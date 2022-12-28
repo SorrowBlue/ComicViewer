@@ -2,48 +2,56 @@ package com.sorrowblue.comicviewer.bookshelf.display
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.model.Display
-import com.sorrowblue.comicviewer.domain.model.EmptyRequest
-import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.domain.model.UpdateBookshelfSettingsRequest
-import com.sorrowblue.comicviewer.domain.model.settings.BookshelfSettings
-import com.sorrowblue.comicviewer.domain.usecase.GetBookshelfSettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.UpdateBookshelfSettingsUseCase
+import com.sorrowblue.comicviewer.domain.model.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookshelfDisplaySettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class BookshelfDisplayViewModel @Inject constructor(
-    getBookshelfSettingsUseCase: GetBookshelfSettingsUseCase,
-    private val updateBookshelfSettingsUseCase: UpdateBookshelfSettingsUseCase,
+    private val settingsUseCase: ManageBookshelfDisplaySettingsUseCase,
 ) : ViewModel() {
 
-    val setting =
-        getBookshelfSettingsUseCase.execute(EmptyRequest)
-            .let { it as Response.Success }.data
-
-    fun updateDisplay(display: Display) {
-        viewModelScope.launch {
-            updateBookshelfSettingsUseCase.execute(UpdateBookshelfSettingsRequest {
-                it.copy(display = display)
-            })
-        }
+    val displayFlow = MutableStateFlow(BookshelfDisplaySettings.DEFAULT_DISPLAY).apply {
+        shareIn(viewModelScope, SharingStarted.WhileSubscribed()).onEach { display ->
+            settingsUseCase.edit { it.copy(display = display) }
+        }.launchIn(viewModelScope)
     }
 
-    fun updateSort(sort: BookshelfSettings.Sort) {
-        viewModelScope.launch {
-            updateBookshelfSettingsUseCase.execute(UpdateBookshelfSettingsRequest {
-                it.copy(sort = sort)
-            })
-        }
+    val spanCountFlow = MutableStateFlow(BookshelfDisplaySettings.DEFAULT_SPAN_COUNT).apply {
+        shareIn(viewModelScope, SharingStarted.WhileSubscribed())
+            .onEach { spanCount ->
+                settingsUseCase.edit { it.copy(spanCount = spanCount) }
+            }.launchIn(viewModelScope)
     }
 
-    fun updateOrder(order: BookshelfSettings.Order) {
+    val sortFlow = MutableStateFlow(BookshelfDisplaySettings.DEFAULT_SORT).apply {
+        shareIn(viewModelScope, SharingStarted.WhileSubscribed()).onEach { sort ->
+            settingsUseCase.edit { it.copy(sort = sort) }
+        }.launchIn(viewModelScope)
+    }
+
+    val orderFlow = MutableStateFlow(BookshelfDisplaySettings.DEFAULT_ORDER).apply {
+        shareIn(viewModelScope, SharingStarted.WhileSubscribed()).onEach { order ->
+            settingsUseCase.edit { it.copy(order = order) }
+        }.launchIn(viewModelScope)
+    }
+
+    init {
         viewModelScope.launch {
-            updateBookshelfSettingsUseCase.execute(UpdateBookshelfSettingsRequest {
-                it.copy(order = order)
-            })
+            settingsUseCase.settings.first().apply {
+                displayFlow.value = display
+                spanCountFlow.value = spanCount
+                sortFlow.value = sort
+                orderFlow.value = order
+            }
         }
     }
 }

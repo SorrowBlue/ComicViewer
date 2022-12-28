@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/server_navigation"
+    app:startDestination="@id/server_list_fragment">
+
+    <fragment
+        android:id="@+id/server_list_fragment"
+        android:name="com.sorrowblue.comicviewer.server.ServerListFragment"
+        android:label="@string/server_title_server_list"
+        tools:layout="@layout/server_fragment_list">
+        <action
+            android:id="@+id/action_server_list_to_bookshelf_navigation"
+            app:destination="@id/bookshelf_navigation" />
+        <action
+            android:id="@+id/action_server_list_to_server_management_navigation_selection"
+            app:destination="@id/server_management_navigation_selection" />
+        <action
+            android:id="@+id/action_server_list_to_server_info_navigation"
+            app:destination="@id/server_info_navigation" />
+    </fragment>
+    <include app:graph="@navigation/bookshelf" />
+    <include app:graph="@navigation/server_management_selection" />
+    <include app:graph="@navigation/server_info" />
+</navigation>

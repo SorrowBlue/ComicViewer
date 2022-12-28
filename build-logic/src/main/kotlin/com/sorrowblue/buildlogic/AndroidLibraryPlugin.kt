@@ -9,32 +9,31 @@ import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
 class AndroidLibraryPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply("com.android.library")
-                apply("org.jetbrains.kotlin.android")
-                apply("org.jetbrains.kotlin.kapt")
-            }
+//            with(pluginManager) {
+//                apply("com.android.library")
+//                apply("org.jetbrains.kotlin.android")
+//            }
             useAndroidExtension()
             useAndroidLibraryExtension()
+            tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
+                kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
+            }
         }
     }
 }
 
-class AndroidApplicationPlugin : Plugin<Project> {
-    override fun apply(target: Project) {
-        with(target) {
-            with(pluginManager) {
-                apply("com.android.application")
-                apply("org.jetbrains.kotlin.android")
-                apply("org.jetbrains.kotlin.kapt")
-            }
-            useAndroidExtension()
-        }
+fun Project.inferNameSpace(s: String): String {
+    val a = if (parent?.name == rootProject.name) null else parent?.name
+    return if (a == null) {
+        "com.sorrowblue.comicviewer.$s"
+    } else {
+        parent!!.inferNameSpace("$a.$s")
     }
 }
 
@@ -42,6 +41,9 @@ fun Project.useAndroidExtension() {
     extensions.configure<BaseExtension> {
         compileSdkVersion(libs.version("android-compile-sdk").toInt())
         buildToolsVersion(libs.version("android-buildtools"))
+        namespace = inferNameSpace(name).also {
+            logger.lifecycle("nameSpace=$it")
+        }
         defaultConfig {
             minSdk = libs.version("android-min-sdk").toInt()
             targetSdk = libs.version("android-target-sdk").toInt()
@@ -61,6 +63,9 @@ fun Project.useAndroidLibraryExtension() {
     extensions.configure<BaseExtension> {
         buildTypes {
             getByName("release") {
+                consumerProguardFiles("consumer-rules.pro")
+            }
+            getByName("debug") {
                 consumerProguardFiles("consumer-rules.pro")
             }
         }

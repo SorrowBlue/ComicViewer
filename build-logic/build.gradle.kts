@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    implementation("com.android.tools.build:gradle:7.2.2")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
+    implementation(libs.android.tools.build.gradle)
+    implementation(libs.kotlin.gradle.plugin)
 }
 
 gradlePlugin {
@@ -16,6 +16,10 @@ gradlePlugin {
         register("android.application") {
             id = "build-logic.android.application"
             implementationClass = "com.sorrowblue.buildlogic.AndroidApplicationPlugin"
+        }
+        register("android.dynamic.feature") {
+            id = "build-logic.android.dynamic-feature"
+            implementationClass = "com.sorrowblue.buildlogic.AndroidDynamicFeaturePlugin"
         }
     }
 }

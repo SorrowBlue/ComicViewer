@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_info_label_edit">Edit</string>
+    <string name="server_info_label_remove">Remove</string>
+    <string name="server_info_label_host">IP/Host</string>
+    <string name="server_info_label_path">Path</string>
+</resources>

@@ -1,31 +1,26 @@
 plugins {
-    id("build-logic.android.library")
+    id("com.android.library")
+id("org.jetbrains.kotlin.android")
+id("build-logic.android.library")
+
     id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.data"
-
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
-
-}
-
 dependencies {
-    api(projects.domain.interactor)
+    implementation(projects.domain.interactor)
+    implementation(projects.data.common)
 
     implementation(libs.kotlinx.serialization.protobuf)
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.datastore.proto)
     implementation(libs.slf4j.android)
+    implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.squareup.logcat)
-    implementation("androidx.documentfile:documentfile:1.0.1")
-    implementation(libs.google.play.feature.delivery)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.coil)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)

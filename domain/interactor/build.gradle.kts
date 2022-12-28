@@ -1,10 +1,10 @@
 plugins {
-    id("build-logic.android.library")
-    id("dagger.hilt.android.plugin")
-}
+    id("com.android.library")
+id("org.jetbrains.kotlin.android")
+id("build-logic.android.library")
 
-android {
-    namespace = "com.sorrowblue.comicviewer.domain.interactor"
+    id("org.jetbrains.kotlin.kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 dependencies {

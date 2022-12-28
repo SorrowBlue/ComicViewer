@@ -1,18 +1,20 @@
 package com.sorrowblue.comicviewer.data.di
 
-import com.sorrowblue.comicviewer.data.reporitory.BookRepositoryImpl
-import com.sorrowblue.comicviewer.data.reporitory.BookShelfSettingsRepositoryImpl
-import com.sorrowblue.comicviewer.data.reporitory.HistoryRepositoryImpl
-import com.sorrowblue.comicviewer.data.reporitory.SettingsRepositoryImpl
-import com.sorrowblue.comicviewer.domain.repository.BookRepository
-import com.sorrowblue.comicviewer.domain.repository.BookShelfSettingsRepository
-import com.sorrowblue.comicviewer.domain.repository.HistoryRepository
-import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
+import com.sorrowblue.comicviewer.data.reporitory.FileRepositoryImpl
+import com.sorrowblue.comicviewer.data.reporitory.SettingsCommonRepositoryImpl
+import com.sorrowblue.comicviewer.data.reporitory.impl.ServerRepositoryImpl
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
+import com.sorrowblue.comicviewer.domain.repository.ServerRepository
+import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Qualifier
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -20,17 +22,13 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindHistoryRepository(repository: HistoryRepositoryImpl): HistoryRepository
+    abstract fun bindFileRepository(repository: FileRepositoryImpl): FileRepository
 
     @Singleton
     @Binds
-    abstract fun bindBookShelfSettingsRepository(repository: BookShelfSettingsRepositoryImpl): BookShelfSettingsRepository
+    abstract fun bindSettingsCommonRepository(repository: SettingsCommonRepositoryImpl): SettingsCommonRepository
 
     @Singleton
     @Binds
-    abstract fun bindSettingsRepository(repository: SettingsRepositoryImpl): SettingsRepository
-
-    @Singleton
-    @Binds
-    abstract fun bindBookRepositoryFactory(factory: BookRepositoryImpl.Factory): BookRepository.Factory
+    abstract fun bindServerRepository(repository: ServerRepositoryImpl): ServerRepository
 }

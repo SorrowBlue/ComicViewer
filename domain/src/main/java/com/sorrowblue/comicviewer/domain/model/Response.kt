@@ -5,10 +5,29 @@ sealed class Response<out T> {
 
     class Error(val exception: Throwable) : Response<Nothing>()
 
-    fun <R> fold(onSuccess: (T) -> R, onError: (Throwable) -> R): R {
+    inline fun <R> fold(onSuccess: (T) -> R, onError: (Throwable) -> R): R {
         return when (this) {
             is Error -> onError(this.exception)
             is Success -> onSuccess(this.data)
         }
+    }
+
+    inline fun onSuccess(body: (T) -> Unit): Response<T> {
+        if (this is Success) {
+            body.invoke(data)
+        }
+        return this
+    }
+
+    inline fun onError(body: (Throwable) -> Unit): Response<T> {
+        if (this is Error) {
+            body.invoke(exception)
+        }
+        return this
+    }
+
+    inline fun <R> convert(onSuccess: (T) -> R): Response<R> = when (this) {
+        is Error -> this
+        is Success -> Response.Success(onSuccess(data))
     }
 }

@@ -3,8 +3,6 @@ package com.sorrowblue.comicviewer.data.database.di
 import android.content.Context
 import androidx.room.Room
 import com.sorrowblue.comicviewer.data.database.ComicViewerDatabase
-import com.sorrowblue.comicviewer.data.database.dao.FileDataDao
-import com.sorrowblue.comicviewer.data.database.dao.LibraryDataDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,12 +22,9 @@ internal object SingletonProvidesModule {
 
     @Singleton
     @Provides
-    fun provideBookshelfDao(db: ComicViewerDatabase): LibraryDataDao =
-        db.libraryDataDao()
+    fun provideServerDao(db: ComicViewerDatabase) = db.serverDao()
 
     @Singleton
     @Provides
-    fun provideFileDataDao(db: ComicViewerDatabase): FileDataDao =
-        db.fileDataDao()
-
+    fun provideFileDao(db: ComicViewerDatabase) = db.fileDao()
 }

@@ -1,11 +1,14 @@
 plugins {
+    id("com.android.application")
+id("org.jetbrains.kotlin.android")
     id("build-logic.android.application")
+
+    id("org.jetbrains.kotlin.kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
 }
 
 android {
-    namespace = "com.sorrowblue.comicviewer"
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
         versionCode = 1
@@ -20,30 +23,39 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            applicationIdSuffix = ".debug"
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
     }
     buildFeatures {
         dataBinding = true
         viewBinding = true
     }
-    dynamicFeatures += setOf(":data:pdf_support")
+//    packagingOptions  {
+//        resources.excludes.add("META-INF/DEPENDENCIES")
+//    }
 }
 
 dependencies {
-    implementation(projects.framework)
-    implementation(projects.data)
-    implementation(projects.data.remote)
-    implementation(projects.data.database)
+    implementation(projects.framework.ui)
+    implementation(projects.framework.notification)
+
+    implementation(projects.data.di)
     implementation(projects.domain)
     implementation(projects.settings)
     implementation(projects.bookshelf)
-    implementation(projects.library)
-    implementation(projects.management)
+    implementation(projects.server)
 
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.biometric)
-    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.hilt.work)
+//    implementation(libs.androidx.biometric)
     implementation(libs.androidx.core.splashscreen)
-
+//    debugImplementation(libs.squareup.leakcanary.android)
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
 

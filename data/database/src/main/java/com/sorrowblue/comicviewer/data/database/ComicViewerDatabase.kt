@@ -3,17 +3,17 @@ package com.sorrowblue.comicviewer.data.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.sorrowblue.comicviewer.data.database.dao.FileDataDao
-import com.sorrowblue.comicviewer.data.database.dao.LibraryDataDao
-import com.sorrowblue.comicviewer.data.entity.FileData
-import com.sorrowblue.comicviewer.data.entity.LibraryData
-import com.sorrowblue.comicviewer.data.entity.LocalDateTimeConverters
+import com.sorrowblue.comicviewer.data.database.dao.FileDao
+import com.sorrowblue.comicviewer.data.database.dao.ServerDao
+import com.sorrowblue.comicviewer.data.database.entity.File
+import com.sorrowblue.comicviewer.data.database.entity.PasswordConverters
+import com.sorrowblue.comicviewer.data.database.entity.Server
 
-@Database(entities = [LibraryData::class, FileData::class], version = 1)
-@TypeConverters(LocalDateTimeConverters::class)
+@Database(entities = [Server::class, File::class], version = 1)
+@TypeConverters(PasswordConverters::class)
 internal abstract class ComicViewerDatabase : RoomDatabase() {
 
-    abstract fun libraryDataDao(): LibraryDataDao
+    abstract fun serverDao(): ServerDao
 
-    abstract fun fileDataDao(): FileDataDao
+    abstract fun fileDao(): FileDao
 }

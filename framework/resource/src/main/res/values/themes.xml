@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.ComicViewer" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/md_theme_light_error</item>
+        <item name="colorOnError">@color/md_theme_light_onError</item>
+        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
+        <item name="colorOutline">@color/md_theme_light_outline</item>
+        <item name="android:colorBackground">@color/md_theme_light_background</item>
+        <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
+        <item name="colorSurface">@color/md_theme_light_surface</item>
+        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
+        <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
+
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="toolbarStyle">@style/Widget.ComicViewer.Toolbar</item>
+
+        <item name="preferenceTheme">@style/ComicViewerPreferenceThemeOverlay</item>
+
+        <item name="searchViewStyle">@style/Widget.ComicViewer.SearchView</item>
+
+    </style>
+
+    <style name="Widget.ComicViewer.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="layout_scrollFlags">noScroll</item>
+        <item name="popupTheme">@style/Theme.ComicViewer.PopupTheme</item>
+        <item name="titleCentered">true</item>
+        <item name="subtitleCentered">true</item>
+    </style>
+
+    <style name="Widget.ComicViewer.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="layout">@layout/abc_search_view</item>
+        <item name="queryBackground">@drawable/abc_textfield_search_material</item>
+        <item name="submitBackground">@drawable/abc_textfield_search_material</item>
+        <item name="closeIcon">@drawable/ic_twotone_close_24</item>
+        <item name="searchIcon">@drawable/ic_twotone_favorite_24</item>
+        <item name="searchHintIcon">@drawable/ic_twotone_broken_image_24</item>
+        <item name="goIcon">@drawable/ic_twotone_refresh_24</item>
+        <item name="voiceIcon">@drawable/ic_twotone_add_24</item>
+        <item name="commitIcon">@drawable/ic_twotone_edit_24</item>
+        <item name="suggestionRowLayout">@layout/abc_search_dropdown_item_icons_2line</item>
+    </style>
+
+
+    <style name="Theme.ComicViewer.PopupTheme" parent="ThemeOverlay.Material3.DynamicColors.Light" />
+
+    <style name="ComicViewerPreferenceThemeOverlay" parent="PreferenceThemeOverlay">
+        <item name="android:layout">@layout/fragment_list_material</item>
+        <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat.Catalog</item>
+        <item name="checkBoxPreferenceStyle">@style/Preference.CheckBoxPreference.Catalog</item>
+    </style>
+
+    <style name="Preference.SwitchPreferenceCompat.Catalog" parent="Preference.SwitchPreferenceCompat.Material">
+        <item name="android:widgetLayout">@layout/widget_switch_material</item>
+    </style>
+    <style name="Preference.CheckBoxPreference.Catalog" parent="Preference.CheckBoxPreference.Material">
+        <item name="android:widgetLayout">@layout/widget_checkbox_material</item>
+    </style>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/book"
+    app:startDestination="@id/book_fragment">
+
+    <fragment
+        android:id="@+id/book_fragment"
+        android:name="com.sorrowblue.comicviewer.book.BookFragment"
+        android:label="ViewerFragment">
+        <argument
+            android:name="server_id"
+            app:argType="integer" />
+        <argument
+            android:name="path"
+            app:argType="string" />
+        <argument
+            android:name="transition_name"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="placeholder"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+</navigation>

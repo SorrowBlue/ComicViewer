@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_viewer_title">Viewer設定</string>
+    <string name="settings_viewer_title_show_status_bar">ステータスバーを表示する</string>
+    <string name="settings_viewer_title_show_navigation_bar">ナビゲーションバーを表示する</string>
+    <string name="settings_viewer_title_not_turn_off_screen">画面をオフにしない</string>
+    <string name="settings_viewer_title_brightness">明るさ</string>
+    <string name="settings_viewer_title_brightness_control">明るさの制御</string>
+    <string name="settings_viewer_title_brightness_level">明るさのレベル</string>
+    <string name="settings_viewer_title_image_quality">画像の品質</string>
+    <string name="settings_viewer_title_reading_direction">綴じ方向</string>
+</resources>

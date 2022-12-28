@@ -1,12 +1,9 @@
 package com.sorrowblue.comicviewer.domain.model
 
+import com.sorrowblue.comicviewer.domain.entity.ServerId
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class History(val bookshelfId: Int = 0, val currentComic: String? = null)
-
-enum class Display {
-    GRID, LIST
-}
+data class History(val serverId: ServerId? = null, val path: String? = null, val position: Int? = null)
 
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/favorite"
+        android:checked="true"
+        android:icon="@drawable/book_favorite"
+        android:title="お気に入りに登録"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_global_settings_navigation"
+        android:icon="@drawable/ic_twotone_settings_24"
+        android:menuCategory="secondary"
+        android:title="@string/framework_title_settings"
+        app:showAsAction="never" />
+</menu>

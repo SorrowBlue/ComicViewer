@@ -12,3 +12,13 @@ abstract class OneTimeUseCase<R : BaseRequest, T> {
 
     protected abstract fun run(request: R): Response<T>
 }
+
+abstract class OneShotUseCase<R : BaseRequest, T> {
+
+    fun execute(request: R): T {
+        val validated = request.validate()
+        return if (validated) run(request) else throw IllegalArgumentException()
+    }
+
+    protected abstract fun run(request: R): T
+}

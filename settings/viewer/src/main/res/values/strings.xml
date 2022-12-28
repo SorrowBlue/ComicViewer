@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="settings_viewer_title">Viewer settings</string>
+    <string name="settings_viewer_title_show_status_bar">Show status bar</string>
+    <string name="settings_viewer_title_show_navigation_bar">Show navigation bar</string>
+    <string name="settings_viewer_title_not_turn_off_screen">Do not turn off screen</string>
+    <string name="settings_viewer_title_brightness">Brightness</string>
+    <string name="settings_viewer_title_brightness_control">brightness control</string>
+    <string name="settings_viewer_title_brightness_level">brightness level</string>
+    <string name="settings_viewer_title_image_quality">Image quality</string>
+
+    <string name="settings_viewer_preference_key_show_status_bar" translatable="false">settings_viewer_preference_key_show_status_bar</string>
+    <string name="settings_viewer_preference_key_show_navigation_bar" translatable="false">settings_viewer_preference_key_show_navigation_bar</string>
+    <string name="settings_viewer_preference_key_not_turn_off_screen" translatable="false">settings_viewer_preference_key_not_turn_off_screen</string>
+    <string name="settings_viewer_preference_key_brightness_control" translatable="false">settings_viewer_preference_key_brightness_control</string>
+    <string name="settings_viewer_preference_key_brightness_level" translatable="false">settings_viewer_preference_key_brightness_level</string>
+    <string name="settings_viewer_preference_key_image_quality" translatable="false">settings_viewer_preference_key_image_quality</string>
+    <string name="settings_viewer_preference_key_reading_direction" tools:ignore="ExtraTranslation">settings_viewer_preference_key_binding_direction</string>
+    <string name="settings_viewer_title_reading_direction">Reading direction</string>
+</resources>

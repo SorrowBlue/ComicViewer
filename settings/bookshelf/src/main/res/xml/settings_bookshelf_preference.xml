@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="@string/settings_bookshelf_preference_key_support_extension"
+        android:title="拡張子設定" />
+
+    <SwitchPreferenceCompat
+        android:key="@string/settings_bookshelf_preference_key_show_preview"
+        android:title="プレビューを表示する" />
+
+    <SwitchPreferenceCompat
+        android:key="@string/settings_bookshelf_preference_key_resolve_image_folder"
+        android:summary="一覧の取得に時間がかかります"
+        android:title="画像フォルダを本として扱う" />
+
+</PreferenceScreen>

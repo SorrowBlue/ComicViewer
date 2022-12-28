@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settings_display"
+    app:startDestination="@id/settings_display_fragment">
+
+    <fragment
+        android:id="@+id/settings_display_fragment"
+        android:name="com.sorrowblue.comicviewer.settings.display.SettingsDisplayFragment"
+        android:label="SettingsDisplayFragment" />
+</navigation>

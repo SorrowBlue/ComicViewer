@@ -1,21 +1,27 @@
 plugins {
-    id("build-logic.android.library")
+    id("com.android.library")
+id("org.jetbrains.kotlin.android")
+id("build-logic.android.library")
+
+    id("org.jetbrains.kotlin.kapt")
+    kotlin("plugin.serialization")
     id("dagger.hilt.android.plugin")
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.data.remote"
-}
-
 dependencies {
-    implementation(projects.data)
+    api(projects.data)
+    implementation(projects.data.common)
+    implementation(projects.data.remote.client)
+    implementation(projects.data.remote.reader)
 
-    implementation(libs.codelibs.jcifs)
-    implementation(libs.apache.commons.compress)
-    implementation(libs.google.play.feature.delivery)
-    implementation("com.googlecode.juniversalchardet:juniversalchardet:1.0.3")
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.coil)
+    implementation(libs.androidx.startup.runtime)
+    implementation(libs.squareup.logcat)
 
     implementation(libs.dagger.hilt.android.core)
+    implementation(libs.androidx.exifinterface)
     kapt(libs.dagger.hilt.android.compiler)
 
     androidTestImplementation(libs.androidx.test.ext.junit)

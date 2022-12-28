@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:key="@string/settings_preference_key_display"
+        app:title="ディスプレイ" />
+
+    <Preference
+        app:key="@string/settings_preference_key_bookshelf"
+        app:title="本棚" />
+
+    <Preference
+        app:key="@string/settings_preference_key_viewer"
+        app:title="ビューワー" />
 
     <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="settings_key_use_auth"
-        android:title="アプリ起動時に認証を使用する" />
+        app:defaultValue="false"
+        app:key="@string/settings_preference_key_use_biometric"
+        app:title="アプリ起動時に認証を使用する" />
+    <SwitchPreferenceCompat
+        app:defaultValue="false"
+        app:key="@string/settings_preference_key_restore_on_launch"
+        app:title="最後に読んだ本のフォルダまで移動する。" />
 </PreferenceScreen>

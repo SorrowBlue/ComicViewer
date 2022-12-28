@@ -5,61 +5,98 @@ android-min-sdk = "28"
 android-target-sdk = "33"
 android-buildtools = "33.0.0"
 
-android-plugin = "7.1.0-beta01"
-lifecycle = "2.4.0"
-
+kotlin = "1.7.22"
 kotlinx-coroutines = "1.6.4"
-kotlinx-serialization = "1.4.0"
+kotlinx-serialization = "1.4.1"
+
+androidx-datastore = "1.0.0"
 androidx-lifecycle = "2.5.1"
-androidx-navigation = "2.5.1"
+androidx-navigation = "2.5.3"
+androidx-paging = "3.1.1"
 androidx-room = "2.4.3"
-dagger-hilt-android = "2.43.2"
+androidx-work = "2.7.1"
+
+dagger-hilt-android = "2.44.2"
 
 [libraries]
+android-tools-build-gradle = "com.android.tools.build:gradle:7.3.1"
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 
-androidx-appcompat = "androidx.appcompat:appcompat:1.5.0"
-androidx-biometric = "androidx.biometric:biometric:1.2.0-alpha04"
+androidx-activity = "androidx.activity:activity:1.6.1"
+
+androidx-appcompat = "androidx.appcompat:appcompat:1.6.0-rc01"
+
+androidx-biometric = "androidx.biometric:biometric:1.2.0-alpha05"
+
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
-androidx-core-ktx = "androidx.core:core-ktx:1.8.0"
+
+androidx-coordinatorlayout = "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
+
+androidx-core-ktx = "androidx.core:core-ktx:1.9.0"
+androidx-core-splashscreen = "androidx.core:core-splashscreen:1.0.0"
+
+androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "androidx.datastore" }
+androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "androidx.datastore" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx.datastore" }
+
+androidx-documentfile = "androidx.documentfile:documentfile:1.1.0-alpha01"
+
+androidx-exifinterface = "androidx.exifinterface:exifinterface:1.3.5"
+
+androidx-fragment-ktx = "androidx.fragment:fragment-ktx:1.5.5"
+
+androidx-hilt-compiler = "androidx.hilt:hilt-compiler:1.0.0"
+androidx-hilt-navigation-fragment = "androidx.hilt:hilt-navigation-fragment:1.0.0"
+androidx-hilt-work = "androidx.hilt:hilt-work:1.0.0"
+
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
+
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
-androidx-paging-runtime-ktx = "androidx.paging:paging-runtime-ktx:3.2.0-alpha02"
-androidx-paging-common = "androidx.paging:paging-common:3.2.0-alpha02"
+
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }
+
 androidx-preference-ktx = "androidx.preference:preference-ktx:1.2.0"
-androidx-swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
+
 androidx-recyclerview = "androidx.recyclerview:recyclerview:1.2.1"
-androidx-viewpager2 = "androidx.viewpager2:viewpager2:1.1.0-beta01"
-androidx-core-splashscreen = "androidx.core:core-splashscreen:1.0.0"
-androidx-datastore-proto = "androidx.datastore:datastore:1.0.0"
-androidx-datastore-core = "androidx.datastore:datastore-core:1.0.0"
-androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.0.0"
+
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
-androidx-hilt-navigation-fragment = "androidx.hilt:hilt-navigation-fragment:1.0.0"
 
-google-material = "com.google.android.material:material:1.7.0-beta01"
-google-play-feature-delivery = "com.google.android.play:feature-delivery-ktx:2.0.0"
+androidx-startup-runtime = "androidx.startup:startup-runtime:1.1.1"
+
+androidx-swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+androidx-viewpager2 = "androidx.viewpager2:viewpager2:1.1.0-beta01"
+
+androidx-window = "androidx.window:window:1.1.0-alpha04"
+
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+androidx-work-multiprocess = { module = "androidx.work:work-multiprocess", version.ref = "androidx-work" }
 
 
-coil = "io.coil-kt:coil:2.2.0"
-jcifs = "org.codelibs:jcifs:2.1.31"
-commons-net = "commons-net:commons-net:3.8.0"
-pdfbox-android = "com.tom-roush:pdfbox-android:2.0.25.0"
+google-material = "com.google.android.material:material:1.7.0"
+
+squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.10"
+
+coil = "io.coil-kt:coil:2.2.2"
+coil-base = "io.coil-kt:coil-base:2.2.2"
+jcifs-ng = "eu.agno3.jcifs:jcifs-ng:2.1.8"
 slf4j-android = "org.slf4j:slf4j-android:1.7.36"
-albfernandez-juniversalchardet = "com.github.albfernandez:juniversalchardet:2.4.0"
-sorrowblue-binding-ktx = "com.sorrowblue.jetpack:binding-ktx:3.0.3"
+sorrowblue-binding-ktx = "com.sorrowblue.jetpack:binding-ktx:3.0.4"
+github-omicronapps-SevenZipJBinding4Android = "com.github.omicronapps:7-Zip-JBinding-4Android:Release-16.02-2.02"
 
-codelibs-jcifs = "org.codelibs:jcifs:2.1.31"
-apache-commons-compress = "org.apache.commons:commons-compress:1.21"
-
+artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.21.0"
 squareup-logcat = "com.squareup.logcat:logcat:0.1"
 chrisbanes-insetter = "dev.chrisbanes.insetter:insetter-dbx:0.6.1"
 
@@ -67,15 +104,11 @@ dagger-hilt-android-core = { module = "com.google.dagger:hilt-android", version.
 dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger-hilt-android" }
 
 junit = "junit:junit:4.13.2"
-androidx-test-ext-junit = "androidx.test.ext:junit:1.1.3"
-androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.4.0"
+androidx-test-ext-junit = "androidx.test.ext:junit:1.1.4"
+androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.0"
+robolectric = "org.robolectric:robolectric:4.9.1"
 
 [bundles]
 androidx-lifecycle = ["androidx-lifecycle-livedata-ktx", "androidx-lifecycle-viewmodel-ktx"]
 androidx-navigation = ["androidx-navigation-fragment-ktx", "androidx-navigation-ui-ktx"]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx", "androidx-room-paging"]
-
-#[plugins]
-#android-application = { id = "com.android.application", version.ref = "android-plugin" }
-#android-library = { id = "com.android.library", version.ref = "android-plugin" }
-#kotlin = { id = "org.jetbrains.kotlin.android", version = "1.5.31" }

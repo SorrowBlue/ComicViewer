@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreferenceCompat
+        android:key="@string/settings_viewer_preference_key_show_status_bar"
+        android:title="@string/settings_viewer_title_show_status_bar" />
+    <SwitchPreferenceCompat
+        android:key="@string/settings_viewer_preference_key_show_navigation_bar"
+        android:title="@string/settings_viewer_title_show_navigation_bar" />
+    <SwitchPreferenceCompat
+        android:key="@string/settings_viewer_preference_key_not_turn_off_screen"
+        android:title="@string/settings_viewer_title_not_turn_off_screen" />
+
+    <SwitchPreferenceCompat
+        android:key="ページの余白を切り取る"
+        android:title="ページの余白を切り取る" />
+
+    <SwitchPreferenceCompat
+        android:key="画像をキャッシュする"
+        android:title="画像をキャッシュする" />
+
+    <DropDownPreference
+        android:key="@string/settings_viewer_preference_key_reading_direction"
+        android:title="@string/settings_viewer_title_reading_direction" />
+
+    <DropDownPreference
+        android:key="各々の本で異なる閉じ方向を設定する"
+        android:title="各々の本で異なる閉じ方向を設定する" />
+
+    <SwitchPreferenceCompat
+        android:key="常に最初のページを表示する"
+        android:title="常に最初のページを表示する" />
+
+    <SeekBarPreference
+        android:key="事前に読み込むページ数"
+        android:max="10"
+        android:title="事前に読み込むページ数"
+        app:min="0"
+        app:showSeekBarValue="true" />
+
+    <SeekBarPreference
+        android:key="@string/settings_viewer_preference_key_image_quality"
+        android:max="100"
+        android:title="@string/settings_viewer_title_image_quality"
+        app:showSeekBarValue="true" />
+
+    <PreferenceCategory android:title="@string/settings_viewer_title_brightness">
+        <SwitchPreferenceCompat
+            android:key="@string/settings_viewer_preference_key_brightness_control"
+            android:title="@string/settings_viewer_title_brightness_control" />
+        <SeekBarPreference
+            android:key="@string/settings_viewer_preference_key_brightness_level"
+            android:max="100"
+            android:min="0"
+            android:title="@string/settings_viewer_title_brightness_level"
+            app:showSeekBarValue="true" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

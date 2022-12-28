@@ -1,11 +1,10 @@
 plugins {
-    id("build-logic.android.library")
-    id("org.jetbrains.kotlin.plugin.parcelize")
-    kotlin("plugin.serialization") version "1.7.10"
-}
+    id("com.android.library")
+id("org.jetbrains.kotlin.android")
+id("build-logic.android.library")
 
-android {
-    namespace = "com.sorrowblue.comicviewer.domain"
+    kotlin("plugin.parcelize")
+    kotlin("plugin.serialization")
 }
 
 dependencies {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/book_info_navigation"
+    app:startDestination="@id/book_info_dialog">
+
+    <dialog
+        android:id="@+id/book_info_dialog"
+        android:name="com.sorrowblue.comicviewer.book.info.BookInfoDialog"
+        tools:layout="@layout/book_dialog_info">
+        <argument
+            android:name="server_id"
+            app:argType="integer" />
+        <argument
+            android:name="path"
+            app:argType="string" />
+        <deepLink
+            android:id="@+id/book_info_dialog_deeplink"
+            android:autoVerify="true"
+            app:uri="comicviewer.sorrowblue.com/book_info?serverId={server_id}&amp;path={path}" />
+    </dialog>
+</navigation>

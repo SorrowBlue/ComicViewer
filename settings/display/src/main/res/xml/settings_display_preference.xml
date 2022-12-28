@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <DropDownPreference
+        android:entries="@array/settings_display_entries_dark_mode"
+        android:key="@string/settings_display_preference_key_dark_mode"
+        android:title="ダークモード"
+        app:useSimpleSummaryProvider="true" />
+
+    <ListPreference
+        app:entries="@array/settings_display_entries_folder_thumbnails"
+        app:key="@string/settings_display_preference_key_folder_thumbnails"
+        app:title="フォルダサムネイルの表示順"
+        app:useSimpleSummaryProvider="true" />
+</PreferenceScreen>
