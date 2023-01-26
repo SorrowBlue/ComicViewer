@@ -108,7 +108,7 @@ androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version
 androidx-work-multiprocess = { module = "androidx.work:work-multiprocess", version.ref = "androidx-work" }
 
 
-google-material = "com.google.android.material:material:1.8.0-rc01"
+google-material = "com.google.android.material:material:1.8.0"
 
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.10"
 
