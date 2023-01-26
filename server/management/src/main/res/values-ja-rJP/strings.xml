@@ -2,7 +2,7 @@
 <resources>
     <string name="server_management_desc_device">この端末上のフォルダを本棚として追加します。</string>
     <string name="server_management_desc_smb">WindowsやNASなどで共有されているフォルダを本棚として追加できます。</string>
-    <string name="server_management_hint_host_name_ip_address">ホスト名またはIPアドレス</string>
+    <string name="server_management_hint_host">サーバ名またはIPアドレス</string>
     <string name="server_management_hint_path">パス</string>
     <string name="server_management_hint_display_name">表示名</string>
     <string name="server_management_label_guest">ゲスト</string>
@@ -11,6 +11,6 @@
     <string name="server_management_hint_password">パスワード</string>
     <string name="server_management_desc_finish_edit_bookshelf">本棚の編集を完了する</string>
     <string name="server_management_desc_finish_add_bookshelf">本棚の追加を完了する</string>
-    <string name="server_management_hint_port">ポート</string>
+    <string name="server_management_hint_port">ポート番号</string>
     <string name="server_management_hint_domain">ドメイン</string>
 </resources>

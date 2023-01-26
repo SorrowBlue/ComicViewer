@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_security_title">セキュリティ</string>
+    <string name="settings_security_title_password_lock">パスワードロック</string>
+    <string name="settings_security_summary_password_lock">アプリ起動時にパスワードを要求します</string>
+    <string name="settings_security_title_use_biometric_auth">生体認証でロック解除</string>
+    <string name="settings_security_title_change_password">パスワードの変更</string>
+    <string name="settings_security_summary_use_biometric_auth">パスワードの代わりに生体認証を使用します</string>
+    <string name="settings_security_title_password">パスワード</string>
+
+
+    <!--パスワード設定/変更/削除ダイアログ-->
+    <string name="settings_security_password_manage_dialog_title_password_setting">パスワードの設定</string>
+    <string name="settings_security_password_manage_dialog_title_change_password">パスワードの変更</string>
+    <string name="settings_security_password_manage_dialog_title_delete_password">パスワードの削除</string>
+
+    <string name="settings_security_password_manage_dialog_hint_new_password">新しいパスワード</string>
+    <string name="settings_security_password_manage_dialog_hint_old_password">以前のパスワード</string>
+
+    <string name="settings_security_password_manage_dialog_error_passwords_do_not_match">パスワードが一致しません。</string>
+</resources>

@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.data.datasource.ServerLocalDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import logcat.logcat
 
 internal class ServerLocalDataSourceImpl @Inject constructor(
     private val dao: ServerDao
@@ -21,8 +22,13 @@ internal class ServerLocalDataSourceImpl @Inject constructor(
 
     override suspend fun create(serverModel: ServerModel): ServerModel {
         val entity = serverModel.toServer()
-        return dao.insertOrUpdate(serverModel.toServer()).let {
-            entity.copy(id = it.toInt())
+        return dao.upsert(serverModel.toServer()).let {
+            logcat { "dao.upsert(): before=${entity.id}, after=$it" }
+            if (it == -1L) {
+                entity
+            } else {
+                entity.copy(id = it.toInt())
+            }
         }.toServerModel()
     }
 

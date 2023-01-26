@@ -1,13 +1,14 @@
 package com.sorrowblue.comicviewer.data.reporitory
 
 import com.sorrowblue.comicviewer.data.datasource.DatastoreDataSource
-import com.sorrowblue.comicviewer.domain.model.DisplaySettings
-import com.sorrowblue.comicviewer.domain.model.History
-import com.sorrowblue.comicviewer.domain.model.ViewerOperationSettings
-import com.sorrowblue.comicviewer.domain.model.ViewerSettings
-import com.sorrowblue.comicviewer.domain.model.settings.BookshelfDisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.BookshelfSettings
-import com.sorrowblue.comicviewer.domain.model.settings.Settings
+import com.sorrowblue.comicviewer.domain.entity.settings.DisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.History
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerOperationSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.SecuritySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.Settings
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -54,5 +55,11 @@ internal class SettingsCommonRepositoryImpl @Inject constructor(
 
     override suspend fun updateViewerOperationSettings(transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings) {
         datastoreDataSource.updateViewerOperationSettings(transform)
+    }
+
+    override val securitySettings: Flow<SecuritySettings> = datastoreDataSource.securitySettings
+
+    override suspend fun updateSecuritySettings(transform: suspend (SecuritySettings) -> SecuritySettings) {
+        datastoreDataSource.updateSecuritySettings(transform)
     }
 }

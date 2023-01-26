@@ -7,29 +7,38 @@ import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.ServerFileModelFolder
 import com.sorrowblue.comicviewer.data.common.ServerModelId
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.datasource.FileModelRemoteDataSource
+import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.data.exception.RemoteException
 import com.sorrowblue.comicviewer.data.datasource.ServerLocalDataSource
+import com.sorrowblue.comicviewer.data.toFileModel
 import com.sorrowblue.comicviewer.data.toServer
 import com.sorrowblue.comicviewer.data.toServerBookshelf
+import com.sorrowblue.comicviewer.data.toServerId
 import com.sorrowblue.comicviewer.data.toServerModel
-import com.sorrowblue.comicviewer.domain.model.Result
-import com.sorrowblue.comicviewer.domain.entity.Server
 import com.sorrowblue.comicviewer.domain.entity.ServerBookshelf
-import com.sorrowblue.comicviewer.domain.entity.ServerId
+import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.server.Server
+import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.domain.model.Unknown
 import com.sorrowblue.comicviewer.domain.repository.LibraryStatus
 import com.sorrowblue.comicviewer.domain.repository.ServerRepository
+import com.sorrowblue.comicviewer.domain.repository.ServerRepositoryError
+import com.sorrowblue.comicviewer.domain.repository.ServerRepositoryStatus
 import com.sorrowblue.comicviewer.domain.usecase.RegisterLibraryError
+import com.sorrowblue.comicviewer.framework.NoNetwork
+import com.sorrowblue.comicviewer.framework.Result
+import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import logcat.logcat
 
 internal class ServerRepositoryImpl @Inject constructor(
     private val serverLocalDataSource: ServerLocalDataSource,
-    private val fileModelRemoteDataSource: FileModelRemoteDataSource.Factory,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
-    private val fileModelRemoteDataSourceFactory: FileModelRemoteDataSource.Factory
+    private val remoteDataSourceFactory: RemoteDataSource.Factory
 ) : ServerRepository {
 
     override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<ServerBookshelf>> {
@@ -38,9 +47,12 @@ internal class ServerRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun exists(server: Server, path: String): Result<Boolean, LibraryStatus> {
+    override suspend fun exists(
+        server: Server,
+        path: String
+    ): Result<Boolean, ServerRepositoryStatus> {
         return Result.Success(
-            fileModelRemoteDataSourceFactory.create(server.toServerModel()).exists(path)
+            remoteDataSourceFactory.create(server.toServerModel()).exists(path)
         )
     }
 
@@ -49,7 +61,7 @@ internal class ServerRepositoryImpl @Inject constructor(
         path: String
     ): Result<Server, RegisterLibraryError> {
         val serverModel = serverLocalDataSource.create(server.toServerModel())
-        val fileModel = fileModelRemoteDataSource.create(serverModel).fileModel(path)
+        val fileModel = remoteDataSourceFactory.create(serverModel).fileModel(path)
         when (fileModel) {
             is FileModel.File -> fileModel.copy(parent = "")
             is FileModel.Folder -> fileModel.copy(parent = "")
@@ -71,7 +83,38 @@ internal class ServerRepositoryImpl @Inject constructor(
         }.fold({
             Result.Success(it?.toServer())
         }, {
-            Result.Exception(Unknown)
+            Result.Exception(Unknown(it))
         })
+    }
+
+    override suspend fun connect(server: Server, path: String): Result<Unit, ServerRepositoryError> {
+        return withContext(Dispatchers.IO) {
+            val remoteDataSource = remoteDataSourceFactory.create(server.toServerModel())
+            kotlin.runCatching {
+                remoteDataSource.connect(path)
+                Result.Success(Unit)
+            }.getOrElse {
+                when (it as? RemoteException) {
+                    RemoteException.InvalidAuth -> Result.Error(ServerRepositoryError.AuthenticationFailure)
+                    RemoteException.InvalidServer -> Result.Error(ServerRepositoryError.IncorrectServerInfo)
+                    RemoteException.NoNetwork -> Result.Exception(NoNetwork)
+                    RemoteException.NotFound -> Result.Error(ServerRepositoryError.PathDoesNotExist)
+                    null -> Result.Exception(Unknown(it))
+                }
+            }
+        }
+    }
+
+    override suspend fun register(
+        server: Server,
+        bookshelf: Bookshelf
+    ): Result<Server, ServerRepositoryError> {
+        return withContext(Dispatchers.IO) {
+            val r = serverLocalDataSource.create(server.toServerModel())
+            val model = bookshelf.copy(serverId = r.id.toServerId(), parent = "").toFileModel()
+            logcat { "model=${model}" }
+            fileModelLocalDataSource.register(model)
+            Result.Success(r.toServer())
+        }
     }
 }

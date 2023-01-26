@@ -7,10 +7,7 @@
     <fragment
         android:id="@+id/settings_fragment"
         android:name="com.sorrowblue.comicviewer.settings.SettingsFragment"
-        android:label="設定" >
-        <action
-            android:id="@+id/settings_action_settings_fragment_to_settings_auth_request_dialog"
-            app:destination="@id/settings_auth_request_dialog" />
+        android:label="設定">
         <action
             android:id="@+id/action_settings_to_display_settings"
             app:destination="@id/settings_display" />
@@ -20,12 +17,12 @@
         <action
             android:id="@+id/action_settings_to_settings_bookshelf"
             app:destination="@id/settings_bookshelf" />
+        <action
+            android:id="@+id/action_settings_to_settings_security"
+            app:destination="@id/settings_security_navigation" />
     </fragment>
-    <dialog
-        android:id="@+id/settings_auth_request_dialog"
-        android:name="com.sorrowblue.comicviewer.settings.AuthRequestDialog"
-        android:label="AuthRequestDialog" />
     <include app:graph="@navigation/settings_display" />
     <include app:graph="@navigation/settings_viewer" />
     <include app:graph="@navigation/settings_bookshelf" />
+    <include app:graph="@navigation/settings_security" />
 </navigation>

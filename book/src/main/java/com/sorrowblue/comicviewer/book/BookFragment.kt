@@ -21,7 +21,7 @@ import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialElevationScale
 import com.sorrowblue.comicviewer.book.databinding.BookFragmentBinding
-import com.sorrowblue.comicviewer.domain.model.ViewerSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
 import com.sorrowblue.comicviewer.framework.resource.FrameworkDrawable
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.jetpack.binding.viewBinding

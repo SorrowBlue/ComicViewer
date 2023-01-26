@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/bookshelf_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.BookshelfFragment"
-        android:label="BookshelfFragment"
         tools:layout="@layout/bookshelf_fragment">
         <argument
             android:name="server_id"
@@ -23,20 +22,17 @@
             app:nullable="true" />
         <argument
             android:name="position"
-            android:defaultValue="0"
+            android:defaultValue="-1"
             app:argType="integer" />
         <action
             android:id="@+id/action_bookshelf_fragment_self"
             app:destination="@id/bookshelf_fragment" />
         <action
-            android:id="@+id/action_to_searchable_bookshelf"
-            app:destination="@id/searchable_bookshelf_fragment" />
-        <action
             android:id="@+id/action_to_bookshelf_scan_info"
             app:destination="@id/bookshelf_scan_info_dialog" />
         <action
             android:id="@+id/action_bookshelf_to_book"
-            app:destination="@id/book" />
+            app:destination="@id/book_navigation" />
         <action
             android:id="@+id/action_bookshelf_to_bookshelf_display"
             app:destination="@id/bookshelf_display_navigation"
@@ -46,28 +42,9 @@
             android:autoVerify="true"
             app:uri="comicviewer.sorrowblue.com/bookshelf?serverId={server_id}&amp;path={path}&amp;transitionName={transition_name}&amp;position={position}" />
     </fragment>
-    <fragment
-        android:id="@+id/searchable_bookshelf_fragment"
-        android:name="com.sorrowblue.comicviewer.bookshelf.searchable.SearchableBookshelfFragment"
-        android:label="SearchableBookshelfFragment"
-        tools:layout="@layout/bookshelf_fragment">
-        <action
-            android:id="@+id/action_to_bookshelf"
-            app:destination="@id/bookshelf_fragment" />
-        <action
-            android:id="@+id/action_bookshelf_to_book"
-            app:destination="@id/book" />
-        <argument
-            android:name="server"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.Server" />
-        <argument
-            android:name="query"
-            app:argType="string" />
-    </fragment>
     <dialog
         android:id="@+id/bookshelf_scan_info_dialog"
         android:name="com.sorrowblue.comicviewer.bookshelf.BookshelfScanInfoDialog"
-        android:label="BookshelfScanInfoDialog"
         tools:layout="@layout/bookshelf_scan_info_view">
         <argument
             android:name="uuid"
@@ -80,8 +57,4 @@
     <include app:graph="@navigation/book" />
     <include app:graph="@navigation/bookshelf_display" />
     <include app:graph="@navigation/book_info" />
-    <action
-        android:id="@+id/action_global_book_info_navigation"
-        app:destination="@id/book_info_navigation"
-        app:launchSingleTop="true" />
 </navigation>

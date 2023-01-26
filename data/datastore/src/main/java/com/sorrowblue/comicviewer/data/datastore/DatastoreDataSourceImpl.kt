@@ -2,13 +2,14 @@ package com.sorrowblue.comicviewer.data.datastore
 
 import androidx.datastore.core.DataStore
 import com.sorrowblue.comicviewer.data.datasource.DatastoreDataSource
-import com.sorrowblue.comicviewer.domain.model.DisplaySettings
-import com.sorrowblue.comicviewer.domain.model.History
-import com.sorrowblue.comicviewer.domain.model.ViewerOperationSettings
-import com.sorrowblue.comicviewer.domain.model.ViewerSettings
-import com.sorrowblue.comicviewer.domain.model.settings.BookshelfDisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.BookshelfSettings
-import com.sorrowblue.comicviewer.domain.model.settings.Settings
+import com.sorrowblue.comicviewer.domain.entity.settings.DisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.History
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerOperationSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.SecuritySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.Settings
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
@@ -20,6 +21,7 @@ internal class DatastoreDataSourceImpl @Inject constructor(
     private val bookshelfDisplaySettingsDataStore: DataStore<BookshelfDisplaySettings>,
     private val bookshelfSettingsDataStore: DataStore<BookshelfSettings>,
     private val viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings>,
+    private val securitySettingsDataStore: DataStore<SecuritySettings>,
 ) : DatastoreDataSource {
 
     override val history: Flow<History> = historyDataStore.data
@@ -49,4 +51,9 @@ internal class DatastoreDataSourceImpl @Inject constructor(
     override val viewerOperationSettings = viewerOperationSettingsDataStore.data
     override suspend fun updateViewerOperationSettings(transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings) =
         viewerOperationSettingsDataStore.updateData(transform)
+
+    override val securitySettings: Flow<SecuritySettings> = securitySettingsDataStore.data
+
+    override suspend fun updateSecuritySettings(transform: suspend (SecuritySettings) -> SecuritySettings) =
+        securitySettingsDataStore.updateData(transform)
 }

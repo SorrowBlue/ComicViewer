@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/favorite_create_navigation"
+    app:startDestination="@id/favorite_favorite_create_fragment">
+
+    <dialog
+        android:id="@+id/favorite_favorite_create_fragment"
+        android:name="com.sorrowblue.comicviewer.favorite.create.FavoriteCreateDialog"
+        android:label="" />
+</navigation>

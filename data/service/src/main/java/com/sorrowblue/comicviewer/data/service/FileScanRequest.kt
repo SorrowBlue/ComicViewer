@@ -17,7 +17,7 @@ internal class FileScanRequest(
         PATH to path,
         SCAN_TYPE_MODEL to scanTypeModel.name,
         RESOLVE_IMAGE_FOLDER to resolveImageFolder,
-        SUPPORT_TYPE_EXTENSIONS to supportExtensions
+        SUPPORT_TYPE_EXTENSIONS to supportExtensions.toTypedArray()
     )
 
     companion object {

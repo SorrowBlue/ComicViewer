@@ -1,16 +1,14 @@
 package com.sorrowblue.buildlogic
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-
-class AndroidApplicationPlugin : Plugin<Project> {
-    override fun apply(target: Project) {
-        with(target) {
-//            with(pluginManager) {
-//                apply("com.android.application")
-//                apply("org.jetbrains.kotlin.android")
-//            }
-            useAndroidExtension()
-        }
+@Suppress("unused")
+internal class AndroidApplicationPlugin : AndroidCommonPlugin({
+    plugins {
+        id("com.android.application")
+        id("org.jetbrains.kotlin.android")
     }
-}
+    useAndroidExtension()
+
+    kotlin {
+        jvmToolchain(11)
+    }
+})

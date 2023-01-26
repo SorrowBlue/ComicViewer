@@ -1,33 +1,36 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.library")
-id("org.jetbrains.kotlin.android")
     id("build-logic.android.library")
-
-    id("org.jetbrains.kotlin.kapt")
-    id("androidx.navigation.safeargs.kotlin")
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
 android {
-    namespace = "com.sorrowblue.comicviewer.settings"
-    resourcePrefix = "settings_"
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
+    resourcePrefix("settings_")
+    dataBinding.enable = true
+    viewBinding.enable = true
 }
 
 dependencies {
+    implementation(projects.framework)
     implementation(projects.framework.settings)
     implementation(projects.domain)
     implementation(projects.settings.display)
     implementation(projects.settings.viewer)
     implementation(projects.settings.bookshelf)
+    implementation(projects.settings.security)
     implementation(libs.androidx.appcompat)
 
-//    implementation(libs.androidx.biometric)
     implementation(libs.androidx.preference.ktx)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
+
+    implementation(libs.androidx.hilt.navigation.fragment)
+    kapt(libs.androidx.hilt.compiler)
+}
+
+kapt {
+    correctErrorTypes = true
 }

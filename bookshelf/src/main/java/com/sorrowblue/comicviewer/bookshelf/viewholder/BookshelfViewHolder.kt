@@ -13,29 +13,25 @@ import coil.load
 import com.sorrowblue.comicviewer.book.BookFragmentArgs
 import com.sorrowblue.comicviewer.book.info.BookInfoDialogArgs
 import com.sorrowblue.comicviewer.bookshelf.BookshelfFragmentArgs
-import com.sorrowblue.comicviewer.bookshelf.BookshelfFragmentDirections
 import com.sorrowblue.comicviewer.bookshelf.R
 import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfItemBinding
 import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfItemListBinding
-import com.sorrowblue.comicviewer.domain.entity.Book
-import com.sorrowblue.comicviewer.domain.entity.Bookshelf
-import com.sorrowblue.comicviewer.domain.entity.File
-import com.sorrowblue.comicviewer.domain.entity.FileThumbnailRequest
-import com.sorrowblue.comicviewer.domain.entity.Server
+import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
 import com.sorrowblue.comicviewer.framework.ui.widget.ktx.setSrcCompat
-import logcat.logcat
 
-internal sealed class BookshelfViewHolder<V : ViewBinding>(
+sealed class BookshelfViewHolder<V : ViewBinding>(
     parent: ViewGroup,
     inflate: (LayoutInflater, ViewGroup, Boolean) -> V,
 ) : ViewBindingViewHolder<V>(parent, inflate) {
 
-    abstract fun bind(server: Server, file: File?)
+    abstract fun bind(file: File?)
     abstract fun clear()
 
     protected fun transition(
-        server: Server,
         file: File,
         sharedElement: View,
         memoryCacheKey: String?
@@ -56,10 +52,11 @@ internal sealed class BookshelfViewHolder<V : ViewBinding>(
                     extra
                 )
             }
+
             is Book -> navController.navigate(
-                BookshelfFragmentDirections.actionBookshelfToBook().actionId,
+                com.sorrowblue.comicviewer.book.R.id.book_navigation,
                 BookFragmentArgs(
-                    server.id.value,
+                    file.serverId.value,
                     file.path,
                     transitionName,
                     bindingAdapterPosition,
@@ -80,32 +77,42 @@ internal sealed class BookshelfViewHolder<V : ViewBinding>(
             binding.folderThumbnail.dispose()
         }
 
-        override fun bind(server: Server, file: File?) {
+        override fun bind(file: File?) {
             binding.name.text = file?.name.orEmpty()
-            val data = file?.let { FileThumbnailRequest(server to it) }
+            val data = file?.let { FileThumbnailRequest(file.serverId to it) }
             when (file) {
                 is Bookshelf -> {
-                    binding.folderThumbnail.transitionName = file.path
-                    binding.bookThumbnail.isVisible = false
                     binding.folderThumbnail.isVisible = true
-                    binding.folderThumbnail.load(data)
+                    binding.root.transitionName = file.path
+                    binding.folderThumbnail.setSrcCompat(data)
+                    binding.bookThumbnail.isVisible = false
+                    binding.bookThumbnail.transitionName = null
+                    binding.bookThumbnail.setSrcCompat(null)
                     binding.progress.isVisible = false
                     binding.progress.max = 0
                     binding.progress.progress = 0
                 }
+
                 is Book -> {
-                    binding.bookThumbnail.transitionName = file.path
                     binding.bookThumbnail.isVisible = true
-                    binding.folderThumbnail.isVisible = false
+                    binding.bookThumbnail.transitionName = file.path
                     binding.bookThumbnail.setSrcCompat(data, true)
+                    binding.folderThumbnail.isVisible = false
+                    binding.root.transitionName = null
+                    binding.folderThumbnail.setSrcCompat(null)
                     binding.progress.isVisible = file.totalPageCount > 0 && file.lastPageRead > 0
                     binding.progress.max = file.totalPageCount
                     binding.progress.progress = file.lastPageRead
                 }
+
                 null -> {
-                    binding.bookThumbnail.transitionName = null
                     binding.bookThumbnail.isVisible = false
+                    binding.bookThumbnail.transitionName = null
+                    binding.bookThumbnail.setSrcCompat(null)
                     binding.folderThumbnail.isVisible = false
+                    binding.root.transitionName = null
+                    binding.folderThumbnail.setSrcCompat(null)
+                    binding.progress.isVisible = false
                     binding.name.text = null
                 }
             }
@@ -114,7 +121,7 @@ internal sealed class BookshelfViewHolder<V : ViewBinding>(
                     is File -> {
                         it.findNavController()
                             .navigate(
-                                R.id.action_global_book_info_navigation,
+                                com.sorrowblue.comicviewer.book.R.id.book_info_navigation,
                                 BookInfoDialogArgs(
                                     file.serverId.value,
                                     file.base64Path()
@@ -122,15 +129,16 @@ internal sealed class BookshelfViewHolder<V : ViewBinding>(
                             )
                         true
                     }
+
                     null -> false
                 }
             }
             binding.root.setOnClickListener {
                 if (file != null) {
                     transition(
-                        server, file, when (file) {
+                        file, when (file) {
                             is Book -> binding.bookThumbnail
-                            is Bookshelf -> binding.folderThumbnail
+                            is Bookshelf -> binding.root
                         }, data?.hashCode().toString()
                     )
                 }
@@ -143,26 +151,39 @@ internal sealed class BookshelfViewHolder<V : ViewBinding>(
 
         override fun clear() {
             binding.cover.dispose()
+            binding.folder.dispose()
         }
 
-        override fun bind(server: Server, file: File?) {
+        override fun bind(file: File?) {
             ViewCompat.setTransitionName(binding.root, file?.path)
             binding.name.text = file?.name.orEmpty()
             var memoryCacheKey: String? = null
             when (file) {
                 is Book -> {
-                    binding.cover.load(FileThumbnailRequest(server to file)) {
+                    binding.page.isVisible = true
+                    binding.page.text = "${file.totalPageCount}p"
+                    binding.cover.transitionName = file.path
+                    binding.cover.isVisible = true
+                    binding.folder.isVisible = false
+                    binding.cover.load(FileThumbnailRequest(file.serverId to file)) {
                         listener { _, result ->
                             memoryCacheKey = result.memoryCacheKey?.key
                         }
                     }
-                    binding.folder.isVisible = false
-                    binding.cover.isVisible = true
                 }
+
                 is Bookshelf -> {
+                    binding.page.isVisible = false
                     binding.cover.isVisible = false
                     binding.folder.isVisible = true
+                    binding.folder.transitionName = file.path
+                    binding.folder.load(FileThumbnailRequest(file.serverId to file)) {
+                        listener { _, result ->
+                            memoryCacheKey = result.memoryCacheKey?.key
+                        }
+                    }
                 }
+
                 null -> {
                     binding.name.text = null
                     binding.folder.isVisible = false
@@ -171,10 +192,12 @@ internal sealed class BookshelfViewHolder<V : ViewBinding>(
             binding.root.setOnClickListener {
                 if (file != null) {
                     transition(
-                        server, file, when (file) {
+                        file,
+                        when (file) {
                             is Book -> binding.cover
                             is Bookshelf -> binding.folder
-                        }, memoryCacheKey
+                        },
+                        memoryCacheKey
                     )
                 }
             }

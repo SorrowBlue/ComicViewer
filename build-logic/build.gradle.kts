@@ -9,17 +9,13 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("android.library") {
-            id = "build-logic.android.library"
-            implementationClass = "com.sorrowblue.buildlogic.AndroidLibraryPlugin"
-        }
         register("android.application") {
             id = "build-logic.android.application"
             implementationClass = "com.sorrowblue.buildlogic.AndroidApplicationPlugin"
         }
-        register("android.dynamic.feature") {
-            id = "build-logic.android.dynamic-feature"
-            implementationClass = "com.sorrowblue.buildlogic.AndroidDynamicFeaturePlugin"
+        register("android.library") {
+            id = "build-logic.android.library"
+            implementationClass = "com.sorrowblue.buildlogic.AndroidLibraryPlugin"
         }
     }
 }

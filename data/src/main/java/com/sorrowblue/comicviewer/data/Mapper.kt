@@ -1,18 +1,26 @@
 package com.sorrowblue.comicviewer.data
 
 import com.sorrowblue.comicviewer.data.common.DeviceStorageModel
+import com.sorrowblue.comicviewer.data.common.FavoriteBookModel
+import com.sorrowblue.comicviewer.data.common.FavoriteModel
+import com.sorrowblue.comicviewer.data.common.FavoriteModelId
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.ServerFileModelFolder
 import com.sorrowblue.comicviewer.data.common.ServerModel
 import com.sorrowblue.comicviewer.data.common.ServerModelId
 import com.sorrowblue.comicviewer.data.common.SmbServerModel
-import com.sorrowblue.comicviewer.domain.entity.BookFile
-import com.sorrowblue.comicviewer.domain.entity.BookFolder
-import com.sorrowblue.comicviewer.domain.entity.Bookshelf
-import com.sorrowblue.comicviewer.domain.entity.File
-import com.sorrowblue.comicviewer.domain.entity.Server
+import com.sorrowblue.comicviewer.domain.entity.Favorite
+import com.sorrowblue.comicviewer.domain.entity.FavoriteBook
+import com.sorrowblue.comicviewer.domain.entity.FavoriteId
+import com.sorrowblue.comicviewer.domain.entity.file.BookFile
+import com.sorrowblue.comicviewer.domain.entity.file.BookFolder
+import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.entity.server.Server
 import com.sorrowblue.comicviewer.domain.entity.ServerBookshelf
-import com.sorrowblue.comicviewer.domain.entity.ServerId
+import com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage
+import com.sorrowblue.comicviewer.domain.entity.server.ServerId
+import com.sorrowblue.comicviewer.domain.entity.server.Smb
 
 internal fun ServerModelId.toServerId() = ServerId(value)
 
@@ -29,17 +37,17 @@ internal fun FileModel.Folder.toBookshelf() =
         lastModifier = lastModifier
     )
 
-internal fun Server.Smb.Auth.toServerModelAuth(): SmbServerModel.Auth {
+internal fun Smb.Auth.toServerModelAuth(): SmbServerModel.Auth {
     return when (this) {
-        Server.Smb.Auth.Guest -> SmbServerModel.Guest
-        is Server.Smb.Auth.UsernamePassword -> SmbServerModel.UsernamePassword(username, password)
+        Smb.Auth.Guest -> SmbServerModel.Guest
+        is Smb.Auth.UsernamePassword -> SmbServerModel.UsernamePassword(domain, username, password)
     }
 }
 
 internal fun Server.toServerModel(): ServerModel {
     return when (this) {
-        is Server.DeviceStorage -> DeviceStorageModel(ServerModelId(id.value), displayName)
-        is Server.Smb -> SmbServerModel(
+        is DeviceStorage -> DeviceStorageModel(ServerModelId(id.value), displayName)
+        is Smb -> SmbServerModel(
             id = ServerModelId(id.value),
             name = displayName,
             host = host,
@@ -52,16 +60,16 @@ internal fun Server.toServerModel(): ServerModel {
 internal fun ServerModel.toServer(): Server {
     return when (this) {
         is DeviceStorageModel ->
-            Server.DeviceStorage(id.toServerId(), name)
+            DeviceStorage(id.toServerId(), name)
         is SmbServerModel -> {
-            Server.Smb(
+            Smb(
                 id = id.toServerId(),
                 displayName = name,
                 host = host,
                 port = port,
                 auth = when (val a = auth) {
-                    SmbServerModel.Guest -> Server.Smb.Auth.Guest
-                    is SmbServerModel.UsernamePassword -> Server.Smb.Auth.UsernamePassword(
+                    SmbServerModel.Guest -> Smb.Auth.Guest
+                    is SmbServerModel.UsernamePassword -> Smb.Auth.UsernamePassword(
                         "TODO()",
                         a.username,
                         a.password
@@ -70,6 +78,18 @@ internal fun ServerModel.toServer(): Server {
             )
         }
     }
+}
+
+internal fun FavoriteModel.toFavorite(): Favorite {
+    return Favorite(FavoriteId(id.value), name, count)
+}
+
+internal fun FavoriteBookModel.toFavoriteBook(): FavoriteBook {
+    return FavoriteBook(FavoriteId(id.value), serverModelId.toServerId(), filePath)
+}
+
+internal fun FavoriteBook.toFavoriteBookModel(): FavoriteBookModel {
+    return FavoriteBookModel(FavoriteModelId(id.value), ServerModelId(serverId.value), path)
 }
 
 internal fun FileModel.toFile(): File {

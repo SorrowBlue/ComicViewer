@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialArcMotion
@@ -74,13 +73,13 @@ internal class ServerManagementSmbFragment :
         }
         binding.fab.setImageResource(FrameworkDrawable.ic_twotone_save_24)
         binding.fab.setOnClickListener {
-            binding.host.editText?.setText(viewModel.host.value)
-            if (viewModel.isGuest.value) {
-                binding.host.editText?.setText(viewModel.host.value)
+            binding.host.editText?.setText(viewModel.hostFlow.value)
+            if (viewModel.isGuestFlow.value) {
+                binding.host.editText?.setText(viewModel.hostFlow.value)
             } else {
-                binding.host.editText?.setText(viewModel.host.value)
-                binding.username.editText?.setText(viewModel.username.value)
-                binding.password.editText?.setText(viewModel.password.value)
+                binding.host.editText?.setText(viewModel.hostFlow.value)
+                binding.username.editText?.setText(viewModel.usernameFlow.value)
+                binding.password.editText?.setText(viewModel.passwordFlow.value)
             }
             WindowInsetsControllerCompat(requireActivity().window, binding.root)
                 .hide(WindowInsetsCompat.Type.ime())
@@ -122,5 +121,16 @@ internal object AuthConverter {
     fun buttonIdToBoolean(value: Int): Boolean {
         return value == R.id.guest
     }
+}
+
+
+internal object PortConverter {
+
+    @JvmStatic
+    @InverseMethod("portToString")
+    fun stringToPort(value: String?) = value?.toIntOrNull()
+
+    @JvmStatic
+    fun portToString(value: Int?) = value?.toString()
 }
 

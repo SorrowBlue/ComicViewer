@@ -9,7 +9,7 @@ enum class ScanTypeModel {
 enum class FolderThumbnailOrderModel {
     NAME,
     MODIFIED,
-    LAST_READ
+    LAST_READ;
 }
 
 sealed class SortType(open val isAsc: Boolean) {

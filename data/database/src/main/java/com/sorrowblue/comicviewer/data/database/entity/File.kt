@@ -19,7 +19,7 @@ internal const val SERVER_ID = "server_id"
         childColumns = [SERVER_ID],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(value = [SERVER_ID])]
+    indices = [Index(value = [SERVER_ID, "path"])]
 )
 data class File(
     val path: String,

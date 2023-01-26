@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.data
 import coil.map.Mapper
 import coil.request.Options
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
-import com.sorrowblue.comicviewer.domain.entity.BookPageRequest
+import com.sorrowblue.comicviewer.domain.request.BookPageRequest
 
 class BookPageRequestMapper : Mapper<BookPageRequest, BookPageRequestData> {
 

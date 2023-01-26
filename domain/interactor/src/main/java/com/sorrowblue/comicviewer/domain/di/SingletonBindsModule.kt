@@ -1,11 +1,11 @@
 package com.sorrowblue.comicviewer.domain.di
 
-import com.sorrowblue.comicviewer.domain.usecase.interactor.DisplaySettingsInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.ViewerOperationSettingsInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.ViewerSettingsInteractor
-import com.sorrowblue.comicviewer.domain.usecase.settings.DisplaySettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ViewerOperationSettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ViewerSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageDisplaySettingsInteractor
+import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageViewerOperationSettingsInteractor
+import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageViewerSettingsInteractor
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,12 +18,13 @@ internal abstract class SingletonBindsModule {
 
     @Binds
     @Singleton
-    abstract fun bindDisplaySettingsUseCase(interactor: DisplaySettingsInteractor): DisplaySettingsUseCase
+    abstract fun bindManageDisplaySettingsUseCase(interactor: ManageDisplaySettingsInteractor): ManageDisplaySettingsUseCase
 
     @Binds
     @Singleton
-    abstract fun bindViewerSettingsUseCase(interactor: ViewerSettingsInteractor): ViewerSettingsUseCase
+    abstract fun bindManageViewerSettingsUseCase(interactor: ManageViewerSettingsInteractor): ManageViewerSettingsUseCase
+
     @Binds
     @Singleton
-    abstract fun bindViewerOperationSettingsUseCase(interactor: ViewerOperationSettingsInteractor): ViewerOperationSettingsUseCase
+    abstract fun bindManageViewerOperationSettingsUseCase(interactor: ManageViewerOperationSettingsInteractor): ManageViewerOperationSettingsUseCase
 }

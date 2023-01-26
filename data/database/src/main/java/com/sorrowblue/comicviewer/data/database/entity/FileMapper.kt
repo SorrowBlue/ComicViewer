@@ -1,6 +1,14 @@
 package com.sorrowblue.comicviewer.data.database.entity
 
+import com.sorrowblue.comicviewer.data.common.FavoriteBookModel
+import com.sorrowblue.comicviewer.data.common.FavoriteModel
 import com.sorrowblue.comicviewer.data.common.FileModel
+
+internal fun FavoriteBookModel.toFavoriteBook() =
+    FavoriteBook(id.value, serverModelId.value, filePath)
+
+internal fun FavoriteModel.toFavorite() =
+    Favorite(id.value, name)
 
 internal fun FileModel.toFile(): File {
     return when (this) {

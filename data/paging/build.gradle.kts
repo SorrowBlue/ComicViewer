@@ -1,13 +1,12 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.library")
-id("org.jetbrains.kotlin.android")
-id("build-logic.android.library")
-
-    id("org.jetbrains.kotlin.kapt")
-    id("dagger.hilt.android.plugin")
+    id("build-logic.android.library")
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.dagger.hilt.android)
 }
 
 dependencies {
+    implementation(projects.framework)
     implementation(projects.domain.interactor)
     implementation(projects.data)
     implementation(projects.data.common)
@@ -16,4 +15,8 @@ dependencies {
     implementation(libs.squareup.logcat)
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
+}
+
+kapt {
+    correctErrorTypes = true
 }

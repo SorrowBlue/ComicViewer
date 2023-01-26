@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_security_title_password">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="@string/settings_security_preference_key_auth_on_launch"
+            android:summary="@string/settings_security_summary_password_lock"
+            android:title="@string/settings_security_title_password_lock" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="@string/settings_security_preference_key_use_biometric"
+            android:summary="@string/settings_security_summary_use_biometric_auth"
+            android:title="@string/settings_security_title_use_biometric_auth" />
+
+        <Preference
+            android:key="@string/settings_security_preference_key_change_password"
+            android:title="@string/settings_security_title_change_password" />
+    </PreferenceCategory>
+</PreferenceScreen>

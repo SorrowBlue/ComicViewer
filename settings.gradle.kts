@@ -1,4 +1,3 @@
-enableFeaturePreview("VERSION_CATALOGS")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     repositories {
@@ -6,22 +5,10 @@ pluginManagement {
         google()
         mavenCentral()
     }
-    plugins {
-        id("build-logic.android.library") apply false
-        id("build-logic.android.application") apply false
-id("com.android.application") version "7.3.1" apply false
-id("com.android.library") version "7.3.1" apply false
-        id("org.jetbrains.kotlin.android") version "1.7.22" apply false
-        id("org.jetbrains.kotlin.plugin.parcelize") version "1.7.22" apply false
-        id("com.google.devtools.ksp") version "1.7.22-1.0.8" apply false
-        id("androidx.navigation.safeargs.kotlin") version "2.6.0-alpha04" apply false
-        id("org.jetbrains.kotlin.kapt") version "1.7.22" apply false
-        kotlin("plugin.serialization") version "1.7.22" apply false
-    }
     resolutionStrategy {
         eachPlugin {
             if (requested.id.id == "dagger.hilt.android.plugin") {
-                useModule("com.google.dagger:hilt-android-gradle-plugin:2.44.2")
+                useModule("com.google.dagger:hilt-android-gradle-plugin:${requested.version}")
             }
         }
     }
@@ -44,6 +31,8 @@ rootProject.name = "ComicViewer"
 
 include(":app")
 
+include(":favorite")
+
 include(":framework")
 include(":framework:notification")
 include(":framework:resource")
@@ -59,13 +48,12 @@ include(":data:database")
 include(":data:datastore")
 include(":data:di")
 include(":data:paging")
+include(":data:reader")
+include(":data:reader:pdf")
+include(":data:reader:zip")
 include(":data:remote")
-include(":data:remote:client")
-include(":data:remote:client:device")
-include(":data:remote:client:smb")
-include(":data:remote:reader")
-include(":data:remote:reader:pdf")
-include(":data:remote:reader:zip")
+include(":data:remote:device")
+include(":data:remote:smb")
 include(":data:service")
 
 include(":server")
@@ -73,9 +61,11 @@ include(":server:info")
 include(":server:management")
 include(":settings")
 include(":settings:display")
-include(":settings:viewer")
 include(":settings:bookshelf")
+include(":settings:security")
+include(":settings:viewer")
 include(":bookshelf")
+include(":bookshelf:display")
 include(":book")
 
 

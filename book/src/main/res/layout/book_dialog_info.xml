@@ -18,9 +18,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="16dp"
-        app:paddingBottomSystemWindowInsets="@{true}">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/book_guideline_begin"
@@ -51,13 +49,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/book_imageview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="@+id/book_guideline_begin"
+            app:layout_constraintTop_toBottomOf="@+id/bookshelf_bottomsheetdraghandleview"
+            app:layout_constraintWidth_percent="0.25"
+            tools:srcCompat="@tools:sample/avatars" />
+
         <TextView
             android:id="@+id/book_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:text="@{viewModel.fileFlow.name}"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             app:layout_constraintEnd_toStartOf="@+id/book_guideline_end"
-            app:layout_constraintStart_toStartOf="@+id/book_guideline_begin"
+            app:layout_constraintStart_toEndOf="@+id/book_imageview"
             app:layout_constraintTop_toBottomOf="@+id/bookshelf_bottomsheetdraghandleview"
             tools:text="サンプルファイル名" />
 
@@ -65,11 +76,11 @@
             android:id="@+id/book_parent_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="親ディレクトリ"
             android:textAppearance="?attr/textAppearanceLabelSmall"
             app:layout_constraintStart_toStartOf="@+id/book_guideline_begin"
-            app:layout_constraintTop_toBottomOf="@+id/book_name" />
+            app:layout_constraintTop_toBottomOf="@+id/favorite" />
 
         <TextView
             android:id="@+id/book_parent"
@@ -77,7 +88,7 @@
             android:layout_height="wrap_content"
             android:text="@{viewModel.parent}"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            app:layout_constraintEnd_toStartOf="@+id/open_folder"
+            app:layout_constraintEnd_toStartOf="@+id/book_guideline_end"
             app:layout_constraintStart_toStartOf="@+id/book_parent_label"
             app:layout_constraintTop_toBottomOf="@+id/book_parent_label"
             tools:text="/sample/books/sample/books/sample/books/sample/books/sample/books/" />
@@ -188,9 +199,12 @@
             android:id="@+id/book_last_read_page"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:textAppearance="?attr/textAppearanceBodyMedium"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/book_last_read_page_label"
             app:layout_constraintTop_toBottomOf="@+id/book_last_read_page_label"
+            app:layout_marginBottomSystemWindowInsets="@{true}"
             tools:text="256" />
 
         <TextView
@@ -203,14 +217,34 @@
             app:layout_constraintStart_toStartOf="@+id/book_guideline_center"
             app:layout_constraintTop_toBottomOf="@+id/book_divider" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/open_folder"
-            style="?attr/materialIconButtonFilledTonalStyle"
+            style="?attr/materialIconButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="フォルダ"
             app:icon="@drawable/ic_twotone_folder_open_24"
+            app:iconGravity="top"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/book_guideline_end"
-            app:layout_constraintTop_toBottomOf="@+id/book_parent_label" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/favorite"
+            app:layout_constraintTop_toBottomOf="@+id/book_imageview" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/favorite"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="お気に入り"
+            app:icon="@drawable/ic_twotone_favorite_24"
+            app:iconGravity="top"
+            app:layout_constraintEnd_toStartOf="@+id/open_folder"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/book_imageview" />
 
         <TextView
             android:id="@+id/book_last_read_time"

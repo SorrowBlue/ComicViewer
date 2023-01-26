@@ -12,6 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.google.android.material.transition.MaterialElevationScale
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.server.databinding.ServerFragmentListBinding
@@ -43,6 +46,12 @@ internal class ServerListFragment : FrameworkFragment(R.layout.server_fragment_l
 
         postponeEnterTransition()
         binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
+        (binding.recyclerView.layoutManager as GridLayoutManager).spanSizeLookup =
+            object : SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (position == 0) 2 else 1
+                }
+            }
 
         binding.recyclerView.applyInsetter {
             type(
@@ -74,7 +83,7 @@ internal class ServerListFragment : FrameworkFragment(R.layout.server_fragment_l
 
     private fun setupAdapter() {
         val adapter = ServerListAdapter()
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter = ConcatAdapter(ServerListHeaderAdapter(), adapter)
         viewLifecycleOwner.lifecycleScope.launch {
             adapter.loadStateFlow.distinctUntilChangedBy { it.refresh }
                 .filter { it.refresh is LoadState.NotLoading }.map { adapter.itemCount == 0 }

@@ -4,12 +4,12 @@ data class SmbServerModel(
     override val id: ServerModelId,
     override val name: String,
     val host: String,
-    val port: String,
+    val port: Int,
     val auth: Auth
 ) : ServerModel {
 
     sealed interface Auth
 
     object Guest : Auth
-    data class UsernamePassword(val username: String, val password: String) : Auth
+    data class UsernamePassword(val domain: String, val username: String, val password: String) : Auth
 }

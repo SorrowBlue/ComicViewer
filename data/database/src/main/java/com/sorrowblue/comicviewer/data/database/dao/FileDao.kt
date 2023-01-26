@@ -9,7 +9,10 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Update
+import androidx.room.Upsert
 import androidx.sqlite.db.SupportSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQueryBuilder
+import com.sorrowblue.comicviewer.data.common.SortType
 import com.sorrowblue.comicviewer.data.database.entity.File
 import com.sorrowblue.comicviewer.data.database.entity.SimpleFile
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistory
@@ -17,6 +20,9 @@ import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfo
 
 @Dao
 internal interface FileDao {
+
+    @Upsert
+    suspend fun upsert(file: File): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(file: File): Long
@@ -76,4 +82,40 @@ internal interface FileDao {
 
     @Query("SELECT * FROM file WHERE server_id = :serverId AND parent = ''")
     suspend fun selectRootBy(serverId: Int): File?
+}
+
+internal fun FileDao.pagingSource(
+    serverId: Int, parent: String, sortType: SortType
+): PagingSource<Int, File> {
+    val query =
+        SupportSQLiteQueryBuilder.builder("file")
+            .apply {
+                columns(arrayOf("*"))
+                selection("server_id = :serverId AND parent = :parent", arrayOf(serverId, parent))
+                when (sortType) {
+                    is SortType.NAME -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
+                    is SortType.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
+                    is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
+                }.let(::orderBy)
+            }.create()
+    @Suppress("DEPRECATION")
+    return pagingSource(query)
+}
+
+internal fun FileDao.pagingSourceQuery(
+    serverId: Int, q: String, sortType: SortType
+): PagingSource<Int, File> {
+    val query =
+        SupportSQLiteQueryBuilder.builder("file")
+            .apply {
+                columns(arrayOf("*"))
+                selection("server_id = :serverId AND name LIKE :path", arrayOf(serverId, "%$q%"))
+                when (sortType) {
+                    is SortType.NAME -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
+                    is SortType.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
+                    is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
+                }.let(::orderBy)
+            }.create()
+    @Suppress("DEPRECATION")
+    return pagingSource(query)
 }

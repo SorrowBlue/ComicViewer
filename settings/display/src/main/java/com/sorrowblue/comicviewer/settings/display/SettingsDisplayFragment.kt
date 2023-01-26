@@ -6,8 +6,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.DropDownPreference
 import androidx.preference.ListPreference
-import com.sorrowblue.comicviewer.domain.model.DarkMode
-import com.sorrowblue.comicviewer.domain.model.FolderThumbnailOrder
+import com.sorrowblue.comicviewer.domain.entity.settings.DarkMode
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.framework.settings.FrameworkPreferenceBinding
 import com.sorrowblue.comicviewer.framework.settings.FrameworkPreferenceFragment
 import com.sorrowblue.comicviewer.framework.settings.preference

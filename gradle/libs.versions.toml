@@ -3,33 +3,51 @@
 android-compile-sdk = "33"
 android-min-sdk = "28"
 android-target-sdk = "33"
-android-buildtools = "33.0.0"
+android-buildtools = "33.0.1"
 
-kotlin = "1.7.22"
+kotlin = "1.8.0"
+google-ksp = "1.8.0-1.0.8"
 kotlinx-coroutines = "1.6.4"
 kotlinx-serialization = "1.4.1"
 
 androidx-datastore = "1.0.0"
-androidx-lifecycle = "2.5.1"
-androidx-navigation = "2.5.3"
+#androidx-lifecycle = "2.5.1"
+androidx-lifecycle = "2.6.0-alpha04"
+#androidx-navigation = "2.5.3"
+androidx-navigation = "2.6.0-alpha04"
 androidx-paging = "3.1.1"
-androidx-room = "2.4.3"
+androidx-room = "2.5.0"
 androidx-work = "2.7.1"
 
 dagger-hilt-android = "2.44.2"
 
+android-gradle = "7.4.0"
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradle" }
+android-library = { id = "com.android.library", version.ref = "android-gradle" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
+google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
+ben-manes-versions = "com.github.ben-manes.versions:0.44.0"
+dagger-hilt-android = { id = "dagger.hilt.android.plugin", version.ref = "dagger-hilt-android" }
+
 [libraries]
-android-tools-build-gradle = "com.android.tools.build:gradle:7.3.1"
+android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "dagger-hilt-android" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 
 androidx-activity = "androidx.activity:activity:1.6.1"
 
-androidx-appcompat = "androidx.appcompat:appcompat:1.6.0-rc01"
+androidx-appcompat = "androidx.appcompat:appcompat:1.6.0"
 
 androidx-biometric = "androidx.biometric:biometric:1.2.0-alpha05"
 
@@ -48,7 +66,8 @@ androidx-documentfile = "androidx.documentfile:documentfile:1.1.0-alpha01"
 
 androidx-exifinterface = "androidx.exifinterface:exifinterface:1.3.5"
 
-androidx-fragment-ktx = "androidx.fragment:fragment-ktx:1.5.5"
+#androidx-fragment-ktx = "androidx.fragment:fragment-ktx:1.5.5"
+androidx-fragment-ktx = "androidx.fragment:fragment-ktx:1.6.0-alpha04"
 
 androidx-hilt-compiler = "androidx.hilt:hilt-compiler:1.0.0"
 androidx-hilt-navigation-fragment = "androidx.hilt:hilt-navigation-fragment:1.0.0"
@@ -65,12 +84,16 @@ androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", v
 
 androidx-preference-ktx = "androidx.preference:preference-ktx:1.2.0"
 
-androidx-recyclerview = "androidx.recyclerview:recyclerview:1.2.1"
+androidx-palette-ktx = "androidx.palette:palette-ktx:1.0.0"
+
+#androidx-recyclerview = "androidx.recyclerview:recyclerview:1.2.1"
+androidx-recyclerview = "androidx.recyclerview:recyclerview:1.3.0-rc01"
 
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "androidx-room" }
 
 androidx-startup-runtime = "androidx.startup:startup-runtime:1.1.1"
 
@@ -85,15 +108,15 @@ androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version
 androidx-work-multiprocess = { module = "androidx.work:work-multiprocess", version.ref = "androidx-work" }
 
 
-google-material = "com.google.android.material:material:1.7.0"
+google-material = "com.google.android.material:material:1.8.0-rc01"
 
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.10"
 
 coil = "io.coil-kt:coil:2.2.2"
 coil-base = "io.coil-kt:coil-base:2.2.2"
-jcifs-ng = "eu.agno3.jcifs:jcifs-ng:2.1.8"
+jcifs-ng = "eu.agno3.jcifs:jcifs-ng:2.1.9"
 slf4j-android = "org.slf4j:slf4j-android:1.7.36"
-sorrowblue-binding-ktx = "com.sorrowblue.jetpack:binding-ktx:3.0.4"
+sorrowblue-binding-ktx = "com.sorrowblue.jetpack:binding-ktx:3.0.5"
 github-omicronapps-SevenZipJBinding4Android = "com.github.omicronapps:7-Zip-JBinding-4Android:Release-16.02-2.02"
 
 artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.21.0"
@@ -104,11 +127,19 @@ dagger-hilt-android-core = { module = "com.google.dagger:hilt-android", version.
 dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger-hilt-android" }
 
 junit = "junit:junit:4.13.2"
-androidx-test-ext-junit = "androidx.test.ext:junit:1.1.4"
-androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.0"
-robolectric = "org.robolectric:robolectric:4.9.1"
+
+androidx-test-core-ktx = "androidx.test:core-ktx:1.5.0"
+androidx-test-runner = "androidx.test:runner:1.5.2"
+androidx-test-rules = "androidx.test:rules:1.5.0"
+
+androidx-test-ext-junit-ktx = "androidx.test.ext:junit-ktx:1.1.5"
+androidx-test-ext-truth = "androidx.test.ext:truth:1.5.0"
+
+androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.1"
+robolectric = "org.robolectric:robolectric:4.9.2"
 
 [bundles]
+androidx-instrumented-tests = ["androidx-test-core-ktx", "androidx-test-runner", "androidx-test-rules", "androidx-test-ext-junit-ktx", "androidx-test-ext-truth"]
 androidx-lifecycle = ["androidx-lifecycle-livedata-ktx", "androidx-lifecycle-viewmodel-ktx"]
 androidx-navigation = ["androidx-navigation-fragment-ktx", "androidx-navigation-ui-ktx"]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx", "androidx-room-paging"]

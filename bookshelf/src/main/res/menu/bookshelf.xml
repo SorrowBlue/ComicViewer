@@ -5,8 +5,7 @@
         android:id="@+id/bookchelf_search"
         android:icon="@drawable/ic_twotone_search_24"
         android:title="search_title"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_bookshelf_to_bookshelf_display"
         android:icon="@drawable/ic_twotone_view_list_24"

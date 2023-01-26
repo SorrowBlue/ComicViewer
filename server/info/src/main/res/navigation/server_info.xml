@@ -12,7 +12,7 @@
         tools:layout="@layout/server_info_dialog">
         <argument
             android:name="server_id"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.ServerId" />
+            app:argType="com.sorrowblue.comicviewer.domain.entity.server.ServerId" />
         <action
             android:id="@+id/action_server_info_to_server_remove_confirm"
             app:destination="@id/server_remove_confirm_dialog" />
@@ -29,7 +29,7 @@
         android:label="サーバ削除">
         <argument
             android:name="server"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.Server" />
+            app:argType="com.sorrowblue.comicviewer.domain.entity.server.Server" />
     </dialog>
     <include app:graph="@navigation/server_management_smb" />
     <include app:graph="@navigation/server_management_device" />

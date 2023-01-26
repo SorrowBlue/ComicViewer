@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/favorite_add_navigation"
+    app:startDestination="@id/favorite_add_fragment">
+
+    <dialog
+        android:id="@+id/favorite_add_fragment"
+        android:name="com.sorrowblue.comicviewer.favorite.add.FavoriteAddFragment"
+        android:label="FavoriteAddFragment">
+        <argument
+            android:name="serverId"
+            app:argType="integer" />
+        <argument
+            android:name="filePath"
+            app:argType="string" />
+        <deepLink
+            android:id="@+id/favorite_deeplink"
+            android:autoVerify="true"
+            app:uri="comicviewer.sorrowblue.com/favorite/add?serverId={serverId}&amp;filePath={filePath}" />
+    </dialog>
+</navigation>

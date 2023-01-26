@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.sorrowblue.comicviewer.bookshelf.searchable.IBookshelfViewModel" />
+            type="com.sorrowblue.comicviewer.bookshelf.AbstractBookshelfViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -28,16 +28,42 @@
                 android:layout_height="wrap_content"
                 app:layout_marginTopSystemWindowInsets="@{true}"
                 app:subtitle="@{viewModel.subTitleFlow}"
+                app:subtitleCentered="true"
                 app:title="@{viewModel.titleFlow}"
+                app:titleCentered="true"
                 tools:subtitle="/books/"
                 tools:title="Books" />
         </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.search.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_anchor="@id/toolbar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                app:fastScrollEnabled="true"
+                app:fastScrollHorizontalThumbDrawable="@drawable/bookshelf_fast_scroll_track"
+                app:fastScrollHorizontalTrackDrawable="@drawable/bookshelf_fast_scroll_thumb"
+                app:fastScrollVerticalThumbDrawable="@drawable/bookshelf_fast_scroll_thumb"
+                app:fastScrollVerticalTrackDrawable="@drawable/bookshelf_fast_scroll_track"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:paddingBottomSystemWindowInsets="@{true}"
+                tools:listitem="@layout/bookshelf_item_suggestion" />
+        </com.google.android.material.search.SearchView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:padding="4dp"
             app:fastScrollEnabled="true"
             app:fastScrollHorizontalThumbDrawable="@drawable/bookshelf_fast_scroll_track"
             app:fastScrollHorizontalTrackDrawable="@drawable/bookshelf_fast_scroll_thumb"
@@ -45,6 +71,7 @@
             app:fastScrollVerticalTrackDrawable="@drawable/bookshelf_fast_scroll_track"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:paddingBottomSystemWindowInsets="@{true}"
             tools:listitem="@layout/bookshelf_item"
             tools:spanCount="3" />
 
@@ -55,5 +82,32 @@
             android:indeterminate="true"
             app:isVisible="@{viewModel.isRefreshing}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:isVisible="@{viewModel.isEmptyData}">
+
+            <ImageView
+                android:id="@+id/favorite_imageview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_undraw_resume_folder_re_e0bi" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ファイルはありません"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                app:layout_constraintEnd_toEndOf="@+id/favorite_imageview"
+                app:layout_constraintStart_toStartOf="@+id/favorite_imageview"
+                app:layout_constraintTop_toBottomOf="@+id/favorite_imageview" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -6,6 +6,7 @@
     <data>
 
         <import type="com.sorrowblue.comicviewer.server.management.smb.AuthConverter" />
+        <import type="com.sorrowblue.comicviewer.server.management.smb.PortConverter" />
 
         <variable
             name="viewModel"
@@ -63,7 +64,7 @@
                     android:id="@+id/host"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:hint="@string/server_management_hint_host"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
                     app:layout_constraintTop_toTopOf="parent"
@@ -71,33 +72,34 @@
                     app:textValidators="@{viewModel.hostValidations}">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/host_name"
+                        android:id="@+id/host_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/server_management_hint_host_name_ip_address"
-                        android:importantForAutofill="auto"
-                        android:inputType="textUri|textAutoCorrect"
-                        android:text="@={viewModel.host}" />
+                        android:importantForAutofill="no"
+                        android:inputType="textUri"
+                        android:text="@={viewModel.hostFlow}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/port"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/server_management_hint_port"
+                    app:helperText="1~65535"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
                     app:layout_constraintTop_toBottomOf="@+id/host"
                     app:layout_constraintVertical_chainStyle="packed"
-                    app:textValidators="@{viewModel.hostValidations}">
+                    app:textValidators="@{viewModel.portValidations}">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/port_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/server_management_hint_port"
-                        android:importantForAutofill="auto"
+                        android:importantForAutofill="no"
                         android:inputType="number"
-                        android:text="@={viewModel.port}" />
+                        android:text="@={PortConverter.portToString(viewModel.portFlow)}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -105,19 +107,20 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:hint="@string/server_management_hint_path"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
                     app:layout_constraintTop_toBottomOf="@+id/port"
+                    app:prefixText="/"
                     app:suffixText="/">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/path_name"
+                        android:id="@+id/path_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/server_management_hint_path"
-                        android:importantForAutofill="auto"
-                        android:inputType="textUri|textAutoCorrect"
-                        android:text="@={viewModel.path}" />
+                        android:importantForAutofill="no"
+                        android:inputType="textUri"
+                        android:text="@={viewModel.pathFlow}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -125,18 +128,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:hint="@string/server_management_hint_display_name"
+                    app:helperText="空白の場合ホスト名"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
                     app:layout_constraintTop_toBottomOf="@+id/path">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/server_management_hint_display_name"
-                        android:importantForAutofill="auto"
-                        android:inputType="textAutoCorrect"
-                        android:text="@={viewModel.displayName}" />
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:text="@={viewModel.displayNameFlow}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
@@ -144,7 +147,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    app:checkedButton="@={AuthConverter.booleanToButtonId(viewModel.isGuest)}"
+                    app:checkedButton="@={AuthConverter.booleanToButtonId(viewModel.isGuestFlow)}"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
                     app:layout_constraintTop_toBottomOf="@+id/display_name"
@@ -174,19 +177,19 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:inputType="textAutoCorrect"
-                    app:isVisible="@{!viewModel.isGuest}"
+                    android:hint="@string/server_management_hint_domain"
+                    app:isVisible="@{!viewModel.isGuestFlow}"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
                     app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-                    app:textValidators="@{viewModel.usernameValidator}">
+                    app:textValidators="@{viewModel.domainValidator}">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/domain_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/server_management_hint_domain"
-                        android:inputType="textUri|textAutoCorrect"
-                        android:text="@={viewModel.domain}" />
+                        android:inputType="textUri"
+                        android:text="@={viewModel.domainFlow}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -194,20 +197,20 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:inputType="textAutoCorrect"
-                    app:isVisible="@{!viewModel.isGuest}"
+                    android:hint="@string/server_management_hint_username"
+                    app:isVisible="@{!viewModel.isGuestFlow}"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
                     app:layout_constraintTop_toBottomOf="@+id/domain"
                     app:textValidators="@{viewModel.usernameValidator}">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/username_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autofillHints="username"
-                        android:hint="@string/server_management_hint_username"
-                        android:inputType="textUri|textAutoCorrect"
-                        android:text="@={viewModel.username}" />
+                        android:inputType="textEmailAddress"
+                        android:text="@={viewModel.usernameFlow}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -216,20 +219,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="16dp"
+                    android:hint="@string/server_management_hint_password"
                     app:endIconMode="password_toggle"
-                    app:isVisible="@{!viewModel.isGuest}"
+                    app:isVisible="@{!viewModel.isGuestFlow}"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
                     app:layout_constraintTop_toBottomOf="@+id/username"
                     app:textValidators="@{viewModel.passwordValidator}">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/password_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autofillHints="password"
-                        android:hint="@string/server_management_hint_password"
                         android:inputType="textPassword"
-                        android:text="@={viewModel.password}" />
+                        android:text="@={viewModel.passwordFlow}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton

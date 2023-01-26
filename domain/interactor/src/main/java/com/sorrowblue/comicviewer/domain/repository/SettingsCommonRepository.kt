@@ -1,12 +1,13 @@
 package com.sorrowblue.comicviewer.domain.repository
 
-import com.sorrowblue.comicviewer.domain.model.DisplaySettings
-import com.sorrowblue.comicviewer.domain.model.History
-import com.sorrowblue.comicviewer.domain.model.ViewerOperationSettings
-import com.sorrowblue.comicviewer.domain.model.ViewerSettings
-import com.sorrowblue.comicviewer.domain.model.settings.BookshelfDisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.BookshelfSettings
-import com.sorrowblue.comicviewer.domain.model.settings.Settings
+import com.sorrowblue.comicviewer.domain.entity.settings.DisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.History
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerOperationSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.SecuritySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.Settings
 import kotlinx.coroutines.flow.Flow
 
 interface SettingsCommonRepository {
@@ -28,6 +29,10 @@ interface SettingsCommonRepository {
 
     val bookshelfSettings: Flow<BookshelfSettings>
     suspend fun updateBookshelfSettings2(transform: suspend (BookshelfSettings) -> BookshelfSettings)
+
     val settings: Flow<Settings>
     suspend fun updateSettings(transform: suspend (Settings) -> Settings)
+
+    val securitySettings: Flow<SecuritySettings>
+    suspend fun updateSecuritySettings(transform: suspend (SecuritySettings) -> SecuritySettings)
 }

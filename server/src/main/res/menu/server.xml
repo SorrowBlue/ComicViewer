@@ -8,4 +8,10 @@
         android:menuCategory="secondary"
         android:title="@string/framework_title_settings"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_server_list_to_favorite_list"
+        android:icon="@drawable/ic_twotone_favorite_24"
+        android:menuCategory="secondary"
+        android:title="お気に入りリスト"
+        app:showAsAction="ifRoom" />
 </menu>

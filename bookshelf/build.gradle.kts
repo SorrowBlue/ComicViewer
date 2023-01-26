@@ -1,30 +1,32 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.library")
-id("org.jetbrains.kotlin.android")
-id("build-logic.android.library")
-
-    id("org.jetbrains.kotlin.kapt")
-    id("androidx.navigation.safeargs.kotlin")
-    id("dagger.hilt.android.plugin")
+    id("build-logic.android.library")
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
-    resourcePrefix = "bookshelf_"
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
+    resourcePrefix("bookshelf_")
+    dataBinding.enable = true
+    viewBinding.enable = true
 }
 
 dependencies {
+    implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.domain)
     implementation(projects.settings)
     implementation(projects.book)
+    implementation(projects.bookshelf.display)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
 
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.paging.runtime.ktx)
+}
+
+kapt {
+    correctErrorTypes = true
 }

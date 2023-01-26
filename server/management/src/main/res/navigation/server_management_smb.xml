@@ -11,12 +11,12 @@
         <argument
             android:name="server_smb"
             android:defaultValue="@null"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.Server$Smb"
+            app:argType="com.sorrowblue.comicviewer.domain.entity.server.Smb"
             app:nullable="true" />
         <argument
             android:name="bookshelf"
             android:defaultValue="@null"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.Bookshelf"
+            app:argType="com.sorrowblue.comicviewer.domain.entity.file.Bookshelf"
             app:nullable="true" />
         <argument
             android:name="transition_name"

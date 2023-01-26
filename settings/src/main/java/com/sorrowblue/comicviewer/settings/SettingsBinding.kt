@@ -11,6 +11,6 @@ internal class SettingsBinding(fragment: FrameworkPreferenceFragment) :
     val viewerSettings by preference<Preference>(R.string.settings_preference_key_viewer)
     val displaySettings by preference<Preference>(R.string.settings_preference_key_display)
     val bookshelf by preference<Preference>(R.string.settings_preference_key_bookshelf)
-    val useBiometric by preference<SwitchPreferenceCompat>(R.string.settings_preference_key_use_biometric)
+    val security by preference<Preference>(R.string.settings_preference_key_security)
     val restoreOnLaunch by preference<SwitchPreferenceCompat>(R.string.settings_preference_key_restore_on_launch)
 }

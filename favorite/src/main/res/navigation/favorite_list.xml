@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/favorite_list_navigation"
+    app:startDestination="@id/favorite_list_fragment">
+
+    <fragment
+        android:id="@+id/favorite_list_fragment"
+        android:name="com.sorrowblue.comicviewer.favorite.list.FavoriteListFragment"
+        android:label="お気に入りリスト" >
+        <action
+            android:id="@+id/action_favorite_list_to_favorite_create"
+            app:destination="@id/favorite_create_navigation" />
+        <action
+            android:id="@+id/action_favorite_list_to_favorite"
+            app:destination="@id/favorite_navigation" />
+    </fragment>
+    <include app:graph="@navigation/favorite_create" />
+    <include app:graph="@navigation/favorite" />
+</navigation>

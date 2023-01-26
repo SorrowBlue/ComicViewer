@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favorite_navigation"
+    app:startDestination="@id/favorite_fragment">
+
+    <fragment
+        android:id="@+id/favorite_fragment"
+        android:name="com.sorrowblue.comicviewer.favorite.FavoriteFragment"
+        android:label="お気に入り"
+        tools:layout="@layout/bookshelf_fragment">
+        <argument
+            android:name="favorite_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_favorite_to_favorite_edit"
+            app:destination="@id/favorite_edit_fragment" />
+        <action
+            android:id="@+id/action_favorite_to_bookshelf_display"
+            app:destination="@id/bookshelf_display_navigation" />
+    </fragment>
+    <include app:graph="@navigation/book" />
+    <include app:graph="@navigation/book_info" />
+
+    <fragment
+        android:id="@+id/favorite_edit_fragment"
+        tools:layout="@layout/favorite_fragment_edit"
+        android:name="com.sorrowblue.comicviewer.favorite.edit.FavoriteEditFragment"
+        android:label="お気に入りの編集">
+
+        <argument
+            android:name="favorite_id"
+            app:argType="integer" />
+    </fragment>
+    <include app:graph="@navigation/bookshelf_display" />
+</navigation>

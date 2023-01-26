@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.common
 
 @JvmInline
-value class ServerFileModel(val value: Pair<ServerModel, FileModel>) {
+value class ServerFileModel(val value: Pair<ServerModelId, FileModel>) {
 
-    val server get() = value.first
-    val file get() = value.second
+    val serverModelId get() = value.first
+    val fileModel get() = value.second
 }

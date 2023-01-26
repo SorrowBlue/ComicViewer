@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/server_navigation">
 
     <include app:graph="@navigation/server" />
     <include app:graph="@navigation/bookshelf" />
     <include app:graph="@navigation/settings" />
+    <include app:graph="@navigation/favorite_add" />
     <action
         android:id="@+id/action_global_settings_navigation"
         app:destination="@id/settings_navigation"
@@ -23,5 +25,13 @@
             android:autoVerify="true"
             app:uri="comicviewer.sorrowblue.com/work?uuid={uuid}" />
     </fragment>
+    <fragment
+        android:id="@+id/auth_fragment"
+        tools:layout="@layout/fragment_auth"
+        android:name="com.sorrowblue.comicviewer.app.AuthFragment" />
+    <action
+        android:id="@+id/action_global_auth_fragment"
+        app:destination="@id/auth_fragment"
+        app:launchSingleTop="true" />
 </navigation>
 

@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.settings.display
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.startup.Initializer
-import com.sorrowblue.comicviewer.domain.model.DarkMode
-import com.sorrowblue.comicviewer.domain.usecase.settings.DisplaySettingsUseCase
+import com.sorrowblue.comicviewer.domain.entity.settings.DarkMode
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -33,6 +33,6 @@ class DarkModeInitializer : Initializer<Unit> {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface InitializerInterface {
-        fun displaySettingsUseCase(): DisplaySettingsUseCase
+        fun displaySettingsUseCase(): ManageDisplaySettingsUseCase
     }
 }

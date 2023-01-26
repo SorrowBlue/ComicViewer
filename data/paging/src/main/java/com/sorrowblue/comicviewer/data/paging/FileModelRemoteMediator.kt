@@ -9,8 +9,10 @@ import com.sorrowblue.comicviewer.data.common.util.SortUtil
 import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
 import com.sorrowblue.comicviewer.data.database.entity.File
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.datasource.FileModelRemoteDataSource
+import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.di.IoDispatcher
+import com.sorrowblue.comicviewer.data.exception.RemoteException
+import com.sorrowblue.comicviewer.domain.PagingException
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import dagger.assisted.Assisted
@@ -23,7 +25,7 @@ import logcat.logcat
 
 @OptIn(ExperimentalPagingApi::class)
 internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
-    fileModelRemoteDataSourceFactory: FileModelRemoteDataSource.Factory,
+    remoteDataSourceFactory: RemoteDataSource.Factory,
     settingsCommonRepository: SettingsCommonRepository,
     @Assisted private val serverModel: ServerModel,
     @Assisted private val fileModel: FileModel,
@@ -40,7 +42,7 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
     }
 
     private val bookShelfSettings = settingsCommonRepository.bookshelfSettings
-    private val remoteDataSource = fileModelRemoteDataSourceFactory.create(serverModel)
+    private val remoteDataSource = remoteDataSourceFactory.create(serverModel)
 
     override suspend fun initialize(): InitializeAction {
         return if (bookShelfSettings.first().isAutoRefresh) InitializeAction.LAUNCH_INITIAL_REFRESH else InitializeAction.SKIP_INITIAL_REFRESH
@@ -49,14 +51,17 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, File>,
     ): MediatorResult {
-        logcat { "loadType=$loadType, anchorPosition=${state.anchorPosition}" }
         kotlin.runCatching {
             withContext(dispatcher) {
                 val settings = bookShelfSettings.first()
                 val supportExtensions = settings.supportExtension.map(SupportExtension::extension)
-                val files = SortUtil.sortedIndex(remoteDataSource.listFiles(fileModel, settings.resolveImageFolder) {
-                    SortUtil.filter(it, supportExtensions)
-                })
+                val files = SortUtil.sortedIndex(
+                    remoteDataSource.listFiles(
+                        fileModel,
+                        settings.resolveImageFolder
+                    ) {
+                        SortUtil.filter(it, supportExtensions)
+                    })
                 fileModelLocalDataSource.withTransaction {
 
                     // リモートになくてDBにある項目：削除対象
@@ -85,8 +90,17 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
         }.fold({
             return MediatorResult.Success(endOfPaginationReached = true)
         }, {
-            it.printStackTrace()
-            return MediatorResult.Error(it)
+            val error = if (it is RemoteException) {
+                when (it)  {
+                    RemoteException.InvalidAuth -> PagingException.InvalidAuth
+                    RemoteException.InvalidServer -> PagingException.InvalidServer
+                    RemoteException.NoNetwork -> PagingException.NoNetwork
+                    RemoteException.NotFound -> PagingException.NotFound
+                }
+            } else {
+                it
+            }
+            return MediatorResult.Error(error)
         })
     }
 }

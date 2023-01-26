@@ -2,14 +2,14 @@ package com.sorrowblue.comicviewer.domain.repository
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.domain.entity.Book
+import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.entity.server.Server
+import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.ScanType
-import com.sorrowblue.comicviewer.domain.entity.Bookshelf
-import com.sorrowblue.comicviewer.domain.entity.File
-import com.sorrowblue.comicviewer.domain.entity.Server
-import com.sorrowblue.comicviewer.domain.entity.ServerId
+import com.sorrowblue.comicviewer.framework.Result
 import kotlinx.coroutines.flow.Flow
 
 interface FileRepository {
@@ -41,5 +41,12 @@ interface FileRepository {
     ): Result<File?, Unit>
 
     suspend fun list(serverId: ServerId): List<File>
+    suspend fun getFolder(server: Server, path: String): Result<Bookshelf, FileRepositoryError>
+}
+
+enum class FileRepositoryError {
+    IncorrectServerInfo,
+    PathDoesNotExist,
+    AuthenticationFailure
 }
 

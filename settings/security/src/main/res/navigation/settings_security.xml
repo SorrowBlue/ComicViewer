@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_security_navigation"
+    app:startDestination="@id/settings_security_fragment">
+
+    <fragment
+        android:id="@+id/settings_security_fragment"
+        android:name="com.sorrowblue.comicviewer.settings.security.SettingsSecurityFragment"
+        android:label="@string/settings_security_title">
+        <action
+            android:id="@+id/action_settings_security_to_device_auth_request"
+            app:destination="@id/settings_security_device_auth_request_dialog" />
+        <action
+            android:id="@+id/action_settings_security_to_settings_security_manage_password"
+            app:destination="@id/settings_security_manage_password_dialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/settings_security_device_auth_request_dialog"
+        android:name="com.sorrowblue.comicviewer.settings.security.DeviceAuthRequestDialog" />
+    <dialog
+        android:id="@+id/settings_security_manage_password_dialog"
+        android:name="com.sorrowblue.comicviewer.settings.security.password.ManagePasswordDialog"
+        tools:layout="@layout/settings_security_view_password">
+        <argument
+            android:name="state"
+            app:argType="com.sorrowblue.comicviewer.settings.security.password.PasswordManageState" />
+    </dialog>
+</navigation>

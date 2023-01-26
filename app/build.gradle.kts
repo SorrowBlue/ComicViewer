@@ -1,11 +1,11 @@
-plugins {
-    id("com.android.application")
-id("org.jetbrains.kotlin.android")
-    id("build-logic.android.application")
+import com.sorrowblue.buildlogic.kotlinOptions
 
-    id("org.jetbrains.kotlin.kapt")
-    id("androidx.navigation.safeargs.kotlin")
-    id("dagger.hilt.android.plugin")
+@Suppress("DSL_SCOPE_VIOLATION")
+plugins {
+    id("build-logic.android.application")
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
@@ -32,16 +32,15 @@ android {
             )
         }
     }
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
+    kotlinOptions {
+        println("jvmTarget = ${jvmTarget}")
     }
-//    packagingOptions  {
-//        resources.excludes.add("META-INF/DEPENDENCIES")
-//    }
+    dataBinding.enable = true
+    viewBinding.enable = true
 }
 
 dependencies {
+    implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.framework.notification)
 
@@ -50,16 +49,18 @@ dependencies {
     implementation(projects.settings)
     implementation(projects.bookshelf)
     implementation(projects.server)
+    implementation(projects.favorite)
+    implementation(projects.settings.security)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.hilt.work)
-//    implementation(libs.androidx.biometric)
+    implementation(libs.androidx.biometric)
     implementation(libs.androidx.core.splashscreen)
 //    debugImplementation(libs.squareup.leakcanary.android)
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
 
-    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
     androidTestImplementation(libs.androidx.test.espresso.core)
 }
 

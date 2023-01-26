@@ -3,11 +3,10 @@ package com.sorrowblue.comicviewer.server.info
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.model.Result
-import com.sorrowblue.comicviewer.domain.entity.Bookshelf
-import com.sorrowblue.comicviewer.domain.entity.Server
-import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoRequest
-import com.sorrowblue.comicviewer.domain.usecase.ServerBookshelfUseCase
+import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.server.Server
+import com.sorrowblue.comicviewer.framework.Result
+import com.sorrowblue.comicviewer.domain.usecase.GetServerInfoUseCase
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +21,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class ServerInfoViewModel @Inject constructor(
-    serverBookshelfUseCase: ServerBookshelfUseCase,
+    getServerInfoUseCase: GetServerInfoUseCase,
     override val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), SupportSafeArgs {
 
@@ -30,11 +29,11 @@ internal class ServerInfoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            serverBookshelfUseCase.execute(GetLibraryInfoRequest(args.serverId))
+            getServerInfoUseCase.execute(GetServerInfoUseCase.Request(args.serverId))
         }
     }
 
-    val libraryInfoFlow = serverBookshelfUseCase.source.mapNotNull {
+    val libraryInfoFlow = getServerInfoUseCase.source.mapNotNull {
         when (it) {
             is Result.Error -> {
                 // TODO(Send error message)

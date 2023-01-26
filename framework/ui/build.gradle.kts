@@ -1,21 +1,17 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.library")
-id("org.jetbrains.kotlin.android")
-id("build-logic.android.library")
-
-    id("org.jetbrains.kotlin.kapt")
+    id("build-logic.android.library")
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
-    resourcePrefix = "framework_ui"
-    buildFeatures {
-        dataBinding = true
-    }
+    resourcePrefix("framework_ui")
+    dataBinding.enable = true
 }
 
 dependencies {
     api(projects.framework.resource)
-
 
     api(libs.androidx.constraintlayout)
     api(libs.androidx.coordinatorlayout)
@@ -26,14 +22,16 @@ dependencies {
     api(libs.androidx.recyclerview)
     api(libs.androidx.swiperefreshlayout)
     api(libs.androidx.viewpager2)
-
-    api(libs.androidx.biometric)
-
     api(libs.google.material)
     api(libs.coil)
     api(libs.kotlinx.coroutines.core)
     api(libs.squareup.logcat)
     api(libs.chrisbanes.insetter)
     api(libs.sorrowblue.binding.ktx)
+    implementation(libs.dagger.hilt.android.core)
+    kapt(libs.dagger.hilt.android.compiler)
+}
 
+kapt {
+    correctErrorTypes = true
 }

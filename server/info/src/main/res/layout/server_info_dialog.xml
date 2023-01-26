@@ -13,9 +13,9 @@
 
         <import type="com.sorrowblue.comicviewer.server.info.Converter" />
 
-        <import type="com.sorrowblue.comicviewer.domain.entity.Server.Smb" />
+        <import type="com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage" />
 
-        <import type="com.sorrowblue.comicviewer.domain.entity.Server.DeviceStorage" />
+        <import type="com.sorrowblue.comicviewer.domain.entity.server.Smb" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="@{Converter.toTypeString(viewModel.server, context)}"
+            android:text="@{Converter.toTypeString(viewModel.server)}"
             android:textAppearance="?attr/textAppearanceLabelLarge"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_drag_handle"
@@ -125,21 +125,6 @@
 
         <TextView
             android:id="@+id/smb_port"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            tools:text="445" />
-
-        <TextView
-            android:id="@+id/file_count_label"
-            android:layout_width="0dp"
-            android:paddingTop="16dp"
-            android:layout_height="wrap_content"
-            android:text="Port"
-            android:textAppearance="?attr/textAppearanceLabelSmall" />
-
-        <TextView
-            android:id="@+id/file_count"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"

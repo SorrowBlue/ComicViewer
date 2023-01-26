@@ -4,7 +4,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +25,7 @@ import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import logcat.logcat
 
 @AndroidEntryPoint
 internal class ServerManagementDeviceFragment :
@@ -84,7 +87,13 @@ internal class ServerManagementDeviceFragment :
 
     private val activityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            viewModel.data.value = it.data?.data!!
+            logcat { "data=${it.data?.data}" }
+            it.data?.data?.let { uri ->
+                viewModel.data.value = uri
+            } ?: kotlin.run {
+                viewModel.data.value = null
+                Snackbar.make(binding.root, "操作がキャンセルされました", Snackbar.LENGTH_SHORT).show()
+            }
         }
 
     private fun openDirectory() {

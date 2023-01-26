@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.settings.viewer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.usecase.settings.ViewerSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 
 @HiltViewModel
 internal class SettingsViewerViewModel @Inject constructor(
-    private val settingsUseCase: ViewerSettingsUseCase,
+    private val settingsUseCase: ManageViewerSettingsUseCase,
 ) : ViewModel() {
 
     val settings =

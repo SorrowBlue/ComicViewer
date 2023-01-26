@@ -38,7 +38,7 @@ abstract class FrameworkPreferenceFragment(
         }
     }
 
-    fun <T> Preference.setOnPreferenceChangeListener(onPreferenceChange: (Preference, T) -> Boolean) {
+    fun <T> Preference.setOnPreferenceChangeListener(onPreferenceChange: (preference: Preference, newValue: T) -> Boolean) {
         setOnPreferenceChangeListener { preference, newValue ->
             @Suppress("UNCHECKED_CAST")
             onPreferenceChange.invoke(preference, newValue as T)

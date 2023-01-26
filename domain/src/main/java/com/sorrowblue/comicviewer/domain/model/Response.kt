@@ -26,8 +26,4 @@ sealed class Response<out T> {
         return this
     }
 
-    inline fun <R> convert(onSuccess: (T) -> R): Response<R> = when (this) {
-        is Error -> this
-        is Success -> Response.Success(onSuccess(data))
-    }
 }

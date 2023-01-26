@@ -3,9 +3,9 @@ package com.sorrowblue.comicviewer.settings.display
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.model.DarkMode
-import com.sorrowblue.comicviewer.domain.model.FolderThumbnailOrder
-import com.sorrowblue.comicviewer.domain.usecase.settings.DisplaySettingsUseCase
+import com.sorrowblue.comicviewer.domain.entity.settings.DarkMode
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderThumbnailOrder
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class SettingsDisplayViewModel @Inject constructor(
-    private val settingsUseCase: DisplaySettingsUseCase
+    private val settingsUseCase: ManageDisplaySettingsUseCase
 ) : ViewModel() {
 
     val darkMode = settingsUseCase.settings.map { it.darkMode }.stateIn { null }

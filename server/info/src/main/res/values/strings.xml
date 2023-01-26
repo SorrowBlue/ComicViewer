@@ -4,4 +4,7 @@
     <string name="server_info_label_remove">Remove</string>
     <string name="server_info_label_host">IP/Host</string>
     <string name="server_info_label_path">Path</string>
+    <string name="server_info_label_device_storage">Device Storage</string>
+    <string name="server_info_label_smb">LAN/SMB</string>
+    <string name="server_info_label_unknown">Unknown</string>
 </resources>

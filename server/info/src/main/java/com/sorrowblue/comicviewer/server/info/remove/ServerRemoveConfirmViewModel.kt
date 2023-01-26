@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.server.info.remove
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.sorrowblue.comicviewer.domain.usecase.RemoveLibraryRequest
 import com.sorrowblue.comicviewer.domain.usecase.RemoveLibraryUseCase
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
@@ -23,7 +22,7 @@ internal class ServerRemoveConfirmViewModel @Inject constructor(
     fun remove() {
         runBlocking {
             withContext(Dispatchers.IO) {
-                removeLibraryUseCase.execute(RemoveLibraryRequest(args.server))
+                removeLibraryUseCase.execute(RemoveLibraryUseCase.Request(args.server))
             }
         }
     }

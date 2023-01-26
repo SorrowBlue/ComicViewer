@@ -1,17 +1,40 @@
 package com.sorrowblue.comicviewer.server
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sorrowblue.comicviewer.bookshelf.BookshelfFragmentArgs
-import com.sorrowblue.comicviewer.domain.entity.FileThumbnailRequest
+import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
 import com.sorrowblue.comicviewer.domain.entity.ServerBookshelf
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
+import com.sorrowblue.comicviewer.server.databinding.ServerItemFavoriteBinding
 import com.sorrowblue.comicviewer.server.databinding.ServerItemListBinding
 import com.sorrowblue.comicviewer.server.info.ServerInfoFragmentArgs
+
+internal class ServerListHeaderAdapter : RecyclerView.Adapter<ServerListHeaderAdapter.ViewHolder>() {
+
+    class ViewHolder(parent: ViewGroup) :
+        ViewBindingViewHolder<ServerItemFavoriteBinding>(parent, ServerItemFavoriteBinding::inflate)
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ServerListHeaderAdapter.ViewHolder {
+        return ViewHolder(parent)
+    }
+
+    override fun getItemCount(): Int {
+        return 1
+    }
+
+    override fun onBindViewHolder(holder: ServerListHeaderAdapter.ViewHolder, position: Int) {
+    }
+}
 
 internal class ServerListAdapter : PagingDataAdapter<ServerBookshelf, ServerListAdapter.ViewHolder>(
     object : DiffUtil.ItemCallback<ServerBookshelf>() {
@@ -34,7 +57,7 @@ internal class ServerListAdapter : PagingDataAdapter<ServerBookshelf, ServerList
 
         fun bind(item: ServerBookshelf) {
             binding.server = item.server
-            binding.preview.load(FileThumbnailRequest(item.server to item.bookshelf))
+            binding.preview.load(FileThumbnailRequest(item.server.id to item.bookshelf))
             binding.root.setOnClickListener {
                 val transitionName = binding.root.transitionName
                 val extras = FragmentNavigatorExtras(it to transitionName)

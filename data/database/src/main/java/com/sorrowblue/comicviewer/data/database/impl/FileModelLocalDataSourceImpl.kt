@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import logcat.logcat
 
 internal class FileModelLocalDataSourceImpl @Inject constructor(
     private val dao: FileDao,
@@ -36,11 +37,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
 ) : FileModelLocalDataSource {
 
     override suspend fun register(fileModel: FileModel) {
-        if (dao.selectBy(fileModel.serverModelId.value, fileModel.path) != null) {
-            dao.update(fileModel.toFile())
-        } else {
-            dao.insert(fileModel.toFile())
-        }
+        dao.upsert(fileModel.toFile())
     }
 
     override suspend fun update(

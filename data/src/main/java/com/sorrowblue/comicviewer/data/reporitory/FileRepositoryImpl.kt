@@ -8,30 +8,37 @@ import com.sorrowblue.comicviewer.data.common.ScanTypeModel
 import com.sorrowblue.comicviewer.data.common.ServerModelId
 import com.sorrowblue.comicviewer.data.common.SortType
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
+import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.toFile
 import com.sorrowblue.comicviewer.data.toFileModel
 import com.sorrowblue.comicviewer.data.toServerModel
-import com.sorrowblue.comicviewer.domain.entity.Book
-import com.sorrowblue.comicviewer.domain.entity.Bookshelf
-import com.sorrowblue.comicviewer.domain.entity.File
-import com.sorrowblue.comicviewer.domain.entity.Server
-import com.sorrowblue.comicviewer.domain.entity.ServerId
+import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.entity.server.Server
+import com.sorrowblue.comicviewer.domain.entity.server.ServerId
+import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
-import com.sorrowblue.comicviewer.domain.model.Unknown
-import com.sorrowblue.comicviewer.domain.model.settings.BookshelfDisplaySettings
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepositoryError
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
+import com.sorrowblue.comicviewer.framework.Result
+import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.withContext
+import logcat.logcat
 
 internal class FileRepositoryImpl @Inject constructor(
     private val fileScanService: FileScanService,
+    private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
     private val settingsCommonRepository: SettingsCommonRepository
 ) : FileRepository {
@@ -113,7 +120,7 @@ internal class FileRepositoryImpl @Inject constructor(
                 ScanType.QUICK -> ScanTypeModel.QUICK
             },
             bookshelfSettings.resolveImageFolder,
-            bookshelfSettings.supportExtension.map(SupportExtension::name)
+            bookshelfSettings.supportExtension.map(SupportExtension::extension)
         )
     }
 
@@ -123,7 +130,7 @@ internal class FileRepositoryImpl @Inject constructor(
         }.fold({
             Result.Success(it?.toFile())
         }, {
-            Result.Exception(Unknown)
+            Result.Exception(com.sorrowblue.comicviewer.framework.Unknown(it))
         })
     }
 
@@ -133,8 +140,25 @@ internal class FileRepositoryImpl @Inject constructor(
         }.fold({
             Result.Success(it?.toFile())
         }, {
-            Result.Exception(Unknown)
+            Result.Exception(Unknown(it))
         })
+    }
+
+    override suspend fun getFolder(
+        server: Server,
+        path: String
+    ): Result<Bookshelf, FileRepositoryError> {
+        return withContext(Dispatchers.IO) {
+            val file =
+                remoteDataSourceFactory.create(server.toServerModel()).fileModel(path).toFile()
+            withContext(Dispatchers.IO) {
+                if (file is Bookshelf) {
+                    Result.Success(file)
+                } else {
+                    Result.Error(FileRepositoryError.PathDoesNotExist)
+                }
+            }
+        }
     }
 
     override suspend fun getNextRelFile(
@@ -151,7 +175,7 @@ internal class FileRepositoryImpl @Inject constructor(
         }.fold({
             Result.Success(it?.toFile())
         }, {
-            Result.Exception(Unknown)
+            Result.Exception(Unknown(it))
         })
     }
 }

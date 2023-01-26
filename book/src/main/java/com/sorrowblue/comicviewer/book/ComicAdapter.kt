@@ -9,21 +9,19 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
 import coil.request.Disposable
-import coil.request.ImageRequest
 import coil.size.Size
 import coil.transform.Transformation
 import com.sorrowblue.comicviewer.book.databinding.BookItemBinding
 import com.sorrowblue.comicviewer.book.databinding.BookItemNextBinding
-import com.sorrowblue.comicviewer.domain.entity.Book
-import com.sorrowblue.comicviewer.domain.entity.FileThumbnailRequest
-import com.sorrowblue.comicviewer.domain.entity.Server
-import com.sorrowblue.comicviewer.domain.entity.BookPageRequest
+import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
+import com.sorrowblue.comicviewer.domain.entity.server.Server
+import com.sorrowblue.comicviewer.domain.request.BookPageRequest
 import com.sorrowblue.comicviewer.domain.usecase.GetNextComicRel
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
 import kotlin.properties.Delegates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import logcat.logcat
 
 enum class Position {
     START,
@@ -92,7 +90,7 @@ internal class ComicAdapter(
         fun bind(book: Book?, rel: GetNextComicRel) {
             if (book != null) {
                 binding.bookName.text = book.name
-                binding.bookThumbnail.load(FileThumbnailRequest(server to book))
+                binding.bookThumbnail.load(FileThumbnailRequest(server.id to book))
                 binding.bookNext.text = when (rel) {
                     GetNextComicRel.NEXT -> "次の本"
                     GetNextComicRel.PREV -> "前の本"
@@ -101,9 +99,9 @@ internal class ComicAdapter(
                 binding.bookNext.setOnClickListener {
                     val bundle = BookFragmentArgs(book.serverId.value, book.path).toBundle()
                     it.findNavController().navigate(
-                        R.id.book,
+                        R.id.book_navigation,
                         bundle,
-                        navOptions { popUpTo(R.id.book) { inclusive = true } })
+                        navOptions { popUpTo(R.id.book_navigation) { inclusive = true } })
                 }
             } else {
                 binding.bookName.text = "本はありません"

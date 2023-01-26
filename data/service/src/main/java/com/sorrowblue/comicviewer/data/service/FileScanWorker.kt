@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.data.common.ScanTypeModel
 import com.sorrowblue.comicviewer.data.common.ServerModel
 import com.sorrowblue.comicviewer.data.common.util.SortUtil
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.datasource.FileModelRemoteDataSource
+import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.datasource.ServerLocalDataSource
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.createNotification
@@ -32,7 +32,7 @@ internal class FileScanWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val serverLocalDataSource: ServerLocalDataSource,
-    private val factory: FileModelRemoteDataSource.Factory,
+    private val factory: RemoteDataSource.Factory,
     private val fileLocalDataSource: FileModelLocalDataSource,
 ) : CoroutineWorker(appContext, workerParams) {
 
@@ -53,6 +53,8 @@ internal class FileScanWorker @AssistedInject constructor(
         val fileModel = fileLocalDataSource.findBy(request.serverModelId, request.path)
         val resolveImageFolder = request.resolveImageFolder
         supportExtensions = request.supportExtensions
+        logcat(tag = "FileScanWorker") { "resolveImageFolder=$resolveImageFolder" }
+        logcat(tag = "FileScanWorker") { "supportExtensions=$supportExtensions" }
         when (request.scanTypeModel) {
             ScanTypeModel.FULL -> factory.create(serverModel)
                 .nestedListFiles(serverModel, rootFileModel, resolveImageFolder, true)
@@ -62,7 +64,7 @@ internal class FileScanWorker @AssistedInject constructor(
         return Result.success()
     }
 
-    private suspend fun FileModelRemoteDataSource.nestedListFiles(
+    private suspend fun RemoteDataSource.nestedListFiles(
         serverModel: ServerModel,
         fileModel: FileModel,
         resolveImageFolder: Boolean,
@@ -100,7 +102,7 @@ internal class FileScanWorker @AssistedInject constructor(
                         )
                     })
             }.also {
-                logcat(tag = "FileScanWorker") { "listFiles(${fileModel.path}). $it ms" }
+                logcat(tag = "FileScanWorker") { "listFiles(${fileModel.path}). $it ms. ${fileModelList.size} files.resolveImageFolder=$resolveImageFolder" }
             }
         } else {
             fileModelList =

@@ -1,13 +1,13 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.library")
-id("org.jetbrains.kotlin.android")
-id("build-logic.android.library")
-
-    kotlin("plugin.parcelize")
-    kotlin("plugin.serialization")
+    id("build-logic.android.library")
+    alias(libs.plugins.kotlin.plugin.parcelize)
+    alias(libs.plugins.kotlin.plugin.serialization)
 }
 
 dependencies {
+    implementation(projects.framework)
     implementation(libs.kotlinx.serialization.core)
+    api(libs.androidx.datastore.core)
     api(libs.androidx.paging.common)
 }

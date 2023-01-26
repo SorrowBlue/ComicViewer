@@ -3,6 +3,6 @@
     <string name="settings_preference_key_display" translatable="false">settings_preference_key_display</string>
     <string name="settings_preference_key_viewer" translatable="false">settings_preference_key_viewer</string>
     <string name="settings_preference_key_bookshelf" translatable="false">settings_preference_key_bookshelf</string>
-    <string name="settings_preference_key_use_biometric" translatable="false">settings_preference_key_use_biometric</string>
     <string name="settings_preference_key_restore_on_launch" translatable="false">settings_preference_key_restore_on_launch</string>
+    <string name="settings_preference_key_security" translatable="false">settings_preference_key_security</string>
 </resources>
