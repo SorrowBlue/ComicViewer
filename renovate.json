@@ -3,6 +3,7 @@
   "extends": [
     "config:base"
   ],
+  "ignoreDeps": ["dagger.hilt.android.plugin"],
   "prHourlyLimit": 0,
   "labels": ["dependencies", "renovate"],
 }
