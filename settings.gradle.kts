@@ -9,7 +9,7 @@ pluginManagement {
     plugins {
         id("build-logic.android.library") apply false
         id("build-logic.android.application") apply false
-id("com.android.application") version "7.3.1" apply false
+id("com.android.application") version "7.4.0" apply false
 id("com.android.library") version "7.3.1" apply false
         id("org.jetbrains.kotlin.android") version "1.7.22" apply false
         id("org.jetbrains.kotlin.plugin.parcelize") version "1.7.22" apply false
