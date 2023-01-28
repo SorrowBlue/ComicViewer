@@ -1,10 +1,16 @@
-:tada: Begin a project.
-:sparkles: Introduce new features.
-:bug: Fix a bug.
-:recycle: Refactor code.
-:memo: Add or update documentation.
+:tada: Begin a project. プロジェクトの最初のコミット。
+:sparkles: Introduce new features. 新規機能の実装。
+:zap: Improve performance. 既存の機能に別の機能を追加。
+:fire: Remove code or files. 機能を削除。
+:bug: Fix a bug. バグを修正。
+:adhesive_bandage: Simple fix for a non-critical issue. ちょっとした修正。
+:construction: Work in progress. 作業途中。
+:art: Improve structure. format of the code. コードのフォーマット。
+:recycle: Refactor code. リファクタリング。
+:memo: Add or update documentation. ドキュメントやコメントアウト
 :construction_worker: Add or update CI build system.
-:heavy_plus_sign: Add a dependency.
-:heavy_minus_sign: Remove a dependency.
-:wrench: Add or update configuration files.
-:construction: Work in progress.
+:arrow_down: Downgrade dependencies. 依存関係をダウングレード。
+:arrow_up: Upgrade dependencies. 依存関係をアップグレード。
+:heavy_plus_sign: Add a dependency. 依存関係を追加。
+:heavy_minus_sign: Remove a dependency. 依存関係を削除。
+:wrench: Add or update configuration files. 構成ファイルを追加。
