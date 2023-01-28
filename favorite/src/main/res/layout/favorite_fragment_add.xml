@@ -54,7 +54,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/favorite_divider"
             app:paddingBottomSystemWindowInsets="@{true}"
-            tools:listitem="@layout/favorite_item_main" />
+            tools:listitem="@layout/favorite_item_list" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/fab"

@@ -4,7 +4,16 @@
         <item quantity="one">%1$d file</item>
         <item quantity="other">%1$d files</item>
     </plurals>
-    <string name="favorite_label_no_favorites">No favorites</string>
+
+    <!--Favorite List-->
+    <string name="favorite_list_title">Favorites</string>
+    <string name="favorite_list_btn_new_favorite">New favorite</string>
+    <string name="favorite_list_desc_favorite_thumbnail">Favorite thumbnail</string>
+    <string name="favorite_list_label_no_favorites">No favorites</string>
+    <plurals name="favorite_list_label_file_count">
+        <item quantity="one">%1$d file</item>
+        <item quantity="other">%1$d files</item>
+    </plurals>
 
     <!--Favorite Create-->
     <string name="favorite_create_title_new_favorite">New favorite</string>

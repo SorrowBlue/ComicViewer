@@ -1,60 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    tools:showIn="@layout/favorite_fragment_list">
 
-    <ImageView
-        android:id="@+id/thumbnail"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+    <data>
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="0dp"
+        <variable
+            name="favorite"
+            type="com.sorrowblue.comicviewer.domain.entity.Favorite" />
+
+        <import type="com.sorrowblue.comicviewer.favorite.extensiton.FavoriteExtensionKt" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
-        app:layout_constraintBottom_toTopOf="@+id/path"
-        app:layout_constraintEnd_toStartOf="@+id/remove"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/thumbnail"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="TextView" />
+        android:foreground="?attr/selectableItemBackground"
+        android:transitionName="@{FavoriteExtensionKt.getTransitionName(favorite)}">
 
-    <TextView
-        android:id="@+id/path"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textAppearance="?attr/textAppearanceLabelSmall"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/remove"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/thumbnail"
-        app:layout_constraintTop_toBottomOf="@+id/name"
-        tools:text="TextView" />
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/favorite_list_desc_favorite_thumbnail"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@{favorite}"
+            tools:srcCompat="@tools:sample/avatars" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/remove"
-        style="?attr/materialIconButtonStyle"
-        android:layout_width="wrap_content"
-        app:iconPadding="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        app:icon="@drawable/ic_twotone_delete_outline_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:text="@{favorite.name}"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            app:layout_constraintBottom_toTopOf="@+id/count"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/thumbnail"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="@tools:sample/full_names" />
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="@{@plurals/favorite_list_label_file_count(favorite.count, favorite.count)}"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/thumbnail"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            tools:text="@plurals/favorite_list_label_file_count" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

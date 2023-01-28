@@ -1,20 +1,18 @@
 package com.sorrowblue.comicviewer.favorite.list
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.LoadState
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
-import com.sorrowblue.comicviewer.domain.entity.FavoriteId
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
-import com.sorrowblue.comicviewer.favorite.FavoriteAdapter
+import com.google.android.material.transition.MaterialFadeThrough
+import com.sorrowblue.comicviewer.domain.entity.Favorite
 import com.sorrowblue.comicviewer.favorite.FavoriteFragmentArgs
 import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentListBinding
@@ -22,11 +20,8 @@ import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -37,47 +32,55 @@ internal class FavoriteListFragment : FrameworkFragment(R.layout.favorite_fragme
     private val binding: FavoriteFragmentListBinding by viewBinding()
     private val viewModel: FavoriteListViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialFadeThrough()
+        exitTransition = MaterialFadeThrough()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        postponeEnterTransition()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         binding.toolbar.setupWithNavController(findNavController())
-        val adapter = FavoriteAdapter {
-            findNavController().navigate(
-                FavoriteListFragmentDirections.actionFavoriteListToFavorite(
-                    it.id
-                )
-            )
-        }
-        binding.recyclerView.adapter = adapter
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pagingDataFlow.collectLatest(adapter::submitData)
-        }
         binding.fab.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.favorite_list_fragment) {
                 findNavController().navigate(FavoriteListFragmentDirections.actionFavoriteListToFavoriteCreate())
             }
         }
-        adapter.loadStateFlow.distinctUntilChangedBy { it.refresh }
-            .map { it.refresh is LoadState.NotLoading && adapter.itemCount == 0 }
-            .onEach { viewModel.isEmptyData.value = it }
+        setupAdapter()
+    }
+
+    private fun setupAdapter() {
+        val adapter = FavoriteListAdapter { favorite, extras ->
+            findNavController().navigate(
+                FavoriteListFragmentDirections.actionFavoriteListToFavorite(favorite),
+                extras
+            )
+        }
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.pagingDataFlow.collectLatest(adapter::submitData)
+        }
+        adapter.loadStateFlow.map { it.refresh }.distinctUntilChanged()
+            .map { it is LoadState.NotLoading && adapter.itemCount == 0 }
+            .onEach { viewModel.isEmptyDataFlow.value = it }
             .launchInWithLifecycle()
     }
-}
 
-private fun FavoriteListFragmentDirections.Companion.actionFavoriteListToFavorite(favoriteId: FavoriteId) =
-    object : NavDirections {
-        override val actionId = actionFavoriteListToFavorite().actionId
-        override val arguments = FavoriteFragmentArgs(favoriteId.value).toBundle()
-    }
-
-@HiltViewModel
-internal class FavoriteListViewModel @Inject constructor(
-    pagingFavoriteUseCase: PagingFavoriteUseCase
-) : ViewModel() {
-
-    val pagingDataFlow =
-        pagingFavoriteUseCase.execute(PagingFavoriteUseCase.Request(PagingConfig(10)))
-            .cachedIn(viewModelScope)
-
-    val isEmptyData = MutableStateFlow(false)
+    private fun FavoriteListFragmentDirections.Companion.actionFavoriteListToFavorite(favorite: Favorite) =
+        object : NavDirections {
+            override val actionId = actionFavoriteListToFavorite().actionId
+            override val arguments =
+                FavoriteFragmentArgs(favorite.id.value).toBundle()
+        }
 }

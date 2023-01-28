@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/viewer_app_bar_layout"
+            android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:liftOnScroll="true">
@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_marginTopSystemWindowInsets="@{true}"
-                tools:title="お気に入りリスト" />
+                tools:title="@string/favorite_list_title" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -38,7 +38,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:paddingBottomSystemWindowInsets="@{true}"
-            tools:listitem="@layout/favorite_item_main" />
+            tools:listitem="@layout/favorite_item_list" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/fab"
@@ -47,7 +47,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="新しいお気に入り"
+            android:text="@string/favorite_list_btn_new_favorite"
             app:icon="@drawable/ic_twotone_add_24"
             app:layout_marginBottomSystemWindowInsets="@{true}" />
 
@@ -55,12 +55,14 @@
             android:id="@+id/empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:isVisible="@{viewModel.isEmptyData}">
+            app:isVisible="@{viewModel.isEmptyDataFlow}"
+            tools:visibility="gone">
 
             <ImageView
                 android:id="@+id/favorite_imageview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +72,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/favorite_label_no_favorites"
+                android:text="@string/favorite_list_label_no_favorites"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall"
                 app:layout_constraintEnd_toEndOf="@+id/favorite_imageview"
                 app:layout_constraintStart_toStartOf="@+id/favorite_imageview"
