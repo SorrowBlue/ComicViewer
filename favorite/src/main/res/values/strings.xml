@@ -5,4 +5,9 @@
         <item quantity="other">%1$d files</item>
     </plurals>
     <string name="favorite_label_no_favorites">No favorites</string>
+
+    <!--Favorite Create-->
+    <string name="favorite_create_title_new_favorite">New favorite</string>
+    <string name="favorite_create_btn_create">Create</string>
+    <string name="favorite_create_hint_title">Title</string>
 </resources>

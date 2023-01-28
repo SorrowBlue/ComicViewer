@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Favorite Create-->
+    <string name="favorite_create_title_new_favorite">新しいお気に入り</string>
+    <string name="favorite_create_btn_create">作成</string>
+    <string name="favorite_create_hint_title">タイトル</string>
+</resources>
