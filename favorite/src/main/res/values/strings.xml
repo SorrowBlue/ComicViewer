@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="favorite_label_count">
+    <!--Favorite-->
+    <string name="favorite_label_no_favorites">No favorites</string>
+    <plurals name="favorite_label_file_count">
         <item quantity="one">%1$d file</item>
         <item quantity="other">%1$d files</item>
     </plurals>
-    <string name="favorite_label_no_favorites">No favorites</string>
+
+    <!--Favorite Edit-->
+    <string name="favorite_edit_title">Edit Favorites</string>
+    <string name="favorite_edit_btn_save">Save</string>
+    <string name="favorite_edit_hint_title">Title</string>
+    <string name="favorite_edit_label_no_books">No books</string>
+
+    <!--Favorite List-->
+    <string name="favorite_list_title">Favorites</string>
+    <string name="favorite_list_btn_new_favorite">New favorite</string>
+    <string name="favorite_list_desc_favorite_thumbnail">Favorite thumbnail</string>
+    <string name="favorite_list_label_no_favorites">No favorites</string>
+    <plurals name="favorite_list_label_file_count">
+        <item quantity="one">%1$d file</item>
+        <item quantity="other">%1$d files</item>
+    </plurals>
+
+    <!--Favorite Create-->
+    <string name="favorite_create_title_new_favorite">New favorite</string>
+    <string name="favorite_create_btn_create">Create</string>
+    <string name="favorite_create_hint_title">Title</string>
 </resources>

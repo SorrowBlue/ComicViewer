@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/viewer_app_bar_layout"
+            android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:liftOnScroll="true"
@@ -26,15 +26,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-                tools:title="お気に入りリストの編集" />
+                tools:title="@string/favorite_edit_title" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/favorite_name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
-                android:hint="タイトル"
+                android:hint="@string/favorite_edit_hint_title"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,11 +44,12 @@
                 app:layout_scrollFlags="noScroll">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/favorite_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:lines="1"
-                    android:text="@={viewModel.title}" />
+                    android:text="@={viewModel.titleFlow}" />
             </com.google.android.material.textfield.TextInputLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -55,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:orientation="vertical"
             android:paddingBottom="80dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -63,8 +67,36 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:paddingBottomSystemWindowInsets="@{true}"
-            app:spanCount="3"
-            tools:listitem="@layout/favorite_item_list" />
+            tools:listitem="@layout/favorite_item_edit" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:isVisible="@{viewModel.isEmptyDataFlow}"
+            tools:visibility="gone">
+
+            <ImageView
+                android:id="@+id/favorite_edit_empty_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_undraw_no_data_re_kwbl" />
+
+            <TextView
+                android:id="@+id/favorite_edit_empty_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/favorite_edit_label_no_books"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                app:layout_constraintEnd_toEndOf="@+id/favorite_edit_empty_image"
+                app:layout_constraintStart_toStartOf="@+id/favorite_edit_empty_image"
+                app:layout_constraintTop_toBottomOf="@+id/favorite_edit_empty_image" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/save"
@@ -73,7 +105,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="保存する"
+            android:text="@string/favorite_edit_btn_save"
             app:icon="@drawable/ic_twotone_save_24"
             app:layout_marginBottomSystemWindowInsets="@{true}" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

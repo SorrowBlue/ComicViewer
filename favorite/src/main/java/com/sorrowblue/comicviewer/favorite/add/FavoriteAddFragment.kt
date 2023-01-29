@@ -10,10 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.sorrowblue.comicviewer.favorite.FavoriteAdapter
 import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentAddBinding
-import com.sorrowblue.jetpack.binding.viewBinding
+import com.sorrowblue.comicviewer.favorite.list.FavoriteListAdapter
+import com.sorrowblue.comicviewer.framework.ui.fragment.dialogViewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -21,12 +21,12 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 internal class FavoriteAddFragment : BottomSheetDialogFragment(R.layout.favorite_fragment_add) {
 
-    private val binding: FavoriteFragmentAddBinding by viewBinding()
+    private val binding: FavoriteFragmentAddBinding by dialogViewBinding()
     private val viewModel: FavoriteAddViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = FavoriteAdapter(viewModel::add)
+        val adapter = FavoriteListAdapter { favorite, _ -> viewModel.add(favorite) }
         binding.recyclerView.adapter = adapter
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.pagingDataFlow.collectLatest {

@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 internal class FavoriteCreateViewModel @Inject constructor(
     private val createFavoriteUseCase: CreateFavoriteUseCase
 ) : ViewModel() {
+
     val title = MutableStateFlow("")
 
     fun create(done: () -> Unit) {

@@ -26,6 +26,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -58,15 +59,20 @@ internal class FavoriteRepositoryImpl @Inject constructor(
     private val favoriteLocalDataSource: FavoriteLocalDataSource
 ) : FavoriteRepository {
 
-    override suspend fun get(favoriteId: FavoriteId): Favorite {
-        return withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.get(FavoriteModelId(favoriteId.value)).toFavorite()
-        }
+    override fun get(favoriteId: FavoriteId): Flow<Favorite> {
+        return favoriteLocalDataSource.get(FavoriteModelId(favoriteId.value))
+            .map(FavoriteModel::toFavorite).flowOn(Dispatchers.IO)
     }
 
     override suspend fun update(favorite: Favorite): Favorite {
         return withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.update(FavoriteModel(FavoriteModelId(favorite.id.value), favorite.name, favorite.count)).toFavorite()
+            favoriteLocalDataSource.update(
+                FavoriteModel(
+                    FavoriteModelId(favorite.id.value),
+                    favorite.name,
+                    favorite.count
+                )
+            ).toFavorite()
         }
     }
 

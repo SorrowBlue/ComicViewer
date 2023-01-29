@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.bookshelf
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -108,7 +107,7 @@ abstract class AbstractBookshelfFragment : FrameworkFragment(R.layout.bookshelf_
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.CREATED) {
                     adapter.loadStateFlow.distinctUntilChangedBy { it.refresh }
-                        .first { it.refresh is LoadState.NotLoading && adapter.itemCount > 0 }
+                        .first { it.refresh is LoadState.NotLoading }
                     startPostponedEnterTransition()
                 }
             }
@@ -139,7 +138,7 @@ abstract class AbstractBookshelfFragment : FrameworkFragment(R.layout.bookshelf_
                     if (it.error is PagingException) {
                         Snackbar.make(
                             binding.root,
-                            (it.error as PagingException).getMessage(requireContext()),
+                            (it.error as PagingException).getMessage(),
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }
@@ -191,7 +190,7 @@ abstract class AbstractBookshelfFragment : FrameworkFragment(R.layout.bookshelf_
     }
 }
 
-private fun PagingException.getMessage(context: Context): String {
+private fun PagingException.getMessage(): String {
     return when (this) {
         PagingException.NoNetwork -> "ネットワークに接続していません。"
         PagingException.InvalidAuth -> "無効な認証情報"

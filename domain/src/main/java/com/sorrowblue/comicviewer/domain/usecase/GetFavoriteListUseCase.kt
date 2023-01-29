@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.domain.entity.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 
-abstract class GetFavoriteUseCase : FlowUseCase<GetFavoriteUseCase.Request, Favorite, Unit>() {
+abstract class GetFavoriteUseCase : FlowUseCase2<GetFavoriteUseCase.Request, Favorite, Unit>() {
     class Request(val favoriteId: FavoriteId) : BaseRequest {
         override fun validate(): Boolean {
             return true
