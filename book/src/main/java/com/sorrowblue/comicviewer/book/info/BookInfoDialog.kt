@@ -52,10 +52,10 @@ internal class BookInfoDialog : BottomSheetDialogFragment(R.layout.book_dialog_i
         binding.openFolder.setOnClickListener {
             findNavController().navigate("http://comicviewer.sorrowblue.com/bookshelf?serverId=${viewModel.serverFileFlow.value!!.server.id.value}&path=${Base64.encodeToString(viewModel.bookshelfFlow.value!!.path.encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)}".toUri())
         }
-//        binding.favorite.setOnClickListener {
-//            val file = viewModel.serverFileFlow.value?.file ?: return@setOnClickListener
-//            findNavController().navigate("https://comicviewer.sorrowblue.com/favorite/add?serverId=${file.serverId.value}&filePath=${Uri.encode(file.path)}".toUri())
-//        }
+        binding.favorite.setOnClickListener {
+            val file = viewModel.serverFileFlow.value?.file ?: return@setOnClickListener
+            findNavController().navigate("https://comicviewer.sorrowblue.com/favorite/add?serverId=${file.serverId.value}&filePath=${Uri.encode(file.path)}".toUri())
+        }
         viewModel.fileFlow.filterNotNull().onEach {
             val imageView: ImageView = binding.bookImageview
             imageView.load(FileThumbnailRequest(it.serverId to it)) {
