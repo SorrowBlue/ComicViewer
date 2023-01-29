@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.framework.ui.fragment
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.chrisbanes.insetter.InsetterApplyTypeDsl
+import dev.chrisbanes.insetter.InsetterDsl
 import javax.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -64,3 +65,28 @@ context(AppCompatActivity)
 fun <T> Flow<T>.launchInWithLifecycle() = flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
 
 
+
+fun InsetterDsl.type(
+    ime: Boolean = false,
+    systemBars: Boolean = false,
+    navigationBars: Boolean = false,
+    statusBars: Boolean = false,
+    systemGestures: Boolean = false,
+    mandatorySystemGestures: Boolean = false,
+    displayCutout: Boolean = false,
+    captionBar: Boolean = false,
+    tappableElement: Boolean = false,
+    f: InsetterApplyTypeDsl.() -> Unit,
+) {
+    type(
+        ime,
+        systemBars || navigationBars,
+        systemBars || statusBars,
+        systemGestures,
+        mandatorySystemGestures,
+        displayCutout,
+        systemBars || captionBar,
+        tappableElement,
+        f
+    )
+}

@@ -1,75 +1,111 @@
 package com.sorrowblue.comicviewer.favorite
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
+import androidx.navigation.ui.setupWithNavController
+import androidx.paging.LoadState
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.sorrowblue.comicviewer.bookshelf.AbstractBookshelfFragment
-import com.sorrowblue.comicviewer.bookshelf.AbstractBookshelfViewModel
-import com.sorrowblue.comicviewer.domain.entity.FavoriteId
-import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.usecase.DeleteFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookshelfDisplaySettingsUseCase
+import com.google.android.material.transition.MaterialArcMotion
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialElevationScale
+import com.sorrowblue.comicviewer.bookshelf.BookshelfAdapter
+import com.sorrowblue.comicviewer.bookshelf.GridItemOffsetDecoration
+import com.sorrowblue.comicviewer.bookshelf.submitDataWithLifecycle
+import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentBinding
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
-import com.sorrowblue.comicviewer.framework.ui.fragment.launchIn
-import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
-import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
-import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
+import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
+import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
+import com.sorrowblue.comicviewer.framework.ui.fragment.type
+import com.sorrowblue.comicviewer.framework.ui.widget.ktx.setSpanCount
+import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.mapNotNull
+import dev.chrisbanes.insetter.applyInsetter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
-internal class FavoriteFragment : AbstractBookshelfFragment() {
+internal class FavoriteFragment : FrameworkFragment(R.layout.favorite_fragment),
+    Toolbar.OnMenuItemClickListener {
 
-    override val viewModel: FavoriteViewModel by viewModels()
-    override val menuResId: Int = R.menu.favorite
+    private val binding: FavoriteFragmentBinding by viewBinding()
+    private val viewModel: FavoriteViewModel by viewModels()
     private val commonViewModel: CommonViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (viewModel.transitionName != null) {
+            sharedElementEnterTransition = MaterialContainerTransform().apply {
+                fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
+                scrimColor = MaterialColors.getColor(
+                    requireContext(),
+                    android.R.attr.colorBackground,
+                    Color.TRANSPARENT
+                )
+                setPathMotion(MaterialArcMotion())
+            }
+        }
+        exitTransition = MaterialElevationScale(false)
+        reenterTransition = MaterialElevationScale(true)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        postponeEnterTransition()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.lifecycle.addObserver(viewModel)
-        viewModel.count.onEach {
-            viewModel.subTitleFlow.value =
-                resources.getQuantityString(R.plurals.favorite_label_count, it, it)
-        }.launchIn()
+
+        binding.viewModel = viewModel
+
+        binding.toolbar.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true)
+                margin(top = true)
+            }
+        }
+        binding.toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setOnMenuItemClickListener(this)
+
+        setupRecyclerView()
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.favorite_menu_edit -> {
-                findNavController().navigate(
-                    FavoriteFragmentDirections.actionFavoriteToFavoriteEdit(
-                        viewModel.favoriteId.value
-                    )
-                )
+                navigate(FavoriteFragmentDirections.actionFavoriteToFavoriteEdit(viewModel.favoriteId.value))
                 true
             }
+
             R.id.favorite_menu_delete -> {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle("このお気に入りリストを削除しますか？")
                     .setPositiveButton("削除") { _, _ ->
                         viewModel.delete {
-                            commonViewModel.snackbarMessage.tryEmit(viewModel.title.value + "を削除しました。")
+                            commonViewModel.snackbarMessage.tryEmit(viewModel.titleFlow.value + "を削除しました。")
                             findNavController().popBackStack()
                         }
                     }
@@ -77,61 +113,49 @@ internal class FavoriteFragment : AbstractBookshelfFragment() {
                     .show()
                 true
             }
+
             else -> item.onNavDestinationSelected(findNavController())
         }
     }
-}
 
-@HiltViewModel
-internal class FavoriteViewModel @Inject constructor(
-    bookshelfDisplaySettingsUseCase: ManageBookshelfDisplaySettingsUseCase,
-    pagingFavoriteBookUseCase: PagingFavoriteBookUseCase,
-    private val getFavoriteUseCase: GetFavoriteUseCase,
-    private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
-    override val savedStateHandle: SavedStateHandle
-) : AbstractBookshelfViewModel(bookshelfDisplaySettingsUseCase), SupportSafeArgs,
-    DefaultLifecycleObserver {
-
-    private val args: FavoriteFragmentArgs by navArgs()
-
-    private val favoriteFlow = getFavoriteUseCase.source
-    val favoriteId = FavoriteId(args.favoriteId)
-
-    val title = favoriteFlow.mapNotNull { it.dataOrNull?.name }.stateIn { "" }
-    val count = favoriteFlow.mapNotNull { it.dataOrNull?.count }.stateIn { 0 }
-    override val transitionName: String? = null
-
-    override val pagingDataFlow = pagingFavoriteBookUseCase.execute(
-        PagingFavoriteBookUseCase.Request(PagingConfig(20), FavoriteId(args.favoriteId))
-    ).cachedIn(viewModelScope)
-
-    override val pagingQueryDataFlow = pagingFavoriteBookUseCase.execute(
-        PagingFavoriteBookUseCase.Request(PagingConfig(20), FavoriteId(args.favoriteId))
-    ).cachedIn(viewModelScope)
-
-    override var position: Int = 0
-
-    override val titleFlow = favoriteFlow.mapNotNull { it.dataOrNull?.name }.stateIn { "" }
-
-    override val subTitleFlow = MutableStateFlow("")
-
-    override fun onStart(owner: LifecycleOwner) {
-        viewModelScope.launch {
-            getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
+    private fun setupRecyclerView() {
+        val adapter =
+            BookshelfAdapter(runBlocking { viewModel.bookshelfDisplaySettingsFlow.first().display })
+        binding.recyclerView.adapter = adapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.pagingDataFlow.collectLatest {
+                adapter.submitDataWithLifecycle(it)
+            }
         }
-    }
-
-    init {
-        viewModelScope.launch {
-            getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
+        if (viewModel.isInitialize) {
+            viewModel.isInitialize = true
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.CREATED) {
+                    adapter.loadStateFlow.distinctUntilChangedBy { it.refresh }
+                        .first { it.refresh is LoadState.NotLoading }
+                    startPostponedEnterTransition()
+                }
+            }
         }
-    }
+        binding.recyclerView.addItemDecoration(GridItemOffsetDecoration(4))
 
-    fun delete(done: () -> Unit) {
-        viewModelScope.launch {
-            deleteFavoriteUseCase.execute(DeleteFavoriteUseCase.Request(FavoriteId(args.favoriteId)))
-                .collect()
-            done()
+        binding.recyclerView.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true, bottom = true)
+            }
         }
+        viewModel.bookshelfDisplaySettingsFlow.onEach { adapter.display = it.display }
+            .launchInWithLifecycle()
+
+        viewModel.spanCountFlow.onEach(binding.recyclerView::setSpanCount).launchInWithLifecycle()
+
+        adapter.loadStateFlow.map { it.refresh }.distinctUntilChanged()
+            .onEach { viewModel.isRefreshingFlow.value = it is LoadState.Loading }
+            .launchInWithLifecycle()
+
+        adapter.loadStateFlow.map { it.refresh }.distinctUntilChanged()
+            .map { it is LoadState.NotLoading && adapter.itemCount == 0 }
+            .onEach { viewModel.isEmptyDataFlow.value = it }
+            .launchInWithLifecycle()
     }
 }

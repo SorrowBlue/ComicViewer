@@ -15,6 +15,7 @@ import com.sorrowblue.comicviewer.data.database.entity.Favorite
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteAndBookCount
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteBook
 import com.sorrowblue.comicviewer.data.database.entity.File
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface FavoriteDao {
@@ -27,6 +28,9 @@ internal interface FavoriteDao {
 
     @Query("SELECT *, (SELECT COUNT(*) FROM favorite_book WHERE favorite_id = :favoriteId) AS count FROM favorite WHERE id = :favoriteId")
     suspend fun findBy(favoriteId: Int): FavoriteAndBookCount?
+
+    @Query("SELECT *, (SELECT COUNT(*) FROM favorite_book WHERE favorite_id = :favoriteId) AS count FROM favorite WHERE id = :favoriteId")
+    fun findByAsFlow(favoriteId: Int): Flow<FavoriteAndBookCount?>
 
     @Query("SELECT favorite.* FROM favorite_book INNER JOIN favorite ON favorite.id = favorite_book.favorite_id WHERE favorite_book.server_id = :serverId AND favorite_book.file_path = :filePath")
     fun selectBy(serverId: Int, filePath: String): List<Favorite>
@@ -78,6 +82,5 @@ internal fun FavoriteBookDao.pagingSource(
                     is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
                 }.let(::orderBy)
             }.create()
-    @Suppress("DEPRECATION")
     return pagingSource(query)
 }

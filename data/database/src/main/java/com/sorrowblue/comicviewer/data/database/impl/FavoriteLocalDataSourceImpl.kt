@@ -21,6 +21,7 @@ import com.sorrowblue.comicviewer.data.datasource.FavoriteBookLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import logcat.logcat
 
@@ -49,8 +50,8 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
     private val favoriteBookDao: FavoriteBookDao,
 ) : FavoriteLocalDataSource {
 
-    override suspend fun get(favoriteModelId: FavoriteModelId): FavoriteModel {
-        return favoriteDao.findBy(favoriteModelId.value)!!.let {
+    override fun get(favoriteModelId: FavoriteModelId): Flow<FavoriteModel> {
+        return favoriteDao.findByAsFlow(favoriteModelId.value).filterNotNull().map {
             FavoriteModel(FavoriteModelId(it.favorite.id), it.favorite.name, it.count)
         }
     }

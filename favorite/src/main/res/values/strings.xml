@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="favorite_label_count">
+    <!--Favorite-->
+    <string name="favorite_label_no_favorites">No favorites</string>
+    <plurals name="favorite_label_file_count">
         <item quantity="one">%1$d file</item>
         <item quantity="other">%1$d files</item>
     </plurals>

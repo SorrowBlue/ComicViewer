@@ -15,7 +15,7 @@ interface FavoriteRepository {
     suspend fun remove(favoriteBook: FavoriteBook)
     fun pagingSourceCount(pagingConfig: PagingConfig): Flow<PagingData<Favorite>>
     suspend fun create(title: String)
-    suspend fun get(favoriteId: FavoriteId): Favorite
+    fun get(favoriteId: FavoriteId): Flow<Favorite>
     suspend fun update(favorite: Favorite): Favorite
     suspend fun delete(favoriteId: FavoriteId)
 }

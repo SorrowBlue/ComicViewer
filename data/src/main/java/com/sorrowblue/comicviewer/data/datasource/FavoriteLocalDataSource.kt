@@ -18,7 +18,7 @@ interface FavoriteLocalDataSource {
     suspend fun remove(favoriteBookModel: FavoriteBookModel)
     fun pagingSourceCount(pagingConfig: PagingConfig): Flow<PagingData<FavoriteModel>>
     suspend fun create(favoriteModel: FavoriteModel)
-    suspend fun get(favoriteModelId: FavoriteModelId): FavoriteModel
+    fun get(favoriteModelId: FavoriteModelId): Flow<FavoriteModel>
     suspend fun delete(favoriteModelId: FavoriteModelId)
     suspend fun update(favoriteModel: FavoriteModel): FavoriteModel
 }
