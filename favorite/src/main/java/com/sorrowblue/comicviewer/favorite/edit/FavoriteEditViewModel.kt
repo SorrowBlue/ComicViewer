@@ -15,6 +15,7 @@ import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteBookUseCas
 import com.sorrowblue.comicviewer.framework.ui.flow.mutableStateIn
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
+import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,9 +36,10 @@ internal class FavoriteEditViewModel @Inject constructor(
 
     private val favoriteId = FavoriteId(args.favoriteId)
 
-    private val favoriteFlow = getFavoriteUseCase.source
+    private val favoriteFlow =
+        getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId)).stateIn { null }
 
-    val titleFlow = favoriteFlow.mapNotNull { it.dataOrNull?.name }.mutableStateIn("")
+    val titleFlow = favoriteFlow.mapNotNull { it?.dataOrNull?.name }.mutableStateIn("")
 
     val isEmptyDataFlow = MutableStateFlow(false)
 
