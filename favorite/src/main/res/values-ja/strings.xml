@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Favorite Edit-->
+    <string name="favorite_edit_title">お気に入りを編集</string>
+    <string name="favorite_edit_btn_save">保存</string>
+    <string name="favorite_edit_hint_title">タイトル</string>
+    <string name="favorite_edit_label_no_books">お気に入りの本はありません</string>
+
     <!--Favorite List-->
     <string name="favorite_list_title">お気に入りリスト</string>
     <string name="favorite_list_btn_new_favorite">新しいお気に入り</string>
@@ -8,6 +14,7 @@
     <plurals name="favorite_list_label_file_count">
         <item quantity="other">%1$d ファイル</item>
     </plurals>
+
     <!--Favorite Create-->
     <string name="favorite_create_title_new_favorite">新しいお気に入り</string>
     <string name="favorite_create_btn_create">作成</string>

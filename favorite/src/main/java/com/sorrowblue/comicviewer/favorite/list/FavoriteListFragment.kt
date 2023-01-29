@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.LoadState
 import com.google.android.material.transition.MaterialFadeThrough
+import com.sorrowblue.comicviewer.bookshelf.submitDataWithLifecycle
 import com.sorrowblue.comicviewer.domain.entity.Favorite
 import com.sorrowblue.comicviewer.favorite.FavoriteFragmentArgs
 import com.sorrowblue.comicviewer.favorite.R
@@ -69,7 +70,9 @@ internal class FavoriteListFragment : FrameworkFragment(R.layout.favorite_fragme
         binding.recyclerView.adapter = adapter
         binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pagingDataFlow.collectLatest(adapter::submitData)
+            viewModel.pagingDataFlow.collectLatest {
+                adapter.submitDataWithLifecycle(it)
+            }
         }
         adapter.loadStateFlow.map { it.refresh }.distinctUntilChanged()
             .map { it is LoadState.NotLoading && adapter.itemCount == 0 }

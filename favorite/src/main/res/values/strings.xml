@@ -5,6 +5,12 @@
         <item quantity="other">%1$d files</item>
     </plurals>
 
+    <!--Favorite Edit-->
+    <string name="favorite_edit_title">Edit Favorites</string>
+    <string name="favorite_edit_btn_save">Save</string>
+    <string name="favorite_edit_hint_title">Title</string>
+    <string name="favorite_edit_label_no_books">No books</string>
+
     <!--Favorite List-->
     <string name="favorite_list_title">Favorites</string>
     <string name="favorite_list_btn_new_favorite">New favorite</string>
