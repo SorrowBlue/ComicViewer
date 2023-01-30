@@ -5,6 +5,9 @@
   ],
   "ignoreDeps": ["dagger.hilt.android.plugin"],
   "prHourlyLimit": 0,
+  "schedule": [
+    "before 3am"
+  ],
   "labels": [":dependabot: dependencies", "renovate"],
   "dependencyDashboardLabels": ["renovate"]
 }
