@@ -10,7 +10,7 @@
             name="favorite"
             type="com.sorrowblue.comicviewer.domain.entity.Favorite" />
 
-        <import type="com.sorrowblue.comicviewer.favorite.extensiton.FavoriteExtensionKt" />
+        <import type="com.sorrowblue.comicviewer.favorite.extension.FavoriteExtensionKt" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

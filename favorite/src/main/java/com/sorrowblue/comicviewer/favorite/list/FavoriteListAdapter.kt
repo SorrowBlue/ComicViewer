@@ -7,7 +7,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.sorrowblue.comicviewer.domain.entity.Favorite
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteItemListBinding
-import com.sorrowblue.comicviewer.favorite.extensiton.transitionName
+import com.sorrowblue.comicviewer.favorite.extension.transitionName
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
 
 internal class FavoriteListAdapter(private val onClick: (Favorite, FragmentNavigator.Extras) -> Unit) :
