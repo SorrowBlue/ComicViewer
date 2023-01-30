@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class FavoriteAddViewModel @Inject constructor(
-    private val pagingFavoriteUseCase: PagingFavoriteUseCase,
+    pagingFavoriteUseCase: PagingFavoriteUseCase,
     private val addFavoriteBookUseCase: AddFavoriteBookUseCase,
     override val savedStateHandle: SavedStateHandle
 ) : ViewModel(), SupportSafeArgs {

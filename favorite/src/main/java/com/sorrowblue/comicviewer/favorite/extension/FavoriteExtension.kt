@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.favorite.extensiton
+package com.sorrowblue.comicviewer.favorite.extension
 
 import com.sorrowblue.comicviewer.domain.entity.Favorite
 

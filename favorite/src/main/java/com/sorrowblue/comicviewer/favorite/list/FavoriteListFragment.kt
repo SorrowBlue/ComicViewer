@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.domain.entity.Favorite
 import com.sorrowblue.comicviewer.favorite.FavoriteFragmentArgs
 import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentListBinding
-import com.sorrowblue.comicviewer.favorite.extensiton.transitionName
+import com.sorrowblue.comicviewer.favorite.extension.transitionName
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
 import com.sorrowblue.jetpack.binding.viewBinding
