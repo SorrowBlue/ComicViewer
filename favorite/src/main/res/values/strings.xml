@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Favorite-->
+    <string name="favorite_title_edit">Edit</string>
+    <string name="favorite_title_delete">Delete</string>
+    <string name="favorite_title_display">Display</string>
     <string name="favorite_label_no_favorites">No favorites</string>
     <plurals name="favorite_label_file_count">
         <item quantity="one">%1$d file</item>
         <item quantity="other">%1$d files</item>
     </plurals>
+
+    <!--Favorite Add-->
+    <string name="favorite_add_title">Add to Favourites</string>
+    <string name="favorite_add_btn_new_favorite">New favorite</string>
 
     <!--Favorite Edit-->
     <string name="favorite_edit_title">Edit Favorites</string>

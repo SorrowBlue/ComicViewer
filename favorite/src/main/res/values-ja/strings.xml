@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Favorite-->
+    <string name="favorite_title_edit">編集</string>
+    <string name="favorite_title_delete">削除</string>
+    <string name="favorite_title_display">表示</string>
     <string name="favorite_label_no_favorites">お気に入りはありません</string>
     <plurals name="favorite_label_file_count">
         <item quantity="other">%1$d ファイル</item>
     </plurals>
+
+    <!--Favorite Add-->
+    <string name="favorite_add_title">お気に入りに追加</string>
+    <string name="favorite_add_btn_new_favorite">新しいお気に入り</string>
 
     <!--Favorite Edit-->
     <string name="favorite_edit_title">お気に入りを編集</string>
