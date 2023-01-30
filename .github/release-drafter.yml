@@ -1,24 +1,19 @@
 
 categories:
   - title: '🚀 Features'
-    labels:
-      - 'feature'
-  - title: '💪 Enhancement'
-    labels:
-      - 'enhancement'
+    label: ':sparkles: enhancement'
   - title: '🐛 Bug Fixes'
-    labels:
-      - 'fix'
-      - 'bugfix'
-      - 'bug'
+    label: ':bug: bug'
+  - title: '♻️ Refactoring'
+    label: ':recycle: refactor'
   - title: '🧰 Maintenance'
-    label: 'chore'
-  - title: '🔧 Refactoring'
-    label: 'refactor'
-  - title: '📖 Documentation'
-    label: 'documentation'
+    labels:
+      - ':truck: chore'
+      - 'github'
+  - title: '📝 Documentation'
+    label: ':memo:documentation'
   - title: '⛓️ Dependency update'
-    label: 'dependencies'
+    label: ':dependabot: dependencies'
 
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 
@@ -29,43 +24,32 @@ template: |
   $CHANGES
 
 autolabeler:
-  - label: feature
+  - label: ':bug: bug'
     branch:
-      - '/^feat(ure)?[/-].+/'
-  - label: bug
+      # fix/xxxxxxxxx
+      - '/^fix[/].+/'
+
+  - label: ':sparkles: enhancement'
     branch:
-      - '/^fix[/-].+/'
-  - label: chore
+      # feature/xxxxxxxxx
+      - '/^feature[/].+/'
+
+  - label: ':truck: chore'
     branch:
+      # chore/xxxxxxxxx
       - '/^chore[/-].+/'
-  - label: refactor
+
+  - label: ':recycle: refactor'
     branch:
-      - '/(refactor|refactoring)[/-].+/'
-  - label: documentation
+      # refactor/xxxxxxxxxx
+      - '/^refactor[/-].+/'
+
+  - label: ':memo:documentation'
     branch:
-      - '/doc(umentation)[/-].+/'
+      - '/^doc[/-].+/'
     files:
       - '*.md'
-  - label: enhancement
-    branch:
-      - '/(enhancement|improve)[/-].+/'
 
-  - label: nextjs
-    files:
-      - 'src/**/*'
-      - 'package.json'
-      - 'yarn.lock'
-      - 'next*'
-      - 'tsconfig.json'
-      - '.eslintrc.json'
-  - label: wasm
-    files:
-      - 'wasm/**/*'
-  - label: docker
-    files:
-      - 'docker/**/*'
-      - 'Dockerfile'
-      - '.dockerignore'
   - label: github
     files:
       - '.github/**/*'
