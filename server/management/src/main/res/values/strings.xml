@@ -15,4 +15,5 @@
     <string name="server_management_desc_finish_add_bookshelf">Finish adding a bookshelf</string>
     <string name="server_management_hint_port">Port number</string>
     <string name="server_management_hint_domain">Domain</string>
+    <string name="server_management_hint_select_folder">Select folder</string>
 </resources>

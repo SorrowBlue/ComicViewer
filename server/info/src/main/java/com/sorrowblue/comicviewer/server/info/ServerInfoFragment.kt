@@ -8,16 +8,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage
 import com.sorrowblue.comicviewer.domain.entity.server.Server
 import com.sorrowblue.comicviewer.domain.entity.server.Smb
+import com.sorrowblue.comicviewer.framework.ui.fragment.dialogViewBinding
 import com.sorrowblue.comicviewer.server.info.databinding.ServerInfoDialogBinding
 import com.sorrowblue.comicviewer.server.management.device.ServerManagementDeviceFragmentArgs
 import com.sorrowblue.comicviewer.server.management.smb.ServerManagementSmbFragmentArgs
-import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 internal class ServerInfoFragment : BottomSheetDialogFragment(R.layout.server_info_dialog) {
 
-    private val binding: ServerInfoDialogBinding by viewBinding()
+    private val binding: ServerInfoDialogBinding by dialogViewBinding()
     private val viewModel: ServerInfoViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,13 +50,7 @@ object Converter {
     fun Server?.toTypeString() = when (this) {
         is DeviceStorage -> R.string.server_info_label_device_storage
         is Smb -> R.string.server_info_label_smb
-        null -> R.string.server_info_label_unknown
+        null -> android.R.string.unknownName
     }
 
-    @JvmStatic
-    fun Server?.toHost() = when (this) {
-        is DeviceStorage -> ""
-        is Smb -> host
-        null -> ""
-    }
 }

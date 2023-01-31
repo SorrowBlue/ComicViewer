@@ -15,7 +15,7 @@ abstract class TextValidator {
 }
 
 fun List<TextValidator>.isErrorFlow(): Flow<Boolean> {
-    return combine(map { it.isError }) {
-        it.any { it }
+    return combine(map { it.isError }) { booleans ->
+        booleans.any { it }
     }
 }

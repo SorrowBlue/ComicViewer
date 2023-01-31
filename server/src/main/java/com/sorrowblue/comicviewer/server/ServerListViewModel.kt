@@ -6,14 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingServerUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookshelfDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import logcat.logcat
 
 @HiltViewModel
 internal class ServerListViewModel @Inject constructor(

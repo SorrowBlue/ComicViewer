@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="server_info_label_edit">Edit</string>
-    <string name="server_info_label_remove">Remove</string>
+    <!--Server Info-->
     <string name="server_info_label_host">IP/Host</string>
     <string name="server_info_label_path">Path</string>
-    <string name="server_info_label_device_storage">Device Storage</string>
+    <string name="server_info_label_device_storage">Internal storage</string>
     <string name="server_info_label_smb">LAN/SMB</string>
-    <string name="server_info_label_unknown">Unknown</string>
+    <string name="server_info_label_port">Port</string>
+    <string name="server_info_btn_edit">Edit</string>
+    <string name="server_info_btn_remove">Remove</string>
 </resources>

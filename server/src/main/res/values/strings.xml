@@ -4,4 +4,5 @@
     <string name="server_message_no_bookshelves_added_yet">No bookshelves added yet</string>
     <string name="server_desc_add_bookshelf">Add bookshelf</string>
     <string name="server_desc_thumbnail_this_bookshelf">Thumbnail for this bookshelf</string>
+    <string name="server_title_favorite">Favorite</string>
 </resources>
