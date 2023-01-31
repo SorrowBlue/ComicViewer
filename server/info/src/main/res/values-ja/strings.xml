@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Server Info-->
+    <string name="server_info_label_host">IP/ホスト名</string>
+    <string name="server_info_label_path">ファイルパス</string>
+    <string name="server_info_label_device_storage">内部ストレージ</string>
+    <string name="server_info_label_smb">LAN/SMB</string>
+    <string name="server_info_btn_edit">編集</string>
+    <string name="server_info_btn_remove">削除</string>
+</resources>

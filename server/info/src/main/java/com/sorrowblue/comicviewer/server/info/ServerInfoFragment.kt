@@ -50,7 +50,7 @@ object Converter {
     fun Server?.toTypeString() = when (this) {
         is DeviceStorage -> R.string.server_info_label_device_storage
         is Smb -> R.string.server_info_label_smb
-        null -> R.string.server_info_label_unknown
+        null -> android.R.string.unknownName
     }
 
     @JvmStatic
