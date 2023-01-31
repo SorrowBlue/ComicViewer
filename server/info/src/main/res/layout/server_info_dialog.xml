@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:text="@{viewModel.server instanceof Smb ? viewModel.bookshelf.path : null}"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            tools:text="/Download/aaaaaaaaaa/bbbbbbbbbb/cccccccccccccc/book.zip" />
+            tools:text="@tools:sample/lorem" />
 
         <TextView
             android:id="@+id/smb_port_label"
