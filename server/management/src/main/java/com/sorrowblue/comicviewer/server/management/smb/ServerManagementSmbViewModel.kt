@@ -76,7 +76,7 @@ internal class ServerManagementSmbViewModel @Inject constructor(
         val path = if (pathFlow.value.isEmpty()) "/" else {
             ("/${pathFlow.value}/").replace("(/+)".toRegex(), "/")
         }
-        val port = portFlow.value ?: 445
+        val port = portFlow.value
         val auth =
             if (isGuestFlow.value) Smb.Auth.Guest
             else Smb.Auth.UsernamePassword(domainFlow.value, usernameFlow.value, passwordFlow.value)
