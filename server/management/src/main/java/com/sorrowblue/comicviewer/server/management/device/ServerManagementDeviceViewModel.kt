@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage
 import com.sorrowblue.comicviewer.domain.usecase.RegisterServerError
-import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.domain.usecase.RegisterServerUseCase
+import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.Unknown
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
@@ -35,7 +35,7 @@ internal class ServerManagementDeviceViewModel @Inject constructor(
 ) : ViewModel(), SupportSafeArgs {
 
     private val args: ServerManagementDeviceFragmentArgs by navArgs()
-    val deviceStorage: DeviceStorage? = args.serverDevice
+    private val deviceStorage: DeviceStorage? = args.serverDevice
     val bookshelf: Bookshelf? = args.bookshelf
 
     val isRegister = args.serverDevice == null

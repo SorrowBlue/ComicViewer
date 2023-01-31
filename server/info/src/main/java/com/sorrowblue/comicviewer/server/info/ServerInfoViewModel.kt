@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.server.Server
-import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.domain.usecase.GetServerInfoUseCase
+import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +33,7 @@ internal class ServerInfoViewModel @Inject constructor(
         }
     }
 
-    val libraryInfoFlow = getServerInfoUseCase.source.mapNotNull {
+    private val libraryInfoFlow = getServerInfoUseCase.source.mapNotNull {
         when (it) {
             is Result.Error -> {
                 // TODO(Send error message)
