@@ -4,4 +4,5 @@
     <string name="server_message_no_bookshelves_added_yet">本棚はまだ追加されていません。</string>
     <string name="server_desc_add_bookshelf">本棚を追加する</string>
     <string name="server_desc_thumbnail_this_bookshelf">この本棚のサムネイル</string>
+    <string name="server_title_favorite">お気に入り</string>
 </resources>

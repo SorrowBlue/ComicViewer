@@ -5,6 +5,7 @@
     <string name="server_info_label_path">Path</string>
     <string name="server_info_label_device_storage">Internal storage</string>
     <string name="server_info_label_smb">LAN/SMB</string>
+    <string name="server_info_label_port">Port</string>
     <string name="server_info_btn_edit">Edit</string>
     <string name="server_info_btn_remove">Remove</string>
 </resources>

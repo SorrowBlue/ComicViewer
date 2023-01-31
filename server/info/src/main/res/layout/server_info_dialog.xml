@@ -120,7 +120,7 @@
             android:layout_width="0dp"
             android:paddingTop="16dp"
             android:layout_height="wrap_content"
-            android:text="Port"
+            android:text="@string/server_info_label_port"
             android:textAppearance="?attr/textAppearanceLabelSmall" />
 
         <TextView

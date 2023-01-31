@@ -13,4 +13,5 @@
     <string name="server_management_desc_finish_add_bookshelf">本棚の追加を完了する</string>
     <string name="server_management_hint_port">ポート番号</string>
     <string name="server_management_hint_domain">ドメイン</string>
+    <string name="server_management_hint_select_folder">フォルダを選択</string>
 </resources>

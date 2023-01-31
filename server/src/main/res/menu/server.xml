@@ -12,6 +12,6 @@
         android:id="@+id/action_server_list_to_favorite_list"
         android:icon="@drawable/ic_twotone_favorite_24"
         android:menuCategory="secondary"
-        android:title="お気に入りリスト"
+        android:title="@string/server_title_favorite"
         app:showAsAction="ifRoom" />
 </menu>
