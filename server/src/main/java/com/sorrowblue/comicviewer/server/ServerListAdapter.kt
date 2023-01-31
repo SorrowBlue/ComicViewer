@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.server
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -9,8 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sorrowblue.comicviewer.bookshelf.BookshelfFragmentArgs
-import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
 import com.sorrowblue.comicviewer.domain.entity.ServerBookshelf
+import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
 import com.sorrowblue.comicviewer.server.databinding.ServerItemFavoriteBinding
 import com.sorrowblue.comicviewer.server.databinding.ServerItemListBinding
@@ -24,7 +23,7 @@ internal class ServerListHeaderAdapter : RecyclerView.Adapter<ServerListHeaderAd
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ServerListHeaderAdapter.ViewHolder {
+    ): ViewHolder {
         return ViewHolder(parent)
     }
 
@@ -32,7 +31,7 @@ internal class ServerListHeaderAdapter : RecyclerView.Adapter<ServerListHeaderAd
         return 1
     }
 
-    override fun onBindViewHolder(holder: ServerListHeaderAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     }
 }
 

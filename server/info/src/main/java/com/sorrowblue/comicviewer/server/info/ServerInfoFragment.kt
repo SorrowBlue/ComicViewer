@@ -53,10 +53,4 @@ object Converter {
         null -> android.R.string.unknownName
     }
 
-    @JvmStatic
-    fun Server?.toHost() = when (this) {
-        is DeviceStorage -> ""
-        is Smb -> host
-        null -> ""
-    }
 }

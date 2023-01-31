@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.server.Smb
-import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.domain.usecase.RegisterServerError
 import com.sorrowblue.comicviewer.domain.usecase.RegisterServerUseCase
+import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.server.management.util.DomainNameTextValidator
@@ -103,7 +103,7 @@ internal class ServerManagementSmbViewModel @Inject constructor(
                 }
                 is Result.Exception -> logcat(tag = this@ServerManagementSmbViewModel::class.simpleName) { "Error: ${res.cause}" }
                 is Result.Success -> {
-                    logcat(tag = this@ServerManagementSmbViewModel::class.simpleName) { "Success: ${smb}" }
+                    logcat(tag = this@ServerManagementSmbViewModel::class.simpleName) { "Success: $smb" }
                     done.invoke(args.serverSmb == null)
                 }
             }
