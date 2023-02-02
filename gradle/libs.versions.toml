@@ -32,7 +32,7 @@ kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", versio
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
-ben-manes-versions = "com.github.ben-manes.versions:0.44.0"
+ben-manes-versions = "com.github.ben-manes.versions:0.45.0"
 dagger-hilt-android = { id = "dagger.hilt.android.plugin", version.ref = "dagger-hilt-android" }
 
 [libraries]
