@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.data.common.FavoriteModel
 import com.sorrowblue.comicviewer.data.common.FavoriteModelId
 import com.sorrowblue.comicviewer.data.common.ServerFileModel
 import com.sorrowblue.comicviewer.data.common.ServerModelId
-import com.sorrowblue.comicviewer.domain.entity.Favorite
+import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
 
 class FileThumbnailRequestMapper : Mapper<FileThumbnailRequest, ServerFileModel> {

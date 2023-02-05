@@ -4,7 +4,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage
 import com.sorrowblue.comicviewer.domain.usecase.RegisterServerError
 import com.sorrowblue.comicviewer.domain.usecase.RegisterServerUseCase
@@ -36,11 +36,11 @@ internal class ServerManagementDeviceViewModel @Inject constructor(
 
     private val args: ServerManagementDeviceFragmentArgs by navArgs()
     private val deviceStorage: DeviceStorage? = args.serverDevice
-    val bookshelf: Bookshelf? = args.bookshelf
+    val folder: Folder? = args.folder
 
     val isRegister = args.serverDevice == null
 
-    val data = MutableStateFlow(bookshelf?.path?.toUri())
+    val data = MutableStateFlow(folder?.path?.toUri())
     val transitionName = args.transitionName
     val displayNameValidator = listOf(RequireValidator())
 

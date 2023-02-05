@@ -14,7 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.paging.LoadState
 import com.google.android.material.transition.MaterialFadeThrough
 import com.sorrowblue.comicviewer.bookshelf.submitDataWithLifecycle
-import com.sorrowblue.comicviewer.domain.entity.Favorite
+import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.favorite.FavoriteFragmentArgs
 import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentListBinding

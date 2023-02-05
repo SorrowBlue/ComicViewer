@@ -14,9 +14,9 @@
             app:argType="com.sorrowblue.comicviewer.domain.entity.server.Smb"
             app:nullable="true" />
         <argument
-            android:name="bookshelf"
+            android:name="folder"
             android:defaultValue="@null"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.file.Bookshelf"
+            app:argType="com.sorrowblue.comicviewer.domain.entity.file.Folder"
             app:nullable="true" />
         <argument
             android:name="transition_name"

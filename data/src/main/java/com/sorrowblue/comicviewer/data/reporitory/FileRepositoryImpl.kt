@@ -13,11 +13,11 @@ import com.sorrowblue.comicviewer.data.toFile
 import com.sorrowblue.comicviewer.data.toFileModel
 import com.sorrowblue.comicviewer.data.toServerModel
 import com.sorrowblue.comicviewer.domain.entity.file.Book
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.server.Server
 import com.sorrowblue.comicviewer.domain.entity.server.ServerId
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
@@ -77,18 +77,18 @@ internal class FileRepositoryImpl @Inject constructor(
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,
         server: Server,
-        bookshelf: Bookshelf
+        folder: Folder
     ): Flow<PagingData<File>> {
         return fileModelLocalDataSource.pagingSource(
             pagingConfig,
             server.toServerModel(),
-            bookshelf.toFileModel()
+            folder.toFileModel()
         ) {
-            val settings = runBlocking { settingsCommonRepository.bookshelfDisplaySettings.first() }
+            val settings = runBlocking { settingsCommonRepository.folderDisplaySettings.first() }
             when (settings.sort) {
-                BookshelfDisplaySettings.Sort.NAME -> SortType.NAME(settings.order == BookshelfDisplaySettings.Order.ASC)
-                BookshelfDisplaySettings.Sort.DATE -> SortType.DATE(settings.order == BookshelfDisplaySettings.Order.ASC)
-                BookshelfDisplaySettings.Sort.SIZE -> SortType.SIZE(settings.order == BookshelfDisplaySettings.Order.ASC)
+                FolderDisplaySettings.Sort.NAME -> SortType.NAME(settings.order == FolderDisplaySettings.Order.ASC)
+                FolderDisplaySettings.Sort.DATE -> SortType.DATE(settings.order == FolderDisplaySettings.Order.ASC)
+                FolderDisplaySettings.Sort.SIZE -> SortType.SIZE(settings.order == FolderDisplaySettings.Order.ASC)
             }
         }.map { it.map(FileModel::toFile) }
     }
@@ -103,11 +103,11 @@ internal class FileRepositoryImpl @Inject constructor(
             ServerModelId(server.id.value),
             query
         ) {
-            val settings = runBlocking { settingsCommonRepository.bookshelfDisplaySettings.first() }
+            val settings = runBlocking { settingsCommonRepository.folderDisplaySettings.first() }
             when (settings.sort) {
-                BookshelfDisplaySettings.Sort.NAME -> SortType.NAME(settings.order == BookshelfDisplaySettings.Order.ASC)
-                BookshelfDisplaySettings.Sort.DATE -> SortType.DATE(settings.order == BookshelfDisplaySettings.Order.ASC)
-                BookshelfDisplaySettings.Sort.SIZE -> SortType.SIZE(settings.order == BookshelfDisplaySettings.Order.ASC)
+                FolderDisplaySettings.Sort.NAME -> SortType.NAME(settings.order == FolderDisplaySettings.Order.ASC)
+                FolderDisplaySettings.Sort.DATE -> SortType.DATE(settings.order == FolderDisplaySettings.Order.ASC)
+                FolderDisplaySettings.Sort.SIZE -> SortType.SIZE(settings.order == FolderDisplaySettings.Order.ASC)
             }
         }.map { pagingData -> pagingData.map(FileModel::toFile) }
     }
@@ -122,16 +122,16 @@ internal class FileRepositoryImpl @Inject constructor(
         return fileModelLocalDataSource.findBy(ServerModelId(serverId.value)).map { it.toFile() }
     }
 
-    override suspend fun scan(bookshelf: Bookshelf, scanType: ScanType): String {
-        val bookshelfSettings = settingsCommonRepository.bookshelfSettings.first()
+    override suspend fun scan(folder: Folder, scanType: ScanType): String {
+        val folderSettings = settingsCommonRepository.folderSettings.first()
         return fileScanService.enqueue(
-            bookshelf.toFileModel(),
+            folder.toFileModel(),
             when (scanType) {
                 ScanType.FULL -> ScanTypeModel.FULL
                 ScanType.QUICK -> ScanTypeModel.QUICK
             },
-            bookshelfSettings.resolveImageFolder,
-            bookshelfSettings.supportExtension.map(SupportExtension::extension)
+            folderSettings.resolveImageFolder,
+            folderSettings.supportExtension.map(SupportExtension::extension)
         )
     }
 
@@ -158,12 +158,12 @@ internal class FileRepositoryImpl @Inject constructor(
     override suspend fun getFolder(
         server: Server,
         path: String
-    ): Result<Bookshelf, FileRepositoryError> {
+    ): Result<Folder, FileRepositoryError> {
         return withContext(Dispatchers.IO) {
             val file =
                 remoteDataSourceFactory.create(server.toServerModel()).fileModel(path).toFile()
             withContext(Dispatchers.IO) {
-                if (file is Bookshelf) {
+                if (file is Folder) {
                     Result.Success(file)
                 } else {
                     Result.Error(FileRepositoryError.PathDoesNotExist)

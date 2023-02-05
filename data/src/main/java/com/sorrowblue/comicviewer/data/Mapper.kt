@@ -9,33 +9,32 @@ import com.sorrowblue.comicviewer.data.common.ServerFileModelFolder
 import com.sorrowblue.comicviewer.data.common.ServerModel
 import com.sorrowblue.comicviewer.data.common.ServerModelId
 import com.sorrowblue.comicviewer.data.common.SmbServerModel
-import com.sorrowblue.comicviewer.domain.entity.Favorite
-import com.sorrowblue.comicviewer.domain.entity.FavoriteBook
-import com.sorrowblue.comicviewer.domain.entity.FavoriteId
+import com.sorrowblue.comicviewer.domain.entity.ServerFolder
+import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteBook
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.BookFile
 import com.sorrowblue.comicviewer.domain.entity.file.BookFolder
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.server.Server
-import com.sorrowblue.comicviewer.domain.entity.ServerBookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage
+import com.sorrowblue.comicviewer.domain.entity.server.Server
 import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.entity.server.Smb
 
 internal fun ServerModelId.toServerId() = ServerId(value)
 
-internal fun ServerFileModelFolder.toServerBookshelf() =
-    ServerBookshelf(value.first.toServer() to value.second.toBookshelf())
+internal fun ServerFileModelFolder.toServerFolder() =
+    ServerFolder(value.first.toServer() to value.second.toFolder())
 
-internal fun FileModel.Folder.toBookshelf() =
-    Bookshelf(
-        serverId = serverModelId.toServerId(),
-        name = name,
-        parent = parent,
-        path = path,
-        size = size,
-        lastModifier = lastModifier
-    )
+internal fun FileModel.Folder.toFolder() = Folder(
+    serverId = serverModelId.toServerId(),
+    name = name,
+    parent = parent,
+    path = path,
+    size = size,
+    lastModifier = lastModifier
+)
 
 internal fun Smb.Auth.toServerModelAuth(): SmbServerModel.Auth {
     return when (this) {
@@ -44,39 +43,36 @@ internal fun Smb.Auth.toServerModelAuth(): SmbServerModel.Auth {
     }
 }
 
-internal fun Server.toServerModel(): ServerModel {
-    return when (this) {
-        is DeviceStorage -> DeviceStorageModel(ServerModelId(id.value), displayName)
-        is Smb -> SmbServerModel(
-            id = ServerModelId(id.value),
-            name = displayName,
-            host = host,
-            port = port,
-            auth = auth.toServerModelAuth()
-        )
-    }
+internal fun Server.toServerModel() = when (this) {
+    is DeviceStorage -> DeviceStorageModel(ServerModelId(id.value), displayName)
+    is Smb -> SmbServerModel(
+        id = ServerModelId(id.value),
+        name = displayName,
+        host = host,
+        port = port,
+        auth = auth.toServerModelAuth()
+    )
 }
 
-internal fun ServerModel.toServer(): Server {
-    return when (this) {
-        is DeviceStorageModel ->
-            DeviceStorage(id.toServerId(), name)
-        is SmbServerModel -> {
-            Smb(
-                id = id.toServerId(),
-                displayName = name,
-                host = host,
-                port = port,
-                auth = when (val a = auth) {
-                    SmbServerModel.Guest -> Smb.Auth.Guest
-                    is SmbServerModel.UsernamePassword -> Smb.Auth.UsernamePassword(
-                        "TODO()",
-                        a.username,
-                        a.password
-                    )
-                }
-            )
-        }
+internal fun ServerModel.toServer() = when (this) {
+    is DeviceStorageModel ->
+        DeviceStorage(id.toServerId(), name)
+
+    is SmbServerModel -> {
+        Smb(
+            id = id.toServerId(),
+            displayName = name,
+            host = host,
+            port = port,
+            auth = when (val a = auth) {
+                SmbServerModel.Guest -> Smb.Auth.Guest
+                is SmbServerModel.UsernamePassword -> Smb.Auth.UsernamePassword(
+                    "TODO()",
+                    a.username,
+                    a.password
+                )
+            }
+        )
     }
 }
 
@@ -106,7 +102,8 @@ internal fun FileModel.toFile(): File {
             totalPageCount,
             lastRead
         )
-        is FileModel.Folder -> Bookshelf(
+
+        is FileModel.Folder -> Folder(
             serverModelId.toServerId(),
             name,
             parent,
@@ -114,6 +111,7 @@ internal fun FileModel.toFile(): File {
             size,
             lastModifier
         )
+
         is FileModel.ImageFolder -> BookFolder(
             serverModelId.toServerId(),
             name,
@@ -131,7 +129,7 @@ internal fun FileModel.toFile(): File {
 
 internal fun File.toFileModel(): FileModel {
     return when (this) {
-        is Bookshelf -> FileModel.Folder(
+        is Folder -> FileModel.Folder(
             path = path,
             serverModelId = ServerModelId(serverId.value),
             name = name,
@@ -140,6 +138,7 @@ internal fun File.toFileModel(): FileModel {
             lastModifier = lastModifier,
             sortIndex = 0
         )
+
         is BookFile -> FileModel.File(
             path = path,
             serverModelId = ServerModelId(serverId.value),
@@ -153,6 +152,7 @@ internal fun File.toFileModel(): FileModel {
             lastReadPage = lastPageRead,
             lastRead = lastReadTime
         )
+
         is BookFolder -> FileModel.ImageFolder(
             path = path,
             serverModelId = ServerModelId(serverId.value),

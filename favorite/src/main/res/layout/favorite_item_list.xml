@@ -8,7 +8,7 @@
 
         <variable
             name="favorite"
-            type="com.sorrowblue.comicviewer.domain.entity.Favorite" />
+            type="com.sorrowblue.comicviewer.domain.entity.favorite.Favorite" />
 
         <import type="com.sorrowblue.comicviewer.favorite.extension.FavoriteExtensionKt" />
     </data>

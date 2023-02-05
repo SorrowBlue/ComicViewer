@@ -5,7 +5,7 @@ import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.sorrowblue.comicviewer.domain.entity.Favorite
+import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteItemListBinding
 import com.sorrowblue.comicviewer.favorite.extension.transitionName
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder

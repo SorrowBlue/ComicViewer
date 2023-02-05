@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.sidesheet.SideSheetDialog
 import com.sorrowblue.comicviewer.bookshelf.display.databinding.BookshelfDisplayFragmentBinding
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.framework.ui.fragment.dialogViewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -36,12 +36,12 @@ internal class BookshelfDisplayFragment : DialogFragment() {
         val navBackStackEntry = findNavController().previousBackStackEntry ?: return
         navBackStackEntry.lifecycleScope.launch {
             viewModel.displayFlow.stateIn(navBackStackEntry.lifecycleScope).onEach {
-                binding.spanCountLabel.isVisible = it == BookshelfDisplaySettings.Display.GRID
-                binding.spanCountSlider.isVisible = it == BookshelfDisplaySettings.Display.GRID
+                binding.spanCountLabel.isVisible = it == FolderDisplaySettings.Display.GRID
+                binding.spanCountSlider.isVisible = it == FolderDisplaySettings.Display.GRID
                 binding.viewTypeGroup.check(
                     when (it) {
-                        BookshelfDisplaySettings.Display.GRID -> R.id.view_type_grid
-                        BookshelfDisplaySettings.Display.LIST -> R.id.view_type_list
+                        FolderDisplaySettings.Display.GRID -> R.id.view_type_grid
+                        FolderDisplaySettings.Display.LIST -> R.id.view_type_list
                     }
                 )
             }.flowWithLifecycle(navBackStackEntry.lifecycle)
@@ -53,9 +53,9 @@ internal class BookshelfDisplayFragment : DialogFragment() {
             viewModel.sortFlow.stateIn(navBackStackEntry.lifecycleScope).onEach {
                 binding.sortTypeGroup.check(
                     when (it) {
-                        BookshelfDisplaySettings.Sort.DATE -> R.id.sort_type_date
-                        BookshelfDisplaySettings.Sort.NAME -> R.id.sort_type_name
-                        BookshelfDisplaySettings.Sort.SIZE -> R.id.sort_type_size
+                        FolderDisplaySettings.Sort.DATE -> R.id.sort_type_date
+                        FolderDisplaySettings.Sort.NAME -> R.id.sort_type_name
+                        FolderDisplaySettings.Sort.SIZE -> R.id.sort_type_size
                     }
                 )
             }.flowWithLifecycle(navBackStackEntry.lifecycle)
@@ -63,8 +63,8 @@ internal class BookshelfDisplayFragment : DialogFragment() {
             viewModel.orderFlow.stateIn(navBackStackEntry.lifecycleScope).onEach {
                 binding.orderTypeGroup.check(
                     when (it) {
-                        BookshelfDisplaySettings.Order.ASC -> R.id.order_type_asc
-                        BookshelfDisplaySettings.Order.DESC -> R.id.order_type_desc
+                        FolderDisplaySettings.Order.ASC -> R.id.order_type_asc
+                        FolderDisplaySettings.Order.DESC -> R.id.order_type_desc
                     }
                 )
             }.flowWithLifecycle(navBackStackEntry.lifecycle)
@@ -72,8 +72,8 @@ internal class BookshelfDisplayFragment : DialogFragment() {
         }
         binding.viewTypeGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             when (checkedIds.firstOrNull()) {
-                R.id.view_type_grid -> viewModel.update(BookshelfDisplaySettings.Display.GRID)
-                R.id.view_type_list -> viewModel.update(BookshelfDisplaySettings.Display.LIST)
+                R.id.view_type_grid -> viewModel.update(FolderDisplaySettings.Display.GRID)
+                R.id.view_type_list -> viewModel.update(FolderDisplaySettings.Display.LIST)
             }
         }
 
@@ -87,17 +87,17 @@ internal class BookshelfDisplayFragment : DialogFragment() {
         // Sort
         binding.sortTypeGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             when (checkedIds.firstOrNull()) {
-                R.id.sort_type_date -> viewModel.update(BookshelfDisplaySettings.Sort.DATE)
-                R.id.sort_type_name -> viewModel.update(BookshelfDisplaySettings.Sort.NAME)
-                R.id.sort_type_size -> viewModel.update(BookshelfDisplaySettings.Sort.SIZE)
+                R.id.sort_type_date -> viewModel.update(FolderDisplaySettings.Sort.DATE)
+                R.id.sort_type_name -> viewModel.update(FolderDisplaySettings.Sort.NAME)
+                R.id.sort_type_size -> viewModel.update(FolderDisplaySettings.Sort.SIZE)
             }
         }
 
         // Order
         binding.orderTypeGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             when (checkedIds.firstOrNull()) {
-                R.id.order_type_asc -> viewModel.update(BookshelfDisplaySettings.Order.ASC)
-                R.id.order_type_desc -> viewModel.update(BookshelfDisplaySettings.Order.DESC)
+                R.id.order_type_asc -> viewModel.update(FolderDisplaySettings.Order.ASC)
+                R.id.order_type_desc -> viewModel.update(FolderDisplaySettings.Order.DESC)
             }
         }
     }

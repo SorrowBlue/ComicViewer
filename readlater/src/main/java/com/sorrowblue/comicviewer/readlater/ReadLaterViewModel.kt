@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookshelfDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingViewModel
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import kotlinx.coroutines.runBlocking
 
 @HiltViewModel
 internal class ReadLaterViewModel @Inject constructor(
-    bookshelfDisplaySettingsUseCase: ManageBookshelfDisplaySettingsUseCase,
+    manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     pagingReadLaterUseCase: PagingReadLaterUseCase,
 ) : PagingViewModel<File>() {
 
@@ -26,13 +26,13 @@ internal class ReadLaterViewModel @Inject constructor(
         .execute(PagingReadLaterUseCase.Request(PagingConfig(20)))
         .cachedIn(viewModelScope)
 
-    val bookshelfDisplaySettingsFlow = bookshelfDisplaySettingsUseCase.settings
-    val spanCountFlow = bookshelfDisplaySettingsFlow.map { it.rawSpanCount }
-        .stateIn { runBlocking { bookshelfDisplaySettingsFlow.first().rawSpanCount } }
+    val folderDisplaySettingsFlow = manageFolderDisplaySettingsUseCase.settings
+    val spanCountFlow = folderDisplaySettingsFlow.map { it.rawSpanCount }
+        .stateIn { runBlocking { folderDisplaySettingsFlow.first().rawSpanCount } }
 
-    private val BookshelfDisplaySettings.rawSpanCount
+    private val FolderDisplaySettings.rawSpanCount
         get() = when (display) {
-            BookshelfDisplaySettings.Display.GRID -> spanCount
-            BookshelfDisplaySettings.Display.LIST -> 1
+            FolderDisplaySettings.Display.GRID -> spanCount
+            FolderDisplaySettings.Display.LIST -> 1
         }
 }

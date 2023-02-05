@@ -2,13 +2,13 @@ package com.sorrowblue.comicviewer.data.reporitory
 
 import com.sorrowblue.comicviewer.data.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.entity.settings.DisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.entity.settings.History
-import com.sorrowblue.comicviewer.domain.entity.settings.ViewerOperationSettings
-import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfSettings
 import com.sorrowblue.comicviewer.domain.entity.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.entity.settings.Settings
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerOperationSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -37,17 +37,17 @@ internal class SettingsCommonRepositoryImpl @Inject constructor(
         datastoreDataSource.updateViewerSettings(transform)
     }
 
-    override val bookshelfDisplaySettings: Flow<BookshelfDisplaySettings> =
-        datastoreDataSource.bookshelfDisplaySettings
+    override val folderDisplaySettings: Flow<FolderDisplaySettings> =
+        datastoreDataSource.folderDisplaySettings
 
-    override suspend fun updateBookshelfSettings(transform: suspend (BookshelfDisplaySettings) -> BookshelfDisplaySettings) {
-        datastoreDataSource.updateBookshelfDisplaySettings(transform)
+    override suspend fun updateFolderDisplaySettings(transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings) {
+        datastoreDataSource.updateFolderDisplaySettings(transform)
     }
 
-    override val bookshelfSettings: Flow<BookshelfSettings> = datastoreDataSource.bookshelfSettings
+    override val folderSettings: Flow<FolderSettings> = datastoreDataSource.folderSettings
 
-    override suspend fun updateBookshelfSettings2(transform: suspend (BookshelfSettings) -> BookshelfSettings) {
-        datastoreDataSource.updateBookshelfSettings(transform)
+    override suspend fun updateFolderSettings(transform: suspend (FolderSettings) -> FolderSettings) {
+        datastoreDataSource.updateFolderSettings(transform)
     }
 
     override val viewerOperationSettings: Flow<ViewerOperationSettings> =

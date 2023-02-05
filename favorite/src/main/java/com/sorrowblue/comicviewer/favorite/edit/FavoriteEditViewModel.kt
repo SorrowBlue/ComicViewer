@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.sorrowblue.comicviewer.domain.entity.FavoriteBook
-import com.sorrowblue.comicviewer.domain.entity.FavoriteId
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteBook
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.usecase.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.RemoveFavoriteBookUseCase

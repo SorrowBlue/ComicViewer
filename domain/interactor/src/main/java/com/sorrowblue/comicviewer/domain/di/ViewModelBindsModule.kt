@@ -12,8 +12,8 @@ import com.sorrowblue.comicviewer.domain.usecase.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetServerBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetServerBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetServerFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.GetServerFolderUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetServerInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.RegisterServerUseCase
 import com.sorrowblue.comicviewer.domain.usecase.RemoveFavoriteBookUseCase
@@ -22,7 +22,7 @@ import com.sorrowblue.comicviewer.domain.usecase.UpdateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.UpdateHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.UpdateLastReadPageUseCase
 import com.sorrowblue.comicviewer.domain.usecase.interactor.AddFavoriteBookInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.AddReadLaterIteractor
+import com.sorrowblue.comicviewer.domain.usecase.interactor.AddReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.usecase.interactor.CreateFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.usecase.interactor.DeleteFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.usecase.interactor.FullScanLibraryInteractor
@@ -33,8 +33,8 @@ import com.sorrowblue.comicviewer.domain.usecase.interactor.GetFileInteractor
 import com.sorrowblue.comicviewer.domain.usecase.interactor.GetNavigationHistoryInteractor
 import com.sorrowblue.comicviewer.domain.usecase.interactor.GetNextBookInteractor
 import com.sorrowblue.comicviewer.domain.usecase.interactor.GetServerBookInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetServerBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.usecase.interactor.GetServerFileInteractor
+import com.sorrowblue.comicviewer.domain.usecase.interactor.GetServerFolderInteractor
 import com.sorrowblue.comicviewer.domain.usecase.interactor.GetServerInfoInteractor
 import com.sorrowblue.comicviewer.domain.usecase.interactor.PagingReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.usecase.interactor.RegisterServerInteractor
@@ -55,12 +55,12 @@ import com.sorrowblue.comicviewer.domain.usecase.paging.interactor.PagingFileInt
 import com.sorrowblue.comicviewer.domain.usecase.paging.interactor.PagingQueryFileInteractor
 import com.sorrowblue.comicviewer.domain.usecase.paging.interactor.PagingServerInteractor
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookshelfDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookshelfSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.LoadSettingsInteractor
-import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageBookshelfDisplaySettingsInteractor
-import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageBookshelfSettings2Interactor
+import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageFolderDisplaySettingsInteractor
+import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageFolderSettingsInteractor
 import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageSecuritySettingsInteractor
 import dagger.Binds
 import dagger.Module
@@ -90,16 +90,16 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindGetBookUseCase(interactor: GetBookInteractor): GetBookUseCase
 
     @Binds
-    abstract fun bindAddReadLaterUseCase(interactor: AddReadLaterIteractor): AddReadLaterUseCase
+    abstract fun bindAddReadLaterUseCase(interactor: AddReadLaterInteractor): AddReadLaterUseCase
 
     @Binds
-    abstract fun bindGetHistoryUseCase(interactor: GetNavigationHistoryInteractor): GetNavigationHistoryUseCase
+    abstract fun bindGetNavigationHistoryUseCase(interactor: GetNavigationHistoryInteractor): GetNavigationHistoryUseCase
 
     @Binds
     abstract fun bindUpdateLastReadPageUseCase(interactor: UpdateLastReadPageInteractor): UpdateLastReadPageUseCase
 
     @Binds
-    abstract fun bindGetServerBookshelfUseCase(interactor: GetServerBookshelfInteractor): GetServerBookshelfUseCase
+    abstract fun bindGetServerFolderUseCase(interactor: GetServerFolderInteractor): GetServerFolderUseCase
 
     @Binds
     abstract fun bindGetServerInfoUseCase(interactor: GetServerInfoInteractor): GetServerInfoUseCase
@@ -126,7 +126,7 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindRemoveFavoriteBookUseCase(interactor: RemoveFavoriteBookInteractor): RemoveFavoriteBookUseCase
 
     @Binds
-    abstract fun bindCreateFavoriteBookUseCase(interactor: CreateFavoriteInteractor): CreateFavoriteUseCase
+    abstract fun bindCreateFavoriteUseCase(interactor: CreateFavoriteInteractor): CreateFavoriteUseCase
 
     @Binds
     abstract fun bindGetFavoriteUseCase(interactor: GetFavoriteInteractor): GetFavoriteUseCase
@@ -158,10 +158,10 @@ internal abstract class ViewModelBindsModule {
 
     // Settings
     @Binds
-    abstract fun bindManageBookshelfDisplaySettingsUseCase(interactor: ManageBookshelfDisplaySettingsInteractor): ManageBookshelfDisplaySettingsUseCase
+    abstract fun bindManageFolderDisplaySettingsUseCase(interactor: ManageFolderDisplaySettingsInteractor): ManageFolderDisplaySettingsUseCase
 
     @Binds
-    abstract fun bindManageBookshelfSettingsUseCase(interactor: ManageBookshelfSettings2Interactor): ManageBookshelfSettingsUseCase
+    abstract fun bindManageFolderSettingsUseCase(interactor: ManageFolderSettingsInteractor): ManageFolderSettingsUseCase
 
     @Binds
     abstract fun bindManageSecuritySettingsUseCase(interactor: ManageSecuritySettingsInteractor): ManageSecuritySettingsUseCase

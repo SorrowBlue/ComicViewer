@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.server.info
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.server.Server
 import com.sorrowblue.comicviewer.domain.usecase.GetServerInfoUseCase
 import com.sorrowblue.comicviewer.framework.Result
@@ -45,6 +45,6 @@ internal class ServerInfoViewModel @Inject constructor(
 
     val server: StateFlow<Server?> =
         libraryInfoFlow.map { it.server }.stateIn(viewModelScope, SharingStarted.Lazily, null)
-    val bookshelf: StateFlow<Bookshelf?> =
+    val folder: StateFlow<Folder?> =
         libraryInfoFlow.map { it.bookshelf }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 }

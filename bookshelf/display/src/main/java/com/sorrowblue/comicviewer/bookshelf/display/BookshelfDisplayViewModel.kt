@@ -2,8 +2,8 @@ package com.sorrowblue.comicviewer.bookshelf.display
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookshelfDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.map
@@ -11,38 +11,38 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class BookshelfDisplayViewModel @Inject constructor(
-    private val settingsUseCase: ManageBookshelfDisplaySettingsUseCase,
+    private val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
 ) : ViewModel() {
 
-    fun update(display: BookshelfDisplaySettings.Display) {
+    fun update(display: FolderDisplaySettings.Display) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(display = display) }
+            manageFolderDisplaySettingsUseCase.edit { it.copy(display = display) }
         }
     }
 
     fun update(spanCount: Int) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(spanCount = spanCount) }
+            manageFolderDisplaySettingsUseCase.edit { it.copy(spanCount = spanCount) }
         }
     }
 
-    fun update(sort: BookshelfDisplaySettings.Sort) {
+    fun update(sort: FolderDisplaySettings.Sort) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(sort = sort) }
+            manageFolderDisplaySettingsUseCase.edit { it.copy(sort = sort) }
         }
     }
 
-    fun update(order: BookshelfDisplaySettings.Order) {
+    fun update(order: FolderDisplaySettings.Order) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(order = order) }
+            manageFolderDisplaySettingsUseCase.edit { it.copy(order = order) }
         }
     }
 
-    val displayFlow = settingsUseCase.settings.map { it.display }
+    val displayFlow = manageFolderDisplaySettingsUseCase.settings.map { it.display }
 
-    val spanCountFlow = settingsUseCase.settings.map { it.spanCount }
+    val spanCountFlow = manageFolderDisplaySettingsUseCase.settings.map { it.spanCount }
 
-    val sortFlow = settingsUseCase.settings.map { it.sort }
+    val sortFlow = manageFolderDisplaySettingsUseCase.settings.map { it.sort }
 
-    val orderFlow = settingsUseCase.settings.map { it.order }
+    val orderFlow = manageFolderDisplaySettingsUseCase.settings.map { it.order }
 }

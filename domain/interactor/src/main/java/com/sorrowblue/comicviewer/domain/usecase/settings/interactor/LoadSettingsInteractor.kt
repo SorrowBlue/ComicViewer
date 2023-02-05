@@ -7,10 +7,12 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 internal class LoadSettingsInteractor @Inject constructor(
-    private val repository: SettingsCommonRepository,
+    private val settingsCommonRepository: SettingsCommonRepository,
 ) : LoadSettingsUseCase() {
-    override val settings: Flow<Settings> = repository.settings
+
+    override val settings: Flow<Settings> = settingsCommonRepository.settings
+
     override suspend fun edit(action: (Settings) -> Settings) {
-        repository.updateSettings(action)
+        settingsCommonRepository.updateSettings(action)
     }
 }

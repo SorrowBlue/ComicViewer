@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.datasource
 
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfSettings
 import com.sorrowblue.comicviewer.domain.entity.settings.DisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.entity.settings.History
 import com.sorrowblue.comicviewer.domain.entity.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.entity.settings.Settings
@@ -24,11 +24,11 @@ interface DatastoreDataSource {
     val viewerSettings: Flow<ViewerSettings>
     suspend fun updateViewerSettings(transform: suspend (ViewerSettings) -> ViewerSettings): ViewerSettings
 
-    val bookshelfDisplaySettings: Flow<BookshelfDisplaySettings>
-    suspend fun updateBookshelfDisplaySettings(transform: suspend (BookshelfDisplaySettings) -> BookshelfDisplaySettings): BookshelfDisplaySettings
+    val folderDisplaySettings: Flow<FolderDisplaySettings>
+    suspend fun updateFolderDisplaySettings(transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings): FolderDisplaySettings
 
-    val bookshelfSettings: Flow<BookshelfSettings>
-    suspend fun updateBookshelfSettings(transform: suspend (BookshelfSettings) -> BookshelfSettings): BookshelfSettings
+    val folderSettings: Flow<FolderSettings>
+    suspend fun updateFolderSettings(transform: suspend (FolderSettings) -> FolderSettings): FolderSettings
 
     val viewerOperationSettings: Flow<ViewerOperationSettings>
     suspend fun updateViewerOperationSettings(transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings): ViewerOperationSettings

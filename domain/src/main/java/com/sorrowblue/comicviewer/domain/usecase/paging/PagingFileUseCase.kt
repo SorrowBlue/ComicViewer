@@ -1,16 +1,16 @@
 package com.sorrowblue.comicviewer.domain.usecase.paging
 
 import androidx.paging.PagingConfig
-import com.sorrowblue.comicviewer.domain.entity.Favorite
-import com.sorrowblue.comicviewer.domain.entity.FavoriteId
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.server.Server
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 
 abstract class PagingFileUseCase : PagingUseCase<PagingFileUseCase.Request, File>() {
 
-    class Request(val pagingConfig: PagingConfig, val server: Server, val bookshelf: Bookshelf) :
+    class Request(val pagingConfig: PagingConfig, val server: Server, val folder: Folder) :
         BaseRequest {
         override fun validate(): Boolean {
             return true

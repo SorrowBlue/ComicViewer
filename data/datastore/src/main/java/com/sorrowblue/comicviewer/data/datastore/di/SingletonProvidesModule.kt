@@ -3,17 +3,17 @@ package com.sorrowblue.comicviewer.data.datastore.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
-import com.sorrowblue.comicviewer.data.datastore.serializer.BookShelfSettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.BookshelfDisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.DisplaySettingsSerializer
+import com.sorrowblue.comicviewer.data.datastore.serializer.FolderDisplaySettingsSerializer
+import com.sorrowblue.comicviewer.data.datastore.serializer.FolderSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.HistorySerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SecuritySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerOperationSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerSettingsSerializer
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfSettings
 import com.sorrowblue.comicviewer.domain.entity.settings.DisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.entity.settings.History
 import com.sorrowblue.comicviewer.domain.entity.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.entity.settings.Settings
@@ -37,14 +37,14 @@ internal object SingletonProvidesModule {
         serializer = HistorySerializer()
     )
 
-    private val Context.bookshelfDisplaySettingsDataStore: DataStore<BookshelfDisplaySettings> by dataStore(
-        fileName = "bookshelfDisplaySettings.pb",
-        serializer = BookshelfDisplaySettingsSerializer()
+    private val Context.folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings> by dataStore(
+        fileName = "folder_display_settings.pb",
+        serializer = FolderDisplaySettingsSerializer()
     )
 
-    private val Context.bookshelfSettingsDataStore: DataStore<BookshelfSettings> by dataStore(
-        fileName = "bookShelfSettings2.pb",
-        serializer = BookShelfSettingsSerializer()
+    private val Context.folderSettingsDataStore: DataStore<FolderSettings> by dataStore(
+        fileName = "folder_settings.pb",
+        serializer = FolderSettingsSerializer()
     )
 
     private val Context.settingsDataStore: DataStore<Settings> by dataStore(
@@ -79,13 +79,13 @@ internal object SingletonProvidesModule {
 
     @Singleton
     @Provides
-    fun provideBookShelfSettingsDataStore(@ApplicationContext context: Context): DataStore<BookshelfDisplaySettings> =
-        context.bookshelfDisplaySettingsDataStore
+    fun provideFolderDisplaySettingsDataStore(@ApplicationContext context: Context): DataStore<FolderDisplaySettings> =
+        context.folderDisplaySettingsDataStore
 
     @Singleton
     @Provides
-    fun provideBookShelfSettings2DataStore(@ApplicationContext context: Context): DataStore<BookshelfSettings> =
-        context.bookshelfSettingsDataStore
+    fun provideFolderSettingsDataStore(@ApplicationContext context: Context): DataStore<FolderSettings> =
+        context.folderSettingsDataStore
 
     @Singleton
     @Provides

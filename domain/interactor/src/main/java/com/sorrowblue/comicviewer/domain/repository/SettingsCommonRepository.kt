@@ -1,13 +1,13 @@
 package com.sorrowblue.comicviewer.domain.repository
 
 import com.sorrowblue.comicviewer.domain.entity.settings.DisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.entity.settings.History
-import com.sorrowblue.comicviewer.domain.entity.settings.ViewerOperationSettings
-import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfSettings
 import com.sorrowblue.comicviewer.domain.entity.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.entity.settings.Settings
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerOperationSettings
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
 import kotlinx.coroutines.flow.Flow
 
 interface SettingsCommonRepository {
@@ -24,11 +24,11 @@ interface SettingsCommonRepository {
     val viewerOperationSettings: Flow<ViewerOperationSettings>
     suspend fun updateViewerOperationSettings(transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings)
 
-    val bookshelfDisplaySettings: Flow<BookshelfDisplaySettings>
-    suspend fun updateBookshelfSettings(transform: suspend (BookshelfDisplaySettings) -> BookshelfDisplaySettings)
+    val folderDisplaySettings: Flow<FolderDisplaySettings>
+    suspend fun updateFolderDisplaySettings(transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings)
 
-    val bookshelfSettings: Flow<BookshelfSettings>
-    suspend fun updateBookshelfSettings2(transform: suspend (BookshelfSettings) -> BookshelfSettings)
+    val folderSettings: Flow<FolderSettings>
+    suspend fun updateFolderSettings(transform: suspend (FolderSettings) -> FolderSettings)
 
     val settings: Flow<Settings>
     suspend fun updateSettings(transform: suspend (Settings) -> Settings)

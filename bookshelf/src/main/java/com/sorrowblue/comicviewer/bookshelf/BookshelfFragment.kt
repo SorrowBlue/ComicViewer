@@ -36,9 +36,9 @@ import com.sorrowblue.comicviewer.book.BookFragmentArgs
 import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfFragmentBinding
 import com.sorrowblue.comicviewer.domain.PagingException
 import com.sorrowblue.comicviewer.domain.entity.file.Book
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.file.info.FileInfoFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
@@ -70,7 +70,7 @@ internal class BookshelfFragment : PagingFragment<File>(R.layout.bookshelf_fragm
     override val viewModel: BookshelfViewModel by viewModels()
     override val recyclerView get() = binding.recyclerView
     override val adapter get() = BookshelfAdapter(
-        runBlocking { viewModel.bookshelfDisplaySettingsFlow.first().display },
+        runBlocking { viewModel.folderDisplaySettingsFlow.first().display },
         { file, transitionName, extras ->
             when (file) {
                 is Book -> navigate(
@@ -80,7 +80,7 @@ internal class BookshelfFragment : PagingFragment<File>(R.layout.bookshelf_fragm
                     ), extras
                 )
 
-                is Bookshelf -> navigate(
+                is Folder -> navigate(
                     BookshelfFragmentDirections.actionBookshelfSelf(
                         file.serverId.value,
                         file.path.encodeBase64(),
@@ -95,7 +95,7 @@ internal class BookshelfFragment : PagingFragment<File>(R.layout.bookshelf_fragm
     override fun onCreateAdapter(adapter: PagingDataAdapter<File, *>) {
         super.onCreateAdapter(adapter)
         check(adapter is BookshelfAdapter)
-        viewModel.bookshelfDisplaySettingsFlow.onEach { adapter.display = it.display }
+        viewModel.folderDisplaySettingsFlow.onEach { adapter.display = it.display }
             .launchInWithLifecycle()
         viewModel.spanCountFlow.onEach(binding.recyclerView::setSpanCount)
             .launchInWithLifecycle()
@@ -208,7 +208,7 @@ internal class BookshelfFragment : PagingFragment<File>(R.layout.bookshelf_fragm
                 newState == SearchView.TransitionState.SHOWING || newState == SearchView.TransitionState.SHOWN
         }
         val adapter = BookshelfAdapter(
-            BookshelfDisplaySettings.Display.LIST,
+            FolderDisplaySettings.Display.LIST,
             { file, transitionName, extras ->
                 when (file) {
                     is Book -> navigate(
@@ -218,7 +218,7 @@ internal class BookshelfFragment : PagingFragment<File>(R.layout.bookshelf_fragm
                         ), extras
                     )
 
-                    is Bookshelf -> navigate(
+                    is Folder -> navigate(
                         BookshelfFragmentDirections.actionBookshelfSelf(
                             file.serverId.value,
                             file.path.encodeBase64(),

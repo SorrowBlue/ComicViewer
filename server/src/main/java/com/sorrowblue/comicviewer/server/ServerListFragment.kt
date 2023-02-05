@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
-import com.sorrowblue.comicviewer.domain.entity.ServerBookshelf
+import com.sorrowblue.comicviewer.domain.entity.ServerFolder
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
@@ -19,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
 
 @AndroidEntryPoint
-internal class ServerListFragment : PagingFragment<ServerBookshelf>(R.layout.server_fragment_list),
+internal class ServerListFragment : PagingFragment<ServerFolder>(R.layout.server_fragment_list),
     Toolbar.OnMenuItemClickListener {
 
     private val binding: ServerFragmentListBinding by viewBinding()

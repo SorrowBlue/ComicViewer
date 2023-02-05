@@ -13,12 +13,12 @@ import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.data.toFavorite
 import com.sorrowblue.comicviewer.data.toFavoriteBookModel
 import com.sorrowblue.comicviewer.data.toFile
-import com.sorrowblue.comicviewer.domain.entity.Favorite
-import com.sorrowblue.comicviewer.domain.entity.FavoriteBook
-import com.sorrowblue.comicviewer.domain.entity.FavoriteId
+import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteBook
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.server.ServerId
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.repository.FavoriteBookRepository
 import com.sorrowblue.comicviewer.domain.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
@@ -36,7 +36,7 @@ internal class FavoriteBookRepositoryImpl @Inject constructor(
     private val settingsCommonRepository: SettingsCommonRepository
 ) : FavoriteBookRepository {
 
-    override fun pagingSource(
+    override fun pagingDataFlow(
         pagingConfig: PagingConfig,
         favoriteId: FavoriteId
     ): Flow<PagingData<File>> {
@@ -44,11 +44,11 @@ internal class FavoriteBookRepositoryImpl @Inject constructor(
             pagingConfig,
             FavoriteModelId(favoriteId.value)
         ) {
-            val settings = runBlocking { settingsCommonRepository.bookshelfDisplaySettings.first() }
+            val settings = runBlocking { settingsCommonRepository.folderDisplaySettings.first() }
             when (settings.sort) {
-                BookshelfDisplaySettings.Sort.NAME -> SortType.NAME(settings.order == BookshelfDisplaySettings.Order.ASC)
-                BookshelfDisplaySettings.Sort.DATE -> SortType.DATE(settings.order == BookshelfDisplaySettings.Order.ASC)
-                BookshelfDisplaySettings.Sort.SIZE -> SortType.SIZE(settings.order == BookshelfDisplaySettings.Order.ASC)
+                FolderDisplaySettings.Sort.NAME -> SortType.NAME(settings.order == FolderDisplaySettings.Order.ASC)
+                FolderDisplaySettings.Sort.DATE -> SortType.DATE(settings.order == FolderDisplaySettings.Order.ASC)
+                FolderDisplaySettings.Sort.SIZE -> SortType.SIZE(settings.order == FolderDisplaySettings.Order.ASC)
             }
         }.map { it.map(FileModel::toFile) }
     }
@@ -101,7 +101,7 @@ internal class FavoriteRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun pagingSourceCount(pagingConfig: PagingConfig): Flow<PagingData<Favorite>> {
+    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<Favorite>> {
         return favoriteLocalDataSource.pagingSourceCount(pagingConfig).map {
             it.map {
                 Favorite(FavoriteId(it.id.value), it.name, it.count)

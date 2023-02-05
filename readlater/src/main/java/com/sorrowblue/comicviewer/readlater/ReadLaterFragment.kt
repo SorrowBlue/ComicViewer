@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.book.BookFragmentArgs
 import com.sorrowblue.comicviewer.bookshelf.BookshelfAdapter
 import com.sorrowblue.comicviewer.bookshelf.BookshelfFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.file.Book
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.file.info.FileInfoFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
@@ -43,7 +43,7 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
     override val recyclerView get() = binding.recyclerView
     override val adapter: PagingDataAdapter<File, *>
         get() = BookshelfAdapter(
-            runBlocking { viewModel.bookshelfDisplaySettingsFlow.first().display },
+            runBlocking { viewModel.folderDisplaySettingsFlow.first().display },
             { file, transitionName, extras ->
                 when (file) {
                     is Book -> navigate(
@@ -51,7 +51,7 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
                         extras
                     )
 
-                    is Bookshelf -> navigate(
+                    is Folder -> navigate(
                         ReadLaterFragmentDirections.actionReadlaterToBookshelf(
                             file,
                             transitionName
@@ -90,7 +90,7 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
     override fun onCreateAdapter(adapter: PagingDataAdapter<File, *>) {
         super.onCreateAdapter(adapter)
         check(adapter is BookshelfAdapter)
-        viewModel.bookshelfDisplaySettingsFlow.onEach { adapter.display = it.display }
+        viewModel.folderDisplaySettingsFlow.onEach { adapter.display = it.display }
             .launchInWithLifecycle()
         viewModel.spanCountFlow.onEach(binding.recyclerView::setSpanCount).launchInWithLifecycle()
     }
@@ -115,13 +115,13 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
     }
 
     private fun ReadLaterFragmentDirections.Companion.actionReadlaterToBookshelf(
-        bookshelf: Bookshelf,
+        folder: Folder,
         transitionName: String
     ) = object : NavDirections {
         override val actionId = actionReadlaterToBookshelf().actionId
         override val arguments = BookshelfFragmentArgs(
-            bookshelf.serverId.value,
-            bookshelf.path.encodeBase64(),
+            folder.serverId.value,
+            folder.path.encodeBase64(),
             transitionName
         ).toBundle()
     }

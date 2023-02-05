@@ -1,19 +1,11 @@
 package com.sorrowblue.comicviewer.book.info
 
-import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
-import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
-import android.renderscript.Allocation
-import android.renderscript.Element
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
 import android.util.Base64
 import android.view.View
 import android.widget.ImageView
-import androidx.core.graphics.applyCanvas
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
@@ -22,8 +14,6 @@ import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Target
 import androidx.palette.graphics.get
 import coil.load
-import coil.size.Size
-import coil.transform.Transformation
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.color.MaterialColors
 import com.sorrowblue.comicviewer.book.R
@@ -50,7 +40,7 @@ internal class BookInfoDialog : BottomSheetDialogFragment(R.layout.book_dialog_i
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         binding.openFolder.setOnClickListener {
-            findNavController().navigate("http://comicviewer.sorrowblue.com/bookshelf?serverId=${viewModel.serverFileFlow.value!!.server.id.value}&path=${Base64.encodeToString(viewModel.bookshelfFlow.value!!.path.encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)}".toUri())
+            findNavController().navigate("http://comicviewer.sorrowblue.com/bookshelf?serverId=${viewModel.serverFileFlow.value!!.server.id.value}&path=${Base64.encodeToString(viewModel.folderFlow.value!!.path.encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)}".toUri())
         }
         binding.favorite.setOnClickListener {
             val file = viewModel.serverFileFlow.value?.file ?: return@setOnClickListener

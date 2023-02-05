@@ -6,7 +6,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.entity.ServerFile
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage
 import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.entity.server.Smb
@@ -74,10 +74,10 @@ internal class BookInfoViewModel @Inject constructor(
         }
     }.stateIn { null }
 
-    val bookshelfFlow: StateFlow<Bookshelf?> = serverFileFlow.filterNotNull().flatMapLatest {
+    val folderFlow: StateFlow<Folder?> = serverFileFlow.filterNotNull().flatMapLatest {
         getBookshelfUseCase.execute(GetFileUseCase.Request(it.server.id, it.file.parent))
             .mapNotNull {
-                it.dataOrNull as? Bookshelf
+                it.dataOrNull as? Folder
             }
     }.stateIn { null }
 }

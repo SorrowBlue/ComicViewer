@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.viewbinding.ViewBinding
 import com.sorrowblue.comicviewer.bookshelf.viewholder.BookshelfViewHolder
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 
 class BookshelfAdapter(
-    display: BookshelfDisplaySettings.Display,
+    display: FolderDisplaySettings.Display,
     private val onClick: (File, String, FragmentNavigator.Extras) -> Unit,
     private val onLongClick: (File) -> Unit
 ) : PagingDataAdapter<File, BookshelfViewHolder<out ViewBinding>>(object :
@@ -34,10 +34,10 @@ class BookshelfAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         when (display) {
-            BookshelfDisplaySettings.Display.GRID ->
+            FolderDisplaySettings.Display.GRID ->
                 BookshelfViewHolder.Grid(parent, onClick, onLongClick)
 
-            BookshelfDisplaySettings.Display.LIST ->
+            FolderDisplaySettings.Display.LIST ->
                 BookshelfViewHolder.List(parent, onClick, onLongClick)
         }
 

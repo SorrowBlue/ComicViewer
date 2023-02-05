@@ -21,7 +21,6 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import logcat.logcat
 
 @OptIn(ExperimentalPagingApi::class)
 internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
@@ -41,11 +40,11 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
         ): FileModelRemoteMediatorImpl
     }
 
-    private val bookShelfSettings = settingsCommonRepository.bookshelfSettings
+    private val folderSettings = settingsCommonRepository.folderSettings
     private val remoteDataSource = remoteDataSourceFactory.create(serverModel)
 
     override suspend fun initialize(): InitializeAction {
-        return if (bookShelfSettings.first().isAutoRefresh) InitializeAction.LAUNCH_INITIAL_REFRESH else InitializeAction.SKIP_INITIAL_REFRESH
+        return if (folderSettings.first().isAutoRefresh) InitializeAction.LAUNCH_INITIAL_REFRESH else InitializeAction.SKIP_INITIAL_REFRESH
     }
 
     override suspend fun load(
@@ -53,7 +52,7 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
     ): MediatorResult {
         kotlin.runCatching {
             withContext(dispatcher) {
-                val settings = bookShelfSettings.first()
+                val settings = folderSettings.first()
                 val supportExtensions = settings.supportExtension.map(SupportExtension::extension)
                 val files = SortUtil.sortedIndex(
                     remoteDataSource.listFiles(

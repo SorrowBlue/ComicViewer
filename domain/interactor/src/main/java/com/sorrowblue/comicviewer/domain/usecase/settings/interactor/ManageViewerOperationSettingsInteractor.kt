@@ -6,12 +6,12 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationS
 import javax.inject.Inject
 
 internal class ManageViewerOperationSettingsInteractor @Inject constructor(
-    private val repository: SettingsCommonRepository,
+    private val settingsCommonRepository: SettingsCommonRepository,
 ) : ManageViewerOperationSettingsUseCase() {
 
-    override val settings = repository.viewerOperationSettings
+    override val settings = settingsCommonRepository.viewerOperationSettings
 
     override suspend fun edit(action: (ViewerOperationSettings) -> ViewerOperationSettings) {
-        repository.updateViewerOperationSettings(action)
+        settingsCommonRepository.updateViewerOperationSettings(action)
     }
 }

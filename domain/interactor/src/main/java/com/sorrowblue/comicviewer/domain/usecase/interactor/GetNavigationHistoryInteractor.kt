@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.domain.usecase.interactor
 
-import android.util.Log
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.server.Server
 import com.sorrowblue.comicviewer.domain.model.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.Response
@@ -26,7 +25,7 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
         )
         val library = serverRepository.get(history.serverId!!).first()
         return library.fold({ lib ->
-            val a = getBookShelfList(lib, history.path!!).fold({
+            val a = getFolderList(lib, history.path!!).fold({
                 Result.Success(NavigationHistory(lib, it, history.position ?: 0))
             }, {
                 Result.Error(Unit)
@@ -39,15 +38,14 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
         })
     }
 
-    private suspend fun getBookShelfList(
+    private suspend fun getFolderList(
         server: Server,
         path: String,
-    ): Response.Success<List<Bookshelf>> {
-        Log.d("TAG", "getBookShelfList: $path")
-        val list = mutableListOf<Bookshelf>()
+    ): Response.Success<List<Folder>> {
+        val list = mutableListOf<Folder>()
         var parent: String? = path
         while (!parent.isNullOrEmpty()) {
-            getBookShelf(server, parent)?.let {
+            getFolder(server, parent)?.let {
                 list.add(0, it)
                 parent = it.parent
             } ?: kotlin.run {
@@ -58,9 +56,9 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
         return Response.Success(list)
     }
 
-    private suspend fun getBookShelf(server: Server, path: String): Bookshelf? {
+    private suspend fun getFolder(server: Server, path: String): Folder? {
         fileRepository.get(server.id, path).onSuccess {
-            return it as? Bookshelf
+            return it as? Folder
         }.onError {
             return null
         }

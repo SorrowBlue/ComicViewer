@@ -7,18 +7,18 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import coil.load
 import com.sorrowblue.comicviewer.bookshelf.BookshelfFragmentArgs
-import com.sorrowblue.comicviewer.domain.entity.ServerBookshelf
+import com.sorrowblue.comicviewer.domain.entity.ServerFolder
 import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
 import com.sorrowblue.comicviewer.server.databinding.ServerItemListBinding
 import com.sorrowblue.comicviewer.server.info.ServerInfoFragmentArgs
 
-internal class ServerListAdapter : PagingDataAdapter<ServerBookshelf, ServerListAdapter.ViewHolder>(
-    object : DiffUtil.ItemCallback<ServerBookshelf>() {
-        override fun areItemsTheSame(oldItem: ServerBookshelf, newItem: ServerBookshelf) =
+internal class ServerListAdapter : PagingDataAdapter<ServerFolder, ServerListAdapter.ViewHolder>(
+    object : DiffUtil.ItemCallback<ServerFolder>() {
+        override fun areItemsTheSame(oldItem: ServerFolder, newItem: ServerFolder) =
             oldItem.bookshelf.serverId == newItem.bookshelf.serverId && oldItem.bookshelf.path == newItem.bookshelf.path
 
-        override fun areContentsTheSame(oldItem: ServerBookshelf, newItem: ServerBookshelf) =
+        override fun areContentsTheSame(oldItem: ServerFolder, newItem: ServerFolder) =
             oldItem.server == newItem.server
     }
 ) {
@@ -32,7 +32,7 @@ internal class ServerListAdapter : PagingDataAdapter<ServerBookshelf, ServerList
     class ViewHolder(parent: ViewGroup) :
         ViewBindingViewHolder<ServerItemListBinding>(parent, ServerItemListBinding::inflate) {
 
-        fun bind(item: ServerBookshelf) {
+        fun bind(item: ServerFolder) {
             binding.server = item.server
             binding.preview.load(FileThumbnailRequest(item.server.id to item.bookshelf))
             binding.root.setOnClickListener {

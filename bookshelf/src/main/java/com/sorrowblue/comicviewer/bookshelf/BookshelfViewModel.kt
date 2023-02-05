@@ -2,19 +2,18 @@ package com.sorrowblue.comicviewer.bookshelf
 
 import android.util.Base64
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.server.ServerId
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.domain.usecase.FullScanLibraryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetServerBookshelfUseCase
+import com.sorrowblue.comicviewer.domain.usecase.GetServerFolderUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookshelfDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingViewModel
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
@@ -22,7 +21,6 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -34,8 +32,8 @@ import kotlinx.coroutines.launch
 class BookshelfViewModel @Inject constructor(
     pagingFileUseCase: PagingFileUseCase,
     pagingQueryFileUseCase: PagingQueryFileUseCase,
-    manageBookshelfDisplaySettingsUseCase: ManageBookshelfDisplaySettingsUseCase,
-    getServerBookshelfUseCase: GetServerBookshelfUseCase,
+    manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
+    getServerFolderUseCase: GetServerFolderUseCase,
     private val fullScanLibraryUseCase: FullScanLibraryUseCase,
     override val savedStateHandle: SavedStateHandle,
 ) : PagingViewModel<File>(), SupportSafeArgs {
@@ -44,7 +42,7 @@ class BookshelfViewModel @Inject constructor(
     var position = args.position
     override val transitionName = args.transitionName
 
-    private val serverBookshelfFlow = getServerBookshelfUseCase.execute(GetServerBookshelfUseCase.Request(ServerId(args.serverId), Base64.decode(args.path.encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)
+    private val serverBookshelfFlow = getServerFolderUseCase.execute(GetServerFolderUseCase.Request(ServerId(args.serverId), Base64.decode(args.path.encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)
         .decodeToString()))
         .mapNotNull { it.dataOrNull }
 
@@ -63,12 +61,12 @@ class BookshelfViewModel @Inject constructor(
     }.cachedIn(viewModelScope)
     var query = ""
 
-    val bookshelfDisplaySettingsFlow = manageBookshelfDisplaySettingsUseCase.settings
+    val folderDisplaySettingsFlow = manageFolderDisplaySettingsUseCase.settings
 
-    val spanCountFlow = bookshelfDisplaySettingsFlow.map {
+    val spanCountFlow = folderDisplaySettingsFlow.map {
         when (it.display) {
-            BookshelfDisplaySettings.Display.GRID -> it.spanCount
-            BookshelfDisplaySettings.Display.LIST -> 1
+            FolderDisplaySettings.Display.GRID -> it.spanCount
+            FolderDisplaySettings.Display.LIST -> 1
         }
     }
     val pagingQueryDataFlow = serverBookshelfFlow.flatMapLatest {

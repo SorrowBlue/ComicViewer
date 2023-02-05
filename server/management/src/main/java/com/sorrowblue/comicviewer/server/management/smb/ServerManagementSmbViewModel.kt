@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.server.management.smb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.server.Smb
 import com.sorrowblue.comicviewer.domain.usecase.RegisterServerError
 import com.sorrowblue.comicviewer.domain.usecase.RegisterServerUseCase
@@ -36,7 +36,7 @@ internal class ServerManagementSmbViewModel @Inject constructor(
 
     private val args: ServerManagementSmbFragmentArgs by navArgs()
     private val smb: Smb? = args.serverSmb
-    private val bookshelf: Bookshelf? = args.bookshelf
+    private val folder: Folder? = args.folder
 
     val isAdd: Boolean = args.serverSmb == null
 
@@ -44,7 +44,7 @@ internal class ServerManagementSmbViewModel @Inject constructor(
 
     val hostFlow = MutableStateFlow(smb?.host.orEmpty())
     val portFlow = MutableStateFlow(smb?.port ?: 445)
-    val pathFlow = MutableStateFlow(bookshelf?.path.orEmpty().removePrefix("/").removeSuffix("/"))
+    val pathFlow = MutableStateFlow(folder?.path.orEmpty().removePrefix("/").removeSuffix("/"))
     val displayNameFlow = MutableStateFlow(smb?.displayName.orEmpty())
     val isGuestFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val domainFlow = MutableStateFlow(smb?.domain.orEmpty())

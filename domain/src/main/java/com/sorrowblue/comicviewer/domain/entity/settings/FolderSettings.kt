@@ -4,7 +4,7 @@ import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BookshelfSettings(
+data class FolderSettings(
     val isAutoRefresh: Boolean = true,
     val supportExtension: Set<SupportExtension> = SupportExtension.values().toSet(),
     val showPreview: Boolean = true,

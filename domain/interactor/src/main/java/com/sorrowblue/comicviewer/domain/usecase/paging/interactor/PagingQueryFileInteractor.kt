@@ -8,10 +8,10 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 internal class PagingQueryFileInteractor @Inject constructor(
-    private val repository: FileRepository,
+    private val fileRepository: FileRepository,
 ) : PagingQueryFileUseCase() {
 
     override fun run(request: Request): Flow<PagingData<File>> {
-        return repository.pagingDataFlow(request.pagingConfig, request.server, request.query)
+        return fileRepository.pagingDataFlow(request.pagingConfig, request.server, request.query)
     }
 }

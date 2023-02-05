@@ -32,11 +32,11 @@ internal class ServerInfoFragment : BottomSheetDialogFragment(R.layout.server_in
             when (val server = viewModel.server.value) {
                 is DeviceStorage -> findNavController().navigate(
                     ServerInfoFragmentDirections.actionServerInfoToServerManagementNavigationDevice().actionId,
-                    ServerManagementDeviceFragmentArgs(server, viewModel.bookshelf.value).toBundle()
+                    ServerManagementDeviceFragmentArgs(server, viewModel.folder.value).toBundle()
                 )
                 is Smb -> findNavController().navigate(
                     ServerInfoFragmentDirections.actionServerInfoToServerManagementNavigationSmb().actionId,
-                    ServerManagementSmbFragmentArgs(server, viewModel.bookshelf.value!!).toBundle()
+                    ServerManagementSmbFragmentArgs(server, viewModel.folder.value!!).toBundle()
                 )
                 null -> Unit
             }

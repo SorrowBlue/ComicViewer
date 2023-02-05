@@ -128,7 +128,7 @@ internal class BookThumbnailFetcher(
         try {
             // 未作成・古い場合、サムネイルキャッシュから取得する
             val list = cacheList(size, folderThumbnailOrder)
-            val snapshot1 = writeToDiskCacheBookshelf(snapshot, list)
+            val snapshot1 = writeToDiskCacheFolder(snapshot, list)
             return if (snapshot1 != null) {
                 SourceResult(
                     source = snapshot1.toImageSource(),
@@ -248,7 +248,7 @@ internal class BookThumbnailFetcher(
         }
     }
 
-    private suspend fun writeToDiskCacheBookshelf(
+    private suspend fun writeToDiskCacheFolder(
         snapshot: DiskCache.Snapshot?,
         list: List<Pair<String, DiskCache.Snapshot>>
     ): DiskCache.Snapshot? {

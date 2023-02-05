@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.datastore.serializer
 
 import androidx.datastore.core.Serializer
-import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import java.io.InputStream
 import java.io.OutputStream
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,15 +13,15 @@ import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 
 @ExperimentalSerializationApi
-internal class BookshelfDisplaySettingsSerializer(private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO) : Serializer<BookshelfDisplaySettings> {
+internal class FolderDisplaySettingsSerializer(private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO) : Serializer<FolderDisplaySettings> {
 
-    override val defaultValue = BookshelfDisplaySettings()
+    override val defaultValue = FolderDisplaySettings()
 
-    override suspend fun readFrom(input: InputStream): BookshelfDisplaySettings {
+    override suspend fun readFrom(input: InputStream): FolderDisplaySettings {
         return ProtoBuf.decodeFromByteArray(input.readBytes())
     }
 
-    override suspend fun writeTo(t: BookshelfDisplaySettings, output: OutputStream) {
+    override suspend fun writeTo(t: FolderDisplaySettings, output: OutputStream) {
         withContext(coroutineDispatcher) {
             @Suppress("BlockingMethodInNonBlockingContext")
             output.write(ProtoBuf.encodeToByteArray(t))

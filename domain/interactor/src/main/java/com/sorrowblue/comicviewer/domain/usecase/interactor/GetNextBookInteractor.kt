@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.usecase.interactor
 
 import com.sorrowblue.comicviewer.domain.entity.file.Book
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError
 import com.sorrowblue.comicviewer.domain.usecase.GetNextBookUseCase
@@ -23,7 +23,7 @@ internal class GetNextBookInteractor @Inject constructor(
         ).map { result ->
             result.fold({
                 when (it) {
-                    is Bookshelf -> Result.Error(GetLibraryInfoError.NOT_FOUND)
+                    is Folder -> Result.Error(GetLibraryInfoError.NOT_FOUND)
                     is Book -> Result.Success(it)
                 }
             }, {

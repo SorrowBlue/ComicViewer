@@ -12,11 +12,11 @@ import com.sorrowblue.comicviewer.data.datasource.ServerLocalDataSource
 import com.sorrowblue.comicviewer.data.exception.RemoteException
 import com.sorrowblue.comicviewer.data.toFileModel
 import com.sorrowblue.comicviewer.data.toServer
-import com.sorrowblue.comicviewer.data.toServerBookshelf
+import com.sorrowblue.comicviewer.data.toServerFolder
 import com.sorrowblue.comicviewer.data.toServerId
 import com.sorrowblue.comicviewer.data.toServerModel
-import com.sorrowblue.comicviewer.domain.entity.ServerBookshelf
-import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.ServerFolder
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.server.Server
 import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.model.Response
@@ -43,9 +43,9 @@ internal class ServerRepositoryImpl @Inject constructor(
     private val remoteDataSourceFactory: RemoteDataSource.Factory
 ) : ServerRepository {
 
-    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<ServerBookshelf>> {
+    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<ServerFolder>> {
         return serverLocalDataSource.pagingSource(pagingConfig).map {
-            it.map(ServerFileModelFolder::toServerBookshelf)
+            it.map(ServerFileModelFolder::toServerFolder)
         }
     }
 
@@ -115,11 +115,11 @@ internal class ServerRepositoryImpl @Inject constructor(
 
     override suspend fun register(
         server: Server,
-        bookshelf: Bookshelf
+        folder: Folder
     ): Result<Server, ServerRepositoryError> {
         return withContext(Dispatchers.IO) {
             val r = serverLocalDataSource.create(server.toServerModel())
-            val model = bookshelf.copy(serverId = r.id.toServerId(), parent = "").toFileModel()
+            val model = folder.copy(serverId = r.id.toServerId(), parent = "").toFileModel()
             logcat { "model=${model}" }
             fileModelLocalDataSource.register(model)
             Result.Success(r.toServer())

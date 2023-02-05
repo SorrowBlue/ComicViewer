@@ -6,12 +6,12 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsU
 import javax.inject.Inject
 
 internal class ManageDisplaySettingsInteractor @Inject constructor(
-    private val repository: SettingsCommonRepository,
+    private val settingsCommonRepository: SettingsCommonRepository,
 ) : ManageDisplaySettingsUseCase() {
 
-    override val settings = repository.displaySettings
+    override val settings = settingsCommonRepository.displaySettings
 
     override suspend fun edit(action: (DisplaySettings) -> DisplaySettings) {
-        repository.updateDisplaySettings(action)
+        settingsCommonRepository.updateDisplaySettings(action)
     }
 }

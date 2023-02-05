@@ -4,7 +4,7 @@ import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Bookshelf(
+data class Folder(
     override val serverId: ServerId,
     override val name: String,
     override val parent: String,

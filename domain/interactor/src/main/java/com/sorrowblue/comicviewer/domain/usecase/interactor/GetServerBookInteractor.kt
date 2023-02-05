@@ -1,10 +1,8 @@
 package com.sorrowblue.comicviewer.domain.usecase.interactor
 
 import com.sorrowblue.comicviewer.domain.entity.ServerBook
-import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.ServerRepository
-import com.sorrowblue.comicviewer.domain.usecase.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryFileResult
 import com.sorrowblue.comicviewer.domain.usecase.GetServerBookUseCase
 import com.sorrowblue.comicviewer.framework.Result
@@ -32,26 +30,6 @@ internal class GetServerBookInteractor @Inject constructor(
                 })
             }, {
                 Result.Error(GetLibraryFileResult.NO_LIBRARY)
-            }, {
-                Result.Exception(it)
-            })
-        }
-    }
-}
-
-internal class GetBookInteractor @Inject constructor(private val fileRepository: FileRepository) :
-    GetBookUseCase() {
-
-    override fun run(request: Request): Flow<Result<Book, Unit>> {
-        return fileRepository.getFile(request.serverId, request.path).map { result ->
-            result.fold({
-                if (it is Book) {
-                    Result.Success(it)
-                } else {
-                    Result.Error(Unit)
-                }
-            }, {
-                Result.Error(Unit)
             }, {
                 Result.Exception(it)
             })

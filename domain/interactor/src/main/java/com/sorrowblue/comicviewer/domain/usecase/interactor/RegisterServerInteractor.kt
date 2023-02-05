@@ -13,17 +13,17 @@ import javax.inject.Inject
 /**
  * サーバに接続して、接続できたら登録/更新する
  *
- * @property repository
+ * @property serverRepository
  */
 internal class RegisterServerInteractor @Inject constructor(
-    private val repository: ServerRepository,
+    private val serverRepository: ServerRepository,
     private val fileRepository: FileRepository
 ) : RegisterServerUseCase() {
 
     override suspend fun run(request: Request): Result<Server, RegisterServerError> {
-        return repository.connect(request.server, request.path).fold({
+        return serverRepository.connect(request.server, request.path).fold({
             fileRepository.getFolder(request.server, request.path).fold({
-                repository.register(request.server, it).fold({
+                serverRepository.register(request.server, it).fold({
                     Result.Success(it)
                 }, {
                     when (it) {

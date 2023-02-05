@@ -65,9 +65,3 @@ sealed interface FileModel {
         val lastRead: Long
     ) : FileModel
 }
-
-data class FileModelExtra(
-    val createTime: Long,
-    val lastAccess: Long,
-    val diskFreeSpace: Long
-)

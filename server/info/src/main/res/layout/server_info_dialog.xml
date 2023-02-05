@@ -79,7 +79,7 @@
             android:id="@+id/device_path"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.server instanceof DeviceStorage ? viewModel.bookshelf.path : null}"
+            android:text="@{viewModel.server instanceof DeviceStorage ? viewModel.folder.path : null}"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="Downloads/New Folder (1)" />
 
@@ -111,7 +111,7 @@
             android:id="@+id/smb_path"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.server instanceof Smb ? viewModel.bookshelf.path : null}"
+            android:text="@{viewModel.server instanceof Smb ? viewModel.folder.path : null}"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="@tools:sample/lorem" />
 
