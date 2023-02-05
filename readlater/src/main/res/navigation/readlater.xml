@@ -11,9 +11,6 @@
         android:label="後で見る"
         tools:layout="@layout/readlater_fragment">
         <action
-            android:id="@+id/action_readlater_to_file_info"
-            app:destination="@id/file_info_navigation" />
-        <action
             android:id="@+id/action_readlater_to_book"
             app:destination="@id/book_navigation" />
         <action
@@ -21,6 +18,6 @@
             app:destination="@id/folder_navigation" />
     </fragment>
     <include app:graph="@navigation/folder" />
+    <include app:graph="@navigation/folder_display" />
     <include app:graph="@navigation/book" />
-    <include app:graph="@navigation/file_info" />
 </navigation>

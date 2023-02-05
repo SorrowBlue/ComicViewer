@@ -29,9 +29,6 @@
         <action
             android:id="@+id/action_favorite_to_book"
             app:destination="@id/book_navigation" />
-        <action
-            android:id="@+id/action_favorite_to_file_info"
-            app:destination="@id/file_info_navigation" />
     </fragment>
     <fragment
         android:id="@+id/favorite_edit_fragment"
@@ -45,5 +42,4 @@
     <include app:graph="@navigation/book" />
     <include app:graph="@navigation/folder_display" />
     <include app:graph="@navigation/folder" />
-    <include app:graph="@navigation/file_info" />
 </navigation>

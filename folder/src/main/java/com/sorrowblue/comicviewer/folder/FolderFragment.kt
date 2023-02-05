@@ -39,7 +39,6 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.ScanType
-import com.sorrowblue.comicviewer.file.info.FileInfoFragmentArgs
 import com.sorrowblue.comicviewer.folder.databinding.FolderFragmentBinding
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
@@ -90,7 +89,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
                     )
                 }
             },
-            { navigate(FolderFragmentDirections.actionFolderToFileInfo(it)) }
+            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.serverId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
 
     override fun onCreateAdapter(adapter: PagingDataAdapter<File, *>) {
@@ -188,13 +187,6 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
         ).toBundle()
     }
 
-    private fun FolderFragmentDirections.Companion.actionFolderToFileInfo(file: File) =
-        object : NavDirections {
-            override val actionId = actionFolderToFileInfo().actionId
-            override val arguments =
-                FileInfoFragmentArgs(file.serverId.value, file.path.encodeBase64()).toBundle()
-        }
-
     private fun setupSearchAdapter() {
         val callback = requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -228,7 +220,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
                     )
                 }
             },
-            { navigate(FolderFragmentDirections.actionFolderToFileInfo(it)) }
+            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.serverId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
         binding.recyclerView.setSpanCount(1)
         binding.searchRecyclerView.adapter = adapter

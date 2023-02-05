@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
@@ -15,7 +16,6 @@ import com.sorrowblue.comicviewer.book.BookFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
-import com.sorrowblue.comicviewer.file.info.FileInfoFragmentArgs
 import com.sorrowblue.comicviewer.folder.FolderAdapter
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
@@ -60,7 +60,7 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
                     )
                 }
             },
-            { navigate(ReadLaterFragmentDirections.actionReadlaterToFileInfo(it)) }
+            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.serverId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -125,13 +125,4 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
             transitionName
         ).toBundle()
     }
-
-    private fun ReadLaterFragmentDirections.Companion.actionReadlaterToFileInfo(file: File) =
-        object : NavDirections {
-            override val actionId = actionReadlaterToFileInfo().actionId
-            override val arguments = FileInfoFragmentArgs(
-                file.serverId.value,
-                file.path.encodeBase64(),
-            ).toBundle()
-        }
 }

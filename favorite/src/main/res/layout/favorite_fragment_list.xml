@@ -40,17 +40,6 @@
             app:paddingBottomSystemWindowInsets="@{true}"
             tools:listitem="@layout/favorite_item_list" />
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/favorite_list_btn_new_favorite"
-            app:icon="@drawable/ic_twotone_add_24"
-            app:layout_marginBottomSystemWindowInsets="@{true}" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/empty"
             android:layout_width="match_parent"

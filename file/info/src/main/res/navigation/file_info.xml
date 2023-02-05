@@ -6,12 +6,16 @@
 
     <dialog
         android:id="@+id/file_info_fragment"
-        android:name="com.sorrowblue.comicviewer.file.info.FileInfoFragment" >
+        android:name="com.sorrowblue.comicviewer.file.info.FileInfoFragment">
         <argument
             android:name="server_id_value"
             app:argType="integer" />
         <argument
             android:name="path"
             app:argType="string" />
+        <deepLink
+            android:id="@+id/file_info_deeplink"
+            android:autoVerify="true"
+            app:uri="comicviewer.sorrowblue.com/file_info?server_id={server_id_value}&amp;path={path}" />
     </dialog>
 </navigation>

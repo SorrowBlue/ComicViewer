@@ -49,6 +49,7 @@ dependencies {
     implementation(projects.settings)
     implementation(projects.folder)
     implementation(projects.server)
+    implementation(projects.file.info)
     implementation(projects.favorite)
     implementation(projects.readlater)
     implementation(projects.settings.security)

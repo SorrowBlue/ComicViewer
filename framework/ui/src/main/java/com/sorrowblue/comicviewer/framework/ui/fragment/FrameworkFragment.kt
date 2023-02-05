@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.framework.ui.fragment
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +50,9 @@ open class FrameworkFragment(contentLayoutId: Int) : Fragment(contentLayoutId) {
 
     protected fun navigate(directions: NavDirections) {
         findNavController().navigate(directions)
+    }
+    protected fun navigate(uri: Uri) {
+        findNavController().navigate(uri)
     }
     protected fun navigate(directions: NavDirections, extras: FragmentNavigator.Extras) {
         findNavController().navigate(directions, extras)

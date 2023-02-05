@@ -19,12 +19,8 @@
         <action
             android:id="@+id/action_server_list_to_server_info_navigation"
             app:destination="@id/server_info_navigation" />
-        <action
-            android:id="@+id/action_server_list_to_favorite_list"
-            app:destination="@id/favorite_list_navigation" />
     </fragment>
     <include app:graph="@navigation/folder" />
     <include app:graph="@navigation/server_management_selection" />
     <include app:graph="@navigation/server_info" />
-    <include app:graph="@navigation/favorite_list" />
 </navigation>

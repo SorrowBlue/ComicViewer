@@ -19,7 +19,6 @@ dependencies {
     implementation(projects.book)
     implementation(projects.folder)
     implementation(projects.folder.display)
-    implementation(projects.file.info)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)

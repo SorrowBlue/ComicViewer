@@ -41,9 +41,6 @@
             android:id="@+id/action_folder_to_folder_display"
             app:destination="@id/folder_display_navigation"
             app:launchSingleTop="true" />
-        <action
-            android:id="@+id/action_folder_to_file_info"
-            app:destination="@id/file_info_navigation" />
     </fragment>
     <dialog
         android:id="@+id/folder_scan_info_dialog"
@@ -59,5 +56,4 @@
     </dialog>
     <include app:graph="@navigation/book" />
     <include app:graph="@navigation/folder_display" />
-    <include app:graph="@navigation/file_info" />
 </navigation>
