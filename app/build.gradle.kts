@@ -47,7 +47,7 @@ dependencies {
     implementation(projects.data.di)
     implementation(projects.domain)
     implementation(projects.settings)
-    implementation(projects.bookshelf)
+    implementation(projects.folder)
     implementation(projects.server)
     implementation(projects.favorite)
     implementation(projects.readlater)

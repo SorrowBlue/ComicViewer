@@ -7,7 +7,7 @@
         android:title="@string/favorite_title_edit"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_favorite_to_bookshelf_display"
+        android:id="@id/action_favorite_to_folder_display"
         android:icon="@drawable/ic_twotone_display_settings_24"
         android:menuCategory="secondary"
         android:title="@string/favorite_title_display"

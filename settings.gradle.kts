@@ -67,8 +67,8 @@ include(":settings:display")
 include(":settings:bookshelf")
 include(":settings:security")
 include(":settings:viewer")
-include(":bookshelf")
-include(":bookshelf:display")
+include(":folder")
+include(":folder:display")
 include(":book")
 
 

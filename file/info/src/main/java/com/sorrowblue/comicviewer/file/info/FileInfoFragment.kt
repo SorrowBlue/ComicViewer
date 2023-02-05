@@ -30,7 +30,7 @@ internal class FileInfoFragment : BottomSheetDialogFragment(R.layout.file_info_f
             findNavController().navigate("http://comicviewer.sorrowblue.com/favorite/add?serverId=${viewModel.fileFlow.value!!.serverId.value}&filePath=${viewModel.fileFlow.value!!.path.encodeBase64()}".toUri())
         }
         binding.openFolder.setOnClickListener {
-            findNavController().navigate("http://comicviewer.sorrowblue.com/bookshelf?serverId=${viewModel.fileFlow.value!!.serverId.value}&path=${viewModel.fileFlow.value!!.parent.encodeBase64()}".toUri())
+            findNavController().navigate("http://comicviewer.sorrowblue.com/folder?serverId=${viewModel.fileFlow.value!!.serverId.value}&path=${viewModel.fileFlow.value!!.parent.encodeBase64()}".toUri())
         }
     }
 }

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.sorrowblue.comicviewer.folder.FolderViewModel" />
+    </data>
+
+    <com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="@{viewModel.transitionName}">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:liftOnScroll="true">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_marginTopSystemWindowInsets="@{true}"
+                app:menu="@menu/folder"
+                app:subtitle="@{viewModel.subTitleFlow}"
+                app:subtitleCentered="true"
+                app:title="@{viewModel.titleFlow}"
+                app:titleCentered="true"
+                tools:subtitle="/books/"
+                tools:title="Books" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.search.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_anchor="@id/toolbar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:padding="4dp"
+                app:fastScrollEnabled="true"
+                app:fastScrollHorizontalThumbDrawable="@drawable/folder_fast_scroll_track"
+                app:fastScrollHorizontalTrackDrawable="@drawable/folder_fast_scroll_thumb"
+                app:fastScrollVerticalThumbDrawable="@drawable/folder_fast_scroll_thumb"
+                app:fastScrollVerticalTrackDrawable="@drawable/folder_fast_scroll_track"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:listitem="@layout/folder_item_list" />
+        </com.google.android.material.search.SearchView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="4dp"
+            app:fastScrollEnabled="true"
+            app:fastScrollHorizontalThumbDrawable="@drawable/folder_fast_scroll_track"
+            app:fastScrollHorizontalTrackDrawable="@drawable/folder_fast_scroll_thumb"
+            app:fastScrollVerticalThumbDrawable="@drawable/folder_fast_scroll_thumb"
+            app:fastScrollVerticalTrackDrawable="@drawable/folder_fast_scroll_track"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/folder_item"
+            tools:spanCount="3" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:isVisible="@{viewModel.isRefreshingFlow}"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:isVisible="@{viewModel.isEmptyDataFlow}">
+
+            <ImageView
+                android:id="@+id/empty_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_undraw_resume_folder_re_e0bi" />
+
+            <TextView
+                android:id="@+id/empty_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:gravity="center_horizontal"
+                android:text="ファイルはありません"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/empty_image" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout>
+</layout>

@@ -17,8 +17,8 @@ dependencies {
     implementation(projects.framework.ui)
     implementation(projects.domain)
     implementation(projects.book)
-    implementation(projects.bookshelf)
-    implementation(projects.bookshelf.display)
+    implementation(projects.folder)
+    implementation(projects.folder.display)
     implementation(projects.file.info)
 
     implementation(libs.dagger.hilt.android.core)

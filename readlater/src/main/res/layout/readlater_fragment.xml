@@ -35,13 +35,13 @@
             android:clipToPadding="false"
             android:padding="4dp"
             app:fastScrollEnabled="true"
-            app:fastScrollHorizontalThumbDrawable="@drawable/bookshelf_fast_scroll_track"
-            app:fastScrollHorizontalTrackDrawable="@drawable/bookshelf_fast_scroll_thumb"
-            app:fastScrollVerticalThumbDrawable="@drawable/bookshelf_fast_scroll_thumb"
-            app:fastScrollVerticalTrackDrawable="@drawable/bookshelf_fast_scroll_track"
+            app:fastScrollHorizontalThumbDrawable="@drawable/folder_fast_scroll_track"
+            app:fastScrollHorizontalTrackDrawable="@drawable/folder_fast_scroll_thumb"
+            app:fastScrollVerticalThumbDrawable="@drawable/folder_fast_scroll_thumb"
+            app:fastScrollVerticalTrackDrawable="@drawable/folder_fast_scroll_track"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/bookshelf_item"
+            tools:listitem="@layout/folder_item"
             tools:spanCount="3" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator

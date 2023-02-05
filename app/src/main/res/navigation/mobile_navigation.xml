@@ -6,7 +6,7 @@
     app:startDestination="@id/server_navigation">
 
     <include app:graph="@navigation/server" />
-    <include app:graph="@navigation/bookshelf" />
+    <include app:graph="@navigation/folder" />
     <include app:graph="@navigation/settings" />
     <include app:graph="@navigation/favorite_add" />
     <action

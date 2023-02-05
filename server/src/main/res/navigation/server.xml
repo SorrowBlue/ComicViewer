@@ -11,8 +11,8 @@
         android:label="@string/server_title_server_list"
         tools:layout="@layout/server_fragment_list">
         <action
-            android:id="@+id/action_server_list_to_bookshelf_navigation"
-            app:destination="@id/bookshelf_navigation" />
+            android:id="@+id/action_server_list_to_folder"
+            app:destination="@id/folder_navigation" />
         <action
             android:id="@+id/action_server_list_to_server_management_navigation_selection"
             app:destination="@id/server_management_navigation_selection" />
@@ -23,7 +23,7 @@
             android:id="@+id/action_server_list_to_favorite_list"
             app:destination="@id/favorite_list_navigation" />
     </fragment>
-    <include app:graph="@navigation/bookshelf" />
+    <include app:graph="@navigation/folder" />
     <include app:graph="@navigation/server_management_selection" />
     <include app:graph="@navigation/server_info" />
     <include app:graph="@navigation/favorite_list" />

@@ -8,7 +8,7 @@
         android:id="@+id/favorite_fragment"
         android:name="com.sorrowblue.comicviewer.favorite.FavoriteFragment"
         android:label="お気に入り"
-        tools:layout="@layout/bookshelf_fragment">
+        tools:layout="@layout/folder_fragment">
         <argument
             android:name="favorite_id"
             app:argType="integer" />
@@ -21,11 +21,11 @@
             android:id="@+id/action_favorite_to_favorite_edit"
             app:destination="@id/favorite_edit_fragment" />
         <action
-            android:id="@+id/action_favorite_to_bookshelf_display"
-            app:destination="@id/bookshelf_display_navigation" />
+            android:id="@+id/action_favorite_to_folder_display"
+            app:destination="@id/folder_display_navigation" />
         <action
             android:id="@+id/action_favorite_to_bookshelf"
-            app:destination="@id/bookshelf_navigation" />
+            app:destination="@id/folder_navigation" />
         <action
             android:id="@+id/action_favorite_to_book"
             app:destination="@id/book_navigation" />
@@ -43,7 +43,7 @@
             app:argType="integer" />
     </fragment>
     <include app:graph="@navigation/book" />
-    <include app:graph="@navigation/bookshelf_display" />
-    <include app:graph="@navigation/bookshelf" />
+    <include app:graph="@navigation/folder_display" />
+    <include app:graph="@navigation/folder" />
     <include app:graph="@navigation/file_info" />
 </navigation>

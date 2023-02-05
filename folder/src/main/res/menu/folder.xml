@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/folder_search"
+        android:icon="@drawable/ic_twotone_search_24"
+        android:title="search_title"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@id/action_folder_to_folder_display"
+        android:icon="@drawable/ic_twotone_view_list_24"
+        android:menuCategory="secondary"
+        android:title="表示"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/folder_refresh_menu"
+        android:icon="@drawable/ic_twotone_refresh_24"
+        android:title="更新"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/folder_refresh"
+                android:icon="@drawable/ic_twotone_refresh_24"
+                android:title="高速スキャン"
+                app:showAsAction="withText" />
+            <item
+                android:id="@+id/folder_refresh_full"
+                android:icon="@drawable/ic_twotone_refresh_24"
+                android:title="フルスキャン"
+                app:showAsAction="withText" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/action_global_settings_navigation"
+        android:icon="@drawable/ic_twotone_settings_24"
+        android:menuCategory="secondary"
+        android:title="@string/framework_title_settings"
+        app:showAsAction="never" />
+</menu>

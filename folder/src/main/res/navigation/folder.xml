@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/folder_navigation"
+    app:startDestination="@id/folder_fragment">
+
+    <fragment
+        android:id="@+id/folder_fragment"
+        android:name="com.sorrowblue.comicviewer.folder.FolderFragment"
+        tools:layout="@layout/folder_fragment">
+        <argument
+            android:name="server_id"
+            app:argType="integer" />
+        <argument
+            android:name="path"
+            app:argType="string" />
+        <argument
+            android:name="transition_name"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="position"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <deepLink
+            android:id="@+id/folder_fragment_deeplink"
+            android:autoVerify="true"
+            app:uri="comicviewer.sorrowblue.com/folder?serverId={server_id}&amp;path={path}&amp;transitionName={transition_name}&amp;position={position}" />
+        <action
+            android:id="@+id/action_folder_self"
+            app:destination="@id/folder_fragment" />
+        <action
+            android:id="@+id/action_folder_to_book"
+            app:destination="@id/book_navigation" />
+        <action
+            android:id="@+id/action_folder_to_folder_scan_info"
+            app:destination="@id/folder_scan_info_dialog" />
+        <action
+            android:id="@+id/action_folder_to_folder_display"
+            app:destination="@id/folder_display_navigation"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_folder_to_file_info"
+            app:destination="@id/file_info_navigation" />
+    </fragment>
+    <dialog
+        android:id="@+id/folder_scan_info_dialog"
+        android:name="com.sorrowblue.comicviewer.folder.FolderScanInfoDialog"
+        tools:layout="@layout/folder_view_scan_info">
+        <argument
+            android:name="uuid"
+            app:argType="string" />
+        <deepLink
+            android:id="@+id/folder_scan_info_dialog_deeplink"
+            android:autoVerify="true"
+            app:uri="comicviewer.sorrowblue.com/scan?uuid={uuid}" />
+    </dialog>
+    <include app:graph="@navigation/book" />
+    <include app:graph="@navigation/folder_display" />
+    <include app:graph="@navigation/file_info" />
+</navigation>

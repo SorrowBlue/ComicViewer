@@ -16,7 +16,7 @@ dependencies {
     implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.domain)
-    implementation(projects.bookshelf)
+    implementation(projects.folder)
     implementation(projects.favorite)
     implementation(projects.server.info)
     implementation(projects.server.management)

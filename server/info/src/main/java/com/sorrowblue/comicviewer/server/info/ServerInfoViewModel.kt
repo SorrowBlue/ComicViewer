@@ -46,5 +46,5 @@ internal class ServerInfoViewModel @Inject constructor(
     val server: StateFlow<Server?> =
         libraryInfoFlow.map { it.server }.stateIn(viewModelScope, SharingStarted.Lazily, null)
     val folder: StateFlow<Folder?> =
-        libraryInfoFlow.map { it.bookshelf }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+        libraryInfoFlow.map { it.folder }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 }

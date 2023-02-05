@@ -14,13 +14,13 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sorrowblue.comicviewer.book.BookFragmentArgs
-import com.sorrowblue.comicviewer.bookshelf.BookshelfAdapter
-import com.sorrowblue.comicviewer.bookshelf.BookshelfFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.file.Book
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentBinding
 import com.sorrowblue.comicviewer.file.info.FileInfoFragmentArgs
+import com.sorrowblue.comicviewer.folder.FolderAdapter
+import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.encodeBase64
@@ -44,7 +44,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
     override val viewModel: FavoriteViewModel by viewModels()
     override val recyclerView: RecyclerView get() = binding.recyclerView
     override val adapter
-        get() = BookshelfAdapter(
+        get() = FolderAdapter(
             runBlocking { viewModel.folderDisplaySettingsFlow.first().display },
             { file, transitionName, extras ->
                 when (file) {
@@ -87,7 +87,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
 
     override fun onCreateAdapter(adapter: PagingDataAdapter<File, *>) {
         super.onCreateAdapter(adapter)
-        check(adapter is BookshelfAdapter)
+        check(adapter is FolderAdapter)
         viewModel.folderDisplaySettingsFlow.onEach { adapter.display = it.display }
             .launchInWithLifecycle()
 
@@ -137,7 +137,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
         transitionName: String
     ) = object : NavDirections {
         override val actionId = actionFavoriteToBookshelf().actionId
-        override val arguments = BookshelfFragmentArgs(
+        override val arguments = FolderFragmentArgs(
             folder.serverId.value,
             folder.path.encodeBase64(),
             transitionName

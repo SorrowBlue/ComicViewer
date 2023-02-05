@@ -8,7 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.LoadState
 import com.google.android.material.transition.MaterialFadeThrough
-import com.sorrowblue.comicviewer.bookshelf.submitDataWithLifecycle
+import com.sorrowblue.comicviewer.folder.submitDataWithLifecycle
 import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentEditBinding
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment

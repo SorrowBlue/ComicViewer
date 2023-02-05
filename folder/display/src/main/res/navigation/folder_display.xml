@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/folder_display_navigation"
+    app:startDestination="@id/folder_display_fragment">
+
+    <dialog
+        android:id="@+id/folder_display_fragment"
+        android:name="com.sorrowblue.comicviewer.folder.display.FolderDisplayFragment"
+        tools:layout="@layout/folder_display_fragment" />
+</navigation>
