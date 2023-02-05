@@ -68,13 +68,13 @@
         android:fillColor="#fff"
         android:pathData="M83.54,60.77h44v5h-44z" />
     <path
-        android:fillColor="@color/md_theme_light_primary"
+        android:fillColor="?attr/colorPrimary"
         android:pathData="M185.54,63.77m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
     <path
-        android:fillColor="@color/md_theme_light_primary"
+        android:fillColor="?attr/colorPrimary"
         android:pathData="M195.54,63.77m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
     <path
-        android:fillColor="@color/md_theme_light_primary"
+        android:fillColor="?attr/colorPrimary"
         android:pathData="M205.54,63.77m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
     <path
         android:fillColor="#3f3d56"
@@ -83,13 +83,13 @@
         android:fillColor="#fff"
         android:pathData="M83.54,131.77h44v5h-44z" />
     <path
-        android:fillColor="@color/md_theme_light_primary"
+        android:fillColor="?attr/colorPrimary"
         android:pathData="M185.54,134.77m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
     <path
-        android:fillColor="@color/md_theme_light_primary"
+        android:fillColor="?attr/colorPrimary"
         android:pathData="M195.54,134.77m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
     <path
-        android:fillColor="@color/md_theme_light_primary"
+        android:fillColor="?attr/colorPrimary"
         android:pathData="M205.54,134.77m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
     <path
         android:fillColor="#3f3d56"
@@ -98,13 +98,13 @@
         android:fillColor="#fff"
         android:pathData="M83.54,202.77h44v5h-44z" />
     <path
-        android:fillColor="@color/md_theme_light_primary"
+        android:fillColor="?attr/colorPrimary"
         android:pathData="M185.54,205.77m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
     <path
-        android:fillColor="@color/md_theme_light_primary"
+        android:fillColor="?attr/colorPrimary"
         android:pathData="M195.54,205.77m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
     <path
-        android:fillColor="@color/md_theme_light_primary"
+        android:fillColor="?attr/colorPrimary"
         android:pathData="M205.54,205.77m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
     <path
         android:fillColor="#ccc"

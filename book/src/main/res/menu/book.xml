@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/favorite"
-        android:checked="true"
-        android:icon="@drawable/book_favorite"
-        android:title="Add favorite"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/action_global_settings_navigation"
         android:icon="@drawable/ic_twotone_settings_24"
         android:menuCategory="secondary"
