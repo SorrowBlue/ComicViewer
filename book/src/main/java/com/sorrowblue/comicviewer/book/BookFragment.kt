@@ -9,7 +9,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,8 +23,6 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialElevationScale
 import com.sorrowblue.comicviewer.book.databinding.BookFragmentBinding
 import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
-import com.sorrowblue.comicviewer.framework.resource.FrameworkDrawable
-import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,8 +60,6 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         applyContainerTransform(viewModel.transitionName)
     }
 
-    var isFavorite = false
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
@@ -74,13 +69,6 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         setupBottomSheet()
 
         binding.viewerToolbar.setupWithNavController(findNavController())
-        binding.viewerToolbar.setOnMenuItemClickListener {
-            if (it.itemId == R.id.favorite) {
-                isFavorite = !isFavorite
-                it.setIcon(if (isFavorite) FrameworkDrawable.ic_twotone_favorite_24 else FrameworkDrawable.ic_twotone_favorite_border_24)
-            }
-            true
-        }
 
         binding.viewPager2.attachToSlider(binding.slider) {
             viewModel.pageIndex.value = it

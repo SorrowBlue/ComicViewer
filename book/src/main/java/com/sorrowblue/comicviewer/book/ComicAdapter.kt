@@ -102,7 +102,7 @@ internal class ComicAdapter(
                 }
             } else {
                 binding.bookName.text = "本はありません"
-                binding.bookThumbnail.load(R.drawable.ic_undraw_not_found_re_44w9)
+                binding.bookThumbnail.load(com.sorrowblue.comicviewer.framework.resource.R.drawable.ic_undraw_not_found_re_44w9)
                 binding.bookNext.isVisible = false
                 binding.bookNext.setOnClickListener(null)
             }
