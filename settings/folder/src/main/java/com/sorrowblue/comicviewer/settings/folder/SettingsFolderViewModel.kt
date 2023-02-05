@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.settings.bookshelf
+package com.sorrowblue.comicviewer.settings.folder
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +8,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-internal class SettingsBookshelfViewModel @Inject constructor(
+internal class SettingsFolderViewModel @Inject constructor(
     private val manageFolderSettingsUseCase: ManageFolderSettingsUseCase
 ) : ViewModel() {
     fun updateShowPreview(newValue: Boolean) {

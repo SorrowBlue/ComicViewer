@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    resourcePrefix("settings_bookshelf_")
+    resourcePrefix("settings_folder")
     dataBinding.enable = true
     viewBinding.enable = true
 }

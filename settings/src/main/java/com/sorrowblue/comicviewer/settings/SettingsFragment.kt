@@ -10,7 +10,6 @@ import com.sorrowblue.comicviewer.framework.settings.preferenceBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import logcat.logcat
 
 @AndroidEntryPoint
 internal class SettingsFragment : FrameworkPreferenceFragment(R.xml.settings_preference) {
@@ -29,8 +28,8 @@ internal class SettingsFragment : FrameworkPreferenceFragment(R.xml.settings_pre
             true
         }
 
-        binding.bookshelf.setOnPreferenceClickListener {
-            findNavController().navigate(SettingsFragmentDirections.actionSettingsToSettingsBookshelf())
+        binding.folder.setOnPreferenceClickListener {
+            findNavController().navigate(SettingsFragmentDirections.actionSettingsToSettingsFolder())
             true
         }
 

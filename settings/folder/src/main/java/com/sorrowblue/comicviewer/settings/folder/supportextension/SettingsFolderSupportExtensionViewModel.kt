@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.settings.bookshelf
+package com.sorrowblue.comicviewer.settings.folder.supportextension
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-internal class SettingsBookshelfSupportExtensionViewModel @Inject constructor(
+internal class SettingsFolderSupportExtensionViewModel @Inject constructor(
     private val settingsUseCase: ManageFolderSettingsUseCase
 ) : ViewModel() {
 

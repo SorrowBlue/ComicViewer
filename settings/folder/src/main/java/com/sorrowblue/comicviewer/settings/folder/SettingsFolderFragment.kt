@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.settings.bookshelf
+package com.sorrowblue.comicviewer.settings.folder
 
 import android.os.Bundle
 import android.view.View
@@ -16,20 +16,20 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-internal class SettingsBookshelfBinding(fragment: FrameworkPreferenceFragment) :
+internal class SettingsFolderBinding(fragment: FrameworkPreferenceFragment) :
     FrameworkPreferenceBinding(fragment) {
 
-    val showPreview: SwitchPreferenceCompat by preference(R.string.settings_bookshelf_preference_key_show_preview)
-    val resolveImageFolder: SwitchPreferenceCompat by preference(R.string.settings_bookshelf_preference_key_resolve_image_folder)
-    val supportExtension: Preference by preference(R.string.settings_bookshelf_preference_key_support_extension)
+    val showPreview: SwitchPreferenceCompat by preference(R.string.settings_folder_preference_key_show_preview)
+    val resolveImageFolder: SwitchPreferenceCompat by preference(R.string.settings_folder_preference_key_resolve_image_folder)
+    val supportExtension: Preference by preference(R.string.settings_folder_preference_key_support_extension)
 }
 
 @AndroidEntryPoint
-internal class SettingsBookshelfFragment :
-    FrameworkPreferenceFragment(R.xml.settings_bookshelf_preference) {
+internal class SettingsFolderFragment :
+    FrameworkPreferenceFragment(R.xml.settings_folder_preference) {
 
-    private val binding: SettingsBookshelfBinding by preferenceBinding()
-    private val viewModel: SettingsBookshelfViewModel by viewModels()
+    private val binding: SettingsFolderBinding by preferenceBinding()
+    private val viewModel: SettingsFolderViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,7 +40,7 @@ internal class SettingsBookshelfFragment :
             }
         }
         binding.supportExtension.setOnPreferenceClickListener {
-            findNavController().navigate(SettingsBookshelfFragmentDirections.actionSettingsBookshelfToSettingsBookshelfSupportExtension())
+            findNavController().navigate(SettingsFolderFragmentDirections.actionSettingsFolderToSettingsFolderSupportExtension())
             true
         }
         binding.showPreview.setOnPreferenceChangeListener<Boolean> { _, newValue ->

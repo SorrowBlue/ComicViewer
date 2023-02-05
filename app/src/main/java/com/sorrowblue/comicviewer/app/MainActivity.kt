@@ -88,7 +88,7 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
             }
         logcat("RESTORE_NAVIGATION", LogPriority.INFO) { "Start restore navigation." }
         if (bookshelves.isNotEmpty()) {
-            // library -> bookshelf
+            // library -> folder
             if (bookshelves.size == 1) {
                 navController.navigate(
                     com.sorrowblue.comicviewer.server.R.id.action_server_list_to_folder,
@@ -99,7 +99,7 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     ).toBundle()
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                    "server(${server.id}) -> bookshelf(${bookshelves.first().path})"
+                    "server(${server.id}) -> folder(${bookshelves.first().path})"
                 }
             } else {
                 navController.navigate(
@@ -111,16 +111,16 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     ).toBundle()
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                    "server(${server.id}) -> bookshelf(${bookshelves.first().path})"
+                    "server(${server.id}) -> folder(${bookshelves.first().path})"
                 }
-                bookshelves.drop(1).dropLast(1).forEachIndexed { index, bookshelf ->
-                    // bookshelf -> bookshelf
+                bookshelves.drop(1).dropLast(1).forEachIndexed { index, folder ->
+                    // folder -> folder
                     navController.navigate(
                         com.sorrowblue.comicviewer.folder.R.id.action_folder_self,
-                        FolderFragmentArgs(server.id.value, bookshelf.base64Path()).toBundle()
+                        FolderFragmentArgs(server.id.value, folder.base64Path()).toBundle()
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "bookshelf(${bookshelves[index].path}) -> bookshelf${bookshelves[index + 1].path}"
+                        "folder(${bookshelves[index].path}) -> folder${bookshelves[index + 1].path}"
                     }
                 }
                 navController.navigate(
@@ -132,9 +132,9 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     ).toBundle()
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                    "bookshelf(${
+                    "folder(${
                         bookshelves.dropLast(1).last().path
-                    }) -> bookshelf${bookshelves.last().path}"
+                    }) -> folder${bookshelves.last().path}"
                 }
             }
         } else {

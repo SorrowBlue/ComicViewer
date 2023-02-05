@@ -52,7 +52,7 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
                     )
 
                     is Folder -> navigate(
-                        ReadLaterFragmentDirections.actionReadlaterToBookshelf(
+                        ReadLaterFragmentDirections.actionReadlaterToFolder(
                             file,
                             transitionName
                         ),
@@ -114,11 +114,11 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
         ).toBundle()
     }
 
-    private fun ReadLaterFragmentDirections.Companion.actionReadlaterToBookshelf(
+    private fun ReadLaterFragmentDirections.Companion.actionReadlaterToFolder(
         folder: Folder,
         transitionName: String
     ) = object : NavDirections {
-        override val actionId = actionReadlaterToBookshelf().actionId
+        override val actionId = actionReadlaterToFolder().actionId
         override val arguments = FolderFragmentArgs(
             folder.serverId.value,
             folder.path.encodeBase64(),

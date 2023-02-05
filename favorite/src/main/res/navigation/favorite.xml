@@ -24,7 +24,7 @@
             android:id="@+id/action_favorite_to_folder_display"
             app:destination="@id/folder_display_navigation" />
         <action
-            android:id="@+id/action_favorite_to_bookshelf"
+            android:id="@+id/action_favorite_to_folder"
             app:destination="@id/folder_navigation" />
         <action
             android:id="@+id/action_favorite_to_book"

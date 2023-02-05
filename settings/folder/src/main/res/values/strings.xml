@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_folder_preference_key_resolve_image_folder" translatable="false">settings_folder_preference_key_resolve_image_folder</string>
+    <string name="settings_folder_preference_key_show_preview" translatable="false">settings_folder_preference_key_show_preview</string>
+    <string name="settings_folder_preference_key_support_extension" translatable="false">settings_folder_preference_key_support_extension</string>
+</resources>

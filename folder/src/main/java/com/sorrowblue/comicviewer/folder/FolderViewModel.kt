@@ -42,7 +42,7 @@ internal class FolderViewModel @Inject constructor(
     var position = args.position
     override val transitionName = args.transitionName
 
-    private val serverBookshelfFlow = getServerFolderUseCase.execute(
+    private val serverFolderFlow = getServerFolderUseCase.execute(
         GetServerFolderUseCase.Request(
             ServerId(args.serverId),
             Base64.decode(args.path.encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)
@@ -50,15 +50,15 @@ internal class FolderViewModel @Inject constructor(
         )
     ).mapNotNull { it.dataOrNull }
 
-    val serverFlow = serverBookshelfFlow.map { it.server }.stateIn { null }
+    val serverFlow = serverFolderFlow.map { it.server }.stateIn { null }
 
-    private val bookshelfFlow = serverBookshelfFlow.map { it.folder }.stateIn { null }
+    private val folderFlow = serverFolderFlow.map { it.folder }.stateIn { null }
 
     val titleFlow = serverFlow.mapNotNull { it?.displayName }.stateIn { "" }
 
-    val subTitleFlow = bookshelfFlow.mapNotNull { it?.name }.stateIn { "" }
+    val subTitleFlow = folderFlow.mapNotNull { it?.name }.stateIn { "" }
 
-    override val pagingDataFlow = serverBookshelfFlow.flatMapLatest {
+    override val pagingDataFlow = serverFolderFlow.flatMapLatest {
         pagingFileUseCase.execute(
             PagingFileUseCase.Request(PagingConfig(100), it.server, it.folder)
         )
@@ -73,7 +73,7 @@ internal class FolderViewModel @Inject constructor(
             FolderDisplaySettings.Display.LIST -> 1
         }
     }
-    val pagingQueryDataFlow = serverBookshelfFlow.flatMapLatest {
+    val pagingQueryDataFlow = serverFolderFlow.flatMapLatest {
         pagingQueryFileUseCase.execute(
             PagingQueryFileUseCase.Request(PagingConfig(100), it.server) {
                 query
@@ -82,13 +82,10 @@ internal class FolderViewModel @Inject constructor(
     }.cachedIn(viewModelScope)
 
     fun fullScan(scanType: ScanType, done: (String) -> Unit) {
-        val bookshelf = bookshelfFlow.value ?: return
+        val folder = folderFlow.value ?: return
         viewModelScope.launch {
-            fullScanLibraryUseCase.execute(
-                FullScanLibraryUseCase.Request(
-                    bookshelf, scanType
-                )
-            ).first().dataOrNull?.let { done.invoke(it) }
+            fullScanLibraryUseCase.execute(FullScanLibraryUseCase.Request(folder, scanType))
+                .first().dataOrNull?.let { done.invoke(it) }
         }
     }
 }

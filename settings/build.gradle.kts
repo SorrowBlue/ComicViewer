@@ -18,7 +18,7 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.settings.display)
     implementation(projects.settings.viewer)
-    implementation(projects.settings.bookshelf)
+    implementation(projects.settings.folder)
     implementation(projects.settings.security)
     implementation(libs.androidx.appcompat)
 

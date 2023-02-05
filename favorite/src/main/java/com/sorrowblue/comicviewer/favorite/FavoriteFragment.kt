@@ -54,7 +54,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
                     )
 
                     is Folder -> navigate(
-                        FavoriteFragmentDirections.actionFavoriteToBookshelf(
+                        FavoriteFragmentDirections.actionFavoriteToFolder(
                             file,
                             transitionName
                         ),
@@ -132,11 +132,11 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
         ).toBundle()
     }
 
-    private fun FavoriteFragmentDirections.Companion.actionFavoriteToBookshelf(
+    private fun FavoriteFragmentDirections.Companion.actionFavoriteToFolder(
         folder: Folder,
         transitionName: String
     ) = object : NavDirections {
-        override val actionId = actionFavoriteToBookshelf().actionId
+        override val actionId = actionFavoriteToFolder().actionId
         override val arguments = FolderFragmentArgs(
             folder.serverId.value,
             folder.path.encodeBase64(),

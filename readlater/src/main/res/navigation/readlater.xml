@@ -17,7 +17,7 @@
             android:id="@+id/action_readlater_to_book"
             app:destination="@id/book_navigation" />
         <action
-            android:id="@+id/action_readlater_to_bookshelf"
+            android:id="@+id/action_readlater_to_folder"
             app:destination="@id/folder_navigation" />
     </fragment>
     <include app:graph="@navigation/folder" />

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.settings.bookshelf
+package com.sorrowblue.comicviewer.settings.folder.supportextension
 
 import android.os.Bundle
 import android.view.View
@@ -8,15 +8,16 @@ import androidx.preference.CheckBoxPreference
 import androidx.preference.children
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.framework.settings.FrameworkPreferenceFragment
+import com.sorrowblue.comicviewer.settings.folder.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-internal class SettingsBookshelfSupportExtensionFragment :
-    FrameworkPreferenceFragment(R.xml.settings_bookshelf_preference_support_extension) {
+internal class SettingsFolderSupportExtensionFragment :
+    FrameworkPreferenceFragment(R.xml.settings_folder_preference_support_extension) {
 
-    private val viewModel: SettingsBookshelfSupportExtensionViewModel by viewModels()
+    private val viewModel: SettingsFolderSupportExtensionViewModel by viewModels()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         super.onCreatePreferences(savedInstanceState, rootKey)

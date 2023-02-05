@@ -15,14 +15,14 @@
             android:id="@+id/action_settings_to_settings_viewer"
             app:destination="@id/settings_viewer" />
         <action
-            android:id="@+id/action_settings_to_settings_bookshelf"
-            app:destination="@id/settings_bookshelf" />
+            android:id="@+id/action_settings_to_settings_folder"
+            app:destination="@id/settings_folder_navigation" />
         <action
             android:id="@+id/action_settings_to_settings_security"
             app:destination="@id/settings_security_navigation" />
     </fragment>
     <include app:graph="@navigation/settings_display" />
     <include app:graph="@navigation/settings_viewer" />
-    <include app:graph="@navigation/settings_bookshelf" />
+    <include app:graph="@navigation/settings_folder" />
     <include app:graph="@navigation/settings_security" />
 </navigation>

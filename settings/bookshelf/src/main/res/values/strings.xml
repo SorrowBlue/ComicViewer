@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="settings_bookshelf_preference_key_resolve_image_folder">settings_bookshelf_preference_key_resolve_image_folder</string>
-    <string name="settings_bookshelf_preference_key_show_preview">settings_bookshelf_preference_key_show_preview</string>
-    <string name="settings_bookshelf_preference_key_support_extension">settings_bookshelf_preference_key_support_extension</string>
-</resources>

@@ -6,8 +6,8 @@
         app:title="ディスプレイ" />
 
     <Preference
-        app:key="@string/settings_preference_key_bookshelf"
-        app:title="本棚" />
+        app:key="@string/settings_preference_key_folder"
+        app:title="フォルダ" />
 
     <Preference
         app:key="@string/settings_preference_key_viewer"
