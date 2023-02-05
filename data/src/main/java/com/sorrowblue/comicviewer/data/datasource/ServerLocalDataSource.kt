@@ -13,7 +13,7 @@ interface ServerLocalDataSource {
 
     suspend fun delete(serverModel: ServerModel): Int
 
-    suspend fun get(serverModelId: ServerModelId): ServerModel?
+    fun get(serverModelId: ServerModelId): Flow<ServerModel?>
 
     fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<ServerFileModelFolder>>
 }

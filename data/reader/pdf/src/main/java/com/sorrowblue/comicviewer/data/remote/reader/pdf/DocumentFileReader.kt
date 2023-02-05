@@ -7,7 +7,6 @@ import android.os.Build
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
-import androidx.window.layout.WindowMetrics
 import com.artifex.mupdf.fitz.Document
 import com.artifex.mupdf.fitz.android.AndroidDrawDevice
 import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream

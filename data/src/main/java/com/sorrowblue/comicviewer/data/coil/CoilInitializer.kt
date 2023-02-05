@@ -6,6 +6,7 @@ import androidx.startup.Initializer
 import coil.Coil
 import coil.fetch.Fetcher
 import coil.size.Precision
+import coil.util.DebugLogger
 import com.sorrowblue.comicviewer.data.BookPageRequestMapper
 import com.sorrowblue.comicviewer.data.FavoriteMapper
 import com.sorrowblue.comicviewer.data.FileMapper

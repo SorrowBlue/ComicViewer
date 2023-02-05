@@ -36,7 +36,6 @@ import java.io.InputStream
 import javax.inject.Inject
 import kotlin.math.floor
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import okhttp3.internal.closeQuietly
@@ -170,7 +169,7 @@ internal class BookThumbnailFetcher(
                 }
             }
 //            delay(750)
-            val server = serverLocalDataSource.get(serverModelId)!!
+            val server = serverLocalDataSource.get(serverModelId).first()!!
             fileReader = remoteDataSourceFactory.create(server).fileReader(fileModel)
             if (fileReader.pageCount() == 0) {
                 throw Exception("Page count is 0 ${fileModel.path}.")

@@ -12,11 +12,13 @@ import com.sorrowblue.comicviewer.data.common.ServerFileModel
 import com.sorrowblue.comicviewer.data.reporitory.FavoriteBookRepositoryImpl
 import com.sorrowblue.comicviewer.data.reporitory.FavoriteRepositoryImpl
 import com.sorrowblue.comicviewer.data.reporitory.FileRepositoryImpl
+import com.sorrowblue.comicviewer.data.reporitory.ReadLaterRepositoryImpl
 import com.sorrowblue.comicviewer.data.reporitory.SettingsCommonRepositoryImpl
 import com.sorrowblue.comicviewer.data.reporitory.impl.ServerRepositoryImpl
 import com.sorrowblue.comicviewer.domain.repository.FavoriteBookRepository
 import com.sorrowblue.comicviewer.domain.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
+import com.sorrowblue.comicviewer.domain.repository.ReadLaterRepository
 import com.sorrowblue.comicviewer.domain.repository.ServerRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import dagger.Binds
@@ -35,6 +37,10 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
+    abstract fun bindReadLaterRepository(repository: ReadLaterRepositoryImpl): ReadLaterRepository
+
+    @Singleton
+    @Binds
     abstract fun bindSettingsCommonRepository(repository: SettingsCommonRepositoryImpl): SettingsCommonRepository
 
     @Singleton
@@ -43,25 +49,25 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindBookPageFetcherFetcher(factory: BookPageFetcher.Factory) : Fetcher.Factory<BookPageRequestData>
+    abstract fun bindBookPageFetcherFetcher(factory: BookPageFetcher.Factory): Fetcher.Factory<BookPageRequestData>
 
     @Singleton
     @Binds
-    abstract fun bindBookThumbnailFetcherFetcher(factory: BookThumbnailFetcher.Factory) : Fetcher.Factory<ServerFileModel>
+    abstract fun bindBookThumbnailFetcherFetcher(factory: BookThumbnailFetcher.Factory): Fetcher.Factory<ServerFileModel>
 
     @Singleton
     @Binds
-    abstract fun bindFileThumbnailFetcherFetcher(factory: FileThumbnailFetcher.Factory) : Fetcher.Factory<FileModel>
+    abstract fun bindFileThumbnailFetcherFetcher(factory: FileThumbnailFetcher.Factory): Fetcher.Factory<FileModel>
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteThumbnailFetcherFetcher(factory: FavoriteThumbnailFetcher.Factory) : Fetcher.Factory<FavoriteModel>
+    abstract fun bindFavoriteThumbnailFetcherFetcher(factory: FavoriteThumbnailFetcher.Factory): Fetcher.Factory<FavoriteModel>
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteRepository(factory: FavoriteRepositoryImpl) : FavoriteRepository
+    abstract fun bindFavoriteRepository(factory: FavoriteRepositoryImpl): FavoriteRepository
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteBookRepository(factory: FavoriteBookRepositoryImpl) : FavoriteBookRepository
+    abstract fun bindFavoriteBookRepository(factory: FavoriteBookRepositoryImpl): FavoriteBookRepository
 }

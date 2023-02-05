@@ -2,21 +2,23 @@ package com.sorrowblue.comicviewer.domain.usecase.interactor
 
 import com.sorrowblue.comicviewer.domain.entity.ServerBookshelf
 import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
-import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.ServerRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError
 import com.sorrowblue.comicviewer.domain.usecase.GetServerBookshelfUseCase
+import com.sorrowblue.comicviewer.framework.Result
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 internal class GetServerBookshelfInteractor @Inject constructor(
     private val serverRepository: ServerRepository,
     private val fileRepository: FileRepository
 ) : GetServerBookshelfUseCase() {
 
-    override suspend fun run(request: Request): Result<ServerBookshelf, GetLibraryInfoError> {
-        return serverRepository.get(request.serverId).fold({ server ->
-            if (server != null) {
+    override fun run(request: Request): Flow<Result<ServerBookshelf, GetLibraryInfoError>> {
+        return serverRepository.get(request.serverId).map { result ->
+            result.fold({ server ->
                 fileRepository.get2(server.id, request.path).fold({
                     Result.Success(ServerBookshelf(server to it as Bookshelf))
                 }, {
@@ -24,13 +26,12 @@ internal class GetServerBookshelfInteractor @Inject constructor(
                 }, {
                     Result.Error(GetLibraryInfoError.NOT_FOUND)
                 })
-            } else {
+            }, {
                 Result.Error(GetLibraryInfoError.NOT_FOUND)
-            }
-        }, {
-            Result.Error(GetLibraryInfoError.NOT_FOUND)
-        }, {
-            Result.Error(GetLibraryInfoError.SYSTEM_ERROR)
-        })
+            }, {
+                Result.Error(GetLibraryInfoError.SYSTEM_ERROR)
+            })
+
+        }
     }
 }

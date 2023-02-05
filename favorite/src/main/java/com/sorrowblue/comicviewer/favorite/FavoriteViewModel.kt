@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.entity.FavoriteId
+import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.DeleteFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookshelfDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.framework.ui.fragment.PagingViewModel
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
@@ -31,31 +33,26 @@ internal class FavoriteViewModel @Inject constructor(
     pagingFavoriteBookUseCase: PagingFavoriteBookUseCase,
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
     override val savedStateHandle: SavedStateHandle
-) : ViewModel(), SupportSafeArgs {
+) : PagingViewModel<File>(), SupportSafeArgs {
 
     private val args: FavoriteFragmentArgs by navArgs()
     val favoriteId = FavoriteId(args.favoriteId)
-    val transitionName = args.transitionName
+    override val transitionName = args.transitionName
 
     private val favoriteFlow = getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
         .mapNotNull { it.dataOrNull }
 
     val bookshelfDisplaySettingsFlow = bookshelfDisplaySettingsUseCase.settings
 
-    val pagingDataFlow = pagingFavoriteBookUseCase
+    override val pagingDataFlow = pagingFavoriteBookUseCase
         .execute(PagingFavoriteBookUseCase.Request(PagingConfig(20), favoriteId))
         .cachedIn(viewModelScope)
 
     val spanCountFlow = bookshelfDisplaySettingsFlow.map { it.rawSpanCount }
         .stateIn { runBlocking { bookshelfDisplaySettingsFlow.first().rawSpanCount } }
 
-    var isInitialize = false
-
     val titleFlow = favoriteFlow.map { it.name }.stateIn { "" }
     val countFlow = favoriteFlow.map { it.count }.stateIn { 0 }
-
-    val isRefreshingFlow = MutableStateFlow(false)
-    val isEmptyDataFlow = MutableStateFlow(false)
 
     fun delete(done: () -> Unit) {
         viewModelScope.launch {

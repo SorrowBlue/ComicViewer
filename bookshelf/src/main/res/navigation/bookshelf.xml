@@ -24,23 +24,26 @@
             android:name="position"
             android:defaultValue="-1"
             app:argType="integer" />
-        <action
-            android:id="@+id/action_bookshelf_fragment_self"
-            app:destination="@id/bookshelf_fragment" />
-        <action
-            android:id="@+id/action_to_bookshelf_scan_info"
-            app:destination="@id/bookshelf_scan_info_dialog" />
-        <action
-            android:id="@+id/action_bookshelf_to_book"
-            app:destination="@id/book_navigation" />
-        <action
-            android:id="@+id/action_bookshelf_to_bookshelf_display"
-            app:destination="@id/bookshelf_display_navigation"
-            app:launchSingleTop="true" />
         <deepLink
             android:id="@+id/bookshelf_fragment_deeplink"
             android:autoVerify="true"
             app:uri="comicviewer.sorrowblue.com/bookshelf?serverId={server_id}&amp;path={path}&amp;transitionName={transition_name}&amp;position={position}" />
+        <action
+            android:id="@+id/action_bookshelf_self"
+            app:destination="@id/bookshelf_fragment" />
+        <action
+            android:id="@+id/action_bookshelf_to_book"
+            app:destination="@id/book_navigation" />
+        <action
+            android:id="@+id/action_to_bookshelf_scan_info"
+            app:destination="@id/bookshelf_scan_info_dialog" />
+        <action
+            android:id="@+id/action_bookshelf_to_bookshelf_display"
+            app:destination="@id/bookshelf_display_navigation"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_bookshelf_to_file_info"
+            app:destination="@id/file_info_navigation" />
     </fragment>
     <dialog
         android:id="@+id/bookshelf_scan_info_dialog"
@@ -56,5 +59,5 @@
     </dialog>
     <include app:graph="@navigation/book" />
     <include app:graph="@navigation/bookshelf_display" />
-    <include app:graph="@navigation/book_info" />
+    <include app:graph="@navigation/file_info" />
 </navigation>

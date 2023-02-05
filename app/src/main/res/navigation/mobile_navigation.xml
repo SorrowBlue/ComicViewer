@@ -33,5 +33,8 @@
         android:id="@+id/action_global_auth_fragment"
         app:destination="@id/auth_fragment"
         app:launchSingleTop="true" />
+    <include app:graph="@navigation/favorite" />
+    <include app:graph="@navigation/favorite_list" />
+    <include app:graph="@navigation/readlater" />
 </navigation>
 

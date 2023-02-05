@@ -17,6 +17,7 @@ import com.sorrowblue.comicviewer.data.database.entity.File
 import com.sorrowblue.comicviewer.data.database.entity.SimpleFile
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistory
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfo
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface FileDao {
@@ -51,6 +52,9 @@ internal interface FileDao {
     @Query("SELECT * FROM file WHERE server_id = :serverId AND path = :path")
     suspend fun selectBy(serverId: Int, path: String): File?
 
+    @Query("SELECT * FROM file WHERE server_id = :serverId AND path = :path")
+    fun selectBy2(serverId: Int, path: String): Flow<File?>
+
     @Query("SELECT * FROM file WHERE server_id = :serverId")
     suspend fun selectBy(serverId: Int): List<File>
 
@@ -62,11 +66,11 @@ internal interface FileDao {
 
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM file, (SELECT sort_index AS current_sort_index, parent current_parent FROM file WHERE server_id = :serverId AND path = :path) WHERE server_id = :serverId AND parent = current_parent AND file_type != 'FOLDER' AND sort_index > current_sort_index ORDER BY sort_index LIMIT 1")
-    suspend fun selectNextFile(serverId: Int, path: String): File?
+    fun selectNextFile(serverId: Int, path: String): Flow<File?>
 
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM file, (SELECT sort_index si, parent pa FROM file WHERE server_id = :serverId AND path = :path) WHERE server_id = :serverId AND parent = pa AND file_type != 'FOLDER' AND sort_index < si ORDER BY sort_index DESC LIMIT 1")
-    suspend fun selectPrevFile(serverId: Int, path: String): File?
+    fun selectPrevFile(serverId: Int, path: String): Flow<File?>
 
     @Query("SELECT cache_key FROM file WHERE server_id = :serverId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit")
     suspend fun selectCacheKeysSortIndex(serverId: Int, parent: String, limit: Int): List<String>

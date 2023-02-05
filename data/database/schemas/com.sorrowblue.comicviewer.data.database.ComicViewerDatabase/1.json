@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0f266b48317b266cd06cb07925e7ecfd",
+    "identityHash": "a3f136f6951bd634d4e5a06e4b130a76",
     "entities": [
       {
         "tableName": "server",
@@ -278,12 +278,64 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "read_later",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`server_id` INTEGER NOT NULL, `file_path` TEXT NOT NULL, PRIMARY KEY(`file_path`, `server_id`), FOREIGN KEY(`server_id`, `file_path`) REFERENCES `file`(`server_id`, `path`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "serverId",
+            "columnName": "server_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "filePath",
+            "columnName": "file_path",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "file_path",
+            "server_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_read_later_favorite_id_server_id_file_path",
+            "unique": false,
+            "columnNames": [
+              "server_id",
+              "file_path"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_read_later_favorite_id_server_id_file_path` ON `${TABLE_NAME}` (`server_id`, `file_path`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "file",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "server_id",
+              "file_path"
+            ],
+            "referencedColumns": [
+              "server_id",
+              "path"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0f266b48317b266cd06cb07925e7ecfd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3f136f6951bd634d4e5a06e4b130a76')"
     ]
   }
 }

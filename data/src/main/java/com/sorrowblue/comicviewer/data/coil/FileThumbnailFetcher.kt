@@ -168,7 +168,7 @@ internal class FileThumbnailFetcher(
                 }
             }
 //            delay(750)
-            val server = serverLocalDataSource.get(serverModelId)!!
+            val server = serverLocalDataSource.get(serverModelId).first()!!
             fileReader = remoteDataSourceFactory.create(server).fileReader(fileModel)
             if (fileReader.pageCount() == 0) {
                 throw Exception("Page count is 0 ${fileModel.path}.")

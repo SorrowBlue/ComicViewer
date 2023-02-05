@@ -18,13 +18,13 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.settings)
     implementation(projects.book)
+    implementation(projects.file.info)
     implementation(projects.bookshelf.display)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
 
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.paging.runtime.ktx)
 }
 
 kapt {

@@ -5,19 +5,14 @@ import android.util.Base64
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.entity.FavoriteBook
-import com.sorrowblue.comicviewer.domain.entity.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.ServerFile
 import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage
 import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.entity.server.Smb
-import com.sorrowblue.comicviewer.domain.usecase.AddFavoriteBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetFavoriteListUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetServerFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.RemoveFavoriteBookUseCase
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
@@ -25,13 +20,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import logcat.logcat
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -55,9 +47,6 @@ internal class BookInfoViewModel @Inject constructor(
             }"
         }
     }
-
-    val favoriteList =
-        getFavoriteListUseCase.source.map { it.dataOrNull.orEmpty() }.stateIn { emptyList() }
 
     val serverFileFlow: StateFlow<ServerFile?> =
         getServerFileUseCase.execute(
@@ -91,19 +80,4 @@ internal class BookInfoViewModel @Inject constructor(
                 it.dataOrNull as? Bookshelf
             }
     }.stateIn { null }
-
-    init {
-        viewModelScope.launch {
-            serverFileFlow.filterNotNull().onEach {
-                getFavoriteListUseCase.execute(
-                    GetFavoriteListUseCase.Request(
-                        it.file.serverId,
-                        it.file.path
-                    )
-                )
-            }.collect()
-        }
-    }
 }
-
-// content://com.android.providers.downloads.documents/tree/raw:/storage/emulated/0/Download/新しいフォルダー (5)/document/raw:/storage/emulated/0/Download/新しいフォルダー (5)

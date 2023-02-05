@@ -12,17 +12,26 @@
         <argument
             android:name="favorite_id"
             app:argType="integer" />
+        <argument
+            android:name="transition_name"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_favorite_to_favorite_edit"
             app:destination="@id/favorite_edit_fragment" />
         <action
             android:id="@+id/action_favorite_to_bookshelf_display"
             app:destination="@id/bookshelf_display_navigation" />
-        <argument
-            android:name="transition_name"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_favorite_to_bookshelf"
+            app:destination="@id/bookshelf_navigation" />
+        <action
+            android:id="@+id/action_favorite_to_book"
+            app:destination="@id/book_navigation" />
+        <action
+            android:id="@+id/action_favorite_to_file_info"
+            app:destination="@id/file_info_navigation" />
     </fragment>
     <fragment
         android:id="@+id/favorite_edit_fragment"
@@ -34,6 +43,7 @@
             app:argType="integer" />
     </fragment>
     <include app:graph="@navigation/book" />
-    <include app:graph="@navigation/book_info" />
     <include app:graph="@navigation/bookshelf_display" />
+    <include app:graph="@navigation/bookshelf" />
+    <include app:graph="@navigation/file_info" />
 </navigation>

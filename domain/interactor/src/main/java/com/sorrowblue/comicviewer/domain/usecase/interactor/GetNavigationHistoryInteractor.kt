@@ -5,12 +5,12 @@ import com.sorrowblue.comicviewer.domain.entity.file.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.server.Server
 import com.sorrowblue.comicviewer.domain.model.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.ServerRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
+import com.sorrowblue.comicviewer.framework.Result
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 
@@ -24,25 +24,17 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
         if (history.serverId == null || history.path == null) return Result.Error(
             Unit
         )
-        val library = serverRepository.get(history.serverId!!)
+        val library = serverRepository.get(history.serverId!!).first()
         return library.fold({ lib ->
-            if (lib == null) {
-                Exception("履歴が見つかりませんでした。libraryID=${history.serverId}")
-                return Result.Error(Unit)
-            } else {
-                val a = getBookShelfList(lib, history.path!!).fold({
-                    Result.Success(NavigationHistory(lib, it, history.position ?: 0))
-                }, {
-                    Exception("履歴が見つかりませんでした。libraryID=${history.serverId}")
-                    Result.Error(Unit)
-                })
-                return a
-            }
+            val a = getBookShelfList(lib, history.path!!).fold({
+                Result.Success(NavigationHistory(lib, it, history.position ?: 0))
+            }, {
+                Result.Error(Unit)
+            })
+            return a
         }, {
-            Exception("履歴が見つかりませんでした。libraryID=${history.serverId}")
             Result.Error(Unit)
         }, {
-            Exception("履歴が見つかりませんでした。libraryID=${history.serverId}")
             Result.Error(Unit)
         })
     }

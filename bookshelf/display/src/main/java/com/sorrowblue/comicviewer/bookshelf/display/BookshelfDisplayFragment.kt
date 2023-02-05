@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.sidesheet.SideSheetDialog
 import com.sorrowblue.comicviewer.bookshelf.display.databinding.BookshelfDisplayFragmentBinding
 import com.sorrowblue.comicviewer.domain.entity.settings.BookshelfDisplaySettings
-import com.sorrowblue.jetpack.binding.viewBinding
+import com.sorrowblue.comicviewer.framework.ui.fragment.dialogViewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 internal class BookshelfDisplayFragment : DialogFragment() {
 
-    private val binding: BookshelfDisplayFragmentBinding by viewBinding()
+    private val binding: BookshelfDisplayFragmentBinding by dialogViewBinding()
     private val viewModel: BookshelfDisplayViewModel by viewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -70,8 +70,8 @@ internal class BookshelfDisplayFragment : DialogFragment() {
             }.flowWithLifecycle(navBackStackEntry.lifecycle)
                 .launchIn(navBackStackEntry.lifecycleScope)
         }
-        binding.viewTypeGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
+        binding.viewTypeGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            when (checkedIds.firstOrNull()) {
                 R.id.view_type_grid -> viewModel.update(BookshelfDisplaySettings.Display.GRID)
                 R.id.view_type_list -> viewModel.update(BookshelfDisplaySettings.Display.LIST)
             }
@@ -85,8 +85,8 @@ internal class BookshelfDisplayFragment : DialogFragment() {
         }
 
         // Sort
-        binding.sortTypeGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
+        binding.sortTypeGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            when (checkedIds.firstOrNull()) {
                 R.id.sort_type_date -> viewModel.update(BookshelfDisplaySettings.Sort.DATE)
                 R.id.sort_type_name -> viewModel.update(BookshelfDisplaySettings.Sort.NAME)
                 R.id.sort_type_size -> viewModel.update(BookshelfDisplaySettings.Sort.SIZE)
@@ -94,8 +94,8 @@ internal class BookshelfDisplayFragment : DialogFragment() {
         }
 
         // Order
-        binding.orderTypeGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
+        binding.orderTypeGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            when (checkedIds.firstOrNull()) {
                 R.id.order_type_asc -> viewModel.update(BookshelfDisplaySettings.Order.ASC)
                 R.id.order_type_desc -> viewModel.update(BookshelfDisplaySettings.Order.DESC)
             }

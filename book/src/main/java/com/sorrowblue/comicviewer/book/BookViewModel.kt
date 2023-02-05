@@ -7,15 +7,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.entity.settings.BindingDirection
 import com.sorrowblue.comicviewer.domain.entity.settings.History
-import com.sorrowblue.comicviewer.framework.Result
-import com.sorrowblue.comicviewer.domain.usecase.GetLibraryFileResult
+import com.sorrowblue.comicviewer.domain.usecase.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNextComicRel
-import com.sorrowblue.comicviewer.domain.usecase.GetServerBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.UpdateHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.UpdateLastReadPageUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
+import com.sorrowblue.comicviewer.framework.ui.fragment.decodeBase64
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
@@ -26,6 +25,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.shareIn
@@ -35,8 +35,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class BookViewModel @Inject constructor(
+    getBookUseCase: GetBookUseCase,
     private val updateHistoryUseCase: UpdateHistoryUseCase,
-    getLibraryFileUseCase: GetServerBookUseCase,
     private val getNextBookUseCase: GetNextBookUseCase,
     private val updateLastReadPageUseCase: UpdateLastReadPageUseCase,
     manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
@@ -45,64 +45,23 @@ internal class BookViewModel @Inject constructor(
 ) : ViewModel(), SupportSafeArgs {
 
     private val args: BookFragmentArgs by navArgs()
+
     val placeholder = args.placeholder
 
-    val libraryComic = getLibraryFileUseCase.execute(
-        GetServerBookUseCase.Request(
-            ServerId(args.serverId), args.path
-        )
-    ).mapNotNull {
-            when (it) {
-                is Result.Error -> {
-                    when (it.error) {
-                        GetLibraryFileResult.NO_LIBRARY -> state.value = LoadingState.NOT_FOUND
-                        GetLibraryFileResult.NO_FILE -> state.value = LoadingState.NOT_FOUND
-                    }
-                    null
-                }
-                is Result.Exception -> {
-                    state.value = LoadingState.ERROR
-                    null
-                }
-                is Result.Success -> {
-                    state.value = LoadingState.SUCCESS
-                    it.data
-                }
-            }
-        }.stateIn { null }
-    val serverFlow = libraryComic.mapNotNull { it?.server }.stateIn { null }
-    val bookFlow = libraryComic.mapNotNull { it?.book }.stateIn { null }
+    val bookFlow =
+        getBookUseCase.execute(GetBookUseCase.Request(ServerId(args.serverId), args.path.decodeBase64()))
+            .map { it.dataOrNull }
+            .stateIn { null }
 
-    init {
-        viewModelScope.launch {
-            bookFlow.filterNotNull().collectLatest {
-                getNextBookUseCase.execute(
-                    GetNextBookUseCase.Request(
-                        it.serverId, it.path, GetNextComicRel.NEXT
-                    )
-                )
-                getNextBookUseCase.execute(
-                    GetNextBookUseCase.Request(
-                        it.serverId, it.path, GetNextComicRel.PREV
-                    )
-                )
-            }
-        }
-    }
-
-    val nextComic = getNextBookUseCase.source.mapNotNull {
-        when (it) {
-            is Result.Error -> null
-            is Result.Exception -> null
-            is Result.Success -> it.data
-        }
+    val nextComic = bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest {
+        getNextBookUseCase
+            .execute(GetNextBookUseCase.Request(it.serverId, it.path, GetNextComicRel.NEXT))
+            .map { it.dataOrNull }
     }.stateIn(viewModelScope, SharingStarted.Lazily, null)
-    val prevComic = getNextBookUseCase.source.mapNotNull {
-        when (it) {
-            is Result.Error -> null
-            is Result.Exception -> null
-            is Result.Success -> it.data
-        }
+    val prevComic = bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest {
+        getNextBookUseCase
+            .execute(GetNextBookUseCase.Request(it.serverId, it.path, GetNextComicRel.PREV))
+            .map { it.dataOrNull }
     }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     val layoutDirectionFlow =
@@ -145,9 +104,8 @@ internal class BookViewModel @Inject constructor(
     }
 
     fun updateLastReadPage(index: Int) {
-        if (serverFlow.value == null || bookFlow.value == null) return
-        val request =
-            UpdateLastReadPageUseCase.Request(serverFlow.value!!.id, bookFlow.value!!.path, index)
+        val book = bookFlow.replayCache.firstOrNull() ?: return
+        val request = UpdateLastReadPageUseCase.Request(book.serverId, book.path, index)
         viewModelScope.launch {
             updateLastReadPageUseCase.execute(request)
         }

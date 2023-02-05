@@ -50,6 +50,7 @@ dependencies {
     implementation(projects.bookshelf)
     implementation(projects.server)
     implementation(projects.favorite)
+    implementation(projects.readlater)
     implementation(projects.settings.security)
 
     implementation(libs.androidx.appcompat)

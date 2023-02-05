@@ -43,9 +43,10 @@ interface FileModelLocalDataSource {
     ): Flow<PagingData<FileModel>>
 
     suspend fun findBy(serverModelId: ServerModelId): List<FileModel>
+    fun selectBy(serverModelId: ServerModelId, path: String): Flow<FileModel?>
     suspend fun findBy(serverModelId: ServerModelId, path: String): FileModel?
-    suspend fun nextFileModel(serverModelId: ServerModelId, path: String): FileModel?
-    suspend fun prevFileModel(serverModelId: ServerModelId, path: String): FileModel?
+    fun nextFileModel(serverModelId: ServerModelId, path: String): Flow<FileModel?>
+    fun prevFileModel(serverModelId: ServerModelId, path: String): Flow<FileModel?>
     suspend fun getCacheKeys(serverModelId: ServerModelId, parent: String, limit: Int): List<String>
     suspend fun getCacheKeys(
         serverModelId: ServerModelId,

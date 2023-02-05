@@ -13,8 +13,6 @@ dependencies {
     implementation(libs.squareup.logcat)
     implementation(libs.artifex.mupdf.fitz)
 
-    implementation(libs.androidx.window)
-
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
 }

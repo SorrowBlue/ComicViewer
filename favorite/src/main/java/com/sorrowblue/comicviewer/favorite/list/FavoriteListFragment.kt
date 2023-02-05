@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
@@ -18,6 +19,7 @@ import com.sorrowblue.comicviewer.favorite.FavoriteFragmentArgs
 import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentListBinding
 import com.sorrowblue.comicviewer.favorite.extension.transitionName
+import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
 import com.sorrowblue.jetpack.binding.viewBinding
@@ -33,6 +35,7 @@ internal class FavoriteListFragment : FrameworkFragment(R.layout.favorite_fragme
 
     private val binding: FavoriteFragmentListBinding by viewBinding()
     private val viewModel: FavoriteListViewModel by viewModels()
+    private val commonViewModel: CommonViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +54,10 @@ internal class FavoriteListFragment : FrameworkFragment(R.layout.favorite_fragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        commonViewModel.isVisibleFab.value = true
+        commonViewModel.isVisibleBottomNavigation.value = true
+
         binding.viewModel = viewModel
         binding.toolbar.setupWithNavController(findNavController())
         binding.fab.setOnClickListener {

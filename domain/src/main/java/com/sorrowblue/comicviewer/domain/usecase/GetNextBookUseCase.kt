@@ -5,7 +5,7 @@ import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 
 abstract class GetNextBookUseCase :
-    FlowUseCase<GetNextBookUseCase.Request, Book, GetLibraryInfoError>() {
+    FlowUseCase2<GetNextBookUseCase.Request, Book, GetLibraryInfoError>() {
 
     class Request(val serverId: ServerId, val path: String, val relation: GetNextComicRel) :
         BaseRequest {

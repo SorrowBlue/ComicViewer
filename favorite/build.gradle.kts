@@ -19,8 +19,7 @@ dependencies {
     implementation(projects.book)
     implementation(projects.bookshelf)
     implementation(projects.bookshelf.display)
-
-    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(projects.file.info)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)

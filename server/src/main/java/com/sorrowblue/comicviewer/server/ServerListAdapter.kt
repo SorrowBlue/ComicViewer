@@ -5,35 +5,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sorrowblue.comicviewer.bookshelf.BookshelfFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.ServerBookshelf
 import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
-import com.sorrowblue.comicviewer.server.databinding.ServerItemFavoriteBinding
 import com.sorrowblue.comicviewer.server.databinding.ServerItemListBinding
 import com.sorrowblue.comicviewer.server.info.ServerInfoFragmentArgs
-
-internal class ServerListHeaderAdapter : RecyclerView.Adapter<ServerListHeaderAdapter.ViewHolder>() {
-
-    class ViewHolder(parent: ViewGroup) :
-        ViewBindingViewHolder<ServerItemFavoriteBinding>(parent, ServerItemFavoriteBinding::inflate)
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
-        return ViewHolder(parent)
-    }
-
-    override fun getItemCount(): Int {
-        return 1
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-    }
-}
 
 internal class ServerListAdapter : PagingDataAdapter<ServerBookshelf, ServerListAdapter.ViewHolder>(
     object : DiffUtil.ItemCallback<ServerBookshelf>() {

@@ -28,6 +28,8 @@ dependencies {
     api(libs.squareup.logcat)
     api(libs.chrisbanes.insetter)
     api(libs.sorrowblue.binding.ktx)
+    api(libs.androidx.paging.runtime.ktx)
+
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
 }

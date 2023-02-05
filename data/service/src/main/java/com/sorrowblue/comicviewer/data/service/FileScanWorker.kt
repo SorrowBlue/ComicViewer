@@ -1,9 +1,12 @@
 package com.sorrowblue.comicviewer.data.service
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -21,7 +24,7 @@ import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.createNotification
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlin.system.measureTimeMillis
+import kotlinx.coroutines.flow.first
 import logcat.logcat
 
 
@@ -48,7 +51,7 @@ internal class FileScanWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val request = FileScanRequest.fromWorkData(inputData) ?: return Result.failure()
         setForeground(getForegroundInfo())
-        val serverModel = serverLocalDataSource.get(request.serverModelId)!!
+        val serverModel = serverLocalDataSource.get(request.serverModelId).first()!!
         val rootFileModel = fileLocalDataSource.root(serverModel.id)!!
         val fileModel = fileLocalDataSource.findBy(request.serverModelId, request.path)
         val resolveImageFolder = request.resolveImageFolder
@@ -58,6 +61,7 @@ internal class FileScanWorker @AssistedInject constructor(
         when (request.scanTypeModel) {
             ScanTypeModel.FULL -> factory.create(serverModel)
                 .nestedListFiles(serverModel, rootFileModel, resolveImageFolder, true)
+
             ScanTypeModel.QUICK -> factory.create(serverModel)
                 .nestedListFiles(serverModel, fileModel!!, resolveImageFolder, false)
         }
@@ -71,48 +75,35 @@ internal class FileScanWorker @AssistedInject constructor(
         isNested: Boolean
     ) {
         setProgress(workDataOf("path" to fileModel.path))
-        notificationManager.notify(NOTIFICATION_ID, createNotification(
-            applicationContext, ChannelID.SCAN, R.drawable.ic_twotone_downloading_24
+        if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
-            val notificationIntent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("https://comicviewer.sorrowblue.com/work?uuid=${id}")
-            )
-            val pendingIntent =
-                PendingIntent.getActivity(
-                    applicationContext,
-                    0,
-                    notificationIntent,
-                    PendingIntent.FLAG_IMMUTABLE
+            notificationManager.notify(NOTIFICATION_ID, createNotification(
+                applicationContext, ChannelID.SCAN, R.drawable.ic_twotone_downloading_24
+            ) {
+                val notificationIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://comicviewer.sorrowblue.com/work?uuid=${id}")
                 )
-            setContentText(fileModel.path)
-            setContentIntent(pendingIntent)
-            setContentTitle("スキャン中")
-            setProgress(0, 0, true)
-        })
-
-        val fileModelList: List<FileModel>
-        if (BuildConfig.DEBUG) {
-            measureTimeMillis {
-                fileModelList =
-                    SortUtil.sortedIndex(listFiles(fileModel, resolveImageFolder) {
-                        SortUtil.filter(
-                            it,
-                            supportExtensions
-                        )
-                    })
-            }.also {
-                logcat(tag = "FileScanWorker") { "listFiles(${fileModel.path}). $it ms. ${fileModelList.size} files.resolveImageFolder=$resolveImageFolder" }
-            }
-        } else {
-            fileModelList =
-                SortUtil.sortedIndex(listFiles(fileModel, resolveImageFolder) {
-                    SortUtil.filter(
-                        it,
-                        supportExtensions
+                val pendingIntent =
+                    PendingIntent.getActivity(
+                        applicationContext,
+                        0,
+                        notificationIntent,
+                        PendingIntent.FLAG_IMMUTABLE
                     )
-                })
+                setContentText(fileModel.path)
+                setContentIntent(pendingIntent)
+                setContentTitle("スキャン中")
+                setProgress(0, 0, true)
+            })
         }
+
+        val fileModelList = SortUtil.sortedIndex(listFiles(fileModel, resolveImageFolder) {
+            SortUtil.filter(it, supportExtensions)
+        })
         fileLocalDataSource.withTransaction {
             // リモートになくてDBにある項目：削除対象
             val deleteFileData = fileLocalDataSource.selectByNotPaths(

@@ -25,10 +25,7 @@ import com.sorrowblue.comicviewer.data.database.entity.toSimpleFile
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
-import logcat.logcat
 
 internal class FileModelLocalDataSourceImpl @Inject constructor(
     private val dao: FileDao,
@@ -133,12 +130,16 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         return dao.selectBy(serverModelId.value, path)?.toFileModel()
     }
 
-    override suspend fun nextFileModel(serverModelId: ServerModelId, path: String): FileModel? {
-        return dao.selectNextFile(serverModelId.value, path)?.toFileModel()
+    override fun selectBy(serverModelId: ServerModelId, path: String): Flow<FileModel?> {
+        return dao.selectBy2(serverModelId.value, path).map { it?.toFileModel() }
     }
 
-    override suspend fun prevFileModel(serverModelId: ServerModelId, path: String): FileModel? {
-        return dao.selectPrevFile(serverModelId.value, path)?.toFileModel()
+    override fun nextFileModel(serverModelId: ServerModelId, path: String): Flow<FileModel?> {
+        return dao.selectNextFile(serverModelId.value, path).map { it?.toFileModel() }
+    }
+
+    override fun prevFileModel(serverModelId: ServerModelId, path: String): Flow<FileModel?> {
+        return dao.selectPrevFile(serverModelId.value, path).map { it?.toFileModel() }
     }
 
     override suspend fun getCacheKeys(
@@ -161,11 +162,13 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
                 "$parent%",
                 limit
             )
+
             FolderThumbnailOrderModel.MODIFIED -> dao.selectCacheKeysSortLastModified(
                 serverModelId.value,
                 "$parent%",
                 limit
             )
+
             FolderThumbnailOrderModel.LAST_READ -> dao.selectCacheKeysSortLastRead(
                 serverModelId.value,
                 "$parent%",

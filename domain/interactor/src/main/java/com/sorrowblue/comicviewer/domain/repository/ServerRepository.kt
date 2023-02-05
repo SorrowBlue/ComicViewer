@@ -17,7 +17,7 @@ interface ServerRepository {
     suspend fun exists(server: Server, path: String): Result<Boolean, ServerRepositoryStatus>
     suspend fun registerOrUpdate(server: Server, path: String): Result<Server, RegisterLibraryError>
 
-    suspend fun get(serverId: ServerId): Result<Server?, LibraryStatus>
+    fun get(serverId: ServerId): Flow<Result<Server, LibraryStatus>>
     suspend fun delete(server: Server): Response<Boolean>
     suspend fun connect(server: Server, path: String): Result<Unit, ServerRepositoryError>
     suspend fun register(server: Server, bookshelf: Bookshelf): Result<Server, ServerRepositoryError>

@@ -7,10 +7,10 @@
 
         <variable
             name="viewModel"
-            type="com.sorrowblue.comicviewer.bookshelf.AbstractBookshelfViewModel" />
+            type="com.sorrowblue.comicviewer.bookshelf.BookshelfViewModel" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,6 +29,7 @@
                 app:layout_marginTopSystemWindowInsets="@{true}"
                 app:subtitle="@{viewModel.subTitleFlow}"
                 app:subtitleCentered="true"
+                app:menu="@menu/bookshelf"
                 app:title="@{viewModel.titleFlow}"
                 app:titleCentered="true"
                 tools:subtitle="/books/"
@@ -80,15 +81,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:isVisible="@{viewModel.isRefreshing}"
+            app:isVisible="@{viewModel.isRefreshingFlow}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:isVisible="@{viewModel.isEmptyData}">
+            app:isVisible="@{viewModel.isEmptyDataFlow}">
 
             <ImageView
                 android:id="@+id/favorite_imageview"
@@ -109,5 +109,5 @@
                 app:layout_constraintStart_toStartOf="@+id/favorite_imageview"
                 app:layout_constraintTop_toBottomOf="@+id/favorite_imageview" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout>
 </layout>

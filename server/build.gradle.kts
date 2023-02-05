@@ -21,7 +21,6 @@ dependencies {
     implementation(projects.server.info)
     implementation(projects.server.management)
 
-    implementation(libs.androidx.paging.runtime.ktx)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)

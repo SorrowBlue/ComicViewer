@@ -22,23 +22,27 @@
             android:text="@string/bookshelf_display_label_display"
             android:textAppearance="?attr/textAppearanceLabelLarge" />
 
-        <RadioGroup
+        <com.google.android.material.chip.ChipGroup
             android:id="@+id/view_type_group"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-            <com.google.android.material.radiobutton.MaterialRadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/view_type_grid"
-                android:layout_width="match_parent"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bookshelf_display_button_grid" />
 
-            <com.google.android.material.radiobutton.MaterialRadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/view_type_list"
-                android:layout_width="match_parent"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bookshelf_display_button_list" />
-        </RadioGroup>
+        </com.google.android.material.chip.ChipGroup>
 
         <TextView
             android:id="@+id/span_count_label"
@@ -64,33 +68,38 @@
             android:text="@string/bookshelf_display_label_order_by"
             android:textAppearance="?attr/textAppearanceLabelLarge" />
 
-        <RadioGroup
+        <com.google.android.material.chip.ChipGroup
             android:id="@+id/sort_type_group"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-            <com.google.android.material.radiobutton.MaterialRadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/sort_type_name"
-                android:layout_width="match_parent"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bookshelf_display_button_file_name"
-                app:icon="@drawable/ic_twotone_sort_by_alpha_24" />
+                app:chipIcon="@drawable/ic_twotone_sort_by_alpha_24" />
 
-            <com.google.android.material.radiobutton.MaterialRadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/sort_type_date"
-                android:layout_width="match_parent"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bookshelf_display_button_date_and_time"
-                app:icon="@drawable/ic_twotone_calendar_today_24" />
+                app:chipIcon="@drawable/ic_twotone_calendar_today_24" />
 
-            <com.google.android.material.radiobutton.MaterialRadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/sort_type_size"
-                android:layout_width="match_parent"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bookshelf_display_button_file_size"
-                app:icon="@drawable/ic_twotone_sort_24" />
+                app:chipIcon="@drawable/ic_twotone_sort_24" />
 
-        </RadioGroup>
+        </com.google.android.material.chip.ChipGroup>
 
         <TextView
             android:id="@+id/order_type_label"
@@ -100,27 +109,28 @@
             android:text="@string/bookshelf_display_label_sort_order"
             android:textAppearance="?attr/textAppearanceLabelLarge" />
 
-        <RadioGroup
+        <com.google.android.material.chip.ChipGroup
             android:id="@+id/order_type_group"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             app:selectionRequired="true"
             app:singleSelection="true">
 
-            <com.google.android.material.radiobutton.MaterialRadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/order_type_asc"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/bookshelf_display_button_asc"
-                app:icon="@drawable/sort_ascending" />
+                app:chipIcon="@drawable/sort_ascending" />
 
-            <com.google.android.material.radiobutton.MaterialRadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/order_type_desc"
-                android:layout_width="match_parent"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bookshelf_display_button_desc"
-                app:icon="@drawable/sort_descending" />
-        </RadioGroup>
+                app:chipIcon="@drawable/sort_descending" />
+        </com.google.android.material.chip.ChipGroup>
     </LinearLayout>
 </layout>

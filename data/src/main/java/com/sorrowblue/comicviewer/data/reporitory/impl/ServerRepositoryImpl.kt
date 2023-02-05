@@ -8,8 +8,8 @@ import com.sorrowblue.comicviewer.data.common.ServerFileModelFolder
 import com.sorrowblue.comicviewer.data.common.ServerModelId
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.exception.RemoteException
 import com.sorrowblue.comicviewer.data.datasource.ServerLocalDataSource
+import com.sorrowblue.comicviewer.data.exception.RemoteException
 import com.sorrowblue.comicviewer.data.toFileModel
 import com.sorrowblue.comicviewer.data.toServer
 import com.sorrowblue.comicviewer.data.toServerBookshelf
@@ -31,6 +31,8 @@ import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import logcat.logcat
@@ -77,13 +79,19 @@ internal class ServerRepositoryImpl @Inject constructor(
         return Response.Success(true)
     }
 
-    override suspend fun get(serverId: ServerId): Result<Server?, LibraryStatus> {
+    override fun get(serverId: ServerId): Flow<Result<Server, LibraryStatus>> {
         return kotlin.runCatching {
-            serverLocalDataSource.get(ServerModelId(serverId.value))
+            serverLocalDataSource.get(ServerModelId(serverId.value)).flowOn(Dispatchers.IO)
         }.fold({
-            Result.Success(it?.toServer())
+            it.map {
+                if (it != null) {
+                    Result.Success(it.toServer())
+                } else {
+                    Result.Error(LibraryStatus.FAILED_CONNECT)
+                }
+            }
         }, {
-            Result.Exception(Unknown(it))
+            flowOf(Result.Exception(Unknown(it)))
         })
     }
 

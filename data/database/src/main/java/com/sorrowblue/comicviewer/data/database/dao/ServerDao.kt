@@ -11,6 +11,7 @@ import androidx.room.Update
 import androidx.room.Upsert
 import com.sorrowblue.comicviewer.data.database.entity.Server
 import com.sorrowblue.comicviewer.data.database.entity.ServerFile
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface ServerDao {
@@ -28,7 +29,7 @@ internal interface ServerDao {
     suspend fun delete(server: Server): Int
 
     @Query("SELECT * FROM server WHERE id = :serverId")
-    suspend fun selectById(serverId: Int): Server?
+    fun selectById(serverId: Int): Flow<Server?>
 
     @Transaction
     suspend fun insertOrUpdate(server: Server): Int {

@@ -27,7 +27,7 @@ tasks.named(
     "dependencyUpdates",
     com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask::class.java
 ).configure {
-//    rejectVersionIf {
-//        isNonStable(candidate.version) && !isNonStable(currentVersion)
-//    }
+    rejectVersionIf {
+        isNonStable(candidate.version) && !isNonStable(currentVersion)
+    }
 }

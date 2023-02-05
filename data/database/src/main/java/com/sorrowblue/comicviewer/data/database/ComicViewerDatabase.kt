@@ -6,14 +6,16 @@ import androidx.room.TypeConverters
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteBookDao
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
+import com.sorrowblue.comicviewer.data.database.dao.ReadLaterDao
 import com.sorrowblue.comicviewer.data.database.dao.ServerDao
 import com.sorrowblue.comicviewer.data.database.entity.Favorite
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteBook
 import com.sorrowblue.comicviewer.data.database.entity.File
 import com.sorrowblue.comicviewer.data.database.entity.PasswordConverters
+import com.sorrowblue.comicviewer.data.database.entity.ReadLater
 import com.sorrowblue.comicviewer.data.database.entity.Server
 
-@Database(entities = [Server::class, File::class, Favorite::class, FavoriteBook::class], version = 1)
+@Database(entities = [Server::class, File::class, Favorite::class, FavoriteBook::class, ReadLater::class], version = 1)
 @TypeConverters(PasswordConverters::class)
 internal abstract class ComicViewerDatabase : RoomDatabase() {
 
@@ -24,4 +26,6 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
 
     abstract fun favoriteBookDao(): FavoriteBookDao
+
+    abstract fun readLaterDao(): ReadLaterDao
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/file_info_navigation"
+    app:startDestination="@id/file_info_fragment">
+
+    <dialog
+        android:id="@+id/file_info_fragment"
+        android:name="com.sorrowblue.comicviewer.file.info.FileInfoFragment" >
+        <argument
+            android:name="server_id_value"
+            app:argType="integer" />
+        <argument
+            android:name="path"
+            app:argType="string" />
+    </dialog>
+</navigation>

@@ -43,22 +43,10 @@
             app:spanCount="2"
             tools:listitem="@layout/server_item_list" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:contentDescription="@string/server_desc_add_bookshelf"
-            android:transitionName="library_fragment_fab"
-            app:layout_marginBottomSystemWindowInsets="@{true}"
-            app:srcCompat="@drawable/ic_twotone_add_24" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:isVisible="@{viewModel.isEmptyData}"
+            app:isVisible="@{viewModel.isEmptyDataFlow}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:visibility="gone">
 

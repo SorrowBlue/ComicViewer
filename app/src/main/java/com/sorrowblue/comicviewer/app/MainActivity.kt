@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sorrowblue.comicviewer.app.databinding.ActivityMainBinding
 import com.sorrowblue.comicviewer.bookshelf.BookshelfFragmentArgs
@@ -17,6 +19,7 @@ import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.LogPriority
@@ -57,6 +60,14 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 }
                 commonViewModel.shouldKeepOnScreen = false
             }
+        }
+        binding.bottomNavigation.setupWithNavController(navController)
+        commonViewModel.isVisibleBottomNavigation.onEach {
+            binding.bottomNavigation.isVisible = it
+        }.launchIn(lifecycleScope)
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            commonViewModel.isVisibleBottomNavigation.value = true
+            commonViewModel.isVisibleFab.value = false
         }
     }
 
@@ -105,7 +116,7 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 bookshelves.drop(1).dropLast(1).forEachIndexed { index, bookshelf ->
                     // bookshelf -> bookshelf
                     navController.navigate(
-                        com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_fragment_self,
+                        com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_self,
                         BookshelfFragmentArgs(server.id.value, bookshelf.base64Path()).toBundle()
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -113,7 +124,7 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     }
                 }
                 navController.navigate(
-                    com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_fragment_self,
+                    com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_self,
                     BookshelfFragmentArgs(
                         server.id.value,
                         bookshelves.last().base64Path(),

@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class ServerInfoViewModel @Inject constructor(
@@ -27,25 +26,22 @@ internal class ServerInfoViewModel @Inject constructor(
 
     private val args: ServerInfoFragmentArgs by navArgs()
 
-    init {
-        viewModelScope.launch {
-            getServerInfoUseCase.execute(GetServerInfoUseCase.Request(args.serverId))
-        }
-    }
+    private val libraryInfoFlow =
+        getServerInfoUseCase.execute(GetServerInfoUseCase.Request(args.serverId)).mapNotNull {
+            when (it) {
+                is Result.Error -> {
+                    // TODO(Send error message)
+                    null
+                }
 
-    private val libraryInfoFlow = getServerInfoUseCase.source.mapNotNull {
-        when (it) {
-            is Result.Error -> {
-                // TODO(Send error message)
-                null
+                is Result.Exception -> {
+                    // TODO(Send system error message)
+                    null
+                }
+
+                is Result.Success -> it.data
             }
-            is Result.Exception -> {
-                // TODO(Send system error message)
-                null
-            }
-            is Result.Success -> it.data
-        }
-    }.shareIn(viewModelScope, SharingStarted.Lazily, 1)
+        }.shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
     val server: StateFlow<Server?> =
         libraryInfoFlow.map { it.server }.stateIn(viewModelScope, SharingStarted.Lazily, null)

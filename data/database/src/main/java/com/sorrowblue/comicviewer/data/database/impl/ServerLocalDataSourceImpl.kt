@@ -36,8 +36,8 @@ internal class ServerLocalDataSourceImpl @Inject constructor(
         return dao.delete(serverModel.toServer())
     }
 
-    override suspend fun get(serverModelId: ServerModelId): ServerModel? {
-        return dao.selectById(serverModelId.value)?.toServerModel()
+    override fun get(serverModelId: ServerModelId): Flow<ServerModel?> {
+        return dao.selectById(serverModelId.value).map { it?.toServerModel() }
     }
 
     override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<ServerFileModelFolder>> {

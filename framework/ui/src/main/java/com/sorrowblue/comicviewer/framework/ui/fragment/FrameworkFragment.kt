@@ -8,7 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.sorrowblue.comicviewer.framework.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.chrisbanes.insetter.InsetterApplyTypeDsl
 import dev.chrisbanes.insetter.InsetterDsl
@@ -16,10 +19,13 @@ import javax.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import logcat.logcat
 
 open class FrameworkFragment(contentLayoutId: Int) : Fragment(contentLayoutId) {
+
+    protected val fab get() = requireActivity().requireViewById<FloatingActionButton>(R.id.framework_ui_fab)
 
     override fun onStart() {
         super.onStart()
@@ -44,6 +50,9 @@ open class FrameworkFragment(contentLayoutId: Int) : Fragment(contentLayoutId) {
     protected fun navigate(directions: NavDirections) {
         findNavController().navigate(directions)
     }
+    protected fun navigate(directions: NavDirections, extras: FragmentNavigator.Extras) {
+        findNavController().navigate(directions, extras)
+    }
 }
 
 @HiltViewModel
@@ -53,6 +62,9 @@ class CommonViewModel @Inject constructor() : ViewModel() {
     var shouldKeepOnScreen = true
 
     val isRestored = MutableSharedFlow<Boolean>(0)
+
+    val isVisibleFab = MutableStateFlow(true)
+    val isVisibleBottomNavigation = MutableStateFlow(true)
 }
 
 context(Fragment)

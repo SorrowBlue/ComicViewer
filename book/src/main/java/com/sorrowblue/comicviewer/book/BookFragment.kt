@@ -8,6 +8,8 @@ import android.view.WindowManager
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +25,7 @@ import com.google.android.material.transition.MaterialElevationScale
 import com.sorrowblue.comicviewer.book.databinding.BookFragmentBinding
 import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
 import com.sorrowblue.comicviewer.framework.resource.FrameworkDrawable
+import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,16 +33,11 @@ import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
-internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
-
-    private val binding: BookFragmentBinding by viewBinding()
-    private val viewModel: BookViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+fun Fragment.applyContainerTransform(transitionName: String?) {
+    if (transitionName != null) {
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
             scrimColor = MaterialColors.getColor(
@@ -49,8 +47,20 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
             )
             setPathMotion(MaterialArcMotion())
         }
-        exitTransition = MaterialElevationScale(false)
-        reenterTransition = MaterialElevationScale(true)
+    }
+    exitTransition = MaterialElevationScale(false)
+    reenterTransition = MaterialElevationScale(true)
+}
+
+@AndroidEntryPoint
+internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
+
+    private val binding: BookFragmentBinding by viewBinding()
+    private val viewModel: BookViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        applyContainerTransform(viewModel.transitionName)
     }
 
     var isFavorite = false
@@ -113,22 +123,20 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         // Adapterをセットするまで非表示
         binding.viewPager2.isVisible = false
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.libraryComic.filterNotNull().collectLatest {
-                val (server, book) = it.value
-                val adapter =
-                    ComicAdapter(server, book, book.totalPageCount, viewModel.placeholder) {
-                        when (it) {
-                            Position.START -> prevPage()
-                            Position.CENTER -> viewModel.isVisibleUI.value =
-                                !viewModel.isVisibleUI.value
-                            Position.END -> nextPage()
-                        }
-                    }
-                binding.viewPager2.adapter = adapter
-                binding.viewPager2.setCurrentItem(book.lastPageRead + 1, false)
-                binding.viewPager2.isVisible = true
-                binding.preview.isVisible = false
+            val book = viewModel.bookFlow.filterNotNull().first()
+            val adapter = ComicAdapter(book, book.totalPageCount, viewModel.placeholder) {
+                when (it) {
+                    Position.START -> prevPage()
+                    Position.CENTER -> viewModel.isVisibleUI.value =
+                        !viewModel.isVisibleUI.value
+
+                    Position.END -> nextPage()
+                }
             }
+            binding.viewPager2.adapter = adapter
+            binding.viewPager2.setCurrentItem(book.lastPageRead + 1, false)
+            binding.viewPager2.isVisible = true
+            binding.preview.isVisible = false
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.prevComic.filterNotNull().collectLatest {
@@ -190,7 +198,10 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 (adapter as? ComicAdapter)?.let { adapter ->
-                    onChange.invoke(if (position == 0) 0 else adapter.currentList.getOrElse(position - 1) { adapter.currentList.lastOrNull() }?.index ?: 0)
+                    onChange.invoke(
+                        if (position == 0) 0 else adapter.currentList.getOrElse(position - 1) { adapter.currentList.lastOrNull() }?.index
+                            ?: 0
+                    )
                 }
             }
         })

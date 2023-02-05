@@ -6,7 +6,7 @@
         android:id="@+id/favorite"
         android:checked="true"
         android:icon="@drawable/book_favorite"
-        android:title="お気に入りに登録"
+        android:title="Add favorite"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_global_settings_navigation"

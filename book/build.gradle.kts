@@ -17,7 +17,6 @@ dependencies {
     implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.domain)
-    implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.palette.ktx)
 
     implementation(libs.dagger.hilt.android.core)

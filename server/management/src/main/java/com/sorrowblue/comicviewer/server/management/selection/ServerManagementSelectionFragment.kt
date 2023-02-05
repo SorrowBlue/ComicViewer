@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.server.management.selection
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,9 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.color.MaterialColors
-import com.google.android.material.transition.Hold
-import com.google.android.material.transition.MaterialArcMotion
-import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
+import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.server.management.R
 import com.sorrowblue.comicviewer.server.management.ServerType
 import com.sorrowblue.comicviewer.server.management.databinding.ServerManagementFragmentSelectionBinding
@@ -30,41 +27,26 @@ internal class ServerManagementSelectionFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = MaterialContainerTransform().apply {
-            fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
-            containerColor = MaterialColors.getColor(
-                requireContext(),
-                android.R.attr.colorBackground,
-                containerColor
-            )
-            scrimColor = Color.TRANSPARENT
-            setPathMotion(MaterialArcMotion())
-        }
-        exitTransition = Hold()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        postponeEnterTransition()
-        return super.onCreateView(inflater, container, savedInstanceState)
+        enterTransition = MaterialFadeThrough()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.viewModel = viewModel
 
-        binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
-        binding.recyclerView.applyInsetter {
-            type(
-                navigationBars = true,
-                captionBar = true,
-                displayCutout = true
-            ) { padding(left = true, right = true, bottom = true) }
-        }
         binding.toolbar.setupWithNavController(findNavController())
+        binding.toolbar.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true)
+                margin(top = true)
+            }
+        }
+        binding.recyclerView.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true, bottom = true)
+            }
+        }
 
         val adapter = ServerManagementSelectionAdapter()
         binding.recyclerView.adapter = adapter

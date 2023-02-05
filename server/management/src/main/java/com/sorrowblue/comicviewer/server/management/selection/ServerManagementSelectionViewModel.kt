@@ -11,7 +11,4 @@ import javax.inject.Inject
 internal class ServerManagementSelectionViewModel @Inject constructor(
     override val savedStateHandle: SavedStateHandle
 ) : ViewModel(), SupportSafeArgs {
-    private val args: ServerManagementSelectionFragmentArgs by navArgs()
-
-    val transitionName = args.transitionName
 }

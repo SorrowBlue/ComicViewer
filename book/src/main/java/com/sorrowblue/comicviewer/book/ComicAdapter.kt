@@ -14,8 +14,6 @@ import coil.transform.Transformation
 import com.sorrowblue.comicviewer.book.databinding.BookItemBinding
 import com.sorrowblue.comicviewer.book.databinding.BookItemNextBinding
 import com.sorrowblue.comicviewer.domain.entity.file.Book
-import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
-import com.sorrowblue.comicviewer.domain.entity.server.Server
 import com.sorrowblue.comicviewer.domain.request.BookPageRequest
 import com.sorrowblue.comicviewer.domain.usecase.GetNextComicRel
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
@@ -34,7 +32,6 @@ private const val VIEW_TYPE_NEXT = 1
 private const val VIEW_TYPE_PREV = 2
 
 internal class ComicAdapter(
-    val server: Server,
     val book: Book,
     count: Int,
     private val placeholder: String?,
@@ -90,7 +87,7 @@ internal class ComicAdapter(
         fun bind(book: Book?, rel: GetNextComicRel) {
             if (book != null) {
                 binding.bookName.text = book.name
-                binding.bookThumbnail.load(FileThumbnailRequest(server.id to book))
+                binding.bookThumbnail.load(book)
                 binding.bookNext.text = when (rel) {
                     GetNextComicRel.NEXT -> "次の本"
                     GetNextComicRel.PREV -> "前の本"
@@ -125,7 +122,7 @@ internal class ComicAdapter(
             binding.bookTextview.text = "ページ：${item.index + 1} 見開き：${item.pos.name}"
             if (requestList[item.index]?.isDisposed == false) return
             requestList[item.index] =
-                binding.viewerImageview.load(BookPageRequest(Triple(server, book, item.index))) {
+                binding.viewerImageview.load(BookPageRequest(book to item.index)) {
                     if (item.index == 0) {
                         memoryCachePolicy(CachePolicy.ENABLED)
                         placeholderMemoryCacheKey(placeholder)
@@ -208,24 +205,21 @@ internal class ComicAdapter(
 
         fun leftLoad(item: PageInfo) {
             binding.bookTextview.text = "ページ：${item.index + 1} 見開き：${item.pos.name}"
-            val page = BookPageRequest(Triple(server, book, item.index))
-            binding.viewerImageview.load(page) {
+            binding.viewerImageview.load(BookPageRequest( book to item.index)) {
                 transformations(MihirakiSplitTransformation(true), WhiteTrimTransformation)
             }
         }
 
         fun rightLoad(item: PageInfo) {
             binding.bookTextview.text = "ページ：${item.index + 1} 見開き：${item.pos.name}"
-            val page = BookPageRequest(Triple(server, book, item.index))
-            binding.viewerImageview.load(page) {
+            binding.viewerImageview.load(BookPageRequest( book to item.index)) {
                 transformations(MihirakiSplitTransformation(false), WhiteTrimTransformation)
             }
         }
 
         fun load(item: PageInfo) {
             binding.bookTextview.text = "ページ：${item.index + 1} 見開き：${item.pos.name}"
-            val page = BookPageRequest(Triple(server, book, item.index))
-            binding.viewerImageview.load(page) { transformations(WhiteTrimTransformation) }
+            binding.viewerImageview.load(BookPageRequest( book to item.index)) { transformations(WhiteTrimTransformation) }
         }
     }
 }

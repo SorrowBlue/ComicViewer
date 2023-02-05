@@ -30,11 +30,10 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
-import logcat.logcat
 
 internal class FileRepositoryImpl @Inject constructor(
     private val fileScanService: FileScanService,
@@ -47,6 +46,18 @@ internal class FileRepositoryImpl @Inject constructor(
         return Response.Success(
             fileModelLocalDataSource.findBy(ServerModelId(serverId.value), path)?.toFile() as? Book
         )
+    }
+
+    override fun getFile(serverId: ServerId, path: String): Flow<Result<File, Unit>> {
+        return kotlin.runCatching {
+            fileModelLocalDataSource.selectBy(ServerModelId(serverId.value), path)
+        }.fold({ fileModelFlow ->
+            fileModelFlow.map {
+                if (it != null) Result.Success(it.toFile()) else Result.Error(Unit)
+            }
+        }, {
+            flowOf(Result.Exception(Unknown(it)))
+        })
     }
 
     override suspend fun update(
@@ -130,7 +141,7 @@ internal class FileRepositoryImpl @Inject constructor(
         }.fold({
             Result.Success(it?.toFile())
         }, {
-            Result.Exception(com.sorrowblue.comicviewer.framework.Unknown(it))
+            Result.Exception(Unknown(it))
         })
     }
 
@@ -161,11 +172,11 @@ internal class FileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getNextRelFile(
+    override fun getNextRelFile(
         serverId: ServerId,
         path: String,
         isNext: Boolean
-    ): Result<File?, Unit> {
+    ): Flow<Result<File, Unit>> {
         return kotlin.runCatching {
             if (isNext) {
                 fileModelLocalDataSource.nextFileModel(ServerModelId(serverId.value), path)
@@ -173,9 +184,9 @@ internal class FileRepositoryImpl @Inject constructor(
                 fileModelLocalDataSource.prevFileModel(ServerModelId(serverId.value), path)
             }
         }.fold({
-            Result.Success(it?.toFile())
+            it.map { if (it != null) Result.Success(it.toFile()) else Result.Error(Unit) }
         }, {
-            Result.Exception(Unknown(it))
+            flowOf(Result.Exception(Unknown(it)))
         })
     }
 }

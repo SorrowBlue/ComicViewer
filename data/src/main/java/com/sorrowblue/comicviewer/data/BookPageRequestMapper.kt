@@ -9,7 +9,7 @@ class BookPageRequestMapper : Mapper<BookPageRequest, BookPageRequestData> {
 
     override fun map(data: BookPageRequest, options: Options): BookPageRequestData {
         return BookPageRequestData(
-            Triple(data.server.toServerModel(), data.book.toFileModel(), data.pageIndex)
+            data.book.toFileModel() to data.pageIndex
         )
     }
 }

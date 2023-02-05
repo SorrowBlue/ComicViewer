@@ -5,7 +5,7 @@ import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 
 abstract class GetServerFileUseCase :
-    FlowOneUseCase<GetServerFileUseCase.Request, ServerFile, GetLibraryFileResult>() {
+    FlowUseCase2<GetServerFileUseCase.Request, ServerFile, GetLibraryFileResult>() {
 
     class Request(val serverId: ServerId, val path: String) : BaseRequest {
         override fun validate(): Boolean {
