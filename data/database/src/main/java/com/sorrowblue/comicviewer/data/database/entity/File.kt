@@ -6,24 +6,23 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ServerModelId
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 
-internal const val SERVER_ID = "server_id"
 
 @Entity(
     tableName = "file",
-    primaryKeys = ["path", SERVER_ID],
+    primaryKeys = [File.PATH, File.BOOKSHELF_ID],
     foreignKeys = [ForeignKey(
-        entity = Server::class,
-        parentColumns = ["id"],
-        childColumns = [SERVER_ID],
+        entity = Bookshelf::class,
+        parentColumns = [Bookshelf.ID],
+        childColumns = [File.BOOKSHELF_ID],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(value = [SERVER_ID, "path"])]
+    indices = [Index(value = [File.BOOKSHELF_ID, File.PATH])]
 )
 data class File(
-    val path: String,
-    @ColumnInfo(name = SERVER_ID) val serverId: Int,
+    @ColumnInfo(PATH) val path: String,
+    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: Int,
     val name: String,
     val parent: String,
     val size: Long,
@@ -34,11 +33,61 @@ data class File(
     @Embedded val info: FileInfo = FileInfo(),
     @Embedded val history: FileHistory = FileHistory()
 ) {
-    fun toFileModel(): FileModel {
+
+    companion object {
+        const val PATH = "path"
+        const val BOOKSHELF_ID = "bookshelf_id"
+
+        fun fromModel(model: FileModel) =
+            when (model) {
+                is FileModel.File -> File(
+                    path = model.path,
+                    bookshelfId = model.bookshelfModelId.value,
+                    name = model.name,
+                    parent = model.parent,
+                    size = model.size,
+                    lastModified = model.lastModifier,
+                    fileType = Type.FILE,
+                    sortIndex = model.sortIndex,
+                    info = FileInfo(model.cacheKey, model.totalPageCount),
+                    history = FileHistory(model.lastReadPage, model.lastRead)
+                )
+
+                is FileModel.Folder -> File(
+                    path = model.path,
+                    bookshelfId = model.bookshelfModelId.value,
+                    name = model.name,
+                    parent = model.parent,
+                    size = model.size,
+                    lastModified = model.lastModifier,
+                    fileType = Type.FOLDER,
+                    sortIndex = model.sortIndex,
+                    info = FileInfo("", 0),
+                    history = FileHistory(0, 0)
+                )
+
+                is FileModel.ImageFolder -> File(
+                    path = model.path,
+                    bookshelfId = model.bookshelfModelId.value,
+                    name = model.name,
+                    parent = model.parent,
+                    size = model.size,
+                    lastModified = model.lastModifier,
+                    fileType = Type.IMAGE_FOLDER,
+                    sortIndex = model.sortIndex,
+                    info = FileInfo(model.cacheKey, model.totalPageCount),
+                    history = FileHistory(model.lastReadPage, model.lastRead)
+                )
+            }
+
+
+    }
+
+    fun toModel(): FileModel {
         return when (fileType) {
             Type.FILE -> FileModel.File(
                 path = path,
-                serverModelId = ServerModelId(serverId),
+                bookshelfModelId = BookshelfModelId(bookshelfId),
                 parent = parent,
                 name = name,
                 size = size,
@@ -49,18 +98,20 @@ data class File(
                 lastReadPage = history.lastReadPage,
                 lastRead = history.lastRead
             )
+
             Type.FOLDER -> FileModel.Folder(
                 path = path,
-                serverModelId = ServerModelId(serverId),
+                bookshelfModelId = BookshelfModelId(bookshelfId),
                 name = name,
                 parent = parent,
                 size = size,
                 lastModifier = lastModified,
                 sortIndex = sortIndex
             )
+
             Type.IMAGE_FOLDER -> FileModel.ImageFolder(
                 path = path,
-                serverModelId = ServerModelId(serverId),
+                bookshelfModelId = BookshelfModelId(bookshelfId),
                 name = name,
                 parent = parent,
                 size = size,
@@ -80,27 +131,3 @@ data class File(
         IMAGE_FOLDER(0)
     }
 }
-
-data class FileHistory(
-    @ColumnInfo(name = "last_read_page") val lastReadPage: Int = 0,
-    @ColumnInfo(name = "last_read") val lastRead: Long = 0,
-)
-
-data class FileInfo(
-    @ColumnInfo(name = "cache_key") val cacheKey: String = "",
-    @ColumnInfo(name = "total_page_count") val totalPageCount: Int = 0,
-)
-
-data class UpdateFileHistory(
-    val path: String,
-    @ColumnInfo(name = SERVER_ID) val serverId: Int,
-    @ColumnInfo(name = "last_read_page") val lastReadPage: Int,
-    @ColumnInfo(name = "last_read") val lastRead: Long
-)
-
-data class UpdateFileInfo(
-    val path: String,
-    @ColumnInfo(name = SERVER_ID) val serverId: Int,
-    @ColumnInfo(name = "cache_key") val cacheKey: String = "",
-    @ColumnInfo(name = "total_page_count") val totalPageCount: Int = 0,
-)

@@ -6,11 +6,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.server.ServerId
+import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.ScanType
-import com.sorrowblue.comicviewer.domain.usecase.FullScanLibraryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetServerFolderUseCase
+import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFolderUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
@@ -33,8 +33,8 @@ internal class FolderViewModel @Inject constructor(
     pagingFileUseCase: PagingFileUseCase,
     pagingQueryFileUseCase: PagingQueryFileUseCase,
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    getServerFolderUseCase: GetServerFolderUseCase,
-    private val fullScanLibraryUseCase: FullScanLibraryUseCase,
+    getBookshelfFolderUseCase: GetBookshelfFolderUseCase,
+    private val scanBookshelfUseCase: ScanBookshelfUseCase,
     override val savedStateHandle: SavedStateHandle,
 ) : PagingViewModel<File>(), SupportSafeArgs {
 
@@ -42,15 +42,15 @@ internal class FolderViewModel @Inject constructor(
     var position = args.position
     override val transitionName = args.transitionName
 
-    private val serverFolderFlow = getServerFolderUseCase.execute(
-        GetServerFolderUseCase.Request(
-            ServerId(args.serverId),
+    private val serverFolderFlow = getBookshelfFolderUseCase.execute(
+        GetBookshelfFolderUseCase.Request(
+            BookshelfId(args.serverId),
             Base64.decode(args.path.encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)
                 .decodeToString()
         )
     ).mapNotNull { it.dataOrNull }
 
-    val serverFlow = serverFolderFlow.map { it.server }.stateIn { null }
+    val serverFlow = serverFolderFlow.map { it.bookshelf }.stateIn { null }
 
     private val folderFlow = serverFolderFlow.map { it.folder }.stateIn { null }
 
@@ -60,7 +60,7 @@ internal class FolderViewModel @Inject constructor(
 
     override val pagingDataFlow = serverFolderFlow.flatMapLatest {
         pagingFileUseCase.execute(
-            PagingFileUseCase.Request(PagingConfig(100), it.server, it.folder)
+            PagingFileUseCase.Request(PagingConfig(100), it.bookshelf, it.folder)
         )
     }.cachedIn(viewModelScope)
     var query = ""
@@ -75,7 +75,7 @@ internal class FolderViewModel @Inject constructor(
     }
     val pagingQueryDataFlow = serverFolderFlow.flatMapLatest {
         pagingQueryFileUseCase.execute(
-            PagingQueryFileUseCase.Request(PagingConfig(100), it.server) {
+            PagingQueryFileUseCase.Request(PagingConfig(100), it.bookshelf) {
                 query
             }
         )
@@ -84,7 +84,7 @@ internal class FolderViewModel @Inject constructor(
     fun fullScan(scanType: ScanType, done: (String) -> Unit) {
         val folder = folderFlow.value ?: return
         viewModelScope.launch {
-            fullScanLibraryUseCase.execute(FullScanLibraryUseCase.Request(folder, scanType))
+            scanBookshelfUseCase.execute(ScanBookshelfUseCase.Request(folder, scanType))
                 .first().dataOrNull?.let { done.invoke(it) }
         }
     }

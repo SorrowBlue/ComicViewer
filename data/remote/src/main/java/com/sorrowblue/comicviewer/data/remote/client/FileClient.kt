@@ -1,13 +1,13 @@
 package com.sorrowblue.comicviewer.data.remote.client
 
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ServerModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
 import java.io.InputStream
 
 interface FileClient {
 
-    val serverModel: ServerModel
+    val bookshelfModel: BookshelfModel
 
     suspend fun listFiles(
         fileModel: FileModel,
@@ -25,8 +25,8 @@ interface FileClient {
 
     suspend fun seekableInputStream(fileModel: FileModel): SeekableInputStream
 
-    interface Factory<T : ServerModel> {
-        fun create(serverModel: T): FileClient
+    interface Factory<T : BookshelfModel> {
+        fun create(bookshelfModel: T): FileClient
     }
 
     suspend fun connect(path: String)

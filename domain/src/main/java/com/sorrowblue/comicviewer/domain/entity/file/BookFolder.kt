@@ -1,9 +1,9 @@
 package com.sorrowblue.comicviewer.domain.entity.file
 
-import com.sorrowblue.comicviewer.domain.entity.server.ServerId
+import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
 
 data class BookFolder(
-    override val serverId: ServerId,
+    override val bookshelfId: BookshelfId,
     override val name: String,
     override val parent: String,
     override val path: String,

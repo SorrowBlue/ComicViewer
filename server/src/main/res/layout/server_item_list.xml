@@ -8,7 +8,7 @@
 
         <variable
             name="server"
-            type="com.sorrowblue.comicviewer.domain.entity.server.Server" />
+            type="com.sorrowblue.comicviewer.domain.entity.server.Bookshelf" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.file.Book
-import com.sorrowblue.comicviewer.domain.entity.server.ServerId
+import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.framework.ui.fragment.decodeBase64
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
@@ -27,7 +27,7 @@ internal class FileInfoViewModel @Inject constructor(
     private val args: FileInfoFragmentArgs by navArgs()
 
     val fileFlow =
-        getFileUseCase.execute(GetFileUseCase.Request(args.serverId, args.path.decodeBase64()))
+        getFileUseCase.execute(GetFileUseCase.Request(args.bookshelfId, args.path.decodeBase64()))
             .map { it.dataOrNull }
             .stateIn { null }
 
@@ -35,7 +35,7 @@ internal class FileInfoViewModel @Inject constructor(
 
     fun addReadLater(done: () -> Unit) {
         val file = fileFlow.value ?: return
-        val request = AddReadLaterUseCase.Request(file.serverId, file.path)
+        val request = AddReadLaterUseCase.Request(file.bookshelfId, file.path)
         viewModelScope.launch {
             addReadLaterUseCase.execute(request).first().fold({
                 done()
@@ -43,5 +43,5 @@ internal class FileInfoViewModel @Inject constructor(
         }
     }
 
-    private val FileInfoFragmentArgs.serverId get() = ServerId(serverIdValue)
+    private val FileInfoFragmentArgs.bookshelfId get() = BookshelfId(serverIdValue)
 }

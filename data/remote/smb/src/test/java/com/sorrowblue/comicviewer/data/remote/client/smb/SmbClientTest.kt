@@ -2,8 +2,8 @@ package com.sorrowblue.comicviewer.data.remote.client.smb
 
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sorrowblue.comicviewer.data.common.ServerModelId
-import com.sorrowblue.comicviewer.data.common.SmbServerModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import java.net.URI
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -24,12 +24,12 @@ internal class SmbClientTest {
         }
     }
 
-    val pc = SmbServerModel(
-        ServerModelId(0),
+    val pc = BookshelfModel.SmbServer(
+        BookshelfModelId(0),
         "Test",
         "SORROWBLUE-DESK",
         445,
-        SmbServerModel.UsernamePassword("", "sorrowblue.sb@outlook.jp", "outyuukiasuna2s2")
+        BookshelfModel.SmbServer.UsernamePassword("", "sorrowblue.sb@outlook.jp", "outyuukiasuna2s2")
     )
 
     @Test

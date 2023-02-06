@@ -2,20 +2,20 @@ package com.sorrowblue.comicviewer.data.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.data.common.FavoriteBookModel
-import com.sorrowblue.comicviewer.data.common.FavoriteModel
-import com.sorrowblue.comicviewer.data.common.FavoriteModelId
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ServerModelId
-import com.sorrowblue.comicviewer.data.common.SortType
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
+import com.sorrowblue.comicviewer.data.common.bookshelf.SortType
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteFileModel
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModelId
 import kotlinx.coroutines.flow.Flow
 
 interface FavoriteLocalDataSource {
 
-    suspend fun getFavoriteList(id: ServerModelId, filePath: String): List<FavoriteModel>
+    suspend fun getFavoriteList(id: BookshelfModelId, filePath: String): List<FavoriteModel>
 
-    suspend fun add(favoriteBookModel: FavoriteBookModel)
-    suspend fun remove(favoriteBookModel: FavoriteBookModel)
+    suspend fun add(favoriteFileModel: FavoriteFileModel)
+    suspend fun remove(favoriteFileModel: FavoriteFileModel)
     fun pagingSourceCount(pagingConfig: PagingConfig): Flow<PagingData<FavoriteModel>>
     suspend fun create(favoriteModel: FavoriteModel)
     fun get(favoriteModelId: FavoriteModelId): Flow<FavoriteModel>

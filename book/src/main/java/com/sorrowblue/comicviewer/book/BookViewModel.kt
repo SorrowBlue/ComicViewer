@@ -4,14 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.viewpager2.widget.ViewPager2
-import com.sorrowblue.comicviewer.domain.entity.server.ServerId
+import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.settings.BindingDirection
 import com.sorrowblue.comicviewer.domain.entity.settings.History
-import com.sorrowblue.comicviewer.domain.usecase.GetBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetNextBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNextComicRel
 import com.sorrowblue.comicviewer.domain.usecase.UpdateHistoryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.UpdateLastReadPageUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.fragment.decodeBase64
@@ -49,18 +49,18 @@ internal class BookViewModel @Inject constructor(
     val placeholder = args.placeholder
 
     val bookFlow =
-        getBookUseCase.execute(GetBookUseCase.Request(ServerId(args.serverId), args.path.decodeBase64()))
+        getBookUseCase.execute(GetBookUseCase.Request(BookshelfId(args.serverId), args.path.decodeBase64()))
             .map { it.dataOrNull }
             .stateIn { null }
 
     val nextComic = bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest {
         getNextBookUseCase
-            .execute(GetNextBookUseCase.Request(it.serverId, it.path, GetNextComicRel.NEXT))
+            .execute(GetNextBookUseCase.Request(it.bookshelfId, it.path, GetNextComicRel.NEXT))
             .map { it.dataOrNull }
     }.stateIn(viewModelScope, SharingStarted.Lazily, null)
     val prevComic = bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest {
         getNextBookUseCase
-            .execute(GetNextBookUseCase.Request(it.serverId, it.path, GetNextComicRel.PREV))
+            .execute(GetNextBookUseCase.Request(it.bookshelfId, it.path, GetNextComicRel.PREV))
             .map { it.dataOrNull }
     }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
@@ -96,7 +96,7 @@ internal class BookViewModel @Inject constructor(
             bookFlow.filterNotNull().collectLatest {
                 updateHistoryUseCase.execute(
                     UpdateHistoryUseCase.Request(
-                        History(ServerId(args.serverId), it.parent, args.position)
+                        History(BookshelfId(args.serverId), it.parent, args.position)
                     )
                 )
             }
@@ -105,7 +105,7 @@ internal class BookViewModel @Inject constructor(
 
     fun updateLastReadPage(index: Int) {
         val book = bookFlow.replayCache.firstOrNull() ?: return
-        val request = UpdateLastReadPageUseCase.Request(book.serverId, book.path, index)
+        val request = UpdateLastReadPageUseCase.Request(book.bookshelfId, book.path, index)
         viewModelScope.launch {
             updateLastReadPageUseCase.execute(request)
         }

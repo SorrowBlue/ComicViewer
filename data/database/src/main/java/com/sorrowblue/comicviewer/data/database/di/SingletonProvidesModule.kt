@@ -22,7 +22,7 @@ internal object SingletonProvidesModule {
 
     @Singleton
     @Provides
-    fun provideServerDao(db: ComicViewerDatabase) = db.serverDao()
+    fun provideBookshelfDao(db: ComicViewerDatabase) = db.bookshelfDao()
 
     @Singleton
     @Provides
@@ -34,9 +34,9 @@ internal object SingletonProvidesModule {
 
     @Singleton
     @Provides
-    fun provideFavoriteBookDao(db: ComicViewerDatabase) = db.favoriteBookDao()
+    fun provideFavoriteFileDao(db: ComicViewerDatabase) = db.favoriteFileDao()
 
     @Singleton
     @Provides
-    fun provideReadLaterDao(db: ComicViewerDatabase) = db.readLaterDao()
+    fun provideReadLaterFileDao(db: ComicViewerDatabase) = db.readLaterFileDao()
 }

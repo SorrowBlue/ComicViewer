@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.data.remote.client.smb
 
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.SUPPORTED_IMAGE
-import com.sorrowblue.comicviewer.data.common.SmbServerModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.extension
 import com.sorrowblue.comicviewer.data.remote.client.FileClient
 import com.sorrowblue.comicviewer.data.remote.client.FileClientException
@@ -32,12 +32,12 @@ import logcat.LogPriority
 import logcat.logcat
 
 internal class SmbFileClient @AssistedInject constructor(
-    @Assisted override val serverModel: SmbServerModel,
+    @Assisted override val bookshelfModel: BookshelfModel.SmbServer,
 ) : FileClient {
 
     @AssistedFactory
-    interface Factory : FileClient.Factory<SmbServerModel> {
-        override fun create(serverModel: SmbServerModel): SmbFileClient
+    interface Factory : FileClient.Factory<BookshelfModel.SmbServer> {
+        override fun create(bookshelfModel: BookshelfModel.SmbServer): SmbFileClient
     }
 
     override suspend fun inputStream(fileModel: FileModel): InputStream {
@@ -224,7 +224,7 @@ internal class SmbFileClient @AssistedInject constructor(
         if (resolveImageFolder && isDirectory && listFiles().any { it.name.extension in SUPPORTED_IMAGE }) {
             return FileModel.ImageFolder(
                 path = url.path,
-                serverModelId = serverModel.id,
+                bookshelfModelId = bookshelfModel.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent.toString() + "/",
                 size = length(),
@@ -239,7 +239,7 @@ internal class SmbFileClient @AssistedInject constructor(
         return if (isDirectory) {
             FileModel.Folder(
                 path = url.path,
-                serverModelId = serverModel.id,
+                bookshelfModelId = bookshelfModel.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent.toString() + "/",
                 size = length(),
@@ -249,7 +249,7 @@ internal class SmbFileClient @AssistedInject constructor(
         } else {
             FileModel.File(
                 path = url.path,
-                serverModelId = serverModel.id,
+                bookshelfModelId = bookshelfModel.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent.toString() + "/",
                 size = length(),
@@ -267,12 +267,12 @@ internal class SmbFileClient @AssistedInject constructor(
 
     private fun smbFile(path: String) =
         SmbFile(
-            URI("smb", null, serverModel.host, serverModel.port, path, null, null).decode(),
+            URI("smb", null, bookshelfModel.host, bookshelfModel.port, path, null, null).decode(),
             cifsContext()
         )
 
     private val FileModel.uri
-        get() = URI("smb", null, serverModel.host, serverModel.port, path, null, null).decode()
+        get() = URI("smb", null, bookshelfModel.host, bookshelfModel.port, path, null, null).decode()
 
     private fun URI.decode() = URLDecoder.decode(toString().replace("+", "%2B"), "UTF-8")
 
@@ -288,9 +288,9 @@ internal class SmbFileClient @AssistedInject constructor(
             setProperty("jcifs.resolveOrder", "DNS")
         }
         val context = BaseContext(PropertyConfiguration(prop))
-        return when (val auth = serverModel.auth) {
-            SmbServerModel.Guest -> context.withGuestCrendentials()
-            is SmbServerModel.UsernamePassword ->
+        return when (val auth = bookshelfModel.auth) {
+            BookshelfModel.SmbServer.Guest -> context.withGuestCrendentials()
+            is BookshelfModel.SmbServer.UsernamePassword ->
                 context.withCredentials(NtlmPasswordAuthenticator(auth.username, auth.password))
         }
     }

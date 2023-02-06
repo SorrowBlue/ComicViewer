@@ -94,7 +94,7 @@ internal class ComicAdapter(
                 }
                 binding.bookNext.isVisible = true
                 binding.bookNext.setOnClickListener {
-                    val bundle = BookFragmentArgs(book.serverId.value, book.path).toBundle()
+                    val bundle = BookFragmentArgs(book.bookshelfId.value, book.path).toBundle()
                     it.findNavController().navigate(
                         R.id.book_navigation,
                         bundle,

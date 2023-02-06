@@ -28,8 +28,8 @@
         android:name="com.sorrowblue.comicviewer.server.info.remove.ServerRemoveConfirmDialog"
         android:label="サーバ削除">
         <argument
-            android:name="server"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.server.Server" />
+            android:name="server_id"
+            app:argType="integer" />
     </dialog>
     <include app:graph="@navigation/server_management_smb" />
     <include app:graph="@navigation/server_management_device" />

@@ -6,15 +6,14 @@ import androidx.startup.Initializer
 import coil.Coil
 import coil.fetch.Fetcher
 import coil.size.Precision
-import coil.util.DebugLogger
 import com.sorrowblue.comicviewer.data.BookPageRequestMapper
 import com.sorrowblue.comicviewer.data.FavoriteMapper
 import com.sorrowblue.comicviewer.data.FileMapper
 import com.sorrowblue.comicviewer.data.FileThumbnailRequestMapper
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
-import com.sorrowblue.comicviewer.data.common.FavoriteModel
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ServerFileModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfFileModel
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -54,7 +53,7 @@ internal class CoilInitializer : Initializer<Unit> {
 
         fun bookPageFetcherFactory(): Fetcher.Factory<BookPageRequestData>
         fun fileThumbnailFetcher(): Fetcher.Factory<FileModel>
-        fun bookThumbnailFetcher(): Fetcher.Factory<ServerFileModel>
+        fun bookThumbnailFetcher(): Fetcher.Factory<BookshelfFileModel>
         fun favoriteThumbnailFetcher(): Fetcher.Factory<FavoriteModel>
 
         companion object {

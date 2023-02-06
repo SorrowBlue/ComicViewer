@@ -4,13 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteBook
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.usecase.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.RemoveFavoriteBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.UpdateFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.RemoveFavoriteFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.UpdateFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
 import com.sorrowblue.comicviewer.framework.ui.flow.mutableStateIn
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingViewModel
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
@@ -24,9 +24,9 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class FavoriteEditViewModel @Inject constructor(
-    pagingFavoriteBookUseCase: PagingFavoriteBookUseCase,
+    pagingFavoriteFileUseCase: PagingFavoriteFileUseCase,
     private val getFavoriteUseCase: GetFavoriteUseCase,
-    private val removeFavoriteBookUseCase: RemoveFavoriteBookUseCase,
+    private val removeFavoriteFileUseCase: RemoveFavoriteFileUseCase,
     private val updateFavoriteUseCase: UpdateFavoriteUseCase,
     override val savedStateHandle: SavedStateHandle
 ) : PagingViewModel<File>(), SupportSafeArgs {
@@ -37,8 +37,8 @@ internal class FavoriteEditViewModel @Inject constructor(
         getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId)).stateIn { null }
 
     override val transitionName: String? = null
-    override val pagingDataFlow = pagingFavoriteBookUseCase.execute(
-        PagingFavoriteBookUseCase.Request(PagingConfig(20), favoriteId)
+    override val pagingDataFlow = pagingFavoriteFileUseCase.execute(
+        PagingFavoriteFileUseCase.Request(PagingConfig(20), favoriteId)
     ).cachedIn(viewModelScope)
 
     val titleFlow = favoriteFlow.mapNotNull { it?.dataOrNull?.name }.mutableStateIn("")
@@ -51,11 +51,11 @@ internal class FavoriteEditViewModel @Inject constructor(
 
     fun removeFile(file: File) {
         viewModelScope.launch {
-            removeFavoriteBookUseCase.execute(
-                RemoveFavoriteBookUseCase.Request(
-                    FavoriteBook(
+            removeFavoriteFileUseCase.execute(
+                RemoveFavoriteFileUseCase.Request(
+                    FavoriteFile(
                         favoriteId,
-                        file.serverId,
+                        file.bookshelfId,
                         file.path
                     )
                 )

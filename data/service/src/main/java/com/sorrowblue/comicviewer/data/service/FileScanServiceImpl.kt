@@ -8,7 +8,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ScanTypeModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
 import com.sorrowblue.comicviewer.data.reporitory.FileScanService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -33,7 +33,7 @@ internal class FileScanServiceImpl @Inject constructor(
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .setInputData(
                 FileScanRequest(
-                    fileModel.serverModelId,
+                    fileModel.bookshelfModelId,
                     fileModel.path,
                     scanTypeModel,
                     resolveImageFolder,

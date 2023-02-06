@@ -14,12 +14,12 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ScanTypeModel
-import com.sorrowblue.comicviewer.data.common.ServerModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.util.SortUtil
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.datasource.ServerLocalDataSource
+import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.createNotification
 import dagger.assisted.Assisted
@@ -34,7 +34,7 @@ private const val NOTIFICATION_ID = 1
 internal class FileScanWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val serverLocalDataSource: ServerLocalDataSource,
+    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val factory: RemoteDataSource.Factory,
     private val fileLocalDataSource: FileModelLocalDataSource,
 ) : CoroutineWorker(appContext, workerParams) {
@@ -51,9 +51,9 @@ internal class FileScanWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val request = FileScanRequest.fromWorkData(inputData) ?: return Result.failure()
         setForeground(getForegroundInfo())
-        val serverModel = serverLocalDataSource.get(request.serverModelId).first()!!
+        val serverModel = bookshelfLocalDataSource.get(request.bookshelfModelId).first()!!
         val rootFileModel = fileLocalDataSource.root(serverModel.id)!!
-        val fileModel = fileLocalDataSource.findBy(request.serverModelId, request.path)
+        val fileModel = fileLocalDataSource.findBy(request.bookshelfModelId, request.path)
         val resolveImageFolder = request.resolveImageFolder
         supportExtensions = request.supportExtensions
         logcat(tag = "FileScanWorker") { "resolveImageFolder=$resolveImageFolder" }
@@ -69,7 +69,7 @@ internal class FileScanWorker @AssistedInject constructor(
     }
 
     private suspend fun RemoteDataSource.nestedListFiles(
-        serverModel: ServerModel,
+        bookshelfModel: BookshelfModel,
         fileModel: FileModel,
         resolveImageFolder: Boolean,
         isNested: Boolean
@@ -107,7 +107,7 @@ internal class FileScanWorker @AssistedInject constructor(
         fileLocalDataSource.withTransaction {
             // リモートになくてDBにある項目：削除対象
             val deleteFileData = fileLocalDataSource.selectByNotPaths(
-                serverModel.id,
+                bookshelfModel.id,
                 fileModel.path,
                 fileModelList.map(FileModel::path)
             )
@@ -116,7 +116,7 @@ internal class FileScanWorker @AssistedInject constructor(
             // existsFiles DBにある項目：更新対象
             // noExistsFiles DBにない項目：挿入対象
             val (existsFiles, noExistsFiles) = fileModelList.partition {
-                fileLocalDataSource.exists(it.serverModelId, it.path)
+                fileLocalDataSource.exists(it.bookshelfModelId, it.path)
             }
             // DBにない項目を挿入
             fileLocalDataSource.registerAll(noExistsFiles)
@@ -125,7 +125,7 @@ internal class FileScanWorker @AssistedInject constructor(
         }
         if (isNested) {
             fileModelList.filter { it is FileModel.Folder || it is FileModel.ImageFolder }
-                .forEach { nestedListFiles(serverModel, it, resolveImageFolder, true) }
+                .forEach { nestedListFiles(bookshelfModel, it, resolveImageFolder, true) }
         }
     }
 }

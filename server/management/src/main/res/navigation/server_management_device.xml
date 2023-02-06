@@ -9,15 +9,9 @@
         android:name="com.sorrowblue.comicviewer.server.management.device.ServerManagementDeviceFragment"
         android:label="ローカルストレージの登録・編集">
         <argument
-            android:name="server_device"
-            android:defaultValue="@null"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage"
-            app:nullable="true" />
-        <argument
-            android:name="folder"
-            android:defaultValue="@null"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.file.Folder"
-            app:nullable="true" />
+            android:name="bookshelf_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
         <argument
             android:name="transition_name"
             android:defaultValue="@null"

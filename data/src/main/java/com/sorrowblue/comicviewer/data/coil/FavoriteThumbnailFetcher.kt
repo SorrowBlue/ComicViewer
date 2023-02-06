@@ -16,7 +16,7 @@ import coil.fetch.SourceResult
 import coil.request.Options
 import coil.size.Dimension
 import com.sorrowblue.comicviewer.data.coil.meta.FolderThumbnailMetadata
-import com.sorrowblue.comicviewer.data.common.FavoriteModel
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.data.datasource.FavoriteBookLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.di.ThumbnailDiskCache

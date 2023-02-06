@@ -1,14 +1,14 @@
 package com.sorrowblue.comicviewer.data.datasource
 
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ServerModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.exception.RemoteException
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 
 interface RemoteDataSource {
 
     interface Factory {
-        fun create(serverModel: ServerModel): RemoteDataSource
+        fun create(bookshelfModel: BookshelfModel): RemoteDataSource
     }
 
     @Throws(RemoteException::class)

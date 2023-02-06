@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.remote.impl
 
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ServerModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.exception.RemoteException
 import com.sorrowblue.comicviewer.data.remote.ImageFolderFileReader
@@ -31,15 +31,15 @@ private suspend fun <R> withLock(action: suspend () -> R): R {
 internal class RemoteDataSourceImpl @AssistedInject constructor(
     fileClientFactory: FileClientFactory,
     private val fileReaderFactory: FileReaderFactory,
-    @Assisted private val serverModel: ServerModel
+    @Assisted private val bookshelfModel: BookshelfModel
 ) : RemoteDataSource {
 
     @AssistedFactory
     interface Factory : RemoteDataSource.Factory {
-        override fun create(serverModel: ServerModel): RemoteDataSourceImpl
+        override fun create(bookshelfModel: BookshelfModel): RemoteDataSourceImpl
     }
 
-    private val fileClient = fileClientFactory.create(serverModel)
+    private val fileClient = fileClientFactory.create(bookshelfModel)
 
     override suspend fun connect(path: String) {
         withLock {

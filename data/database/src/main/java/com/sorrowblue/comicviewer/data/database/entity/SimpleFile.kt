@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.data.common.SimpleFileModel
 
 internal class SimpleFile(
     val path: String,
-    @ColumnInfo(name = SERVER_ID) val serverId: Int,
+    @ColumnInfo(name = File.BOOKSHELF_ID) val serverId: Int,
     val name: String,
     val parent: String,
     val size: Long,
@@ -14,22 +14,21 @@ internal class SimpleFile(
     @ColumnInfo(name = "file_type") val fileType: File.Type,
     @ColumnInfo(name = "file_type_order") val fileTypeOrder: Int = fileType.order,
     @ColumnInfo(name = "sort_index") val sortIndex: Int,
-)
-
-internal fun SimpleFileModel.toSimpleFile(): SimpleFile {
-    val type = when (type) {
-        is FileModel.File -> File.Type.FILE
-        is FileModel.Folder -> File.Type.FOLDER
-        is FileModel.ImageFolder -> File.Type.IMAGE_FOLDER
+) {
+    companion object {
+        fun fromModel(model: SimpleFileModel) = SimpleFile(
+            path = model.path,
+            serverId = model.bookshelfModelId.value,
+            name = model.name,
+            parent = model.parent,
+            size = model.size,
+            lastModified = model.lastModifier,
+            fileType = when (model.type) {
+                is FileModel.File -> File.Type.FILE
+                is FileModel.Folder -> File.Type.FOLDER
+                is FileModel.ImageFolder -> File.Type.IMAGE_FOLDER
+            },
+            sortIndex = model.sortIndex
+        )
     }
-    return SimpleFile(
-        path = path,
-        serverId = serverModelId.value,
-        name = name,
-        parent = parent,
-        size = size,
-        lastModified = lastModifier,
-        fileType = type,
-        sortIndex = sortIndex
-    )
 }

@@ -13,7 +13,7 @@ import coil.request.Options
 import com.sorrowblue.comicviewer.data.coil.meta.BookPageMetaData
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.datasource.ServerLocalDataSource
+import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.di.PageDiskCache
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -31,18 +31,18 @@ internal class BookPageFetcher(
     diskCacheLazy: dagger.Lazy<DiskCache?>,
     private val context: Context,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
-    private val serverLocalDataSource: ServerLocalDataSource,
+    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : CoilFetcher<BookPageRequestData>(data, options, diskCacheLazy) {
 
     class Factory @Inject constructor(
         @PageDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
         @ApplicationContext private val context: Context,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
-        private val serverLocalDataSource: ServerLocalDataSource,
+        private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     ) : Fetcher.Factory<BookPageRequestData> {
 
         override fun create(data: BookPageRequestData, options: Options, imageLoader: ImageLoader) =
-            BookPageFetcher(data, options, diskCache, context, remoteDataSourceFactory, serverLocalDataSource)
+            BookPageFetcher(data, options, diskCache, context, remoteDataSourceFactory, bookshelfLocalDataSource)
     }
 
     override suspend fun fetch(): FetchResult {
@@ -58,7 +58,7 @@ internal class BookPageFetcher(
             var fileReader: FileReader? = null
             try {
                 fileReader =
-                    remoteDataSourceFactory.create(serverLocalDataSource.get(data.fileModel.serverModelId).first()!!).fileReader(data.fileModel)
+                    remoteDataSourceFactory.create(bookshelfLocalDataSource.get(data.fileModel.bookshelfModelId).first()!!).fileReader(data.fileModel)
                 var inputStream: InputStream = fileReader.pageInputStream(data.pageIndex)
                 var bytes = inputStream.use { it.readBytes() }
                 val metaData = BookPageMetaData(

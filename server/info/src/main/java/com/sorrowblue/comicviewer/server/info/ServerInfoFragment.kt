@@ -5,9 +5,9 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage
-import com.sorrowblue.comicviewer.domain.entity.server.Server
-import com.sorrowblue.comicviewer.domain.entity.server.Smb
+import com.sorrowblue.comicviewer.domain.entity.server.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.server.InternalStorage
+import com.sorrowblue.comicviewer.domain.entity.server.SmbServer
 import com.sorrowblue.comicviewer.framework.ui.fragment.dialogViewBinding
 import com.sorrowblue.comicviewer.server.info.databinding.ServerInfoDialogBinding
 import com.sorrowblue.comicviewer.server.management.device.ServerManagementDeviceFragmentArgs
@@ -25,18 +25,18 @@ internal class ServerInfoFragment : BottomSheetDialogFragment(R.layout.server_in
         binding.viewModel = viewModel
         binding.remove.setOnClickListener {
             findNavController().navigate(
-                ServerInfoFragmentDirections.actionServerInfoToServerRemoveConfirm(viewModel.server.value!!)
+                ServerInfoFragmentDirections.actionServerInfoToServerRemoveConfirm(viewModel.bookshelf.value!!.id.value)
             )
         }
         binding.edit.setOnClickListener {
-            when (val server = viewModel.server.value) {
-                is DeviceStorage -> findNavController().navigate(
+            when (val server = viewModel.bookshelf.value) {
+                is InternalStorage -> findNavController().navigate(
                     ServerInfoFragmentDirections.actionServerInfoToServerManagementNavigationDevice().actionId,
-                    ServerManagementDeviceFragmentArgs(server, viewModel.folder.value).toBundle()
+                    ServerManagementDeviceFragmentArgs(server.id.value).toBundle()
                 )
-                is Smb -> findNavController().navigate(
+                is SmbServer -> findNavController().navigate(
                     ServerInfoFragmentDirections.actionServerInfoToServerManagementNavigationSmb().actionId,
-                    ServerManagementSmbFragmentArgs(server, viewModel.folder.value!!).toBundle()
+                    ServerManagementSmbFragmentArgs(server.id.value).toBundle()
                 )
                 null -> Unit
             }
@@ -47,9 +47,9 @@ internal class ServerInfoFragment : BottomSheetDialogFragment(R.layout.server_in
 object Converter {
 
     @JvmStatic
-    fun Server?.toTypeString() = when (this) {
-        is DeviceStorage -> R.string.server_info_label_device_storage
-        is Smb -> R.string.server_info_label_smb
+    fun Bookshelf?.toTypeString() = when (this) {
+        is InternalStorage -> R.string.server_info_label_device_storage
+        is SmbServer -> R.string.server_info_label_smb
         null -> android.R.string.unknownName
     }
 

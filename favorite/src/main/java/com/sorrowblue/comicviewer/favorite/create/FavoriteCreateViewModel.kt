@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.favorite.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.usecase.CreateFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.CreateFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

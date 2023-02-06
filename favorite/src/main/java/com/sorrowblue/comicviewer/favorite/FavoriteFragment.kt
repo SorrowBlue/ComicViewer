@@ -59,7 +59,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
                     )
                 }
             },
-            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.serverId.value}&path=${it.path.encodeBase64()}".toUri()) }
+            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -122,7 +122,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
     ) = object : NavDirections {
         override val actionId = actionFavoriteToBook().actionId
         override val arguments = BookFragmentArgs(
-            book.serverId.value,
+            book.bookshelfId.value,
             book.path.encodeBase64(),
             transitionName,
             book.lastPageRead
@@ -135,7 +135,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
     ) = object : NavDirections {
         override val actionId = actionFavoriteToFolder().actionId
         override val arguments = FolderFragmentArgs(
-            folder.serverId.value,
+            folder.bookshelfId.value,
             folder.path.encodeBase64(),
             transitionName
         ).toBundle()

@@ -77,14 +77,14 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
 
                     is Folder -> navigate(
                         FolderFragmentDirections.actionFolderSelf(
-                            file.serverId.value,
+                            file.bookshelfId.value,
                             file.path.encodeBase64(),
                             transitionName
                         ), extras
                     )
                 }
             },
-            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.serverId.value}&path=${it.path.encodeBase64()}".toUri()) }
+            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
 
     override fun onCreateAdapter(adapter: PagingDataAdapter<File, *>) {
@@ -175,7 +175,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
     ) = object : NavDirections {
         override val actionId = actionFolderToBook().actionId
         override val arguments = BookFragmentArgs(
-            book.serverId.value,
+            book.bookshelfId.value,
             book.path.encodeBase64(),
             transitionName,
             book.lastPageRead
@@ -206,14 +206,14 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
 
                     is Folder -> navigate(
                         FolderFragmentDirections.actionFolderSelf(
-                            file.serverId.value,
+                            file.bookshelfId.value,
                             file.path.encodeBase64(),
                             transitionName
                         ), extras
                     )
                 }
             },
-            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.serverId.value}&path=${it.path.encodeBase64()}".toUri()) }
+            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
         viewModel.pagingQueryDataFlow.attachAdapter(adapter)
         binding.searchRecyclerView.adapter = adapter

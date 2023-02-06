@@ -4,19 +4,17 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.sorrowblue.comicviewer.data.common.FavoriteBookModel
-import com.sorrowblue.comicviewer.data.common.FavoriteModel
-import com.sorrowblue.comicviewer.data.common.FavoriteModelId
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ServerModelId
-import com.sorrowblue.comicviewer.data.common.SortType
-import com.sorrowblue.comicviewer.data.database.dao.FavoriteBookDao
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
+import com.sorrowblue.comicviewer.data.common.bookshelf.SortType
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteFileModel
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModelId
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
-import com.sorrowblue.comicviewer.data.database.dao.pagingSource
+import com.sorrowblue.comicviewer.data.database.dao.FavoriteFileDao
 import com.sorrowblue.comicviewer.data.database.entity.Favorite
+import com.sorrowblue.comicviewer.data.database.entity.FavoriteFile
 import com.sorrowblue.comicviewer.data.database.entity.File
-import com.sorrowblue.comicviewer.data.database.entity.toFavorite
-import com.sorrowblue.comicviewer.data.database.entity.toFavoriteBook
 import com.sorrowblue.comicviewer.data.datasource.FavoriteBookLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
 import javax.inject.Inject
@@ -26,7 +24,7 @@ import kotlinx.coroutines.flow.map
 import logcat.logcat
 
 internal class FavoriteBookLocalDataSourceImpl @Inject constructor(
-    private val favoriteBookDao: FavoriteBookDao,
+    private val favoriteFileDao: FavoriteFileDao,
 ) : FavoriteBookLocalDataSource {
     override fun pagingSource(
         pagingConfig: PagingConfig,
@@ -34,12 +32,12 @@ internal class FavoriteBookLocalDataSourceImpl @Inject constructor(
         sortType: () -> SortType
     ): Flow<PagingData<FileModel>> {
         return Pager(pagingConfig) {
-            favoriteBookDao.pagingSource(favoriteModelId.value, sortType.invoke())
-        }.flow.map { it.map(File::toFileModel) }
+            favoriteFileDao.pagingSource(favoriteModelId.value, sortType.invoke())
+        }.flow.map { it.map(File::toModel) }
     }
 
     override suspend fun getCacheKeyList(favoriteModelId: FavoriteModelId, limit: Int): List<String> {
-        return favoriteBookDao.selectCacheKey(favoriteModelId.value, limit).also {
+        return favoriteFileDao.selectCacheKey(favoriteModelId.value, limit).also {
             logcat { "cacheKeyList=${it}" }
         }
     }
@@ -47,7 +45,7 @@ internal class FavoriteBookLocalDataSourceImpl @Inject constructor(
 
 internal class FavoriteLocalDataSourceImpl @Inject constructor(
     private val favoriteDao: FavoriteDao,
-    private val favoriteBookDao: FavoriteBookDao,
+    private val favoriteFileDao: FavoriteFileDao,
 ) : FavoriteLocalDataSource {
 
     override fun get(favoriteModelId: FavoriteModelId): Flow<FavoriteModel> {
@@ -57,7 +55,7 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun update(favoriteModel: FavoriteModel): FavoriteModel {
-        favoriteDao.upsert(favoriteModel.toFavorite())
+        favoriteDao.upsert(Favorite.fromModel(favoriteModel))
         return favoriteModel
     }
 
@@ -65,16 +63,16 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
         return favoriteDao.delete(Favorite(favoriteModelId.value, ""))
     }
 
-    override suspend fun getFavoriteList(id: ServerModelId, filePath: String): List<FavoriteModel> {
+    override suspend fun getFavoriteList(id: BookshelfModelId, filePath: String): List<FavoriteModel> {
         return favoriteDao.selectBy(id.value, filePath).map(Favorite::toModel)
     }
 
-    override suspend fun add(favoriteBookModel: FavoriteBookModel) {
-        favoriteBookDao.insert(favoriteBookModel.toFavoriteBook())
+    override suspend fun add(favoriteFileModel: FavoriteFileModel) {
+        favoriteFileDao.insert(FavoriteFile.fromModel(favoriteFileModel))
     }
 
-    override suspend fun remove(favoriteBookModel: FavoriteBookModel) {
-        favoriteBookDao.delete(favoriteBookModel.toFavoriteBook())
+    override suspend fun remove(favoriteFileModel: FavoriteFileModel) {
+        favoriteFileDao.delete(FavoriteFile.fromModel(favoriteFileModel))
     }
 
     override fun pagingSourceCount(pagingConfig: PagingConfig): Flow<PagingData<FavoriteModel>> {
@@ -88,7 +86,6 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun create(favoriteModel: FavoriteModel) {
-        logcat { "create=$favoriteModel" }
-        favoriteDao.upsert(favoriteModel.toFavorite())
+        favoriteDao.upsert(Favorite.fromModel(favoriteModel))
     }
 }

@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a3f136f6951bd634d4e5a06e4b130a76",
+    "identityHash": "74bc63e968abda704f862db70d3765ac",
     "entities": [
       {
-        "tableName": "server",
+        "tableName": "bookshelf",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `display_name` TEXT NOT NULL, `type` TEXT NOT NULL, `host` TEXT NOT NULL, `port` INTEGER NOT NULL, `domain` TEXT NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL)",
         "fields": [
           {
@@ -68,7 +68,7 @@
       },
       {
         "tableName": "file",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`path` TEXT NOT NULL, `server_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `parent` TEXT NOT NULL, `size` INTEGER NOT NULL, `last_modified` INTEGER NOT NULL, `file_type` TEXT NOT NULL, `file_type_order` INTEGER NOT NULL, `sort_index` INTEGER NOT NULL, `cache_key` TEXT NOT NULL, `total_page_count` INTEGER NOT NULL, `last_read_page` INTEGER NOT NULL, `last_read` INTEGER NOT NULL, PRIMARY KEY(`path`, `server_id`), FOREIGN KEY(`server_id`) REFERENCES `server`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`path` TEXT NOT NULL, `bookshelf_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `parent` TEXT NOT NULL, `size` INTEGER NOT NULL, `last_modified` INTEGER NOT NULL, `file_type` TEXT NOT NULL, `file_type_order` INTEGER NOT NULL, `sort_index` INTEGER NOT NULL, `cache_key` TEXT NOT NULL, `total_page_count` INTEGER NOT NULL, `last_read_page` INTEGER NOT NULL, `last_read` INTEGER NOT NULL, PRIMARY KEY(`path`, `bookshelf_id`), FOREIGN KEY(`bookshelf_id`) REFERENCES `bookshelf`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "path",
@@ -77,8 +77,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "serverId",
-            "columnName": "server_id",
+            "fieldPath": "bookshelfId",
+            "columnName": "bookshelf_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -153,28 +153,28 @@
           "autoGenerate": false,
           "columnNames": [
             "path",
-            "server_id"
+            "bookshelf_id"
           ]
         },
         "indices": [
           {
-            "name": "index_file_server_id_path",
+            "name": "index_file_bookshelf_id_path",
             "unique": false,
             "columnNames": [
-              "server_id",
+              "bookshelf_id",
               "path"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_file_server_id_path` ON `${TABLE_NAME}` (`server_id`, `path`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_file_bookshelf_id_path` ON `${TABLE_NAME}` (`bookshelf_id`, `path`)"
           }
         ],
         "foreignKeys": [
           {
-            "table": "server",
+            "table": "bookshelf",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "server_id"
+              "bookshelf_id"
             ],
             "referencedColumns": [
               "id"
@@ -209,8 +209,8 @@
         "foreignKeys": []
       },
       {
-        "tableName": "favorite_book",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`favorite_id` INTEGER NOT NULL, `server_id` INTEGER NOT NULL, `file_path` TEXT NOT NULL, PRIMARY KEY(`favorite_id`, `file_path`, `server_id`), FOREIGN KEY(`favorite_id`) REFERENCES `favorite`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`server_id`, `file_path`) REFERENCES `file`(`server_id`, `path`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "tableName": "favorite_file",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`favorite_id` INTEGER NOT NULL, `file_path` TEXT NOT NULL, `bookshelf_id` INTEGER NOT NULL, PRIMARY KEY(`favorite_id`, `file_path`, `bookshelf_id`), FOREIGN KEY(`favorite_id`) REFERENCES `favorite`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`file_path`, `bookshelf_id`) REFERENCES `file`(`path`, `bookshelf_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "favoriteId",
@@ -219,15 +219,15 @@
             "notNull": true
           },
           {
-            "fieldPath": "serverId",
-            "columnName": "server_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "filePath",
             "columnName": "file_path",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverId",
+            "columnName": "bookshelf_id",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -236,20 +236,20 @@
           "columnNames": [
             "favorite_id",
             "file_path",
-            "server_id"
+            "bookshelf_id"
           ]
         },
         "indices": [
           {
-            "name": "index_favorite_book_favorite_id_server_id_file_path",
+            "name": "index_favorite_file_favorite_id_file_path_bookshelf_id",
             "unique": false,
             "columnNames": [
               "favorite_id",
-              "server_id",
-              "file_path"
+              "file_path",
+              "bookshelf_id"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_favorite_book_favorite_id_server_id_file_path` ON `${TABLE_NAME}` (`favorite_id`, `server_id`, `file_path`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_favorite_file_favorite_id_file_path_bookshelf_id` ON `${TABLE_NAME}` (`favorite_id`, `file_path`, `bookshelf_id`)"
           }
         ],
         "foreignKeys": [
@@ -269,50 +269,50 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "server_id",
-              "file_path"
+              "file_path",
+              "bookshelf_id"
             ],
             "referencedColumns": [
-              "server_id",
-              "path"
+              "path",
+              "bookshelf_id"
             ]
           }
         ]
       },
       {
-        "tableName": "read_later",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`server_id` INTEGER NOT NULL, `file_path` TEXT NOT NULL, PRIMARY KEY(`file_path`, `server_id`), FOREIGN KEY(`server_id`, `file_path`) REFERENCES `file`(`server_id`, `path`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "tableName": "read_later_file",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`file_path` TEXT NOT NULL, `bookshelf_id` INTEGER NOT NULL, PRIMARY KEY(`bookshelf_id`, `file_path`), FOREIGN KEY(`file_path`, `bookshelf_id`) REFERENCES `file`(`path`, `bookshelf_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
-          {
-            "fieldPath": "serverId",
-            "columnName": "server_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "filePath",
             "columnName": "file_path",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bookshelfId",
+            "columnName": "bookshelf_id",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "file_path",
-            "server_id"
+            "bookshelf_id",
+            "file_path"
           ]
         },
         "indices": [
           {
-            "name": "index_read_later_favorite_id_server_id_file_path",
+            "name": "index_read_later_file_file_path_bookshelf_id",
             "unique": false,
             "columnNames": [
-              "server_id",
-              "file_path"
+              "file_path",
+              "bookshelf_id"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_read_later_favorite_id_server_id_file_path` ON `${TABLE_NAME}` (`server_id`, `file_path`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_read_later_file_file_path_bookshelf_id` ON `${TABLE_NAME}` (`file_path`, `bookshelf_id`)"
           }
         ],
         "foreignKeys": [
@@ -321,12 +321,12 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "server_id",
-              "file_path"
+              "file_path",
+              "bookshelf_id"
             ],
             "referencedColumns": [
-              "server_id",
-              "path"
+              "path",
+              "bookshelf_id"
             ]
           }
         ]
@@ -335,7 +335,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3f136f6951bd634d4e5a06e4b130a76')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '74bc63e968abda704f862db70d3765ac')"
     ]
   }
 }

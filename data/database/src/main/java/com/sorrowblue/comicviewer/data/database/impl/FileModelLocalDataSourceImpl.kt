@@ -7,21 +7,18 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.room.withTransaction
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.FolderThumbnailOrderModel
-import com.sorrowblue.comicviewer.data.common.ServerModel
-import com.sorrowblue.comicviewer.data.common.ServerModelId
 import com.sorrowblue.comicviewer.data.common.SimpleFileModel
-import com.sorrowblue.comicviewer.data.common.SortType
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
+import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.SortType
 import com.sorrowblue.comicviewer.data.database.ComicViewerDatabase
 import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
-import com.sorrowblue.comicviewer.data.database.dao.pagingSource
-import com.sorrowblue.comicviewer.data.database.dao.pagingSourceQuery
 import com.sorrowblue.comicviewer.data.database.entity.File
+import com.sorrowblue.comicviewer.data.database.entity.SimpleFile
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistory
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfo
-import com.sorrowblue.comicviewer.data.database.entity.toFile
-import com.sorrowblue.comicviewer.data.database.entity.toSimpleFile
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -34,29 +31,29 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
 ) : FileModelLocalDataSource {
 
     override suspend fun register(fileModel: FileModel) {
-        dao.upsert(fileModel.toFile())
+        dao.upsert(File.fromModel(fileModel))
     }
 
     override suspend fun update(
         path: String,
-        serverModelId: ServerModelId,
+        bookshelfModelId: BookshelfModelId,
         lastReadPage: Int,
         lastRead: Long
     ) {
-        dao.update(UpdateFileHistory(path, serverModelId.value, lastReadPage, lastRead))
+        dao.update(UpdateFileHistory(path, bookshelfModelId.value, lastReadPage, lastRead))
     }
 
     override suspend fun update(
         path: String,
-        serverModelId: ServerModelId,
+        bookshelfModelId: BookshelfModelId,
         cacheKey: String,
         totalPage: Int
     ) {
-        dao.update(UpdateFileInfo(path, serverModelId.value, cacheKey, totalPage))
+        dao.update(UpdateFileInfo(path, bookshelfModelId.value, cacheKey, totalPage))
     }
 
     override suspend fun updateAll(list: List<SimpleFileModel>) {
-        dao.updateAllSimple(list.map { it.toSimpleFile() })
+        dao.updateAllSimple(list.map(SimpleFile::fromModel))
     }
 
     override suspend fun <R> withTransaction(block: suspend () -> R): R {
@@ -64,113 +61,113 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun selectByNotPaths(
-        serverModelId: ServerModelId,
+        bookshelfModelId: BookshelfModelId,
         path: String,
         list: List<String>
     ): List<FileModel> {
-        return dao.selectByNotPaths(serverModelId.value, path, list).map(File::toFileModel)
+        return dao.selectByNotPaths(bookshelfModelId.value, path, list).map(File::toModel)
     }
 
     override suspend fun deleteAll(list: List<FileModel>) {
-        dao.deleteAll(list.map { it.toFile() })
+        dao.deleteAll(list.map(File.Companion::fromModel))
     }
 
-    override suspend fun exists(serverModelId: ServerModelId, path: String): Boolean {
-        return dao.selectBy(serverModelId.value, path) != null
+    override suspend fun exists(bookshelfModelId: BookshelfModelId, path: String): Boolean {
+        return dao.selectBy(bookshelfModelId.value, path) != null
     }
 
     override suspend fun registerAll(list: List<FileModel>) {
         withTransaction {
             val (exists, noexists) = list.partition {
-                dao.selectBy(it.serverModelId.value, it.path) != null
+                dao.selectBy(it.bookshelfModelId.value, it.path) != null
             }
-            dao.insertAll(noexists.map { it.toFile() })
-            dao.updateAll(exists.map { it.toFile() })
+            dao.insertAll(noexists.map { File.fromModel(it) })
+            dao.updateAll(exists.map { File.fromModel(it) })
         }
     }
 
     @OptIn(ExperimentalPagingApi::class)
     override fun pagingSource(
         pagingConfig: PagingConfig,
-        serverModel: ServerModel,
+        bookshelfModel: BookshelfModel,
         fileModel: FileModel,
         sortType: () -> SortType
     ): Flow<PagingData<FileModel>> {
-        val remoteMediator = factory.create(serverModel, fileModel)
+        val remoteMediator = factory.create(bookshelfModel, fileModel)
         return Pager(pagingConfig, remoteMediator = remoteMediator) {
-            dao.pagingSource(serverModel.id.value, fileModel.path, sortType())
-        }.flow.map { pagingData -> pagingData.map { it.toFileModel() } }
+            dao.pagingSource(bookshelfModel.id.value, fileModel.path, sortType())
+        }.flow.map { pagingData -> pagingData.map { it.toModel() } }
 
     }
 
     override fun pagingSource(
         pagingConfig: PagingConfig,
-        serverModelId: ServerModelId,
+        bookshelfModelId: BookshelfModelId,
         query: () -> String,
         sortType: () -> SortType,
     ): Flow<PagingData<FileModel>> {
         return Pager(pagingConfig) {
             dao.pagingSourceQuery(
-                serverModelId.value,
+                bookshelfModelId.value,
                 query(),
                 sortType()
             )
-        }.flow.map { pagingData -> pagingData.map { it.toFileModel() } }
+        }.flow.map { pagingData -> pagingData.map { it.toModel() } }
     }
 
-    override suspend fun root(id: ServerModelId): FileModel.Folder? {
-        return dao.selectRootBy(id.value)?.toFileModel() as? FileModel.Folder
+    override suspend fun root(id: BookshelfModelId): FileModel.Folder? {
+        return dao.selectRootBy(id.value)?.toModel() as? FileModel.Folder
     }
 
-    override suspend fun findBy(serverModelId: ServerModelId): List<FileModel> {
-        return dao.selectBy(serverModelId.value).map(File::toFileModel)
+    override suspend fun findBy(bookshelfModelId: BookshelfModelId): List<FileModel> {
+        return dao.selectBy(bookshelfModelId.value).map(File::toModel)
     }
 
-    override suspend fun findBy(serverModelId: ServerModelId, path: String): FileModel? {
-        return dao.selectBy(serverModelId.value, path)?.toFileModel()
+    override suspend fun findBy(bookshelfModelId: BookshelfModelId, path: String): FileModel? {
+        return dao.selectBy(bookshelfModelId.value, path)?.toModel()
     }
 
-    override fun selectBy(serverModelId: ServerModelId, path: String): Flow<FileModel?> {
-        return dao.selectBy2(serverModelId.value, path).map { it?.toFileModel() }
+    override fun selectBy(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?> {
+        return dao.selectBy2(bookshelfModelId.value, path).map { it?.toModel() }
     }
 
-    override fun nextFileModel(serverModelId: ServerModelId, path: String): Flow<FileModel?> {
-        return dao.selectNextFile(serverModelId.value, path).map { it?.toFileModel() }
+    override fun nextFileModel(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?> {
+        return dao.selectNextFile(bookshelfModelId.value, path).map { it?.toModel() }
     }
 
-    override fun prevFileModel(serverModelId: ServerModelId, path: String): Flow<FileModel?> {
-        return dao.selectPrevFile(serverModelId.value, path).map { it?.toFileModel() }
+    override fun prevFileModel(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?> {
+        return dao.selectPrevFile(bookshelfModelId.value, path).map { it?.toModel() }
     }
 
     override suspend fun getCacheKeys(
-        serverModelId: ServerModelId,
+        bookshelfModelId: BookshelfModelId,
         parent: String,
         limit: Int
     ): List<String> {
-        return dao.selectCacheKeysSortIndex(serverModelId.value, "$parent%", limit)
+        return dao.selectCacheKeysSortIndex(bookshelfModelId.value, "$parent%", limit)
     }
 
     override suspend fun getCacheKeys(
-        serverModelId: ServerModelId,
+        bookshelfModelId: BookshelfModelId,
         parent: String,
         limit: Int,
         folderThumbnailOrderModel: FolderThumbnailOrderModel
     ): List<String> {
         return when (folderThumbnailOrderModel) {
             FolderThumbnailOrderModel.NAME -> dao.selectCacheKeysSortIndex(
-                serverModelId.value,
+                bookshelfModelId.value,
                 "$parent%",
                 limit
             )
 
             FolderThumbnailOrderModel.MODIFIED -> dao.selectCacheKeysSortLastModified(
-                serverModelId.value,
+                bookshelfModelId.value,
                 "$parent%",
                 limit
             )
 
             FolderThumbnailOrderModel.LAST_READ -> dao.selectCacheKeysSortLastRead(
-                serverModelId.value,
+                bookshelfModelId.value,
                 "$parent%",
                 limit
             )

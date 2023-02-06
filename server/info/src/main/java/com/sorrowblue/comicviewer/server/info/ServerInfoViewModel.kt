@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
-import com.sorrowblue.comicviewer.domain.entity.server.Server
-import com.sorrowblue.comicviewer.domain.entity.server.ServerId
-import com.sorrowblue.comicviewer.domain.usecase.GetServerInfoUseCase
+import com.sorrowblue.comicviewer.domain.entity.server.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
@@ -21,14 +21,14 @@ import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 internal class ServerInfoViewModel @Inject constructor(
-    getServerInfoUseCase: GetServerInfoUseCase,
+    getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     override val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), SupportSafeArgs {
 
     private val args: ServerInfoFragmentArgs by navArgs()
 
     private val libraryInfoFlow =
-        getServerInfoUseCase.execute(GetServerInfoUseCase.Request(ServerId(args.serverId))).mapNotNull {
+        getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(BookshelfId(args.serverId))).mapNotNull {
             when (it) {
                 is Result.Error -> {
                     // TODO(Send error message)
@@ -44,8 +44,8 @@ internal class ServerInfoViewModel @Inject constructor(
             }
         }.shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
-    val server: StateFlow<Server?> =
-        libraryInfoFlow.map { it.server }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+    val bookshelf: StateFlow<Bookshelf?> =
+        libraryInfoFlow.map { it.bookshelf }.stateIn(viewModelScope, SharingStarted.Lazily, null)
     val folder: StateFlow<Folder?> =
         libraryInfoFlow.map { it.folder }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 }

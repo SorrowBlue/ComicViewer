@@ -21,10 +21,10 @@ import coil.size.Dimension
 import com.sorrowblue.comicviewer.data.coil.meta.BookThumbnailMetaData
 import com.sorrowblue.comicviewer.data.coil.meta.FolderThumbnailMetadata
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.FolderThumbnailOrderModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.datasource.ServerLocalDataSource
+import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.di.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderThumbnailOrder
@@ -47,7 +47,7 @@ internal class FileThumbnailFetcher(
     private val options: Options,
     diskCacheLazy: dagger.Lazy<DiskCache?>,
     private val context: Context,
-    private val serverLocalDataSource: ServerLocalDataSource,
+    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val settingsCommonRepository: SettingsCommonRepository,
@@ -56,7 +56,7 @@ internal class FileThumbnailFetcher(
     class Factory @Inject constructor(
         @ThumbnailDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
         @ApplicationContext private val context: Context,
-        private val serverLocalDataSource: ServerLocalDataSource,
+        private val bookshelfLocalDataSource: BookshelfLocalDataSource,
         private val fileModelLocalDataSource: FileModelLocalDataSource,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val settingsCommonRepository: SettingsCommonRepository
@@ -72,7 +72,7 @@ internal class FileThumbnailFetcher(
                 options,
                 diskCache,
                 context,
-                serverLocalDataSource,
+                bookshelfLocalDataSource,
                 fileModelLocalDataSource,
                 remoteDataSourceFactory,
                 settingsCommonRepository
@@ -80,7 +80,7 @@ internal class FileThumbnailFetcher(
         }
     }
 
-    private val serverModelId get() = data.serverModelId
+    private val serverModelId get() = data.bookshelfModelId
     private val fileModel get() = data
     private val width = (options.size.width as? Dimension.Pixels)?.px?.toFloat() ?: 300f
     private val height = (options.size.height as? Dimension.Pixels)?.px?.toFloat() ?: 300f
@@ -168,7 +168,7 @@ internal class FileThumbnailFetcher(
                 }
             }
 //            delay(750)
-            val server = serverLocalDataSource.get(serverModelId).first()!!
+            val server = bookshelfLocalDataSource.get(serverModelId).first()!!
             fileReader = remoteDataSourceFactory.create(server).fileReader(fileModel)
             if (fileReader.pageCount() == 0) {
                 throw Exception("Page count is 0 ${fileModel.path}.")

@@ -3,23 +3,23 @@ package com.sorrowblue.comicviewer.data.reporitory
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.sorrowblue.comicviewer.data.common.FavoriteModel
-import com.sorrowblue.comicviewer.data.common.FavoriteModelId
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModelId
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ServerModelId
-import com.sorrowblue.comicviewer.data.common.SortType
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
+import com.sorrowblue.comicviewer.data.common.bookshelf.SortType
 import com.sorrowblue.comicviewer.data.datasource.FavoriteBookLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.data.toFavorite
 import com.sorrowblue.comicviewer.data.toFavoriteBookModel
 import com.sorrowblue.comicviewer.data.toFile
 import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
-import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteBook
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.server.ServerId
+import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.repository.FavoriteBookRepository
+import com.sorrowblue.comicviewer.domain.repository.FavoriteFileRepository
 import com.sorrowblue.comicviewer.domain.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import javax.inject.Inject
@@ -31,10 +31,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-internal class FavoriteBookRepositoryImpl @Inject constructor(
+internal class FavoriteFileRepositoryImpl @Inject constructor(
     private val favoriteBookLocalDataSource: FavoriteBookLocalDataSource,
     private val settingsCommonRepository: SettingsCommonRepository
-) : FavoriteBookRepository {
+) : FavoriteFileRepository {
 
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,
@@ -82,22 +82,22 @@ internal class FavoriteRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFavoriteList(serverId: ServerId, filePath: String): List<Favorite> {
+    override suspend fun getFavoriteList(bookshelfId: BookshelfId, filePath: String): List<Favorite> {
         return withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.getFavoriteList(ServerModelId(serverId.value), filePath)
+            favoriteLocalDataSource.getFavoriteList(BookshelfModelId(bookshelfId.value), filePath)
                 .map { it.toFavorite() }
         }
     }
 
-    override suspend fun add(favoriteBook: FavoriteBook) {
+    override suspend fun add(favoriteFile: FavoriteFile) {
         return withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.add(favoriteBook.toFavoriteBookModel())
+            favoriteLocalDataSource.add(favoriteFile.toFavoriteBookModel())
         }
     }
 
-    override suspend fun remove(favoriteBook: FavoriteBook) {
+    override suspend fun remove(favoriteFile: FavoriteFile) {
         return withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.remove(favoriteBook.toFavoriteBookModel())
+            favoriteLocalDataSource.remove(favoriteFile.toFavoriteBookModel())
         }
     }
 

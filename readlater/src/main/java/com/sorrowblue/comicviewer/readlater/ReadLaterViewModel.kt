@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingViewModel
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
@@ -18,12 +18,12 @@ import kotlinx.coroutines.runBlocking
 @HiltViewModel
 internal class ReadLaterViewModel @Inject constructor(
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    pagingReadLaterUseCase: PagingReadLaterUseCase,
+    pagingReadLaterFileUseCase: PagingReadLaterFileUseCase,
 ) : PagingViewModel<File>() {
 
     override val transitionName = null
-    override val pagingDataFlow = pagingReadLaterUseCase
-        .execute(PagingReadLaterUseCase.Request(PagingConfig(20)))
+    override val pagingDataFlow = pagingReadLaterFileUseCase
+        .execute(PagingReadLaterFileUseCase.Request(PagingConfig(20)))
         .cachedIn(viewModelScope)
 
     val folderDisplaySettingsFlow = manageFolderDisplaySettingsUseCase.settings

@@ -13,9 +13,9 @@
 
         <import type="com.sorrowblue.comicviewer.server.info.Converter" />
 
-        <import type="com.sorrowblue.comicviewer.domain.entity.server.DeviceStorage" />
+        <import type="com.sorrowblue.comicviewer.domain.entity.server.InternalStorage" />
 
-        <import type="com.sorrowblue.comicviewer.domain.entity.server.Smb" />
+        <import type="com.sorrowblue.comicviewer.domain.entity.server.SmbServer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="@{Converter.toTypeString(viewModel.server)}"
+            android:text="@{Converter.toTypeString(viewModel.bookshelf)}"
             android:textAppearance="?attr/textAppearanceLabelLarge"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_drag_handle"
@@ -59,7 +59,7 @@
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.server.displayName}"
+            android:text="@{viewModel.bookshelf.displayName}"
             android:textAppearance="?attr/textAppearanceTitleLarge"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toStartOf="@+id/guideline_begin"
@@ -78,7 +78,7 @@
             android:id="@+id/device_path"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.server instanceof DeviceStorage ? viewModel.folder.path : null}"
+            android:text="@{viewModel.bookshelf instanceof InternalStorage ? viewModel.folder.path : null}"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="Downloads/New Folder (1)" />
 
@@ -94,7 +94,7 @@
             android:id="@+id/smb_host"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.server instanceof Smb ? ((Smb)viewModel.server).host : null}"
+            android:text="@{viewModel.bookshelf instanceof SmbServer ? ((SmbServer)viewModel.bookshelf).host : null}"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="19.2168.0.1" />
 
@@ -110,7 +110,7 @@
             android:id="@+id/smb_path"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.server instanceof Smb ? viewModel.folder.path : null}"
+            android:text="@{viewModel.bookshelf instanceof SmbServer ? viewModel.folder.path : null}"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="@tools:sample/lorem" />
 
@@ -160,14 +160,14 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:constraint_referenced_ids="smb_host_label,smb_host,smb_path_label,smb_path,smb_port_label,smb_port"
-            app:isVisible="@{viewModel.server instanceof Smb}" />
+            app:isVisible="@{viewModel.bookshelf instanceof SmbServer}" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_device"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:constraint_referenced_ids="device_path_label,device_path"
-            app:isVisible="@{viewModel.server instanceof DeviceStorage}" />
+            app:isVisible="@{viewModel.bookshelf instanceof InternalStorage}" />
 
         <androidx.constraintlayout.helper.widget.Flow
             android:id="@+id/server_infoFlow"

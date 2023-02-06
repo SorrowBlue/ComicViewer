@@ -9,15 +9,9 @@
         android:name="com.sorrowblue.comicviewer.server.management.smb.ServerManagementSmbFragment"
         android:label="SMBサーバの登録・編集">
         <argument
-            android:name="server_smb"
-            android:defaultValue="@null"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.server.Smb"
-            app:nullable="true" />
-        <argument
-            android:name="folder"
-            android:defaultValue="@null"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.file.Folder"
-            app:nullable="true" />
+            android:name="bookshelf_id"
+            android:defaultValue="-1"
+            app:argType="integer" />
         <argument
             android:name="transition_name"
             android:defaultValue="@null"

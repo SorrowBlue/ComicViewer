@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.remote.client.smb
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sorrowblue.comicviewer.data.common.ServerModelId
-import com.sorrowblue.comicviewer.data.common.SmbServerModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import com.sorrowblue.comicviewer.data.remote.client.FileClientException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -26,12 +26,12 @@ internal class SmbClientTest {
         }
     }
 
-    private val nasServer = SmbServerModel(
-        ServerModelId(0),
+    private val nasServer = BookshelfModel.SmbServer(
+        BookshelfModelId(0),
         "Test",
         "192.168.0.101",
         445,
-        SmbServerModel.UsernamePassword("", "SorrowBlue", "nasyuukiasuna2s2")
+        BookshelfModel.SmbServer.UsernamePassword("", "SorrowBlue", "nasyuukiasuna2s2")
     )
 
     @Test
@@ -45,7 +45,7 @@ internal class SmbClientTest {
     @Test
     fun connectGuestTest() {
         runTest {
-            val result = SmbFileClient(nasServer.copy(auth = SmbServerModel.Guest)).connect("/test/")
+            val result = SmbFileClient(nasServer.copy(auth = BookshelfModel.SmbServer.Guest)).connect("/test/")
             Assert.assertEquals(result, Unit)
         }
     }
@@ -124,7 +124,7 @@ internal class SmbClientTest {
     fun connectTest_bad_auth() {
         Assert.assertThrows(FileClientException.InvalidAuth::class.java) {
             runTest {
-                SmbFileClient(nasServer.copy(auth = SmbServerModel.Guest)).connect("/test/")
+                SmbFileClient(nasServer.copy(auth = BookshelfModel.SmbServer.Guest)).connect("/test/")
             }
         }
     }

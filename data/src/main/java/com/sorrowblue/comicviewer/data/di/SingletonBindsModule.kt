@@ -6,20 +6,20 @@ import com.sorrowblue.comicviewer.data.coil.BookThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.FavoriteThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.FileThumbnailFetcher
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
-import com.sorrowblue.comicviewer.data.common.FavoriteModel
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ServerFileModel
-import com.sorrowblue.comicviewer.data.reporitory.FavoriteBookRepositoryImpl
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfFileModel
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.data.reporitory.FavoriteFileRepositoryImpl
 import com.sorrowblue.comicviewer.data.reporitory.FavoriteRepositoryImpl
 import com.sorrowblue.comicviewer.data.reporitory.FileRepositoryImpl
 import com.sorrowblue.comicviewer.data.reporitory.ReadLaterRepositoryImpl
 import com.sorrowblue.comicviewer.data.reporitory.SettingsCommonRepositoryImpl
-import com.sorrowblue.comicviewer.data.reporitory.impl.ServerRepositoryImpl
-import com.sorrowblue.comicviewer.domain.repository.FavoriteBookRepository
+import com.sorrowblue.comicviewer.data.reporitory.impl.BookshelfRepositoryImpl
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
+import com.sorrowblue.comicviewer.domain.repository.FavoriteFileRepository
 import com.sorrowblue.comicviewer.domain.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.ReadLaterRepository
-import com.sorrowblue.comicviewer.domain.repository.ServerRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import dagger.Binds
 import dagger.Module
@@ -45,7 +45,7 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindServerRepository(repository: ServerRepositoryImpl): ServerRepository
+    abstract fun bindBookshelfRepository(repository: BookshelfRepositoryImpl): BookshelfRepository
 
     @Singleton
     @Binds
@@ -53,7 +53,7 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindBookThumbnailFetcherFetcher(factory: BookThumbnailFetcher.Factory): Fetcher.Factory<ServerFileModel>
+    abstract fun bindBookThumbnailFetcherFetcher(factory: BookThumbnailFetcher.Factory): Fetcher.Factory<BookshelfFileModel>
 
     @Singleton
     @Binds
@@ -69,5 +69,5 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteBookRepository(factory: FavoriteBookRepositoryImpl): FavoriteBookRepository
+    abstract fun bindFavoriteBookRepository(factory: FavoriteFileRepositoryImpl): FavoriteFileRepository
 }

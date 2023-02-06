@@ -7,9 +7,9 @@ import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.usecase.DeleteFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingViewModel
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
@@ -28,7 +28,7 @@ import kotlinx.coroutines.runBlocking
 internal class FavoriteViewModel @Inject constructor(
     getFavoriteUseCase: GetFavoriteUseCase,
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    pagingFavoriteBookUseCase: PagingFavoriteBookUseCase,
+    pagingFavoriteFileUseCase: PagingFavoriteFileUseCase,
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
     override val savedStateHandle: SavedStateHandle
 ) : PagingViewModel<File>(), SupportSafeArgs {
@@ -42,8 +42,8 @@ internal class FavoriteViewModel @Inject constructor(
 
     val folderDisplaySettingsFlow = manageFolderDisplaySettingsUseCase.settings
 
-    override val pagingDataFlow = pagingFavoriteBookUseCase
-        .execute(PagingFavoriteBookUseCase.Request(PagingConfig(20), favoriteId))
+    override val pagingDataFlow = pagingFavoriteFileUseCase
+        .execute(PagingFavoriteFileUseCase.Request(PagingConfig(20), favoriteId))
         .cachedIn(viewModelScope)
 
     val spanCountFlow = folderDisplaySettingsFlow.map { it.rawSpanCount }

@@ -1,67 +1,67 @@
 package com.sorrowblue.comicviewer.domain.di
 
-import com.sorrowblue.comicviewer.domain.usecase.AddFavoriteBookUseCase
+import com.sorrowblue.comicviewer.domain.interactor.AddReadLaterInteractor
+import com.sorrowblue.comicviewer.domain.interactor.GetNavigationHistoryInteractor
+import com.sorrowblue.comicviewer.domain.interactor.ScanBookshelfInteractor
+import com.sorrowblue.comicviewer.domain.interactor.UpdateHistoryInteractor
+import com.sorrowblue.comicviewer.domain.interactor.bookshelf.GetBookshelfBookInteractor
+import com.sorrowblue.comicviewer.domain.interactor.bookshelf.GetBookshelfFileInteractor
+import com.sorrowblue.comicviewer.domain.interactor.bookshelf.GetBookshelfFolderInteractor
+import com.sorrowblue.comicviewer.domain.interactor.bookshelf.GetBookshelfInfoInteractor
+import com.sorrowblue.comicviewer.domain.interactor.bookshelf.RegisterBookshelfInteractor
+import com.sorrowblue.comicviewer.domain.interactor.bookshelf.RemoveBookshelfInteractor
+import com.sorrowblue.comicviewer.domain.interactor.favorite.AddFavoriteFileInteractor
+import com.sorrowblue.comicviewer.domain.interactor.favorite.CreateFavoriteInteractor
+import com.sorrowblue.comicviewer.domain.interactor.favorite.DeleteFavoriteInteractor
+import com.sorrowblue.comicviewer.domain.interactor.favorite.GetFavoriteInteractor
+import com.sorrowblue.comicviewer.domain.interactor.favorite.GetFavoriteListInteractor
+import com.sorrowblue.comicviewer.domain.interactor.favorite.RemoveFavoriteFileInteractor
+import com.sorrowblue.comicviewer.domain.interactor.favorite.UpdateFavoriteInteractor
+import com.sorrowblue.comicviewer.domain.interactor.file.GetBookInteractor
+import com.sorrowblue.comicviewer.domain.interactor.file.GetFileInteractor
+import com.sorrowblue.comicviewer.domain.interactor.file.GetNextBookInteractor
+import com.sorrowblue.comicviewer.domain.interactor.file.UpdateLastReadPageInteractor
+import com.sorrowblue.comicviewer.domain.interactor.paging.PagingBookshelfFolderInteractor
+import com.sorrowblue.comicviewer.domain.interactor.paging.PagingFavoriteFileInteractor
+import com.sorrowblue.comicviewer.domain.interactor.paging.PagingFavoriteInteractor
+import com.sorrowblue.comicviewer.domain.interactor.paging.PagingFileInteractor
+import com.sorrowblue.comicviewer.domain.interactor.paging.PagingQueryFileInteractor
+import com.sorrowblue.comicviewer.domain.interactor.paging.PagingReadLaterFileInteractor
+import com.sorrowblue.comicviewer.domain.interactor.settings.LoadSettingsInteractor
+import com.sorrowblue.comicviewer.domain.interactor.settings.ManageFolderDisplaySettingsInteractor
+import com.sorrowblue.comicviewer.domain.interactor.settings.ManageFolderSettingsInteractor
+import com.sorrowblue.comicviewer.domain.interactor.settings.ManageSecuritySettingsInteractor
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.CreateFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.DeleteFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.FullScanLibraryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetFavoriteListUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetNextBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetServerBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetServerFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetServerFolderUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetServerInfoUseCase
-import com.sorrowblue.comicviewer.domain.usecase.RegisterServerUseCase
-import com.sorrowblue.comicviewer.domain.usecase.RemoveFavoriteBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.RemoveLibraryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.UpdateFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.UpdateHistoryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.UpdateLastReadPageUseCase
-import com.sorrowblue.comicviewer.domain.usecase.interactor.AddFavoriteBookInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.AddReadLaterInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.CreateFavoriteInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.DeleteFavoriteInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.FullScanLibraryInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetBookInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetFavoriteInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetFavoriteListInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetFileInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetNavigationHistoryInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetNextBookInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetServerBookInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetServerFileInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetServerFolderInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.GetServerInfoInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.PagingReadLaterInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.RegisterServerInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.RemoveFavoriteBookInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.RemoveLibraryInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.UpdateFavoriteInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.UpdateHistoryInteractor
-import com.sorrowblue.comicviewer.domain.usecase.interactor.UpdateLastReadPageInteractor
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFolderUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.AddFavoriteFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.CreateFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteListUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.RemoveFavoriteFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.UpdateFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingServerUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.interactor.PagingFavoriteBookInteractor
-import com.sorrowblue.comicviewer.domain.usecase.paging.interactor.PagingFavoriteInteractor
-import com.sorrowblue.comicviewer.domain.usecase.paging.interactor.PagingFileInteractor
-import com.sorrowblue.comicviewer.domain.usecase.paging.interactor.PagingQueryFileInteractor
-import com.sorrowblue.comicviewer.domain.usecase.paging.interactor.PagingServerInteractor
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.LoadSettingsInteractor
-import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageFolderDisplaySettingsInteractor
-import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageFolderSettingsInteractor
-import com.sorrowblue.comicviewer.domain.usecase.settings.interactor.ManageSecuritySettingsInteractor
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -72,19 +72,19 @@ import dagger.hilt.android.components.ViewModelComponent
 internal abstract class ViewModelBindsModule {
 
     @Binds
-    abstract fun bindRegisterServerUseCase(interactor: RegisterServerInteractor): RegisterServerUseCase
+    abstract fun bindRegisterBookshelfUseCase(interactor: RegisterBookshelfInteractor): RegisterBookshelfUseCase
 
     @Binds
     abstract fun bindLoadSettingsUseCase(interactor: LoadSettingsInteractor): LoadSettingsUseCase
 
     @Binds
-    abstract fun bindRemoveLibraryUseCase(interactor: RemoveLibraryInteractor): RemoveLibraryUseCase
+    abstract fun bindRemoveBookshelfUseCase(interactor: RemoveBookshelfInteractor): RemoveBookshelfUseCase
 
     @Binds
-    abstract fun bindFullScanLibraryUseCase(interactor: FullScanLibraryInteractor): FullScanLibraryUseCase
+    abstract fun bindScanBookshelfUseCase(interactor: ScanBookshelfInteractor): ScanBookshelfUseCase
 
     @Binds
-    abstract fun bindGetServerBookUseCase(interactor: GetServerBookInteractor): GetServerBookUseCase
+    abstract fun bindGetBookshelfBookUseCase(interactor: GetBookshelfBookInteractor): GetBookshelfBookUseCase
 
     @Binds
     abstract fun bindGetBookUseCase(interactor: GetBookInteractor): GetBookUseCase
@@ -99,10 +99,10 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindUpdateLastReadPageUseCase(interactor: UpdateLastReadPageInteractor): UpdateLastReadPageUseCase
 
     @Binds
-    abstract fun bindGetServerFolderUseCase(interactor: GetServerFolderInteractor): GetServerFolderUseCase
+    abstract fun bindGetBookshelfFolderUseCase(interactor: GetBookshelfFolderInteractor): GetBookshelfFolderUseCase
 
     @Binds
-    abstract fun bindGetServerInfoUseCase(interactor: GetServerInfoInteractor): GetServerInfoUseCase
+    abstract fun bindGetBookshelfInfoUseCase(interactor: GetBookshelfInfoInteractor): GetBookshelfInfoUseCase
 
     @Binds
     abstract fun bindGetNextBookUseCase(interactor: GetNextBookInteractor): GetNextBookUseCase
@@ -114,16 +114,16 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindGetFileUseCase(interactor: GetFileInteractor): GetFileUseCase
 
     @Binds
-    abstract fun bindGetServerFileUseCase(interactor: GetServerFileInteractor): GetServerFileUseCase
+    abstract fun bindGetBookshelfFileUseCase(interactor: GetBookshelfFileInteractor): GetBookshelfFileUseCase
 
     @Binds
     abstract fun bindGetFavoriteListUseCase(interactor: GetFavoriteListInteractor): GetFavoriteListUseCase
 
     @Binds
-    abstract fun bindAddFavoriteBookUseCase(interactor: AddFavoriteBookInteractor): AddFavoriteBookUseCase
+    abstract fun bindAddFavoriteFileUseCase(interactor: AddFavoriteFileInteractor): AddFavoriteFileUseCase
 
     @Binds
-    abstract fun bindRemoveFavoriteBookUseCase(interactor: RemoveFavoriteBookInteractor): RemoveFavoriteBookUseCase
+    abstract fun bindRemoveFavoriteFileUseCase(interactor: RemoveFavoriteFileInteractor): RemoveFavoriteFileUseCase
 
     @Binds
     abstract fun bindCreateFavoriteUseCase(interactor: CreateFavoriteInteractor): CreateFavoriteUseCase
@@ -145,16 +145,16 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindPagingQueryFileUseCase(interactor: PagingQueryFileInteractor): PagingQueryFileUseCase
 
     @Binds
-    abstract fun bindPagingServerUseCase(interactor: PagingServerInteractor): PagingServerUseCase
+    abstract fun bindPagingBookshelfFolderUseCase(interactor: PagingBookshelfFolderInteractor): PagingBookshelfFolderUseCase
 
     @Binds
     abstract fun bindPagingFavoriteUseCase(interactor: PagingFavoriteInteractor): PagingFavoriteUseCase
 
     @Binds
-    abstract fun bindPagingFavoriteBookUseCase(interactor: PagingFavoriteBookInteractor): PagingFavoriteBookUseCase
+    abstract fun bindPagingFavoriteFileUseCase(interactor: PagingFavoriteFileInteractor): PagingFavoriteFileUseCase
 
     @Binds
-    abstract fun bindPagingReadLaterUseCase(interactor: PagingReadLaterInteractor): PagingReadLaterUseCase
+    abstract fun bindPagingReadLaterFileUseCase(interactor: PagingReadLaterFileInteractor): PagingReadLaterFileUseCase
 
     // Settings
     @Binds

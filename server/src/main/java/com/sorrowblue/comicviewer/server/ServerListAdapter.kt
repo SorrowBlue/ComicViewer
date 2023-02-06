@@ -7,9 +7,9 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import coil.load
-import com.sorrowblue.comicviewer.domain.entity.ServerFolder
+import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
-import com.sorrowblue.comicviewer.domain.entity.server.Server
+import com.sorrowblue.comicviewer.domain.entity.server.Bookshelf
 import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.fragment.encodeBase64
@@ -17,13 +17,13 @@ import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolde
 import com.sorrowblue.comicviewer.server.databinding.ServerItemListBinding
 import com.sorrowblue.comicviewer.server.info.ServerInfoFragmentArgs
 
-internal class ServerListAdapter : PagingDataAdapter<ServerFolder, ServerListAdapter.ViewHolder>(
-    object : DiffUtil.ItemCallback<ServerFolder>() {
-        override fun areItemsTheSame(oldItem: ServerFolder, newItem: ServerFolder) =
-            oldItem.folder.serverId == newItem.folder.serverId && oldItem.folder.path == newItem.folder.path
+internal class ServerListAdapter : PagingDataAdapter<BookshelfFolder, ServerListAdapter.ViewHolder>(
+    object : DiffUtil.ItemCallback<BookshelfFolder>() {
+        override fun areItemsTheSame(oldItem: BookshelfFolder, newItem: BookshelfFolder) =
+            oldItem.folder.bookshelfId == newItem.folder.bookshelfId && oldItem.folder.path == newItem.folder.path
 
-        override fun areContentsTheSame(oldItem: ServerFolder, newItem: ServerFolder) =
-            oldItem.server == newItem.server
+        override fun areContentsTheSame(oldItem: BookshelfFolder, newItem: BookshelfFolder) =
+            oldItem.bookshelf == newItem.bookshelf
     }
 ) {
 
@@ -36,9 +36,9 @@ internal class ServerListAdapter : PagingDataAdapter<ServerFolder, ServerListAda
     class ViewHolder(parent: ViewGroup) :
         ViewBindingViewHolder<ServerItemListBinding>(parent, ServerItemListBinding::inflate) {
 
-        fun bind(item: ServerFolder) {
-            binding.server = item.server
-            binding.preview.load(FileThumbnailRequest(item.server.id to item.folder))
+        fun bind(item: BookshelfFolder) {
+            binding.server = item.bookshelf
+            binding.preview.load(FileThumbnailRequest(item.bookshelf.id to item.folder))
             binding.root.setOnClickListener {
                 val transitionName = binding.root.transitionName
                 val extras = FragmentNavigatorExtras(it to transitionName)
@@ -52,7 +52,7 @@ internal class ServerListAdapter : PagingDataAdapter<ServerFolder, ServerListAda
             }
             binding.menu.setOnClickListener {
                 it.findNavController().navigate(
-                    ServerListFragmentDirections.actionServerListToServerInfoNavigation(item.server)
+                    ServerListFragmentDirections.actionServerListToServerInfoNavigation(item.bookshelf)
                 )
             }
         }
@@ -63,7 +63,7 @@ internal class ServerListAdapter : PagingDataAdapter<ServerFolder, ServerListAda
         ) = object : NavDirections {
             override val actionId = actionServerListToFolder().actionId
             override val arguments = FolderFragmentArgs(
-                folder.serverId.value,
+                folder.bookshelfId.value,
                 folder.path.encodeBase64(),
                 transitionName
             ).toBundle()
@@ -71,10 +71,10 @@ internal class ServerListAdapter : PagingDataAdapter<ServerFolder, ServerListAda
         }
 
         private fun ServerListFragmentDirections.Companion.actionServerListToServerInfoNavigation(
-            server: Server
+            bookshelf: Bookshelf
         ) = object : NavDirections {
             override val actionId = actionServerListToServerInfoNavigation().actionId
-            override val arguments = ServerInfoFragmentArgs(server.id.value).toBundle()
+            override val arguments = ServerInfoFragmentArgs(bookshelf.id.value).toBundle()
 
         }
     }

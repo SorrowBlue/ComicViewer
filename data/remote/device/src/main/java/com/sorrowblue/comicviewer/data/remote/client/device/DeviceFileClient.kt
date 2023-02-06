@@ -5,13 +5,12 @@ import android.content.Intent
 import android.os.ParcelFileDescriptor
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
-import com.sorrowblue.comicviewer.data.common.DeviceStorageModel
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.extension
 import com.sorrowblue.comicviewer.data.remote.client.FileClient
 import com.sorrowblue.comicviewer.data.remote.client.FileClientException
-import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -19,13 +18,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStream
 
 internal class DeviceFileClient @AssistedInject constructor(
-    @Assisted override val serverModel: DeviceStorageModel,
+    @Assisted override val bookshelfModel: BookshelfModel.InternalStorage,
     @ApplicationContext private val context: Context
 ) : FileClient {
 
     @AssistedFactory
-    interface Factory : FileClient.Factory<DeviceStorageModel> {
-        override fun create(serverModel: DeviceStorageModel): DeviceFileClient
+    interface Factory : FileClient.Factory<BookshelfModel.InternalStorage> {
+        override fun create(bookshelfModel: BookshelfModel.InternalStorage): DeviceFileClient
     }
 
     private val contentResolver = context.contentResolver
@@ -150,7 +149,7 @@ internal class DeviceFileClient @AssistedInject constructor(
         return if (resolveImageFolder && listFiles().any { it.name.orEmpty().extension in SUPPORTED_IMAGE }) {
             FileModel.ImageFolder(
                 path = uri.toString(),
-                serverModelId = serverModel.id,
+                bookshelfModelId = bookshelfModel.id,
                 name = name?.removeSuffix("/").orEmpty(),
                 parent = parentFile?.uri?.toString().orEmpty(),
                 size = length(),
@@ -164,7 +163,7 @@ internal class DeviceFileClient @AssistedInject constructor(
         } else if (isFile) {
             FileModel.File(
                 path = uri.toString(),
-                serverModelId = serverModel.id,
+                bookshelfModelId = bookshelfModel.id,
                 name = name?.removeSuffix("/").orEmpty(),
                 parent = parentFile?.uri?.toString().orEmpty(),
                 size = length(),
@@ -178,7 +177,7 @@ internal class DeviceFileClient @AssistedInject constructor(
         } else {
             FileModel.Folder(
                 path = uri.toString(),
-                serverModelId = serverModel.id,
+                bookshelfModelId = bookshelfModel.id,
                 name = name?.removeSuffix("/").orEmpty(),
                 parent = parentFile?.uri?.toString().orEmpty(),
                 size = length(),

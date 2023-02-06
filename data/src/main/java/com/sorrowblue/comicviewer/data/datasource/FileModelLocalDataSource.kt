@@ -3,11 +3,11 @@ package com.sorrowblue.comicviewer.data.datasource
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.FolderThumbnailOrderModel
-import com.sorrowblue.comicviewer.data.common.ServerModel
-import com.sorrowblue.comicviewer.data.common.ServerModelId
+import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import com.sorrowblue.comicviewer.data.common.SimpleFileModel
-import com.sorrowblue.comicviewer.data.common.SortType
+import com.sorrowblue.comicviewer.data.common.bookshelf.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface FileModelLocalDataSource {
@@ -15,41 +15,41 @@ interface FileModelLocalDataSource {
 
     suspend fun update(
         path: String,
-        serverModelId: ServerModelId,
+        bookshelfModelId: BookshelfModelId,
         lastReadPage: Int,
         lastRead: Long
     )
 
-    suspend fun update(path: String, serverModelId: ServerModelId, cacheKey: String, totalPage: Int)
+    suspend fun update(path: String, bookshelfModelId: BookshelfModelId, cacheKey: String, totalPage: Int)
 
     suspend fun updateAll(list: List<SimpleFileModel>)
 
     suspend fun <R> withTransaction(block: suspend () -> R): R
 
     suspend fun selectByNotPaths(
-        serverModelId: ServerModelId,
+        bookshelfModelId: BookshelfModelId,
         path: String,
         list: List<String>
     ): List<FileModel>
 
     suspend fun deleteAll(list: List<FileModel>)
-    suspend fun exists(serverModelId: ServerModelId, path: String): Boolean
+    suspend fun exists(bookshelfModelId: BookshelfModelId, path: String): Boolean
     suspend fun registerAll(list: List<FileModel>)
     fun pagingSource(
         pagingConfig: PagingConfig,
-        serverModel: ServerModel,
+        bookshelfModel: BookshelfModel,
         fileModel: FileModel,
         sortType: () -> SortType
     ): Flow<PagingData<FileModel>>
 
-    suspend fun findBy(serverModelId: ServerModelId): List<FileModel>
-    fun selectBy(serverModelId: ServerModelId, path: String): Flow<FileModel?>
-    suspend fun findBy(serverModelId: ServerModelId, path: String): FileModel?
-    fun nextFileModel(serverModelId: ServerModelId, path: String): Flow<FileModel?>
-    fun prevFileModel(serverModelId: ServerModelId, path: String): Flow<FileModel?>
-    suspend fun getCacheKeys(serverModelId: ServerModelId, parent: String, limit: Int): List<String>
+    suspend fun findBy(bookshelfModelId: BookshelfModelId): List<FileModel>
+    fun selectBy(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
+    suspend fun findBy(bookshelfModelId: BookshelfModelId, path: String): FileModel?
+    fun nextFileModel(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
+    fun prevFileModel(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
+    suspend fun getCacheKeys(bookshelfModelId: BookshelfModelId, parent: String, limit: Int): List<String>
     suspend fun getCacheKeys(
-        serverModelId: ServerModelId,
+        bookshelfModelId: BookshelfModelId,
         parent: String,
         limit: Int,
         folderThumbnailOrderModel: FolderThumbnailOrderModel
@@ -58,10 +58,10 @@ interface FileModelLocalDataSource {
     suspend fun removeCacheKey(diskCacheKey: String)
     fun pagingSource(
         pagingConfig: PagingConfig,
-        serverModelId: ServerModelId,
+        bookshelfModelId: BookshelfModelId,
         query: () -> String,
         sortType: () -> SortType
     ): Flow<PagingData<FileModel>>
 
-    suspend fun root(id: ServerModelId): FileModel.Folder?
+    suspend fun root(id: BookshelfModelId): FileModel.Folder?
 }

@@ -2,18 +2,18 @@ package com.sorrowblue.comicviewer.data.service
 
 import androidx.work.Data
 import androidx.work.workDataOf
-import com.sorrowblue.comicviewer.data.common.ScanTypeModel
-import com.sorrowblue.comicviewer.data.common.ServerModelId
+import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 
 internal class FileScanRequest(
-    val serverModelId: ServerModelId,
+    val bookshelfModelId: BookshelfModelId,
     val path: String,
     val scanTypeModel: ScanTypeModel,
     val resolveImageFolder: Boolean,
     val supportExtensions: List<String>
 ) {
     fun toWorkData() = workDataOf(
-        SERVER_MODEL_ID to serverModelId.value,
+        SERVER_MODEL_ID to bookshelfModelId.value,
         PATH to path,
         SCAN_TYPE_MODEL to scanTypeModel.name,
         RESOLVE_IMAGE_FOLDER to resolveImageFolder,
@@ -38,7 +38,7 @@ internal class FileScanRequest(
                 data.getStringArray(SUPPORT_TYPE_EXTENSIONS)?.asList() ?: return null
             if (id < 0) return null
             return FileScanRequest(
-                ServerModelId(id),
+                BookshelfModelId(id),
                 path,
                 scanTypeModel,
                 resolveImageFolder,

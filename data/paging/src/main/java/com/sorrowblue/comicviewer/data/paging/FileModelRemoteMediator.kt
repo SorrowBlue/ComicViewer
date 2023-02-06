@@ -4,7 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.ServerModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.util.SortUtil
 import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
 import com.sorrowblue.comicviewer.data.database.entity.File
@@ -26,7 +26,7 @@ import kotlinx.coroutines.withContext
 internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
     remoteDataSourceFactory: RemoteDataSource.Factory,
     settingsCommonRepository: SettingsCommonRepository,
-    @Assisted private val serverModel: ServerModel,
+    @Assisted private val bookshelfModel: BookshelfModel,
     @Assisted private val fileModel: FileModel,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
@@ -35,13 +35,13 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
     @AssistedFactory
     interface Factory : FileModelRemoteMediator.Factory {
         override fun create(
-            serverModel: ServerModel,
+            bookshelfModel: BookshelfModel,
             fileModel: FileModel,
         ): FileModelRemoteMediatorImpl
     }
 
     private val folderSettings = settingsCommonRepository.folderSettings
-    private val remoteDataSource = remoteDataSourceFactory.create(serverModel)
+    private val remoteDataSource = remoteDataSourceFactory.create(bookshelfModel)
 
     override suspend fun initialize(): InitializeAction {
         return if (folderSettings.first().isAutoRefresh) InitializeAction.LAUNCH_INITIAL_REFRESH else InitializeAction.SKIP_INITIAL_REFRESH
@@ -65,7 +65,7 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
 
                     // リモートになくてDBにある項目：削除対象
                     val deleteFileData = fileModelLocalDataSource.selectByNotPaths(
-                        fileModel.serverModelId,
+                        fileModel.bookshelfModelId,
                         fileModel.path,
                         files.map(FileModel::path)
                     )
@@ -75,7 +75,7 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
                     // existsFiles DBにある項目：更新対象
                     // noExistsFiles DBにない項目：挿入対象
                     val (existsFiles, noExistsFiles) = files.partition {
-                        fileModelLocalDataSource.exists(it.serverModelId, it.path)
+                        fileModelLocalDataSource.exists(it.bookshelfModelId, it.path)
                     }
 
                     // DBにない項目を挿入
