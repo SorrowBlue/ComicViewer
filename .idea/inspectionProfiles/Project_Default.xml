@@ -1,0 +1,15 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="SSBasedInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <replaceConfiguration name="DialogFragmentでのviewBinding使用禁止" uuid="cf8ad1bf-df94-38e2-bee3-93427d64827c" text="class $Class$ : $AnotherClass$ {  &#10;    val $Field$ by $method$()&#10;}" recursive="false" caseInsensitive="false" type="Kotlin" pattern_context="default" reformatAccordingToStyle="true" shortenFQN="true" replacement="val $Field$ by dialogViewBinding()&#10;">
+        <constraint name="__context__" within="" contains="" />
+        <constraint name="Class" within="" contains="" />
+        <constraint name="Field" maxCount="2147483647" target="true" within="" contains="" />
+        <constraint name="method" regexp="viewBinding" within="" contains="" />
+        <constraint name="AnotherClass" regexp="DialogFragment" withinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+    </inspection_tool>
+    <inspection_tool class="cf8ad1bf-df94-38e2-bee3-93427d64827c" enabled="true" level="ERROR" enabled_by_default="true" />
+  </profile>
+</component>
