@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bookshelf_navigation"
+    app:startDestination="@id/bookshelf_list_fragment">
+
+    <framework-fragment
+        android:id="@+id/bookshelf_list_fragment"
+        android:name="com.sorrowblue.comicviewer.bookshelf.BookshelfListFragment"
+        android:label="@string/server_title_server_list"
+        app:bottom_nav_visible="true"
+        app:fab_icon="@drawable/ic_twotone_add_24"
+        app:fab_visible="true"
+        app:fab_label="@string/server_list_btn_new"
+        tools:layout="@layout/bookshelf_fragment_list">
+        <action
+            android:id="@+id/action_bookshelf_list_to_folder"
+            app:destination="@id/folder_navigation" />
+        <action
+            android:id="@+id/action_bookshelf_list_to_bookshelf_management_selection"
+            app:destination="@id/bookshelf_management_selection_navigation" />
+        <action
+            android:id="@+id/action_bookshelf_list_to_bookshelf_info"
+            app:destination="@id/bookshelf_info_navigation" />
+    </framework-fragment>
+    <include app:graph="@navigation/folder" />
+    <include app:graph="@navigation/bookshelf_management_selection" />
+    <include app:graph="@navigation/bookshelf_info" />
+</navigation>

@@ -17,8 +17,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.snackbar.Snackbar
 import com.sorrowblue.comicviewer.app.databinding.ActivityMainBinding
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
-import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
+import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkFragmentNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkNavHostFragment
 import com.sorrowblue.jetpack.binding.viewBinding
@@ -94,7 +94,7 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
             // library -> folder
             if (bookshelves.size == 1) {
                 navController.navigate(
-                    com.sorrowblue.comicviewer.server.R.id.action_server_list_to_folder,
+                    com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_list_to_folder,
                     FolderFragmentArgs(
                         server.id.value,
                         bookshelves.first().base64Path(),
@@ -106,7 +106,7 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 }
             } else {
                 navController.navigate(
-                    com.sorrowblue.comicviewer.server.R.id.action_server_list_to_folder,
+                    com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_list_to_folder,
                     FolderFragmentArgs(
                         server.id.value,
                         bookshelves.first().base64Path(),

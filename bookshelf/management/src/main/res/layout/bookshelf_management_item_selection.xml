@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.sorrowblue.comicviewer.bookshelf.management.ServerType" />
+
+        <variable
+            name="serverType"
+            type="com.sorrowblue.comicviewer.bookshelf.management.ServerType" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        style="?attr/materialCardViewOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transitionName="@{serverType.name()}"
+        app:cardUseCompatPadding="true"
+        tools:showIn="@layout/bookshelf_management_fragment_selection">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/protocol_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/protocol"
+                app:srcCompat="@{serverType == ServerType.DEVICE ? @drawable/ic_undraw_bookshelves_re_lxoy : serverType == ServerType.SMB ? @drawable/ic_undraw_server_re_twwj : null}"
+                tools:srcCompat="@drawable/ic_undraw_bookshelves_re_lxoy" />
+
+            <TextView
+                android:id="@+id/protocol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{serverType == ServerType.DEVICE ? @string/bookshelf_management_title_device : serverType == ServerType.SMB ? @string/bookshelf_management_title_smb : null}"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                app:layout_constraintBottom_toTopOf="@id/description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="@string/bookshelf_management_title_smb" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{serverType == ServerType.DEVICE ? @string/bookshelf_management_desc_device : serverType == ServerType.SMB ? @string/bookshelf_management_desc_smb : null}"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/protocol_image"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/protocol"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="@string/bookshelf_management_desc_device" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

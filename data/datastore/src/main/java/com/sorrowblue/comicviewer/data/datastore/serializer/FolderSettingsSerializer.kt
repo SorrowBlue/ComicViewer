@@ -8,8 +8,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromByteArray
-import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 
 @ExperimentalSerializationApi
@@ -18,13 +16,13 @@ internal class FolderSettingsSerializer(private val coroutineDispatcher: Corouti
     override val defaultValue = FolderSettings()
 
     override suspend fun readFrom(input: InputStream): FolderSettings {
-        return ProtoBuf.decodeFromByteArray(input.readBytes())
+        return ProtoBuf.decodeFromByteArray(FolderSettings.serializer(), input.readBytes())
     }
 
     override suspend fun writeTo(t: FolderSettings, output: OutputStream) {
         withContext(coroutineDispatcher) {
             @Suppress("BlockingMethodInNonBlockingContext")
-            output.write(ProtoBuf.encodeToByteArray(t))
+            output.write(ProtoBuf.encodeToByteArray(FolderSettings.serializer(), t))
         }
     }
 }

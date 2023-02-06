@@ -8,8 +8,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromByteArray
-import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 
 @ExperimentalSerializationApi
@@ -17,13 +15,13 @@ internal class ViewerSettingsSerializer(private val coroutineDispatcher: Corouti
     Serializer<ViewerSettings> {
     override val defaultValue = ViewerSettings()
     override suspend fun readFrom(input: InputStream): ViewerSettings {
-        return ProtoBuf.decodeFromByteArray(input.readBytes())
+        return ProtoBuf.decodeFromByteArray(ViewerSettings.serializer(), input.readBytes())
     }
 
     override suspend fun writeTo(t: ViewerSettings, output: OutputStream) {
         withContext(coroutineDispatcher) {
             @Suppress("BlockingMethodInNonBlockingContext")
-            output.write(ProtoBuf.encodeToByteArray(t))
+            output.write(ProtoBuf.encodeToByteArray(ViewerSettings.serializer(), t))
         }
     }
 }

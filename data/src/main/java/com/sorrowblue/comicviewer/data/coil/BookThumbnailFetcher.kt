@@ -20,12 +20,14 @@ import coil.request.Options
 import coil.size.Dimension
 import com.sorrowblue.comicviewer.data.coil.meta.BookThumbnailMetaData
 import com.sorrowblue.comicviewer.data.coil.meta.FolderThumbnailMetadata
+import com.sorrowblue.comicviewer.data.coil.meta.readBookThumbnailMetaData
+import com.sorrowblue.comicviewer.data.coil.meta.readFolderThumbnailMetadata
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfFileModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
+import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.di.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderThumbnailOrder
@@ -155,7 +157,7 @@ internal class BookThumbnailFetcher(
             if (snapshot != null) {
                 val meta = fileSystem.read(snapshot.metadata) {
                     use {
-                        BookThumbnailMetaData.read(it)
+                        readBookThumbnailMetaData(it)
                     }
                 }
 
@@ -213,7 +215,7 @@ internal class BookThumbnailFetcher(
         return try {
             fileSystem.read(metadata) {
                 use {
-                    FolderThumbnailMetadata.read(it)
+                    readFolderThumbnailMetadata(it)
                 }
             }
         } catch (_: IOException) {

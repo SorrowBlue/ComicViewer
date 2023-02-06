@@ -15,11 +15,10 @@ data class BookThumbnailMetaData(
 ) {
     @OptIn(ExperimentalSerializationApi::class)
     fun write(output: OutputStream) {
-        Json.encodeToStream(this, output)
-    }
-    companion object {
-        fun read(bufferedSource: BufferedSource) =
-            kotlin.runCatching { Json.decodeFromString<BookThumbnailMetaData>(bufferedSource.readUtf8()) }
-                .getOrElse { BookThumbnailMetaData(0, 0) }
+        Json.encodeToStream(serializer(),this, output)
     }
 }
+
+fun readBookThumbnailMetaData(bufferedSource: BufferedSource) =
+    kotlin.runCatching { Json.decodeFromString<BookThumbnailMetaData>(bufferedSource.readUtf8()) }
+        .getOrElse { BookThumbnailMetaData(0, 0) }

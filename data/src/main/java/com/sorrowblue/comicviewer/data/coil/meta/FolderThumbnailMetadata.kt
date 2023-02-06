@@ -11,14 +11,12 @@ import okio.BufferedSource
 @Serializable
 internal class FolderThumbnailMetadata(var thumbnail: List<String> = emptyList()) {
 
-
     @OptIn(ExperimentalSerializationApi::class)
     fun write(output: OutputStream) {
-        Json.encodeToStream(this, output)
-    }
-    companion object {
-        fun read(bufferedSource: BufferedSource) =
-            kotlin.runCatching { Json.decodeFromString<FolderThumbnailMetadata>(bufferedSource.readUtf8()) }
-                .getOrElse { FolderThumbnailMetadata() }
+        Json.encodeToStream(serializer(),this, output)
     }
 }
+
+internal fun readFolderThumbnailMetadata(bufferedSource: BufferedSource) =
+    runCatching { Json.decodeFromString<FolderThumbnailMetadata>(bufferedSource.readUtf8()) }
+        .getOrElse { FolderThumbnailMetadata() }

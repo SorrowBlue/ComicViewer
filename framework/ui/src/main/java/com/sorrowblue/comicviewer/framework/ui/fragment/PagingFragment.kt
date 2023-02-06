@@ -57,11 +57,19 @@ abstract class PagingFragment<T : Any>(contentLayoutId: Int) : FrameworkFragment
                 )
                 setPathMotion(MaterialArcMotion())
             }
-            exitTransition = MaterialElevationScale(false)
-            reenterTransition = MaterialElevationScale(true)
+            exitTransition = MaterialElevationScale(false).apply {
+                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
+            }
+            reenterTransition = MaterialElevationScale(true).apply {
+                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
+            }
         } else {
-            enterTransition = MaterialFadeThrough()
-            exitTransition = MaterialFadeThrough()
+            enterTransition = MaterialFadeThrough().apply {
+                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
+            }
+            exitTransition = MaterialFadeThrough().apply {
+                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
+            }
         }
     }
 
@@ -91,7 +99,7 @@ abstract class PagingFragment<T : Any>(contentLayoutId: Int) : FrameworkFragment
         recyclerView.doOnPreDraw {
             if (viewModel.isInitialize) {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    delay(250)
+                    delay(100)
                     startPostponedEnterTransition()
                 }
             } else {

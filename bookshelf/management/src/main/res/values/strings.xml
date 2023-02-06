@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bookshelf_management_title_smb" translatable="false">SMB/LAN</string>
+    <string name="bookshelf_management_title_device" translatable="false">Device</string>
+    <string name="bookshelf_management_desc_device">Add a folder on this terminal as a bookshelf.</string>
+    <string name="bookshelf_management_desc_smb">Folders shared by Windows, NAS, etc. can be added as bookshelves.</string>
+    <string name="bookshelf_management_hint_host">Server name or IP address</string>
+    <string name="bookshelf_management_hint_path">Path</string>
+    <string name="bookshelf_management_hint_display_name">Display name</string>
+    <string name="bookshelf_management_label_guest">Guest</string>
+    <string name="bookshelf_management_label_username_password">Username/password</string>
+    <string name="bookshelf_management_hint_username">Username</string>
+    <string name="bookshelf_management_hint_password">Password</string>
+    <string name="bookshelf_management_desc_finish_edit_bookshelf">Finish editing the bookshelf</string>
+    <string name="bookshelf_management_desc_finish_add_bookshelf">Finish adding a bookshelf</string>
+    <string name="bookshelf_management_hint_port">Port number</string>
+    <string name="bookshelf_management_hint_domain">Domain</string>
+    <string name="bookshelf_management_hint_select_folder">Select folder</string>
+</resources>

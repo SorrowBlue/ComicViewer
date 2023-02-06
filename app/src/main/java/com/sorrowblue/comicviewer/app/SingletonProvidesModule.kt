@@ -15,7 +15,7 @@ internal object SingletonProvidesModule {
     @Provides
     fun bindFrameworkAppBarConfiguration() = AppBarConfiguration(
         setOf(
-            com.sorrowblue.comicviewer.server.R.id.server_list_fragment,
+            com.sorrowblue.comicviewer.bookshelf.R.id.bookshelf_list_fragment,
             com.sorrowblue.comicviewer.favorite.R.id.favorite_list_fragment,
             com.sorrowblue.comicviewer.readlater.R.id.readlater_fragment
         )

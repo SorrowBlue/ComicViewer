@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoViewModel" />
+
+        <import type="kotlin.collections.CollectionsKt" />
+
+        <import type="com.sorrowblue.comicviewer.bookshelf.info.Converter" />
+
+        <import type="com.sorrowblue.comicviewer.domain.entity.server.InternalStorage" />
+
+        <import type="com.sorrowblue.comicviewer.domain.entity.server.SmbServer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_begin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/bottom_sheet_drag_handle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@{Converter.toTypeString(viewModel.bookshelf)}"
+            android:textAppearance="?attr/textAppearanceLabelLarge"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_drag_handle"
+            tools:text="LAN/SMB" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.bookshelf.displayName}"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_begin"
+            app:layout_constraintTop_toBottomOf="@+id/type"
+            tools:text="Sample File Name" />
+
+        <TextView
+            android:id="@+id/device_path_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:text="@string/bookshelf_info_label_path"
+            android:textAppearance="?attr/textAppearanceLabelSmall" />
+
+        <TextView
+            android:id="@+id/device_path"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.bookshelf instanceof InternalStorage ? viewModel.folder.path : null}"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            tools:text="Downloads/New Folder (1)" />
+
+        <TextView
+            android:id="@+id/smb_host_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:text="@string/bookshelf_info_label_host"
+            android:textAppearance="?attr/textAppearanceLabelSmall" />
+
+        <TextView
+            android:id="@+id/smb_host"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.bookshelf instanceof SmbServer ? ((SmbServer)viewModel.bookshelf).host : null}"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            tools:text="19.2168.0.1" />
+
+        <TextView
+            android:id="@+id/smb_path_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/bookshelf_info_label_path"
+            android:paddingTop="16dp"
+            android:textAppearance="?attr/textAppearanceLabelSmall" />
+
+        <TextView
+            android:id="@+id/smb_path"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.bookshelf instanceof SmbServer ? viewModel.folder.path : null}"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/smb_port_label"
+            android:layout_width="0dp"
+            android:paddingTop="16dp"
+            android:layout_height="wrap_content"
+            android:text="@string/bookshelf_info_label_port"
+            android:textAppearance="?attr/textAppearanceLabelSmall" />
+
+        <TextView
+            android:id="@+id/smb_port"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            tools:text="445" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/remove"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/bookshelf_info_btn_remove"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/edit"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@+id/guideline_begin" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/edit"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/bookshelf_info_btn_edit"
+            app:icon="@drawable/ic_twotone_edit_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/remove" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_smb"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:constraint_referenced_ids="smb_host_label,smb_host,smb_path_label,smb_path,smb_port_label,smb_port"
+            app:isVisible="@{viewModel.bookshelf instanceof SmbServer}" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_device"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:constraint_referenced_ids="device_path_label,device_path"
+            app:isVisible="@{viewModel.bookshelf instanceof InternalStorage}" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/server_infoFlow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
+            app:constraint_referenced_ids="device_path_label,device_path,smb_host_label,smb_host,smb_port_label,smb_port,smb_path_label,smb_path"
+            app:layout_constraintBottom_toTopOf="@+id/remove"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_begin"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintVertical_bias="0.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

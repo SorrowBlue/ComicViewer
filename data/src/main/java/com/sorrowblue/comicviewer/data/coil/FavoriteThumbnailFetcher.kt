@@ -16,6 +16,7 @@ import coil.fetch.SourceResult
 import coil.request.Options
 import coil.size.Dimension
 import com.sorrowblue.comicviewer.data.coil.meta.FolderThumbnailMetadata
+import com.sorrowblue.comicviewer.data.coil.meta.readFolderThumbnailMetadata
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.data.datasource.FavoriteBookLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
@@ -120,7 +121,7 @@ internal class FavoriteThumbnailFetcher(
         return try {
             fileSystem.read(metadata) {
                 use {
-                    FolderThumbnailMetadata.read(it)
+                    readFolderThumbnailMetadata(it)
                 }
             }
         } catch (_: IOException) {

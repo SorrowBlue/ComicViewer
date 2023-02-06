@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bookshelf_management_smb_navigation"
+    app:startDestination="@id/bookshelf_management_smb_fragment">
+
+    <framework-fragment
+        android:id="@+id/bookshelf_management_smb_fragment"
+        android:name="com.sorrowblue.comicviewer.bookshelf.management.smb.BookshelfManagementSmbFragment"
+        android:label="SMBサーバの登録・編集">
+        <argument
+            android:name="bookshelf_id"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <argument
+            android:name="transition_name"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </framework-fragment>
+</navigation>

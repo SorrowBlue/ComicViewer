@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/server_navigation">
+    app:startDestination="@id/bookshelf_navigation">
     <action
         android:id="@+id/action_global_settings_navigation"
         app:destination="@id/settings_navigation"
@@ -28,7 +28,7 @@
         android:id="@+id/action_global_auth_fragment"
         app:destination="@id/auth_fragment"
         app:launchSingleTop="true" />
-    <include app:graph="@navigation/server" />
+    <include app:graph="@navigation/bookshelf" />
     <include app:graph="@navigation/favorite_list" />
     <include app:graph="@navigation/readlater" />
 
