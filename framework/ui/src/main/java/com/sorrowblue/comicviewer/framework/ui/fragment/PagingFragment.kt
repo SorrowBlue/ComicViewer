@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.framework.ui.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,11 @@ import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.transition.MaterialArcMotion
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialFadeThrough
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,22 +45,22 @@ abstract class PagingFragment<T : Any>(contentLayoutId: Int) : FrameworkFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        if (viewModel.transitionName != null) {
-//            sharedElementEnterTransition = MaterialContainerTransform().apply {
-//                fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
-//                scrimColor = MaterialColors.getColor(
-//                    requireContext(),
-//                    android.R.attr.colorBackground,
-//                    Color.TRANSPARENT
-//                )
-//                setPathMotion(MaterialArcMotion())
-//            }
-//            exitTransition = MaterialElevationScale(false)
-//            reenterTransition = MaterialElevationScale(true)
-//        } else {
-//            enterTransition = MaterialFadeThrough()
-//            exitTransition = MaterialFadeThrough()
-//        }
+        if (viewModel.transitionName != null) {
+            sharedElementEnterTransition = MaterialContainerTransform().apply {
+                fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
+                scrimColor = MaterialColors.getColor(
+                    requireContext(),
+                    android.R.attr.colorBackground,
+                    Color.TRANSPARENT
+                )
+                setPathMotion(MaterialArcMotion())
+            }
+            exitTransition = MaterialElevationScale(false)
+            reenterTransition = MaterialElevationScale(true)
+        } else {
+            enterTransition = MaterialFadeThrough()
+            exitTransition = MaterialFadeThrough()
+        }
     }
 
     override fun onCreateView(
@@ -62,7 +68,7 @@ abstract class PagingFragment<T : Any>(contentLayoutId: Int) : FrameworkFragment
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        postponeEnterTransition()
+        postponeEnterTransition()
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 

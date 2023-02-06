@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/favorite_navigation"
     app:startDestination="@id/favorite_fragment">
-    <fragment
+    <framework-fragment
         android:id="@+id/favorite_fragment"
         android:name="com.sorrowblue.comicviewer.favorite.FavoriteFragment"
         android:label="お気に入り"
@@ -29,8 +29,8 @@
         <action
             android:id="@+id/action_favorite_to_book"
             app:destination="@id/book_navigation" />
-    </fragment>
-    <fragment
+    </framework-fragment>
+    <framework-fragment
         android:id="@+id/favorite_edit_fragment"
         android:name="com.sorrowblue.comicviewer.favorite.edit.FavoriteEditFragment"
         android:label="@string/favorite_edit_title"
@@ -38,7 +38,7 @@
         <argument
             android:name="favorite_id"
             app:argType="integer" />
-    </fragment>
+    </framework-fragment>
     <include app:graph="@navigation/book" />
     <include app:graph="@navigation/folder_display" />
     <include app:graph="@navigation/folder" />

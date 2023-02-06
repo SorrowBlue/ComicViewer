@@ -4,7 +4,7 @@
     android:id="@+id/server_management_navigation_smb"
     app:startDestination="@id/server_management_smb_fragment">
 
-    <fragment
+    <framework-fragment
         android:id="@+id/server_management_smb_fragment"
         android:name="com.sorrowblue.comicviewer.server.management.smb.ServerManagementSmbFragment"
         android:label="SMBサーバの登録・編集">
@@ -23,5 +23,5 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
-    </fragment>
+    </framework-fragment>
 </navigation>

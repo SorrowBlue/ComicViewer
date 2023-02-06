@@ -8,7 +8,7 @@
         android:id="@+id/action_global_settings_navigation"
         app:destination="@id/settings_navigation"
         app:launchSingleTop="true" />
-    <fragment
+    <framework-fragment
         android:id="@+id/work_fragment"
         android:name="com.sorrowblue.comicviewer.app.WorkFragment"
         android:label="WorkFragment">
@@ -19,8 +19,8 @@
             android:id="@+id/deepLink"
             android:autoVerify="true"
             app:uri="comicviewer.sorrowblue.com/work?uuid={uuid}" />
-    </fragment>
-    <fragment
+    </framework-fragment>
+    <framework-fragment
         android:id="@+id/auth_fragment"
         android:name="com.sorrowblue.comicviewer.app.AuthFragment"
         tools:layout="@layout/fragment_auth" />

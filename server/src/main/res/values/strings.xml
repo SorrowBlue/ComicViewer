@@ -5,4 +5,5 @@
     <string name="server_desc_add_bookshelf">Add bookshelf</string>
     <string name="server_desc_thumbnail_this_bookshelf">Thumbnail for this bookshelf</string>
     <string name="server_title_favorite">Favorite</string>
+    <string name="server_list_btn_new">本棚を追加</string>
 </resources>

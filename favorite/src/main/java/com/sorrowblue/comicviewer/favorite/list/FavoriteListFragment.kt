@@ -4,18 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.transition.MaterialFadeThrough
 import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.favorite.FavoriteFragmentArgs
 import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentListBinding
 import com.sorrowblue.comicviewer.favorite.extension.transitionName
-import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.jetpack.binding.viewBinding
@@ -26,7 +23,6 @@ import dev.chrisbanes.insetter.applyInsetter
 internal class FavoriteListFragment : PagingFragment<Favorite>(R.layout.favorite_fragment_list) {
 
     private val binding: FavoriteFragmentListBinding by viewBinding()
-    private val commonViewModel: CommonViewModel by activityViewModels()
 
     override val viewModel: FavoriteListViewModel by viewModels()
     override val recyclerView get() = binding.recyclerView
@@ -55,9 +51,6 @@ internal class FavoriteListFragment : PagingFragment<Favorite>(R.layout.favorite
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        commonViewModel.isVisibleFab.value = true
-        commonViewModel.isVisibleBottomNavigation.value = true
 
         binding.viewModel = viewModel
 

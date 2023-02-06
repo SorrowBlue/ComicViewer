@@ -3,23 +3,27 @@ package com.sorrowblue.comicviewer.app
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.core.view.WindowCompat
-import androidx.core.view.isVisible
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.color.DynamicColors
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.sorrowblue.comicviewer.app.databinding.ActivityMainBinding
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
+import com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkFragmentNavigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkNavHostFragment
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.LogPriority
@@ -32,17 +36,17 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private val viewModel: MainViewModel by viewModels()
     private val commonViewModel: CommonViewModel by viewModels()
     private val navController
-        get() = binding.navHostFragmentActivityMain.getFragment<NavHostFragment>()
+        get() = binding.navHostFragmentActivityMain.getFragment<FrameworkNavHostFragment>()
             .findNavController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
+        DynamicColors.applyToActivityIfAvailable(this)
         super.onCreate(savedInstanceState)
         splashScreen.setOnExitAnimationListener(SplashScreenViewProvider::startSlideUpAnime)
         splashScreen.setKeepOnScreenCondition {
             commonViewModel.shouldKeepOnScreen
         }
-
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         commonViewModel.snackbarMessage.onEach {
@@ -62,12 +66,11 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
             }
         }
         binding.bottomNavigation.setupWithNavController(navController)
-        commonViewModel.isVisibleBottomNavigation.onEach {
-            binding.bottomNavigation.isVisible = it
-        }.launchIn(lifecycleScope)
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            commonViewModel.isVisibleBottomNavigation.value = true
-            commonViewModel.isVisibleFab.value = false
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination is FrameworkFragmentNavigator.Destination) {
+                binding.bottomNavigation.isShown(destination.isVisibleBottomNavigation)
+                binding.frameworkUiFab.isShownWithImageResource(destination.isVisibleFab, destination.fabIcon, destination.fabLabel)
+            }
         }
     }
 
@@ -141,5 +144,40 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
             commonViewModel.isRestored.emit(true)
         }
         logcat("RESTORE_NAVIGATION", LogPriority.INFO) { "Done restore navigation." }
+    }
+}
+fun BottomNavigationView.isShown(isShown: Boolean?) {
+    if (isShown == null) return
+    val lp = layoutParams as CoordinatorLayout.LayoutParams
+    val behavior = lp.behavior as TestHideBottomViewOnScrollBehavior
+    doOnPreDraw {
+        if (isShown) {
+            behavior.isEnabled = true
+            behavior.slideUp(this)
+        } else {
+            behavior.isEnabled = false
+            behavior.slideDown(this)
+        }
+    }
+}
+
+fun ExtendedFloatingActionButton.isShownWithImageResource(isShown: Boolean, iconResId: Int, labelResid: Int) {
+    if (isShown) {
+        if (this.isShown) {
+            hide(object : ExtendedFloatingActionButton.OnChangedCallback() {
+                override fun onHidden(extendedFab: ExtendedFloatingActionButton?) {
+                    setText(labelResid)
+                    setIconResource(iconResId)
+                    show()
+                }
+            })
+        } else {
+            setText(labelResid)
+            setIconResource(iconResId)
+            show()
+        }
+    } else {
+        setOnClickListener(null)
+        hide()
     }
 }

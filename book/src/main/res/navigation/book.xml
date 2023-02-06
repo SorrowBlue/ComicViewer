@@ -5,7 +5,7 @@
     android:id="@+id/book_navigation"
     app:startDestination="@id/book_fragment">
 
-    <fragment
+    <framework-fragment
         android:id="@+id/book_fragment"
         android:name="com.sorrowblue.comicviewer.book.BookFragment"
         android:label="ViewerFragment"
@@ -30,5 +30,5 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
-    </fragment>
+    </framework-fragment>
 </navigation>

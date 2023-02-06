@@ -33,6 +33,7 @@
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
 
+        <item name="toolbarStyle">@style/Widget.ComicViewer.Toolbar</item>
         <item name="preferenceTheme">@style/ComicViewerPreferenceThemeOverlay</item>
     </style>
 

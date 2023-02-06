@@ -4,7 +4,7 @@
     android:id="@+id/server_management_navigation_device"
     app:startDestination="@id/server_management_device_fragment">
 
-    <fragment
+    <framework-fragment
         android:id="@+id/server_management_device_fragment"
         android:name="com.sorrowblue.comicviewer.server.management.device.ServerManagementDeviceFragment"
         android:label="ローカルストレージの登録・編集">
@@ -23,5 +23,5 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
-    </fragment>
+    </framework-fragment>
 </navigation>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FrameworkFragmentNavigator">
+        <attr name="bottom_nav_visible" format="boolean" />
+        <attr name="fab_visible" format="boolean" />
+        <attr name="fab_icon" format="reference" />
+        <attr name="fab_label" format="reference" />
+    </declare-styleable>
+</resources>

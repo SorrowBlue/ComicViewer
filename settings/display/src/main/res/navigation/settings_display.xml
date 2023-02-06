@@ -4,7 +4,7 @@
     android:id="@+id/settings_display"
     app:startDestination="@id/settings_display_fragment">
 
-    <fragment
+    <framework-fragment
         android:id="@+id/settings_display_fragment"
         android:name="com.sorrowblue.comicviewer.settings.display.SettingsDisplayFragment"
         android:label="SettingsDisplayFragment" />

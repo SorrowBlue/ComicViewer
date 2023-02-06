@@ -5,12 +5,10 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
-import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingDataAdapter
 import com.sorrowblue.comicviewer.book.BookFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.file.Book
@@ -18,7 +16,6 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.folder.FolderAdapter
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
-import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.encodeBase64
 import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
@@ -37,7 +34,6 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
     Toolbar.OnMenuItemClickListener {
 
     private val binding: ReadlaterFragmentBinding by viewBinding()
-    private val commonViewModel: CommonViewModel by activityViewModels()
 
     override val viewModel: ReadLaterViewModel by viewModels()
     override val recyclerView get() = binding.recyclerView
@@ -65,9 +61,6 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        commonViewModel.isVisibleFab.value = true
-        commonViewModel.isVisibleBottomNavigation.value = true
 
         binding.viewModel = viewModel
 

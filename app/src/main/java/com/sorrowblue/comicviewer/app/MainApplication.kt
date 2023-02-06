@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.app
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 import logcat.AndroidLogcatLogger
@@ -19,8 +18,6 @@ class MainApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         AndroidLogcatLogger.installOnDebuggableApp(this, LogPriority.VERBOSE)
-
-        DynamicColors.applyToActivitiesIfAvailable(this)
     }
 
     override fun getWorkManagerConfiguration() =

@@ -4,10 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/favorite_list_navigation"
     app:startDestination="@id/favorite_list_fragment">
-    <fragment
+    <framework-fragment
         android:id="@+id/favorite_list_fragment"
         android:name="com.sorrowblue.comicviewer.favorite.list.FavoriteListFragment"
         android:label="@string/favorite_list_title"
+        app:bottom_nav_visible="true"
+        app:fab_label="@string/favorite_list_btn_new_favorite"
+        app:fab_icon="@drawable/ic_twotone_add_24"
+        app:fab_visible="true"
         tools:layout="@layout/favorite_fragment_list">
         <action
             android:id="@+id/action_favorite_list_to_favorite_create"
@@ -15,7 +19,7 @@
         <action
             android:id="@+id/action_favorite_list_to_favorite"
             app:destination="@id/favorite_navigation" />
-    </fragment>
+    </framework-fragment>
     <include app:graph="@navigation/favorite" />
     <include app:graph="@navigation/favorite_create" />
 </navigation>
