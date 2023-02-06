@@ -20,7 +20,6 @@ dependencies {
     api(libs.bundles.androidx.lifecycle)
     api(libs.bundles.androidx.navigation)
     api(libs.androidx.recyclerview)
-    api(libs.androidx.swiperefreshlayout)
     api(libs.androidx.viewpager2)
     api(libs.google.material)
     api(libs.coil)
