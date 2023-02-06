@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.server.Server
+import com.sorrowblue.comicviewer.domain.entity.server.ServerId
 import com.sorrowblue.comicviewer.domain.usecase.GetServerInfoUseCase
 import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
@@ -27,7 +28,7 @@ internal class ServerInfoViewModel @Inject constructor(
     private val args: ServerInfoFragmentArgs by navArgs()
 
     private val libraryInfoFlow =
-        getServerInfoUseCase.execute(GetServerInfoUseCase.Request(args.serverId)).mapNotNull {
+        getServerInfoUseCase.execute(GetServerInfoUseCase.Request(ServerId(args.serverId))).mapNotNull {
             when (it) {
                 is Result.Error -> {
                     // TODO(Send error message)

@@ -74,7 +74,7 @@ internal class ServerListAdapter : PagingDataAdapter<ServerFolder, ServerListAda
             server: Server
         ) = object : NavDirections {
             override val actionId = actionServerListToServerInfoNavigation().actionId
-            override val arguments = ServerInfoFragmentArgs(server.id).toBundle()
+            override val arguments = ServerInfoFragmentArgs(server.id.value).toBundle()
 
         }
     }

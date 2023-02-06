@@ -12,7 +12,7 @@
         tools:layout="@layout/server_info_dialog">
         <argument
             android:name="server_id"
-            app:argType="com.sorrowblue.comicviewer.domain.entity.server.ServerId" />
+            app:argType="integer" />
         <action
             android:id="@+id/action_server_info_to_server_remove_confirm"
             app:destination="@id/server_remove_confirm_dialog" />
