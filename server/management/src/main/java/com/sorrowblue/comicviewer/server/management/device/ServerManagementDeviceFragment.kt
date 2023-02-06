@@ -55,7 +55,7 @@ internal class ServerManagementDeviceFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController()
         binding.root.transitionName = viewModel.transitionName
         binding.viewModel = viewModel
         binding.dir.setEndIconOnClickListener {

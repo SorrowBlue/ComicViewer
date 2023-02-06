@@ -11,7 +11,6 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sorrowblue.comicviewer.book.BookFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.file.Book
@@ -20,10 +19,10 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentBinding
 import com.sorrowblue.comicviewer.folder.FolderAdapter
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
+import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.encodeBase64
-import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.framework.ui.widget.ktx.setSpanCount
 import com.sorrowblue.jetpack.binding.viewBinding
@@ -41,7 +40,6 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
     private val commonViewModel: CommonViewModel by activityViewModels()
 
     override val viewModel: FavoriteViewModel by viewModels()
-    override val recyclerView: RecyclerView get() = binding.recyclerView
     override val adapter
         get() = FolderAdapter(
             runBlocking { viewModel.folderDisplaySettingsFlow.first().display },
@@ -69,7 +67,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
 
         binding.viewModel = viewModel
 
-        binding.toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController()
         binding.toolbar.setOnMenuItemClickListener(this)
         binding.toolbar.applyInsetter {
             type(systemBars = true, displayCutout = true) {
@@ -77,7 +75,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
                 margin(top = true)
             }
         }
-        binding.recyclerView.applyInsetter {
+        binding.frameworkUiRecyclerView.applyInsetter {
             type(systemBars = true, displayCutout = true) {
                 padding(horizontal = true, bottom = true)
             }
@@ -90,7 +88,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
         viewModel.folderDisplaySettingsFlow.onEach { adapter.display = it.display }
             .launchInWithLifecycle()
 
-        viewModel.spanCountFlow.onEach(binding.recyclerView::setSpanCount).launchInWithLifecycle()
+        viewModel.spanCountFlow.onEach(binding.frameworkUiRecyclerView::setSpanCount).launchInWithLifecycle()
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {

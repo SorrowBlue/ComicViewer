@@ -18,8 +18,7 @@
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:liftOnScroll="true"
-            app:paddingTopSystemWindowInsets="@{true}">
+            app:liftOnScroll="true">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -54,7 +53,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+            android:id="@id/framework_ui_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -66,7 +65,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:paddingBottomSystemWindowInsets="@{true}"
             tools:listitem="@layout/favorite_item_edit" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -106,7 +104,6 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:text="@string/favorite_edit_btn_save"
-            app:icon="@drawable/ic_twotone_save_24"
-            app:layout_marginBottomSystemWindowInsets="@{true}" />
+            app:icon="@drawable/ic_twotone_save_24" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

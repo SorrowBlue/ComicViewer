@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.favorite.edit
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
@@ -13,12 +12,12 @@ import com.sorrowblue.comicviewer.domain.usecase.RemoveFavoriteBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.UpdateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteBookUseCase
 import com.sorrowblue.comicviewer.framework.ui.flow.mutableStateIn
+import com.sorrowblue.comicviewer.framework.ui.fragment.PagingViewModel
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
@@ -30,22 +29,19 @@ internal class FavoriteEditViewModel @Inject constructor(
     private val removeFavoriteBookUseCase: RemoveFavoriteBookUseCase,
     private val updateFavoriteUseCase: UpdateFavoriteUseCase,
     override val savedStateHandle: SavedStateHandle
-) : ViewModel(), SupportSafeArgs {
+) : PagingViewModel<File>(), SupportSafeArgs {
 
     private val args: FavoriteEditFragmentArgs by navArgs()
-
     private val favoriteId = FavoriteId(args.favoriteId)
-
     private val favoriteFlow =
         getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId)).stateIn { null }
 
-    val titleFlow = favoriteFlow.mapNotNull { it?.dataOrNull?.name }.mutableStateIn("")
-
-    val isEmptyDataFlow = MutableStateFlow(false)
-
-    val pagingDataFlow = pagingFavoriteBookUseCase.execute(
+    override val transitionName: String? = null
+    override val pagingDataFlow = pagingFavoriteBookUseCase.execute(
         PagingFavoriteBookUseCase.Request(PagingConfig(20), favoriteId)
     ).cachedIn(viewModelScope)
+
+    val titleFlow = favoriteFlow.mapNotNull { it?.dataOrNull?.name }.mutableStateIn("")
 
     init {
         viewModelScope.launch {

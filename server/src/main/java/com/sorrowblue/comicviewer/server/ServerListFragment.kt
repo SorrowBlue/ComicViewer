@@ -22,7 +22,6 @@ internal class ServerListFragment : PagingFragment<ServerFolder>(R.layout.server
     private val binding: ServerFragmentListBinding by viewBinding()
     override val viewModel: ServerListViewModel by viewModels()
 
-    override val recyclerView get() = binding.recyclerView
     override val adapter get() = ServerListAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,7 +29,7 @@ internal class ServerListFragment : PagingFragment<ServerFolder>(R.layout.server
 
         binding.viewModel = viewModel
 
-        binding.toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController()
         binding.toolbar.setOnMenuItemClickListener(this)
         binding.toolbar.applyInsetter {
             type(systemBars = true, displayCutout = true) {
@@ -39,7 +38,7 @@ internal class ServerListFragment : PagingFragment<ServerFolder>(R.layout.server
             }
         }
 
-        binding.recyclerView.applyInsetter {
+        binding.frameworkUiRecyclerView.applyInsetter {
             type(systemBars = true, displayCutout = true) {
                 padding(horizontal = true, bottom = true)
             }

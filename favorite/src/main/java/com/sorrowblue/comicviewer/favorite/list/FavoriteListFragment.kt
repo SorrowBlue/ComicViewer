@@ -25,7 +25,6 @@ internal class FavoriteListFragment : PagingFragment<Favorite>(R.layout.favorite
     private val binding: FavoriteFragmentListBinding by viewBinding()
 
     override val viewModel: FavoriteListViewModel by viewModels()
-    override val recyclerView get() = binding.recyclerView
     override val adapter
         get() = FavoriteListAdapter { favorite, extras ->
             findNavController().navigate(
@@ -54,14 +53,14 @@ internal class FavoriteListFragment : PagingFragment<Favorite>(R.layout.favorite
 
         binding.viewModel = viewModel
 
-        binding.toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController()
         binding.toolbar.applyInsetter {
             type(systemBars = true, displayCutout = true) {
                 padding(horizontal = true)
                 margin(top = true)
             }
         }
-        binding.recyclerView.applyInsetter {
+        binding.frameworkUiRecyclerView.applyInsetter {
             type(systemBars = true, displayCutout = true) {
                 padding(horizontal = true, bottom = true)
             }

@@ -31,7 +31,7 @@ internal class ServerManagementSelectionFragment :
 
         binding.viewModel = viewModel
 
-        binding.toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController()
         binding.toolbar.applyInsetter {
             type(systemBars = true, displayCutout = true) {
                 padding(horizontal = true)

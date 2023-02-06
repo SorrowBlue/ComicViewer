@@ -3,28 +3,24 @@ package com.sorrowblue.comicviewer.favorite.edit
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import com.google.android.material.transition.MaterialFadeThrough
+import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentEditBinding
-import com.sorrowblue.comicviewer.folder.submitDataWithLifecycle
-import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
-import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
+import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
+import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
+import dev.chrisbanes.insetter.applyInsetter
 
 @AndroidEntryPoint
-internal class FavoriteEditFragment : FrameworkFragment(R.layout.favorite_fragment_edit) {
+internal class FavoriteEditFragment : PagingFragment<File>(R.layout.favorite_fragment_edit) {
 
     private val binding: FavoriteFragmentEditBinding by viewBinding()
-    private val viewModel: FavoriteEditViewModel by viewModels()
+    override val viewModel: FavoriteEditViewModel by viewModels()
+
+    override val adapter get() = FavoriteEditAdapter(viewModel::removeFile)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,27 +31,31 @@ internal class FavoriteEditFragment : FrameworkFragment(R.layout.favorite_fragme
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
-        binding.toolbar.setupWithNavController(findNavController())
+
+        binding.appBarLayout.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(top = true)
+            }
+        }
+
+        binding.toolbar.setupWithNavController()
+        binding.toolbar.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true)
+            }
+        }
+
+        binding.frameworkUiRecyclerView.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true, bottom = true)
+            }
+        }
+
         binding.save.setOnClickListener {
             viewModel.save {
                 findNavController().popBackStack()
             }
         }
-        setupAdapter()
-    }
-
-    private fun setupAdapter() {
-        val adapter = FavoriteEditAdapter(viewModel::removeFile)
-        binding.recyclerView.adapter = adapter
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pagingDataFlow.collectLatest {
-                adapter.submitDataWithLifecycle(it)
-            }
-        }
-        adapter.loadStateFlow.map { it.refresh }.distinctUntilChanged()
-            .map { it is LoadState.NotLoading && adapter.itemCount == 0 }
-            .onEach { viewModel.isEmptyDataFlow.value = it }
-            .launchInWithLifecycle()
     }
 }
 

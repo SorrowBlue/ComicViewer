@@ -16,9 +16,9 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.folder.FolderAdapter
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
+import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.encodeBase64
-import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.framework.ui.widget.ktx.setSpanCount
 import com.sorrowblue.comicviewer.readlater.databinding.ReadlaterFragmentBinding
@@ -36,7 +36,6 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
     private val binding: ReadlaterFragmentBinding by viewBinding()
 
     override val viewModel: ReadLaterViewModel by viewModels()
-    override val recyclerView get() = binding.recyclerView
     override val adapter: PagingDataAdapter<File, *>
         get() = FolderAdapter(
             runBlocking { viewModel.folderDisplaySettingsFlow.first().display },
@@ -64,7 +63,7 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
 
         binding.viewModel = viewModel
 
-        binding.toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController()
         binding.toolbar.setOnMenuItemClickListener(this)
         binding.toolbar.applyInsetter {
             type(systemBars = true, displayCutout = true) {
@@ -73,7 +72,7 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
             }
         }
 
-        binding.recyclerView.applyInsetter {
+        binding.frameworkUiRecyclerView.applyInsetter {
             type(systemBars = true, displayCutout = true) {
                 padding(horizontal = true, bottom = true)
             }
@@ -85,7 +84,7 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
         check(adapter is FolderAdapter)
         viewModel.folderDisplaySettingsFlow.onEach { adapter.display = it.display }
             .launchInWithLifecycle()
-        viewModel.spanCountFlow.onEach(binding.recyclerView::setSpanCount).launchInWithLifecycle()
+        viewModel.spanCountFlow.onEach(binding.frameworkUiRecyclerView::setSpanCount).launchInWithLifecycle()
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {

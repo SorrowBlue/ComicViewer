@@ -24,13 +24,12 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_marginTopSystemWindowInsets="@{true}"
                 app:menu="@menu/server"
                 tools:title="@string/server_title_server_list" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+            android:id="@id/framework_ui_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -60,7 +59,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_marginBottomSystemWindowInsets="@{true}"
                 app:srcCompat="@drawable/ic_undraw_bookshelves_re_lxoy" />
 
             <TextView
@@ -77,8 +75,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/empty_image"
-                app:layout_constraintVertical_bias="0.0"
-                app:layout_marginBottomSystemWindowInsets="@{true}" />
+                app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

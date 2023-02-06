@@ -18,6 +18,8 @@ import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
+import com.sorrowblue.comicviewer.framework.ui.R
+import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,7 +43,7 @@ abstract class PagingFragment<T : Any>(contentLayoutId: Int) : FrameworkFragment
 
     protected abstract val viewModel: PagingViewModel<T>
 
-    protected abstract val recyclerView: RecyclerView
+    private val recyclerView: RecyclerView get() = requireView().requireViewById<RecyclerView>(R.id.framework_ui_recycler_view)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +85,7 @@ abstract class PagingFragment<T : Any>(contentLayoutId: Int) : FrameworkFragment
         recyclerView.adapter = adapter
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.pagingDataFlow.collectLatest {
-                adapter.submitData(viewLifecycleOwner.lifecycle, it)
+                adapter.submitDataWithLifecycle(it)
             }
         }
         recyclerView.doOnPreDraw {

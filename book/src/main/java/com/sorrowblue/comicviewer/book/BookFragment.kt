@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.color.MaterialColors
@@ -67,7 +66,7 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         setupHardware()
         setupBottomSheet()
 
-        binding.viewerToolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController()
 
         binding.viewPager2.attachToSlider(binding.slider) {
             viewModel.pageIndex.value = it
@@ -172,10 +171,10 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
             viewModel.isVisibleUI.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
                 if (it) {
                     standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-                    binding.viewerAppBarLayout.setExpanded(true)
+                    binding.appBarLayout.setExpanded(true)
                 } else {
                     standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                    binding.viewerAppBarLayout.setExpanded(false)
+                    binding.appBarLayout.setExpanded(false)
                 }
             }
         }
@@ -212,7 +211,7 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
     private fun setupFullScreen(displaySettings: ViewerSettings) {
         val windowInsetsController =
             WindowInsetsControllerCompat(requireActivity().window, binding.root)
-        binding.viewerToolbar.applyInsetter {
+        binding.toolbar.applyInsetter {
             type(displayCutout = true, statusBars = displaySettings.showStatusBar) { margin(true) }
         }
         binding.viewPager2.applyInsetter {

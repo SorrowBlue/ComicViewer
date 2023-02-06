@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.sorrowblue.comicviewer.framework.settings.FrameworkPreferenceFragment
 import com.sorrowblue.comicviewer.framework.settings.preferenceBinding
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
-import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
+import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.settings.security.password.PasswordManageState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged

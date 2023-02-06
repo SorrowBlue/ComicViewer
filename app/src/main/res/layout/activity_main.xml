@@ -27,7 +27,6 @@
             android:contentDescription="TODO()"
             app:layout_anchor="@id/bottom_navigation"
             app:layout_anchorGravity="top|end"
-            app:layout_marginBottomSystemWindowInsets="@{true}"
             app:srcCompat="@drawable/ic_twotone_add_24" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -3,29 +3,21 @@ package com.sorrowblue.comicviewer.framework.ui.fragment
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.paging.PagingData
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.sorrowblue.comicviewer.framework.ui.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.chrisbanes.insetter.InsetterApplyTypeDsl
 import dev.chrisbanes.insetter.InsetterDsl
 import javax.inject.Inject
-import javax.inject.Qualifier
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.launchIn
 import logcat.logcat
 
 open class FrameworkFragment(contentLayoutId: Int) : Fragment(contentLayoutId) {
@@ -66,32 +58,10 @@ open class FrameworkFragment(contentLayoutId: Int) : Fragment(contentLayoutId) {
         findNavController().navigate(directions, extras)
     }
 
-    protected fun Toolbar.setupWithNavController(navController: NavController) {
-        setupWithNavController(navController, appBarConfiguration)
+    protected fun Toolbar.setupWithNavController() {
+        setupWithNavController(findNavController(), appBarConfiguration)
     }
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class FrameworkAppBarConfiguration
-
-@HiltViewModel
-class CommonViewModel @Inject constructor() : ViewModel() {
-
-    val snackbarMessage = MutableSharedFlow<String>(0, 1, BufferOverflow.SUSPEND)
-    var shouldKeepOnScreen = true
-
-    val isRestored = MutableSharedFlow<Boolean>(0)
-}
-
-context(Fragment)
-fun <T> Flow<T>.launchIn() = launchIn(viewLifecycleOwner.lifecycleScope)
-
-context(Fragment)
-fun <T> Flow<T>.launchInWithLifecycle() = flowWithLifecycle(viewLifecycleOwner.lifecycle).launchIn(viewLifecycleOwner.lifecycleScope)
-
-context(AppCompatActivity)
-fun <T> Flow<T>.launchInWithLifecycle() = flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
 
 fun InsetterDsl.type(
     ime: Boolean = false,
@@ -116,4 +86,9 @@ fun InsetterDsl.type(
         tappableElement,
         f
     )
+}
+
+context(Fragment)
+fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.submitDataWithLifecycle(data: PagingData<T>) {
+    submitData(viewLifecycleOwner.lifecycle, data)
 }

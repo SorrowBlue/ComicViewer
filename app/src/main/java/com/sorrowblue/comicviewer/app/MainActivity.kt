@@ -18,7 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sorrowblue.comicviewer.app.databinding.ActivityMainBinding
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
-import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
+import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkFragmentNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkNavHostFragment
 import com.sorrowblue.jetpack.binding.viewBinding

@@ -24,12 +24,11 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_marginTopSystemWindowInsets="@{true}"
                 tools:title="@string/favorite_list_title" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+            android:id="@id/framework_ui_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -37,7 +36,6 @@
             android:paddingBottom="88dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:paddingBottomSystemWindowInsets="@{true}"
             tools:listitem="@layout/favorite_item_list" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

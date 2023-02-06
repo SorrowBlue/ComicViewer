@@ -24,7 +24,6 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_marginTopSystemWindowInsets="@{true}"
                 tools:title="本棚追加" />
         </com.google.android.material.appbar.AppBarLayout>
 

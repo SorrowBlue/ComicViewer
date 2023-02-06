@@ -14,7 +14,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.PermissionChecker
 import androidx.core.net.toUri
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -25,9 +24,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.search.SearchView
 import com.google.android.material.snackbar.Snackbar
@@ -39,11 +36,11 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.folder.databinding.FolderFragmentBinding
+import com.sorrowblue.comicviewer.framework.ui.flow.attachAdapter
+import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.encodeBase64
-import com.sorrowblue.comicviewer.framework.ui.fragment.launchIn
-import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.framework.ui.widget.ktx.setSpanCount
 import com.sorrowblue.jetpack.binding.viewBinding
@@ -66,7 +63,6 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
     private val commonViewModel: CommonViewModel by activityViewModels()
 
     override val viewModel: FolderViewModel by viewModels()
-    override val recyclerView get() = binding.recyclerView
     override val adapter
         get() = FolderAdapter(
             runBlocking { viewModel.folderDisplaySettingsFlow.first().display },
@@ -96,7 +92,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
         check(adapter is FolderAdapter)
         viewModel.folderDisplaySettingsFlow.onEach { adapter.display = it.display }
             .launchInWithLifecycle()
-        viewModel.spanCountFlow.onEach(binding.recyclerView::setSpanCount)
+        viewModel.spanCountFlow.onEach(binding.frameworkUiRecyclerView::setSpanCount)
             .launchInWithLifecycle()
         viewLifecycleOwner.lifecycleScope.launch {
             adapter.loadStateFlow.mapNotNull { it.refresh as? LoadState.Error }
@@ -118,7 +114,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
                 repeatOnLifecycle(Lifecycle.State.CREATED) {
                     adapter.loadStateFlow.distinctUntilChangedBy { it.refresh }
                         .first { it.refresh is LoadState.NotLoading && adapter.itemCount > 0 }
-                    binding.recyclerView.scrollToPosition(position)
+                    binding.frameworkUiRecyclerView.scrollToPosition(position)
                     commonViewModel.isRestored.emit(true)
                 }
             }
@@ -130,7 +126,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
 
         binding.viewModel = viewModel
 
-        binding.toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController()
         binding.toolbar.setOnLongClickListener {
             findNavController().popBackStack(R.id.folder_navigation, true)
             true
@@ -142,7 +138,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
                 margin(top = true)
             }
         }
-        binding.recyclerView.applyInsetter {
+        binding.frameworkUiRecyclerView.applyInsetter {
             type(systemBars = true, displayCutout = true) {
                 padding(horizontal = true, bottom = true)
             }
@@ -204,10 +200,8 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
             { file, transitionName, extras ->
                 when (file) {
                     is Book -> navigate(
-                        FolderFragmentDirections.actionFolderToBook(
-                            file,
-                            transitionName
-                        ), extras
+                        FolderFragmentDirections.actionFolderToBook(file, transitionName),
+                        extras
                     )
 
                     is Folder -> navigate(
@@ -221,7 +215,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
             },
             { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.serverId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
-        binding.recyclerView.setSpanCount(1)
+        viewModel.pagingQueryDataFlow.attachAdapter(adapter)
         binding.searchRecyclerView.adapter = adapter
         binding.searchView.editText.doAfterTextChanged { editable ->
             editable?.toString()?.let {
@@ -231,10 +225,6 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
                 }
             }
         }
-
-        viewModel.pagingQueryDataFlow.onEach {
-            adapter.submitDataWithLifecycle(it)
-        }.launchIn()
     }
 
     private val launcher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -318,9 +308,4 @@ private fun PagingException.getMessage(): String {
         PagingException.InvalidServer -> "サーバーが見つかりません"
         PagingException.NotFound -> "ファイル/フォルダが見つかりません。"
     }
-}
-
-context(Fragment)
-fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.submitDataWithLifecycle(data: PagingData<T>) {
-    submitData(viewLifecycleOwner.lifecycle, data)
 }
