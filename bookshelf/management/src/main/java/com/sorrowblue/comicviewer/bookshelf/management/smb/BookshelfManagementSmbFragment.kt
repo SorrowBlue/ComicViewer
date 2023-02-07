@@ -21,8 +21,10 @@ import com.sorrowblue.comicviewer.bookshelf.management.R
 import com.sorrowblue.comicviewer.bookshelf.management.databinding.BookshelfManagementFragmentSmbBinding
 import com.sorrowblue.comicviewer.framework.resource.FrameworkDrawable
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
+import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -58,6 +60,17 @@ internal class BookshelfManagementSmbFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbar.setupWithNavController()
+        binding.toolbar.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true)
+                margin(top = true)
+            }
+        }
+        binding.content.applyInsetter {
+            type(systemBars = true, displayCutout = true, ime = true) {
+                padding(horizontal = true, bottom = true)
+            }
+        }
         binding.root.transitionName = viewModel.transitionName
         binding.viewModel = viewModel
         viewLifecycleOwner.lifecycleScope.launch {

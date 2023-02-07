@@ -45,6 +45,12 @@ internal class BookshelfListFragment :
             }
         }
 
+        binding.empty.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true, bottom = true)
+            }
+        }
+
         fab.setOnClickListener {
             navigate(BookshelfListFragmentDirections.actionBookshelfListToBookshelfManagementSelection())
         }

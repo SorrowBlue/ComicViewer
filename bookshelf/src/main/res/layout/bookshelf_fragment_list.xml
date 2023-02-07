@@ -43,10 +43,10 @@
             tools:listitem="@layout/bookshelf_item_list" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:isVisible="@{viewModel.isEmptyDataFlow}"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:visibility="gone">
 
             <ImageView
