@@ -9,7 +9,7 @@ import java.time.format.FormatStyle
 object Converter {
 
     @JvmStatic
-    fun String?.extension() = this?.substringAfterLast('.')?.lowercase()
+    fun String.extension() = substringAfterLast('.').lowercase()
 
     @JvmStatic
     fun fileSize(fileSize: Long): String {
@@ -27,7 +27,7 @@ object Converter {
         }
     }
     @JvmStatic
-    fun dateTime(epochMilli: Long) = Instant.ofEpochMilli(epochMilli)
+    fun dateTime(epochMilli: Long): String = Instant.ofEpochMilli(epochMilli)
         .atZone(ZoneOffset.systemDefault())
         .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
     @JvmStatic
