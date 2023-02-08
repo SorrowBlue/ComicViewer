@@ -8,10 +8,6 @@ import java.time.format.FormatStyle
 
 object Converter {
 
-    @JvmStatic
-    fun String.extension() = substringAfterLast('.').lowercase()
-
-    @JvmStatic
     fun fileSize(fileSize: Long): String {
         var a = fileSize / 1024f
         return if (a < 1024) {
@@ -26,10 +22,8 @@ object Converter {
             }
         }
     }
-    @JvmStatic
     fun dateTime(epochMilli: Long): String = Instant.ofEpochMilli(epochMilli)
         .atZone(ZoneOffset.systemDefault())
         .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
-    @JvmStatic
     fun lastReadPage(context: Context, lastReadPage: Int,maxPage: Int) = "${lastReadPage}/${maxPage} pages"
 }

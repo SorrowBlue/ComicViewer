@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -28,8 +29,9 @@ internal class FileInfoViewModel @Inject constructor(
 
     val fileFlow =
         getFileUseCase.execute(GetFileUseCase.Request(args.bookshelfId, args.path.decodeBase64()))
-            .map { it.dataOrNull }
-            .stateIn { null }
+            .map {
+                it.dataOrNull
+            }.stateIn { null }
 
     val bookFlow = fileFlow.map { it as? Book }.stateIn { null }
 
