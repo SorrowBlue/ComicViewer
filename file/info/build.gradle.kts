@@ -38,6 +38,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.2.2")
     implementation("com.google.accompanist:accompanist-flowlayout:0.28.0")
 
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
 }
