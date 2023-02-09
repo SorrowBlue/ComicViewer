@@ -5,8 +5,8 @@ android-min-sdk = "28"
 android-target-sdk = "33"
 android-buildtools = "33.0.1"
 
-kotlin = "1.8.10"
-google-ksp = "1.8.10-1.0.9"
+kotlin = "1.8.0"
+google-ksp = "1.8.0-1.0.9"
 kotlinx-coroutines = "1.6.4"
 kotlinx-serialization = "1.4.1"
 
@@ -75,6 +75,7 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }

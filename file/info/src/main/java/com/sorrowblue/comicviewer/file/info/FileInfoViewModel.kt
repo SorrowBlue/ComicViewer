@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.file.info
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
@@ -14,7 +14,6 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -28,13 +27,9 @@ internal class FileInfoViewModel @Inject constructor(
 
     val fileFlow =
         getFileUseCase.execute(GetFileUseCase.Request(args.bookshelfId, args.path.decodeBase64()))
-            .map { it.dataOrNull }
             .stateIn { null }
 
-    val bookFlow = fileFlow.map { it as? Book }.stateIn { null }
-
-    fun addReadLater(done: () -> Unit) {
-        val file = fileFlow.value ?: return
+    fun addReadLater(file: File, done: () -> Unit) {
         val request = AddReadLaterUseCase.Request(file.bookshelfId, file.path)
         viewModelScope.launch {
             addReadLaterUseCase.execute(request).first().fold({
