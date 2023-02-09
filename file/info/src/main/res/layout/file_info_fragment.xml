@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.sorrowblue.comicviewer.file.info.Converter" />
+
+        <variable
+            name="viewModel"
+            type="com.sorrowblue.comicviewer.file.info.FileInfoViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/begin_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/end_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/bottom_sheet_drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/book_thumbnail"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="fitCenter"
+            app:isVisible="@{viewModel.bookFlow != null}"
+            app:layout_constraintStart_toStartOf="@+id/begin_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_drag_handle"
+            app:srcCompat="@{viewModel.bookFlow != null ? viewModel.bookFlow : null}"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <ImageView
+            android:id="@+id/folder_thumbnail"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@drawable/bg_folder"
+            android:backgroundTint="?attr/colorControlNormal"
+            android:paddingStart="12dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="12dp"
+            android:scaleType="fitCenter"
+            app:isVisible="@{viewModel.bookFlow == null}"
+            app:layout_constraintStart_toStartOf="@+id/begin_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_drag_handle"
+            app:srcCompat="@{viewModel.bookFlow == null ? viewModel.fileFlow : null}"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/thumbnail_end_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="end"
+            app:constraint_referenced_ids="book_thumbnail,folder_thumbnail" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/thumbnail_bottom_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="book_thumbnail,folder_thumbnail,path" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{viewModel.fileFlow.name}"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+            app:layout_constraintStart_toEndOf="@+id/thumbnail_end_barrier"
+            app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_drag_handle"
+            tools:text="うちの会社の小さい先輩の話【カラーページ増量版／共通ペーパー付き】 (4) (バンブーコミックス)" />
+
+        <TextView
+            android:id="@+id/path"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{viewModel.fileFlow.parent}"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+            app:layout_constraintStart_toEndOf="@+id/thumbnail_end_barrier"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            tools:text="うちの会社の小さい先輩の話【カラーページ増量版／共通ペーパー付き】 (4) (バンブーコミックス)" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:chipSpacingVertical="0dp"
+            app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+            app:layout_constraintStart_toStartOf="@+id/begin_guideline"
+            app:layout_constraintTop_toTopOf="@+id/thumbnail_bottom_barrier"
+            app:layout_constraintVertical_bias="0.0">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/file_extension"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Converter.extension(viewModel.fileFlow.name)}"
+                app:chipIcon="@drawable/ic_twotone_extension_24"
+                tools:text="ZIP" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/file_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Converter.fileSize(viewModel.fileFlow.size)}"
+                app:chipIcon="@drawable/ic_twotone_book_24"
+                tools:text="12.34Mb" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/update_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Converter.dateTime(viewModel.fileFlow.lastModifier)}"
+                app:chipIcon="@drawable/ic_twotone_update_24"
+                tools:text="@tools:sample/date/hhmmss" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/last_read_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Converter.lastReadPage(context, viewModel.bookFlow.lastPageRead, viewModel.bookFlow.totalPageCount)}"
+                app:chipIcon="@drawable/ic_twotone_history_24"
+                tools:text="199/255 page" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/last_read_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Converter.dateTime(viewModel.fileFlow.lastModifier) + ` に読んだ`}"
+                app:chipIcon="@drawable/ic_twotone_history_24"
+                tools:text="2023/01/01 23:59:59に読んだ" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/action_flow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            app:constraint_referenced_ids="read_later,add_favorite,open_folder"
+            app:flow_horizontalBias="0"
+            app:flow_horizontalStyle="spread_inside"
+            app:flow_verticalGap="8dp"
+            app:flow_wrapMode="chain"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+            app:layout_constraintStart_toStartOf="@+id/begin_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/chip_group"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/read_later"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Read later"
+            app:flow_horizontalBias="1"
+            app:icon="@drawable/ic_twotone_watch_later_24"
+            app:layout_wrapBehaviorInParent="skipped" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_favorite"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save to favorites"
+            app:icon="@drawable/ic_twotone_favorite_24" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/open_folder"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open folder"
+            app:icon="@drawable/ic_twotone_folder_open_24" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
