@@ -8,15 +8,20 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/viewer_imageview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <View
@@ -65,19 +70,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/center"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/book_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="?scrimBackground"
-            android:backgroundTint="?android:attr/colorBackground"
-            android:padding="8dp"
-            android:text="TextView"
-            android:textColor="?attr/colorOnBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

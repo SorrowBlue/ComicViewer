@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.entity.file
 
 import android.util.Base64
-import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 
 sealed interface File {
     val bookshelfId: BookshelfId

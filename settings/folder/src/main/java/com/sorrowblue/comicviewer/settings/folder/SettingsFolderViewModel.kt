@@ -19,13 +19,5 @@ internal class SettingsFolderViewModel @Inject constructor(
         }
     }
 
-    fun updateResolveImageFolder(newValue: Boolean) {
-        viewModelScope.launch {
-            manageFolderSettingsUseCase.edit {
-                it.copy(resolveImageFolder = newValue)
-            }
-        }
-    }
-
     val settings = manageFolderSettingsUseCase.settings
 }

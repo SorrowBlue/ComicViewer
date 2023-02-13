@@ -10,9 +10,8 @@ import coil.load
 import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfItemListBinding
 import com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
-import com.sorrowblue.comicviewer.domain.entity.server.Bookshelf
-import com.sorrowblue.comicviewer.domain.request.FileThumbnailRequest
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.fragment.encodeBase64
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
@@ -38,8 +37,9 @@ internal class BookshelfListAdapter :
         ViewBindingViewHolder<BookshelfItemListBinding>(parent, BookshelfItemListBinding::inflate) {
 
         fun bind(item: BookshelfFolder) {
-            binding.server = item.bookshelf
-            binding.preview.load(FileThumbnailRequest(item.bookshelf.id to item.folder))
+            binding.bookshelf = item.bookshelf
+            binding.folder = item.folder
+            binding.preview.load(item.folder)
             binding.root.setOnClickListener {
                 val transitionName = binding.root.transitionName
                 val extras = FragmentNavigatorExtras(it to transitionName)
@@ -51,10 +51,11 @@ internal class BookshelfListAdapter :
                     extras
                 )
             }
-            binding.menu.setOnClickListener {
+            binding.root.setOnLongClickListener {
                 it.findNavController().navigate(
                     BookshelfListFragmentDirections.actionBookshelfListToBookshelfInfo(item.bookshelf)
                 )
+                true
             }
         }
 

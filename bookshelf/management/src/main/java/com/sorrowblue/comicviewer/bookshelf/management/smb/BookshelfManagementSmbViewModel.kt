@@ -8,8 +8,8 @@ import com.sorrowblue.comicviewer.bookshelf.management.util.HostNameTextValidato
 import com.sorrowblue.comicviewer.bookshelf.management.util.PortTextValidator
 import com.sorrowblue.comicviewer.bookshelf.management.util.RequireValidator
 import com.sorrowblue.comicviewer.bookshelf.management.util.isErrorFlow
-import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
-import com.sorrowblue.comicviewer.domain.entity.server.SmbServer
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfError
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase

@@ -5,8 +5,8 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
-import com.sorrowblue.comicviewer.domain.entity.server.Bookshelf
-import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.framework.Result

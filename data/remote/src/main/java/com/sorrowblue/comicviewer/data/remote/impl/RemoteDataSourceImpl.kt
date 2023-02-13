@@ -17,11 +17,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-val mutexs = List(12) { Mutex() }
+val mutexs = List(10) { Mutex() }
 
 private suspend fun <R> withLock(action: suspend () -> R): R {
     while (true) {
-        delay(250)
+        delay(300)
         mutexs.firstOrNull { !it.isLocked }?.withLock {
             return action.invoke()
         }
@@ -53,6 +53,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
                         FileClientException.InvalidServer -> RemoteException.InvalidServer
                         FileClientException.NoNetwork -> RemoteException.NoNetwork
                     }
+
                     else -> it
                 }
             }
@@ -64,7 +65,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         resolveImageFolder: Boolean,
         filter: (FileModel) -> Boolean
     ): List<FileModel> {
-        return         withLock {
+        return withLock {
             runCatching {
                 fileClient.listFiles(fileModel, resolveImageFolder).filter(filter)
             }.getOrElse {
@@ -83,10 +84,10 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
     }
 
     override suspend fun fileModel(path: String): FileModel {
-        return         withLock {
+        return withLock {
             runCatching {
-            fileClient.current(path)
-        }.getOrElse {
+                fileClient.current(path)
+            }.getOrElse {
                 throw when (it) {
                     is FileClientException -> when (it) {
                         FileClientException.InvalidAuth -> RemoteException.InvalidAuth
@@ -102,7 +103,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
     }
 
     override suspend fun exists(path: String): Boolean {
-        return         withLock {
+        return withLock {
             runCatching {
                 fileClient.exists(path)
             }.getOrElse {
@@ -139,9 +140,11 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
                         FileClientException.InvalidServer -> RemoteException.InvalidServer
                         FileClientException.NoNetwork -> RemoteException.NoNetwork
                     }
+
                     is FileReaderException -> when (it) {
                         FileReaderException.NotSupport -> TODO()
                     }
+
                     else -> it
                 }
             }

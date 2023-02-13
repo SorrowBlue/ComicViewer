@@ -27,17 +27,15 @@
             android:layout_marginBottom="8dp"
             android:scaleType="fitCenter"
             app:isVisible="@{file instanceof Book}"
-            app:srcCompat="@{file instanceof Book ? file : null}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@{file instanceof Book ? file : null}"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <ImageView
             android:id="@+id/folder_thumbnail"
             android:layout_width="56dp"
-            app:isVisible="@{!(file instanceof Book)}"
-            app:srcCompat="@{file instanceof Book ? null : file}"
             android:layout_height="56dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
@@ -48,9 +46,11 @@
             android:paddingTop="16dp"
             android:paddingEnd="12dp"
             android:paddingBottom="12dp"
+            app:isVisible="@{!(file instanceof Book)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@{file instanceof Book ? null : file}"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <TextView
@@ -62,6 +62,7 @@
             android:layout_marginEnd="16dp"
             android:ellipsize="middle"
             android:maxLines="2"
+            android:text="@{file.name}"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/page"

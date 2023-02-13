@@ -29,7 +29,7 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
             } else {
                 entity.copy(id = it.toInt())
             }
-        }.toModel()
+        }.toModel(0)
     }
 
     override suspend fun delete(bookshelfModel: BookshelfModel): Int {
@@ -37,13 +37,13 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
     }
 
     override fun get(bookshelfModelId: BookshelfModelId): Flow<BookshelfModel?> {
-        return dao.selectById(bookshelfModelId.value).map { it?.toModel() }
+        return dao.selectById(bookshelfModelId.value).map { it?.toModel(0) }
     }
 
     override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolderModel>> {
         return Pager(pagingConfig) { dao.pagingSource() }.flow.map { pagingData ->
             pagingData.map {
-                BookshelfFolderModel(it.bookshelf.toModel() to it.file.toModel() as FileModel.Folder)
+                BookshelfFolderModel(it.bookshelf.toModel(it.fileCount) to it.file.toModel() as FileModel.Folder)
             }
         }
 

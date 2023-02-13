@@ -28,8 +28,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorSurfaceVariant">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -99,17 +98,17 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bottom_sheet"
+            style="@style/Widget.Material3.BottomSheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorSurfaceVariant"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
             <com.google.android.material.slider.Slider
                 android:id="@+id/slider"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp"
+                android:layout_marginStart="@dimen/framework_ui_default_margin"
+                android:layout_marginEnd="@dimen/framework_ui_default_margin"
                 android:max="0"
                 android:stepSize="1.0"
                 android:valueFrom="0"
@@ -127,10 +126,10 @@
                 android:id="@+id/count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/framework_ui_default_margin"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="@dimen/framework_ui_default_margin"
+                android:layout_marginBottom="@dimen/framework_ui_default_margin"
                 android:text="@{String.valueOf(viewModel.pageIndex + 1) + ` / ` + String.valueOf(viewModel.pageCount)}"
                 android:textAppearance="?attr/textAppearanceLabelMedium"
                 app:layout_constraintBottom_toBottomOf="parent"

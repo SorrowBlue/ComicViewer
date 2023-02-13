@@ -28,9 +28,7 @@
                 android:layout_height="wrap_content"
                 app:menu="@menu/folder"
                 app:subtitle="@{viewModel.subTitleFlow}"
-                app:subtitleCentered="true"
                 app:title="@{viewModel.titleFlow}"
-                app:titleCentered="true"
                 tools:subtitle="/books/"
                 tools:title="Books" />
         </com.google.android.material.appbar.AppBarLayout>
@@ -64,7 +62,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:orientation="vertical"
-            android:padding="4dp"
+            android:padding="12dp"
             app:fastScrollEnabled="true"
             app:fastScrollHorizontalThumbDrawable="@drawable/folder_fast_scroll_track"
             app:fastScrollHorizontalTrackDrawable="@drawable/folder_fast_scroll_thumb"

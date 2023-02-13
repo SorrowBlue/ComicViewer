@@ -14,9 +14,9 @@
             app:argType="integer" />
         <argument
             android:name="transition_name"
+            android:defaultValue="@null"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <action
             android:id="@+id/action_favorite_to_favorite_edit"
             app:destination="@id/favorite_edit_fragment" />
@@ -34,6 +34,9 @@
         android:id="@+id/favorite_edit_fragment"
         android:name="com.sorrowblue.comicviewer.favorite.edit.FavoriteEditFragment"
         android:label="@string/favorite_edit_title"
+        app:fab_icon="@drawable/ic_twotone_save_24"
+        app:fab_label="@string/favorite_edit_btn_save"
+        app:fab_visible="true"
         tools:layout="@layout/favorite_fragment_edit">
         <argument
             android:name="favorite_id"

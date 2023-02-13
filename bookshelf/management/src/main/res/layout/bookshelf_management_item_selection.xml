@@ -16,8 +16,8 @@
         style="?attr/materialCardViewOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:transitionName="@{serverType.name()}"
-        app:cardUseCompatPadding="true"
         tools:showIn="@layout/bookshelf_management_fragment_selection">
 
         <androidx.constraintlayout.widget.ConstraintLayout

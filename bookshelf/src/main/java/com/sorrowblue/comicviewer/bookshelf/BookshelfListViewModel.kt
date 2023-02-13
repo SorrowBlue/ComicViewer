@@ -18,7 +18,8 @@ internal class BookshelfListViewModel @Inject constructor(
 ) : PagingViewModel<BookshelfFolder>(), SupportSafeArgs {
 
     override val transitionName = null
+
     override val pagingDataFlow =
-        pagingBookshelfFolderUseCase.execute(PagingBookshelfFolderUseCase.Request(PagingConfig(10)))
+        pagingBookshelfFolderUseCase.execute(PagingBookshelfFolderUseCase.Request(PagingConfig(20)))
             .cachedIn(viewModelScope)
 }

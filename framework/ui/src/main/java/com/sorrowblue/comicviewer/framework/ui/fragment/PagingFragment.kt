@@ -99,7 +99,7 @@ abstract class PagingFragment<T : Any>(contentLayoutId: Int) : FrameworkFragment
         recyclerView.doOnPreDraw {
             if (viewModel.isInitialize) {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    delay(100)
+                    delay(500)
                     startPostponedEnterTransition()
                 }
             } else {

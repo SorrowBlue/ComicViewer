@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.bookshelf.info
 
-import com.sorrowblue.comicviewer.domain.entity.server.Bookshelf
-import com.sorrowblue.comicviewer.domain.entity.server.InternalStorage
-import com.sorrowblue.comicviewer.domain.entity.server.SmbServer
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 
 object Converter {
 

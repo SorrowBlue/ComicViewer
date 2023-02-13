@@ -7,5 +7,5 @@
         android:icon="@drawable/ic_twotone_settings_24"
         android:menuCategory="secondary"
         android:title="@string/framework_title_settings"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>

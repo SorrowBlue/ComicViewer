@@ -33,7 +33,8 @@ class SmbFileClientTest {
             "",
             "SorrowBlue",
             "nasyuukiasuna2s2"
-        )
+        ),
+        0
     )
 
     private val path = "/test/[0]TEST/"

@@ -3,16 +3,13 @@ package com.sorrowblue.comicviewer.book
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.viewpager2.widget.ViewPager2
-import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
-import com.sorrowblue.comicviewer.domain.entity.settings.BindingDirection
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.settings.History
-import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNextComicRel
 import com.sorrowblue.comicviewer.domain.usecase.UpdateHistoryUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.fragment.decodeBase64
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
@@ -28,7 +25,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -40,7 +36,6 @@ internal class BookViewModel @Inject constructor(
     private val getNextBookUseCase: GetNextBookUseCase,
     private val updateLastReadPageUseCase: UpdateLastReadPageUseCase,
     manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
-    manageViewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase,
     override val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), SupportSafeArgs {
 
@@ -64,26 +59,11 @@ internal class BookViewModel @Inject constructor(
             .map { it.dataOrNull }
     }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-    val layoutDirectionFlow =
-        manageViewerOperationSettingsUseCase.settings.distinctUntilChangedBy { it.bindingDirection }
-            .map {
-                when (it.bindingDirection) {
-                    BindingDirection.LTR -> ViewPager2.LAYOUT_DIRECTION_LTR
-                    BindingDirection.RTL -> ViewPager2.LAYOUT_DIRECTION_RTL
-                }
-            }.shareIn(viewModelScope, SharingStarted.Lazily, 1)
-
-    val readAheadPageCountFlow = manageViewerSettingsUseCase.settings.map { it.readAheadPageCount }
-        .shareIn(viewModelScope, SharingStarted.Lazily, 1)
-
-
     val state = MutableStateFlow(LoadingState.LOADING)
 
     val transitionName = args.transitionName
     val isVisibleUI = MutableStateFlow(false)
-    val viewerSettings =
-        manageViewerSettingsUseCase.settings.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
-
+    val viewerSettings = manageViewerSettingsUseCase.settings
 
     val title = bookFlow.mapNotNull { it?.name }.stateIn { "" }
 

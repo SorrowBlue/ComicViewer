@@ -59,15 +59,24 @@ internal data class Bookshelf(
 
     enum class Type { INTERNAL, SMB }
 
-    fun toModel(): BookshelfModel = when (type) {
-        Type.INTERNAL -> BookshelfModel.InternalStorage(BookshelfModelId(id), displayName)
+    fun toModel(fileCount: Int): BookshelfModel = when (type) {
+        Type.INTERNAL -> BookshelfModel.InternalStorage(
+            BookshelfModelId(id),
+            displayName,
+            fileCount
+        )
+
         Type.SMB -> BookshelfModel.SmbServer(
             BookshelfModelId(id),
             displayName,
             host,
             port,
-            if (username.isEmpty()) BookshelfModel.SmbServer.Guest
-            else BookshelfModel.SmbServer.UsernamePassword(domain, username, password.plane)
+            if (username.isEmpty()) {
+                BookshelfModel.SmbServer.Guest
+            } else {
+                BookshelfModel.SmbServer.UsernamePassword(domain, username, password.plane)
+            },
+            fileCount
         )
     }
 }

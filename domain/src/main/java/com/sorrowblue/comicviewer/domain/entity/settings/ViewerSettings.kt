@@ -10,5 +10,12 @@ data class ViewerSettings(
     val enableBrightnessControl: Boolean = false,
     val screenBrightness: Float = 0.5f,
     val imageQuality: Int = 75,
-    val readAheadPageCount: Int = 2
-)
+    val readAheadPageCount: Int = 2,
+    val bindingDirection: BindingDirection = BindingDirection.RIGHT
+) {
+
+    enum class BindingDirection {
+        RIGHT,
+        LEFT
+    }
+}

@@ -9,11 +9,9 @@ import coil.size.Precision
 import com.sorrowblue.comicviewer.data.BookPageRequestMapper
 import com.sorrowblue.comicviewer.data.FavoriteMapper
 import com.sorrowblue.comicviewer.data.FileMapper
-import com.sorrowblue.comicviewer.data.FileThumbnailRequestMapper
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
-import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfFileModel
+import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -30,9 +28,6 @@ internal class CoilInitializer : Initializer<Unit> {
 
                 add(FileMapper())
                 add(MyComponent.fileThumbnailFetcher(context))
-
-                add(FileThumbnailRequestMapper())
-                add(MyComponent.bookThumbnailFetcher(context))
 
                 add(FavoriteMapper())
                 add(MyComponent.favoriteThumbnailFetcher(context))
@@ -53,13 +48,9 @@ internal class CoilInitializer : Initializer<Unit> {
 
         fun bookPageFetcherFactory(): Fetcher.Factory<BookPageRequestData>
         fun fileThumbnailFetcher(): Fetcher.Factory<FileModel>
-        fun bookThumbnailFetcher(): Fetcher.Factory<BookshelfFileModel>
         fun favoriteThumbnailFetcher(): Fetcher.Factory<FavoriteModel>
 
         companion object {
-            fun bookThumbnailFetcher(context: Context) =
-                EntryPointAccessors.fromApplication<MyComponent>(context).bookThumbnailFetcher()
-
             fun fileThumbnailFetcher(context: Context) =
                 EntryPointAccessors.fromApplication<MyComponent>(context).fileThumbnailFetcher()
 

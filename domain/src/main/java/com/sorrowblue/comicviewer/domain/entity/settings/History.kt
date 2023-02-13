@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.domain.entity.settings
 
-import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import kotlinx.serialization.Serializable
 
 @Serializable

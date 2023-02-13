@@ -21,14 +21,19 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialElevationScale
 import com.sorrowblue.comicviewer.book.databinding.BookFragmentBinding
 import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
+import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
+import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 fun Fragment.applyContainerTransform(transitionName: String?) {
@@ -70,7 +75,6 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
 
         binding.viewPager2.attachToSlider(binding.slider) {
             viewModel.pageIndex.value = it
-            viewModel.updateLastReadPage(it)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -84,10 +88,21 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.appBarLayout.elevation = binding.bottomSheet.elevation
+    }
+
     override fun onPause() {
         super.onPause()
-        (binding.viewPager2.adapter as? ComicAdapter)?.currentList?.getOrNull(binding.slider.value.toInt())
-            ?.let { viewModel.updateLastReadPage(it.index) }
+        val bookAdapter = binding.viewPager2.adapter as? BookAdapter ?: return
+        bookAdapter.currentList.getOrNull(binding.slider.value.toInt())?.let {
+            val index = when (it) {
+                is BookPage.Next -> if (it.isNext) bookAdapter.currentList.filterIsInstance<BookPage.Split>().last().index else 0
+                is BookPage.Split -> it.index
+            }
+            viewModel.updateLastReadPage(index)
+        }
     }
 
     override fun onStop() {
@@ -110,7 +125,7 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         binding.viewPager2.isVisible = false
         viewLifecycleOwner.lifecycleScope.launch {
             val book = viewModel.bookFlow.filterNotNull().first()
-            val adapter = ComicAdapter(book, book.totalPageCount, viewModel.placeholder) {
+            val adapter = BookAdapter(book, book.totalPageCount, viewModel.placeholder) {
                 when (it) {
                     Position.START -> prevPage()
                     Position.CENTER -> viewModel.isVisibleUI.value =
@@ -126,25 +141,29 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.prevComic.filterNotNull().collectLatest {
-                (binding.viewPager2.adapter as? ComicAdapter)?.prevComic = it
+                (binding.viewPager2.adapter as? BookAdapter)?.prevBook = it
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.nextComic.filterNotNull().collectLatest {
-                (binding.viewPager2.adapter as? ComicAdapter)?.nextComic = it
+                (binding.viewPager2.adapter as? BookAdapter)?.nextBook = it
             }
         }
-        // 閉じ方向設定
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.layoutDirectionFlow.collectLatest {
-                binding.viewPager2.layoutDirection = it
-                binding.slider.layoutDirection = it
+
+        // 綴じ方向設定
+        viewModel.viewerSettings.map { it.bindingDirection }.distinctUntilChanged().onEach {
+            val direction = when (it) {
+                ViewerSettings.BindingDirection.RIGHT -> ViewPager2.LAYOUT_DIRECTION_RTL
+                ViewerSettings.BindingDirection.LEFT -> ViewPager2.LAYOUT_DIRECTION_LTR
             }
-        }
+            binding.viewPager2.layoutDirection = direction
+            binding.slider.layoutDirection = direction
+        }.launchInWithLifecycle()
+
         // 先読みページ数
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.readAheadPageCountFlow.collectLatest(binding.viewPager2::setOffscreenPageLimit)
-        }
+        viewModel.viewerSettings.map { it.readAheadPageCount }.distinctUntilChanged().onEach {
+            binding.viewPager2.offscreenPageLimit = it
+        }.launchInWithLifecycle()
     }
 
     private fun setupHardware() {
@@ -183,18 +202,22 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
     private fun ViewPager2.attachToSlider(slider: Slider, onChange: (pageIndex: Int) -> Unit) {
         registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                (adapter as? ComicAdapter)?.let { adapter ->
-                    onChange.invoke(
-                        if (position == 0) 0 else adapter.currentList.getOrElse(position - 1) { adapter.currentList.lastOrNull() }?.index
-                            ?: 0
-                    )
-                }
+                val bookAdapter = adapter as? BookAdapter ?: return
+                val splitList = bookAdapter.currentList.filterIsInstance<BookPage.Split>()
+                // 0 12345678 9
+                onChange.invoke(
+                    when (position) {
+                        0 -> splitList.first().index
+                        bookAdapter.currentList.lastIndex -> splitList.last().index
+                        else -> splitList[position - 1].index
+                    }
+                )
             }
         })
         slider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
-                (adapter as? ComicAdapter)?.let { adapter ->
-                    currentItem = adapter.currentList.indexOfFirst { it.index == value.toInt() } + 1
+                (adapter as? BookAdapter)?.let { adapter ->
+                    currentItem = adapter.currentList.filterIsInstance<BookPage.Split>().indexOfFirst { it.index == value.toInt() } + 1
                 }
             }
         }
@@ -212,15 +235,9 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         val windowInsetsController =
             WindowInsetsControllerCompat(requireActivity().window, binding.root)
         binding.toolbar.applyInsetter {
-            type(displayCutout = true, statusBars = displaySettings.showStatusBar) { margin(true) }
-        }
-        binding.viewPager2.applyInsetter {
-            type(
-                displayCutout = true,
-                statusBars = displaySettings.showStatusBar,
-                navigationBars = displaySettings.showNavigationBar
-            ) {
-                padding(true)
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true)
+                margin(top = true)
             }
         }
 

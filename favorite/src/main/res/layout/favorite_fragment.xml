@@ -27,9 +27,7 @@
                 android:layout_height="wrap_content"
                 app:menu="@menu/favorite"
                 app:subtitle="@{@plurals/favorite_label_file_count(viewModel.countFlow, viewModel.countFlow)}"
-                app:subtitleCentered="true"
                 app:title="@{viewModel.titleFlow}"
-                app:titleCentered="true"
                 tools:subtitle="/books/"
                 tools:title="Books" />
         </com.google.android.material.appbar.AppBarLayout>

@@ -2,25 +2,18 @@ package com.sorrowblue.comicviewer.settings.viewer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 @HiltViewModel
 internal class SettingsViewerViewModel @Inject constructor(
     private val settingsUseCase: ManageViewerSettingsUseCase,
 ) : ViewModel() {
 
-    val settings =
-        settingsUseCase.settings.stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            runBlocking { settingsUseCase.settings.first() })
+    val settings = settingsUseCase.settings
 
     fun updateStatusBar(newValue: Boolean) {
         viewModelScope.launch {
@@ -55,6 +48,12 @@ internal class SettingsViewerViewModel @Inject constructor(
     fun updateImageQuality(newValue: Int) {
         viewModelScope.launch {
             settingsUseCase.edit { it.copy(imageQuality = newValue) }
+        }
+    }
+
+    fun updateBindingDirection(newValue: ViewerSettings.BindingDirection) {
+        viewModelScope.launch {
+            settingsUseCase.edit { it.copy(bindingDirection = newValue) }
         }
     }
 }

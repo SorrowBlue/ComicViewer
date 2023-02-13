@@ -4,7 +4,6 @@ import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
 import jcifs.CIFSContext
 import jcifs.SmbConstants
 import jcifs.smb.SmbRandomAccessFile
-import logcat.logcat
 
 internal class SmbSeekableInputStream(uri: String, tc: CIFSContext, write: Boolean) :
     SeekableInputStream {
@@ -15,7 +14,6 @@ internal class SmbSeekableInputStream(uri: String, tc: CIFSContext, write: Boole
     }.onFailure {
         it.printStackTrace()
     }.getOrThrow()
-
 
     override fun seek(offset: Long, whence: Int): Long {
         when (whence) {

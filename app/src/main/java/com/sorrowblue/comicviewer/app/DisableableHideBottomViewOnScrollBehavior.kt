@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 
-class TestHideBottomViewOnScrollBehavior<V : View> : HideBottomViewOnScrollBehavior<V> {
+class DisableableHideBottomViewOnScrollBehavior<V : View> : HideBottomViewOnScrollBehavior<V> {
     constructor() : super()
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 

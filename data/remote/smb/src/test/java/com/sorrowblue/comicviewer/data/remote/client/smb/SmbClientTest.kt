@@ -29,7 +29,8 @@ internal class SmbClientTest {
         "Test",
         "SORROWBLUE-DESK",
         445,
-        BookshelfModel.SmbServer.UsernamePassword("", "sorrowblue.sb@outlook.jp", "outyuukiasuna2s2")
+        BookshelfModel.SmbServer.UsernamePassword("", "sorrowblue.sb@outlook.jp", "outyuukiasuna2s2"),
+        0
     )
 
     @Test

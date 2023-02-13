@@ -1,11 +1,12 @@
-package com.sorrowblue.comicviewer.domain.entity.server
+package com.sorrowblue.comicviewer.domain.entity.bookshelf
 
 data class SmbServer(
     override val id: BookshelfId,
     override val displayName: String,
     val host: String,
     val port: Int,
-    val auth: Auth
+    val auth: Auth,
+    override val fileCount: Int
 ) : Bookshelf {
 
     constructor(displayName: String, host: String, port: Int, auth: Auth) : this(
@@ -13,7 +14,8 @@ data class SmbServer(
         displayName,
         host,
         port,
-        auth
+        auth,
+        0
     )
 
     sealed interface Auth {

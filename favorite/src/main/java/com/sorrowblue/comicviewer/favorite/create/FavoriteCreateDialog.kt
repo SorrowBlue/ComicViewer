@@ -8,8 +8,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteViewCreateBinding
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkDialogFragment
-import com.sorrowblue.comicviewer.framework.ui.fragment.dialogViewBinding
 import com.sorrowblue.comicviewer.framework.ui.fragment.launchInWithDialogLifecycle
+import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.onEach
 @AndroidEntryPoint
 internal class FavoriteCreateDialog : FrameworkDialogFragment() {
 
-    private val binding: FavoriteViewCreateBinding by dialogViewBinding()
+    private val binding: FavoriteViewCreateBinding by viewBinding()
     private val viewModel: FavoriteCreateViewModel by viewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?, builder: MaterialAlertDialogBuilder) {

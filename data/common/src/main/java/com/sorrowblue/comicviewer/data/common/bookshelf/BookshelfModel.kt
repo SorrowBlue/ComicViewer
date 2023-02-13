@@ -4,21 +4,31 @@ sealed interface BookshelfModel {
 
     val id: BookshelfModelId
     val name: String
-    data class InternalStorage(override val id: BookshelfModelId, override val name: String) :
-        BookshelfModel
+    val fileCount: Int
+
+    data class InternalStorage(
+        override val id: BookshelfModelId,
+        override val name: String,
+        override val fileCount: Int
+    ) : BookshelfModel
 
     data class SmbServer(
         override val id: BookshelfModelId,
         override val name: String,
         val host: String,
         val port: Int,
-        val auth: Auth
+        val auth: Auth,
+        override val fileCount: Int
     ) : BookshelfModel {
 
         sealed interface Auth
 
         object Guest : Auth
-        data class UsernamePassword(val domain: String, val username: String, val password: String) :
+        data class UsernamePassword(
+            val domain: String,
+            val username: String,
+            val password: String
+        ) :
             Auth
     }
 }

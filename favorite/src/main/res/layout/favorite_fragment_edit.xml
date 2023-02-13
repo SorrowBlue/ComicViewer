@@ -58,7 +58,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:orientation="vertical"
-            android:paddingBottom="80dp"
+            android:paddingBottom="88dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -95,15 +95,5 @@
                 app:layout_constraintStart_toStartOf="@+id/favorite_edit_empty_image"
                 app:layout_constraintTop_toBottomOf="@+id/favorite_edit_empty_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/favorite_edit_btn_save"
-            app:icon="@drawable/ic_twotone_save_24" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

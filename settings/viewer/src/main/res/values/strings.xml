@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="settings_viewer_title">Viewer settings</string>
     <string name="settings_viewer_title_show_status_bar">Show status bar</string>
     <string name="settings_viewer_title_show_navigation_bar">Show navigation bar</string>
@@ -15,6 +15,15 @@
     <string name="settings_viewer_preference_key_brightness_control" translatable="false">settings_viewer_preference_key_brightness_control</string>
     <string name="settings_viewer_preference_key_brightness_level" translatable="false">settings_viewer_preference_key_brightness_level</string>
     <string name="settings_viewer_preference_key_image_quality" translatable="false">settings_viewer_preference_key_image_quality</string>
-    <string name="settings_viewer_preference_key_reading_direction" tools:ignore="ExtraTranslation">settings_viewer_preference_key_binding_direction</string>
-    <string name="settings_viewer_title_reading_direction">Reading direction</string>
+
+    <string name="settings_viewer_preference_key_binding_direction" translatable="false">settings_viewer_preference_key_binding_direction</string>
+    <string name="settings_viewer_title_binding_direction">Binding direction</string>
+    <string name="settings_viewer_label_right_binding">Right binding</string>
+    <string name="settings_viewer_label_left_binding">Left binding</string>
+
+    <string-array name="settings_viewer_entries_binding_direction">
+        <item>@string/settings_viewer_label_right_binding</item>
+        <item>@string/settings_viewer_label_left_binding</item>
+    </string-array>
+
 </resources>

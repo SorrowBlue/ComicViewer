@@ -44,6 +44,11 @@ internal class FavoriteEditFragment : PagingFragment<File>(R.layout.favorite_fra
                 padding(horizontal = true)
             }
         }
+        binding.favoriteNameLayout.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true)
+            }
+        }
 
         binding.frameworkUiRecyclerView.applyInsetter {
             type(systemBars = true, displayCutout = true) {
@@ -51,7 +56,7 @@ internal class FavoriteEditFragment : PagingFragment<File>(R.layout.favorite_fra
             }
         }
 
-        binding.save.setOnClickListener {
+        fab.setOnClickListener {
             viewModel.save {
                 findNavController().popBackStack()
             }

@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:stepSize="1.0"
             android:valueFrom="2"
-            android:valueTo="4" />
+            android:valueTo="5" />
 
         <TextView
             android:id="@+id/sort_type_label"

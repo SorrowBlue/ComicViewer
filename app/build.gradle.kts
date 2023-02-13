@@ -37,6 +37,10 @@ android {
     }
     dataBinding.enable = true
     viewBinding.enable = true
+
+    packagingOptions {
+        resources.excludes.add("META-INF/DEPENDENCIES")
+    }
 }
 
 dependencies {
@@ -61,6 +65,17 @@ dependencies {
 //    debugImplementation(libs.squareup.leakcanary.android)
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
+
+    implementation("com.google.api-client:google-api-client-android:2.2.0")
+    implementation("com.google.http-client:google-http-client-android:1.42.3") {
+        exclude("xpp3")
+        exclude("org.apache.httpcomponents")
+        exclude("junit")
+        exclude("com.google.android")
+    }
+//    implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
+    implementation("com.google.android.gms:play-services-auth:20.4.1")
+    implementation("com.google.apis:google-api-services-drive:v3-rev20230206-2.0.0")
 
     androidTestImplementation(libs.androidx.test.ext.junit.ktx)
     androidTestImplementation(libs.androidx.test.espresso.core)

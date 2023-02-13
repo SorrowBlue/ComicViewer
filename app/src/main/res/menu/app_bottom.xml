@@ -2,15 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:icon="@drawable/ic_twotone_book_24"
         android:id="@+id/bookshelf_navigation"
-        android:title="盆棚" />
+        android:icon="@drawable/ic_twotone_book_24"
+        android:title="本棚" />
     <item
-        android:icon="@drawable/ic_twotone_favorite_24"
         android:id="@+id/favorite_list_navigation"
+        android:icon="@drawable/ic_twotone_favorite_24"
         android:title="お気に入り" />
     <item
-        android:icon="@drawable/ic_twotone_watch_later_24"
         android:id="@+id/readlater_navigation"
+        android:icon="@drawable/ic_twotone_watch_later_24"
         android:title="後で見る" />
+    <item
+        android:id="@+id/google_drive_fragment"
+        android:icon="@drawable/ic_twotone_more_vert_24"
+        android:title="GoogleDrive" />
 </menu>

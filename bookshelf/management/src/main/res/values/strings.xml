@@ -16,4 +16,6 @@
     <string name="bookshelf_management_hint_port">Port number</string>
     <string name="bookshelf_management_hint_domain">Domain</string>
     <string name="bookshelf_management_hint_select_folder">Select folder</string>
+
+    <string name="bookshelf_management_smb_save">保存</string>
 </resources>

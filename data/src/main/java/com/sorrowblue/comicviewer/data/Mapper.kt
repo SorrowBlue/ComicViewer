@@ -8,6 +8,10 @@ import com.sorrowblue.comicviewer.data.common.favorite.FavoriteFileModel
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModelId
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
@@ -15,10 +19,6 @@ import com.sorrowblue.comicviewer.domain.entity.file.BookFile
 import com.sorrowblue.comicviewer.domain.entity.file.BookFolder
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
-import com.sorrowblue.comicviewer.domain.entity.server.Bookshelf
-import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
-import com.sorrowblue.comicviewer.domain.entity.server.InternalStorage
-import com.sorrowblue.comicviewer.domain.entity.server.SmbServer
 
 internal fun BookshelfModelId.toServerId() = BookshelfId(value)
 
@@ -46,19 +46,29 @@ internal fun SmbServer.Auth.toServerModelAuth(): BookshelfModel.SmbServer.Auth {
 }
 
 internal fun Bookshelf.toServerModel() = when (this) {
-    is InternalStorage -> BookshelfModel.InternalStorage(BookshelfModelId(id.value), displayName)
+    is InternalStorage -> BookshelfModel.InternalStorage(
+        id = BookshelfModelId(id.value),
+        name = displayName,
+        fileCount = fileCount
+    )
+
     is SmbServer -> BookshelfModel.SmbServer(
         id = BookshelfModelId(id.value),
         name = displayName,
         host = host,
         port = port,
-        auth = auth.toServerModelAuth()
+        auth = auth.toServerModelAuth(),
+        fileCount = fileCount
     )
 }
 
 internal fun BookshelfModel.toServer() = when (this) {
     is BookshelfModel.InternalStorage ->
-        InternalStorage(id.toServerId(), name)
+        InternalStorage(
+            id = id.toServerId(),
+            displayName = name,
+            fileCount = fileCount
+        )
 
     is BookshelfModel.SmbServer -> {
         SmbServer(
@@ -66,24 +76,18 @@ internal fun BookshelfModel.toServer() = when (this) {
             displayName = name,
             host = host,
             port = port,
-            auth = when (val a = auth) {
+            auth = when (val auth = auth) {
                 BookshelfModel.SmbServer.Guest -> SmbServer.Auth.Guest
-                is BookshelfModel.SmbServer.UsernamePassword -> SmbServer.Auth.UsernamePassword(
-                    a.domain,
-                    a.username,
-                    a.password
-                )
-            }
+                is BookshelfModel.SmbServer.UsernamePassword ->
+                    SmbServer.Auth.UsernamePassword(auth.domain, auth.username, auth.password)
+            },
+            fileCount = fileCount
         )
     }
 }
 
 internal fun FavoriteModel.toFavorite(): Favorite {
     return Favorite(FavoriteId(id.value), name, count)
-}
-
-internal fun FavoriteFileModel.toFavoriteBook(): FavoriteFile {
-    return FavoriteFile(FavoriteId(id.value), bookshelfModelId.toServerId(), filePath)
 }
 
 internal fun FavoriteFile.toFavoriteBookModel(): FavoriteFileModel {

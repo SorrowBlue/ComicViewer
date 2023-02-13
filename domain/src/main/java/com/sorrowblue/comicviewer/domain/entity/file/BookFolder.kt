@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.domain.entity.file
 
-import com.sorrowblue.comicviewer.domain.entity.server.BookshelfId
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 
 data class BookFolder(
     override val bookshelfId: BookshelfId,

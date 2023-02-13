@@ -7,19 +7,19 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.databinding.InverseMethod
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.color.MaterialColors
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialSharedAxis
 import com.sorrowblue.comicviewer.bookshelf.management.R
 import com.sorrowblue.comicviewer.bookshelf.management.databinding.BookshelfManagementFragmentSmbBinding
-import com.sorrowblue.comicviewer.framework.resource.FrameworkDrawable
+import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.jetpack.binding.viewBinding
@@ -34,6 +34,7 @@ internal class BookshelfManagementSmbFragment :
 
     private val binding: BookshelfManagementFragmentSmbBinding by viewBinding()
     private val viewModel: BookshelfManagementSmbViewModel by viewModels()
+    private val commonViewModel: CommonViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +67,7 @@ internal class BookshelfManagementSmbFragment :
                 margin(top = true)
             }
         }
-        binding.content.applyInsetter {
+        binding.nestedScroll.applyInsetter {
             type(systemBars = true, displayCutout = true, ime = true) {
                 padding(horizontal = true, bottom = true)
             }
@@ -75,16 +76,15 @@ internal class BookshelfManagementSmbFragment :
         binding.viewModel = viewModel
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isConnecting.collectLatest {
-                binding.fab.isVisible = !it
+                fab.isVisible = !it
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isError.collectLatest {
-                binding.fab.isEnabled = !it
+                fab.isEnabled = !it
             }
         }
-        binding.fab.setImageResource(FrameworkDrawable.ic_twotone_save_24)
-        binding.fab.setOnClickListener {
+        fab.setOnClickListener {
             binding.host.editText?.setText(viewModel.hostFlow.value)
             if (viewModel.isGuestFlow.value) {
                 binding.host.editText?.setText(viewModel.hostFlow.value)
@@ -111,9 +111,7 @@ internal class BookshelfManagementSmbFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.message.collectLatest {
-                    Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG)
-                        .setAnchorView(binding.fab)
-                        .show()
+                    commonViewModel.snackbarMessage.tryEmit(it)
                 }
             }
         }

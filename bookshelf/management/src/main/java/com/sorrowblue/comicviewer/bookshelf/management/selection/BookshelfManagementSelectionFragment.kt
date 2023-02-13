@@ -2,11 +2,13 @@ package com.sorrowblue.comicviewer.bookshelf.management.selection
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.material.transition.MaterialFadeThrough
 import com.sorrowblue.comicviewer.bookshelf.management.R
 import com.sorrowblue.comicviewer.bookshelf.management.ServerType
 import com.sorrowblue.comicviewer.bookshelf.management.databinding.BookshelfManagementFragmentSelectionBinding
+import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.jetpack.binding.viewBinding

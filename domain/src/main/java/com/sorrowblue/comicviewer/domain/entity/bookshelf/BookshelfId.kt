@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.domain.entity.server
+package com.sorrowblue.comicviewer.domain.entity.bookshelf
 
 import kotlinx.serialization.Serializable
 

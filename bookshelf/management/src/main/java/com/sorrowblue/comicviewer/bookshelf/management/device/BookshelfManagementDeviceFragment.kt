@@ -5,21 +5,24 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.color.MaterialColors
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialSharedAxis
 import com.sorrowblue.comicviewer.bookshelf.management.R
 import com.sorrowblue.comicviewer.bookshelf.management.databinding.BookshelfManagementFragmentDeviceBinding
+import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
+import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import logcat.logcat
@@ -30,6 +33,7 @@ internal class BookshelfManagementDeviceFragment :
 
     private val binding: BookshelfManagementFragmentDeviceBinding by viewBinding()
     private val viewModel: BookshelfManagementDeviceViewModel by viewModels()
+    private val commonViewModel: CommonViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,27 +60,36 @@ internal class BookshelfManagementDeviceFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbar.setupWithNavController()
+        binding.toolbar.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true)
+                margin(top = true)
+            }
+        }
+        binding.nestedScroll.applyInsetter {
+            type(systemBars = true, displayCutout = true, ime = true) {
+                padding(horizontal = true, bottom = true)
+            }
+        }
         binding.root.transitionName = viewModel.transitionName
         binding.viewModel = viewModel
         binding.dir.setEndIconOnClickListener {
             openDirectory()
         }
-        binding.fab.setOnClickListener {
+        fab.setOnClickListener {
             viewModel.connect {
                 findNavController().popBackStack(R.id.bookshelf_management_selection_fragment, true)
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isError.collectLatest {
-                binding.fab.isEnabled = !it
+                fab.isEnabled = !it
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.message.collectLatest {
-                    Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG)
-                        .setAnchorView(binding.fab)
-                        .show()
+                    commonViewModel.snackbarMessage.tryEmit("操作がキャンセルされました")
                 }
             }
         }
@@ -89,7 +102,7 @@ internal class BookshelfManagementDeviceFragment :
                 viewModel.data.value = uri
             } ?: kotlin.run {
                 viewModel.data.value = null
-                Snackbar.make(binding.root, "操作がキャンセルされました", Snackbar.LENGTH_SHORT).show()
+                commonViewModel.snackbarMessage.tryEmit("操作がキャンセルされました")
             }
         }
 

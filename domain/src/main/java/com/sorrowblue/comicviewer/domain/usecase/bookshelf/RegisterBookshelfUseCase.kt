@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
-import com.sorrowblue.comicviewer.domain.entity.server.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 import com.sorrowblue.comicviewer.domain.usecase.FlowOneUseCase
 import com.sorrowblue.comicviewer.domain.usecase.UseCaseError

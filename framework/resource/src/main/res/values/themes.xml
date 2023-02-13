@@ -37,7 +37,7 @@
         <item name="preferenceTheme">@style/ComicViewerPreferenceThemeOverlay</item>
     </style>
 
-    <style name="Widget.ComicViewer.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
+    <style name="Widget.ComicViewer.Toolbar" parent="@style/Widget.Material3.Toolbar">
         <item name="layout_scrollFlags">noScroll</item>
         <item name="popupTheme">@style/Theme.ComicViewer.PopupTheme</item>
         <item name="titleCentered">true</item>

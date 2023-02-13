@@ -13,13 +13,13 @@ import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentAddBinding
 import com.sorrowblue.comicviewer.favorite.list.FavoriteListAdapter
 import com.sorrowblue.comicviewer.framework.ui.flow.attachAdapter
-import com.sorrowblue.comicviewer.framework.ui.fragment.dialogViewBinding
+import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 internal class FavoriteAddFragment : BottomSheetDialogFragment(R.layout.favorite_fragment_add) {
 
-    private val binding: FavoriteFragmentAddBinding by dialogViewBinding()
+    private val binding: FavoriteFragmentAddBinding by viewBinding()
     private val viewModel: FavoriteAddViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

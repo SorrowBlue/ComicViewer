@@ -35,5 +35,9 @@
     <include app:graph="@navigation/file_info" />
     <include app:graph="@navigation/favorite_add" />
     <include app:graph="@navigation/settings" />
+    <framework-fragment
+        android:id="@+id/google_drive_fragment"
+        android:name="com.sorrowblue.comicviewer.app.GoogleDriveFragment"
+        android:label="GoogleDriveFragment" />
 </navigation>
 

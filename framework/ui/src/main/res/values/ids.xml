@@ -2,4 +2,5 @@
 <resources>
     <item name="framework_ui_fab" type="id" />
     <item name="framework_ui_recycler_view" type="id" />
+    <item name="framework_ui_autodispose_view_tag" type="id" />
 </resources>

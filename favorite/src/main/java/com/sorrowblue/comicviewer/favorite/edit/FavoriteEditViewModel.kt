@@ -50,16 +50,11 @@ internal class FavoriteEditViewModel @Inject constructor(
     }
 
     fun removeFile(file: File) {
+        val request =
+            RemoveFavoriteFileUseCase.Request(FavoriteFile(favoriteId, file.bookshelfId, file.path))
+
         viewModelScope.launch {
-            removeFavoriteFileUseCase.execute(
-                RemoveFavoriteFileUseCase.Request(
-                    FavoriteFile(
-                        favoriteId,
-                        file.bookshelfId,
-                        file.path
-                    )
-                )
-            ).collect()
+            removeFavoriteFileUseCase.execute(request).collect()
         }
     }
 

@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.sidesheet.SideSheetDialog
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.folder.display.databinding.FolderDisplayFragmentBinding
-import com.sorrowblue.comicviewer.framework.ui.fragment.dialogViewBinding
+import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 internal class FolderDisplayFragment : DialogFragment() {
 
-    private val binding: FolderDisplayFragmentBinding by dialogViewBinding()
+    private val binding: FolderDisplayFragmentBinding by viewBinding()
     private val viewModel: FolderDisplayViewModel by viewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

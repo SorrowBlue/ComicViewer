@@ -9,9 +9,4 @@
         android:key="@string/settings_folder_preference_key_show_preview"
         android:title="プレビューを表示する" />
 
-    <SwitchPreferenceCompat
-        android:key="@string/settings_folder_preference_key_resolve_image_folder"
-        android:summary="一覧の取得に時間がかかります"
-        android:title="画像フォルダを本として扱う" />
-
 </PreferenceScreen>

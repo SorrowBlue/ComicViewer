@@ -20,11 +20,12 @@
         android:title="画像をキャッシュする" />
 
     <DropDownPreference
-        android:key="@string/settings_viewer_preference_key_reading_direction"
-        android:title="@string/settings_viewer_title_reading_direction" />
+        app:useSimpleSummaryProvider="true"
+        android:key="@string/settings_viewer_preference_key_binding_direction"
+        android:title="@string/settings_viewer_title_binding_direction" />
 
     <DropDownPreference
-        android:key="各々の本で異なる閉じ方向を設定する"
+        android:key="@string/settings_viewer_preference_key_binding_direction"
         android:title="各々の本で異なる閉じ方向を設定する" />
 
     <SwitchPreferenceCompat

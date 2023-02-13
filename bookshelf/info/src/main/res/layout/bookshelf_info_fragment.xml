@@ -13,9 +13,9 @@
 
         <import type="com.sorrowblue.comicviewer.bookshelf.info.Converter" />
 
-        <import type="com.sorrowblue.comicviewer.domain.entity.server.InternalStorage" />
+        <import type="com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage" />
 
-        <import type="com.sorrowblue.comicviewer.domain.entity.server.SmbServer" />
+        <import type="com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -13,7 +13,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sorrowblue.comicviewer.folder.databinding.FolderViewScanInfoBinding
-import com.sorrowblue.comicviewer.framework.ui.fragment.dialogViewBinding
+import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
 import kotlinx.coroutines.flow.collectLatest
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 internal class FolderScanInfoDialog : DialogFragment() {
 
-    private val binding: FolderViewScanInfoBinding by dialogViewBinding()
+    private val binding: FolderViewScanInfoBinding by viewBinding()
     private val args: FolderScanInfoDialogArgs by navArgs()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

@@ -8,5 +8,8 @@
     <string name="settings_viewer_title_brightness_control">明るさの制御</string>
     <string name="settings_viewer_title_brightness_level">明るさのレベル</string>
     <string name="settings_viewer_title_image_quality">画像の品質</string>
-    <string name="settings_viewer_title_reading_direction">綴じ方向</string>
+
+    <string name="settings_viewer_title_binding_direction">綴じ方向</string>
+    <string name="settings_viewer_label_right_binding">右綴じ</string>
+    <string name="settings_viewer_label_left_binding">左綴じ</string>
 </resources>

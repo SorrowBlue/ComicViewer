@@ -8,15 +8,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sorrowblue.comicviewer.bookshelf.info.databinding.BookshelfInfoFragmentBinding
 import com.sorrowblue.comicviewer.bookshelf.management.device.BookshelfManagementDeviceFragmentArgs
 import com.sorrowblue.comicviewer.bookshelf.management.smb.BookshelfManagementSmbFragmentArgs
-import com.sorrowblue.comicviewer.domain.entity.server.InternalStorage
-import com.sorrowblue.comicviewer.domain.entity.server.SmbServer
-import com.sorrowblue.comicviewer.framework.ui.fragment.dialogViewBinding
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
+import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 internal class BookshelfInfoFragment : BottomSheetDialogFragment(R.layout.bookshelf_info_fragment) {
 
-    private val binding: BookshelfInfoFragmentBinding by dialogViewBinding()
+    private val binding: BookshelfInfoFragmentBinding by viewBinding()
     private val viewModel: BookshelfInfoViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
