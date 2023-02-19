@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="server_title_server_list">本棚リスト</string>
-    <string name="server_message_no_bookshelves_added_yet">本棚はまだ追加されていません。</string>
-    <string name="server_desc_add_bookshelf">本棚を追加する</string>
-    <string name="server_desc_thumbnail_this_bookshelf">この本棚のサムネイル</string>
-    <string name="server_title_favorite">お気に入り</string>
+    <!--Bookshelf List-->
+    <string name="bookshelf_list_title">本棚一覧</string>
+    <string name="bookshelf_list_message_no_bookshelves_added_yet">本棚はまだ追加されていません。</string>
+    <string name="bookshelf_list_desc_add_bookshelf">本棚を追加する</string>
+    <string name="bookshelf_list_desc_thumbnail_this_bookshelf">この本棚のサムネイル</string>
+    <string name="bookshelf_list_title_favorite">お気に入り</string>
+    <string name="bookshelf_list_btn_new">本棚を追加</string>
 
-    <!--Server Info-->
+    <!--Bookshelf Info-->
+    <string name="bookshelf_info_title">本棚情報</string>
     <string name="bookshelf_info_label_host">IP/ホスト名</string>
     <string name="bookshelf_info_label_path">ファイルパス</string>
     <string name="bookshelf_info_label_internal_storage">内部ストレージ</string>
@@ -15,18 +18,22 @@
     <string name="bookshelf_info_btn_edit">編集</string>
     <string name="bookshelf_info_btn_remove">削除</string>
 
-    <string name="bookshelf_management_desc_device">この端末上のフォルダを本棚として追加します。</string>
-    <string name="bookshelf_management_desc_smb">WindowsやNASなどで共有されているフォルダを本棚として追加できます。</string>
-    <string name="bookshelf_management_hint_host">サーバ名またはIPアドレス</string>
-    <string name="bookshelf_management_hint_path">パス</string>
-    <string name="bookshelf_management_hint_display_name">表示名</string>
-    <string name="bookshelf_management_label_guest">ゲスト</string>
-    <string name="bookshelf_management_label_username_password">ユーザ名／パスワード</string>
-    <string name="bookshelf_management_hint_username">ユーザ名</string>
-    <string name="bookshelf_management_hint_password">パスワード</string>
-    <string name="bookshelf_management_desc_finish_edit_bookshelf">本棚の編集を完了する</string>
-    <string name="bookshelf_management_desc_finish_add_bookshelf">本棚の追加を完了する</string>
-    <string name="bookshelf_management_hint_port">ポート番号</string>
-    <string name="bookshelf_management_hint_domain">ドメイン</string>
-    <string name="bookshelf_management_hint_select_folder">フォルダを選択</string>
+    <!--Bookshelf Manage-->
+    <string name="bookshelf_manage_title_list">本棚の選択</string>
+    <string name="bookshelf_manage_desc_device">この端末上のフォルダを本棚として追加します。</string>
+    <string name="bookshelf_manage_desc_smb">WindowsやNASなどで共有されているフォルダを本棚として追加できます。</string>
+    <string name="bookshelf_manage_hint_host">サーバ名またはIPアドレス</string>
+    <string name="bookshelf_manage_hint_path">パス</string>
+    <string name="bookshelf_manage_hint_display_name">表示名</string>
+    <string name="bookshelf_manage_label_guest">ゲスト</string>
+    <string name="bookshelf_manage_label_username_password">ユーザ名／パスワード</string>
+    <string name="bookshelf_manage_hint_username">ユーザ名</string>
+    <string name="bookshelf_manage_hint_password">パスワード</string>
+    <string name="bookshelf_manage_desc_finish_edit_bookshelf">本棚の編集を完了する</string>
+    <string name="bookshelf_manage_desc_finish_add_bookshelf">本棚の追加を完了する</string>
+    <string name="bookshelf_manage_hint_port">ポート番号</string>
+    <string name="bookshelf_manage_hint_domain">ドメイン</string>
+    <string name="bookshelf_manage_hint_select_folder">フォルダを選択</string>
+    <string name="bookshelf_manage_smb_save">保存</string>
+    <string name="bookshelf_remove_title">本棚を削除</string>
 </resources>

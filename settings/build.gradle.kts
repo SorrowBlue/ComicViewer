@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
-    id("com.mikepenz.aboutlibraries.plugin")
 }
 
 android {

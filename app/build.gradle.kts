@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
     alias(libs.plugins.dagger.hilt.android)
+    id("com.mikepenz.aboutlibraries.plugin")
 }
 
 android {
@@ -78,23 +79,22 @@ android {
 
 dependencies {
     implementation(projects.framework.ui)
-
     implementation(projects.data.di)
     implementation(projects.domain)
     implementation(projects.settings)
     implementation(projects.folder)
     implementation(projects.bookshelf)
-    implementation(projects.file)
     implementation(projects.favorite)
     implementation(projects.readlater)
     implementation(projects.library)
     implementation(projects.settings.security)
 
-    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.core.splashscreen)
-//    debugImplementation(libs.squareup.leakcanary.android)
+
+    debugImplementation(libs.squareup.leakcanary.android)
+
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
 

@@ -18,6 +18,7 @@ dependencies {
     api(projects.framework)
     api(projects.framework.resource)
 
+    api(libs.androidx.appcompat)
     api(libs.androidx.constraintlayout)
     api(libs.androidx.coordinatorlayout)
     api(libs.androidx.core.ktx)

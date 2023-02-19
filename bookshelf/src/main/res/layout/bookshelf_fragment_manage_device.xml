@@ -68,7 +68,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/bookshelf_management_hint_display_name"
+                        android:hint="@string/bookshelf_manage_hint_display_name"
                         android:inputType="textAutoCorrect"
                         android:text="@={viewModel.displayName}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -90,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
-                        android:hint="@string/bookshelf_management_hint_select_folder"
+                        android:hint="@string/bookshelf_manage_hint_select_folder"
                         android:inputType="textAutoCorrect"
                         android:text="@{viewModel.dir}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -102,7 +102,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/bookshelf_management_smb_save"
+                    android:text="@string/bookshelf_manage_smb_save"
                     app:icon="@drawable/ic_twotone_save_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

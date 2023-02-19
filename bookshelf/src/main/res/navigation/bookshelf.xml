@@ -7,10 +7,10 @@
     <framework-fragment
         android:id="@+id/bookshelf_list_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.list.BookshelfListFragment"
-        android:label="@string/server_title_server_list"
+        android:label="@string/bookshelf_list_title"
         app:bottom_nav_visible="true"
         app:fab_icon="@drawable/ic_twotone_add_24"
-        app:fab_label="@string/server_list_btn_new"
+        app:fab_label="@string/bookshelf_list_btn_new"
         app:fab_visible="true"
         tools:layout="@layout/bookshelf_fragment_list">
         <action
@@ -26,7 +26,7 @@
     <dialog
         android:id="@+id/bookshelf_info_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoFragment"
-        android:label="本棚情報"
+        android:label="@string/bookshelf_info_title"
         tools:layout="@layout/bookshelf_fragment_info">
         <argument
             android:name="bookshelf_id"
@@ -44,16 +44,16 @@
     <dialog
         android:id="@+id/bookshelf_remove_confirm_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.remove.BookshelfRemoveConfirmDialog"
-        android:label="サーバ削除">
+        android:label="@string/bookshelf_remove_title">
         <argument
             android:name="bookshelf_id"
             app:argType="integer" />
     </dialog>
     <framework-fragment
-        tools:layout="@layout/bookshelf_fragment_manage_list"
         android:id="@+id/bookshelf_manage_list_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.manage.list.BookshelfManageListFragment"
-        android:label="サーバ選択" >
+        android:label="@string/bookshelf_manage_title_list"
+        tools:layout="@layout/bookshelf_fragment_manage_list">
         <action
             android:id="@+id/action_bookshelf_manage_list_to_bookshelf_manage_smb"
             app:destination="@id/bookshelf_manage_smb_fragment" />
@@ -63,9 +63,9 @@
     </framework-fragment>
     <framework-fragment
         android:id="@+id/bookshelf_manage_smb_fragment"
-        tools:layout="@layout/bookshelf_fragment_manage_smb"
         android:name="com.sorrowblue.comicviewer.bookshelf.manage.smb.BookshelfManageSmbFragment"
-        android:label="SMBサーバの登録・編集">
+        android:label="@string/bookshelf_manage_title_smb"
+        tools:layout="@layout/bookshelf_fragment_manage_smb">
         <argument
             android:name="bookshelf_id"
             android:defaultValue="-1"
@@ -78,9 +78,9 @@
     </framework-fragment>
     <framework-fragment
         android:id="@+id/bookshelf_manage_device_fragment"
-        tools:layout="@layout/bookshelf_fragment_manage_device"
         android:name="com.sorrowblue.comicviewer.bookshelf.manage.device.BookshelfManageDeviceFragment"
-        android:label="ローカルストレージの登録・編集">
+        android:label="@string/bookshelf_manage_title_device"
+        tools:layout="@layout/bookshelf_fragment_manage_device">
         <argument
             android:name="bookshelf_id"
             android:defaultValue="-1"

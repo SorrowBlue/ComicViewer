@@ -27,5 +27,5 @@
         android:padding="12dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/bookshelf_management_item_selection" />
+        tools:listitem="@layout/bookshelf_fragment_manage_list" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

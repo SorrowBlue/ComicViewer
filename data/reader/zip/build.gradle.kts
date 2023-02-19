@@ -8,6 +8,7 @@ id("build-logic.android.library")
 }
 
 dependencies {
+    implementation(projects.data.common)
     implementation(projects.data.reader)
 
     implementation(libs.squareup.logcat)

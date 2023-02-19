@@ -33,7 +33,7 @@
                 android:id="@+id/preview"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:contentDescription="@string/server_desc_thumbnail_this_bookshelf"
+                android:contentDescription="@string/bookshelf_list_desc_thumbnail_this_bookshelf"
                 android:scaleType="fitCenter"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -47,9 +47,11 @@
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
                 app:icon="@{bookshelf instanceof SmbServer ? @drawable/ic_twotone_dns_24 : @drawable/ic_twotone_sd_storage_24}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:icon="@drawable/ic_twotone_dns_24" />
 
             <TextView
                 android:id="@+id/title"

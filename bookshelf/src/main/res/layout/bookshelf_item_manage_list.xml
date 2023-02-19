@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:transitionName="@{source.name()}"
-        tools:showIn="@layout/bookshelf_management_fragment_selection">
+        tools:showIn="@layout/bookshelf_fragment_manage_list">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                 android:id="@+id/protocol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{source == BookshelfSource.DEVICE ? @string/bookshelf_management_title_device : source == BookshelfSource.SMB ? @string/bookshelf_management_title_smb : null}"
+                android:text="@{source == BookshelfSource.DEVICE ? @string/bookshelf_manage_title_device : source == BookshelfSource.SMB ? @string/bookshelf_manage_title_smb : null}"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 app:layout_constraintBottom_toTopOf="@id/description"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +52,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                tools:text="@string/bookshelf_management_title_smb" />
+                tools:text="@string/bookshelf_manage_title_smb" />
 
             <TextView
                 android:id="@+id/description"
@@ -60,7 +60,7 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="@{source == BookshelfSource.DEVICE ? @string/bookshelf_management_desc_device : source == BookshelfSource.SMB ? @string/bookshelf_management_desc_smb : null}"
+                android:text="@{source == BookshelfSource.DEVICE ? @string/bookshelf_manage_desc_device : source == BookshelfSource.SMB ? @string/bookshelf_manage_desc_smb : null}"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/protocol_image"
@@ -68,7 +68,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/protocol"
                 app:layout_constraintVertical_bias="0.0"
-                tools:text="@string/bookshelf_management_desc_device" />
+                tools:text="@string/bookshelf_manage_desc_device" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -86,7 +86,6 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private suspend fun restoreNavigation(navController: NavController) {
         if (!viewModel.settings.first().restoreOnLaunch) {
             logcat("RESTORE_NAVIGATION", LogPriority.INFO) { "Do not restore navigation." }
-            commonViewModel.shouldKeepOnScreen = false
             commonViewModel.isRestored.emit(true)
             return
         }

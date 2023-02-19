@@ -43,8 +43,8 @@
                 android:id="@id/framework_ui_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/ic_twotone_add_24"
-                tools:text="@string/server_list_btn_new" />
+                tools:icon="@drawable/ic_twotone_add_24"
+                tools:text="@string/bookshelf_list_btn_new" />
         </FrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

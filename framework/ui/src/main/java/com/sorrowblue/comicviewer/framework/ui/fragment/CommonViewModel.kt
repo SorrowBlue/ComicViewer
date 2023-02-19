@@ -12,5 +12,5 @@ class CommonViewModel @Inject constructor() : ViewModel() {
     val snackbarMessage = MutableSharedFlow<String>(0, 1, BufferOverflow.SUSPEND)
     var shouldKeepOnScreen = true
 
-    val isRestored = MutableSharedFlow<Boolean>(0)
+    val isRestored = MutableSharedFlow<Boolean>(1)
 }

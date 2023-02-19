@@ -30,7 +30,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:title="@string/bookshelf_management_title_smb" />
+                tools:title="@string/bookshelf_manage_title_smb" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
@@ -65,7 +65,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/bookshelf_management_hint_host"
+                    android:hint="@string/bookshelf_manage_hint_host"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
                     app:layout_constraintTop_toTopOf="parent"
@@ -86,7 +86,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/bookshelf_management_hint_port"
+                    android:hint="@string/bookshelf_manage_hint_port"
                     app:helperText="1~65535"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
@@ -108,7 +108,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/bookshelf_management_hint_path"
+                    android:hint="@string/bookshelf_manage_hint_path"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
                     app:layout_constraintTop_toBottomOf="@+id/port"
@@ -129,7 +129,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/bookshelf_management_hint_display_name"
+                    android:hint="@string/bookshelf_manage_hint_display_name"
                     app:helperText="空白の場合ホスト名"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
@@ -161,7 +161,7 @@
                         style="@style/Widget.Material3.Button.OutlinedButton.Icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/bookshelf_management_label_guest"
+                        android:text="@string/bookshelf_manage_label_guest"
                         app:icon="@drawable/ic_twotone_person_24" />
 
                     <com.google.android.material.button.MaterialButton
@@ -169,7 +169,7 @@
                         style="@style/Widget.Material3.Button.OutlinedButton.Icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/bookshelf_management_label_username_password"
+                        android:text="@string/bookshelf_manage_label_username_password"
                         app:icon="@drawable/ic_twotone_password_24" />
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -178,7 +178,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/bookshelf_management_hint_domain"
+                    android:hint="@string/bookshelf_manage_hint_domain"
                     app:isVisible="@{!viewModel.isGuestFlow}"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
@@ -198,7 +198,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/bookshelf_management_hint_username"
+                    android:hint="@string/bookshelf_manage_hint_username"
                     app:isVisible="@{!viewModel.isGuestFlow}"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
@@ -219,7 +219,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/bookshelf_management_hint_password"
+                    android:hint="@string/bookshelf_manage_hint_password"
                     app:endIconMode="password_toggle"
                     app:isVisible="@{!viewModel.isGuestFlow}"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
@@ -243,7 +243,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/bookshelf_management_smb_save"
+                    android:text="@string/bookshelf_manage_smb_save"
                     app:icon="@drawable/ic_twotone_save_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

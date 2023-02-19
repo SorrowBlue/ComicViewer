@@ -6,7 +6,7 @@ android-target-sdk = "33"
 android-buildtools = "33.0.1"
 
 google-api-client-android = "2.2.0"
-google-api-services-drive = "v3-rev20230206-2.0.0"
+google-api-services-drive = "v3-rev20230212-2.0.0"
 google-http-client-gson = "1.42.3"
 kotlin = "1.8.10"
 google-ksp = "1.8.10-1.0.9"
