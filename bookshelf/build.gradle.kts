@@ -19,8 +19,6 @@ dependencies {
     implementation(projects.framework.ui)
     implementation(projects.domain)
     implementation(projects.folder)
-    implementation(projects.favorite)
-    implementation(projects.bookshelf.management)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)

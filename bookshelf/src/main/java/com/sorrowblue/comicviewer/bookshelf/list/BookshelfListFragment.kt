@@ -53,7 +53,7 @@ internal class BookshelfListFragment :
         }
 
         fab.setOnClickListener {
-            navigate(BookshelfListFragmentDirections.actionBookshelfListToBookshelfManagementSelection())
+            navigate(BookshelfListFragmentDirections.actionBookshelfListToBookshelfManageList())
         }
     }
 

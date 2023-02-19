@@ -18,5 +18,9 @@
             android:id="@+id/favorite_deeplink"
             android:autoVerify="true"
             app:uri="comicviewer://comicviewer.sorrowblue.com/favorite/add?serverId={serverId}&amp;filePath={filePath}" />
+        <action
+            android:id="@+id/action_favorite_add_to_favorite_create"
+            app:destination="@id/favorite_create_navigation" />
     </dialog>
+    <include app:graph="@navigation/favorite_create" />
 </navigation>

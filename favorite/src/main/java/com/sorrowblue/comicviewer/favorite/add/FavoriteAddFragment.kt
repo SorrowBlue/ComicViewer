@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -28,6 +29,9 @@ internal class FavoriteAddFragment : BottomSheetDialogFragment(R.layout.favorite
         binding.recyclerView.adapter = adapter
         viewModel.pagingDataFlow.attachAdapter(adapter)
         binding.close.setOnClickListener { dismiss() }
+        binding.fab.setOnClickListener {
+            findNavController().navigate(FavoriteAddFragmentDirections.actionFavoriteAddToFavoriteCreate())
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

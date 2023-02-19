@@ -78,14 +78,13 @@ android {
 
 dependencies {
     implementation(projects.framework.ui)
-    implementation(projects.framework.notification)
 
     implementation(projects.data.di)
     implementation(projects.domain)
     implementation(projects.settings)
     implementation(projects.folder)
     implementation(projects.bookshelf)
-    implementation(projects.file.info)
+    implementation(projects.file)
     implementation(projects.favorite)
     implementation(projects.readlater)
     implementation(projects.library)

@@ -17,11 +17,11 @@
             android:id="@+id/action_bookshelf_list_to_folder"
             app:destination="@id/folder_navigation" />
         <action
-            android:id="@+id/action_bookshelf_list_to_bookshelf_management_selection"
-            app:destination="@id/bookshelf_management_selection_navigation" />
-        <action
             android:id="@+id/action_bookshelf_list_to_bookshelf_info"
             app:destination="@id/bookshelf_info_fragment" />
+        <action
+            android:id="@+id/action_bookshelf_list_to_bookshelf_manage_list"
+            app:destination="@id/bookshelf_manage_list_fragment" />
     </framework-fragment>
     <dialog
         android:id="@+id/bookshelf_info_fragment"
@@ -35,11 +35,11 @@
             android:id="@+id/action_bookshelf_info_to_bookshelf_remove_confirm"
             app:destination="@id/bookshelf_remove_confirm_fragment" />
         <action
-            android:id="@+id/action_bookshelf_info_to_bookshelf_management_device"
-            app:destination="@id/bookshelf_management_device_navigation" />
+            android:id="@+id/action_bookshelf_info_to_bookshelf_manage_smb"
+            app:destination="@id/bookshelf_manage_smb_fragment" />
         <action
-            android:id="@+id/action_bookshelf_info_to_bookshelf_management_smb"
-            app:destination="@id/bookshelf_management_smb_navigation" />
+            android:id="@+id/action_bookshelf_info_to_bookshelf_manage_device"
+            app:destination="@id/bookshelf_manage_device_fragment" />
     </dialog>
     <dialog
         android:id="@+id/bookshelf_remove_confirm_fragment"
@@ -49,8 +49,47 @@
             android:name="bookshelf_id"
             app:argType="integer" />
     </dialog>
-    <include app:graph="@navigation/bookshelf_management_smb" />
-    <include app:graph="@navigation/bookshelf_management_device" />
-    <include app:graph="@navigation/bookshelf_management_selection" />
+    <framework-fragment
+        tools:layout="@layout/bookshelf_fragment_manage_list"
+        android:id="@+id/bookshelf_manage_list_fragment"
+        android:name="com.sorrowblue.comicviewer.bookshelf.manage.list.BookshelfManageListFragment"
+        android:label="サーバ選択" >
+        <action
+            android:id="@+id/action_bookshelf_manage_list_to_bookshelf_manage_smb"
+            app:destination="@id/bookshelf_manage_smb_fragment" />
+        <action
+            android:id="@+id/action_bookshelf_manage_list_to_bookshelf_manage_device"
+            app:destination="@id/bookshelf_manage_device_fragment" />
+    </framework-fragment>
+    <framework-fragment
+        android:id="@+id/bookshelf_manage_smb_fragment"
+        tools:layout="@layout/bookshelf_fragment_manage_smb"
+        android:name="com.sorrowblue.comicviewer.bookshelf.manage.smb.BookshelfManageSmbFragment"
+        android:label="SMBサーバの登録・編集">
+        <argument
+            android:name="bookshelf_id"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <argument
+            android:name="transition_name"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </framework-fragment>
+    <framework-fragment
+        android:id="@+id/bookshelf_manage_device_fragment"
+        tools:layout="@layout/bookshelf_fragment_manage_device"
+        android:name="com.sorrowblue.comicviewer.bookshelf.manage.device.BookshelfManageDeviceFragment"
+        android:label="ローカルストレージの登録・編集">
+        <argument
+            android:name="bookshelf_id"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <argument
+            android:name="transition_name"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </framework-fragment>
     <include app:graph="@navigation/folder" />
 </navigation>

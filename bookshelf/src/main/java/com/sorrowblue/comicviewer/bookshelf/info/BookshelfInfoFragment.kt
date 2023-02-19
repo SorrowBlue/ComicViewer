@@ -7,8 +7,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sorrowblue.comicviewer.bookshelf.R
 import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfFragmentInfoBinding
-import com.sorrowblue.comicviewer.bookshelf.management.device.BookshelfManagementDeviceFragmentArgs
-import com.sorrowblue.comicviewer.bookshelf.management.smb.BookshelfManagementSmbFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.jetpack.binding.viewBinding
@@ -33,13 +31,15 @@ internal class BookshelfInfoFragment : BottomSheetDialogFragment(R.layout.booksh
         binding.edit.setOnClickListener {
             when (val server = viewModel.bookshelf.value) {
                 is InternalStorage -> findNavController().navigate(
-                    BookshelfInfoFragmentDirections.actionBookshelfInfoToBookshelfManagementDevice().actionId,
-                    BookshelfManagementDeviceFragmentArgs(server.id.value).toBundle()
+                    BookshelfInfoFragmentDirections.actionBookshelfInfoToBookshelfManageDevice(
+                        server.id.value
+                    )
                 )
 
                 is SmbServer -> findNavController().navigate(
-                    BookshelfInfoFragmentDirections.actionBookshelfInfoToBookshelfManagementSmb().actionId,
-                    BookshelfManagementSmbFragmentArgs(server.id.value).toBundle()
+                    BookshelfInfoFragmentDirections.actionBookshelfInfoToBookshelfManageSmb(
+                        server.id.value
+                    )
                 )
 
                 null -> Unit

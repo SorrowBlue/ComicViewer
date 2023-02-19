@@ -7,15 +7,16 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
-import com.sorrowblue.comicviewer.file.info.databinding.FileInfoFragmentBinding
+import com.sorrowblue.comicviewer.file.R
+import com.sorrowblue.comicviewer.file.databinding.FileFragmentInfoBinding
 import com.sorrowblue.comicviewer.framework.ui.fragment.encodeBase64
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-internal class FileInfoFragment : BottomSheetDialogFragment(R.layout.file_info_fragment) {
+internal class FileInfoFragment : BottomSheetDialogFragment(R.layout.file_fragment_info) {
 
-    private val binding: FileInfoFragmentBinding by viewBinding()
+    private val binding: FileFragmentInfoBinding by viewBinding()
     private val viewModel: FileInfoViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -32,7 +32,7 @@
     <include app:graph="@navigation/favorite_list" />
     <include app:graph="@navigation/readlater" />
 
-    <include app:graph="@navigation/file_info" />
+    <include app:graph="@navigation/file" />
     <include app:graph="@navigation/favorite_add" />
     <include app:graph="@navigation/settings" />
     <include app:graph="@navigation/library" />
