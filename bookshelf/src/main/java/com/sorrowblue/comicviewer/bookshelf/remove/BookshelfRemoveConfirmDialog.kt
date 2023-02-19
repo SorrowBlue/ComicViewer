@@ -5,7 +5,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.sorrowblue.comicviewer.bookshelf.info.R
+import com.sorrowblue.comicviewer.bookshelf.R
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 

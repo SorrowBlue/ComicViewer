@@ -6,4 +6,13 @@
     <string name="server_desc_thumbnail_this_bookshelf">Thumbnail for this bookshelf</string>
     <string name="server_title_favorite">Favorite</string>
     <string name="server_list_btn_new">本棚を追加</string>
+
+    <!--Server Info-->
+    <string name="bookshelf_info_label_host">IP/Host</string>
+    <string name="bookshelf_info_label_path">Path</string>
+    <string name="bookshelf_info_label_internal_storage">Internal storage</string>
+    <string name="bookshelf_info_label_smb">LAN/SMB</string>
+    <string name="bookshelf_info_label_port">Port</string>
+    <string name="bookshelf_info_btn_edit">Edit</string>
+    <string name="bookshelf_info_btn_remove">Remove</string>
 </resources>

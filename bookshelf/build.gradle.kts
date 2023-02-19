@@ -20,7 +20,6 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.folder)
     implementation(projects.favorite)
-    implementation(projects.bookshelf.info)
     implementation(projects.bookshelf.management)
 
     implementation(libs.dagger.hilt.android.core)

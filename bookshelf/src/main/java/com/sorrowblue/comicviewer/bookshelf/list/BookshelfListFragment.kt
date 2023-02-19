@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.bookshelf
+package com.sorrowblue.comicviewer.bookshelf.list
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
-import com.sorrowblue.comicviewer.bookshelf.BookshelfListFragmentDirections
 import com.sorrowblue.comicviewer.bookshelf.R
 import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfFragmentListBinding
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder

@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bookshelf_navigation"
     app:startDestination="@id/bookshelf_list_fragment">
-
     <framework-fragment
         android:id="@+id/bookshelf_list_fragment"
-        android:name="com.sorrowblue.comicviewer.bookshelf.BookshelfListFragment"
+        android:name="com.sorrowblue.comicviewer.bookshelf.list.BookshelfListFragment"
         android:label="@string/server_title_server_list"
         app:bottom_nav_visible="true"
         app:fab_icon="@drawable/ic_twotone_add_24"
-        app:fab_visible="true"
         app:fab_label="@string/server_list_btn_new"
+        app:fab_visible="true"
         tools:layout="@layout/bookshelf_fragment_list">
         <action
             android:id="@+id/action_bookshelf_list_to_folder"
@@ -22,9 +21,36 @@
             app:destination="@id/bookshelf_management_selection_navigation" />
         <action
             android:id="@+id/action_bookshelf_list_to_bookshelf_info"
-            app:destination="@id/bookshelf_info_navigation" />
+            app:destination="@id/bookshelf_info_fragment" />
     </framework-fragment>
-    <include app:graph="@navigation/folder" />
+    <dialog
+        android:id="@+id/bookshelf_info_fragment"
+        android:name="com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoFragment"
+        android:label="本棚情報"
+        tools:layout="@layout/bookshelf_fragment_info">
+        <argument
+            android:name="bookshelf_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_bookshelf_info_to_bookshelf_remove_confirm"
+            app:destination="@id/bookshelf_remove_confirm_fragment" />
+        <action
+            android:id="@+id/action_bookshelf_info_to_bookshelf_management_device"
+            app:destination="@id/bookshelf_management_device_navigation" />
+        <action
+            android:id="@+id/action_bookshelf_info_to_bookshelf_management_smb"
+            app:destination="@id/bookshelf_management_smb_navigation" />
+    </dialog>
+    <dialog
+        android:id="@+id/bookshelf_remove_confirm_fragment"
+        android:name="com.sorrowblue.comicviewer.bookshelf.remove.BookshelfRemoveConfirmDialog"
+        android:label="サーバ削除">
+        <argument
+            android:name="bookshelf_id"
+            app:argType="integer" />
+    </dialog>
+    <include app:graph="@navigation/bookshelf_management_smb" />
+    <include app:graph="@navigation/bookshelf_management_device" />
     <include app:graph="@navigation/bookshelf_management_selection" />
-    <include app:graph="@navigation/bookshelf_info" />
+    <include app:graph="@navigation/folder" />
 </navigation>

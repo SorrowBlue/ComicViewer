@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.bookshelf
+package com.sorrowblue.comicviewer.bookshelf.list
 
 import android.view.ViewGroup
 import androidx.navigation.NavDirections
@@ -7,11 +7,8 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import coil.load
-import com.sorrowblue.comicviewer.bookshelf.BookshelfListFragmentDirections
 import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfItemListBinding
-import com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.fragment.encodeBase64
@@ -54,7 +51,7 @@ internal class BookshelfListAdapter :
             }
             binding.root.setOnLongClickListener {
                 it.findNavController().navigate(
-                    BookshelfListFragmentDirections.actionBookshelfListToBookshelfInfo(item.bookshelf)
+                    BookshelfListFragmentDirections.actionBookshelfListToBookshelfInfo(item.bookshelf.id.value)
                 )
                 true
             }
@@ -70,14 +67,6 @@ internal class BookshelfListAdapter :
                 folder.path.encodeBase64(),
                 transitionName
             ).toBundle()
-
-        }
-
-        private fun BookshelfListFragmentDirections.Companion.actionBookshelfListToBookshelfInfo(
-            bookshelf: Bookshelf
-        ) = object : NavDirections {
-            override val actionId = actionBookshelfListToBookshelfInfo().actionId
-            override val arguments = BookshelfInfoFragmentArgs(bookshelf.id.value).toBundle()
 
         }
     }

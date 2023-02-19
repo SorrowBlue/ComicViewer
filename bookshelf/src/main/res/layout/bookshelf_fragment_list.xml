@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.sorrowblue.comicviewer.bookshelf.BookshelfListViewModel" />
+            type="com.sorrowblue.comicviewer.bookshelf.list.BookshelfListViewModel" />
     </data>
 
     <com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout

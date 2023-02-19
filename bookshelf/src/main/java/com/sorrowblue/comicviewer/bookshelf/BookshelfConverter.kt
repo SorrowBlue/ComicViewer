@@ -12,4 +12,11 @@ object BookshelfConverter {
         is InternalStorage -> bookshelf.displayName.ifEmpty { folder.name }
         is SmbServer -> bookshelf.displayName.ifEmpty { bookshelf.host }
     }
+
+    @JvmStatic
+    fun Bookshelf?.source() = when (this) {
+        is InternalStorage -> R.string.bookshelf_info_label_internal_storage
+        is SmbServer -> R.string.bookshelf_info_label_smb
+        null -> android.R.string.unknownName
+    }
 }

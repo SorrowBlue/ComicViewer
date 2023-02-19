@@ -9,9 +9,7 @@
             name="viewModel"
             type="com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoViewModel" />
 
-        <import type="kotlin.collections.CollectionsKt" />
-
-        <import type="com.sorrowblue.comicviewer.bookshelf.info.Converter" />
+        <import type="com.sorrowblue.comicviewer.bookshelf.BookshelfConverter" />
 
         <import type="com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage" />
 
@@ -49,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="@{Converter.toTypeString(viewModel.bookshelf)}"
+            android:text="@{BookshelfConverter.source(viewModel.bookshelf)}"
             android:textAppearance="?attr/textAppearanceLabelLarge"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_drag_handle"

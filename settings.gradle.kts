@@ -73,7 +73,6 @@ include(":data:service")
 
 include(":book")
 include(":bookshelf")
-include(":bookshelf:info")
 include(":bookshelf:management")
 include(":favorite")
 include(":file")

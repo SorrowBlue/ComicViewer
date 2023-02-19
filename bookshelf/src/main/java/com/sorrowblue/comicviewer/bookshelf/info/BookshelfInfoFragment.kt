@@ -5,7 +5,8 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.sorrowblue.comicviewer.bookshelf.info.databinding.BookshelfInfoFragmentBinding
+import com.sorrowblue.comicviewer.bookshelf.R
+import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfFragmentInfoBinding
 import com.sorrowblue.comicviewer.bookshelf.management.device.BookshelfManagementDeviceFragmentArgs
 import com.sorrowblue.comicviewer.bookshelf.management.smb.BookshelfManagementSmbFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
@@ -14,9 +15,9 @@ import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-internal class BookshelfInfoFragment : BottomSheetDialogFragment(R.layout.bookshelf_info_fragment) {
+internal class BookshelfInfoFragment : BottomSheetDialogFragment(R.layout.bookshelf_fragment_info) {
 
-    private val binding: BookshelfInfoFragmentBinding by viewBinding()
+    private val binding: BookshelfFragmentInfoBinding by viewBinding()
     private val viewModel: BookshelfInfoViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

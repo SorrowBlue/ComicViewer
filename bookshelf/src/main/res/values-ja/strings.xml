@@ -5,4 +5,13 @@
     <string name="server_desc_add_bookshelf">本棚を追加する</string>
     <string name="server_desc_thumbnail_this_bookshelf">この本棚のサムネイル</string>
     <string name="server_title_favorite">お気に入り</string>
+
+    <!--Server Info-->
+    <string name="bookshelf_info_label_host">IP/ホスト名</string>
+    <string name="bookshelf_info_label_path">ファイルパス</string>
+    <string name="bookshelf_info_label_internal_storage">内部ストレージ</string>
+    <string name="bookshelf_info_label_smb">LAN/SMB</string>
+    <string name="bookshelf_info_label_port">ポート</string>
+    <string name="bookshelf_info_btn_edit">編集</string>
+    <string name="bookshelf_info_btn_remove">削除</string>
 </resources>
