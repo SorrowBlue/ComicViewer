@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dropbox_navigation"
+    app:startDestination="@id/dropbox_list_fragment">
+
+    <framework-fragment
+        android:id="@+id/dropbox_list_fragment"
+        android:name="com.sorrowblue.comicviewer.library.dropbox.list.DropBoxListFragment"
+        android:label="DropBox"
+        tools:layout="@layout/dropbox_fragment_list">
+        <argument
+            android:name="parent"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="transition_name"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_dropbox_list_self"
+            app:destination="@id/dropbox_list_fragment" />
+        <action
+            android:id="@+id/action_dropbox_list_to_dropbox_signin"
+            app:destination="@id/dropbox_signin_fragment"
+            app:popUpTo="@id/dropbox_list_fragment"
+            app:popUpToInclusive="true" />
+    </framework-fragment>
+    <framework-fragment
+        android:id="@+id/dropbox_signin_fragment"
+        android:name="com.sorrowblue.comicviewer.library.dropbox.signin.DropBoxSignInFragment"
+        android:label="DropBox"
+        tools:layout="@layout/dropbox_fragment_signin">
+        <action
+            android:id="@+id/action_dropbox_signinto_dropbox_list"
+            app:destination="@id/dropbox_list_fragment"
+            app:popUpTo="@id/dropbox_signin_fragment"
+            app:popUpToInclusive="true" />
+    </framework-fragment>
+</navigation>

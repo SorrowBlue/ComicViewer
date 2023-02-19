@@ -17,6 +17,10 @@
         app:key="@string/settings_preference_key_security"
         app:title="セキュリティ" />
 
+    <Preference
+        app:key="@string/settings_preference_key_license"
+        app:title="ライセンス" />
+
     <SwitchPreferenceCompat
         app:defaultValue="false"
         app:key="@string/settings_preference_key_restore_on_launch"

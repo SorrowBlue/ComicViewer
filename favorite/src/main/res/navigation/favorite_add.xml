@@ -17,6 +17,6 @@
         <deepLink
             android:id="@+id/favorite_deeplink"
             android:autoVerify="true"
-            app:uri="comicviewer.sorrowblue.com/favorite/add?serverId={serverId}&amp;filePath={filePath}" />
+            app:uri="comicviewer://comicviewer.sorrowblue.com/favorite/add?serverId={serverId}&amp;filePath={filePath}" />
     </dialog>
 </navigation>

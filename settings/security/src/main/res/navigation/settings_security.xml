@@ -25,6 +25,6 @@
         tools:layout="@layout/settings_security_view_password">
         <argument
             android:name="state"
-            app:argType="com.sorrowblue.comicviewer.settings.security.password.PasswordManageState" />
+            app:argType="string" />
     </dialog>
 </navigation>

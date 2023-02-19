@@ -7,10 +7,6 @@ plugins {
 
 }
 
-kotlin {
-
-}
-
 dependencies {
     implementation(projects.framework)
     implementation(projects.domain.interactor)

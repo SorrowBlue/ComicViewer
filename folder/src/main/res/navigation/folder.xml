@@ -28,7 +28,7 @@
         <deepLink
             android:id="@+id/folder_fragment_deeplink"
             android:autoVerify="true"
-            app:uri="comicviewer.sorrowblue.com/folder?serverId={server_id}&amp;path={path}&amp;transitionName={transition_name}&amp;position={position}" />
+            app:uri="comicviewer://comicviewer.sorrowblue.com/folder?serverId={server_id}&amp;path={path}&amp;transitionName={transition_name}&amp;position={position}" />
         <action
             android:id="@+id/action_folder_self"
             app:destination="@id/folder_fragment" />
@@ -53,7 +53,7 @@
         <deepLink
             android:id="@+id/folder_scan_info_dialog_deeplink"
             android:autoVerify="true"
-            app:uri="comicviewer.sorrowblue.com/scan?uuid={uuid}" />
+            app:uri="comicviewer://comicviewer.sorrowblue.com/scan?uuid={uuid}" />
     </dialog>
     <include app:graph="@navigation/book" />
     <include app:graph="@navigation/folder_display" />

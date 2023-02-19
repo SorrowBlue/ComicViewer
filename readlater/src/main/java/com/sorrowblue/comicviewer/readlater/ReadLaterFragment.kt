@@ -55,7 +55,7 @@ internal class ReadLaterFragment : PagingFragment<File>(R.layout.readlater_fragm
                     )
                 }
             },
-            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
+            { navigate("comicviewer://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

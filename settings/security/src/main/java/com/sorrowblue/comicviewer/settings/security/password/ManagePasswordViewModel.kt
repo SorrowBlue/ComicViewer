@@ -32,7 +32,7 @@ internal class ManagePasswordViewModel @Inject constructor(
     private val args: ManagePasswordDialogArgs by navArgs()
 
     val settings = manageSecuritySettingsUseCase.settings
-    val state: PasswordManageState = args.state
+    val state: PasswordManageState = PasswordManageState.valueOf(args.state)
 
     val password = MutableStateFlow("")
 }

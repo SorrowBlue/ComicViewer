@@ -7,6 +7,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import coil.load
+import com.sorrowblue.comicviewer.bookshelf.BookshelfListFragmentDirections
 import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfItemListBinding
 import com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder

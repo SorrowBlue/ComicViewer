@@ -5,6 +5,7 @@ import android.view.View
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.mikepenz.aboutlibraries.LibsBuilder
 import com.sorrowblue.comicviewer.framework.settings.FrameworkPreferenceFragment
 import com.sorrowblue.comicviewer.framework.settings.preferenceBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +31,10 @@ internal class SettingsFragment : FrameworkPreferenceFragment(R.xml.settings_pre
 
         binding.folder.setOnPreferenceClickListener {
             findNavController().navigate(SettingsFragmentDirections.actionSettingsToSettingsFolder())
+            true
+        }
+        binding.license.setOnPreferenceClickListener {
+            LibsBuilder().start(requireActivity())
             true
         }
 

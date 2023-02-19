@@ -7,10 +7,7 @@
     <framework-fragment
         android:id="@+id/bookshelf_management_smb_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.management.smb.BookshelfManagementSmbFragment"
-        android:label="SMBサーバの登録・編集"
-        app:fab_icon="@drawable/ic_twotone_save_24"
-        app:fab_label="@string/bookshelf_management_smb_save"
-        app:fab_visible="true">
+        android:label="SMBサーバの登録・編集">
         <argument
             android:name="bookshelf_id"
             android:defaultValue="-1"

@@ -18,7 +18,7 @@
         <deepLink
             android:id="@+id/deepLink"
             android:autoVerify="true"
-            app:uri="comicviewer.sorrowblue.com/work?uuid={uuid}" />
+            app:uri="comicviewer://comicviewer.sorrowblue.com/work?uuid={uuid}" />
     </framework-fragment>
     <framework-fragment
         android:id="@+id/auth_fragment"
@@ -35,9 +35,6 @@
     <include app:graph="@navigation/file_info" />
     <include app:graph="@navigation/favorite_add" />
     <include app:graph="@navigation/settings" />
-    <framework-fragment
-        android:id="@+id/google_drive_fragment"
-        android:name="com.sorrowblue.comicviewer.app.GoogleDriveFragment"
-        android:label="GoogleDriveFragment" />
+    <include app:graph="@navigation/library" />
 </navigation>
 

@@ -8,8 +8,8 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import com.sorrowblue.comicviewer.framework.settings.FrameworkPreferenceFragment
 import com.sorrowblue.comicviewer.framework.settings.preferenceBinding
-import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
+import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.settings.security.password.PasswordManageState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -43,16 +43,16 @@ internal class SettingsSecurityFragment :
         binding.auth.setOnPreferenceChangeListener<Boolean> { _, newValue ->
             if (newValue) {
                 findNavController().navigate(SettingsSecurityFragmentDirections.actionSettingsSecurityToSettingsSecurityManagePassword(
-                    PasswordManageState.NEW))
+                    PasswordManageState.NEW.name))
             } else {
                 findNavController().navigate(SettingsSecurityFragmentDirections.actionSettingsSecurityToSettingsSecurityManagePassword(
-                    PasswordManageState.DELETE))
+                    PasswordManageState.DELETE.name))
             }
             false
         }
         binding.password.setOnPreferenceClickListener {
             findNavController().navigate(SettingsSecurityFragmentDirections.actionSettingsSecurityToSettingsSecurityManagePassword(
-                PasswordManageState.CHANGE))
+                PasswordManageState.CHANGE.name))
             true
         }
         viewModel.securitySettingsFlow.map { it.useBiometrics }.distinctUntilChanged()

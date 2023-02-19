@@ -14,12 +14,12 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
 import com.sorrowblue.comicviewer.data.common.util.SortUtil
+import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.createNotification
 import dagger.assisted.Assisted
@@ -85,7 +85,7 @@ internal class FileScanWorker @AssistedInject constructor(
             ) {
                 val notificationIntent = Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("https://comicviewer.sorrowblue.com/work?uuid=${id}")
+                    Uri.parse("comicviewer://comicviewer.sorrowblue.com/work?uuid=${id}")
                 )
                 val pendingIntent =
                     PendingIntent.getActivity(

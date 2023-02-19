@@ -27,10 +27,10 @@ internal class FileInfoFragment : BottomSheetDialogFragment(R.layout.file_info_f
             }
         }
         binding.addFavorite.setOnClickListener {
-            findNavController().navigate("http://comicviewer.sorrowblue.com/favorite/add?serverId=${viewModel.fileFlow.value!!.bookshelfId.value}&filePath=${viewModel.fileFlow.value!!.path.encodeBase64()}".toUri())
+            findNavController().navigate("comicviewer://comicviewer.sorrowblue.com/favorite/add?serverId=${viewModel.fileFlow.value!!.bookshelfId.value}&filePath=${viewModel.fileFlow.value!!.path.encodeBase64()}".toUri())
         }
         binding.openFolder.setOnClickListener {
-            requireParentFragment().findNavController().navigate("http://comicviewer.sorrowblue.com/folder?serverId=${viewModel.fileFlow.value!!.bookshelfId.value}&path=${viewModel.fileFlow.value!!.parent.encodeBase64()}".toUri())
+            requireParentFragment().findNavController().navigate("comicviewer://comicviewer.sorrowblue.com/folder?serverId=${viewModel.fileFlow.value!!.bookshelfId.value}&path=${viewModel.fileFlow.value!!.parent.encodeBase64()}".toUri())
         }
     }
 }

@@ -8,8 +8,11 @@ plugins {
 
 android {
     resourcePrefix("settings_security")
-    dataBinding.enable = true
-    viewBinding.enable = true
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {

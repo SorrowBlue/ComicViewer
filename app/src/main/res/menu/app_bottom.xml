@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_twotone_watch_later_24"
         android:title="後で見る" />
     <item
-        android:id="@+id/google_drive_fragment"
-        android:icon="@drawable/ic_twotone_more_vert_24"
-        android:title="GoogleDrive" />
+        android:id="@+id/library_navigation"
+        android:icon="@drawable/ic_twotone_library_books_24"
+        android:title="ライブラリ" />
 </menu>

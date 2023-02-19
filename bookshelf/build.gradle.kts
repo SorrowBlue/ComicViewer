@@ -8,19 +8,20 @@ plugins {
 
 android {
     resourcePrefix("bookshelf")
-    dataBinding.enable = true
-    viewBinding.enable = true
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.domain)
     implementation(projects.folder)
     implementation(projects.favorite)
     implementation(projects.bookshelf.info)
     implementation(projects.bookshelf.management)
-
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)

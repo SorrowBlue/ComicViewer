@@ -84,7 +84,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
                     )
                 }
             },
-            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
+            { navigate("comicviewer://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
 
     override fun onCreateAdapter(adapter: PagingDataAdapter<File, *>) {
@@ -213,7 +213,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
                     )
                 }
             },
-            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
+            { navigate("comicviewer://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
         viewModel.pagingQueryDataFlow.attachAdapter(adapter)
         binding.searchRecyclerView.adapter = adapter

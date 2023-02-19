@@ -69,7 +69,6 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination is FrameworkFragmentNavigator.Destination) {
                 binding.bottomNavigation.isShown(destination.isVisibleBottomNavigation)
-                binding.frameworkUiFab.isEnabled = true
                 binding.frameworkUiFab.isShownWithImageResource(
                     destination.isVisibleFab,
                     destination.fabIcon,

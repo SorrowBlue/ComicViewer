@@ -11,6 +11,7 @@ sealed interface File {
     val size: Long
     val lastModifier: Long
 
+    val params: Map<String, String?>
 
     fun base64Path(): String =
         Base64.encodeToString(path.encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)

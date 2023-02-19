@@ -7,13 +7,15 @@ plugins {
 }
 
 android {
-    resourcePrefix("favorite_")
-    dataBinding.enable = true
-    viewBinding.enable = true
+    resourcePrefix("favorite")
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.domain)
     implementation(projects.book)

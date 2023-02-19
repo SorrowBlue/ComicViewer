@@ -76,15 +76,15 @@ internal class BookshelfManagementSmbFragment :
         binding.viewModel = viewModel
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isConnecting.collectLatest {
-                fab.isVisible = !it
+                binding.save.isVisible = !it
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isError.collectLatest {
-                fab.isEnabled = !it
+                binding.save.isEnabled = !it
             }
         }
-        fab.setOnClickListener {
+        binding.save.setOnClickListener {
             binding.host.editText?.setText(viewModel.hostFlow.value)
             if (viewModel.isGuestFlow.value) {
                 binding.host.editText?.setText(viewModel.hostFlow.value)

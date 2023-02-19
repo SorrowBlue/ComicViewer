@@ -6,6 +6,7 @@
     <data>
 
         <import type="com.sorrowblue.comicviewer.bookshelf.management.smb.AuthConverter" />
+
         <import type="com.sorrowblue.comicviewer.bookshelf.management.smb.PortConverter" />
 
         <variable
@@ -36,7 +37,6 @@
             android:id="@+id/nested_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="88dp"
             android:clipToPadding="false"
             android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -64,6 +64,7 @@
                     android:id="@+id/host"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/bookshelf_management_hint_host"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
@@ -84,7 +85,7 @@
                     android:id="@+id/port"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/bookshelf_management_hint_port"
                     app:helperText="1~65535"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
@@ -106,7 +107,7 @@
                     android:id="@+id/path"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/bookshelf_management_hint_path"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                     app:layout_constraintStart_toStartOf="@+id/guideline_begin"
@@ -127,7 +128,7 @@
                     android:id="@+id/display_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/bookshelf_management_hint_display_name"
                     app:helperText="空白の場合ホスト名"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
@@ -176,7 +177,7 @@
                     android:id="@+id/domain"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/bookshelf_management_hint_domain"
                     app:isVisible="@{!viewModel.isGuestFlow}"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
@@ -196,7 +197,7 @@
                     android:id="@+id/username"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/bookshelf_management_hint_username"
                     app:isVisible="@{!viewModel.isGuestFlow}"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_end"
@@ -217,8 +218,7 @@
                     android:id="@+id/password"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/bookshelf_management_hint_password"
                     app:endIconMode="password_toggle"
                     app:isVisible="@{!viewModel.isGuestFlow}"
@@ -235,6 +235,20 @@
                         android:inputType="textPassword"
                         android:text="@={viewModel.passwordFlow}" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/bookshelf_management_smb_save"
+                    app:icon="@drawable/ic_twotone_save_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/password"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <View
                     android:id="@+id/blocker"

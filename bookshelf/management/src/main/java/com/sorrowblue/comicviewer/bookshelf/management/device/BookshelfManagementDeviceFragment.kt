@@ -76,14 +76,14 @@ internal class BookshelfManagementDeviceFragment :
         binding.dir.setEndIconOnClickListener {
             openDirectory()
         }
-        fab.setOnClickListener {
+        binding.save.setOnClickListener {
             viewModel.connect {
                 findNavController().popBackStack(R.id.bookshelf_management_selection_fragment, true)
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isError.collectLatest {
-                fab.isEnabled = !it
+                binding.save.isEnabled = !it
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {

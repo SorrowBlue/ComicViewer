@@ -13,4 +13,5 @@ data class BookFile(
     override val lastPageRead: Int,
     override val totalPageCount: Int,
     override val lastReadTime: Long,
+    override val params: Map<String, String?> = emptyMap()
 ) : Book

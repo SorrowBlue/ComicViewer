@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/onedrive_navigation"
+    app:startDestination="@id/one_drive_list_fragment">
+
+    <framework-fragment
+        android:id="@+id/one_drive_list_fragment"
+        android:name="com.sorrowblue.comicviewer.library.onedrive.list.OneDriveListFragment"
+        android:label="OneDrive"
+        tools:layout="@layout/onedrive_fragment_list">
+        <argument
+            android:name="drive_id"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="item_id"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="transition_name"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_one_drive_list_self"
+            app:destination="@id/one_drive_list_fragment" />
+        <action
+            android:id="@+id/action_one_drive_list_to_one_drive_signin"
+            app:destination="@id/one_drive_signin_fragment"
+            app:popUpTo="@id/one_drive_list_fragment"
+            app:popUpToInclusive="true" />
+    </framework-fragment>
+    <framework-fragment
+        android:id="@+id/one_drive_signin_fragment"
+        android:name="com.sorrowblue.comicviewer.library.onedrive.signin.OneDriveSignInFragment"
+        android:label="OneDrive"
+        tools:layout="@layout/onedrive_fragment_signin" >
+        <action
+            android:id="@+id/onedriveAction_one_drive_signin_fragment_to_one_drive_list_fragment"
+            app:destination="@id/one_drive_list_fragment"
+            app:popUpTo="@id/one_drive_signin_fragment"
+            app:popUpToInclusive="true" />
+    </framework-fragment>
+</navigation>

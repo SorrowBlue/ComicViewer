@@ -8,12 +8,14 @@ plugins {
 
 android {
     resourcePrefix("folder_display")
-    dataBinding.enable = true
-    viewBinding.enable = true
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.domain)
     implementation(projects.settings)

@@ -4,7 +4,11 @@ plugins {
 
 android {
     resourcePrefix("framework_settings")
-    viewBinding.enable = true
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {

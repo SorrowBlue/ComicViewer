@@ -7,17 +7,17 @@ plugins {
 }
 
 android {
-    resourcePrefix("settings_viewer_")
-    dataBinding.enable = true
-    viewBinding.enable = true
+    resourcePrefix("settings_viewer")
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.framework.settings)
     implementation(projects.domain)
-
-    implementation(libs.androidx.preference.ktx)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)

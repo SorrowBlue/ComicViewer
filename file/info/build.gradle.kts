@@ -8,11 +8,14 @@ plugins {
 
 android {
     resourcePrefix("file_info")
-    dataBinding.enable = true
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.domain)
 

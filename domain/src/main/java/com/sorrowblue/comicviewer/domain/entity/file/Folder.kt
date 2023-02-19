@@ -8,5 +8,6 @@ data class Folder(
     override val parent: String,
     override val path: String,
     override val size: Long,
-    override val lastModifier: Long
+    override val lastModifier: Long,
+    override val params: Map<String, String?> = emptyMap()
 ) : File

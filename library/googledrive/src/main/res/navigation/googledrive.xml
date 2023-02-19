@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/googledrive_navigation"
+    app:startDestination="@id/googledrive_list_fragment">
+    <framework-fragment
+        android:id="@+id/googledrive_list_fragment"
+        android:name="com.sorrowblue.comicviewer.library.googledrive.list.GoogleDriveListFragment"
+        android:label="Google ドライブ"
+        tools:layout="@layout/googledrive_item_list">
+        <argument
+            android:name="parent"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="transition_name"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_googledrive_list_self"
+            app:destination="@id/googledrive_list_fragment" />
+        <action
+            android:id="@+id/action_googledrive_list_to_googledrive_signin"
+            app:destination="@id/googledrive_signin_fragment"
+            app:popUpTo="@id/googledrive_list_fragment"
+            app:popUpToInclusive="true" />
+    </framework-fragment>
+    <framework-fragment
+        android:id="@+id/googledrive_signin_fragment"
+        android:name="com.sorrowblue.comicviewer.library.googledrive.signin.GoogleDriveSignInFragment"
+        android:label="Google ドライブ"
+        tools:layout="@layout/googledrive_fragment_signin">
+        <action
+            android:id="@+id/action_googledrive_signin_to_googledrive_list"
+            app:destination="@id/googledrive_list_fragment"
+            app:popUpTo="@id/googledrive_signin_fragment"
+            app:popUpToInclusive="true" />
+    </framework-fragment>
+</navigation>

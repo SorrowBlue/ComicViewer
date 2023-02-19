@@ -7,16 +7,18 @@ plugins {
 }
 
 android {
-    resourcePrefix("book_")
-    dataBinding.enable = true
-    kotlinOptions {}
+    resourcePrefix("book")
 
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.domain)
+
     implementation(libs.androidx.palette.ktx)
 
     implementation(libs.dagger.hilt.android.core)

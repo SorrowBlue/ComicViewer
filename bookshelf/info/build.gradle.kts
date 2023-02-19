@@ -8,12 +8,14 @@ plugins {
 
 android {
     resourcePrefix("bookshelf_info")
-    dataBinding.enable = true
-    viewBinding.enable = true
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.domain)
 

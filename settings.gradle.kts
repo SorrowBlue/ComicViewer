@@ -12,6 +12,9 @@ pluginManagement {
             }
         }
     }
+    plugins {
+        id("com.mikepenz.aboutlibraries.plugin") version "10.6.0"
+    }
 }
 
 @Suppress("UnstableApiUsage")
@@ -24,6 +27,19 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.ghostscript.com/") }
         // com.github.omicronapps:7-Zip-JBinding-4Android
         maven { url = uri("https://jitpack.io/") }
+
+        maven {
+            url = uri("https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1")
+        }
+
+//        maven {
+//            name = "vsts-maven-adal-android"
+//            url = uri("https://identitydivision.pkgs.visualstudio.com/_packaging/AndroidADAL/maven/v1")
+//            credentials {
+//                username = "sorrowblue.sb@outlook.jp"
+//                password = "outyuukiasuna2s2"
+//            }
+//        }
     }
 }
 
@@ -31,8 +47,7 @@ rootProject.name = "ComicViewer"
 
 include(":app")
 
-include(":favorite")
-
+// framework
 include(":framework")
 include(":framework:notification")
 include(":framework:resource")
@@ -56,15 +71,21 @@ include(":data:remote:device")
 include(":data:remote:smb")
 include(":data:service")
 
-include(":file")
-include(":file:info")
-include(":readlater")
+include(":book")
 include(":bookshelf")
 include(":bookshelf:info")
 include(":bookshelf:management")
+include(":favorite")
+include(":file")
+include(":file:info")
 include(":folder")
 include(":folder:display")
-include(":book")
+include(":library")
+include(":library:box")
+include(":library:dropbox")
+include(":library:googledrive")
+include(":library:onedrive")
+include(":readlater")
 
 include(":settings")
 include(":settings:display")

@@ -4,31 +4,33 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    id("com.mikepenz.aboutlibraries.plugin")
 }
 
 android {
-    resourcePrefix("settings_")
-    dataBinding.enable = true
-    viewBinding.enable = true
+    resourcePrefix("settings")
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.framework.settings)
     implementation(projects.domain)
     implementation(projects.settings.display)
     implementation(projects.settings.viewer)
     implementation(projects.settings.folder)
     implementation(projects.settings.security)
-    implementation(libs.androidx.appcompat)
 
-    implementation(libs.androidx.preference.ktx)
-
-    implementation(libs.dagger.hilt.android.core)
-    kapt(libs.dagger.hilt.android.compiler)
+    implementation ("com.mikepenz:aboutlibraries:10.6.0")
 
     implementation(libs.androidx.hilt.navigation.fragment)
     kapt(libs.androidx.hilt.compiler)
+
+    implementation(libs.dagger.hilt.android.core)
+    kapt(libs.dagger.hilt.android.compiler)
 }
 
 kapt {

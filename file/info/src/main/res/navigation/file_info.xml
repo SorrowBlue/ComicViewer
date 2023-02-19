@@ -16,6 +16,6 @@
         <deepLink
             android:id="@+id/file_info_deeplink"
             android:autoVerify="true"
-            app:uri="comicviewer.sorrowblue.com/file_info?server_id={server_id_value}&amp;path={path}" />
+            app:uri="comicviewer://comicviewer.sorrowblue.com/file_info?server_id={server_id_value}&amp;path={path}" />
     </dialog>
 </navigation>

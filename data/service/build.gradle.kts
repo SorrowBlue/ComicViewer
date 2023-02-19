@@ -7,12 +7,11 @@ plugins {
 
 dependencies {
     implementation(projects.framework)
-    api(projects.data)
+    implementation(projects.data)
     implementation(projects.data.common)
     implementation(projects.framework.notification)
 
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.work.multiprocess)
     implementation(libs.squareup.logcat)
 
     implementation(libs.androidx.hilt.work)

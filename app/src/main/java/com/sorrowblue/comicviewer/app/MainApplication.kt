@@ -17,7 +17,9 @@ class MainApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        AndroidLogcatLogger.installOnDebuggableApp(this, LogPriority.VERBOSE)
+        if (BuildConfig.DEBUG) {
+            AndroidLogcatLogger.installOnDebuggableApp(this, LogPriority.VERBOSE)
+        }
     }
 
     override fun getWorkManagerConfiguration() =

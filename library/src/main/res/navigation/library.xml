@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/library_navigation"
+    app:startDestination="@id/library_list_fragment">
+
+    <framework-fragment
+        android:id="@+id/library_list_fragment"
+        android:name="com.sorrowblue.comicviewer.library.LibraryListFragment"
+        android:label="ライブラリ"
+        app:bottom_nav_visible="true">
+        <action
+            android:id="@+id/action_library_list_to_dropbox_navigation"
+            app:destination="@id/dropbox_navigation" />
+        <action
+            android:id="@+id/action_library_list_to_googledrive_navigation"
+            app:destination="@id/googledrive_navigation" />
+        <action
+            android:id="@+id/action_library_list_to_box_navigation"
+            app:destination="@id/box_navigation" />
+        <action
+            android:id="@+id/action_library_list_to_onedrive_navigation"
+            app:destination="@id/onedrive_navigation" />
+    </framework-fragment>
+    <include app:graph="@navigation/dropbox" />
+    <include app:graph="@navigation/googledrive" />
+    <include app:graph="@navigation/box" />
+    <include app:graph="@navigation/onedrive" />
+</navigation>

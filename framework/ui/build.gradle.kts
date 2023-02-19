@@ -7,10 +7,15 @@ plugins {
 
 android {
     resourcePrefix("framework_ui")
-    dataBinding.enable = true
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
+    api(projects.framework)
     api(projects.framework.resource)
 
     api(libs.androidx.constraintlayout)

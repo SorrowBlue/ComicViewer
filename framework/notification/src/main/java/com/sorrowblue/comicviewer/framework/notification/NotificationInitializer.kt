@@ -22,7 +22,8 @@ internal class NotificationInitializer : Initializer<Unit> {
 }
 
 enum class ChannelID(val id: String) {
-    SCAN("scan")
+    SCAN("scan"),
+    DOWNLOAD("download")
 }
 
 fun createNotification(context: Context, channelID: ChannelID, smallIcon: Int, builder: NotificationCompat.Builder.() -> Unit): Notification {

@@ -1,0 +1,14 @@
+{
+  "$//": "https://learn.microsoft.com/ja-jp/azure/active-directory/develop/msal-configuration",
+  "client_id": "c633e62f-b392-45e0-9d49-461e05cf06bd",
+  "authorization_user_agent": "DEFAULT",
+  "redirect_uri": "msauth://com.sorrowblue.comicviewer.debug/Y%2FB5atPXqn5k7zntH24ww0w0u0E%3D",
+  "account_mode": "SINGLE",
+  "broker_redirect_uri_registered": true,
+  "authorities": [
+    {
+      "type": "AAD",
+      "authority_url": "https://login.microsoftonline.com/consumers"
+    }
+  ]
+}

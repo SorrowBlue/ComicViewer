@@ -1,6 +1,9 @@
-import com.sorrowblue.buildlogic.kotlinOptions
+@file:Suppress("UnstableApiUsage")
 
-@Suppress("DSL_SCOPE_VIOLATION")
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.konan.properties.propertyString
+
+@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
     id("build-logic.android.application")
     alias(libs.plugins.kotlin.kapt)
@@ -11,8 +14,25 @@ plugins {
 android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            storeFile =
+                file(gradleLocalProperties(rootDir).propertyString("debug.storeFile").orEmpty())
+            storePassword = gradleLocalProperties(rootDir).propertyString("debug.storePassword")
+            keyAlias = gradleLocalProperties(rootDir).propertyString("debug.keyAlias")
+            keyPassword = gradleLocalProperties(rootDir).propertyString("debug.keyPassword")
+        }
+        create("release") {
+            storeFile =
+                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
+            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
+            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
+            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
+        }
     }
 
     buildTypes {
@@ -22,6 +42,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -32,19 +53,30 @@ android {
             )
         }
     }
-    kotlinOptions {
-        println("jvmTarget = ${jvmTarget}")
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
     }
-    dataBinding.enable = true
-    viewBinding.enable = true
 
     packagingOptions {
         resources.excludes.add("META-INF/DEPENDENCIES")
+        resources.excludes.add("META-INF/LICENSE")
+        resources.excludes.add("META-INF/LICENSE.txt")
+        resources.excludes.add("META-INF/license.txt")
+        resources.excludes.add("META-INF/NOTICE")
+        resources.excludes.add("META-INF/NOTICE.txt")
+        resources.excludes.add("META-INF/notice.txt")
+        resources.excludes.add("META-INF/ASL2.0")
+    }
+
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.framework.ui)
     implementation(projects.framework.notification)
 
@@ -56,6 +88,7 @@ dependencies {
     implementation(projects.file.info)
     implementation(projects.favorite)
     implementation(projects.readlater)
+    implementation(projects.library)
     implementation(projects.settings.security)
 
     implementation(libs.androidx.appcompat)
@@ -65,17 +98,6 @@ dependencies {
 //    debugImplementation(libs.squareup.leakcanary.android)
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
-
-    implementation("com.google.api-client:google-api-client-android:2.2.0")
-    implementation("com.google.http-client:google-http-client-android:1.42.3") {
-        exclude("xpp3")
-        exclude("org.apache.httpcomponents")
-        exclude("junit")
-        exclude("com.google.android")
-    }
-//    implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
-    implementation("com.google.android.gms:play-services-auth:20.4.1")
-    implementation("com.google.apis:google-api-services-drive:v3-rev20230206-2.0.0")
 
     androidTestImplementation(libs.androidx.test.ext.junit.ktx)
     androidTestImplementation(libs.androidx.test.espresso.core)

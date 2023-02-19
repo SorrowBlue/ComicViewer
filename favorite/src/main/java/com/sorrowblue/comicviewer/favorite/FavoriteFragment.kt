@@ -59,7 +59,7 @@ internal class FavoriteFragment : PagingFragment<File>(R.layout.favorite_fragmen
                     )
                 }
             },
-            { navigate("http://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
+            { navigate("comicviewer://comicviewer.sorrowblue.com/file_info?server_id=${it.bookshelfId.value}&path=${it.path.encodeBase64()}".toUri()) }
         )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
