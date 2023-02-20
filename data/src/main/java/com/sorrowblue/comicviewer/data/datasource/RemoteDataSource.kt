@@ -27,5 +27,5 @@ interface RemoteDataSource {
     @Throws(RemoteException::class)
     suspend fun fileModel(path: String): FileModel
 
-    suspend fun fileReader(fileModel: FileModel): FileReader
+    suspend fun fileReader(fileModel: FileModel): FileReader?
 }

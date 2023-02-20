@@ -59,6 +59,7 @@ internal class BookPageFetcher(
             try {
                 fileReader =
                     remoteDataSourceFactory.create(bookshelfLocalDataSource.get(data.fileModel.bookshelfModelId).first()!!).fileReader(data.fileModel)
+                        ?: throw RuntimeException("この拡張子はサポートされていません。")
                 var inputStream: InputStream = fileReader.pageInputStream(data.pageIndex)
                 var bytes = inputStream.use { it.readBytes() }
                 val metaData = BookPageMetaData(

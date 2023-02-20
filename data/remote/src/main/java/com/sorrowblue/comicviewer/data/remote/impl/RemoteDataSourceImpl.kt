@@ -121,7 +121,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }
     }
 
-    override suspend fun fileReader(fileModel: FileModel): FileReader {
+    override suspend fun fileReader(fileModel: FileModel): FileReader? {
         return withLock {
             runCatching {
                 if (fileModel is FileModel.ImageFolder) {

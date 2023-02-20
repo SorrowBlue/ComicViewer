@@ -32,7 +32,6 @@ internal fun Project.useAndroidExtension() {
             targetCompatibility = JavaVersion.VERSION_11
         }
         kotlinOptions {
-            jvmTarget = "11"
             freeCompilerArgs = listOf("-Xcontext-receivers")
         }
     }

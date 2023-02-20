@@ -1,33 +1,38 @@
 package com.sorrowblue.comicviewer.data.remote.reader.impl
 
+import android.content.Context
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import com.sorrowblue.comicviewer.data.remote.reader.FileReaderFactory
 import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
-import com.sorrowblue.comicviewer.data.remote.reader.qualifier.EpubReaderFactory
-import com.sorrowblue.comicviewer.data.remote.reader.qualifier.OxpsReaderFactory
-import com.sorrowblue.comicviewer.data.remote.reader.qualifier.PdfReaderFactory
-import com.sorrowblue.comicviewer.data.remote.reader.qualifier.XpsReaderFactory
 import com.sorrowblue.comicviewer.data.remote.reader.qualifier.ZipReaderFactory
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 internal class FileReaderFactoryImpl @Inject constructor(
-    @PdfReaderFactory private val pdfReaderFactory: FileReader.Factory,
-    @EpubReaderFactory private val epubReaderFactory: FileReader.Factory,
-    @XpsReaderFactory private val xpsReaderFactory: FileReader.Factory,
-    @OxpsReaderFactory private val oxpsReaderFactory: FileReader.Factory,
+    @ApplicationContext private val context: Context,
     @ZipReaderFactory private val zipReaderFactory: FileReader.Factory
 ) : FileReaderFactory {
 
     override suspend fun create(
         extension: String,
         seekableInputStream: SeekableInputStream
-    ): FileReader {
+    ): FileReader? {
         return when (extension) {
-            "pdf" -> pdfReaderFactory.create(seekableInputStream)
-            "epub" -> epubReaderFactory.create(seekableInputStream)
-            "xps" -> xpsReaderFactory.create(seekableInputStream)
-            "oxps" -> oxpsReaderFactory.create(seekableInputStream)
+            "pdf" -> loadReader("PdfFileReader", context, seekableInputStream)
+            "epub" -> loadReader("EpubFileReader", context, seekableInputStream)
+            "xps" -> loadReader("XpsFileReader", context, seekableInputStream)
+            "oxps" -> loadReader("OxpsFileReader", context, seekableInputStream)
             else -> zipReaderFactory.create(seekableInputStream)
         }
+    }
+
+    private fun loadReader(
+        name: String,
+        context: Context,
+        seekableInputStream: SeekableInputStream
+    ): FileReader? {
+        return Class.forName("com.sorrowblue.extention.document.$name")
+            .getDeclaredConstructor(Context::class.java, SeekableInputStream::class.java)
+            .newInstance(context, seekableInputStream) as? FileReader
     }
 }

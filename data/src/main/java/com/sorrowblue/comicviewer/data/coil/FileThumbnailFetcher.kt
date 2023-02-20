@@ -130,7 +130,10 @@ internal class FileThumbnailFetcher(
                 logcat { "${fileModel.path} is not cache list" }
                 // キャッシュがない場合、取得する。
                 val bookshelfModel = bookshelfLocalDataSource.get(bookshelfModelId).first()!!
-                val supportExtensions = settingsCommonRepository.folderSettings.first().supportExtension.map(SupportExtension::extension)
+                val supportExtensions =
+                    settingsCommonRepository.folderSettings.first().supportExtension.map(
+                        SupportExtension::extension
+                    )
                 remoteDataSourceFactory.create(bookshelfModel).listFiles(fileModel, false) {
                     SortUtil.filter(it, supportExtensions)
                 }.firstOrNull { it is FileModel.File }?.let {
@@ -158,7 +161,10 @@ internal class FileThumbnailFetcher(
         }
     }
 
-    private suspend fun fetchFile(snapshot: DiskCache.Snapshot?, fileModel: FileModel): FetchResult {
+    private suspend fun fetchFile(
+        snapshot: DiskCache.Snapshot?,
+        fileModel: FileModel
+    ): FetchResult {
         var fileReader: FileReader? = null
         try {
             if (snapshot != null) {
@@ -179,6 +185,7 @@ internal class FileThumbnailFetcher(
             }
             val server = bookshelfLocalDataSource.get(bookshelfModelId).first()!!
             fileReader = remoteDataSourceFactory.create(server).fileReader(fileModel)
+                ?: throw RuntimeException("この拡張子はサポートされていません。")
             if (fileReader.pageCount() == 0) {
                 throw Exception("Page count is 0 ${fileModel.path}.")
             }
@@ -269,7 +276,11 @@ internal class FileThumbnailFetcher(
         // Return `null` if we're unable to write to this entry.
         if (editor == null) return null
 
-        val result = Bitmap.createBitmap(requestWidth.toInt(), requestHeight.toInt(), Bitmap.Config.ARGB_8888)
+        val result = Bitmap.createBitmap(
+            requestWidth.toInt(),
+            requestHeight.toInt(),
+            Bitmap.Config.ARGB_8888
+        )
         val canvas = Canvas(result)
         canvas.drawColor(Color.TRANSPARENT)
         val step = floor(requestHeight / 12)

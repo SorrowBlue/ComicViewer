@@ -3,7 +3,7 @@
 android-compile-sdk = "33"
 android-min-sdk = "28"
 android-target-sdk = "33"
-android-buildtools = "33.0.1"
+android-buildtools = "33.0.2"
 
 google-api-client-android = "2.2.0"
 google-api-services-drive = "v3-rev20230212-2.0.0"

@@ -10,13 +10,20 @@ plugins {
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
     alias(libs.plugins.dagger.hilt.android)
     id("com.mikepenz.aboutlibraries.plugin")
+    id("org.ajoberstar.grgit") version "5.0.0"
 }
+
+fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex())) "-SNAPSHOT" else ""
 
 android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
-        versionCode = 2
-        versionName = "1.0"
+        versionCode = 5
+        versionName = grgit.describe {
+            longDescr = false
+            isTags = true
+        }?.toVersion() ?: "0.0.1-SNAPSHOT"
+        logger.lifecycle("versionName=$versionName")
     }
 
     signingConfigs {
@@ -47,7 +54,7 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -75,6 +82,7 @@ android {
         checkReleaseBuilds = false
         abortOnError = false
     }
+    dynamicFeatures += setOf(":document")
 }
 
 dependencies {
@@ -87,7 +95,9 @@ dependencies {
     implementation(projects.favorite)
     implementation(projects.readlater)
     implementation(projects.library)
+    api(projects.data.reader)
     implementation(projects.settings.security)
+    implementation("com.google.android.play:feature-delivery-ktx:2.0.1")
 
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.biometric)
