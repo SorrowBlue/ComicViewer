@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="library_toolbar" type="id" />
+    <item name="library_app_bar" type="id" />
+    <item name="library_sign_out" type="id" />
+    <item name="library_profile_image" type="id" />
+    <item name="library_username" type="id" />
+    <item name="library_progress_indicator" type="id" />
+</resources>

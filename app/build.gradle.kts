@@ -54,7 +54,7 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -82,20 +82,22 @@ android {
         checkReleaseBuilds = false
         abortOnError = false
     }
-    dynamicFeatures += setOf(":document")
+    dynamicFeatures += setOf(":document", ":library:googledrive")
 }
 
 dependencies {
-    implementation(projects.framework.ui)
+    api(projects.framework.ui)
+    api(projects.framework.notification)
+    api(projects.data.reader)
+
     implementation(projects.data.di)
-    implementation(projects.domain)
+    api(projects.domain)
     implementation(projects.settings)
     implementation(projects.folder)
     implementation(projects.bookshelf)
     implementation(projects.favorite)
     implementation(projects.readlater)
-    implementation(projects.library)
-    api(projects.data.reader)
+    api(projects.library)
     implementation(projects.settings.security)
     implementation("com.google.android.play:feature-delivery-ktx:2.0.1")
 
@@ -103,7 +105,7 @@ dependencies {
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.core.splashscreen)
 
-    debugImplementation(libs.squareup.leakcanary.android)
+//    debugImplementation(libs.squareup.leakcanary.android)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)

@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.library.googledrive.list
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
@@ -19,14 +21,12 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
+import com.sorrowblue.comicviewer.library.databinding.GoogledriveFragmentListBinding
 import com.sorrowblue.comicviewer.library.googledrive.DriveDownloadWorker
-import com.sorrowblue.comicviewer.library.googledrive.R
-import com.sorrowblue.comicviewer.library.googledrive.databinding.GoogledriveFragmentListBinding
+import com.sorrowblue.comicviewer.library.R
 import com.sorrowblue.jetpack.binding.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
 
-@AndroidEntryPoint
 internal class GoogleDriveListFragment : PagingFragment<File>(R.layout.googledrive_fragment_list) {
 
     private val binding: GoogledriveFragmentListBinding by viewBinding()
@@ -35,7 +35,8 @@ internal class GoogleDriveListFragment : PagingFragment<File>(R.layout.googledri
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = viewModel
+
+        appBarConfiguration = AppBarConfiguration(setOf())
 
         binding.toolbar.setupWithNavController()
         binding.toolbar.applyInsetter {

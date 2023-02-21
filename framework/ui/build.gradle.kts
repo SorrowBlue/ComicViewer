@@ -24,7 +24,10 @@ dependencies {
     api(libs.androidx.core.ktx)
     api(libs.androidx.fragment.ktx)
     api(libs.bundles.androidx.lifecycle)
-    api(libs.bundles.androidx.navigation)
+    api(libs.bundles.androidx.navigation) {
+        exclude("com.google.android.play", "core")
+    }
+    api("com.google.android.play:feature-delivery:2.0.1")
     api(libs.androidx.recyclerview)
     api(libs.androidx.viewpager2)
     api(libs.google.material)

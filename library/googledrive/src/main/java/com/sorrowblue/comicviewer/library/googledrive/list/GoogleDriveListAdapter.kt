@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
-import com.sorrowblue.comicviewer.library.googledrive.databinding.GoogledriveItemListBinding
+import com.sorrowblue.comicviewer.library.databinding.GoogledriveItemListBinding
 
 internal class GoogleDriveListAdapter(private val download: (Book) -> Unit) :
     PagingDataAdapter<File, GoogleDriveListAdapter.ViewHolder>(

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.app
 
-import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.google.android.play.core.splitcompat.SplitCompatApplication
@@ -8,7 +7,6 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
-
 
 @HiltAndroidApp
 class MainApplication : SplitCompatApplication(), Configuration.Provider {

@@ -1,11 +1,14 @@
 package com.sorrowblue.comicviewer.framework.ui.fragment
 
+import android.app.Application
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -29,19 +32,34 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-abstract class PagingViewModel<T : Any> : ViewModel() {
+interface SupportPaging<T : Any> {
+    val isRefreshingFlow: MutableStateFlow<Boolean>
+    val isEmptyDataFlow: MutableStateFlow<Boolean>
+    var isInitialize: Boolean
 
-    val isRefreshingFlow = MutableStateFlow(false)
-    val isEmptyDataFlow = MutableStateFlow(false)
-    var isInitialize = false
+    val pagingDataFlow: Flow<PagingData<T>>
+    val transitionName: String?
+}
 
-    abstract val pagingDataFlow: Flow<PagingData<T>>
-    abstract val transitionName: String?
+abstract class PagingViewModel<T : Any> : ViewModel(), SupportPaging<T> {
+    override val isRefreshingFlow = MutableStateFlow(false)
+    override val isEmptyDataFlow = MutableStateFlow(false)
+    override var isInitialize = false
+}
+
+abstract class PagingAndroidViewModel<T : Any>(application: Application) :
+    AndroidViewModel(application), SupportPaging<T> {
+
+    protected val context: Context get() = getApplication()
+
+    override val isRefreshingFlow = MutableStateFlow(false)
+    override val isEmptyDataFlow = MutableStateFlow(false)
+    override var isInitialize = false
 }
 
 abstract class PagingFragment<T : Any>(contentLayoutId: Int) : FrameworkFragment(contentLayoutId) {
 
-    protected abstract val viewModel: PagingViewModel<T>
+    protected abstract val viewModel: SupportPaging<T>
 
     private val recyclerView: RecyclerView get() = requireView().requireViewById<RecyclerView>(R.id.framework_ui_recycler_view)
 

@@ -5,9 +5,6 @@
 
     <data>
 
-        <variable
-            name="viewModel"
-            type="com.sorrowblue.comicviewer.library.googledrive.list.GoogleDriveListViewModel" />
     </data>
 
     <com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout
@@ -40,7 +37,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@{viewModel.googleSignInAccount.photoUrl}"
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <TextView
@@ -51,7 +47,6 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@{viewModel.googleSignInAccount.displayName}"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/sign_out"
@@ -77,10 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            app:isVisible="@{viewModel.googleSignInAccount != null}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/googledrive_item_list" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_indicator"
@@ -88,7 +81,6 @@
             android:layout_height="wrap_content"
             android:indeterminate="true"
             android:visibility="gone"
-            app:isVisible="@{viewModel.isRefreshingFlow}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout>
 </layout>

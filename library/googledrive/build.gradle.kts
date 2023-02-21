@@ -1,24 +1,53 @@
+@file:Suppress("UnstableApiUsage")
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("build-logic.android.library")
+    id("com.android.dynamic-feature")
+    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
-    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
+    namespace = "com.sorrowblue.comicviewer.library.googledrive"
     resourcePrefix("googledrive")
+
+    compileSdk = libs.versions.android.compile.sdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.android.min.sdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            proguardFiles("proguard-rules-dynamic-features.pro")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 
     buildFeatures {
         dataBinding = true
         viewBinding = true
     }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/DEPENDENCIES")
+    }
 }
 
+kotlin.jvmToolchain(11)
+
 dependencies {
-    implementation(projects.framework.ui)
-    implementation(projects.framework.notification)
-    implementation(projects.domain)
+    implementation(project(":app"))
 
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.play.services.auth)
@@ -29,9 +58,6 @@ dependencies {
     implementation(libs.google.api.services.drive) {
         exclude("org.apache.httpcomponents")
     }
-
-    implementation(libs.dagger.hilt.android.core)
-    kapt(libs.dagger.hilt.android.compiler)
 }
 
 kapt {

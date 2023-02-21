@@ -5,6 +5,7 @@
     app:startDestination="@id/library_list_fragment">
 
     <framework-fragment
+        app:moduleName="library"
         android:id="@+id/library_list_fragment"
         android:name="com.sorrowblue.comicviewer.library.LibraryListFragment"
         android:label="ライブラリ"
@@ -14,7 +15,7 @@
             app:destination="@id/dropbox_navigation" />
         <action
             android:id="@+id/action_library_list_to_googledrive_navigation"
-            app:destination="@id/googledrive_navigation" />
+            app:destination="@id/googledrive" />
         <action
             android:id="@+id/action_library_list_to_box_navigation"
             app:destination="@id/box_navigation" />
@@ -23,7 +24,11 @@
             app:destination="@id/onedrive_navigation" />
     </framework-fragment>
     <include app:graph="@navigation/dropbox" />
-    <include app:graph="@navigation/googledrive" />
+    <include-dynamic
+        android:id="@+id/googledrive"
+        app:graphPackage="com.sorrowblue.comicviewer.debug.googledrive"
+        app:graphResName="googledrive"
+        app:moduleName="googledrive" />
     <include app:graph="@navigation/box" />
     <include app:graph="@navigation/onedrive" />
 </navigation>

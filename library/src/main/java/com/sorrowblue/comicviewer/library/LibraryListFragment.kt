@@ -2,12 +2,12 @@ package com.sorrowblue.comicviewer.library
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.navigation.NavDirections
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.library.databinding.LibraryFragmentListBinding
 import com.sorrowblue.comicviewer.library.dropbox.list.DropBoxListFragmentArgs
-import com.sorrowblue.comicviewer.library.googledrive.list.GoogleDriveListFragmentArgs
 import com.sorrowblue.comicviewer.library.onedrive.list.OneDriveListFragmentArgs
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,8 +69,7 @@ internal class LibraryListFragment : FrameworkFragment(R.layout.library_fragment
         transitionName: String
     ) = object : NavDirections {
         override val actionId = actionLibraryListToGoogledriveNavigation().actionId
-        override val arguments =
-            GoogleDriveListFragmentArgs(transitionName = transitionName).toBundle()
+        override val arguments =  bundleOf("transitionName" to transitionName)
     }
 
     private fun LibraryListFragmentDirections.Companion.actionLibraryListToDropboxNavigation(

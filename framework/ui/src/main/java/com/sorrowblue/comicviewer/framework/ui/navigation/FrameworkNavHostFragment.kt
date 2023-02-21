@@ -10,12 +10,12 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.Navigator
 import androidx.navigation.NavigatorProvider
+import androidx.navigation.dynamicfeatures.fragment.DynamicNavHostFragment
 import androidx.navigation.fragment.FragmentNavigator
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.plusAssign
 import com.sorrowblue.comicviewer.framework.ui.R
 
-class FrameworkNavHostFragment : NavHostFragment() {
+class FrameworkNavHostFragment : DynamicNavHostFragment() {
 
     override fun onCreateNavHostController(navHostController: NavHostController) {
         val containerId =

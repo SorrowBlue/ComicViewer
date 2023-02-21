@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <com.google.android.gms.common.SignInButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/sign_in"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

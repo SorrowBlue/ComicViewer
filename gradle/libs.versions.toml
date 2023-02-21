@@ -83,6 +83,7 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
+androidx-navigation-dynamic-features-fragment = { module = "androidx.navigation:navigation-dynamic-features-fragment", version.ref = "androidx-navigation" }
 
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }
@@ -142,5 +143,5 @@ robolectric = "org.robolectric:robolectric:4.9.2"
 [bundles]
 androidx-instrumented-tests = ["androidx-test-core-ktx", "androidx-test-runner", "androidx-test-rules", "androidx-test-ext-junit-ktx", "androidx-test-ext-truth"]
 androidx-lifecycle = ["androidx-lifecycle-livedata-ktx", "androidx-lifecycle-viewmodel-ktx"]
-androidx-navigation = ["androidx-navigation-fragment-ktx", "androidx-navigation-ui-ktx"]
+androidx-navigation = ["androidx-navigation-fragment-ktx", "androidx-navigation-ui-ktx", "androidx-navigation-dynamic-features-fragment"]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx", "androidx-room-paging"]
