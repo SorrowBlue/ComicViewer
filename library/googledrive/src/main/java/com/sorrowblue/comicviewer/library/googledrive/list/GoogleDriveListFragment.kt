@@ -1,14 +1,16 @@
 package com.sorrowblue.comicviewer.library.googledrive.list
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.work.Constraints
@@ -17,15 +19,25 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.Scope
+import com.google.api.services.drive.DriveScopes
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
+import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
+import com.sorrowblue.comicviewer.framework.ui.widget.ktx.setSrcCompat
+import com.sorrowblue.comicviewer.library.R
 import com.sorrowblue.comicviewer.library.databinding.GoogledriveFragmentListBinding
 import com.sorrowblue.comicviewer.library.googledrive.DriveDownloadWorker
-import com.sorrowblue.comicviewer.library.R
 import com.sorrowblue.jetpack.binding.viewBinding
 import dev.chrisbanes.insetter.applyInsetter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+
 
 internal class GoogleDriveListFragment : PagingFragment<File>(R.layout.googledrive_fragment_list) {
 
@@ -37,6 +49,17 @@ internal class GoogleDriveListFragment : PagingFragment<File>(R.layout.googledri
         super.onViewCreated(view, savedInstanceState)
 
         appBarConfiguration = AppBarConfiguration(setOf())
+
+
+        viewModel.googleSignInAccount.onEach {
+            binding.profilePhoto.setSrcCompat(it?.photoUrl)
+            binding.displayName.text = it?.displayName
+            binding.frameworkUiRecyclerView.isVisible = it != null
+        }.launchInWithLifecycle()
+
+        viewModel.isRefreshingFlow.onEach {
+            binding.progressIndicator.isVisible = it
+        }.launchInWithLifecycle()
 
         binding.toolbar.setupWithNavController()
         binding.toolbar.applyInsetter {
@@ -51,8 +74,21 @@ internal class GoogleDriveListFragment : PagingFragment<File>(R.layout.googledri
                 padding(horizontal = true, bottom = true)
             }
         }
-        if (GoogleSignIn.getLastSignedInAccount(requireContext()) == null) {
-            findNavController().navigate(GoogleDriveListFragmentDirections.actionGoogledriveListToGoogledriveSignin())
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.googleSignInAccount.flowWithLifecycle(lifecycle).collectLatest {
+                if (it == null) {
+                    findNavController().navigate(GoogleDriveListFragmentDirections.actionGoogledriveListToGoogledriveSignin())
+                }
+            }
+        }
+
+        binding.signOut.setOnClickListener {
+            val googleSignInClient =
+                GoogleSignIn.getClient(requireContext(), GoogleSignInOptions.DEFAULT_SIGN_IN)
+            viewLifecycleOwner.lifecycleScope.launch {
+                googleSignInClient.signOut().await()
+                viewModel.updateAccount()
+            }
         }
     }
 

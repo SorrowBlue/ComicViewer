@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.library.googledrive.list
 
 import android.app.Application
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -23,7 +25,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 internal class GoogleDriveListViewModel(
     application: Application,
     override val savedStateHandle: SavedStateHandle
-) : PagingAndroidViewModel<File>(application), SupportSafeArgs {
+) : PagingAndroidViewModel<File>(application), SupportSafeArgs, DefaultLifecycleObserver {
 
     private val args: GoogleDriveListFragmentArgs by navArgs()
 
@@ -32,6 +34,15 @@ internal class GoogleDriveListViewModel(
         GoogleAccountCredential.usingOAuth2(context, listOf(DriveScopes.DRIVE_READONLY))
 
     val googleSignInAccount = MutableStateFlow(GoogleSignIn.getLastSignedInAccount(context))
+
+    fun updateAccount() {
+        googleSignInAccount.value = GoogleSignIn.getLastSignedInAccount(context)
+    }
+
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
+        updateAccount()
+    }
 
     override val transitionName = args.transitionName
     override val pagingDataFlow = googleSignInAccount.filterNotNull().flatMapLatest {

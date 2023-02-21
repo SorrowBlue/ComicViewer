@@ -1,5 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
+import com.sorrowblue.buildlogic.kotlinOptions
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("com.android.dynamic-feature")
@@ -32,6 +34,7 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs = listOf("-Xcontext-receivers")
     }
 
     buildFeatures {
@@ -55,6 +58,7 @@ dependencies {
     implementation(libs.google.api.client.android) {
         exclude("org.apache.httpcomponents")
     }
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
     implementation(libs.google.api.services.drive) {
         exclude("org.apache.httpcomponents")
     }
