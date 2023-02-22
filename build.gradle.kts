@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.plugin.serialization) apply false
     alias(libs.plugins.androidx.navigation.safeargs.kotlin) apply false
     alias(libs.plugins.google.ksp) apply false
-    id("com.mikepenz.aboutlibraries.plugin") version "10.6.0" apply false
+    id("com.mikepenz.aboutlibraries.plugin") version "10.6.1" apply false
     id("com.vanniktech.dependency.graph.generator") version "0.8.0"
 }
 

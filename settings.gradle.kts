@@ -13,7 +13,7 @@ pluginManagement {
         }
     }
     plugins {
-        id("com.mikepenz.aboutlibraries.plugin") version "10.6.0"
+        id("com.mikepenz.aboutlibraries.plugin") version "10.6.1"
     }
 }
 
