@@ -13,7 +13,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment_activity_main"
-            android:name="com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkNavHostFragment"
+            android:name="com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkDynamicNavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:defaultNavHost="true"

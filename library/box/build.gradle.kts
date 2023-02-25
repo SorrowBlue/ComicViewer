@@ -23,11 +23,11 @@ dependencies {
 
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation("com.box:box-java-sdk:4.0.0")
+    implementation(libs.box.java.sdk)
     implementation(libs.kotlinx.serialization.protobuf)
 
     implementation(libs.androidx.hilt.work)
-    implementation("androidx.browser:browser:1.5.0")
+    implementation(libs.androidx.browser)
     kapt(libs.androidx.hilt.compiler)
 
     implementation(libs.dagger.hilt.android.core)

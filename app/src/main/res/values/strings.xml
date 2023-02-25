@@ -1,4 +1,13 @@
 <resources>
 
     <string name="title_document">Document for ComicViewer</string>
+    <string name="title_dynamic">Dynamic</string>
+    <string name="title_googledrive">Support GoogleDrive</string>
+    <string name="title_onedrive">Support OneDrive</string>
+
+
+    <string name="yubikit_otp_activity_title">dummy</string>
+    <string name="yubikit_prompt_activity_title">dummy</string>
+
+    <style name="YubiKitPromptDialogTheme" />
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/box_navigation"
     app:startDestination="@id/box_list_fragment">
-    <framework-fragment
+    <fragment
         android:id="@+id/box_list_fragment"
         android:name="com.sorrowblue.comicviewer.library.box.list.BoxListFragment"
         android:label="BoxListFragment"
@@ -27,13 +27,13 @@
         <action
             android:id="@+id/action_box_list_self"
             app:destination="@id/box_list_fragment" />
-    </framework-fragment>
-    <framework-fragment
+    </fragment>
+    <fragment
         android:id="@+id/box_signin_fragment"
         android:name="com.sorrowblue.comicviewer.library.box.signin.BoxSignInFragment"
         android:label="Box"
         tools:layout="@layout/box_fragment_signin" />
-    <framework-fragment
+    <fragment
         android:id="@+id/box_oauth2_fragment"
         android:name="com.sorrowblue.comicviewer.library.box.oauth.BoxOauth2Fragment"
         android:label="Box"
@@ -52,5 +52,5 @@
             app:destination="@id/box_list_fragment"
             app:popUpTo="@id/box_navigation"
             app:popUpToInclusive="true" />
-    </framework-fragment>
+    </fragment>
 </navigation>

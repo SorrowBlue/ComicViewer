@@ -34,8 +34,11 @@ kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", versio
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
-ben-manes-versions = "com.github.ben-manes.versions:0.45.0"
+ben-manes-versions = "com.github.ben-manes.versions:0.46.0"
 dagger-hilt-android = { id = "dagger.hilt.android.plugin", version.ref = "dagger-hilt-android" }
+aboutlibraries-plugin = "com.mikepenz.aboutlibraries.plugin:10.6.1"
+dependency-graph-generator = "com.vanniktech.dependency.graph.generator:0.8.0"
+grgit = "org.ajoberstar.grgit:5.0.0"
 
 [libraries]
 android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
@@ -47,6 +50,7 @@ kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-jdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
@@ -56,6 +60,8 @@ androidx-activity = "androidx.activity:activity:1.6.1"
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 
 androidx-biometric = "androidx.biometric:biometric:1.2.0-alpha05"
+
+androidx-browser = "androidx.browser:browser:1.5.0"
 
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 
@@ -108,6 +114,9 @@ androidx-window = "androidx.window:window:1.0.0"
 
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 
+google-android-play-feature-delivery-ktx = "com.google.android.play:feature-delivery-ktx:2.0.1"
+google-code-gson = "com.google.code.gson:gson:2.10.1"
+google-guava = "com.google.guava:guava:31.1-jre"
 google-material = "com.google.android.material:material:1.8.0"
 
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
@@ -129,6 +138,10 @@ dagger-hilt-android-core = { module = "com.google.dagger:hilt-android", version.
 dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger-hilt-android" }
 
 junit = "junit:junit:4.13.2"
+box-java-sdk = "com.box:box-java-sdk:4.0.0"
+
+microsoft-identity-client-msal = "com.microsoft.identity.client:msal:4.2.0"
+microsoft-graph = "com.microsoft.graph:microsoft-graph:5.47.0"
 
 androidx-test-core-ktx = "androidx.test:core-ktx:1.5.0"
 androidx-test-runner = "androidx.test:runner:1.5.2"

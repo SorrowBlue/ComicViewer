@@ -1,4 +1,5 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -12,6 +13,10 @@ pluginManagement {
             }
         }
     }
+}
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
 }
 
 @Suppress("UnstableApiUsage")
@@ -28,15 +33,6 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1")
         }
-
-//        maven {
-//            name = "vsts-maven-adal-android"
-//            url = uri("https://identitydivision.pkgs.visualstudio.com/_packaging/AndroidADAL/maven/v1")
-//            credentials {
-//                username = "sorrowblue.sb@outlook.jp"
-//                password = "outyuukiasuna2s2"
-//            }
-//        }
     }
 }
 
@@ -88,3 +84,4 @@ include(":settings:viewer")
 
 includeBuild("build-logic")
 include(":document")
+include(":dynamic")

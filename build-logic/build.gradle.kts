@@ -17,5 +17,9 @@ gradlePlugin {
             id = "build-logic.android.library"
             implementationClass = "com.sorrowblue.buildlogic.AndroidLibraryPlugin"
         }
+        register("android.dynamic-feature") {
+            id = "build-logic.android.dynamic-feature"
+            implementationClass = "com.sorrowblue.buildlogic.AndroidDynamicFeaturePlugin"
+        }
     }
 }

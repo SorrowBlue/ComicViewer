@@ -74,11 +74,6 @@ internal class LibraryListAdapter(private val onClick: (Library, FragmentNavigat
                     binding.leadingIcon.setImageResource(FrameworkResourceR.drawable.ic_box_blue_cmyk)
                 }
 
-                CloudStorage.MEGA -> {
-                    binding.headline.text = "MEGA"
-                    binding.leadingIcon.setImageResource(FrameworkResourceR.drawable.ic_mega_letter_logo)
-                }
-
                 CloudStorage.DROP_BOX -> {
                     binding.headline.text = "DropBox"
                     binding.leadingIcon.setImageResource(FrameworkResourceR.drawable.ic_dropbox_tab_32)

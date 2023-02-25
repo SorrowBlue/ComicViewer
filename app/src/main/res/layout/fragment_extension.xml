@@ -1,59 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data>
-
-    </data>
-
-    <com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:liftOnScroll="true">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar_layout"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:liftOnScroll="true">
+            app:menu="@menu/readlater"
+            app:title="拡張機能" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:title="拡張機能" />
-        </com.google.android.material.appbar.AppBarLayout>
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/content_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/state"
-                android:layout_width="wrap_content"
+                android:id="@+id/log"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="pdfサポート"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:text="LOG:"
+                android:textAppearance="?attr/textAppearanceLabelSmall" />
 
-            <Button
-                android:id="@+id/download"
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/dynamic"
+                layout="@layout/view_extension"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ダウンロード"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/state" />
+                android:layout_marginTop="16dp" />
 
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/progress"
-                android:layout_width="200dp"
+            <include
+                android:id="@+id/document"
+                layout="@layout/view_extension"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="100"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/download" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout>
-</layout>
+                android:layout_marginTop="16dp" />
+
+            <include
+                android:id="@+id/googledrive"
+                layout="@layout/view_extension"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
+
+            <include
+                android:id="@+id/onedrive"
+                layout="@layout/view_extension"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout>

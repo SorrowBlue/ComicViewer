@@ -7,28 +7,27 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
-import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.resource.R
+import com.sorrowblue.comicviewer.library.onedrive.data.AuthenticationProvider
 import com.sorrowblue.comicviewer.library.onedrive.data.OneDriveApiRepository
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import com.sorrowblue.comicviewer.library.onedrive.data.OneDriveApiRepositoryImpl
 import kotlin.math.ceil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import logcat.logcat
 
-@HiltWorker
-internal class OneDriveDownloadWorker @AssistedInject constructor(
-    @Assisted appContext: Context,
-    @Assisted params: WorkerParameters,
-    private val repository: OneDriveApiRepository
+internal class OneDriveDownloadWorker(
+    appContext: Context,
+    params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
+
+    private val repository = OneDriveApiRepository.getInstance(appContext)
 
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
     private val NOTIFICATION_ID: Int = 4

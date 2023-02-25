@@ -8,7 +8,6 @@ enum class CloudStorage : Library {
     GOOGLE_DRIVE,
     ONE_DRIVE,
     BOX,
-    MEGA,
     DROP_BOX;
 
     override val viewType = LibraryListViewType.CLOUD_STORAGE

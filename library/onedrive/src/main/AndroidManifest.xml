@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application android:theme="@style/Theme.ComicViewer">
         <activity
             android:name="com.microsoft.identity.client.BrowserTabActivity"
@@ -14,9 +16,17 @@
 
                 <data
                     android:host="${applicationId}"
-                    android:path="/waSgfrgxyjcWBV9fwOAOtvNIeDQ="
+                    android:path="/SxNr0XXPX24h5R9D/OzOtZMHvEs="
                     android:scheme="msauth" />
             </intent-filter>
         </activity>
     </application>
+    <dist:module
+        dist:instant="false"
+        dist:title="@string/title_onedrive">
+        <dist:delivery>
+            <dist:on-demand />
+        </dist:delivery>
+        <dist:fusing dist:include="true" />
+    </dist:module>
 </manifest>

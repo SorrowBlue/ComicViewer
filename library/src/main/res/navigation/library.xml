@@ -2,10 +2,10 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/library_navigation"
+    app:progressDestination="@+id/frameworkProgressFragment"
     app:startDestination="@id/library_list_fragment">
 
-    <framework-fragment
-        app:moduleName="library"
+    <fragment
         android:id="@+id/library_list_fragment"
         android:name="com.sorrowblue.comicviewer.library.LibraryListFragment"
         android:label="ライブラリ"
@@ -21,14 +21,22 @@
             app:destination="@id/box_navigation" />
         <action
             android:id="@+id/action_library_list_to_onedrive_navigation"
-            app:destination="@id/onedrive_navigation" />
-    </framework-fragment>
+            app:destination="@id/onedrive" />
+    </fragment>
     <include app:graph="@navigation/dropbox" />
     <include-dynamic
         android:id="@+id/googledrive"
-        app:graphPackage="com.sorrowblue.comicviewer.debug.googledrive"
+        app:graphPackage="${applicationId}.googledrive"
         app:graphResName="googledrive"
         app:moduleName="googledrive" />
+    <include-dynamic
+        android:id="@+id/onedrive"
+        app:graphPackage="${applicationId}.onedrive"
+        app:graphResName="onedrive"
+        app:moduleName="onedrive" />
     <include app:graph="@navigation/box" />
-    <include app:graph="@navigation/onedrive" />
+    <fragment
+        android:id="@+id/frameworkProgressFragment"
+        android:name="com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkProgressFragment"
+        android:label="FrameworkProgressFragment" />
 </navigation>

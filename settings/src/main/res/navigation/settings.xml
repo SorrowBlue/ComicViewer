@@ -4,7 +4,7 @@
     android:id="@+id/settings_navigation"
     app:startDestination="@id/settings_fragment">
 
-    <framework-fragment
+    <fragment
         android:id="@+id/settings_fragment"
         android:name="com.sorrowblue.comicviewer.settings.SettingsFragment"
         android:label="設定">
@@ -20,7 +20,7 @@
         <action
             android:id="@+id/action_settings_to_settings_security"
             app:destination="@id/settings_security_navigation" />
-    </framework-fragment>
+    </fragment>
     <include app:graph="@navigation/settings_display" />
     <include app:graph="@navigation/settings_viewer" />
     <include app:graph="@navigation/settings_folder" />

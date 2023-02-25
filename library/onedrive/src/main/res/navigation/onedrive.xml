@@ -2,12 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/onedrive_navigation"
     app:startDestination="@id/one_drive_list_fragment">
 
-    <framework-fragment
+    <fragment
         android:id="@+id/one_drive_list_fragment"
         android:name="com.sorrowblue.comicviewer.library.onedrive.list.OneDriveListFragment"
+        app:moduleName="onedrive"
         android:label="OneDrive"
         tools:layout="@layout/onedrive_fragment_list">
         <argument
@@ -33,8 +33,9 @@
             app:destination="@id/one_drive_signin_fragment"
             app:popUpTo="@id/one_drive_list_fragment"
             app:popUpToInclusive="true" />
-    </framework-fragment>
-    <framework-fragment
+    </fragment>
+    <fragment
+        app:moduleName="onedrive"
         android:id="@+id/one_drive_signin_fragment"
         android:name="com.sorrowblue.comicviewer.library.onedrive.signin.OneDriveSignInFragment"
         android:label="OneDrive"
@@ -44,5 +45,5 @@
             app:destination="@id/one_drive_list_fragment"
             app:popUpTo="@id/one_drive_signin_fragment"
             app:popUpToInclusive="true" />
-    </framework-fragment>
+    </fragment>
 </navigation>

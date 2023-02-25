@@ -5,12 +5,10 @@
 
     <data>
 
-        <variable
-            name="viewModel"
-            type="com.sorrowblue.comicviewer.library.onedrive.list.OneDriveListViewModel" />
     </data>
 
     <com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout
+        android:id="@+id/nested_scroll_coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -27,11 +25,12 @@
                 app:title="Google Drive" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/content_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/profile_photo"
+                    android:id="@+id/profile_image"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginStart="16dp"
@@ -43,18 +42,17 @@
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <TextView
-                    android:id="@+id/user_name"
+                    android:id="@+id/display_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@{viewModel.currentUserFlow.displayName}"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/sign_out"
-                    app:layout_constraintStart_toEndOf="@+id/profile_photo"
+                    app:layout_constraintStart_toEndOf="@+id/profile_image"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="@tools:sample/full_names" />
 
@@ -76,18 +74,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            app:isVisible="@{viewModel.currentUserFlow != null}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/onedrive_item_list" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_indicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:visibility="gone"
-            app:isVisible="@{viewModel.isRefreshingFlow}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </com.sorrowblue.comicviewer.framework.ui.NestedScrollCoordinatorLayout>
 </layout>

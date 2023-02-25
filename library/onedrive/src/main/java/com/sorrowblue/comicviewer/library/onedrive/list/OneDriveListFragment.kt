@@ -7,9 +7,12 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
@@ -20,27 +23,23 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
-import com.sorrowblue.comicviewer.library.onedrive.R
-import com.sorrowblue.comicviewer.library.onedrive.databinding.OnedriveFragmentListBinding
+import com.sorrowblue.comicviewer.library.databinding.GoogledriveFragmentListBinding
 import com.sorrowblue.jetpack.binding.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import logcat.logcat
 
-@AndroidEntryPoint
-internal class OneDriveListFragment : PagingFragment<File>(R.layout.onedrive_fragment_list) {
+internal class OneDriveListFragment :
+    PagingFragment<File>(com.sorrowblue.comicviewer.library.R.layout.googledrive_fragment_list) {
 
-    private val binding: OnedriveFragmentListBinding by viewBinding()
-
+    private val binding: GoogledriveFragmentListBinding by viewBinding()
     override val viewModel: OneDriveListViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = viewModel
 
+        appBarConfiguration = AppBarConfiguration(setOf())
         binding.toolbar.setupWithNavController()
         binding.toolbar.applyInsetter {
             type(systemBars = true, displayCutout = true) {
@@ -65,10 +64,21 @@ internal class OneDriveListFragment : PagingFragment<File>(R.layout.onedrive_fra
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.currentUserFlow.filterNotNull().collectLatest {
-                logcat { "user=$it" }
-                binding.profilePhoto.load(viewModel.profileImage())
+            viewModel.currentUserFlow.collectLatest {
+                if (it != null) {
+                    binding.displayName.text = it.displayName
+                    binding.profilePhoto.load(viewModel.profileImage())
+                } else {
+                    binding.displayName.text = "no signed"
+                    binding.profilePhoto.setImageResource(com.sorrowblue.comicviewer.framework.resource.R.drawable.ic_twotone_broken_image_24)
+                }
             }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isRefreshingFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest {
+                    binding.progressIndicator.isVisible = true
+                }
         }
     }
 

@@ -1,3 +1,8 @@
+buildscript {
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
+    }
+}
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
@@ -10,8 +15,8 @@ plugins {
     alias(libs.plugins.kotlin.plugin.serialization) apply false
     alias(libs.plugins.androidx.navigation.safeargs.kotlin) apply false
     alias(libs.plugins.google.ksp) apply false
-    id("com.mikepenz.aboutlibraries.plugin") version "10.6.0" apply false
-    id("com.vanniktech.dependency.graph.generator") version "0.8.0"
+    alias(libs.plugins.aboutlibraries.plugin) apply false
+    alias(libs.plugins.dependency.graph.generator)
 }
 
 tasks.register("clean", Delete::class) {

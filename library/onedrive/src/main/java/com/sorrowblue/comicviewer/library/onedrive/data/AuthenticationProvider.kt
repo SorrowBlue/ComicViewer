@@ -11,11 +11,8 @@ import com.microsoft.identity.client.ISingleAccountPublicClientApplication
 import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.exception.MsalException
 import com.sorrowblue.comicviewer.library.onedrive.R
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.net.URL
 import java.util.concurrent.CompletableFuture
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,10 +25,17 @@ import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import logcat.logcat
 
-@Singleton
-internal class AuthenticationProvider @Inject constructor(
-    @ApplicationContext private val appContext: Context
-) : BaseAuthenticationProvider() {
+class AuthenticationProvider private constructor(private val appContext: Context) :
+    BaseAuthenticationProvider() {
+
+    companion object {
+        private var instance: AuthenticationProvider? = null
+
+        @Synchronized
+        fun getInstance(context: Context) = instance ?: AuthenticationProvider(context).also {
+            instance = it
+        }
+    }
 
     private var clientApplication = MutableStateFlow<ISingleAccountPublicClientApplication?>(null)
 
@@ -43,7 +47,7 @@ internal class AuthenticationProvider @Inject constructor(
         if (clientApplication.value != null) return
         withContext(Dispatchers.IO) {
             PublicClientApplication.createSingleAccountPublicClientApplication(
-                appContext,
+                appContext.applicationContext,
                 R.raw.auth_config_single_account,
                 object : IPublicClientApplication.ISingleAccountApplicationCreatedListener {
                     override fun onCreated(application: ISingleAccountPublicClientApplication) {
@@ -64,7 +68,7 @@ internal class AuthenticationProvider @Inject constructor(
         } else CompletableFuture.completedFuture(null)
     }
 
-    val isAuthenticated = clientApplication.flatMapLatest{
+    val isAuthenticated = clientApplication.flatMapLatest {
         callbackFlow {
             if (it == null) {
                 trySend(null).isSuccess
@@ -72,6 +76,7 @@ internal class AuthenticationProvider @Inject constructor(
                 it.getCurrentAccountAsync(object :
                     ISingleAccountPublicClientApplication.CurrentAccountCallback {
                     override fun onAccountLoaded(activeAccount: IAccount?) {
+                        logcat { "onAccountLoaded($activeAccount)" }
                         trySend(activeAccount != null).isSuccess
                     }
 
@@ -79,19 +84,22 @@ internal class AuthenticationProvider @Inject constructor(
                         priorAccount: IAccount?,
                         currentAccount: IAccount?
                     ) {
+                        logcat { "onAccountChanged($currentAccount)" }
                         trySend(currentAccount != null).isSuccess
                     }
 
                     override fun onError(exception: MsalException) {
-                        trySend( false).isSuccess
+                        exception.printStackTrace()
+                        logcat { "onError(${exception.localizedMessage})" }
+                        trySend(false).isSuccess
                     }
                 })
             }
-            awaitClose {  }
+            awaitClose { }
         }
     }
 
-    val currentAccountFlow = clientApplication.filterNotNull().map{
+    val currentAccountFlow = clientApplication.filterNotNull().map {
         callbackFlow {
             it.getCurrentAccountAsync(object :
                 ISingleAccountPublicClientApplication.CurrentAccountCallback {
@@ -107,7 +115,7 @@ internal class AuthenticationProvider @Inject constructor(
                     trySend(null).isSuccess
                 }
             })
-            awaitClose {  }
+            awaitClose { }
         }
     }
 
@@ -122,17 +130,20 @@ internal class AuthenticationProvider @Inject constructor(
 //            .withCallback(getAuthenticationCallback(future))
 //            .build()
 //        clientApplication.signIn(parameters)
+        logcat { "signIn request=${clientApplication.value}" }
         clientApplication.value?.signIn(
             activity,
             null,
             scopes.toTypedArray(),
             getAuthenticationCallback(future)
         )
+        logcat { "signIn request" }
         return future
     }
 
     suspend fun signOut(): Unit? {
-        return clientApplication.value?.signOut(object : ISingleAccountPublicClientApplication.SignOutCallback {
+        return clientApplication.value?.signOut(object :
+            ISingleAccountPublicClientApplication.SignOutCallback {
             override fun onSignOut() {
                 logcat(LogPriority.INFO) { "Signed out." }
             }
@@ -145,8 +156,9 @@ internal class AuthenticationProvider @Inject constructor(
 
     private suspend fun acquireTokenSilently(): CompletableFuture<IAuthenticationResult> {
         val future = CompletableFuture<IAuthenticationResult>()
-        val authority = clientApplication.value?.configuration?.defaultAuthority?.authorityURL?.toString()
-            ?: return future
+        val authority =
+            clientApplication.value?.configuration?.defaultAuthority?.authorityURL?.toString()
+                ?: return future
         clientApplication.value?.acquireTokenSilentAsync(
             scopes.toTypedArray(),
             authority,
@@ -158,10 +170,12 @@ internal class AuthenticationProvider @Inject constructor(
     private fun getAuthenticationCallback(future: CompletableFuture<IAuthenticationResult>) =
         object : AuthenticationCallback {
             override fun onCancel() {
+                logcat { "onCancel" }
                 future.cancel(true)
             }
 
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
+                logcat { "onSuccess" }
                 future.complete(authenticationResult)
             }
 

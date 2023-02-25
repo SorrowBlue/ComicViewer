@@ -8,26 +8,15 @@ import com.sorrowblue.comicviewer.domain.entity.file.BookFile
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.library.onedrive.data.OneDriveApiRepository
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import logcat.logcat
 
-internal class OneDrivePagingSource @AssistedInject constructor(
-    @Assisted("driveId") val driveId: String?,
-    @Assisted("itemId") val itemId: String,
+internal class OneDrivePagingSource(
+    val driveId: String?,
+    val itemId: String,
     private val repository: OneDriveApiRepository
 ) : PagingSource<String, File>() {
-
-    @AssistedFactory
-    interface Factory {
-        fun create(
-            @Assisted("driveId") driveId: String?,
-            @Assisted("itemId") itemId: String
-        ): OneDrivePagingSource
-    }
 
     override fun getRefreshKey(state: PagingState<String, File>): String? {
         return state.anchorPosition?.let {

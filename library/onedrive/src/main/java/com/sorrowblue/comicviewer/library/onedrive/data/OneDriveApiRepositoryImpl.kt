@@ -7,15 +7,13 @@ import com.microsoft.graph.requests.DriveItemCollectionPage
 import com.microsoft.graph.requests.GraphServiceClient
 import java.io.InputStream
 import java.io.OutputStream
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import logcat.logcat
 
-internal class OneDriveApiRepositoryImpl @Inject constructor(
-    private val authenticationProvider: AuthenticationProvider
-) : OneDriveApiRepository {
+internal class OneDriveApiRepositoryImpl(private val authenticationProvider: AuthenticationProvider) :
+    OneDriveApiRepository {
 
     private val graphClient = GraphServiceClient.builder()
         .authenticationProvider(authenticationProvider)
@@ -70,7 +68,12 @@ internal class OneDriveApiRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun download(driveId: String, itemId: String, outputStream: OutputStream, onProgress: (Double) -> Unit) {
+    override suspend fun download(
+        driveId: String,
+        itemId: String,
+        outputStream: OutputStream,
+        onProgress: (Double) -> Unit
+    ) {
         withContext(Dispatchers.IO) {
             val size =
                 graphClient.drives(driveId).items(itemId).buildRequest().get()!!.size!!.toDouble()
@@ -89,7 +92,6 @@ internal class OneDriveApiRepositoryImpl @Inject constructor(
     ): DriveItemCollectionPage {
         return if (driveId == null) {
             withContext(Dispatchers.IO) {
-//                graphClient.drives(driveId()).items(graphClient.me().drive().root().buildRequest().get()!!.id!!).children().buildRequest().apply {
                 kotlin.runCatching {
                     graphClient.me().drive().root().children().buildRequest().apply {
                         top(limit)

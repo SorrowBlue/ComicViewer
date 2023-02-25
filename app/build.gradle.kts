@@ -9,8 +9,8 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
     alias(libs.plugins.dagger.hilt.android)
-    id("com.mikepenz.aboutlibraries.plugin")
-    id("org.ajoberstar.grgit") version "5.0.0"
+    alias(libs.plugins.aboutlibraries.plugin)
+    alias(libs.plugins.grgit)
 }
 
 fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex())) "-SNAPSHOT" else ""
@@ -18,7 +18,7 @@ fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex()))
 android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
-        versionCode = 5
+        versionCode = 12
         versionName = grgit.describe {
             longDescr = false
             isTags = true
@@ -41,6 +41,13 @@ android {
             keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
             keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
         }
+        create("prerelease") {
+            storeFile =
+                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
+            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
+            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
+            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
+        }
     }
 
     buildTypes {
@@ -51,6 +58,15 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
+        }
+        create("prerelease") {
+            isDebuggable = true
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("prerelease")
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -82,10 +98,11 @@ android {
         checkReleaseBuilds = false
         abortOnError = false
     }
-    dynamicFeatures += setOf(":document", ":library:googledrive")
+    dynamicFeatures += setOf(":document", ":library:googledrive", ":library:onedrive", ":dynamic")
 }
 
 dependencies {
+    api(libs.google.guava)
     api(projects.framework.ui)
     api(projects.framework.notification)
     api(projects.data.reader)
@@ -94,12 +111,12 @@ dependencies {
     api(projects.domain)
     implementation(projects.settings)
     implementation(projects.folder)
+    implementation(projects.file)
     implementation(projects.bookshelf)
     implementation(projects.favorite)
     implementation(projects.readlater)
     api(projects.library)
     implementation(projects.settings.security)
-    implementation("com.google.android.play:feature-delivery-ktx:2.0.1")
 
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.biometric)

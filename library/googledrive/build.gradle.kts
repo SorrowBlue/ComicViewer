@@ -1,41 +1,14 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.sorrowblue.buildlogic.kotlinOptions
-
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.dynamic-feature")
-    id("org.jetbrains.kotlin.android")
+    id("build-logic.android.dynamic-feature")
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
 android {
-    namespace = "com.sorrowblue.comicviewer.library.googledrive"
     resourcePrefix("googledrive")
-
-    compileSdk = libs.versions.android.compile.sdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.android.min.sdk.get().toInt()
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        release {
-            proguardFiles("proguard-rules-dynamic-features.pro")
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = "11"
-        freeCompilerArgs = listOf("-Xcontext-receivers")
-    }
 
     buildFeatures {
         dataBinding = true
@@ -47,10 +20,9 @@ android {
     }
 }
 
-kotlin.jvmToolchain(11)
-
 dependencies {
-    implementation(project(":app"))
+    implementation(projects.app)
+    implementation(projects.dynamic)
 
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.play.services.auth)
@@ -58,7 +30,7 @@ dependencies {
     implementation(libs.google.api.client.android) {
         exclude("org.apache.httpcomponents")
     }
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
+    implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.google.api.services.drive) {
         exclude("org.apache.httpcomponents")
     }

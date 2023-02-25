@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/googledrive_list_fragment">
-    <framework-fragment
+    <fragment
         android:id="@+id/googledrive_list_fragment"
         android:name="com.sorrowblue.comicviewer.library.googledrive.list.GoogleDriveListFragment"
         android:label="Google ドライブ"
@@ -26,8 +26,8 @@
             app:destination="@id/googledrive_signin_fragment"
             app:popUpTo="@id/googledrive_list_fragment"
             app:popUpToInclusive="true" />
-    </framework-fragment>
-    <framework-fragment
+    </fragment>
+    <fragment
         android:id="@+id/googledrive_signin_fragment"
         android:name="com.sorrowblue.comicviewer.library.googledrive.signin.GoogleDriveSignInFragment"
         android:label="Google ドライブ"
@@ -37,5 +37,5 @@
             app:destination="@id/googledrive_list_fragment"
             app:popUpTo="@id/googledrive_signin_fragment"
             app:popUpToInclusive="true" />
-    </framework-fragment>
+    </fragment>
 </navigation>

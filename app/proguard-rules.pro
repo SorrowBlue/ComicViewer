@@ -19,7 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.artifex.mupdf.fitz.** {
-    *;
-}
 
+-keep class com.google.android.play.core.** { *; }
+-keep class androidx.navigation.dynamicfeatures.** { *; }
+-keep class java.lang.Integer { *; }
+-keep class com.google.android.gms.tasks.** { *; }

@@ -46,6 +46,9 @@ internal fun Project.useAndroidLibraryExtension() {
             getByName("debug") {
                 consumerProguardFiles("consumer-rules.pro")
             }
+            create("prerelease") {
+                consumerProguardFiles("consumer-rules.pro")
+            }
         }
     }
 }

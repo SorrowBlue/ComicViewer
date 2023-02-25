@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object SingletonProvidesModule {
+object FrameworkAppBarConfigurationModule {
 
     @FrameworkAppBarConfiguration
     @Provides
@@ -18,7 +18,7 @@ internal object SingletonProvidesModule {
             com.sorrowblue.comicviewer.bookshelf.R.id.bookshelf_list_fragment,
             com.sorrowblue.comicviewer.favorite.R.id.favorite_list_fragment,
             com.sorrowblue.comicviewer.readlater.R.id.readlater_fragment,
-//            com.sorrowblue.comicviewer.library.R.id.library_list_fragment,
+            com.sorrowblue.comicviewer.library.R.id.library_list_fragment,
         )
     )
 }

@@ -5,7 +5,7 @@
     android:id="@+id/settings_security_navigation"
     app:startDestination="@id/settings_security_fragment">
 
-    <framework-fragment
+    <fragment
         android:id="@+id/settings_security_fragment"
         android:name="com.sorrowblue.comicviewer.settings.security.SettingsSecurityFragment"
         android:label="@string/settings_security_title">
@@ -15,7 +15,7 @@
         <action
             android:id="@+id/action_settings_security_to_settings_security_manage_password"
             app:destination="@id/settings_security_manage_password_dialog" />
-    </framework-fragment>
+    </fragment>
     <dialog
         android:id="@+id/settings_security_device_auth_request_dialog"
         android:name="com.sorrowblue.comicviewer.settings.security.DeviceAuthRequestDialog" />

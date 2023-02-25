@@ -1,18 +1,20 @@
 package com.sorrowblue.comicviewer.library.onedrive.signin
 
 import android.app.Activity
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.library.onedrive.data.AuthenticationProvider
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
+import logcat.logcat
 
-@HiltViewModel
-internal class OneDriveSignInViewModel @Inject constructor(private val authenticationProvider: AuthenticationProvider) :
-    ViewModel() {
+internal class OneDriveSignInViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val authenticationProvider: AuthenticationProvider = AuthenticationProvider.getInstance(application)
 
     val loginsState = MutableStateFlow(SignInState.NONE)
 
@@ -22,6 +24,7 @@ internal class OneDriveSignInViewModel @Inject constructor(private val authentic
             kotlin.runCatching {
                 authenticationProvider.signIn(activity).await()
             }.onSuccess {
+                logcat { "success signin. id=${it.account.id}" }
                 if (it.account.idToken != null) {
                     loginsState.value = SignInState.SIGNINED
                     done()
@@ -29,6 +32,7 @@ internal class OneDriveSignInViewModel @Inject constructor(private val authentic
                     loginsState.value = SignInState.ERROR
                 }
             }.onFailure {
+                it.printStackTrace()
                 loginsState.value = SignInState.ERROR
             }
         }

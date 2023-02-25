@@ -20,7 +20,6 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.library.box)
     implementation(projects.library.dropbox)
-    implementation(projects.library.onedrive)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)

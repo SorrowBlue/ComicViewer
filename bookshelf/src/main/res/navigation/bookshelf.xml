@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bookshelf_navigation"
     app:startDestination="@id/bookshelf_list_fragment">
-    <framework-fragment
+    <fragment
         android:id="@+id/bookshelf_list_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.list.BookshelfListFragment"
         android:label="@string/bookshelf_list_title"
@@ -22,7 +22,7 @@
         <action
             android:id="@+id/action_bookshelf_list_to_bookshelf_manage_list"
             app:destination="@id/bookshelf_manage_list_fragment" />
-    </framework-fragment>
+    </fragment>
     <dialog
         android:id="@+id/bookshelf_info_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoFragment"
@@ -49,7 +49,7 @@
             android:name="bookshelf_id"
             app:argType="integer" />
     </dialog>
-    <framework-fragment
+    <fragment
         android:id="@+id/bookshelf_manage_list_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.manage.list.BookshelfManageListFragment"
         android:label="@string/bookshelf_manage_title_list"
@@ -60,8 +60,8 @@
         <action
             android:id="@+id/action_bookshelf_manage_list_to_bookshelf_manage_device"
             app:destination="@id/bookshelf_manage_device_fragment" />
-    </framework-fragment>
-    <framework-fragment
+    </fragment>
+    <fragment
         android:id="@+id/bookshelf_manage_smb_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.manage.smb.BookshelfManageSmbFragment"
         android:label="@string/bookshelf_manage_title_smb"
@@ -75,8 +75,8 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
-    </framework-fragment>
-    <framework-fragment
+    </fragment>
+    <fragment
         android:id="@+id/bookshelf_manage_device_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.manage.device.BookshelfManageDeviceFragment"
         android:label="@string/bookshelf_manage_title_device"
@@ -90,6 +90,6 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
-    </framework-fragment>
+    </fragment>
     <include app:graph="@navigation/folder" />
 </navigation>

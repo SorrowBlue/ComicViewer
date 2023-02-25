@@ -1,9 +1,10 @@
+@file:Suppress("UnstableApiUsage")
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("build-logic.android.library")
+    id("build-logic.android.dynamic-feature")
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
-    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
@@ -16,19 +17,15 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.ui)
-    implementation(projects.framework.notification)
-    implementation(projects.domain)
+    implementation(projects.app)
+    implementation(projects.dynamic)
+    implementation("com.fasterxml.jackson.core:jackson-core:2.13.4")
 
     implementation(libs.kotlinx.coroutines.jdk8)
-    implementation("com.microsoft.identity.client:msal:4.2.0")
-    implementation("com.microsoft.graph:microsoft-graph:5.47.0")
+    implementation(libs.microsoft.graph)
+    implementation(libs.microsoft.identity.client.msal)
 
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.hilt.work)
-    kapt(libs.androidx.hilt.compiler)
-    implementation(libs.dagger.hilt.android.core)
-    kapt(libs.dagger.hilt.android.compiler)
 }
 
 kapt {

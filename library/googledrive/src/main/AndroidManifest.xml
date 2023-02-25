@@ -2,13 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution">
 
-    <application
-        android:hasCode="true"
-        android:theme="@style/Theme.ComicViewer" />
+    <application android:theme="@style/Theme.ComicViewer" />
 
     <dist:module
         dist:instant="false"
-        dist:title="@string/title_document">
+        dist:title="@string/title_googledrive">
         <dist:delivery>
             <dist:on-demand />
         </dist:delivery>

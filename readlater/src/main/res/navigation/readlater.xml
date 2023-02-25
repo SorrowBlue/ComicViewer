@@ -5,7 +5,7 @@
     android:id="@+id/readlater_navigation"
     app:startDestination="@id/readlater_fragment">
 
-    <framework-fragment
+    <fragment
         android:id="@+id/readlater_fragment"
         android:name="com.sorrowblue.comicviewer.readlater.ReadLaterFragment"
         android:label="後で見る"
@@ -18,7 +18,7 @@
         <action
             android:id="@+id/action_readlater_to_folder"
             app:destination="@id/folder_navigation" />
-    </framework-fragment>
+    </fragment>
     <include app:graph="@navigation/folder" />
     <include app:graph="@navigation/folder_display" />
     <include app:graph="@navigation/book" />
