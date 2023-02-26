@@ -1,3 +1,2 @@
 keep_files:
-  - assetlinks.json
-
+  - /.well-known/assetlinks.json
