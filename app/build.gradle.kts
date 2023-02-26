@@ -89,7 +89,7 @@ android {
 }
 
 dependencies {
-    api("com.fasterxml.jackson.core:jackson-core:2.13.4")
+    api("com.fasterxml.jackson.core:jackson-core:2.14.2")
     api(libs.google.code.gson)
     api(libs.google.guava)
     api(projects.framework.ui)
