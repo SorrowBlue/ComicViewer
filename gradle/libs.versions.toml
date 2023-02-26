@@ -8,7 +8,7 @@ android-buildtools = "33.0.2"
 kotlin = "1.8.10"
 google-ksp = "1.8.10-1.0.9"
 kotlinx-coroutines = "1.6.4"
-kotlinx-serialization = "1.4.1"
+kotlinx-serialization = "1.5.0"
 
 androidx-datastore = "1.0.0"
 androidx-lifecycle = "2.5.1"
