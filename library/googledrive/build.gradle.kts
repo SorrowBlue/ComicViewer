@@ -22,18 +22,13 @@ android {
 
 dependencies {
     implementation(projects.app)
-    implementation(projects.dynamic)
 
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.play.services.auth)
-    implementation(libs.google.http.client.gson)
-    implementation(libs.google.api.client.android) {
-        exclude("org.apache.httpcomponents")
-    }
+
+    implementation(libs.google.android.gms.play.services.auth)
+    implementation(libs.google.api.client.android)
+    implementation(libs.google.api.services.drive)
     implementation(libs.kotlinx.coroutines.play.services)
-    implementation(libs.google.api.services.drive) {
-        exclude("org.apache.httpcomponents")
-    }
 }
 
 kapt {

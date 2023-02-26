@@ -1,9 +1,8 @@
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.konan.properties.propertyString
 
-@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
     id("build-logic.android.application")
     alias(libs.plugins.kotlin.kapt)
@@ -60,7 +59,6 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         create("prerelease") {
-            isDebuggable = true
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -83,25 +81,11 @@ android {
         viewBinding = true
     }
 
-    packagingOptions {
-        resources.excludes.add("META-INF/DEPENDENCIES")
-        resources.excludes.add("META-INF/LICENSE")
-        resources.excludes.add("META-INF/LICENSE.txt")
-        resources.excludes.add("META-INF/license.txt")
-        resources.excludes.add("META-INF/NOTICE")
-        resources.excludes.add("META-INF/NOTICE.txt")
-        resources.excludes.add("META-INF/notice.txt")
-        resources.excludes.add("META-INF/ASL2.0")
-    }
-
-    lint {
-        checkReleaseBuilds = false
-        abortOnError = false
-    }
-    dynamicFeatures += setOf(":document", ":library:googledrive", ":library:onedrive", ":dynamic")
+    dynamicFeatures += setOf(":document", ":library:googledrive", ":library:onedrive")
 }
 
 dependencies {
+    api(libs.google.code.gson)
     api(libs.google.guava)
     api(projects.framework.ui)
     api(projects.framework.notification)

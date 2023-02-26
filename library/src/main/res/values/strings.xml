@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="library_list_label_google_drive" translatable="false">Google Drive</string>
+    <string name="library_list_label_one_drive" translatable="false">OneDrive</string>
+    <string name="library_list_label_dropbox" translatable="false">Dropbox</string>
+    <string name="library_list_label_box" translatable="false">Box</string>
+</resources>

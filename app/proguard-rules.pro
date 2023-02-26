@@ -20,7 +20,40 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.google.android.play.core.** { *; }
--keep class androidx.navigation.dynamicfeatures.** { *; }
--keep class java.lang.Integer { *; }
--keep class com.google.android.gms.tasks.** { *; }
+-dontwarn aQute.bnd.annotation.Resolution
+-dontwarn aQute.bnd.annotation.spi.ServiceProvider
+-dontwarn com.fasterxml.jackson.core.StreamReadCapability
+-dontwarn com.fasterxml.jackson.core.io.ContentReference
+-dontwarn com.fasterxml.jackson.core.util.JacksonFeature
+-dontwarn com.fasterxml.jackson.core.util.JacksonFeatureSet
+-dontwarn com.google.auto.value.AutoValue
+-dontwarn com.google.crypto.tink.subtle.Ed25519Sign$KeyPair
+-dontwarn com.google.crypto.tink.subtle.Ed25519Sign
+-dontwarn com.google.crypto.tink.subtle.Ed25519Verify
+-dontwarn com.google.crypto.tink.subtle.X25519
+-dontwarn java.beans.ConstructorProperties
+-dontwarn java.beans.Transient
+-dontwarn javax.xml.stream.Location
+-dontwarn javax.xml.stream.XMLEventFactory
+-dontwarn javax.xml.stream.XMLInputFactory
+-dontwarn javax.xml.stream.XMLOutputFactory
+-dontwarn javax.xml.stream.XMLResolver
+-dontwarn javax.xml.stream.XMLStreamConstants
+-dontwarn javax.xml.stream.XMLStreamException
+-dontwarn javax.xml.stream.XMLStreamReader
+-dontwarn javax.xml.stream.XMLStreamWriter
+-dontwarn javax.xml.stream.util.StreamReaderDelegate
+-dontwarn javax.xml.stream.util.XMLEventAllocator
+-dontwarn org.bouncycastle.asn1.cms.ContentInfo
+-dontwarn org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider
+-dontwarn org.bouncycastle.jsse.BCSSLParameters
+-dontwarn org.bouncycastle.jsse.BCSSLSocket
+-dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
+-dontwarn org.conscrypt.Conscrypt$Version
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
+-dontwarn org.openjsse.javax.net.ssl.SSLParameters
+-dontwarn org.openjsse.javax.net.ssl.SSLSocket
+-dontwarn org.openjsse.net.ssl.OpenJSSE
+-dontwarn org.slf4j.impl.StaticLoggerBinder
+-dontwarn reactor.blockhound.integration.BlockHoundIntegration

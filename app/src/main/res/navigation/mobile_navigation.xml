@@ -35,10 +35,6 @@
     <include app:graph="@navigation/favorite_add" />
     <include app:graph="@navigation/settings" />
     <include app:graph="@navigation/library" />
-    <fragment
-        android:id="@+id/extension_fragment"
-        android:name="com.sorrowblue.comicviewer.app.extension.ExtensionFragment"
-        android:label="拡張機能" />
     <include app:graph="@navigation/file" />
 </navigation>
 

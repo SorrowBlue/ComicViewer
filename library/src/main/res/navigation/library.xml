@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/library_navigation"
-    app:progressDestination="@+id/frameworkProgressFragment"
     app:startDestination="@id/library_list_fragment">
 
     <fragment
@@ -35,8 +34,4 @@
         app:graphResName="onedrive"
         app:moduleName="onedrive" />
     <include app:graph="@navigation/box" />
-    <fragment
-        android:id="@+id/frameworkProgressFragment"
-        android:name="com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkProgressFragment"
-        android:label="FrameworkProgressFragment" />
 </navigation>

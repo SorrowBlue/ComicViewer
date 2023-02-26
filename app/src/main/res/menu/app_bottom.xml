@@ -17,8 +17,4 @@
         android:id="@id/library_navigation"
         android:icon="@drawable/ic_twotone_library_books_24"
         android:title="ライブラリ" />
-    <item
-        android:id="@+id/extension_fragment"
-        android:icon="@drawable/ic_twotone_extension_24"
-        android:title="拡張機能" />
 </menu>

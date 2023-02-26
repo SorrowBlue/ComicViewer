@@ -61,29 +61,11 @@ internal class LibraryListAdapter(private val onClick: (Library, FragmentNavigat
         ) {
 
         fun bind(item: CloudStorage) {
-            binding.root.transitionName = item.name
+            binding.root.transitionName = item::class.qualifiedName
             binding.root.setOnClickListener { onClick.invoke(item, FragmentNavigatorExtras(it to it.transitionName)) }
-            when (item) {
-                CloudStorage.GOOGLE_DRIVE -> {
-                    binding.headline.text = "Google ドライブ"
-                    binding.leadingIcon.setImageResource(FrameworkResourceR.drawable.ic_google_drive_icon_2020)
-                }
-
-                CloudStorage.BOX -> {
-                    binding.headline.text = "BOX"
-                    binding.leadingIcon.setImageResource(FrameworkResourceR.drawable.ic_box_blue_cmyk)
-                }
-
-                CloudStorage.DROP_BOX -> {
-                    binding.headline.text = "DropBox"
-                    binding.leadingIcon.setImageResource(FrameworkResourceR.drawable.ic_dropbox_tab_32)
-                }
-
-                CloudStorage.ONE_DRIVE -> {
-                    binding.headline.text = "OneDrive"
-                    binding.leadingIcon.setImageResource(FrameworkResourceR.drawable.ic_microsoft_office_onedrive)
-                }
-            }
+            binding.headline.setText(item.titleRes)
+            binding.leadingIcon.setImageResource(item.iconRes)
+            binding.trailingIcon.setImageResource(if (item.isInstalled) com.sorrowblue.comicviewer.framework.resource.R.drawable.ic_twotone_arrow_right_24 else com.sorrowblue.comicviewer.framework.resource.R.drawable.ic_twotone_download_24)
         }
     }
 }

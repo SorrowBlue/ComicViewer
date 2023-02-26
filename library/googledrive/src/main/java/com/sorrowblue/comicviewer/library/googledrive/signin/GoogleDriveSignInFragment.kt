@@ -15,8 +15,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.api.services.drive.DriveScopes
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
-import com.sorrowblue.comicviewer.library.databinding.GoogledriveFragmentSigninBinding
 import com.sorrowblue.comicviewer.library.R
+import com.sorrowblue.comicviewer.library.databinding.GoogledriveFragmentSigninBinding
 import com.sorrowblue.jetpack.binding.viewBinding
 import dev.chrisbanes.insetter.applyInsetter
 

@@ -1,1 +1,3 @@
--keep class net.sf.sevenzipjbinding.** { *; }
+-keep class net.sf.sevenzipjbinding.** {
+    *;
+}

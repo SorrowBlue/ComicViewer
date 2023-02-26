@@ -5,9 +5,6 @@ android-min-sdk = "28"
 android-target-sdk = "33"
 android-buildtools = "33.0.2"
 
-google-api-client-android = "2.2.0"
-google-api-services-drive = "v3-rev20230212-2.0.0"
-google-http-client-gson = "1.42.3"
 kotlin = "1.8.10"
 google-ksp = "1.8.10-1.0.9"
 kotlinx-coroutines = "1.6.4"
@@ -15,7 +12,7 @@ kotlinx-serialization = "1.4.1"
 
 androidx-datastore = "1.0.0"
 androidx-lifecycle = "2.5.1"
-androidx-navigation = "2.5.3"
+androidx-navigation = "2.6.0-alpha06"
 androidx-paging = "3.1.1"
 androidx-room = "2.5.0"
 androidx-work = "2.8.0"
@@ -23,7 +20,6 @@ androidx-work = "2.8.0"
 dagger-hilt-android = "2.45"
 
 android-gradle = "7.4.1"
-play-services-auth = "20.4.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
@@ -42,9 +38,6 @@ grgit = "org.ajoberstar.grgit:5.0.0"
 
 [libraries]
 android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
-google-api-client-android = { module = "com.google.api-client:google-api-client-android", version.ref = "google-api-client-android" }
-google-api-services-drive = { module = "com.google.apis:google-api-services-drive", version.ref = "google-api-services-drive" }
-google-http-client-gson = { module = "com.google.http-client:google-http-client-gson", version.ref = "google-http-client-gson" }
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "dagger-hilt-android" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -118,8 +111,11 @@ google-android-play-feature-delivery-ktx = "com.google.android.play:feature-deli
 google-code-gson = "com.google.code.gson:gson:2.10.1"
 google-guava = "com.google.guava:guava:31.1-jre"
 google-material = "com.google.android.material:material:1.8.0"
+google-android-gms-play-services-auth = "com.google.android.gms:play-services-auth:20.4.1"
+google-api-client-android = "com.google.api-client:google-api-client-android:2.2.0"
+google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev20230212-2.0.0"
+google-http-client-gson = "com.google.http-client:google-http-client-gson:1.42.3"
 
-play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.10"
 dropbox-core-sdk = "com.dropbox.core:dropbox-core-sdk:5.4.4"
 

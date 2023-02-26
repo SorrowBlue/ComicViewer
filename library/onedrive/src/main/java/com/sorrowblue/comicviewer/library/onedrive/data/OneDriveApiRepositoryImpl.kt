@@ -99,7 +99,8 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
                         skipToken?.let(::skipToken)
                     }.get()!!
                 }.getOrElse {
-                    list(driveId, itemId, limit, skipToken)
+                    throw it
+//                    list(driveId, itemId, limit, skipToken)
                 }
             }
         } else {

@@ -18,10 +18,12 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingAndroidViewModel
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class GoogleDriveListViewModel(
     application: Application,
     override val savedStateHandle: SavedStateHandle
@@ -49,8 +51,7 @@ internal class GoogleDriveListViewModel(
         credential.selectedAccount = it.account
         val driverService =
             Drive.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance(), credential)
-                .setApplicationName("ComicViewer")
-                .build()
+                .setApplicationName("ComicViewer").build()
         Pager(PagingConfig(20)) { DrivePagingSource(driverService, parent) }.flow
     }.cachedIn(viewModelScope)
 }

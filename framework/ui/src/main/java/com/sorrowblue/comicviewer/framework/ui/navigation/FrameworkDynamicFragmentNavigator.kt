@@ -13,6 +13,7 @@ import androidx.navigation.dynamicfeatures.DynamicExtras
 import androidx.navigation.dynamicfeatures.DynamicInstallManager
 import androidx.navigation.fragment.FragmentNavigator
 import com.sorrowblue.comicviewer.framework.ui.R
+import logcat.logcat
 
 @Navigator.Name("fragment")
 class FrameworkDynamicFragmentNavigator(
@@ -44,6 +45,7 @@ class FrameworkDynamicFragmentNavigator(
         if (destination is Destination) {
             val moduleName = destination.moduleName
             if (moduleName != null && installManager.needsInstall(moduleName)) {
+                logcat { "navigate moduleName=$moduleName, ${installManager.needsInstall(moduleName)}" }
                 installManager.performInstall(entry, extras, moduleName)
                 return
             }

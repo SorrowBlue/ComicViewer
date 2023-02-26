@@ -18,14 +18,13 @@ android {
 
 dependencies {
     implementation(projects.app)
-    implementation(projects.dynamic)
-    implementation("com.fasterxml.jackson.core:jackson-core:2.13.4")
 
-    implementation(libs.kotlinx.coroutines.jdk8)
+    implementation(libs.androidx.work.runtime.ktx)
+
     implementation(libs.microsoft.graph)
     implementation(libs.microsoft.identity.client.msal)
 
-    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.kotlinx.coroutines.jdk8)
 }
 
 kapt {
