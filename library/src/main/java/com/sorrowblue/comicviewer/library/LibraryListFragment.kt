@@ -38,7 +38,8 @@ internal class LibraryListFragment : FrameworkFragment(R.layout.library_fragment
                 )
 
                 is CloudStorage.Box -> navigate(
-                    LibraryListFragmentDirections.actionLibraryListToBoxNavigation(), extras
+                    LibraryListFragmentDirections.actionLibraryListToBoxNavigation(extras.sharedElements.values.first()),
+                    extras
                 )
 
                 is CloudStorage.Dropbox -> navigate(
@@ -65,6 +66,13 @@ internal class LibraryListFragment : FrameworkFragment(R.layout.library_fragment
         transitionName: String
     ) = object : NavDirections {
         override val actionId = actionLibraryListToGoogledriveNavigation().actionId
+        override val arguments = bundleOf("transitionName" to transitionName)
+    }
+
+    private fun LibraryListFragmentDirections.Companion.actionLibraryListToBoxNavigation(
+        transitionName: String
+    ) = object : NavDirections {
+        override val actionId = actionLibraryListToBoxNavigation().actionId
         override val arguments = bundleOf("transitionName" to transitionName)
     }
 

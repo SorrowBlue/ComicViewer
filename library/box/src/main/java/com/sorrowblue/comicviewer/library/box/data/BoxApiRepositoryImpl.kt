@@ -9,7 +9,6 @@ import com.box.sdk.BoxUser
 import com.box.sdk.PagingParameters
 import com.box.sdk.SortParameters
 import java.io.OutputStream
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -21,7 +20,7 @@ import logcat.logcat
 private val CLIENT_ID = "nihdm7dthg9lm7m3b41bpw7jp7b0lb9z"
 private val CLIENT_SECRET = "znx5P0kuwJ5LNqF3UG8Yw8Xs05dw4zNq"
 
-internal class BoxApiRepositoryImpl @Inject constructor(
+internal class BoxApiRepositoryImpl(
     private val dropboxCredentialDataStore: DataStore<BoxConnectionState>,
 ) : BoxApiRepository {
 
@@ -87,9 +86,12 @@ internal class BoxApiRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signOut() {
-        val api = apiFlow.first() ?: return
-        api.revokeToken()
-        dropboxCredentialDataStore.updateData { it.copy(state = null) }
+        withContext(Dispatchers.IO) {
+            apiFlow.first()?.let { api ->
+                api.revokeToken()
+                dropboxCredentialDataStore.updateData { it.copy(state = null) }
+            }
+        }
     }
 
     override suspend fun list(path: String?, limit: Long, offset: Long): List<BoxItem.Info>? {

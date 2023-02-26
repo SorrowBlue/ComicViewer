@@ -9,24 +9,23 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
-import com.sorrowblue.comicviewer.library.box.R
-import com.sorrowblue.comicviewer.library.box.databinding.BoxFragmentListBinding
+import com.sorrowblue.comicviewer.library.databinding.LibraryFragmentCloudBinding
 import com.sorrowblue.jetpack.binding.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.onEach
 
-@AndroidEntryPoint
-internal class BoxListFragment : PagingFragment<File>(R.layout.box_fragment_list) {
+internal class BoxListFragment :
+    PagingFragment<File>(com.sorrowblue.comicviewer.library.R.layout.library_fragment_cloud) {
 
-    private val binding: BoxFragmentListBinding by viewBinding()
+    private val binding: LibraryFragmentCloudBinding by viewBinding()
     override val viewModel: BoxListViewModel by viewModels()
 
     override val adapter
@@ -54,7 +53,7 @@ internal class BoxListFragment : PagingFragment<File>(R.layout.box_fragment_list
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = viewModel
+        appBarConfiguration = AppBarConfiguration(setOf())
         binding.toolbar.setupWithNavController()
         binding.toolbar.applyInsetter {
             type(systemBars = true, displayCutout = true) {
@@ -82,21 +81,6 @@ internal class BoxListFragment : PagingFragment<File>(R.layout.box_fragment_list
     private val createFileRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data?.data != null) {
-//                val request = OneTimeWorkRequestBuilder<DropBoxDownloadWorker>()
-//                    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-//                    .setInputData(
-//                        workDataOf(
-//                            "outputUri" to it.data!!.data!!.toString(),
-//                            "path" to file.path
-//                        )
-//                    )
-//                    .setConstraints(
-//                        Constraints.Builder()
-//                            .setRequiresStorageNotLow(true)
-//                            .build()
-//                    )
-//                    .build()
-//                WorkManager.getInstance(requireContext()).enqueue(request)
             }
         }
 }

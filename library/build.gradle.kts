@@ -18,7 +18,6 @@ android {
 dependencies {
     implementation(projects.framework.ui)
     implementation(projects.domain)
-    implementation(projects.library.box)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)

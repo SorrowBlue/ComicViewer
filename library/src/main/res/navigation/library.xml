@@ -37,5 +37,25 @@
         app:graphPackage="${applicationId}.dropbox"
         app:graphResName="dropbox"
         app:moduleName="dropbox" />
-    <include app:graph="@navigation/box" />
+    <include-dynamic
+        android:id="@+id/box_navigation"
+        app:graphPackage="${applicationId}.box"
+        app:graphResName="box"
+        app:moduleName="box" />
+
+    <fragment
+        android:id="@+id/box_oauth2_fragment"
+        android:name="com.sorrowblue.comicviewer.library.box.oauth.BoxOauth2Fragment"
+        android:label="Box">
+        <argument
+            android:name="state"
+            app:argType="string" />
+        <argument
+            android:name="code"
+            app:argType="string" />
+        <deepLink
+            android:id="@+id/boxDeeplink"
+            android:autoVerify="true"
+            app:uri="comicviewer.sorrowblue.com/box/oauth2?state={state}&amp;code={code}" />
+    </fragment>
 </navigation>

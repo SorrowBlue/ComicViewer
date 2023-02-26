@@ -53,16 +53,14 @@ android {
         release {
             isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
         }
         create("prerelease") {
             isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("prerelease")
         }
@@ -70,8 +68,7 @@ android {
             applicationIdSuffix = ".debug"
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
@@ -81,7 +78,14 @@ android {
         viewBinding = true
     }
 
-    dynamicFeatures += setOf(":document", ":library:googledrive", ":library:onedrive", ":library:dropbox")
+    dynamicFeatures += setOf(
+        ":dynamic",
+        ":document",
+        ":library:googledrive",
+        ":library:onedrive",
+        ":library:dropbox",
+        ":library:box"
+    )
 }
 
 dependencies {

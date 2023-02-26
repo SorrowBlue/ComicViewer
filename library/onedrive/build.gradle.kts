@@ -18,6 +18,7 @@ android {
 
 dependencies {
     implementation(projects.app)
+    implementation(projects.dynamic)
 
     implementation(libs.androidx.work.runtime.ktx)
 

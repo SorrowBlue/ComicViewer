@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/box_navigation"
     app:startDestination="@id/box_list_fragment">
     <fragment
         android:id="@+id/box_list_fragment"
@@ -33,24 +32,4 @@
         android:name="com.sorrowblue.comicviewer.library.box.signin.BoxSignInFragment"
         android:label="Box"
         tools:layout="@layout/box_fragment_signin" />
-    <fragment
-        android:id="@+id/box_oauth2_fragment"
-        android:name="com.sorrowblue.comicviewer.library.box.oauth.BoxOauth2Fragment"
-        android:label="Box"
-        tools:layout="@layout/box_fragment_signin">
-        <argument
-            android:name="state"
-            app:argType="string" />
-        <argument
-            android:name="code"
-            app:argType="string" />
-        <deepLink
-            android:id="@+id/boxDeeplink"
-            app:uri="comicviewer.sorrowblue.com/box/oauth2?state={state}&amp;code={code}" />
-        <action
-            android:id="@+id/action_box_oauth2_to_box_list"
-            app:destination="@id/box_list_fragment"
-            app:popUpTo="@id/box_navigation"
-            app:popUpToInclusive="true" />
-    </fragment>
 </navigation>

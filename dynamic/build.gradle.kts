@@ -5,5 +5,5 @@ plugins {
 dependencies {
     implementation(projects.app)
 
-    api(libs.google.code.gson)
+    api(libs.androidx.browser)
 }
