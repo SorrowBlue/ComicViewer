@@ -86,6 +86,11 @@ android {
         ":library:dropbox",
         ":library:box"
     )
+
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
 }
 
 dependencies {

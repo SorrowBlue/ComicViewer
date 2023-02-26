@@ -1,10 +1,10 @@
 package com.sorrowblue.comicviewer.domain.interactor.bookshelf
 
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.repository.FileRepository
-import com.sorrowblue.comicviewer.domain.repository.FileRepositoryError
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepositoryError
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepositoryError
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfError
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.framework.Result

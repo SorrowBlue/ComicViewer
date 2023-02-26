@@ -17,9 +17,9 @@ import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.request.BookPageRequest
 import com.sorrowblue.comicviewer.framework.ui.fragment.encodeBase64
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
-import kotlin.properties.Delegates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.properties.Delegates
 
 internal class BookAdapter(
     val book: Book,

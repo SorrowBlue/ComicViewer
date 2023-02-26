@@ -2,10 +2,10 @@ package com.sorrowblue.comicviewer.domain.repository
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import kotlinx.coroutines.flow.Flow
 
 interface FavoriteRepository {

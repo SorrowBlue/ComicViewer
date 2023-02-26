@@ -136,7 +136,7 @@
                 android:id="@+id/last_read_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{Converter.lastReadPage(context, viewModel.bookFlow.lastPageRead, viewModel.bookFlow.totalPageCount)}"
+                android:text="@{Converter.lastReadPage(viewModel.bookFlow.lastPageRead, viewModel.bookFlow.totalPageCount)}"
                 app:chipIcon="@drawable/ic_twotone_history_24"
                 tools:text="199/255 page" />
 

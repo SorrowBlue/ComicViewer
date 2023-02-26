@@ -10,8 +10,8 @@ import androidx.annotation.Keep
 import androidx.core.content.ContextCompat
 import com.artifex.mupdf.fitz.Document
 import com.artifex.mupdf.fitz.android.AndroidDrawDevice
-import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
+import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import kotlin.math.min

@@ -4,9 +4,9 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.google.android.play.core.splitcompat.SplitCompatApplication
 import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
+import javax.inject.Inject
 
 @HiltAndroidApp
 class MainApplication : SplitCompatApplication(), Configuration.Provider {

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.file.info
 
-import android.content.Context
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -31,5 +30,5 @@ object Converter {
         .atZone(ZoneOffset.systemDefault())
         .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
     @JvmStatic
-    fun lastReadPage(context: Context, lastReadPage: Int,maxPage: Int) = "${lastReadPage}/${maxPage} pages"
+    fun lastReadPage(lastReadPage: Int, maxPage: Int) = "${lastReadPage}/${maxPage} pages"
 }

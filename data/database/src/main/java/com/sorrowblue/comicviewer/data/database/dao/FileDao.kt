@@ -77,18 +77,10 @@ internal interface FileDao {
     suspend fun selectCacheKeysSortIndex(bookshelfId: Int, parent: String, limit: Int): List<String>
 
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit")
-    suspend fun selectCacheKeysSortLastModified(
-        bookshelfId: Int,
-        parent: String,
-        limit: Int
-    ): List<String>
+    suspend fun selectCacheKeysSortLastModified(bookshelfId: Int, parent: String, limit: Int): List<String>
 
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit")
-    suspend fun selectCacheKeysSortLastRead(
-        bookshelfId: Int,
-        parent: String,
-        limit: Int
-    ): List<String>
+    suspend fun selectCacheKeysSortLastRead(bookshelfId: Int, parent: String, limit: Int): List<String>
 
     @Query("UPDATE file SET cache_key = '' WHERE cache_key = :cacheKey")
     suspend fun removeCacheKey(cacheKey: String)
@@ -97,46 +89,30 @@ internal interface FileDao {
     suspend fun selectRootBy(bookshelfId: Int): File?
 
 
-    fun pagingSource(
-        bookshelfId: Int,
-        parent: String,
-        sortType: SortType
-    ): PagingSource<Int, File> {
-        val query = SupportSQLiteQueryBuilder.builder("file")
-            .apply {
-                columns(arrayOf("*"))
-                selection(
-                    "bookshelf_id = :bookshelfId AND parent = :parent",
-                    arrayOf(bookshelfId, parent)
-                )
-                when (sortType) {
-                    is SortType.NAME -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
-                    is SortType.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
-                    is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
-                }.let(::orderBy)
-            }.create()
-        return pagingSource(query)
+    fun pagingSource(bookshelfId: Int, parent: String, sortType: SortType): PagingSource<Int, File> {
+        val query = SupportSQLiteQueryBuilder.builder("file").apply {
+            columns(arrayOf("*"))
+            selection("bookshelf_id = :bookshelfId AND parent = :parent", arrayOf(bookshelfId, parent))
+            when (sortType) {
+                is SortType.NAME -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
+                is SortType.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
+                is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
+            }.let(::orderBy)
+        }.create()
+        @Suppress("DEPRECATION") return pagingSource(query)
     }
 
-    fun pagingSourceQuery(
-        bookshelfId: Int,
-        q: String,
-        sortType: SortType
-    ): PagingSource<Int, File> {
-        val query = SupportSQLiteQueryBuilder.builder("file")
-            .apply {
-                columns(arrayOf("*"))
-                selection(
-                    "bookshelf_id = :bookshelfId AND name LIKE :path",
-                    arrayOf(bookshelfId, "%$q%")
-                )
-                when (sortType) {
-                    is SortType.NAME -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
-                    is SortType.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
-                    is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
-                }.let(::orderBy)
-            }.create()
-        return pagingSource(query)
+    fun pagingSourceQuery(bookshelfId: Int, q: String, sortType: SortType): PagingSource<Int, File> {
+        val query = SupportSQLiteQueryBuilder.builder("file").apply {
+            columns(arrayOf("*"))
+            selection("bookshelf_id = :bookshelfId AND name LIKE :path", arrayOf(bookshelfId, "%$q%"))
+            when (sortType) {
+                is SortType.NAME -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
+                is SortType.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
+                is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
+            }.let(::orderBy)
+        }.create()
+        @Suppress("DEPRECATION") return pagingSource(query)
     }
 
 }

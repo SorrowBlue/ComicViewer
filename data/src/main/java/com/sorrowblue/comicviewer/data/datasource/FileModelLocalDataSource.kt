@@ -3,10 +3,10 @@ package com.sorrowblue.comicviewer.data.datasource
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
+import com.sorrowblue.comicviewer.data.common.SimpleFileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
-import com.sorrowblue.comicviewer.data.common.SimpleFileModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortType
 import kotlinx.coroutines.flow.Flow
 

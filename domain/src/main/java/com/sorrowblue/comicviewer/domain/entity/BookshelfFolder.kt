@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.entity
 
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 
 @JvmInline
 value class BookshelfFolder(val value: Pair<Bookshelf, Folder>) {

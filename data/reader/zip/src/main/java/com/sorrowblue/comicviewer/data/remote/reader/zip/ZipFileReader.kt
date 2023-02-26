@@ -4,8 +4,8 @@ import android.icu.text.Collator
 import android.icu.text.RuleBasedCollator
 import com.sorrowblue.comicviewer.data.common.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.data.common.extension
-import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
+import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

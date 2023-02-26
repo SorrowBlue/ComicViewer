@@ -3,9 +3,9 @@ package com.sorrowblue.comicviewer.bookshelf.info
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs

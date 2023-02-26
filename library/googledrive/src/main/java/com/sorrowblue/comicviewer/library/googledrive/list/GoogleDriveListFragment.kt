@@ -20,8 +20,6 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.Scope
-import com.google.api.services.drive.DriveScopes
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle

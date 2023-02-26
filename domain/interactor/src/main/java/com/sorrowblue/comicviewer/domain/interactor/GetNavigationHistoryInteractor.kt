@@ -1,11 +1,11 @@
 package com.sorrowblue.comicviewer.domain.interactor
 
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.model.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory

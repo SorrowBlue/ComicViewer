@@ -66,7 +66,7 @@ internal class AuthFragment : FrameworkFragment(R.layout.fragment_auth) {
             binding.textInputLayout.error = null
             binding.textInputLayout.isErrorEnabled = false
         }
-        binding.password.setOnEditorActionListener { v, actionId, event ->
+        binding.password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 if (binding.password.editableText.toString() == runBlocking { viewModel.settings.first() }.password) {
                     findNavController().navigateUp()

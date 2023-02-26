@@ -12,9 +12,9 @@ import androidx.work.WorkManager
 import com.sorrowblue.comicviewer.app.databinding.FragmentWorkBinding
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.jetpack.binding.viewBinding
-import java.util.UUID
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 internal class WorkFragment : FrameworkFragment(R.layout.fragment_work) {
 
