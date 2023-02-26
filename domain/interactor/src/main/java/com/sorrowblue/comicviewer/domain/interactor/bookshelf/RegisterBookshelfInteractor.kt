@@ -22,8 +22,8 @@ internal class RegisterBookshelfInteractor @Inject constructor(
 
     override suspend fun run(request: Request): Result<Bookshelf, RegisterBookshelfError> {
         return bookshelfRepository.connect(request.bookshelf, request.path).fold({
-            fileRepository.getFolder(request.bookshelf, request.path).fold({
-                bookshelfRepository.register(request.bookshelf, it).fold({
+            fileRepository.getFolder(request.bookshelf, request.path).fold({ folder ->
+                bookshelfRepository.register(request.bookshelf, folder).fold({
                     Result.Success(it)
                 }, {
                     when (it) {

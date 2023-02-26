@@ -24,7 +24,7 @@ internal class SmbClientTest {
         }
     }
 
-    val pc = BookshelfModel.SmbServer(
+    private val pc = BookshelfModel.SmbServer(
         BookshelfModelId(0),
         "Test",
         "SORROWBLUE-DESK",

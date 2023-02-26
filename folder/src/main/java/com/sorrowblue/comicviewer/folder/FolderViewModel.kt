@@ -50,7 +50,7 @@ internal class FolderViewModel @Inject constructor(
         )
     ).mapNotNull { it.dataOrNull }
 
-    val serverFlow = serverFolderFlow.map { it.bookshelf }.stateIn { null }
+    private val serverFlow = serverFolderFlow.map { it.bookshelf }.stateIn { null }
 
     private val folderFlow = serverFolderFlow.map { it.folder }.stateIn { null }
 

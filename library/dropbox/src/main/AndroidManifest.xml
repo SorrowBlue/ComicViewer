@@ -25,6 +25,10 @@
         </activity>
     </application>
 
+    <queries>
+        <package android:name="com.dropbox.android" />
+    </queries>
+
     <dist:module
         dist:instant="false"
         dist:title="@string/title_dropbox">

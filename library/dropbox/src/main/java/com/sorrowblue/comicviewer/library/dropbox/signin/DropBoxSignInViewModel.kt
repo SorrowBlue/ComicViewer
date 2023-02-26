@@ -17,7 +17,7 @@ internal class DropBoxSignInViewModel(application: Application) : AndroidViewMod
         repository.storeCredential(dbxCredential)
     }
 
-    suspend fun currentAccount(): Flow<FullAccount?> {
+    fun currentAccount(): Flow<FullAccount?> {
         return repository.accountFlow
     }
 }

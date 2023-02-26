@@ -183,8 +183,8 @@ internal class FileRepositoryImpl @Inject constructor(
             } else {
                 fileModelLocalDataSource.prevFileModel(BookshelfModelId(bookshelfId.value), path)
             }
-        }.fold({
-            it.map { if (it != null) Result.Success(it.toFile()) else Result.Error(Unit) }
+        }.fold({ modelFlow ->
+            modelFlow.map { if (it != null) Result.Success(it.toFile()) else Result.Error(Unit) }
         }, {
             flowOf(Result.Exception(Unknown(it)))
         })

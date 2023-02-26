@@ -1,11 +1,10 @@
 package com.sorrowblue.comicviewer.settings.security
 
-import android.os.Build
 import androidx.biometric.BiometricManager
 
 object BiometricUtil {
 
-    val authenticators = BiometricManager.Authenticators.BIOMETRIC_WEAK
+    const val authenticators = BiometricManager.Authenticators.BIOMETRIC_WEAK
 }
 
 fun <R> BiometricManager.check(

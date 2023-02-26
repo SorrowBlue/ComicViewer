@@ -75,8 +75,8 @@ internal class BookPageFetcher(
                         dataSource = DataSource.NETWORK
                     )
                 }
-                if (bytes.isNotEmpty()) {
-                    return SourceResult(
+                return if (bytes.isNotEmpty()) {
+                    SourceResult(
                         source = ImageSource(Buffer().apply { write(bytes) }, context),
                         mimeType = null,
                         dataSource = DataSource.NETWORK
@@ -84,7 +84,7 @@ internal class BookPageFetcher(
                 } else {
                     inputStream = fileReader.pageInputStream(data.pageIndex)
                     bytes = inputStream.use { it.readBytes() }
-                    return SourceResult(
+                    SourceResult(
                         source = ImageSource(Buffer().apply { write(bytes) }, context),
                         mimeType = null,
                         dataSource = DataSource.NETWORK

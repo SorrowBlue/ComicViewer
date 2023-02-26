@@ -23,9 +23,12 @@ import logcat.logcat
 internal class DropBoxDownloadWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
 
+    companion object {
+        private const val NOTIFICATION_ID: Int = 3
+    }
+
     private val repository = DropBoxApiRepository.getInstance(appContext)
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
-    private val NOTIFICATION_ID: Int = 3
 
     private val notificationBuilder = NotificationCompat.Builder(appContext, ChannelID.DOWNLOAD.id)
         .setSmallIcon(R.drawable.ic_twotone_downloading_24)

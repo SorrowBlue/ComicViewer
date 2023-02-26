@@ -32,8 +32,8 @@ internal class DropBoxApiRepositoryImpl(
     }
 
     override fun isAuthenticated(): Flow<Boolean> {
-        return dropboxCredentialDataStore.data.map {
-            it.credential != null && kotlin.runCatching {
+        return dropboxCredentialDataStore.data.map { credential ->
+            credential.credential != null && kotlin.runCatching {
                 client().check().user("auth_check").result == "auth_check"
             }.onFailure {
                 it.printStackTrace()

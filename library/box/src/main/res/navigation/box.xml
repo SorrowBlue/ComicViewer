@@ -7,7 +7,7 @@
         android:id="@+id/box_list_fragment"
         android:name="com.sorrowblue.comicviewer.library.box.list.BoxListFragment"
         android:label="BoxListFragment"
-        tools:layout="@layout/box_fragment_list">
+        tools:layout="@layout/library_fragment_cloud">
         <action
             android:id="@+id/action_box_list_to_box_signin"
             app:destination="@id/box_signin_fragment"
@@ -31,5 +31,5 @@
         android:id="@+id/box_signin_fragment"
         android:name="com.sorrowblue.comicviewer.library.box.signin.BoxSignInFragment"
         android:label="Box"
-        tools:layout="@layout/box_fragment_signin" />
+        tools:layout="@layout/googledrive_fragment_signin" />
 </navigation>

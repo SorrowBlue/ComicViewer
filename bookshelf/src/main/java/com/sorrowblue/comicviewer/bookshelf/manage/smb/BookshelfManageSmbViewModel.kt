@@ -75,7 +75,7 @@ internal class BookshelfManageSmbViewModel @Inject constructor(
     val isConnecting = MutableStateFlow(false)
 
     fun connect(done: (Boolean) -> Unit) {
-        val _smbServer = smbServerFlow.value ?: kotlin.run {
+        val oldSmbServer = smbServerFlow.value ?: kotlin.run {
             if (args.bookshelfId == -1) null else return
         }
         isConnecting.value = true
@@ -95,7 +95,7 @@ internal class BookshelfManageSmbViewModel @Inject constructor(
                 usernameFlow.value,
                 passwordFlow.value
             )
-        val smbServer = _smbServer?.copy(
+        val smbServer = oldSmbServer?.copy(
             displayName = displayNameFlow.value,
             host = hostFlow.value,
             port = port,

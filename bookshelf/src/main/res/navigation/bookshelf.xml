@@ -8,10 +8,10 @@
         android:id="@+id/bookshelf_list_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.list.BookshelfListFragment"
         android:label="@string/bookshelf_list_title"
-        app:bottom_nav_visible="true"
-        app:fab_icon="@drawable/ic_twotone_add_24"
-        app:fab_label="@string/bookshelf_list_btn_new"
-        app:fab_visible="true"
+        app:bottomNavVisible="true"
+        app:fabIcon="@drawable/ic_twotone_add_24"
+        app:fabLabel="@string/bookshelf_list_btn_new"
+        app:fabVisible="true"
         tools:layout="@layout/bookshelf_fragment_list">
         <action
             android:id="@+id/action_bookshelf_list_to_folder"

@@ -191,7 +191,7 @@ internal class SmbFileClient @AssistedInject constructor(
     ): List<FileModel> {
         return kotlin.runCatching {
             fileModel.smbFile.use(SmbFile::listFiles)
-                .map { it.use { it.toFileModel(resolveImageFolder) } }
+                .map { smbFile -> smbFile.use { it.toFileModel(resolveImageFolder) } }
         }.getOrElse {
             it.printStackTrace()
             when (it) {

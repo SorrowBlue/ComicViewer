@@ -1,4 +1,5 @@
-@Suppress("DSL_SCOPE_VIOLATION")
+@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
+
 plugins {
     id("build-logic.android.library")
     alias(libs.plugins.kotlin.kapt)

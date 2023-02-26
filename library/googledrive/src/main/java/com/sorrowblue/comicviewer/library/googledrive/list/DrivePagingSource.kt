@@ -9,9 +9,8 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import logcat.logcat
 
-internal class DrivePagingSource(private val driverService: Drive, val parent: String) :
+internal class DrivePagingSource(private val driverService: Drive, private val parent: String) :
     PagingSource<String, File>() {
     override fun getRefreshKey(state: PagingState<String, File>): String? {
         return state.anchorPosition?.let {
@@ -27,11 +26,8 @@ internal class DrivePagingSource(private val driverService: Drive, val parent: S
                 .setPageSize(params.loadSize)
                 .setPageToken(params.key)
                 .setFields("nextPageToken,files(id,name,parents,modifiedTime,size,mimeType,iconLink)")
-            logcat { "uri=${request.buildHttpRequestUrl()}" }
             val fileList = request.execute()
-            logcat { "${fileList.kind}" }
             val list = fileList.files?.map {
-                logcat { "thumbnailLink=${it.thumbnailLink}" }
                 if (it.mimeType == "application/vnd.google-apps.folder") {
                     Folder(
                         BookshelfId(0),

@@ -1,4 +1,5 @@
-@Suppress("DSL_SCOPE_VIOLATION")
+@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
+
 plugins {
     id("build-logic.android.library")
     alias(libs.plugins.kotlin.kapt)
@@ -23,7 +24,7 @@ dependencies {
     implementation(projects.settings.folder)
     implementation(projects.settings.security)
 
-    implementation ("com.mikepenz:aboutlibraries:10.6.0")
+    implementation("com.mikepenz:aboutlibraries:10.6.0")
 
     implementation(libs.androidx.hilt.navigation.fragment)
     kapt(libs.androidx.hilt.compiler)

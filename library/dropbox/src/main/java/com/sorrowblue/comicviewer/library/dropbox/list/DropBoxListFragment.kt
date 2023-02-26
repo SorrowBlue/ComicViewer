@@ -24,7 +24,6 @@ import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.library.databinding.LibraryFragmentCloudBinding
 import com.sorrowblue.jetpack.binding.viewBinding
 import dev.chrisbanes.insetter.applyInsetter
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.filterNotNull
@@ -89,7 +88,7 @@ internal class DropBoxListFragment :
         }.launchInWithLifecycle()
     }
 
-    lateinit var file: File
+    private lateinit var file: File
 
     private val createFileRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

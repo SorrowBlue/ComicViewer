@@ -49,14 +49,14 @@ internal class BookViewModel @Inject constructor(
             .map { it.dataOrNull }
             .stateIn { null }
 
-    val nextComic = bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest {
+    val nextComic = bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest { it ->
         getNextBookUseCase
             .execute(GetNextBookUseCase.Request(it.bookshelfId, it.path, GetNextComicRel.NEXT))
             .map { it.dataOrNull }
     }.stateIn(viewModelScope, SharingStarted.Lazily, null)
-    val prevComic = bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest {
+    val prevComic = bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest { book ->
         getNextBookUseCase
-            .execute(GetNextBookUseCase.Request(it.bookshelfId, it.path, GetNextComicRel.PREV))
+            .execute(GetNextBookUseCase.Request(book.bookshelfId, book.path, GetNextComicRel.PREV))
             .map { it.dataOrNull }
     }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 

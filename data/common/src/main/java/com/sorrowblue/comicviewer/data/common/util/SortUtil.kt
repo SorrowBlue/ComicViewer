@@ -21,7 +21,7 @@ object SortUtil {
         return fileModel is FileModel.Folder || fileModel is FileModel.ImageFolder || fileModel.extension in supportExtensions
     }
 
-    val sort = compareBy<FileModel> { if (it is FileModel.File) 1 else 0 }
+    private val sort = compareBy<FileModel> { if (it is FileModel.File) 1 else 0 }
         .thenBy(collator::compare, FileModel::name)
 
 

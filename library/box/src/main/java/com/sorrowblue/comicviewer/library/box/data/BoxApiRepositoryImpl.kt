@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import logcat.logcat
 
-private val CLIENT_ID = "nihdm7dthg9lm7m3b41bpw7jp7b0lb9z"
-private val CLIENT_SECRET = "znx5P0kuwJ5LNqF3UG8Yw8Xs05dw4zNq"
+private const val CLIENT_ID = "nihdm7dthg9lm7m3b41bpw7jp7b0lb9z"
+private const val CLIENT_SECRET = "znx5P0kuwJ5LNqF3UG8Yw8Xs05dw4zNq"
 
 internal class BoxApiRepositoryImpl(
     private val dropboxCredentialDataStore: DataStore<BoxConnectionState>,
@@ -34,8 +34,8 @@ internal class BoxApiRepositoryImpl(
                 }.fold({
                     logcat { "ユーザ取得。成功、id=${it.id}" }
                     restoreApi
-                }, {
-                    it.printStackTrace()
+                }, { throwable ->
+                    throwable.printStackTrace()
                     logcat { "ユーザ取得。失敗" }
                     dropboxCredentialDataStore.updateData { it.copy(state = null) }
                     null
@@ -105,10 +105,8 @@ internal class BoxApiRepositoryImpl(
         val sorting = SortParameters.none()
         val paging = PagingParameters.offset(offset, limit)
         val iterator = folder.getChildren(sorting, paging, "id", "name", "type","size", "modified_at")
-        return iterator.apply {
-            forEach {
-                logcat { "フォルダ, id=${it.id}, ${it.name}" }
-            }
+        return iterator.onEach {
+            logcat { "フォルダ, id=${it.id}, ${it.name}" }
         }.toList().apply {
             logcat { "フォルダリスト size=${size}" }
         }

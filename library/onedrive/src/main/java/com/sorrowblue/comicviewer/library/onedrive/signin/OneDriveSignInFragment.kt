@@ -7,7 +7,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
-import com.sorrowblue.comicviewer.library.databinding.GoogledriveFragmentSigninBinding
 import com.sorrowblue.comicviewer.library.onedrive.R
 import com.sorrowblue.comicviewer.library.onedrive.databinding.OnedriveFragmentSigninBinding
 import com.sorrowblue.jetpack.binding.viewBinding

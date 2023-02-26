@@ -3,8 +3,6 @@ package com.sorrowblue.comicviewer.library.onedrive.signin
 import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.library.onedrive.data.AuthenticationProvider
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +14,7 @@ internal class OneDriveSignInViewModel(application: Application) : AndroidViewMo
 
     private val authenticationProvider: AuthenticationProvider = AuthenticationProvider.getInstance(application)
 
-    val loginsState = MutableStateFlow(SignInState.NONE)
+    private val loginsState = MutableStateFlow(SignInState.NONE)
 
     fun signIn(activity: Activity, done: () -> Unit) {
         loginsState.value = SignInState.RUNNNING

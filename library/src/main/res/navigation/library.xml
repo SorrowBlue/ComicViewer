@@ -8,7 +8,7 @@
         android:id="@+id/library_list_fragment"
         android:name="com.sorrowblue.comicviewer.library.LibraryListFragment"
         android:label="ライブラリ"
-        app:bottom_nav_visible="true">
+        app:bottomNavVisible="true">
         <action
             android:id="@+id/action_library_list_to_dropbox_navigation"
             app:destination="@id/dropbox_navigation" />

@@ -11,6 +11,8 @@ import com.microsoft.identity.client.ISingleAccountPublicClientApplication
 import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.exception.MsalException
 import com.sorrowblue.comicviewer.library.onedrive.R
+import java.net.URL
+import java.util.concurrent.CompletableFuture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -22,8 +24,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import logcat.logcat
-import java.net.URL
-import java.util.concurrent.CompletableFuture
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AuthenticationProvider private constructor(private val appContext: Context) : BaseAuthenticationProvider() {
@@ -116,20 +116,31 @@ class AuthenticationProvider private constructor(private val appContext: Context
         // TODO(https://github.com/AzureAD/microsoft-authentication-library-for-android/issues/1742)
         // val parameters = SignInParameters.builder().withActivity(activity).withLoginHint(null).withScopes(scopes).withCallback(getAuthenticationCallback(future)).build()
         // clientApplication.signIn(parameters)
-        @Suppress("DEPRECATION") clientApplication.value?.signIn(activity, null, scopes.toTypedArray(), getAuthenticationCallback(future))
+        withContext(Dispatchers.IO) {
+            @Suppress("DEPRECATION")
+            clientApplication.value?.signIn(
+                activity,
+                null,
+                scopes.toTypedArray(),
+                getAuthenticationCallback(future)
+            )
+        }
         return future
     }
 
     suspend fun signOut(): Unit? {
-        return clientApplication.value?.signOut(object : ISingleAccountPublicClientApplication.SignOutCallback {
-            override fun onSignOut() {
-                logcat(LogPriority.INFO) { "Signed out." }
-            }
+        return withContext(Dispatchers.IO) {
+            clientApplication.value?.signOut(object :
+                ISingleAccountPublicClientApplication.SignOutCallback {
+                override fun onSignOut() {
+                    logcat(LogPriority.INFO) { "Signed out." }
+                }
 
-            override fun onError(exception: MsalException) {
-                logcat(LogPriority.ERROR) { "MSAL error signing out. ${exception.localizedMessage}" }
-            }
-        })
+                override fun onError(exception: MsalException) {
+                    logcat(LogPriority.ERROR) { "MSAL error signing out. ${exception.localizedMessage}" }
+                }
+            })
+        }
     }
 
     private suspend fun acquireTokenSilently(): CompletableFuture<IAuthenticationResult> {
@@ -139,7 +150,14 @@ class AuthenticationProvider private constructor(private val appContext: Context
         // TODO(https://github.com/AzureAD/microsoft-authentication-library-for-android/issues/1742)
         // val silentParameters = AcquireTokenSilentParameters.Builder().fromAuthority(authority).withCallback(getAuthenticationCallback(future)).withScopes(scopes).build()
         // clientApplication.value?.acquireTokenSilentAsync(silentParameters)
-        @Suppress("DEPRECATION") clientApplication.value?.acquireTokenSilentAsync(scopes.toTypedArray(), authority, getAuthenticationCallback(future))
+        withContext(Dispatchers.IO) {
+            @Suppress("DEPRECATION")
+            clientApplication.value?.acquireTokenSilentAsync(
+                scopes.toTypedArray(),
+                authority,
+                getAuthenticationCallback(future)
+            )
+        }
         return future
     }
 

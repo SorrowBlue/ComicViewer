@@ -7,19 +7,7 @@
     <application android:theme="@style/Theme.ComicViewer">
         <activity
             android:name="com.microsoft.identity.client.BrowserTabActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="${applicationId}"
-                    android:path="/SxNr0XXPX24h5R9D/OzOtZMHvEs="
-                    android:scheme="msauth" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
     </application>
     <dist:module
         dist:instant="false"

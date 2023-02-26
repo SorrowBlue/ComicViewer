@@ -102,8 +102,8 @@ internal class FavoriteRepositoryImpl @Inject constructor(
     }
 
     override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<Favorite>> {
-        return favoriteLocalDataSource.pagingSourceCount(pagingConfig).map {
-            it.map {
+        return favoriteLocalDataSource.pagingSourceCount(pagingConfig).map { pagingData ->
+            pagingData.map {
                 Favorite(FavoriteId(it.id.value), it.name, it.count)
             }
         }

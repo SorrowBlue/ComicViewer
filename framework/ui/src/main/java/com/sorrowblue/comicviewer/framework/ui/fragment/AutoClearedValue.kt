@@ -40,5 +40,5 @@ class AutoClearedValue<T : Any>(fragment: Fragment) : ReadWriteProperty<Fragment
 fun String.decodeBase64() =
     Base64.decode(encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP).decodeToString()
 
-fun String.encodeBase64() =
+fun String.encodeBase64(): String =
     Base64.encodeToString(encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)

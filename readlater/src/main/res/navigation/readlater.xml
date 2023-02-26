@@ -9,8 +9,8 @@
         android:id="@+id/readlater_fragment"
         android:name="com.sorrowblue.comicviewer.readlater.ReadLaterFragment"
         android:label="後で見る"
-        app:bottom_nav_visible="true"
-        app:fab_visible="false"
+        app:bottomNavVisible="true"
+        app:fabVisible="false"
         tools:layout="@layout/readlater_fragment">
         <action
             android:id="@+id/action_readlater_to_book"

@@ -105,7 +105,7 @@ internal class OneDriveListFragment :
             createFileRequest.launch(intent)
         }
 
-    lateinit var file: File
+    private lateinit var file: File
 
     private val createFileRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

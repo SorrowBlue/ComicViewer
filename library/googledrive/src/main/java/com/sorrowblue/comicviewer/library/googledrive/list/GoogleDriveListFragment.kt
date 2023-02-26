@@ -113,7 +113,7 @@ internal class GoogleDriveListFragment : PagingFragment<File>(R.layout.googledri
             createFileRequest.launch(intent)
         }
 
-    lateinit var file: File
+    private lateinit var file: File
 
     private val createFileRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/folder_fragment"
         android:name="com.sorrowblue.comicviewer.folder.FolderFragment"
-        app:bottom_nav_visible="true"
+        app:bottomNavVisible="true"
         tools:layout="@layout/folder_fragment">
         <argument
             android:name="server_id"

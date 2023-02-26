@@ -34,7 +34,7 @@ internal object SingletonProvidesModule {
     @Singleton
     @PageDiskCache
     @Provides
-    fun providePageDiskCache(@ApplicationContext context: Context): DiskCache? {
+    fun providePageDiskCache(@ApplicationContext context: Context): DiskCache {
         return context.newDiskCache("page_cache")
     }
 

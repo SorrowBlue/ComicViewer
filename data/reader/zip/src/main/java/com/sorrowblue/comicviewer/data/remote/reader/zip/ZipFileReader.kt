@@ -38,7 +38,7 @@ internal class ZipFileReader @AssistedInject constructor(
     private val entries =
         archive.archiveItems.filter { !it.isFolder && it.path.extension in SUPPORTED_IMAGE }
             .sortedWith(Comparator.comparing({ it.path }, collator::compare))
-    val mutex = Mutex()
+    private val mutex = Mutex()
 
     override fun fileSize(pageIndex: Int): Long = entries[pageIndex].size ?: 0
 

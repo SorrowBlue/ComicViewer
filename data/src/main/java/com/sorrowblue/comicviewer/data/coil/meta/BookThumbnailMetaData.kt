@@ -20,5 +20,5 @@ data class BookThumbnailMetaData(
 }
 
 fun readBookThumbnailMetaData(bufferedSource: BufferedSource) =
-    kotlin.runCatching { Json.decodeFromString<BookThumbnailMetaData>(bufferedSource.readUtf8()) }
+    runCatching { Json.decodeFromString<BookThumbnailMetaData>(bufferedSource.readUtf8()) }
         .getOrElse { BookThumbnailMetaData(0, 0) }

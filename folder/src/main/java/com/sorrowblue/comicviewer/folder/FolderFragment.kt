@@ -235,7 +235,7 @@ internal class FolderFragment : PagingFragment<File>(R.layout.folder_fragment),
         }
     }
 
-    lateinit var scanType: ScanType
+    private lateinit var scanType: ScanType
 
     private fun show() {
         MaterialAlertDialogBuilder(requireContext()).setTitle("権限リクエスト")

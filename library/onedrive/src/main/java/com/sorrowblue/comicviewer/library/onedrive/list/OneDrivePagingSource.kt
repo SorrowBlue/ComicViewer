@@ -14,7 +14,7 @@ import logcat.logcat
 
 internal class OneDrivePagingSource(
     val driveId: String?,
-    val itemId: String,
+    private val itemId: String,
     private val repository: OneDriveApiRepository
 ) : PagingSource<String, File>() {
 

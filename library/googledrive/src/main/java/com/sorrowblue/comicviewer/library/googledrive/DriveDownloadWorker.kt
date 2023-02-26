@@ -30,8 +30,11 @@ import logcat.logcat
 internal class DriveDownloadWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
 
+    companion object {
+        private const val NOTIFICATION_ID: Int = 2
+    }
+
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
-    private val NOTIFICATION_ID: Int = 2
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(NOTIFICATION_ID, createNotification(

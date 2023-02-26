@@ -26,7 +26,7 @@ object Converter {
         }
     }
     @JvmStatic
-    fun dateTime(epochMilli: Long) = Instant.ofEpochMilli(epochMilli)
+    fun dateTime(epochMilli: Long): String = Instant.ofEpochMilli(epochMilli)
         .atZone(ZoneOffset.systemDefault())
         .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
     @JvmStatic

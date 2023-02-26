@@ -50,7 +50,8 @@ abstract class FrameworkPreferenceFragment(
 abstract class FrameworkPreferenceBinding(val fragment: FrameworkPreferenceFragment)
 
 
-inline fun <reified V : FrameworkPreferenceBinding> FrameworkPreferenceFragment.preferenceBinding() =
+context(FrameworkPreferenceFragment)
+inline fun <reified V : FrameworkPreferenceBinding> preferenceBinding() =
     object : AndroidLifecycleBindingProperty<FrameworkPreferenceFragment, V>() {
 
         override fun bind(thisRef: FrameworkPreferenceFragment): V {
@@ -63,7 +64,8 @@ inline fun <reified V : FrameworkPreferenceBinding> FrameworkPreferenceFragment.
         }
     }
 
-inline fun <reified V : Preference> FrameworkPreferenceBinding.preference(id: Int) =
+context(FrameworkPreferenceBinding)
+inline fun <reified V : Preference> preference(id: Int) =
     object : AndroidLifecycleBindingProperty<FrameworkPreferenceBinding, V>() {
 
         override fun bind(thisRef: FrameworkPreferenceBinding): V {

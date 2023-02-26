@@ -34,9 +34,9 @@
         android:id="@+id/favorite_edit_fragment"
         android:name="com.sorrowblue.comicviewer.favorite.edit.FavoriteEditFragment"
         android:label="@string/favorite_edit_title"
-        app:fab_icon="@drawable/ic_twotone_save_24"
-        app:fab_label="@string/favorite_edit_btn_save"
-        app:fab_visible="true"
+        app:fabIcon="@drawable/ic_twotone_save_24"
+        app:fabLabel="@string/favorite_edit_btn_save"
+        app:fabVisible="true"
         tools:layout="@layout/favorite_fragment_edit">
         <argument
             android:name="favorite_id"

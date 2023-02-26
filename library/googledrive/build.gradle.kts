@@ -1,6 +1,5 @@
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("build-logic.android.dynamic-feature")
     alias(libs.plugins.kotlin.kapt)

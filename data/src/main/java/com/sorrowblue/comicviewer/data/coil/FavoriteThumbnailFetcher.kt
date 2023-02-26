@@ -174,8 +174,8 @@ internal class FavoriteThumbnailFetcher(
         }
         return withContext(NonCancellable) {
             fileSystem.write(editor.metadata) {
-                outputStream().use {
-                    FolderThumbnailMetadata(list.map { it.first }).write(it)
+                outputStream().use { outputStream ->
+                    FolderThumbnailMetadata(list.map { it.first }).write(outputStream)
                 }
             }
             fileSystem.write(editor.data) {

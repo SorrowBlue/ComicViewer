@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
 import com.sorrowblue.comicviewer.library.databinding.LibraryItemLocalFeatureBinding
 import com.sorrowblue.comicviewer.library.databinding.LibraryItemServiceBinding
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class LibraryListAdapter(private val onClick: (Library, FragmentNavigator.Extras) -> Unit) :
     ListAdapter<Library, RecyclerView.ViewHolder>(

@@ -51,10 +51,10 @@ internal class GoogleDriveSignInFragment : FrameworkFragment(R.layout.googledriv
     }
 
     private val googleSignInRequest =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
                 kotlin.runCatching {
-                    GoogleSignIn.getSignedInAccountFromIntent(it.data).result
+                    GoogleSignIn.getSignedInAccountFromIntent(result.data).result
                     findNavController().navigate(GoogleDriveSignInFragmentDirections.actionGoogledriveSigninToGoogledriveList())
                 }.onFailure {
                     it.printStackTrace()

@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
 import com.sorrowblue.comicviewer.data.database.entity.DecryptedPassword
 import com.sorrowblue.comicviewer.data.database.entity.Bookshelf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import logcat.LogcatLogger
 import logcat.PrintLogger
@@ -43,7 +44,7 @@ class BookshelfLocalDataSourceTest {
     fun testInsert() = runTest {
         val server = randomServer()
         val column = bookshelfDao.insert(server)
-        Assert.assertEquals(bookshelfDao.selectById(column.toInt()), server.copy(column.toInt()))
+        Assert.assertEquals(bookshelfDao.selectById(column.toInt()).first(), server.copy(column.toInt()))
     }
 
     @Test
@@ -51,7 +52,7 @@ class BookshelfLocalDataSourceTest {
         val server = randomServer()
         val column = bookshelfDao.upsert(server)
         logcat { "before=${server.id}, after=${column}" }
-        Assert.assertEquals(bookshelfDao.selectById(column.toInt()), server.copy(column.toInt()))
+        Assert.assertEquals(bookshelfDao.selectById(column.toInt()).first(), server.copy(column.toInt()))
     }
 
     @Test
@@ -79,7 +80,7 @@ class BookshelfLocalDataSourceTest {
     fun testSelectById() = runTest {
         val server = randomServer()
         val column = bookshelfDao.insert(server)
-        Assert.assertEquals(bookshelfDao.selectById(column.toInt()), server.copy(column.toInt()))
+        Assert.assertEquals(bookshelfDao.selectById(column.toInt()).first(), server.copy(column.toInt()))
     }
 
     private fun randomServer(id: Int = 0) = Bookshelf(

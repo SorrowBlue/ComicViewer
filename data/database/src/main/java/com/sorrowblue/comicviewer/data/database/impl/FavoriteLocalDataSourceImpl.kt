@@ -78,8 +78,8 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
     override fun pagingSourceCount(pagingConfig: PagingConfig): Flow<PagingData<FavoriteModel>> {
         return Pager(pagingConfig) {
             favoriteDao.pagingSourceCount()
-        }.flow.map {
-            it.map {
+        }.flow.map { pagingData ->
+            pagingData.map {
                 FavoriteModel(FavoriteModelId(it.favorite.id), it.favorite.name, it.count)
             }
         }

@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class MainViewModel @Inject constructor(
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
-    private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
+    manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
     loadSettingsUseCase: LoadSettingsUseCase
 ) : ViewModel() {
 

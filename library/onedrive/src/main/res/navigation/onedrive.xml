@@ -9,7 +9,7 @@
         android:name="com.sorrowblue.comicviewer.library.onedrive.list.OneDriveListFragment"
         app:moduleName="onedrive"
         android:label="OneDrive"
-        tools:layout="@layout/onedrive_fragment_list">
+        tools:layout="@layout/library_fragment_cloud">
         <argument
             android:name="drive_id"
             android:defaultValue="@null"

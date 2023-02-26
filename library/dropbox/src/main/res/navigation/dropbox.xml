@@ -8,7 +8,7 @@
         android:id="@+id/dropbox_list_fragment"
         android:name="com.sorrowblue.comicviewer.library.dropbox.list.DropBoxListFragment"
         android:label="DropBox"
-        tools:layout="@layout/dropbox_fragment_list">
+        tools:layout="@layout/library_fragment_cloud">
         <argument
             android:name="parent"
             android:defaultValue=""
@@ -31,7 +31,7 @@
         android:id="@+id/dropbox_signin_fragment"
         android:name="com.sorrowblue.comicviewer.library.dropbox.signin.DropBoxSignInFragment"
         android:label="DropBox"
-        tools:layout="@layout/dropbox_fragment_signin">
+        tools:layout="@layout/googledrive_fragment_signin">
         <action
             android:id="@+id/action_dropbox_signinto_dropbox_list"
             app:destination="@id/dropbox_list_fragment"

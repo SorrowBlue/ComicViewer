@@ -5,7 +5,7 @@ import android.graphics.Color
 import coil.size.Size
 import coil.transform.Transformation
 
-class MihirakiSplitTransformation(val isLeft: Boolean) : Transformation {
+class MihirakiSplitTransformation(private val isLeft: Boolean) : Transformation {
     override val cacheKey = "MihirakiSplitTransformation"
 
     override suspend fun transform(input: Bitmap, size: Size): Bitmap {

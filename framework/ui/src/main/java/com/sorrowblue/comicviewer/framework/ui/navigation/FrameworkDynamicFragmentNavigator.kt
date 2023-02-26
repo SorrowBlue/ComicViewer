@@ -83,11 +83,11 @@ class FrameworkDynamicFragmentNavigator(
             context.withStyledAttributes(attrs, R.styleable.FrameworkDynamicFragmentNavigator) {
                 moduleName = getString(R.styleable.FrameworkDynamicFragmentNavigator_moduleName)
                 isVisibleBottomNavigation =
-                    getBoolean(R.styleable.FrameworkDynamicFragmentNavigator_bottom_nav_visible, false)
+                    getBoolean(R.styleable.FrameworkDynamicFragmentNavigator_bottomNavVisible, false)
                 isVisibleFab =
-                    getBoolean(R.styleable.FrameworkDynamicFragmentNavigator_fab_visible, false)
-                fabIcon = getResourceId(R.styleable.FrameworkDynamicFragmentNavigator_fab_icon, View.NO_ID)
-                fabLabel = getResourceId(R.styleable.FrameworkDynamicFragmentNavigator_fab_label, View.NO_ID)
+                    getBoolean(R.styleable.FrameworkDynamicFragmentNavigator_fabVisible, false)
+                fabIcon = getResourceId(R.styleable.FrameworkDynamicFragmentNavigator_fabIcon, View.NO_ID)
+                fabLabel = getResourceId(R.styleable.FrameworkDynamicFragmentNavigator_fabLabel, View.NO_ID)
             }
         }
 

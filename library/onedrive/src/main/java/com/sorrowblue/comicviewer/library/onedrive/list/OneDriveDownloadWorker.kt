@@ -13,9 +13,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.resource.R
-import com.sorrowblue.comicviewer.library.onedrive.data.AuthenticationProvider
 import com.sorrowblue.comicviewer.library.onedrive.data.OneDriveApiRepository
-import com.sorrowblue.comicviewer.library.onedrive.data.OneDriveApiRepositoryImpl
 import kotlin.math.ceil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -27,10 +25,13 @@ internal class OneDriveDownloadWorker(
     params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
 
+    companion object {
+        private const val NOTIFICATION_ID: Int = 4
+    }
+
     private val repository = OneDriveApiRepository.getInstance(appContext)
 
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
-    private val NOTIFICATION_ID: Int = 4
 
     private val notificationBuilder = NotificationCompat.Builder(appContext, ChannelID.DOWNLOAD.id)
         .setSmallIcon(R.drawable.ic_twotone_downloading_24)
