@@ -7,7 +7,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
-import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
@@ -15,21 +14,16 @@ import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.resource.R
 import com.sorrowblue.comicviewer.library.dropbox.data.DropBoxApiRepository
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import kotlin.math.ceil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import logcat.logcat
 
-@HiltWorker
-internal class DropBoxDownloadWorker @AssistedInject constructor(
-    @Assisted appContext: Context,
-    @Assisted params: WorkerParameters,
-    private val repository: DropBoxApiRepository
-) : CoroutineWorker(appContext, params) {
+internal class DropBoxDownloadWorker(appContext: Context, params: WorkerParameters) :
+    CoroutineWorker(appContext, params) {
 
+    private val repository = DropBoxApiRepository.getInstance(appContext)
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
     private val NOTIFICATION_ID: Int = 3
 
@@ -79,7 +73,6 @@ internal class DropBoxDownloadWorker @AssistedInject constructor(
             )
         }
     }
-
 
     private fun updateNotification(tag: String, name: String, progress: Int) {
         if (ActivityCompat.checkSelfPermission(

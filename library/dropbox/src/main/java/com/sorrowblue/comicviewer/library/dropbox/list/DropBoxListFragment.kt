@@ -9,29 +9,31 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import coil.load
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
-import com.sorrowblue.comicviewer.library.dropbox.R
-import com.sorrowblue.comicviewer.library.dropbox.databinding.DropboxFragmentListBinding
+import com.sorrowblue.comicviewer.library.databinding.LibraryFragmentCloudBinding
 import com.sorrowblue.jetpack.binding.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
 
-@AndroidEntryPoint
-internal class DropBoxListFragment : PagingFragment<File>(R.layout.dropbox_fragment_list) {
+internal class DropBoxListFragment :
+    PagingFragment<File>(com.sorrowblue.comicviewer.library.R.layout.library_fragment_cloud) {
 
-    private val binding: DropboxFragmentListBinding by viewBinding()
+    private val binding: LibraryFragmentCloudBinding by viewBinding()
     override val viewModel: DropBoxListViewModel by viewModels()
 
     override val adapter
@@ -59,7 +61,7 @@ internal class DropBoxListFragment : PagingFragment<File>(R.layout.dropbox_fragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = viewModel
+        appBarConfiguration = AppBarConfiguration(setOf())
         binding.toolbar.setupWithNavController()
         binding.toolbar.applyInsetter {
             type(systemBars = true, displayCutout = true) {
@@ -73,6 +75,11 @@ internal class DropBoxListFragment : PagingFragment<File>(R.layout.dropbox_fragm
                 padding(horizontal = true, bottom = true)
             }
         }
+
+        viewModel.account.filterNotNull().onEach {
+            binding.displayName.text = it.name.displayName
+            binding.profileImage.load(it.profilePhotoUrl)
+        }.launchInWithLifecycle()
 
         binding.signOut.setOnClickListener {
             viewModel.signOut()

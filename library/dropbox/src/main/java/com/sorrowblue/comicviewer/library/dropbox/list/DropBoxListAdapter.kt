@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
-import com.sorrowblue.comicviewer.library.dropbox.databinding.DropboxItemListBinding
+import com.sorrowblue.comicviewer.library.databinding.GoogledriveItemListBinding
 
 internal class DropBoxListAdapter(private val download: (Book) -> Unit) :
     PagingDataAdapter<File, DropBoxListAdapter.ViewHolder>(
@@ -32,9 +32,12 @@ internal class DropBoxListAdapter(private val download: (Book) -> Unit) :
     }
 
     inner class ViewHolder(parent: ViewGroup) :
-        ViewBindingViewHolder<DropboxItemListBinding>(parent, DropboxItemListBinding::inflate) {
+        ViewBindingViewHolder<GoogledriveItemListBinding>(
+            parent,
+            GoogledriveItemListBinding::inflate
+        ) {
         fun bind(file: File) {
-            binding.previewUrl.load(file.params["preview_url"])
+            binding.icon.load(file.params["preview_url"])
             binding.name.text = file.name
             binding.size.text = "${file.size} B"
             binding.root.setOnClickListener {

@@ -22,7 +22,6 @@
             android:id="@+id/action_library_list_to_onedrive_navigation"
             app:destination="@id/onedrive" />
     </fragment>
-    <include app:graph="@navigation/dropbox" />
     <include-dynamic
         android:id="@+id/googledrive"
         app:graphPackage="${applicationId}.googledrive"
@@ -33,5 +32,10 @@
         app:graphPackage="${applicationId}.onedrive"
         app:graphResName="onedrive"
         app:moduleName="onedrive" />
+    <include-dynamic
+        android:id="@+id/dropbox_navigation"
+        app:graphPackage="${applicationId}.dropbox"
+        app:graphResName="dropbox"
+        app:moduleName="dropbox" />
     <include app:graph="@navigation/box" />
 </navigation>

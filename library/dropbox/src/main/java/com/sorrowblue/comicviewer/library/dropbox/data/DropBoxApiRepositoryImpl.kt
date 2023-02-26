@@ -10,9 +10,7 @@ import com.dropbox.core.oauth.DbxCredential
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.ListFolderResult
 import com.dropbox.core.v2.users.FullAccount
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.OutputStream
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -20,9 +18,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-internal class DropBoxApiRepositoryImpl @Inject constructor(
-    private val dropboxCredentialDataStore: DataStore<DropboxCredential>,
-    @ApplicationContext private val context: Context
+internal class DropBoxApiRepositoryImpl(
+    context: Context,
+    private val dropboxCredentialDataStore: DataStore<DropboxCredential>
 ) : DropBoxApiRepository {
 
     private val config = DbxRequestConfig

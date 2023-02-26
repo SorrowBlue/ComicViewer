@@ -7,29 +7,28 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import com.dropbox.core.android.Auth
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
-import com.sorrowblue.comicviewer.library.dropbox.R
-import com.sorrowblue.comicviewer.library.dropbox.databinding.DropboxFragmentSigninBinding
+import com.sorrowblue.comicviewer.library.databinding.GoogledriveFragmentSigninBinding
 import com.sorrowblue.jetpack.binding.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import logcat.logcat
 
-@AndroidEntryPoint
-internal class DropBoxSignInFragment : FrameworkFragment(R.layout.dropbox_fragment_signin) {
+internal class DropBoxSignInFragment : FrameworkFragment(com.sorrowblue.comicviewer.library.R.layout.googledrive_fragment_signin) {
 
-    private val binding: DropboxFragmentSigninBinding by viewBinding()
+    private val binding: GoogledriveFragmentSigninBinding by viewBinding()
     private val viewModel: DropBoxSignInViewModel by viewModels()
     private val commonViewModel: CommonViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        appBarConfiguration = AppBarConfiguration(setOf())
         binding.toolbar.setupWithNavController()
         binding.toolbar.applyInsetter {
             type(systemBars = true, displayCutout = true) {
@@ -41,7 +40,7 @@ internal class DropBoxSignInFragment : FrameworkFragment(R.layout.dropbox_fragme
         binding.signIn.setOnClickListener {
             Auth.startOAuth2Authentication(requireContext(), "uolcvekf83nd74j")
         }
-        binding.progress.isVisible = false
+//        binding.progress.isVisible = false
         binding.signIn.isVisible = true
     }
 
@@ -49,7 +48,7 @@ internal class DropBoxSignInFragment : FrameworkFragment(R.layout.dropbox_fragme
         super.onResume()
         Auth.getDbxCredential()?.let {
             logcat { "dropbox 認証した" }
-            binding.progress.isVisible = true
+//            binding.progress.isVisible = true
             binding.signIn.isVisible = false
             viewLifecycleOwner.lifecycleScope.launch {
                 logcat { "dropbox 認証情報保存" }
@@ -62,13 +61,13 @@ internal class DropBoxSignInFragment : FrameworkFragment(R.layout.dropbox_fragme
                 } else {
                     logcat { "dropbox アカウント取得失敗" }
                     commonViewModel.snackbarMessage.emit("認証に失敗しました。")
-                    binding.progress.isVisible = false
+//                    binding.progress.isVisible = false
                     binding.signIn.isVisible = true
                 }
             }
         } ?: kotlin.run {
             logcat { "dropbox 認証してない" }
-            binding.progress.isVisible = false
+//            binding.progress.isVisible = false
             binding.signIn.isVisible = true
         }
     }

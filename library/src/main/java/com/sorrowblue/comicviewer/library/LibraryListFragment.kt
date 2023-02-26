@@ -8,7 +8,6 @@ import androidx.navigation.NavDirections
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.library.databinding.LibraryFragmentListBinding
-import com.sorrowblue.comicviewer.library.dropbox.list.DropBoxListFragmentArgs
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
@@ -73,7 +72,7 @@ internal class LibraryListFragment : FrameworkFragment(R.layout.library_fragment
         transitionName: String
     ) = object : NavDirections {
         override val actionId = actionLibraryListToDropboxNavigation().actionId
-        override val arguments = DropBoxListFragmentArgs(transitionName = transitionName).toBundle()
+        override val arguments = bundleOf("transitionName" to transitionName)
     }
 
     private fun LibraryListFragmentDirections.Companion.actionLibraryListToOnedriveNavigation(

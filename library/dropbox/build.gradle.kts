@@ -1,10 +1,10 @@
-@Suppress("DSL_SCOPE_VIOLATION")
+@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
+
 plugins {
-    id("build-logic.android.library")
+    id("build-logic.android.dynamic-feature")
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.plugin.serialization)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
-    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
@@ -17,20 +17,13 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.ui)
-    implementation(projects.framework.notification)
-    implementation(projects.domain)
+    implementation(projects.app)
 
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.work.runtime.ktx)
+
     implementation(libs.dropbox.core.sdk)
     implementation(libs.kotlinx.serialization.protobuf)
-
-    implementation(libs.androidx.hilt.work)
-    kapt(libs.androidx.hilt.compiler)
-
-    implementation(libs.dagger.hilt.android.core)
-    kapt(libs.dagger.hilt.android.compiler)
 }
 
 kapt {
