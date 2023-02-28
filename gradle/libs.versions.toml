@@ -19,7 +19,7 @@ androidx-work = "2.8.0"
 
 dagger-hilt-android = "2.45"
 
-android-gradle = "7.4.1"
+android-gradle = "7.4.2"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
