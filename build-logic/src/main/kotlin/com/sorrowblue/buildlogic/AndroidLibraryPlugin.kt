@@ -35,6 +35,9 @@ internal class AndroidDynamicFeaturePlugin : AndroidCommonPlugin({
             create("prerelease") {
                 proguardFiles("consumer-rules.pro")
             }
+            create("internal") {
+                proguardFiles("consumer-rules.pro")
+            }
         }
     }
 

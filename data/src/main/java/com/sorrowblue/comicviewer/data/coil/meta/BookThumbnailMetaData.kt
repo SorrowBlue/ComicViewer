@@ -1,24 +1,28 @@
 package com.sorrowblue.comicviewer.data.coil.meta
 
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import java.io.OutputStream
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToStream
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.protobuf.ProtoBuf
 import okio.BufferedSource
 
 @Serializable
 data class BookThumbnailMetaData(
-    val comicFileLastModified: Long,
-    val comicFileSize: Long
+    val bookshelfId: BookshelfId = BookshelfId(0),
+    val path: String = "",
+    val comicFileSize: Long = 0
 ) {
     @OptIn(ExperimentalSerializationApi::class)
     fun write(output: OutputStream) {
-        Json.encodeToStream(serializer(),this, output)
+        output.write(ProtoBuf.encodeToByteArray(this))
     }
 }
 
 fun readBookThumbnailMetaData(bufferedSource: BufferedSource) =
-    runCatching { Json.decodeFromString<BookThumbnailMetaData>(bufferedSource.readUtf8()) }
-        .getOrElse { BookThumbnailMetaData(0, 0) }
+    runCatching {
+        ProtoBuf.decodeFromByteArray<BookThumbnailMetaData>(bufferedSource.readByteArray())
+//        Json.decodeFromString<BookThumbnailMetaData>(bufferedSource.readUtf8())
+    }.getOrElse { BookThumbnailMetaData() }

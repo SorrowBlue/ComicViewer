@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.data.coil.meta
 import java.io.OutputStream
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToStream
+import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.protobuf.ProtoBuf
 
 @Serializable
 internal data class BookPageMetaData(
@@ -15,6 +15,6 @@ internal data class BookPageMetaData(
 
     @OptIn(ExperimentalSerializationApi::class)
     fun write(output: OutputStream) {
-        Json.encodeToStream(serializer(), this, output)
+        output.write(ProtoBuf.encodeToByteArray(this))
     }
 }

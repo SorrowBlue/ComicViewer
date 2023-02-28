@@ -47,6 +47,9 @@ internal fun Project.useAndroidLibraryExtension() {
             create("prerelease") {
                 consumerProguardFiles("consumer-rules.pro")
             }
+            create("internal") {
+                consumerProguardFiles("consumer-rules.pro")
+            }
         }
     }
 }

@@ -1,0 +1,13 @@
+{
+  "client_id": "c633e62f-b392-45e0-9d49-461e05cf06bd",
+  "authorization_user_agent": "DEFAULT",
+  "redirect_uri": "msauth://com.sorrowblue.comicviewer/gGUmxE5%2BtHDEfULN2HxKT7J2Zu8%3D",
+  "account_mode": "SINGLE",
+  "broker_redirect_uri_registered": true,
+  "authorities": [
+    {
+      "type": "AAD",
+      "authority_url": "https://login.microsoftonline.com/consumers"
+    }
+  ]
+}

@@ -30,6 +30,7 @@ import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.di.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
@@ -174,7 +175,7 @@ internal class FileThumbnailFetcher(
                     }
                 }
 
-                if (meta.comicFileLastModified == fileModel.lastModifier && meta.comicFileSize == fileModel.size) {
+                if (meta.bookshelfId.value == fileModel.bookshelfModelId.value && meta.path == fileModel.path && meta.comicFileSize == fileModel.size) {
                     // キャッシュから返す。
                     return SourceResult(
                         source = snapshot.toImageSource(),
@@ -342,13 +343,13 @@ internal class FileThumbnailFetcher(
             // Write the response to the disk cache.
             val thumbnail = fileReader.thumbnailBitmap()
             if (thumbnail != null) {
-                fileSystem.write(editor.data) {
-                    thumbnail.compress(COMPRESS_FORMAT, 75, outputStream())
-                }
                 fileSystem.write(editor.metadata) {
                     outputStream().use {
-                        BookThumbnailMetaData(fileModel.lastModifier, fileModel.size).write(it)
+                        BookThumbnailMetaData(BookshelfId(fileModel.bookshelfModelId.value) ,fileModel.path, fileModel.size).write(it)
                     }
+                }
+                fileSystem.write(editor.data) {
+                    thumbnail.compress(COMPRESS_FORMAT, 75, outputStream())
                 }
                 fileModelLocalDataSource.update(
                     fileModel.path,

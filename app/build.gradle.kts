@@ -47,6 +47,13 @@ android {
             keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
             keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
         }
+        create("internal") {
+            storeFile =
+                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
+            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
+            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
+            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
+        }
     }
 
     buildTypes {
@@ -63,6 +70,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("prerelease")
+        }
+        create("internal") {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("internal")
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -94,8 +108,6 @@ android {
 }
 
 dependencies {
-    api("com.fasterxml.jackson.core:jackson-core:2.13.4")
-    api(libs.google.code.gson)
     api(libs.google.guava)
     api(projects.framework.ui)
     api(projects.framework.notification)

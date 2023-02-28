@@ -17,7 +17,7 @@ dependencies {
     implementation(libs.squareup.logcat)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.coil)
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.protobuf)
     implementation(libs.androidx.exifinterface)
 
     implementation(libs.dagger.hilt.android.core)
