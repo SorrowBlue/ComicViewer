@@ -21,7 +21,11 @@ android {
 
 dependencies {
     implementation(projects.app)
+    implementation(projects.framework.ui)
+    implementation(projects.framework.notification)
+    implementation(projects.domain)
     implementation(projects.dynamic)
+    implementation(projects.library)
 
     implementation(libs.androidx.work.runtime.ktx)
 

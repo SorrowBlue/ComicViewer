@@ -109,26 +109,25 @@ android {
 
 dependencies {
     api(libs.google.guava)
-    api(projects.framework.ui)
-    api(projects.framework.notification)
-    api(projects.data.reader)
+    implementation(projects.framework.ui)
+    implementation(projects.framework.notification)
 
     implementation(projects.data.di)
-    api(projects.domain)
+    implementation(projects.domain)
     implementation(projects.settings)
     implementation(projects.folder)
     implementation(projects.file)
     implementation(projects.bookshelf)
     implementation(projects.favorite)
     implementation(projects.readlater)
-    api(projects.library)
+    implementation(projects.library)
     implementation(projects.settings.security)
 
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.core.splashscreen)
 
-//    debugImplementation(libs.squareup.leakcanary.android)
+    debugImplementation(libs.squareup.leakcanary.android)
 
     implementation(libs.dagger.hilt.android.core)
     kapt(libs.dagger.hilt.android.compiler)
