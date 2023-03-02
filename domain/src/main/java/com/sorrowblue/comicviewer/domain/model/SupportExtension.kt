@@ -1,22 +1,35 @@
 package com.sorrowblue.comicviewer.domain.model
 
-enum class SupportExtension(val extension: String) {
-    // 圧縮/アーカイブ
-    SEVEN_Z("7z"),
-    CAB("cab"),
-    CB7("cb7"),
-    CBR("cbr"),
-    CBT("cbt"),
-    CBZ("cbz"),
-    LZH("lzh"),
-    RAR("rar"),
-    TAR("tar"),
-    WIM("wim"),
-    ZIP("zip"),
+import kotlinx.serialization.Serializable
 
-    // ドキュメント
-    PDF("pdf"),
-    EPUB("epub"),
-    XPS("xps"),
-    OPEN_XPS("oxps"),
+@Serializable
+sealed interface SupportExtension {
+    val extension: String
+
+    enum class Archive(override val extension: String) : SupportExtension {
+        SEVEN_Z("7z"),
+        CAB("cab"),
+        CB7("cb7"),
+        CBR("cbr"),
+        CBT("cbt"),
+        CBZ("cbz"),
+        LZH("lzh"),
+        RAR("rar"),
+        TAR("tar"),
+        WIM("wim"),
+        ZIP("zip"),
+    }
+
+    enum class Document(override val extension: String) : SupportExtension {
+        PDF("pdf"),
+        EPUB("epub"),
+        XPS("xps"),
+        OPEN_XPS("oxps"),
+    }
+
+    companion object {
+        fun valueOf(key: String): SupportExtension {
+            return Archive.values().firstOrNull { it.name == key } ?: Document.values().firstOrNull { it.name == key } ?: throw IllegalArgumentException("")
+        }
+    }
 }

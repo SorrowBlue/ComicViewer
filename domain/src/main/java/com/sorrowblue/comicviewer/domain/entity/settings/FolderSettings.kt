@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FolderSettings(
     val isAutoRefresh: Boolean = true,
-    val supportExtension: Set<SupportExtension> = SupportExtension.values().toSet(),
+    val supportExtension: Set<SupportExtension> = SupportExtension.Archive.values().toSet(),
     val showPreview: Boolean = true,
     val resolveImageFolder: Boolean = false
 )

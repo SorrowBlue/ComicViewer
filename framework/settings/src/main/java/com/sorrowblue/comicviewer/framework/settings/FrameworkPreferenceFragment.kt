@@ -8,8 +8,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.resource.databinding.FragmentListMaterialBinding
+import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.jetpack.binding.viewBinding
 import dev.chrisbanes.insetter.applyInsetter
 
@@ -33,8 +35,16 @@ abstract class FrameworkPreferenceFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.preferenceToolbar.setupWithNavController(findNavController())
-        binding.preferenceAppBarLayout.applyInsetter {
-            type(statusBars = true, captionBar = true, displayCutout = true) { margin(top = true) }
+        binding.preferenceToolbar.applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                margin(top = true)
+                padding(horizontal = true)
+            }
+        }
+        binding.listContainer.requireViewById<RecyclerView>(androidx.preference.R.id.recycler_view).applyInsetter {
+            type(systemBars = true, displayCutout = true) {
+                padding(horizontal = true, bottom = true)
+            }
         }
     }
 

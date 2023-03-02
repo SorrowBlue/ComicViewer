@@ -2,4 +2,6 @@
 <resources>
     <string name="settings_folder_preference_key_show_preview" translatable="false">settings_folder_preference_key_show_preview</string>
     <string name="settings_folder_preference_key_support_extension" translatable="false">settings_folder_preference_key_support_extension</string>
+    <string name="settings_folder_prefkey_archive">settings_folder_prefkey_archive</string>
+    <string name="settings_folder_prefkey_document">settings_folder_prefkey_document</string>
 </resources>

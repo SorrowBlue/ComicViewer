@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen />
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="@string/settings_folder_prefkey_archive"
+        app:title="アーカイブ" />
+    <com.sorrowblue.comicviewer.settings.folder.supportextension.PreferenceCategoryButton
+        app:layout="@layout/settings_folder_btn"
+        app:key="@string/settings_folder_prefkey_document"
+        app:title="ドキュメント" />
+</PreferenceScreen>
