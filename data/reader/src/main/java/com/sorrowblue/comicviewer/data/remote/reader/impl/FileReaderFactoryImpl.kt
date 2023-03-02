@@ -31,7 +31,7 @@ internal class FileReaderFactoryImpl @Inject constructor(
         context: Context,
         seekableInputStream: SeekableInputStream
     ): FileReader? {
-        return Class.forName("com.sorrowblue.extention.document.$name")
+        return Class.forName("com.sorrowblue.comicviewer.data.remote.reader.document.$name")
             .getDeclaredConstructor(Context::class.java, SeekableInputStream::class.java)
             .newInstance(context, seekableInputStream) as? FileReader
     }

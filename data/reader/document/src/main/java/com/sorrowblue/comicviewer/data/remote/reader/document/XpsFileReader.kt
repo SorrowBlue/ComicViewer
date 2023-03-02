@@ -1,4 +1,4 @@
-package com.sorrowblue.extention.document
+package com.sorrowblue.comicviewer.data.remote.reader.document
 
 import android.content.Context
 import androidx.annotation.Keep

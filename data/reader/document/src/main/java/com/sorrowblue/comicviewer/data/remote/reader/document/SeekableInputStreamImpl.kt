@@ -1,4 +1,4 @@
-package com.sorrowblue.extention.document
+package com.sorrowblue.comicviewer.data.remote.reader.document
 
 import androidx.annotation.Keep
 import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream

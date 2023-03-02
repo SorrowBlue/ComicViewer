@@ -94,7 +94,6 @@ internal class SettingsFolderSupportExtensionFragment :
         SupportExtension.Document.values().forEach {
             val pref = CheckBoxPreference(requireContext())
             pref.key = it.name
-            pref.isEnabled = viewModel.isSupportDocument.value
             pref.title = it.extension
             pref.isChecked = true
             pref.setOnPreferenceChangeListener<Boolean> { preference, t ->
