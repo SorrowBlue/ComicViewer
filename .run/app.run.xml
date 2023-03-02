@@ -9,7 +9,7 @@
     <option name="ALL_USERS" value="false" />
     <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
     <option name="CLEAR_APP_STORAGE" value="false" />
-    <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="ComicViewer.document,ComicViewer.dynamic,ComicViewer.library.box,ComicViewer.library.dropbox,ComicViewer.library.googledrive,ComicViewer.library.onedrive" />
+    <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="ComicViewer.document" />
     <option name="ACTIVITY_EXTRA_FLAGS" value="" />
     <option name="MODE" value="default_activity" />
     <option name="CLEAR_LOGCAT" value="true" />

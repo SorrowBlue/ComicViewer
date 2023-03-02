@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.startup.Initializer
 import com.sorrowblue.comicviewer.domain.entity.settings.DarkMode
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.framework.LogcatInitializer
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -14,7 +15,7 @@ import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
 
-class DarkModeInitializer : Initializer<Unit> {
+internal class DarkModeInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
         val useCase = EntryPointAccessors.fromApplication<InitializerInterface>(context)
@@ -25,10 +26,10 @@ class DarkModeInitializer : Initializer<Unit> {
             DarkMode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
             DarkMode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
         }.let(AppCompatDelegate::setDefaultNightMode)
-        logcat(LogPriority.INFO) { "Night Mode is initialized with $darkMode." }
+        logcat(LogPriority.INFO) { "Initialized NightMode is $darkMode." }
     }
 
-    override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
+    override fun dependencies() = listOf(LogcatInitializer::class.java)
 
     @EntryPoint
     @InstallIn(SingletonComponent::class)

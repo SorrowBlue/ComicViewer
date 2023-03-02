@@ -3,4 +3,5 @@ plugins {
 }
 dependencies {
     api(libs.squareup.logcat)
+    implementation(libs.androidx.startup.runtime)
 }

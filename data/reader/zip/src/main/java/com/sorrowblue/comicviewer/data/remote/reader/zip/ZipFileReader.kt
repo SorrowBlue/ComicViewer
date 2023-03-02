@@ -6,9 +6,6 @@ import com.sorrowblue.comicviewer.data.common.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.data.common.extension
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -17,14 +14,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import net.sf.sevenzipjbinding.SevenZip
 
-internal class ZipFileReader @AssistedInject constructor(
-    @Assisted private val seekableInputStream: SeekableInputStream,
-) : FileReader {
-
-    @AssistedFactory
-    interface Factory : FileReader.Factory {
-        override fun create(seekableInputStream: SeekableInputStream): ZipFileReader
-    }
+internal class ZipFileReader(private val seekableInputStream: SeekableInputStream) : FileReader {
 
     private val zipFile = SevenZip.openInArchive(null, IInStreamImpl(seekableInputStream))
 

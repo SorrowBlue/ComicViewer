@@ -95,6 +95,7 @@ android {
     dynamicFeatures += setOf(
         ":dynamic",
         ":data:reader:document",
+        ":data:reader:zip",
         ":library:googledrive",
         ":library:onedrive",
         ":library:dropbox",

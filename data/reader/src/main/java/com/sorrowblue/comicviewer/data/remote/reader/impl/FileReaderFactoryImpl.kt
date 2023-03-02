@@ -4,13 +4,11 @@ import android.content.Context
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import com.sorrowblue.comicviewer.data.remote.reader.FileReaderFactory
 import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
-import com.sorrowblue.comicviewer.data.remote.reader.qualifier.ZipReaderFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 internal class FileReaderFactoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    @ZipReaderFactory private val zipReaderFactory: FileReader.Factory
 ) : FileReaderFactory {
 
     override suspend fun create(
@@ -22,7 +20,7 @@ internal class FileReaderFactoryImpl @Inject constructor(
             "epub" -> loadReader("EpubFileReader", context, seekableInputStream)
             "xps" -> loadReader("XpsFileReader", context, seekableInputStream)
             "oxps" -> loadReader("OxpsFileReader", context, seekableInputStream)
-            else -> zipReaderFactory.create(seekableInputStream)
+            else -> loadZipReader(seekableInputStream)
         }
     }
 
@@ -34,5 +32,12 @@ internal class FileReaderFactoryImpl @Inject constructor(
         return Class.forName("com.sorrowblue.comicviewer.data.remote.reader.document.$name")
             .getDeclaredConstructor(Context::class.java, SeekableInputStream::class.java)
             .newInstance(context, seekableInputStream) as? FileReader
+    }
+    private fun loadZipReader(
+        seekableInputStream: SeekableInputStream
+    ): FileReader? {
+        return Class.forName("com.sorrowblue.comicviewer.data.remote.reader.zip.ZipFileReader")
+            .getDeclaredConstructor(SeekableInputStream::class.java)
+            .newInstance(seekableInputStream) as? FileReader
     }
 }

@@ -12,10 +12,13 @@ import com.sorrowblue.comicviewer.data.FileMapper
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.framework.LogcatInitializer
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import logcat.LogPriority
+import logcat.logcat
 
 internal class CoilInitializer : Initializer<Unit> {
 
@@ -37,10 +40,11 @@ internal class CoilInitializer : Initializer<Unit> {
             .precision(Precision.INEXACT)
             .build()
         Coil.setImageLoader(imageLoader)
+        logcat(LogPriority.INFO) { "Initialize coil." }
     }
 
 
-    override fun dependencies() = emptyList<Class<out Initializer<*>>>()
+    override fun dependencies() = listOf(LogcatInitializer::class.java)
 
     @EntryPoint
     @InstallIn(SingletonComponent::class)

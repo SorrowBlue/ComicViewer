@@ -6,6 +6,9 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.startup.Initializer
+import com.sorrowblue.comicviewer.framework.LogcatInitializer
+import logcat.LogPriority
+import logcat.logcat
 
 internal class NotificationInitializer : Initializer<Unit> {
     override fun create(context: Context) {
@@ -16,9 +19,10 @@ internal class NotificationInitializer : Initializer<Unit> {
             NotificationManagerCompat.IMPORTANCE_LOW).setName(name).setDescription(descriptionText)
             .build()
         notificationManager.createNotificationChannel(channel)
+        logcat(LogPriority.INFO) { "Initialize notification." }
     }
 
-    override fun dependencies() = emptyList<Class<Initializer<*>>>()
+    override fun dependencies() = listOf(LogcatInitializer::class.java)
 }
 
 enum class ChannelID(val id: String) {
