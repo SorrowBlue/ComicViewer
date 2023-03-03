@@ -14,6 +14,12 @@ class LogcatInitializer : Initializer<LogcatLogger.Companion> {
             AndroidLogcatLogger.installOnDebuggableApp(context as Application, LogPriority.VERBOSE)
             logcat(LogPriority.INFO) { "Initialize logcat." }
         }
+
+        kotlin.runCatching {
+            val initializer = Class.forName("com.sorrowblue.comicviewer.data.remote.reader.zip.SevenZipInitializer").getConstructor().newInstance()as? Initializer<Unit>
+            initializer?.create(context)
+        }
+
         return LogcatLogger.Companion
     }
 

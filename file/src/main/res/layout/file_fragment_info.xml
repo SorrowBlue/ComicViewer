@@ -136,6 +136,7 @@
                 android:id="@+id/last_read_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:isVisible="@{viewModel.bookFlow != null}"
                 android:text="@{Converter.lastReadPage(viewModel.bookFlow.lastPageRead, viewModel.bookFlow.totalPageCount)}"
                 app:chipIcon="@drawable/ic_twotone_history_24"
                 tools:text="199/255 page" />
@@ -145,6 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{Converter.dateTime(viewModel.fileFlow.lastModifier) + ` に読んだ`}"
+                app:isVisible="@{viewModel.bookFlow != null}"
                 app:chipIcon="@drawable/ic_twotone_history_24"
                 tools:text="2023/01/01 23:59:59に読んだ" />
         </com.google.android.material.chip.ChipGroup>

@@ -8,7 +8,8 @@ import coil.fetch.Fetcher
 import coil.size.Precision
 import com.sorrowblue.comicviewer.data.BookPageRequestMapper
 import com.sorrowblue.comicviewer.data.FavoriteMapper
-import com.sorrowblue.comicviewer.data.FileMapper
+import com.sorrowblue.comicviewer.data.BookMapper
+import com.sorrowblue.comicviewer.data.FolderMapper
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
@@ -23,18 +24,21 @@ import logcat.logcat
 internal class CoilInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
-        val imageLoader = Coil.imageLoader(context).newBuilder()
-            .components {
+        val imageLoader = Coil.imageLoader(context).newBuilder().components {
 
-                add(BookPageRequestMapper())
-                add(MyComponent.bookPageFetcherFactory(context))
+            add(BookPageRequestMapper())
+            add(MyComponent.bookPageFetcherFactory(context))
 
-                add(FileMapper())
-                add(MyComponent.fileThumbnailFetcher(context))
+            add(FolderMapper())
+            add(MyComponent.folderThumbnailFetcher(context))
 
-                add(FavoriteMapper())
-                add(MyComponent.favoriteThumbnailFetcher(context))
-            }
+            add(BookMapper())
+            add(MyComponent.bookThumbnailFetcher(context))
+
+            add(FavoriteMapper())
+            add(MyComponent.favoriteThumbnailFetcher(context))
+        }
+            .logger(LogcatLogger())
             .allowRgb565(true)
             .bitmapConfig(Bitmap.Config.RGB_565)
             .precision(Precision.INEXACT)
@@ -50,13 +54,17 @@ internal class CoilInitializer : Initializer<Unit> {
     @InstallIn(SingletonComponent::class)
     internal interface MyComponent {
 
+        fun folderThumbnailFetcher(): Fetcher.Factory<FileModel.Folder>
+        fun bookThumbnailFetcher(): Fetcher.Factory<FileModel.Book>
+
         fun bookPageFetcherFactory(): Fetcher.Factory<BookPageRequestData>
-        fun fileThumbnailFetcher(): Fetcher.Factory<FileModel>
         fun favoriteThumbnailFetcher(): Fetcher.Factory<FavoriteModel>
 
         companion object {
-            fun fileThumbnailFetcher(context: Context) =
-                EntryPointAccessors.fromApplication<MyComponent>(context).fileThumbnailFetcher()
+            fun folderThumbnailFetcher(context: Context) =
+                EntryPointAccessors.fromApplication<MyComponent>(context).folderThumbnailFetcher()
+            fun bookThumbnailFetcher(context: Context) =
+                EntryPointAccessors.fromApplication<MyComponent>(context).bookThumbnailFetcher()
 
             fun bookPageFetcherFactory(context: Context) =
                 EntryPointAccessors.fromApplication<MyComponent>(context).bookPageFetcherFactory()
@@ -67,3 +75,4 @@ internal class CoilInitializer : Initializer<Unit> {
     }
 
 }
+

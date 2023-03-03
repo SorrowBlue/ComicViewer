@@ -36,5 +36,6 @@
     <include app:graph="@navigation/settings" />
     <include app:graph="@navigation/library" />
     <include app:graph="@navigation/file" />
+    <include app:graph="@navigation/settings_feature" />
 </navigation>
 

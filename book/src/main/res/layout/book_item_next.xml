@@ -39,7 +39,7 @@
             app:layout_constraintWidth_percent="0.5"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/book_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

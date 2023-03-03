@@ -15,8 +15,7 @@ import coil.fetch.Fetcher
 import coil.fetch.SourceResult
 import coil.request.Options
 import coil.size.Dimension
-import com.sorrowblue.comicviewer.data.coil.meta.FolderThumbnailMetadata
-import com.sorrowblue.comicviewer.data.coil.meta.readFolderThumbnailMetadata
+import com.sorrowblue.comicviewer.data.coil.folder.FolderThumbnailMetadata
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.data.datasource.FavoriteBookLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
@@ -84,7 +83,7 @@ internal class FavoriteThumbnailFetcher(
             // サムネイル候補キャッシュを取得
             val list = favoriteBookLocalDataSource.getCacheKeyList(data.id, size)
             // 候補が適格である場合、キャッシュから候補を返します。
-            if (snapshot.toFolderThumbnailMetadata()?.thumbnail == list) {
+            if (snapshot.toFolderThumbnailMetadata()?.thumbnails == list) {
                 // 最新の場合
                 return SourceResult(
                     source = snapshot.toImageSource(),
@@ -120,9 +119,7 @@ internal class FavoriteThumbnailFetcher(
     private fun DiskCache.Snapshot.toFolderThumbnailMetadata(): FolderThumbnailMetadata? {
         return try {
             fileSystem.read(metadata) {
-                use {
-                    readFolderThumbnailMetadata(it)
-                }
+                use(FolderThumbnailMetadata.Companion::from)
             }
         } catch (_: IOException) {
             // If we can't parse the metadata, ignore this entry.
@@ -174,9 +171,7 @@ internal class FavoriteThumbnailFetcher(
         }
         return withContext(NonCancellable) {
             fileSystem.write(editor.metadata) {
-                outputStream().use { outputStream ->
-                    FolderThumbnailMetadata(list.map { it.first }).write(outputStream)
-                }
+                FolderThumbnailMetadata("", 0, 0, list.map { it.first }).writeTo(this)
             }
             fileSystem.write(editor.data) {
                 outputStream().use {

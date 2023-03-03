@@ -51,7 +51,7 @@
                 android:paddingEnd="12dp"
                 android:paddingBottom="12dp"
                 android:scaleType="fitCenter"
-                app:error="@{@drawable/ic_twotone_broken_image_24}"
+                app:error="@{@drawable/ic_twotone_book_24}"
                 app:isVisible="@{!(file instanceof Book)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="w,1:1"

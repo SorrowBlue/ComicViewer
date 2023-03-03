@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_feature_title_archive">Archive</string>
+    <string name="settings_feature_desc_archive">ARCHIVE形式のファイルを読み込みます。\n拡張子: 7z, cab, cb7, cbr, cbt, cbz, lzh, rar, tar, wim, zip</string>
+
+    <string name="settings_feature_title_document">Document</string>
+    <string name="settings_feature_desc_document">Document形式のファイルを読み込みます。\n拡張子: pdf, epub, xps, oxps</string>
+</resources>

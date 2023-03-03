@@ -29,14 +29,14 @@ internal class FileReaderFactoryImpl @Inject constructor(
         context: Context,
         seekableInputStream: SeekableInputStream
     ): FileReader? {
-        return Class.forName("com.sorrowblue.comicviewer.data.remote.reader.document.$name")
+        return Class.forName("com.sorrowblue.comicviewer.data.reader.document.$name")
             .getDeclaredConstructor(Context::class.java, SeekableInputStream::class.java)
             .newInstance(context, seekableInputStream) as? FileReader
     }
     private fun loadZipReader(
         seekableInputStream: SeekableInputStream
     ): FileReader? {
-        return Class.forName("com.sorrowblue.comicviewer.data.remote.reader.zip.ZipFileReader")
+        return Class.forName("com.sorrowblue.comicviewer.data.reader.zip.ZipFileReader")
             .getDeclaredConstructor(SeekableInputStream::class.java)
             .newInstance(seekableInputStream) as? FileReader
     }

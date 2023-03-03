@@ -1,9 +1,10 @@
 package com.sorrowblue.comicviewer.data.di
 
 import coil.fetch.Fetcher
-import com.sorrowblue.comicviewer.data.coil.BookPageFetcher
+import com.sorrowblue.comicviewer.data.coil.page.BookPageFetcher
 import com.sorrowblue.comicviewer.data.coil.FavoriteThumbnailFetcher
-import com.sorrowblue.comicviewer.data.coil.FileThumbnailFetcher
+import com.sorrowblue.comicviewer.data.coil.book.BookThumbnailFetcher
+import com.sorrowblue.comicviewer.data.coil.folder.FolderThumbnailFetcher
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
@@ -51,7 +52,11 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindFileThumbnailFetcherFetcher(factory: FileThumbnailFetcher.Factory): Fetcher.Factory<FileModel>
+    abstract fun bindBookThumbnailFetcherFetcher(factory: BookThumbnailFetcher.Factory): Fetcher.Factory<FileModel.Book>
+
+    @Singleton
+    @Binds
+    abstract fun bindFolderThumbnailFetcherFetcher(factory: FolderThumbnailFetcher.Factory): Fetcher.Factory<FileModel.Folder>
 
     @Singleton
     @Binds

@@ -111,14 +111,14 @@ internal class SmbFileClient @AssistedInject constructor(
             it.printStackTrace()
             when (it) {
                 is SmbAuthException -> {
-                    logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
+                    logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                     throw FileClientException.InvalidAuth
                 }
                 is SmbException -> {
                     if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
                     } else {
-                        logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
+                        logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                         when (it.ntStatus) {
                             NtStatus.NT_STATUS_BAD_NETWORK_NAME -> false
                             NtStatus.NT_STATUS_UNSUCCESSFUL -> throw FileClientException.InvalidServer
@@ -138,14 +138,14 @@ internal class SmbFileClient @AssistedInject constructor(
             it.printStackTrace()
             when (it) {
                 is SmbAuthException -> {
-                    logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
+                    logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                     throw FileClientException.InvalidAuth
                 }
                 is SmbException -> {
                     if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
                     } else {
-                        logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
+                        logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                         when (it.ntStatus) {
                             NtStatus.NT_STATUS_BAD_NETWORK_NAME -> throw FileClientException.InvalidPath
                             NtStatus.NT_STATUS_UNSUCCESSFUL -> throw FileClientException.InvalidServer
@@ -165,14 +165,14 @@ internal class SmbFileClient @AssistedInject constructor(
             it.printStackTrace()
             when (it) {
                 is SmbAuthException -> {
-                    logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
+                    logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                     throw FileClientException.InvalidAuth
                 }
                 is SmbException -> {
                     if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
                     } else {
-                        logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
+                        logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                         when (it.ntStatus) {
                             NtStatus.NT_STATUS_BAD_NETWORK_NAME -> throw FileClientException.InvalidPath
                             NtStatus.NT_STATUS_UNSUCCESSFUL -> throw FileClientException.InvalidServer
@@ -196,14 +196,14 @@ internal class SmbFileClient @AssistedInject constructor(
             it.printStackTrace()
             when (it) {
                 is SmbAuthException -> {
-                    logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
+                    logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                     throw FileClientException.InvalidAuth
                 }
                 is SmbException -> {
                     if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
                     } else {
-                        logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
+                        logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                         when (it.ntStatus) {
                             NtStatus.NT_STATUS_BAD_NETWORK_NAME -> throw FileClientException.InvalidPath
                             NtStatus.NT_STATUS_UNSUCCESSFUL -> throw FileClientException.InvalidServer
@@ -241,7 +241,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 path = url.path,
                 bookshelfModelId = bookshelfModel.id,
                 name = name.removeSuffix("/"),
-                parent = Path(url.path).parent.toString() + "/",
+                parent = Path(url.path).parent.toString().removeSuffix("/") + "/",
                 size = length(),
                 lastModifier = lastModified,
                 sortIndex = 0
@@ -251,7 +251,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 path = url.path,
                 bookshelfModelId = bookshelfModel.id,
                 name = name.removeSuffix("/"),
-                parent = Path(url.path).parent.toString() + "/",
+                parent = Path(url.path).parent.toString().removeSuffix("/") + "/",
                 size = length(),
                 lastModifier = lastModified,
                 sortIndex = 0,

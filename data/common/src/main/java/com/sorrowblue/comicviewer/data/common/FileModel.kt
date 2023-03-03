@@ -17,6 +17,13 @@ sealed interface FileModel {
     fun simple() =
         SimpleFileModel(path, bookshelfModelId, name, parent, size, lastModifier, this, sortIndex)
 
+    sealed interface Book : FileModel {
+        val cacheKey: String
+        val totalPageCount: Int
+        val lastReadPage: Int
+        val lastRead: Long
+    }
+
     data class File(
         override val path: String,
         override val bookshelfModelId: BookshelfModelId,
@@ -25,11 +32,11 @@ sealed interface FileModel {
         override val size: Long,
         override val lastModifier: Long,
         override val sortIndex: Int,
-        val cacheKey: String,
-        val totalPageCount: Int,
-        val lastReadPage: Int,
-        val lastRead: Long
-    ) : FileModel
+        override val cacheKey: String,
+        override val totalPageCount: Int,
+        override val lastReadPage: Int,
+        override val lastRead: Long
+    ) : Book
 
     data class Folder(
         override val path: String,
@@ -49,9 +56,9 @@ sealed interface FileModel {
         override val size: Long,
         override val lastModifier: Long,
         override val sortIndex: Int,
-        val cacheKey: String,
-        val totalPageCount: Int,
-        val lastReadPage: Int,
-        val lastRead: Long
-    ) : FileModel
+        override val cacheKey: String,
+        override val totalPageCount: Int,
+        override val lastReadPage: Int,
+        override val lastRead: Long
+    ) : Book
 }
