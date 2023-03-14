@@ -114,7 +114,7 @@ google-material = "com.google.android.material:material:1.8.0"
 google-android-gms-play-services-auth = "com.google.android.gms:play-services-auth:20.4.1"
 google-api-client-android = "com.google.api-client:google-api-client-android:2.2.0"
 google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev20230212-2.0.0"
-google-http-client-gson = "com.google.http-client:google-http-client-gson:1.42.3"
+google-http-client-gson = "com.google.http-client:google-http-client-gson:1.43.1"
 
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.10"
 dropbox-core-sdk = "com.dropbox.core:dropbox-core-sdk:5.4.4"
