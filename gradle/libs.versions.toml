@@ -119,8 +119,8 @@ google-http-client-gson = "com.google.http-client:google-http-client-gson:1.42.3
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.10"
 dropbox-core-sdk = "com.dropbox.core:dropbox-core-sdk:5.4.4"
 
-coil = "io.coil-kt:coil:2.2.2"
-coil-base = "io.coil-kt:coil-base:2.2.2"
+coil = "io.coil-kt:coil:2.3.0"
+coil-base = "io.coil-kt:coil-base:2.3.0"
 jcifs-ng = "eu.agno3.jcifs:jcifs-ng:2.1.9"
 slf4j-android = "org.slf4j:slf4j-android:1.7.36"
 sorrowblue-binding-ktx = "com.sorrowblue.jetpack:binding-ktx:3.0.5"
