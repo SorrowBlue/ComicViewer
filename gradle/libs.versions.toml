@@ -33,7 +33,7 @@ androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotli
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
 ben-manes-versions = "com.github.ben-manes.versions:0.46.0"
 dagger-hilt-android = { id = "dagger.hilt.android.plugin", version.ref = "dagger-hilt-android" }
-aboutlibraries-plugin = "com.mikepenz.aboutlibraries.plugin:10.6.1"
+aboutlibraries-plugin = "com.mikepenz.aboutlibraries.plugin:10.6.2"
 dependency-graph-generator = "com.vanniktech.dependency.graph.generator:0.8.0"
 grgit = "org.ajoberstar.grgit:5.0.0"
 
