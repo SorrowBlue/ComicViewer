@@ -63,7 +63,7 @@ androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 androidx-coordinatorlayout = "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
 
 androidx-core-ktx = "androidx.core:core-ktx:1.10.0"
-androidx-core-splashscreen = "androidx.core:core-splashscreen:1.0.0"
+androidx-core-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "androidx.datastore" }
 androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "androidx.datastore" }
