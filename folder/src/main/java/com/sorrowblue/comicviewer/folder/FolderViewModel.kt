@@ -70,6 +70,8 @@ internal class FolderViewModel @Inject constructor(
         }
     }
 
+    val isEditing = MutableStateFlow(false)
+
     val searchQueryFlow = MutableStateFlow("")
     val searchRangeFlow = MutableStateFlow<SearchCondition.Range>(SearchCondition.Range.BOOKSHELF)
     val searchPeriodFlow = MutableStateFlow(SearchCondition.Period.NONE)

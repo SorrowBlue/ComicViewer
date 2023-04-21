@@ -6,6 +6,9 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.addCallback
@@ -79,6 +82,52 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewModel = viewModel
+
+        var actionMode: ActionMode? = null
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this, false) {
+            actionMode?.finish()
+        }
+
+        viewModel.isEditing.onEach {
+            (binding.recyclerView.adapter as? FileListAdapter)?.isEditing = it
+            if (it) {
+                actionMode = binding.toolbar.startActionMode(object : ActionMode.Callback {
+                    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+                        MenuInflater(requireContext()).inflate(R.menu.folder_action, menu)
+                        return true
+                    }
+
+                    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+                        callback.isEnabled = true
+                        return false
+                    }
+
+                    override fun onActionItemClicked(mode: ActionMode, item: MenuItem) =
+                        when (item.itemId) {
+                            R.id.folder_menu_download_selected -> {
+                                true
+                            }
+                            R.id.folder_menu_delete_selected -> {
+                                true
+                            }
+                            R.id.folder_menu_add_read_mark -> {
+                                true
+                            }
+                            R.id.folder_menu_remove_read_mark -> {
+                                true
+                            }
+                            else -> false
+                        }
+
+                    override fun onDestroyActionMode(mode: ActionMode) {
+                        viewModel.isEditing.value = false
+                        callback.isEnabled = false
+                        actionMode = null
+                    }
+                })
+            }
+        }.launchInWithLifecycle()
+
 
         binding.toolbar.setOnLongClickListener {
             findNavController().popBackStack(R.id.folder_navigation, true)
@@ -178,6 +227,11 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
 
             R.id.folder_menu_scan -> {
                 scan(ScanType.FULL)
+                true
+            }
+
+            R.id.folder_menu_edit -> {
+                viewModel.isEditing.value = true
                 true
             }
 

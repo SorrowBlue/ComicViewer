@@ -101,7 +101,6 @@ android {
 
     dynamicFeatures += setOf(
         projects.data.reader.document.projectString(),
-        projects.data.reader.zip.projectString(),
         projects.library.box.projectString(),
         projects.library.dropbox.projectString(),
         projects.library.googledrive.projectString(),

@@ -6,7 +6,10 @@
     <data>
 
         <import type="com.sorrowblue.comicviewer.domain.entity.file.Book" />
+
         <import type="com.sorrowblue.comicviewer.domain.entity.file.Folder" />
+
+        <import type="com.sorrowblue.comicviewer.framework.ui.converter.StringConverter" />
 
         <variable
             name="file"
@@ -14,30 +17,30 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_view"
+        android:checkable="true"
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp"
-        app:cardElevation="0dp"
+        tools:layout_width="100dp"
         tools:showIn="@layout/file_fragment_info">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/book_thumbnail"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 app:isVisible="@{file instanceof Book}"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars"
-                tools:visibility="gone" />
+                app:shapeAppearanceOverlay="@style/file_bottom_round"
+                tools:srcCompat="@tools:sample/avatars" />
 
             <ImageView
                 android:id="@+id/folder_thumbnail"
@@ -51,12 +54,13 @@
                 android:paddingBottom="12dp"
                 android:scaleType="fitCenter"
                 app:isVisible="@{file instanceof Folder}"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="w,1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:shapeAppearanceOverlay="@style/file_bottom_round"
+                tools:srcCompat="@tools:sample/avatars"
+                tools:visibility="gone" />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progress"
@@ -65,18 +69,8 @@
                 android:max="@{file instanceof Book ? ((Book)file).totalPageCount : 0}"
                 android:progress="@{file instanceof Book ? ((Book)file).lastPageRead : 0}"
                 app:isVisible="@{file instanceof Book &amp;&amp; ((Book)file).lastPageRead > 0}"
-                app:layout_constraintBottom_toTopOf="@+id/name"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:alpha="0.85"
-                android:background="?attr/colorSecondaryContainer"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/name" />
 
@@ -84,16 +78,22 @@
                 android:id="@+id/name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:lines="2"
+                android:minLines="2"
                 android:padding="4dp"
-                android:text="@{file.name}"
-                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textAppearance="@style/TextAppearance.Material3.MostSmall"
                 android:textColor="?attr/colorOnSecondaryContainer"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:text="[ロジロ] 彼とのセックスじゃイケないから…あたしのココに入れて欲しいの… 01.zip" />
+                app:layout_constraintTop_toBottomOf="@+id/fileBarrier"
+                tools:text="[ロジロ] 彼とのセあいうえおかきくけこさしすせそ" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/fileBarrier"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="book_thumbnail,folder_thumbnail" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

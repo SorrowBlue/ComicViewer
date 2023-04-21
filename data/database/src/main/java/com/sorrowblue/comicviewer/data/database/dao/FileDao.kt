@@ -148,4 +148,6 @@ internal interface FileDao {
     @Query("SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC")
     fun pagingHistoryBookSource(): PagingSource<Int, File>
 
+    @Query("UPDATE file SET cache_key = '' WHERE cache_key != ''")
+    suspend fun deleteThumbnails()
 }

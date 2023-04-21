@@ -1,13 +1,21 @@
 plugins {
-    id("build-logic.android.dynamic-feature")
+    id("build-logic.android.library")
+    id("com.sorrowblue.dagger-hilt")
+}
+
+android {
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
 }
 
 dependencies {
-    implementation(projects.app)
+    implementation(projects.framework)
     implementation(projects.data.common)
     implementation(projects.data.reader)
 
-    implementation(libs.squareup.logcat)
     implementation(libs.androidx.startup.runtime)
     implementation(libs.github.omicronapps.sevenZipJBinding4Android)
 }

@@ -6,9 +6,11 @@ import com.sorrowblue.comicviewer.data.remote.reader.FileReaderFactory
 import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import javax.inject.Qualifier
 
 internal class FileReaderFactoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
+    @ZipFileReaderFactory private val zipFileReaderFactory: FileReader.Factory
 ) : FileReaderFactory {
 
     override suspend fun create(
@@ -33,11 +35,11 @@ internal class FileReaderFactoryImpl @Inject constructor(
             .getDeclaredConstructor(Context::class.java, SeekableInputStream::class.java)
             .newInstance(context, seekableInputStream) as? FileReader
     }
-    private fun loadZipReader(
-        seekableInputStream: SeekableInputStream
-    ): FileReader? {
-        return Class.forName("com.sorrowblue.comicviewer.data.reader.zip.ZipFileReader")
-            .getDeclaredConstructor(SeekableInputStream::class.java)
-            .newInstance(seekableInputStream) as? FileReader
-    }
+
+    private fun loadZipReader(seekableInputStream: SeekableInputStream) =
+        zipFileReaderFactory.create(seekableInputStream)
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ZipFileReaderFactory

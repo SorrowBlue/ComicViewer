@@ -63,14 +63,13 @@ abstract class FileListFragment : PagingFragment<File> {
                 FolderDisplaySettings.Display.LIST -> {
                     itemDecoration?.let(recyclerView::removeItemDecoration)
                     defaultMargin = 0
-                    recyclerView.requestApplyInsets()
                     recyclerView.setSpanCount(1)
+                    recyclerView.requestApplyInsets()
                 }
 
                 FolderDisplaySettings.Display.GRID -> {
                     defaultMargin =
                         resources.getDimensionPixelSize(com.sorrowblue.comicviewer.framework.ui.R.dimen.framework_ui_default_margin)
-                    recyclerView.requestApplyInsets()
                     val spanCount = when (columnSize) {
                         FolderDisplaySettings.Size.SMALL -> R.integer.file_list_span_count_small
                         FolderDisplaySettings.Size.MEDIUM -> R.integer.file_list_span_count_medium
@@ -82,7 +81,7 @@ abstract class FileListFragment : PagingFragment<File> {
                     val itemSpace = when (columnSize) {
                         FolderDisplaySettings.Size.SMALL -> R.dimen.file_list_item_space_small
                         FolderDisplaySettings.Size.MEDIUM -> R.dimen.file_list_item_space_medium
-                        FolderDisplaySettings.Size.LARGE -> R.dimen.file_list_item_space_large
+                        FolderDisplaySettings.Size.LARGE -> R.dimen.file_list_item_space_medium
                     }.let(resources::getDimensionPixelSize)
                     itemDecoration?.let {
                         it.size = itemSpace

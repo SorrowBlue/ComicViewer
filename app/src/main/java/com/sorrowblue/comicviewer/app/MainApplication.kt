@@ -14,13 +14,6 @@ class MainApplication : SplitCompatApplication(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
-    override fun onCreate() {
-        super.onCreate()
-        if (BuildConfig.DEBUG) {
-            AndroidLogcatLogger.installOnDebuggableApp(this, LogPriority.VERBOSE)
-        }
-    }
-
     override fun getWorkManagerConfiguration() =
         Configuration.Builder().setWorkerFactory(workerFactory).build()
 }

@@ -185,4 +185,8 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
             dao.pagingHistoryBookSource()
         }.flow.map { pagingData -> pagingData.map { it.toModel() } }
     }
+
+    override suspend fun deleteThumbnails() {
+        dao.deleteThumbnails()
+    }
 }

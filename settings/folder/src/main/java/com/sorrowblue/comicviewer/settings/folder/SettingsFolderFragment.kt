@@ -20,6 +20,7 @@ internal class SettingsFolderBinding(fragment: FrameworkPreferenceFragment) :
     val resolveImageFolder: SwitchPreferenceCompat by preference(R.string.settings_folder_prefkey_resolve_image_folder)
     val showPreview: SwitchPreferenceCompat by preference(R.string.settings_folder_preference_key_show_preview)
     val supportExtension: Preference by preference(R.string.settings_folder_preference_key_support_extension)
+    val deleteThumbnail: Preference by preference(R.string.settings_folder_preference_key_delete_thumbnail)
 }
 
 @AndroidEntryPoint
@@ -47,6 +48,10 @@ internal class SettingsFolderFragment :
         binding.resolveImageFolder.setOnPreferenceChangeListener<Boolean> { _, newValue ->
             viewModel.updateResolveImageFolder(newValue)
             false
+        }
+        binding.deleteThumbnail.setOnPreferenceClickListener {
+            viewModel.deleteThumbnail()
+            true
         }
     }
 }

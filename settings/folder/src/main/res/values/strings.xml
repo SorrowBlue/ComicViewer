@@ -5,4 +5,5 @@
     <string name="settings_folder_preference_key_support_extension" translatable="false">settings_folder_preference_key_support_extension</string>
     <string name="settings_folder_prefkey_archive">settings_folder_prefkey_archive</string>
     <string name="settings_folder_prefkey_document">settings_folder_prefkey_document</string>
+    <string name="settings_folder_preference_key_delete_thumbnail">settings_folder_preference_key_delete_thumbnail</string>
 </resources>

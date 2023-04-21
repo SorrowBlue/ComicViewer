@@ -17,6 +17,7 @@ import com.sorrowblue.comicviewer.domain.interactor.favorite.GetFavoriteInteract
 import com.sorrowblue.comicviewer.domain.interactor.favorite.GetFavoriteListInteractor
 import com.sorrowblue.comicviewer.domain.interactor.favorite.RemoveFavoriteFileInteractor
 import com.sorrowblue.comicviewer.domain.interactor.favorite.UpdateFavoriteInteractor
+import com.sorrowblue.comicviewer.domain.interactor.file.DeleteThumbnailsInteractor
 import com.sorrowblue.comicviewer.domain.interactor.file.GetBookInteractor
 import com.sorrowblue.comicviewer.domain.interactor.file.GetFileInteractor
 import com.sorrowblue.comicviewer.domain.interactor.file.GetNextBookInteractor
@@ -50,6 +51,7 @@ import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteListUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.RemoveFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.UpdateFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.DeleteThumbnailsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
@@ -119,6 +121,9 @@ internal abstract class ViewModelBindsModule {
 
     @Binds
     abstract fun bindGetFileUseCase(interactor: GetFileInteractor): GetFileUseCase
+
+    @Binds
+    abstract fun bindDeleteThumbnailsUseCase(interactor: DeleteThumbnailsInteractor): DeleteThumbnailsUseCase
 
     @Binds
     abstract fun bindGetBookshelfFileUseCase(interactor: GetBookshelfFileInteractor): GetBookshelfFileUseCase
