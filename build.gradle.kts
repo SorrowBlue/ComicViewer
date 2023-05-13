@@ -15,7 +15,7 @@ plugins {
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
     alias(libs.plugins.dependency.graph.generator)
-    id("org.ajoberstar.grgit") version "5.0.0"
+    id("org.ajoberstar.grgit") version "5.2.0"
 }
 
 tasks.register("clean", Delete::class) {
