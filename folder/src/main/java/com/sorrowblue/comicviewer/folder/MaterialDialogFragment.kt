@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sorrowblue.comicviewer.folder.databinding.FolderViewTitleBinding
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkDialogFragment
+import com.sorrowblue.comicviewer.framework.ui.navigation.setDialogFragmentResult
 
 internal class MaterialDialogFragment : FrameworkDialogFragment() {
 
@@ -19,15 +20,11 @@ internal class MaterialDialogFragment : FrameworkDialogFragment() {
             setMessage(R.string.folder_message_scan)
             setView(R.layout.folder_view_title)
             setNegativeButton("No") {_, _ ->
-                setFragmentResult("result", false)
+                setDialogFragmentResult("result", false)
             }
             setPositiveButton("Continue") { _, _ ->
-                setFragmentResult("result", true)
+                setDialogFragmentResult("result", true)
             }
         }
     }
-}
-
-fun <T> Fragment.setFragmentResult(key: String, value: T) {
-    findNavController().previousBackStackEntry?.savedStateHandle?.set(key, value)
 }

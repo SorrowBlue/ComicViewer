@@ -9,9 +9,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import com.sorrowblue.comicviewer.bookshelf.R
 import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfFragmentListBinding
+import com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoEditResult
+import com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoRemoveResult
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
+import com.sorrowblue.comicviewer.framework.ui.navigation.setDialogFragmentResultListener
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
@@ -53,6 +56,36 @@ internal class BookshelfListFragment :
 
         fab.setOnClickListener {
             navigate(BookshelfListFragmentDirections.actionBookshelfListToBookshelfManageList())
+        }
+
+        setDialogFragmentResultListener<BookshelfInfoRemoveResult>(
+            R.id.bookshelf_list_fragment,
+            "remove"
+        ) {
+            navigate(
+                BookshelfListFragmentDirections.actionBookshelfListToBookshelfRemoveConfirm(it.bookshelfId.value)
+            )
+        }
+
+        setDialogFragmentResultListener<BookshelfInfoEditResult>(
+            R.id.bookshelf_list_fragment,
+            "edit"
+        ) {
+            when (it.type) {
+                "InternalStorage" -> {
+                    navigate(
+                        BookshelfListFragmentDirections.actionBookshelfListToBookshelfManageDevice(
+                            it.bookshelfId.value
+                        )
+                    )
+                }
+
+                "SmbServer" -> {
+                    navigate(
+                        BookshelfListFragmentDirections.actionBookshelfListToBookshelfManageSmb(it.bookshelfId.value)
+                    )
+                }
+            }
         }
     }
 

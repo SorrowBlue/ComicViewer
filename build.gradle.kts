@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
     alias(libs.plugins.dependency.graph.generator)
+    id("org.ajoberstar.grgit") version "5.0.0"
 }
 
 tasks.register("clean", Delete::class) {
@@ -37,3 +38,10 @@ tasks.named(
         isNonStable(candidate.version) && !isNonStable(currentVersion)
     }
 }
+
+version = grgit.describe {
+    longDescr = false
+    tags = true
+}.toVersion().also { logger.lifecycle("version: $it") }
+
+fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex())) "-SNAPSHOT" else ""
