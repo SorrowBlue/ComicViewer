@@ -50,6 +50,7 @@ abstract class FileListFragment : PagingFragment<File> {
         )
 
     override fun onCreateAdapter(pagingDataAdapter: PagingDataAdapter<File, *>) {
+        recyclerView.itemAnimator = null
         super.onCreateAdapter(pagingDataAdapter)
         check(pagingDataAdapter is FileListAdapter)
 

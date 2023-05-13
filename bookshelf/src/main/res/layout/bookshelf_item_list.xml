@@ -22,6 +22,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="?attr/materialCardViewElevatedStyle"
         android:layout_margin="4dp"
         android:transitionName="@{String.valueOf(bookshelf.hashCode())}">
 
@@ -34,7 +35,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:contentDescription="@string/bookshelf_list_desc_thumbnail_this_bookshelf"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

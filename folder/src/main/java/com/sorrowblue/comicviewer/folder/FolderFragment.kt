@@ -55,6 +55,7 @@ import com.sorrowblue.comicviewer.framework.ui.fragment.autoClearedValue
 import com.sorrowblue.comicviewer.framework.ui.fragment.checkSelfPermission
 import com.sorrowblue.comicviewer.framework.ui.fragment.makeSnackbar
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
+import com.sorrowblue.comicviewer.framework.ui.navigation.setDialogFragmentResultListener
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
@@ -121,6 +122,10 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
 
                     override fun onDestroyActionMode(mode: ActionMode) {
                         viewModel.isEditing.value = false
+                        (binding.recyclerView.adapter as? FileListAdapter)?.selectedItemIds?.clear()
+                        (binding.recyclerView.adapter as? FileListAdapter)?.let {
+                            it.notifyItemRangeChanged(0, it.itemCount)
+                        }
                         callback.isEnabled = false
                         actionMode = null
                     }
@@ -393,26 +398,4 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
         }
     }
 
-    private fun <T> Fragment.setDialogFragmentResultListener(
-        destinationId: Int,
-        key: String,
-        result: (T) -> Unit
-    ) {
-        val navController = findNavController()
-        val navBackStackEntry = navController.getBackStackEntry(destinationId)
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME && navBackStackEntry.savedStateHandle.contains(
-                    key
-                )
-            ) {
-                result(navBackStackEntry.savedStateHandle.remove<T>(key)!!)
-            }
-        }
-        navBackStackEntry.lifecycle.addObserver(observer)
-        viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_DESTROY) {
-                navBackStackEntry.lifecycle.removeObserver(observer)
-            }
-        })
-    }
 }

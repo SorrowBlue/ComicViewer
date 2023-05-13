@@ -59,10 +59,12 @@ open class FrameworkFragment : Fragment {
     }
 
     protected fun navigate(directions: NavDirections) {
+        @Suppress("FrameworkOnly")
         findNavController().navigate(directions)
     }
 
     protected fun navigate(uri: Uri) {
+        @Suppress("FrameworkOnly")
         findNavController().navigate(uri)
     }
 

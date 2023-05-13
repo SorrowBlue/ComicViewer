@@ -5,8 +5,8 @@ android-min-sdk = "30"
 android-target-sdk = "33"
 android-buildtools = "33.0.2"
 
-kotlin = "1.8.20"
-google-ksp = "1.8.20-1.0.11"
+kotlin = "1.8.21"
+google-ksp = "1.8.21-1.0.11"
 kotlinx-coroutines = "1.6.4"
 kotlinx-serialization = "1.5.0"
 
@@ -19,7 +19,7 @@ androidx-work = "2.8.1"
 
 dagger-hilt-android = "2.45"
 
-android-gradle = "8.0.0"
+android-gradle = "8.0.1"
 
 mikepenz-aboutlibraries = "10.6.2"
 

@@ -6,6 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
+import com.sorrowblue.comicviewer.framework.ui.fragment.makeSnackbar
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.library.databinding.LibraryFragmentListBinding
 import com.sorrowblue.jetpack.binding.viewBinding
@@ -33,7 +34,9 @@ internal class LibraryListFragment : FrameworkFragment(R.layout.library_fragment
                 LocalFeature.HISTORY -> {
                     navigate(LibraryListFragmentDirections.actionLibraryListToHistoryNavigation())
                 }
-                LocalFeature.DOWNLOADED -> {}
+                LocalFeature.DOWNLOADED -> {
+                    makeSnackbar("Coming Soon...").show()
+                }
                 is CloudStorage.GoogleDrive -> navigate(
                     LibraryListFragmentDirections.actionLibraryListToGoogledriveNavigation(
                         extras.sharedElements.values.first()

@@ -22,6 +22,15 @@
         <action
             android:id="@+id/action_bookshelf_list_to_bookshelf_manage_list"
             app:destination="@id/bookshelf_manage_list_fragment" />
+        <action
+            android:id="@+id/action_bookshelf_list_to_bookshelf_remove_confirm"
+            app:destination="@id/bookshelf_remove_confirm_fragment" />
+        <action
+            android:id="@+id/action_bookshelf_list_to_bookshelf_manage_smb"
+            app:destination="@id/bookshelf_manage_smb_fragment" />
+        <action
+            android:id="@+id/action_bookshelf_list_to_bookshelf_manage_device"
+            app:destination="@id/bookshelf_manage_device_fragment" />
     </fragment>
     <dialog
         android:id="@+id/bookshelf_info_fragment"
@@ -31,15 +40,6 @@
         <argument
             android:name="bookshelf_id"
             app:argType="integer" />
-        <action
-            android:id="@+id/action_bookshelf_info_to_bookshelf_remove_confirm"
-            app:destination="@id/bookshelf_remove_confirm_fragment" />
-        <action
-            android:id="@+id/action_bookshelf_info_to_bookshelf_manage_smb"
-            app:destination="@id/bookshelf_manage_smb_fragment" />
-        <action
-            android:id="@+id/action_bookshelf_info_to_bookshelf_manage_device"
-            app:destination="@id/bookshelf_manage_device_fragment" />
     </dialog>
     <dialog
         android:id="@+id/bookshelf_remove_confirm_fragment"
