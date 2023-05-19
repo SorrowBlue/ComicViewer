@@ -69,7 +69,7 @@ internal class AuthFragment : FrameworkFragment(R.layout.fragment_auth) {
         binding.password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 if (binding.password.editableText.toString() == runBlocking { viewModel.settings.first() }.password) {
-                    findNavController().navigateUp()
+                    navigate(AuthFragmentDirections.actionAuthToBookshelf())
                     true
                 } else {
                     binding.textInputLayout.error = "パスワードが間違っています。"

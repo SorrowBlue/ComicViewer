@@ -2,7 +2,10 @@ package com.sorrowblue.comicviewer.app.di
 
 import android.content.Context
 import androidx.navigation.ui.AppBarConfiguration
+import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+import com.google.android.play.core.splitinstall.testing.FakeSplitInstallManager
+import com.google.android.play.core.splitinstall.testing.FakeSplitInstallManagerFactory
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkAppBarConfiguration
 import dagger.Module
 import dagger.Provides
@@ -28,6 +31,9 @@ object FrameworkAppBarConfigurationModule {
 
     @Singleton
     @Provides
-    fun splitInstallManager(@ApplicationContext context: Context) =
-        SplitInstallManagerFactory.create(context)
+    fun splitInstallManager(@ApplicationContext context: Context): SplitInstallManager =
+        FakeSplitInstallManagerFactory.create(context, context.getExternalFilesDir("local_testing")).apply {
+            setShouldNetworkError(true)
+        }
+//        SplitInstallManagerFactory.create(context)
 }

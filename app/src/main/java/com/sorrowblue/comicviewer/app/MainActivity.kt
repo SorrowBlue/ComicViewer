@@ -9,7 +9,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.asFlow
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.ui.setupWithNavController
@@ -32,7 +31,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
 
@@ -72,17 +70,17 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
         val navController =
             binding.navHostFragmentActivityMain.findNavController<FrameworkDynamicNavHostFragment>()
         // 初期化処理未実施の場合
-        if (commonViewModel.shouldKeepOnScreen) {
+//        if (commonViewModel.shouldKeepOnScreen) {
             // リストア Skip/完了 を待つ
-            lifecycleScope.launch {
-                restoreNavigation(navController)
-                commonViewModel.isRestored.first()
-                if (viewModel.securitySettingsFlow.first().password != null) {
-                    navController.navigate(MobileNavigationDirections.actionGlobalAuthFragment())
-                }
-                commonViewModel.shouldKeepOnScreen = false
-            }
-        }
+//            lifecycleScope.launch {
+//                restoreNavigation(navController)
+//                commonViewModel.isRestored.first()
+//                if (viewModel.securitySettingsFlow.first().password != null) {
+//                    navController.navigate(MobileNavigationDirections.actionGlobalAuthFragment())
+//                }
+//                commonViewModel.shouldKeepOnScreen = false
+//            }
+//        }
         binding.bottomNavigation.setupWithNavController(navController)
         binding.bottomNavigation.setOnItemReselectedListener {
             logcat { navController.currentBackStack.value.lastOrNull()?.destination?.parent?.startDestDisplayName.orEmpty() }

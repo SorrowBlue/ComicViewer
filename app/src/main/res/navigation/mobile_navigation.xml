@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/bookshelf_navigation">
+    app:startDestination="@id/init_fragment">
     <action
         android:id="@+id/action_global_settings_navigation"
         app:destination="@id/settings_navigation"
@@ -24,10 +24,6 @@
         android:id="@+id/auth_fragment"
         android:name="com.sorrowblue.comicviewer.app.AuthFragment"
         tools:layout="@layout/fragment_auth" />
-    <action
-        android:id="@+id/action_global_auth_fragment"
-        app:destination="@id/auth_fragment"
-        app:launchSingleTop="true" />
     <include app:graph="@navigation/bookshelf" />
     <include app:graph="@navigation/favorite_list" />
     <include app:graph="@navigation/readlater" />
@@ -37,5 +33,27 @@
     <include app:graph="@navigation/library" />
     <include app:graph="@navigation/file" />
     <include app:graph="@navigation/settings_feature" />
+    <fragment
+        android:id="@+id/init_fragment"
+        android:name="com.sorrowblue.comicviewer.app.InitFragment" />
+    <fragment
+        android:id="@+id/tutorial_fragment"
+        android:name="com.sorrowblue.comicviewer.app.tutorial.TutorialFragment"
+        android:label="TutorialFragment" />
+    <action
+        android:id="@+id/action_global_auth"
+        app:destination="@id/auth_fragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/mobile_navigation" />
+    <action
+        android:id="@+id/action_global_tutorial"
+        app:destination="@id/tutorial_fragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/mobile_navigation" />
+    <action
+        android:id="@+id/action_global_bookshelf"
+        app:destination="@id/bookshelf_navigation"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/mobile_navigation" />
 </navigation>
 
