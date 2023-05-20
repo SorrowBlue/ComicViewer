@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.app.tutorial
+package com.sorrowblue.comicviewer.tutorial
 
 import android.content.Intent
 import android.os.Bundle
@@ -23,11 +23,10 @@ import com.google.android.play.core.splitinstall.SplitInstallSessionState
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
-import com.sorrowblue.comicviewer.app.R
-import com.sorrowblue.comicviewer.app.databinding.TutorialFragmentDocumentBinding
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.makeSnackbar
+import com.sorrowblue.comicviewer.tutorial.databinding.TutorialFragmentDocumentBinding
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel

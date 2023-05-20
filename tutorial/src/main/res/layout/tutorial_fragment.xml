@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.sorrowblue.comicviewer.app.tutorial.TutorialViewModel" />
+            type="com.sorrowblue.comicviewer.tutorial.TutorialViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

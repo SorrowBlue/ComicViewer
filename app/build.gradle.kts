@@ -125,6 +125,7 @@ dependencies {
     implementation(projects.favorite)
     implementation(projects.readlater)
     implementation(projects.library)
+    implementation(projects.tutorial)
     implementation(projects.settings.security)
     implementation(projects.settings.feature)
 

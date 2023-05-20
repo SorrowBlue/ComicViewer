@@ -23,5 +23,5 @@ internal class MainViewModel @Inject constructor(
 
     fun getNavigationHistory(): Flow<NavigationHistory?> = getNavigationHistoryUseCase.execute(EmptyRequest).map { it.dataOrNull }
 
-    val isTutorial = loadSettingsUseCase.settings.map { it.doneTutorial }
+    val doneTutorialFlow = loadSettingsUseCase.settings.map { it.doneTutorial }
  }

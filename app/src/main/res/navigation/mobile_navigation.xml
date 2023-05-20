@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/init_fragment">
+    app:startDestination="@id/bookshelf_navigation">
     <action
         android:id="@+id/action_global_settings_navigation"
         app:destination="@id/settings_navigation"
@@ -20,10 +19,6 @@
             android:autoVerify="true"
             app:uri="comicviewer://comicviewer.sorrowblue.com/work?uuid={uuid}" />
     </fragment>
-    <fragment
-        android:id="@+id/auth_fragment"
-        android:name="com.sorrowblue.comicviewer.app.AuthFragment"
-        tools:layout="@layout/fragment_auth" />
     <include app:graph="@navigation/bookshelf" />
     <include app:graph="@navigation/favorite_list" />
     <include app:graph="@navigation/readlater" />
@@ -33,18 +28,6 @@
     <include app:graph="@navigation/library" />
     <include app:graph="@navigation/file" />
     <include app:graph="@navigation/settings_feature" />
-    <fragment
-        android:id="@+id/init_fragment"
-        android:name="com.sorrowblue.comicviewer.app.InitFragment" />
-    <fragment
-        android:id="@+id/tutorial_fragment"
-        android:name="com.sorrowblue.comicviewer.app.tutorial.TutorialFragment"
-        android:label="TutorialFragment" />
-    <action
-        android:id="@+id/action_global_auth"
-        app:destination="@id/auth_fragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@id/mobile_navigation" />
     <action
         android:id="@+id/action_global_tutorial"
         app:destination="@id/tutorial_fragment"
@@ -55,5 +38,9 @@
         app:destination="@id/bookshelf_navigation"
         app:launchSingleTop="true"
         app:popUpTo="@id/mobile_navigation" />
+    <include app:graph="@navigation/tutorial" />
+    <action
+        android:id="@+id/action_global_tutorial_navigation"
+        app:destination="@id/tutorial_navigation" />
 </navigation>
 

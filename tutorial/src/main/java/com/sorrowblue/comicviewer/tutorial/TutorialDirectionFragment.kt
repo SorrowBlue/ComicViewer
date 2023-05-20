@@ -1,16 +1,15 @@
-package com.sorrowblue.comicviewer.app.tutorial
+package com.sorrowblue.comicviewer.tutorial
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.app.R
-import com.sorrowblue.comicviewer.app.databinding.TutorialFragmentDirectionBinding
 import com.sorrowblue.comicviewer.domain.entity.settings.BindingDirection
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
+import com.sorrowblue.comicviewer.tutorial.databinding.TutorialFragmentDirectionBinding
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -47,5 +47,10 @@
                 tools:icon="@drawable/ic_twotone_add_24"
                 tools:text="@string/bookshelf_list_btn_new" />
         </FrameLayout>
+
+        <include
+            android:id="@+id/view_auth"
+            layout="@layout/view_auth" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

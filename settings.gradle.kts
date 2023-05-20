@@ -89,6 +89,7 @@ include(":library:googledrive")
 include(":library:onedrive")
 include(":readlater")
 include(":history")
+include(":tutorial")
 
 include(":settings")
 include(":settings:display")
