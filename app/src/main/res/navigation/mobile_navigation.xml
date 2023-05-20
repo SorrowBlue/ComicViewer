@@ -3,10 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/bookshelf_navigation">
-    <action
-        android:id="@+id/action_global_settings_navigation"
-        app:destination="@id/settings_navigation"
-        app:launchSingleTop="true" />
     <fragment
         android:id="@+id/work_fragment"
         android:name="com.sorrowblue.comicviewer.app.WorkFragment"
@@ -22,12 +18,16 @@
     <include app:graph="@navigation/bookshelf" />
     <include app:graph="@navigation/favorite_list" />
     <include app:graph="@navigation/readlater" />
-
     <include app:graph="@navigation/favorite_add" />
     <include app:graph="@navigation/settings" />
     <include app:graph="@navigation/library" />
     <include app:graph="@navigation/file" />
     <include app:graph="@navigation/settings_feature" />
+    <include app:graph="@navigation/tutorial" />
+    <action
+        android:id="@+id/action_global_settings_navigation"
+        app:destination="@id/settings_navigation"
+        app:launchSingleTop="true" />
     <action
         android:id="@+id/action_global_tutorial"
         app:destination="@id/tutorial_fragment"
@@ -38,7 +38,6 @@
         app:destination="@id/bookshelf_navigation"
         app:launchSingleTop="true"
         app:popUpTo="@id/mobile_navigation" />
-    <include app:graph="@navigation/tutorial" />
     <action
         android:id="@+id/action_global_tutorial_navigation"
         app:destination="@id/tutorial_navigation" />
