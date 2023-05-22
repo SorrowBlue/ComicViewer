@@ -145,7 +145,7 @@ internal class FolderThumbnailFetcher(
         )
         val notEnough = cacheKeyList.size < size
         val list = cacheKeyList.mapNotNull { cacheKey ->
-            diskCache?.get(cacheKey)?.let {
+            diskCache?.openSnapshot(cacheKey)?.let {
                 cacheKey to it
             } ?: null.apply {
                 fileModelLocalDataSource.removeCacheKey(cacheKey)
@@ -170,9 +170,9 @@ internal class FolderThumbnailFetcher(
 
         // 新しいエディターを開きます。
         val editor = if (snapshot != null) {
-            snapshot.closeAndEdit()
+            snapshot.closeAndOpenEditor()
         } else {
-            diskCache?.edit(diskCacheKey)
+            diskCache?.openEditor(diskCacheKey)
         }
 
         // このエントリに書き込めない場合は「null」を返します。
@@ -206,7 +206,7 @@ internal class FolderThumbnailFetcher(
                     }
                     result.recycle()
                 }
-                editor.commitAndGet()
+                editor.commitAndOpenSnapshot()
             }
         } catch (e: Exception) {
             editor.abortQuietly()
@@ -225,9 +225,9 @@ internal class FolderThumbnailFetcher(
 
         // 新しいエディターを開きます。
         val editor = if (snapshot != null) {
-            snapshot.closeAndEdit()
+            snapshot.closeAndOpenEditor()
         } else {
-            diskCache?.edit(diskCacheKey)
+            diskCache?.openEditor(diskCacheKey)
         }
 
         // このエントリに書き込めない場合は「null」を返します。
@@ -244,7 +244,7 @@ internal class FolderThumbnailFetcher(
             fileSystem.write(editor.data) {
                 bitmap.compress(COMPRESS_FORMAT, 75, outputStream())
             }
-            return editor.commitAndGet()
+            return editor.commitAndOpenSnapshot()
         } catch (e: Exception) {
             editor.abortQuietly()
             throw e

@@ -98,7 +98,7 @@ internal class FavoriteThumbnailFetcher(
         val cacheKeyList = favoriteBookLocalDataSource.getCacheKeyList(data.id, size)
         val notEnough = cacheKeyList.size < size
         val list = cacheKeyList.mapNotNull { cacheKey ->
-            diskCache?.get(cacheKey)?.let {
+            diskCache?.openSnapshot(cacheKey)?.let {
                 cacheKey to it
             } ?: null.apply {
                 fileModelLocalDataSource.removeCacheKey(cacheKey)
@@ -123,9 +123,9 @@ internal class FavoriteThumbnailFetcher(
 
         // 新しいエディターを開きます。
         val editor = if (snapshot != null) {
-            snapshot.closeAndEdit()
+            snapshot.closeAndOpenEditor()
         } else {
-            diskCache?.edit(diskCacheKey)
+            diskCache?.openEditor(diskCacheKey)
         }
 
         // このエントリに書き込めない場合は「null」を返します。
@@ -156,7 +156,7 @@ internal class FavoriteThumbnailFetcher(
                     }
                     result.recycle()
                 }
-                editor.commitAndGet()
+                editor.commitAndOpenSnapshot()
             }
         } catch (e: Exception) {
             editor.abortQuietly()

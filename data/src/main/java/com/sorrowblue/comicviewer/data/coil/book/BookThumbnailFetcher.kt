@@ -26,7 +26,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStream
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
-import logcat.logcat
 import okhttp3.internal.closeQuietly
 import okio.Buffer
 import okio.ByteString.Companion.encodeUtf8
@@ -122,9 +121,9 @@ internal class BookThumbnailFetcher(
 
         // 新しいエディターを開きます。
         val editor = if (snapshot != null) {
-            snapshot.closeAndEdit()
+            snapshot.closeAndOpenEditor()
         } else {
-            diskCache?.edit(diskCacheKey)
+            diskCache?.openEditor(diskCacheKey)
         }
 
         // このエントリに書き込めない場合は「null」を返します。
@@ -143,7 +142,7 @@ internal class BookThumbnailFetcher(
             fileModelLocalDataSource.update(
                 book.path, book.bookshelfModelId, diskCacheKey, fileReader.pageCount()
             )
-            return editor.commitAndGet()
+            return editor.commitAndOpenSnapshot()
         } catch (e: Exception) {
             editor.abortQuietly()
             throw e

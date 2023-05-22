@@ -33,7 +33,7 @@ internal class BookPageFetcher(
     private val context: Context,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-) : CoilFetcher<BookPageRequestData>(data, options, diskCacheLazy) {
+) : CoilFetcher<BookPageRequestData>(options, diskCacheLazy) {
 
     class Factory @Inject constructor(
         @PageDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
@@ -110,9 +110,9 @@ internal class BookPageFetcher(
 
         // 新しいエディターを開きます。
         val editor = if (snapshot != null) {
-            snapshot.closeAndEdit()
+            snapshot.closeAndOpenEditor()
         } else {
-            diskCache?.edit(diskCacheKey)
+            diskCache?.openEditor(diskCacheKey)
         }
 
         // このエントリに書き込めない場合は `null` を返します。
@@ -127,7 +127,7 @@ internal class BookPageFetcher(
             fileSystem.write(editor.data) {
                 write(bytes)
             }
-            editor.commitAndGet()
+            editor.commitAndOpenSnapshot()
         }.onFailure {
             editor.abortQuietly()
         }.getOrThrow()

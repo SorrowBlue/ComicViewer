@@ -23,7 +23,7 @@ internal abstract class FileModelFetcher(
 
     protected fun readFromDiskCache(): DiskCache.Snapshot? {
         return if (options.diskCachePolicy.readEnabled) {
-            diskCache?.get(diskCacheKey)
+            diskCache?.openSnapshot(diskCacheKey)
         } else {
             null
         }

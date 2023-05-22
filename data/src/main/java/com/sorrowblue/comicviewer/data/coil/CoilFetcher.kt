@@ -8,7 +8,6 @@ import coil.request.Options
 
 @OptIn(ExperimentalCoilApi::class)
 abstract class CoilFetcher<T>(
-    private val data: T,
     private val options: Options,
     diskCacheLazy: dagger.Lazy<DiskCache?>,
 ) : Fetcher {
@@ -20,7 +19,7 @@ abstract class CoilFetcher<T>(
 
     protected fun readFromDiskCache(): DiskCache.Snapshot? {
         return if (options.diskCachePolicy.readEnabled) {
-            diskCache?.get(diskCacheKey)
+            diskCache?.openSnapshot(diskCacheKey)
         } else {
             null
         }
