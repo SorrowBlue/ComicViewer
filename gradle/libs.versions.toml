@@ -109,7 +109,7 @@ androidx-window = "androidx.window:window:1.0.0"
 
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 
-google-android-play-feature-delivery-ktx = "com.google.android.play:feature-delivery-ktx:2.0.1"
+google-android-play-feature-delivery-ktx = "com.google.android.play:feature-delivery-ktx:2.1.0"
 google-code-gson = "com.google.code.gson:gson:2.10.1"
 google-guava = "com.google.guava:guava:31.1-jre"
 google-material = "com.google.android.material:material:1.9.0"
