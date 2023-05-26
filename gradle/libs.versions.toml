@@ -103,7 +103,7 @@ androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "
 
 androidx-startup-runtime = "androidx.startup:startup-runtime:1.1.1"
 
-androidx-viewpager2 = "androidx.viewpager2:viewpager2:1.1.0-beta01"
+androidx-viewpager2 = "androidx.viewpager2:viewpager2:1.1.0-beta02"
 
 androidx-window = "androidx.window:window:1.0.0"
 
