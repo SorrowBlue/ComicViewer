@@ -19,7 +19,7 @@ androidx-work = "2.8.1"
 
 dagger-hilt-android = "2.46.1"
 
-android-gradle = "8.0.1"
+android-gradle = "8.0.2"
 
 mikepenz-aboutlibraries = "10.7.0"
 
