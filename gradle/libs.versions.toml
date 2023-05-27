@@ -50,7 +50,7 @@ kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 
-androidx-activity = "androidx.activity:activity:1.7.1"
+androidx-activity = "androidx.activity:activity:1.7.2"
 
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 
