@@ -3,7 +3,11 @@ package com.sorrowblue.comicviewer.app.ktx
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import logcat.logcat
 
-fun ExtendedFloatingActionButton.isShownWithImageResource(isShown: Boolean, iconResId: Int, labelResid: Int) {
+fun ExtendedFloatingActionButton.isShownWithImageResource(
+    isShown: Boolean,
+    iconResId: Int,
+    labelResid: Int
+) {
     logcat { "isShownWithImageResource($isShown, $iconResId, $labelResid)" }
     if (isShown) {
         if (this.isShown) {

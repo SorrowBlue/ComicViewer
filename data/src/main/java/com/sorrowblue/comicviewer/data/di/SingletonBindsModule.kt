@@ -1,10 +1,10 @@
 package com.sorrowblue.comicviewer.data.di
 
 import coil.fetch.Fetcher
-import com.sorrowblue.comicviewer.data.coil.page.BookPageFetcher
-import com.sorrowblue.comicviewer.data.coil.favorite.FavoriteThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.book.BookThumbnailFetcher
+import com.sorrowblue.comicviewer.data.coil.favorite.FavoriteThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.folder.FolderThumbnailFetcher
+import com.sorrowblue.comicviewer.data.coil.page.BookPageFetcher
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel

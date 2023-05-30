@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.data.database.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.migration.AutoMigrationSpec
 import com.sorrowblue.comicviewer.data.database.ComicViewerDatabase
 import dagger.Module
 import dagger.Provides

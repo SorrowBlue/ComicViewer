@@ -95,7 +95,10 @@ internal class BookshelfRepositoryImpl @Inject constructor(
         })
     }
 
-    override suspend fun connect(bookshelf: Bookshelf, path: String): Result<Unit, BookshelfRepositoryError> {
+    override suspend fun connect(
+        bookshelf: Bookshelf,
+        path: String
+    ): Result<Unit, BookshelfRepositoryError> {
         return withContext(Dispatchers.IO) {
             val remoteDataSource = remoteDataSourceFactory.create(bookshelf.toServerModel())
             kotlin.runCatching {

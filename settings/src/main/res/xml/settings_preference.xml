@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <Preference
         app:key="@string/settings_preference_key_display"
-        app:title="ディスプレイ" />
-
+        app:title="@string/settings_label_display" />
     <Preference
         app:key="@string/settings_preference_key_folder"
-        app:title="フォルダ" />
-
+        app:title="@string/settings_label_folder" />
     <Preference
         app:key="@string/settings_preference_key_viewer"
-        app:title="ビューワー" />
-
+        app:title="@string/settings_label_viewer" />
     <Preference
         app:key="@string/settings_preference_key_security"
-        app:title="セキュリティ" />
-
+        app:title="@string/settings_label_security" />
     <Preference
-        app:key="@string/settings_preference_key_license"
-        app:title="ライセンス" />
-
+        app:icon="@drawable/ic_twotone_info_24"
+        app:key="@string/settings_preference_key_app"
+        app:title="@string/settings_label_app" />
+    <Preference
+        app:key="@string/settings_preference_key_tutorial"
+        app:title="@string/settings_title_tutorial" />
     <SwitchPreferenceCompat
         app:defaultValue="false"
         app:key="@string/settings_preference_key_restore_on_launch"

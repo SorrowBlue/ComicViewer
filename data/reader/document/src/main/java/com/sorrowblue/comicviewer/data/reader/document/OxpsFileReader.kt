@@ -11,6 +11,7 @@ internal class OxpsFileReader(
     seekableInputStream: SeekableInputStream
 ) : DocumentFileReader(context, "application/oxps", seekableInputStream) {
 
+    @Keep
     interface Factory : FileReader.Factory {
         override fun create(seekableInputStream: SeekableInputStream): OxpsFileReader
     }

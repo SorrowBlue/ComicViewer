@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
 internal class EpubFileReader(context: Context, seekableInputStream: SeekableInputStream) :
     DocumentFileReader(context, "application/epub+zip", seekableInputStream) {
 
+    @Keep
     interface Factory : FileReader.Factory {
         override fun create(seekableInputStream: SeekableInputStream): EpubFileReader
     }

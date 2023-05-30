@@ -16,9 +16,11 @@ import kotlinx.coroutines.flow.onEach
 class GoogleDriveProfileFragment : DialogFragment(R.layout.googledrive_fragment_profile) {
 
     private val binding: GoogledriveFragmentProfileBinding by viewBinding()
-    private val viewModel: GoogleDriveListViewModel by navGraphViewModels(com.sorrowblue.comicviewer.library.R.id.googledrive) { GoogleDriveListViewModel.Factory(
-        GoogleDriveApiRepositoryImpl(requireContext())
-    )}
+    private val viewModel: GoogleDriveListViewModel by navGraphViewModels(com.sorrowblue.comicviewer.library.R.id.googledrive) {
+        GoogleDriveListViewModel.Factory(
+            GoogleDriveApiRepositoryImpl(requireContext())
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

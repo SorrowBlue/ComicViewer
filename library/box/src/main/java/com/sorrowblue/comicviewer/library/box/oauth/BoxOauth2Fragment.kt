@@ -41,11 +41,14 @@ internal class BoxOauth2Fragment :
 
         binding.signIn.isVisible = false
         viewModel.authenticate {
-            findNavController().navigate(com.sorrowblue.comicviewer.library.R.id.box_navigation, null, navOptions {
-                popUpTo(com.sorrowblue.comicviewer.library.R.id.box_oauth2_fragment) {
-                    this.inclusive = true
-                }
-            })
+            findNavController().navigate(
+                com.sorrowblue.comicviewer.library.R.id.box_navigation,
+                null,
+                navOptions {
+                    popUpTo(com.sorrowblue.comicviewer.library.R.id.box_oauth2_fragment) {
+                        this.inclusive = true
+                    }
+                })
         }
     }
 }

@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.makeSnackbar
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
@@ -32,28 +33,30 @@ internal class LibraryListFragment : FrameworkFragment(R.layout.library_fragment
         val adapter = LibraryListAdapter { library, extras ->
             when (library) {
                 LocalFeature.HISTORY -> {
-                    navigate(LibraryListFragmentDirections.actionLibraryListToHistoryNavigation())
+                    findNavController().navigate(LibraryListFragmentDirections.actionLibraryListToHistoryNavigation())
                 }
+
                 LocalFeature.DOWNLOADED -> {
                     makeSnackbar("Coming Soon...").show()
                 }
-                is CloudStorage.GoogleDrive -> navigate(
+
+                is CloudStorage.GoogleDrive -> findNavController().navigate(
                     LibraryListFragmentDirections.actionLibraryListToGoogledriveNavigation(
                         extras.sharedElements.values.first()
                     ), extras
                 )
 
-                is CloudStorage.Box -> navigate(
+                is CloudStorage.Box -> findNavController().navigate(
                     LibraryListFragmentDirections.actionLibraryListToBoxNavigation(extras.sharedElements.values.first()),
                     extras
                 )
 
-                is CloudStorage.Dropbox -> navigate(
+                is CloudStorage.Dropbox -> findNavController().navigate(
                     LibraryListFragmentDirections.actionLibraryListToDropboxNavigation(extras.sharedElements.values.first()),
                     extras
                 )
 
-                is CloudStorage.OneDrive -> navigate(
+                is CloudStorage.OneDrive -> findNavController().navigate(
                     LibraryListFragmentDirections.actionLibraryListToOnedriveNavigation(extras.sharedElements.values.first()),
                     extras
                 )

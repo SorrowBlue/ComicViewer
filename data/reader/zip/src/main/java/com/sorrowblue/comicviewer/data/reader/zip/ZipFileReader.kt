@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.data.reader.zip
 
 import android.icu.text.Collator
 import android.icu.text.RuleBasedCollator
-import androidx.annotation.Keep
 import com.sorrowblue.comicviewer.data.common.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.data.common.extension
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
@@ -17,6 +16,7 @@ import java.util.Locale
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import net.sf.sevenzipjbinding.SevenZip
+import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 
 internal class ZipFileReader @AssistedInject constructor(
     @Assisted private val seekableInputStream: SeekableInputStream
@@ -50,7 +50,7 @@ internal class ZipFileReader @AssistedInject constructor(
     override suspend fun pageInputStream(pageIndex: Int): InputStream {
         return mutex.withLock {
             val outputStream = ByteArrayOutputStream()
-            entries[pageIndex].extractSlow {
+            entries[pageIndex].extractSlow2 {
                 outputStream.write(it)
                 it.size
             }
@@ -67,4 +67,8 @@ internal class ZipFileReader @AssistedInject constructor(
         archive.close()
         zipFile.close()
     }
+}
+
+private fun ISimpleInArchiveItem.extractSlow2(function: (data: ByteArray) -> Int) {
+    extractSlow { function.invoke(it) }
 }

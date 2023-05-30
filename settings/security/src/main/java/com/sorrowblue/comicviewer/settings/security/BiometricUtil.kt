@@ -14,4 +14,5 @@ fun <R> BiometricManager.check(
     }
 }
 
-fun BiometricManager.canAuthenticateWeak() = canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+fun BiometricManager.canAuthenticateWeak() =
+    canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)

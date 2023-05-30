@@ -13,5 +13,7 @@ internal class SettingsBinding(fragment: FrameworkPreferenceFragment) :
     val folder by preference<Preference>(R.string.settings_preference_key_folder)
     val security by preference<Preference>(R.string.settings_preference_key_security)
     val license by preference<Preference>(R.string.settings_preference_key_license)
+    val app by preference<Preference>(R.string.settings_preference_key_app)
+    val tutorial by preference<Preference>(R.string.settings_preference_key_tutorial)
     val restoreOnLaunch by preference<SwitchPreferenceCompat>(R.string.settings_preference_key_restore_on_launch)
 }

@@ -41,11 +41,12 @@ abstract class FrameworkPreferenceFragment(
                 padding(horizontal = true)
             }
         }
-        binding.listContainer.requireViewById<RecyclerView>(androidx.preference.R.id.recycler_view).applyInsetter {
-            type(systemBars = true, displayCutout = true) {
-                padding(horizontal = true, bottom = true)
+        binding.listContainer.requireViewById<RecyclerView>(androidx.preference.R.id.recycler_view)
+            .applyInsetter {
+                type(systemBars = true, displayCutout = true) {
+                    padding(horizontal = true, bottom = true)
+                }
             }
-        }
     }
 
     fun <T> Preference.setOnPreferenceChangeListener(onPreferenceChange: (preference: Preference, newValue: T) -> Boolean) {
@@ -54,7 +55,6 @@ abstract class FrameworkPreferenceFragment(
             onPreferenceChange.invoke(preference, newValue as T)
         }
     }
-
 }
 
 abstract class FrameworkPreferenceBinding(val fragment: FrameworkPreferenceFragment)

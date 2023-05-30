@@ -12,10 +12,10 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 internal class FileInfoViewModel @Inject constructor(
@@ -27,7 +27,12 @@ internal class FileInfoViewModel @Inject constructor(
     private val args: FileInfoFragmentArgs by navArgs()
 
     val fileFlow =
-        getFileUseCase.execute(GetFileUseCase.Request(args.bookshelfId, args.path.decodeFromBase64()))
+        getFileUseCase.execute(
+            GetFileUseCase.Request(
+                args.bookshelfId,
+                args.path.decodeFromBase64()
+            )
+        )
             .map { it.dataOrNull }
             .stateIn { null }
 

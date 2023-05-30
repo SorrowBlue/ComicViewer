@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.library.onedrive.list
 
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -30,6 +29,7 @@ import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import logcat.logcat
+import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class OneDriveListFragment :
     PagingFragment<File>(com.sorrowblue.comicviewer.library.R.layout.library_fragment_file_list) {

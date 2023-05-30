@@ -3,7 +3,10 @@ package com.sorrowblue.comicviewer.library.onedrive.data
 import java.io.IOException
 import java.io.OutputStream
 
-internal class ProgressOutputStream(private val underlying: OutputStream, private val onProgress: (Long) -> Unit) : OutputStream() {
+internal class ProgressOutputStream(
+    private val underlying: OutputStream,
+    private val onProgress: (Long) -> Unit
+) : OutputStream() {
     private var completed: Long = 0
 
     override fun write(data: ByteArray, off: Int, len: Int) {

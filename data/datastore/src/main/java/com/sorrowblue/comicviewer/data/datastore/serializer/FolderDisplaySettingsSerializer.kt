@@ -11,12 +11,18 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
 
 @ExperimentalSerializationApi
-internal class FolderDisplaySettingsSerializer(private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO) : Serializer<FolderDisplaySettings> {
+internal class FolderDisplaySettingsSerializer(private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO) :
+    Serializer<FolderDisplaySettings> {
 
     override val defaultValue = FolderDisplaySettings()
 
     override suspend fun readFrom(input: InputStream): FolderDisplaySettings {
-        return kotlin.runCatching { ProtoBuf.decodeFromByteArray(FolderDisplaySettings.serializer(), input.readBytes()) }.getOrElse { FolderDisplaySettings() }
+        return kotlin.runCatching {
+            ProtoBuf.decodeFromByteArray(
+                FolderDisplaySettings.serializer(),
+                input.readBytes()
+            )
+        }.getOrElse { FolderDisplaySettings() }
     }
 
     override suspend fun writeTo(t: FolderDisplaySettings, output: OutputStream) {

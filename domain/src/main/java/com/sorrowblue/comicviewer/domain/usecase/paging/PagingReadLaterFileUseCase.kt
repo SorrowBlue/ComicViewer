@@ -4,7 +4,8 @@ import androidx.paging.PagingConfig
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 
-abstract class PagingReadLaterFileUseCase : PagingUseCase<PagingReadLaterFileUseCase.Request, File>() {
+abstract class PagingReadLaterFileUseCase :
+    PagingUseCase<PagingReadLaterFileUseCase.Request, File>() {
 
     class Request(val pagingConfig: PagingConfig) : BaseRequest {
         override fun validate(): Boolean {

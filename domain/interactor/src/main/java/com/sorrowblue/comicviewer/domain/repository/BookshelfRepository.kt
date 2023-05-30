@@ -14,11 +14,21 @@ import kotlinx.coroutines.flow.Flow
 interface BookshelfRepository {
 
     fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>>
-    suspend fun exists(bookshelf: Bookshelf, path: String): Result<Boolean, BookshelfRepositoryStatus>
-    suspend fun registerOrUpdate(bookshelf: Bookshelf, path: String): Result<Bookshelf, RegisterLibraryError>
+    suspend fun exists(
+        bookshelf: Bookshelf,
+        path: String
+    ): Result<Boolean, BookshelfRepositoryStatus>
+
+    suspend fun registerOrUpdate(
+        bookshelf: Bookshelf,
+        path: String
+    ): Result<Bookshelf, RegisterLibraryError>
 
     fun get(bookshelfId: BookshelfId): Flow<Result<Bookshelf, LibraryStatus>>
     suspend fun delete(bookshelf: Bookshelf): Response<Boolean>
     suspend fun connect(bookshelf: Bookshelf, path: String): Result<Unit, BookshelfRepositoryError>
-    suspend fun register(bookshelf: Bookshelf, folder: Folder): Result<Bookshelf, BookshelfRepositoryError>
+    suspend fun register(
+        bookshelf: Bookshelf,
+        folder: Folder
+    ): Result<Bookshelf, BookshelfRepositoryError>
 }

@@ -52,7 +52,10 @@ internal class BoxPagingSource(
                         0,
                         0,
                         0,
-                        mapOf("thumbnail" to repository.fileThumbnail(it.id).orEmpty(), "access_token" to repository.accessToken())
+                        mapOf(
+                            "thumbnail" to repository.fileThumbnail(it.id).orEmpty(),
+                            "access_token" to repository.accessToken()
+                        )
                     )
                 }
 

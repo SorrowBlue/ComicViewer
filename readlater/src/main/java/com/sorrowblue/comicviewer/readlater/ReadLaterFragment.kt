@@ -41,12 +41,12 @@ internal class ReadLaterFragment : FileListFragment(R.layout.readlater_fragment)
         extras: FragmentNavigator.Extras
     ) {
         when (file) {
-            is Book -> navigate(
+            is Book -> findNavController().navigate(
                 ReadLaterFragmentDirections.actionReadlaterToBook(file, transitionName),
                 extras
             )
 
-            is Folder -> navigate(
+            is Folder -> findNavController().navigate(
                 ReadLaterFragmentDirections.actionReadlaterToFolder(file, transitionName),
                 extras
             )

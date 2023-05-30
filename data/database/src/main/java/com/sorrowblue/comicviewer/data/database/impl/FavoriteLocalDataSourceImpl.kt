@@ -35,7 +35,10 @@ internal class FavoriteBookLocalDataSourceImpl @Inject constructor(
         }.flow.map { it.map(File::toModel) }
     }
 
-    override suspend fun getCacheKeyList(favoriteModelId: FavoriteModelId, limit: Int): List<String> {
+    override suspend fun getCacheKeyList(
+        favoriteModelId: FavoriteModelId,
+        limit: Int
+    ): List<String> {
         return favoriteFileDao.selectCacheKey(favoriteModelId.value, limit)
     }
 }
@@ -60,7 +63,10 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
         return favoriteDao.delete(Favorite(favoriteModelId.value, ""))
     }
 
-    override suspend fun getFavoriteList(id: BookshelfModelId, filePath: String): List<FavoriteModel> {
+    override suspend fun getFavoriteList(
+        id: BookshelfModelId,
+        filePath: String
+    ): List<FavoriteModel> {
         return favoriteDao.selectBy(id.value, filePath).map(Favorite::toModel)
     }
 

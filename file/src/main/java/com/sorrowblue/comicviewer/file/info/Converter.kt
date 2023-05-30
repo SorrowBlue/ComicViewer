@@ -25,10 +25,12 @@ object Converter {
             }
         }
     }
+
     @JvmStatic
     fun dateTime(epochMilli: Long): String = Instant.ofEpochMilli(epochMilli)
         .atZone(ZoneOffset.systemDefault())
         .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+
     @JvmStatic
     fun lastReadPage(lastReadPage: Int, maxPage: Int) = "${lastReadPage}/${maxPage} pages"
 }

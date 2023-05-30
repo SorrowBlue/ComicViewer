@@ -100,8 +100,8 @@
             android:id="@+id/smb_path_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/bookshelf_info_label_path"
             android:paddingTop="16dp"
+            android:text="@string/bookshelf_info_label_path"
             android:textAppearance="?attr/textAppearanceLabelSmall" />
 
         <TextView
@@ -115,8 +115,8 @@
         <TextView
             android:id="@+id/smb_port_label"
             android:layout_width="0dp"
-            android:paddingTop="16dp"
             android:layout_height="wrap_content"
+            android:paddingTop="16dp"
             android:text="@string/bookshelf_info_label_port"
             android:textAppearance="?attr/textAppearanceLabelSmall" />
 

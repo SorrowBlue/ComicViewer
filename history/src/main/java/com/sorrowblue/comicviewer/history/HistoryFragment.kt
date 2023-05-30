@@ -34,7 +34,7 @@ internal class HistoryFragment : PagingFragment<File>(R.layout.history_fragment)
             FolderDisplaySettings.Display.LIST,
             runBlocking { viewModel.isEnabledThumbnailFlow.first() },
             { file, transitionName, extras -> navigateToFile(file, transitionName, extras) },
-            { navigate(FileInfoNavigation.getDeeplink(it)) }
+            { findNavController().navigate(FileInfoNavigation.getDeeplink(it)) }
         )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +70,7 @@ internal class HistoryFragment : PagingFragment<File>(R.layout.history_fragment)
         extras: FragmentNavigator.Extras
     ) {
         when (file) {
-            is Book -> navigate(
+            is Book -> findNavController().navigate(
                 HistoryFragmentDirections.actionHistoryToBook(file, transitionName),
                 extras
             )

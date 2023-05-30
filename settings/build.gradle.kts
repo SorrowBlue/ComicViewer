@@ -8,7 +8,9 @@ plugins {
 
 android {
     resourcePrefix("settings")
-
+    defaultConfig {
+        buildConfigField("long", "TIMESTAMP", "${System.currentTimeMillis()}L")
+    }
     buildFeatures {
         dataBinding = true
         viewBinding = true
@@ -24,7 +26,7 @@ dependencies {
     implementation(projects.settings.security)
 
     implementation(libs.mikepenz.aboutlibraries)
-
+    implementation("com.google.android.play:review-ktx:2.0.1")
     implementation(libs.androidx.hilt.navigation.fragment)
     kapt(libs.androidx.hilt.compiler)
 }

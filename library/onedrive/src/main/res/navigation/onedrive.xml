@@ -7,8 +7,8 @@
     <fragment
         android:id="@+id/one_drive_list_fragment"
         android:name="com.sorrowblue.comicviewer.library.onedrive.list.OneDriveListFragment"
-        app:moduleName="onedrive"
         android:label="OneDrive"
+        app:moduleName="onedrive"
         tools:layout="@layout/library_fragment_cloud">
         <argument
             android:name="drive_id"
@@ -35,11 +35,11 @@
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        app:moduleName="onedrive"
         android:id="@+id/one_drive_signin_fragment"
         android:name="com.sorrowblue.comicviewer.library.onedrive.signin.OneDriveSignInFragment"
         android:label="OneDrive"
-        tools:layout="@layout/onedrive_fragment_signin" >
+        app:moduleName="onedrive"
+        tools:layout="@layout/onedrive_fragment_signin">
         <action
             android:id="@+id/onedriveAction_one_drive_signin_fragment_to_one_drive_list_fragment"
             app:destination="@id/one_drive_list_fragment"

@@ -12,13 +12,13 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 import com.sorrowblue.comicviewer.library.dropbox.data.DropBoxApiRepository
 import kotlin.math.ceil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import logcat.logcat
+import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class DropBoxDownloadWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {

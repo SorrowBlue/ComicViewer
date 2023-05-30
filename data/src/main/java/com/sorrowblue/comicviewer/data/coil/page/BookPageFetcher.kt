@@ -18,6 +18,7 @@ import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.di.PageDiskCache
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.IOException
 import java.io.InputStream
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
@@ -43,23 +44,41 @@ internal class BookPageFetcher(
     ) : Fetcher.Factory<BookPageRequestData> {
 
         override fun create(data: BookPageRequestData, options: Options, imageLoader: ImageLoader) =
-            BookPageFetcher(data, options, diskCache, context, remoteDataSourceFactory, bookshelfLocalDataSource)
+            BookPageFetcher(
+                data,
+                options,
+                diskCache,
+                context,
+                remoteDataSourceFactory,
+                bookshelfLocalDataSource
+            )
     }
 
     override suspend fun fetch(): FetchResult {
         var snapshot = readFromDiskCache()
         try {
             if (snapshot != null) {
-                return SourceResult(
-                    source = snapshot.toImageSource(),
-                    mimeType = null,
-                    dataSource = DataSource.DISK
-                )
+                if (fileSystem.metadata(snapshot.metadata).size == 0L) {
+                    return SourceResult(
+                        source = snapshot.toImageSource(),
+                        mimeType = null,
+                        dataSource = DataSource.DISK
+                    )
+                }
+                if (snapshot.toBookPageMetaData() == null) {
+                    return SourceResult(
+                        source = snapshot.toImageSource(),
+                        mimeType = null,
+                        dataSource = DataSource.DISK
+                    )
+                }
             }
             var fileReader: FileReader? = null
             try {
                 fileReader =
-                    remoteDataSourceFactory.create(bookshelfLocalDataSource.get(data.fileModel.bookshelfModelId).first()!!).fileReader(data.fileModel)
+                    remoteDataSourceFactory.create(
+                        bookshelfLocalDataSource.get(data.fileModel.bookshelfModelId).first()!!
+                    ).fileReader(data.fileModel)
                         ?: throw RuntimeException("この拡張子はサポートされていません。")
                 var inputStream: InputStream = fileReader.pageInputStream(data.pageIndex)
                 var bytes = inputStream.use { it.readBytes() }
@@ -99,6 +118,17 @@ internal class BookPageFetcher(
         } catch (e: Exception) {
             snapshot?.closeQuietly()
             throw e
+        }
+    }
+
+    private fun DiskCache.Snapshot.toBookPageMetaData(): BookPageMetaData? {
+        return try {
+            fileSystem.read(metadata) {
+                BookPageMetaData.from(this)
+            }
+        } catch (_: IOException) {
+            // If we can't parse the metadata, ignore this entry.
+            null
         }
     }
 

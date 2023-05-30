@@ -11,7 +11,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
 
 @ExperimentalSerializationApi
-internal class SettingsSerializer(private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO) : Serializer<Settings> {
+internal class SettingsSerializer(private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO) :
+    Serializer<Settings> {
     override val defaultValue = Settings()
     override suspend fun readFrom(input: InputStream): Settings {
         return ProtoBuf.decodeFromByteArray(Settings.serializer(), input.readBytes())

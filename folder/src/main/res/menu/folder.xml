@@ -16,14 +16,12 @@
         android:id="@+id/folder_menu_scan"
         android:icon="@drawable/ms_rounded_scan_24"
         android:title="スキャン"
-        app:showAsAction="ifRoom">
-    </item>
+        app:showAsAction="ifRoom"></item>
     <item
         android:id="@+id/folder_menu_edit"
         android:icon="@drawable/ic_twotone_edit_24"
         android:title="編集"
-        app:showAsAction="ifRoom">
-    </item>
+        app:showAsAction="ifRoom"></item>
     <item
         android:id="@+id/action_global_settings_navigation"
         android:icon="@drawable/ic_twotone_settings_24"

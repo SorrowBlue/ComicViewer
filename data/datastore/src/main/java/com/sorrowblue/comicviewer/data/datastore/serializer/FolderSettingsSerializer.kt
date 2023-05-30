@@ -11,7 +11,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
 
 @ExperimentalSerializationApi
-internal class FolderSettingsSerializer(private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO) : Serializer<FolderSettings> {
+internal class FolderSettingsSerializer(private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO) :
+    Serializer<FolderSettings> {
 
     override val defaultValue = FolderSettings()
 

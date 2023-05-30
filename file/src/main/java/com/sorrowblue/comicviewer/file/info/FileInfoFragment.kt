@@ -34,18 +34,30 @@ internal class FileInfoFragment : BottomSheetDialogFragment(R.layout.file_fragme
         }
         binding.openFolder.setOnClickListener {
             val file = viewModel.fileFlow.value!!
-            findNavController().previousBackStackEntry?.savedStateHandle?.set("bookshelfId", file.bookshelfId.value)
-            findNavController().previousBackStackEntry?.savedStateHandle?.set("parent", file.base64Parent())
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                "bookshelfId",
+                file.bookshelfId.value
+            )
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                "parent",
+                file.base64Parent()
+            )
             dismiss()
 //            requireParentFragment().findNavController().navigate("comicviewer://comicviewer.sorrowblue.com/folder?serverId=${viewModel.fileFlow.value!!.bookshelfId.value}&path=${viewModel.fileFlow.value!!.base64Parent()}".toUri())
         }
     }
 }
 
-fun Fragment.observeOpenFolder(fragmentId: Int, openFolder: (bookshelfId: Int, parent: String) -> Unit) {
+fun Fragment.observeOpenFolder(
+    fragmentId: Int,
+    openFolder: (bookshelfId: Int, parent: String) -> Unit
+) {
     val navBackStackEntry = findNavController().getBackStackEntry(fragmentId)
     val observer = LifecycleEventObserver { _, event ->
-        if (event == Lifecycle.Event.ON_RESUME && navBackStackEntry.savedStateHandle.contains("bookshelfId") && navBackStackEntry.savedStateHandle.contains("parent")) {
+        if (event == Lifecycle.Event.ON_RESUME && navBackStackEntry.savedStateHandle.contains("bookshelfId") && navBackStackEntry.savedStateHandle.contains(
+                "parent"
+            )
+        ) {
             val bookshelfId = navBackStackEntry.savedStateHandle.get<Int>("bookshelfId")!!
             navBackStackEntry.savedStateHandle.remove<Int>("bookshelfId")
             val parent = navBackStackEntry.savedStateHandle.get<String>("parent")!!

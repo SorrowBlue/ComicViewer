@@ -15,6 +15,7 @@ import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
 
+@Suppress("unused")
 internal class DarkModeInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {

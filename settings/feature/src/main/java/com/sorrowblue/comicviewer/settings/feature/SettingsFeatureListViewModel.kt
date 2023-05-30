@@ -17,6 +17,7 @@ internal class SettingsFeatureListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val stateList: MutableStateFlow<List<FeatureItem>>
+
     init {
         val modules = splitInstallManager.installedModules
         stateList = MutableStateFlow(Feature.values().map {

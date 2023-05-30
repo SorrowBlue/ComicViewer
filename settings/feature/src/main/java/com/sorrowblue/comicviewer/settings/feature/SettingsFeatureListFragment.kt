@@ -7,11 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.ktx.moduleNames
-import com.google.android.play.core.ktx.startConfirmationDialogForResult
 import com.google.android.play.core.splitinstall.SplitInstallSessionState
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
-import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
-import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.settings.feature.databinding.SettingsFeatureFragmentListBinding
@@ -55,7 +52,11 @@ internal class SettingsFeatureListFragment :
                     MaterialAlertDialogBuilder(requireContext()).setTitle("機能の削除")
                         .setMessage("${getString(it.feature.title)}機能を削除しますか？\n機能話すぐに削除されずアプリが使用していない間に自動的に削除されます。")
                         .setPositiveButton("削除") { _, _ ->
-                            Snackbar.make(binding.root, "${it.feature.title}機能の削除をリクエストしました。", Snackbar.LENGTH_SHORT).show()
+                            Snackbar.make(
+                                binding.root,
+                                "${it.feature.title}機能の削除をリクエストしました。",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                             viewModel.uninstall(it.feature.moduleName)
                         }
                         .setNegativeButton("Cancel") { _, _ -> }

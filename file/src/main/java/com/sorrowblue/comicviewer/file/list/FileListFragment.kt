@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sorrowblue.comicviewer.domain.entity.file.File
@@ -46,7 +47,7 @@ abstract class FileListFragment : PagingFragment<File> {
             runBlocking { viewModel.displayFlow.first() },
             runBlocking { viewModel.isEnabledThumbnailFlow.first() },
             { file, transitionName, extras -> navigateToFile(file, transitionName, extras) },
-            { navigate(FileInfoNavigation.getDeeplink(it)) }
+            { findNavController().navigate(FileInfoNavigation.getDeeplink(it)) }
         )
 
     override fun onCreateAdapter(pagingDataAdapter: PagingDataAdapter<File, *>) {
@@ -91,23 +92,29 @@ abstract class FileListFragment : PagingFragment<File> {
                         } else {
                             recyclerView.invalidateItemDecorations()
                         }
-                    } ?: recyclerView.addItemDecoration(AdaptiveSpacingItemDecoration(itemSpace).also {
-                        itemDecoration = it
-                    })
+                    }
+                        ?: recyclerView.addItemDecoration(AdaptiveSpacingItemDecoration(itemSpace).also {
+                            itemDecoration = it
+                        })
                     recyclerView.requestApplyInsets()
                 }
             }
         }.launchInWithLifecycle()
     }
 
-    var defaultMargin = 0
+    private var defaultMargin = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbar.setupWithNavController()
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, insets ->
-            val i = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            v.updatePadding(left = i.left + defaultMargin, right = i.right + defaultMargin, bottom = i.bottom + defaultMargin)
+            val i =
+                insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            v.updatePadding(
+                left = i.left + defaultMargin,
+                right = i.right + defaultMargin,
+                bottom = i.bottom + defaultMargin
+            )
             WindowInsetsCompat.CONSUMED
         }
         toolbar.applyInsetter {

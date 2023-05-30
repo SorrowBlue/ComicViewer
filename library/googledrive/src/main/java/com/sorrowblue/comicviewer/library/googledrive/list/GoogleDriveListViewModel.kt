@@ -75,6 +75,7 @@ internal class GoogleDriveListViewModel(
             }
         }
     }
+
     private val args: GoogleDriveListFragmentArgs by navArgs()
 
     private val parent = args.parent ?: "root"

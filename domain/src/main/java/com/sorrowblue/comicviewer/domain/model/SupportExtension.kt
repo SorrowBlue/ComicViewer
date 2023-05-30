@@ -29,7 +29,8 @@ sealed interface SupportExtension {
 
     companion object {
         fun valueOf(key: String): SupportExtension {
-            return Archive.values().firstOrNull { it.name == key } ?: Document.values().firstOrNull { it.name == key } ?: throw IllegalArgumentException("")
+            return Archive.values().firstOrNull { it.name == key } ?: Document.values()
+                .firstOrNull { it.name == key } ?: throw IllegalArgumentException("")
         }
     }
 }

@@ -19,7 +19,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import logcat.logcat
 
-internal class DropBoxSignInFragment : FrameworkFragment(com.sorrowblue.comicviewer.library.R.layout.library_fragment_signin) {
+internal class DropBoxSignInFragment :
+    FrameworkFragment(com.sorrowblue.comicviewer.library.R.layout.library_fragment_signin) {
 
     private val binding: LibraryFragmentSigninBinding by viewBinding()
     private val viewModel: DropBoxSignInViewModel by viewModels()

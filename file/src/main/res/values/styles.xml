@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="file_bottom_round" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeBottomLeft">12dp</item>

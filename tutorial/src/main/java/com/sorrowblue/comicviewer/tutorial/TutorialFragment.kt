@@ -7,6 +7,7 @@ import androidx.activity.addCallback
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
+import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
+import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.tutorial.databinding.TutorialFragmentBinding
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,9 +37,14 @@ internal class TutorialFragment : FrameworkFragment(R.layout.tutorial_fragment) 
 
         binding.viewModel = viewModel
 
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, true) {
-            requireActivity().finish()
-        }
+        val callback =
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, true) {
+                if (viewModel.args.popBackId != 0) {
+                    findNavController().popBackStack(viewModel.args.popBackId, false)
+                } else {
+                    findNavController().popBackStack()
+                }
+            }
 
         val adapter = TutorialAdapter(this, viewModel.items)
         binding.viewPager2.adapter = adapter
@@ -68,8 +76,11 @@ internal class TutorialFragment : FrameworkFragment(R.layout.tutorial_fragment) 
 
 @HiltViewModel
 internal class TutorialViewModel @Inject constructor(
+    override val savedStateHandle: SavedStateHandle,
     private val loadSettingsUseCase: LoadSettingsUseCase
-) : ViewModel() {
+) : ViewModel(), SupportSafeArgs {
+
+    val args: TutorialFragmentArgs by navArgs()
 
     val currentItem = MutableStateFlow(0)
 

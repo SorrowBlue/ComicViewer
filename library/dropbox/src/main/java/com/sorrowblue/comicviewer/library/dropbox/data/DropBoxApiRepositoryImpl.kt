@@ -54,8 +54,8 @@ internal class DropBoxApiRepositoryImpl(context: Context) : DropBoxApiRepository
         }
     }
 
-    override val accountFlow = dropboxCredentialDataStore.data.map {
-        if (it.credential != null) {
+    override val accountFlow = dropboxCredentialDataStore.data.map { credential ->
+        if (credential.credential != null) {
             kotlin.runCatching { client().users().currentAccount }.onFailure {
                 it.printStackTrace()
             }.getOrNull()

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.library.onedrive.list
 
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -19,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import logcat.logcat
+import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class OneDriveDownloadWorker(
     appContext: Context,

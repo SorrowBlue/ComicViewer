@@ -38,6 +38,16 @@ internal class SettingsFragment : FrameworkPreferenceFragment(R.xml.settings_pre
             true
         }
 
+        binding.tutorial.setOnPreferenceClickListener {
+            findNavController().navigate(com.sorrowblue.comicviewer.framework.ui.R.id.action_global_tutorial_navigation)
+            true
+        }
+
+        binding.app.setOnPreferenceClickListener {
+            findNavController().navigate(SettingsFragmentDirections.actionSettingsToSettingsApp())
+            true
+        }
+
         binding.security.setOnPreferenceClickListener {
             findNavController().navigate(SettingsFragmentDirections.actionSettingsToSettingsSecurity())
             true

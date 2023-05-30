@@ -20,9 +20,9 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
+        style="?attr/materialCardViewElevatedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?attr/materialCardViewElevatedStyle"
         android:layout_margin="4dp"
         android:transitionName="@{String.valueOf(bookshelf.hashCode())}">
 

@@ -6,9 +6,10 @@ import androidx.lifecycle.LifecycleOwner
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-fun <T : Any> Fragment.autoClearedValue(init: () -> T) = AutoClearedValue<T>(this, init)
+fun <T : Any> Fragment.autoClearedValue(init: () -> T) = AutoClearedValue(this, init)
 
-class AutoClearedValue<T : Any>(fragment: Fragment, private val init: () -> T) : ReadOnlyProperty<Fragment, T> {
+class AutoClearedValue<T : Any>(fragment: Fragment, private val init: () -> T) :
+    ReadOnlyProperty<Fragment, T> {
     private var _value: T? = null
 
     init {

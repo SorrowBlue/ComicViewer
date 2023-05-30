@@ -1,12 +1,12 @@
 package com.sorrowblue.comicviewer.library.box.list
 
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 import android.view.ViewGroup
 import coil.load
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.library.filelist.LibraryFileListAdapter
+import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class BoxListAdapter(download: (Book) -> Unit, folder: (Folder) -> Unit) :
     LibraryFileListAdapter(download, folder) {

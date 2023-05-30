@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
-import com.sorrowblue.comicviewer.domain.usecase.paging.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface FileModelLocalDataSource {
@@ -22,7 +21,12 @@ interface FileModelLocalDataSource {
         lastRead: Long
     )
 
-    suspend fun update(path: String, bookshelfModelId: BookshelfModelId, cacheKey: String, totalPage: Int)
+    suspend fun update(
+        path: String,
+        bookshelfModelId: BookshelfModelId,
+        cacheKey: String,
+        totalPage: Int
+    )
 
     suspend fun updateAll(list: List<SimpleFileModel>)
 
@@ -49,7 +53,12 @@ interface FileModelLocalDataSource {
     suspend fun findBy(bookshelfModelId: BookshelfModelId, path: String): FileModel?
     fun nextFileModel(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
     fun prevFileModel(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
-    suspend fun getCacheKeys(bookshelfModelId: BookshelfModelId, parent: String, limit: Int): List<String>
+    suspend fun getCacheKeys(
+        bookshelfModelId: BookshelfModelId,
+        parent: String,
+        limit: Int
+    ): List<String>
+
     suspend fun getCacheKeys(
         bookshelfModelId: BookshelfModelId,
         parent: String,

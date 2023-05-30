@@ -14,7 +14,6 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import com.sorrowblue.comicviewer.library.dropbox.data.DropBoxApiRepository
 import com.sorrowblue.comicviewer.library.filelist.LibraryFileListViewModel
-import kotlinx.coroutines.launch
 
 internal class DropBoxListViewModel(
     private val repository: DropBoxApiRepository,
@@ -45,10 +44,4 @@ internal class DropBoxListViewModel(
     override val isAuthenticated = repository.isAuthenticated
 
     val account = repository.accountFlow.stateIn { null }
-
-    fun signOut() {
-        viewModelScope.launch {
-            repository.signOut()
-        }
-    }
 }

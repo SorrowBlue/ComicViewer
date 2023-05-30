@@ -60,6 +60,7 @@ internal class SmbFileClient @AssistedInject constructor(
                     logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                     throw FileClientException.InvalidAuth
                 }
+
                 is SmbException -> {
                     if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
@@ -72,6 +73,7 @@ internal class SmbFileClient @AssistedInject constructor(
                         }
                     }
                 }
+
                 else -> throw it
             }
         }
@@ -87,6 +89,7 @@ internal class SmbFileClient @AssistedInject constructor(
                     logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                     throw FileClientException.InvalidAuth
                 }
+
                 is SmbException -> {
                     if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
@@ -99,6 +102,7 @@ internal class SmbFileClient @AssistedInject constructor(
                         }
                     }
                 }
+
                 else -> throw it
             }
         }
@@ -114,6 +118,7 @@ internal class SmbFileClient @AssistedInject constructor(
                     logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                     throw FileClientException.InvalidAuth
                 }
+
                 is SmbException -> {
                     if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
@@ -126,6 +131,7 @@ internal class SmbFileClient @AssistedInject constructor(
                         }
                     }
                 }
+
                 else -> throw it
             }
         }
@@ -141,6 +147,7 @@ internal class SmbFileClient @AssistedInject constructor(
                     logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                     throw FileClientException.InvalidAuth
                 }
+
                 is SmbException -> {
                     if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
@@ -153,6 +160,7 @@ internal class SmbFileClient @AssistedInject constructor(
                         }
                     }
                 }
+
                 else -> throw it
             }
         }
@@ -168,6 +176,7 @@ internal class SmbFileClient @AssistedInject constructor(
                     logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                     throw FileClientException.InvalidAuth
                 }
+
                 is SmbException -> {
                     if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
@@ -180,6 +189,7 @@ internal class SmbFileClient @AssistedInject constructor(
                         }
                     }
                 }
+
                 else -> throw it
             }
         }
@@ -199,6 +209,7 @@ internal class SmbFileClient @AssistedInject constructor(
                     logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)}" }
                     throw FileClientException.InvalidAuth
                 }
+
                 is SmbException -> {
                     if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
@@ -211,6 +222,7 @@ internal class SmbFileClient @AssistedInject constructor(
                         }
                     }
                 }
+
                 else -> throw it
             }
         }
@@ -272,7 +284,15 @@ internal class SmbFileClient @AssistedInject constructor(
         )
 
     private val FileModel.uri
-        get() = URI("smb", null, bookshelfModel.host, bookshelfModel.port, path, null, null).decode()
+        get() = URI(
+            "smb",
+            null,
+            bookshelfModel.host,
+            bookshelfModel.port,
+            path,
+            null,
+            null
+        ).decode()
 
     private fun URI.decode() = URLDecoder.decode(toString().replace("+", "%2B"), "UTF-8")
 

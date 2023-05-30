@@ -19,8 +19,10 @@ internal class SettingsFolderViewModel @Inject constructor(
     private val deleteThumbnailsUseCase: DeleteThumbnailsUseCase
 ) : ViewModel() {
 
-    val showPreview = manageFolderDisplaySettingsUseCase.settings.map { it.isEnabledThumbnail }.distinctUntilChanged()
-    val resolveImageFolder = manageFolderSettingsUseCase.settings.map { it.resolveImageFolder }.distinctUntilChanged()
+    val showPreview = manageFolderDisplaySettingsUseCase.settings.map { it.isEnabledThumbnail }
+        .distinctUntilChanged()
+    val resolveImageFolder =
+        manageFolderSettingsUseCase.settings.map { it.resolveImageFolder }.distinctUntilChanged()
 
     fun updateShowPreview(newValue: Boolean) {
         viewModelScope.launch {

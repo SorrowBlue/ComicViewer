@@ -21,7 +21,8 @@ internal class MainViewModel @Inject constructor(
     val settings = loadSettingsUseCase.settings
     val securitySettingsFlow = manageSecuritySettingsUseCase.settings
 
-    fun getNavigationHistory(): Flow<NavigationHistory?> = getNavigationHistoryUseCase.execute(EmptyRequest).map { it.dataOrNull }
+    fun getNavigationHistory(): Flow<NavigationHistory?> =
+        getNavigationHistoryUseCase.execute(EmptyRequest).map { it.dataOrNull }
 
     val doneTutorialFlow = loadSettingsUseCase.settings.map { it.doneTutorial }
- }
+}

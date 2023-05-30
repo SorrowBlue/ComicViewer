@@ -12,7 +12,8 @@ import logcat.logcat
 
 internal class OneDriveSignInViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val authenticationProvider: AuthenticationProvider = AuthenticationProvider.getInstance(application)
+    private val authenticationProvider: AuthenticationProvider =
+        AuthenticationProvider.getInstance(application)
 
     private val loginsState = MutableStateFlow(SignInState.NONE)
 

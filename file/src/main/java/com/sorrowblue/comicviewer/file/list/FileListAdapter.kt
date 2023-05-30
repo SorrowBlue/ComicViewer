@@ -20,11 +20,10 @@ import com.sorrowblue.comicviewer.file.databinding.FileItemListBinding
 import com.sorrowblue.comicviewer.framework.resource.R
 import com.sorrowblue.comicviewer.framework.ui.converter.StringConverter.removeExtension
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
-import logcat.logcat
 
 class FileListAdapter(
     private var display: FolderDisplaySettings.Display,
-    var isEnabledThumbnail: Boolean,
+    private var isEnabledThumbnail: Boolean,
     private val onClick: (File, String, FragmentNavigator.Extras) -> Unit,
     private val onLongClick: (File) -> Unit
 ) : PagingDataAdapter<File, FileListAdapter.FileViewHolder<out ViewBinding>>(
@@ -45,8 +44,8 @@ class FileListAdapter(
     override fun getItemViewType(position: Int) = display.ordinal
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (display) {
-        FolderDisplaySettings.Display.GRID -> Grid(parent, isEnabledThumbnail,onClick, onLongClick)
-        FolderDisplaySettings.Display.LIST -> List(parent, isEnabledThumbnail,onClick, onLongClick)
+        FolderDisplaySettings.Display.GRID -> Grid(parent, isEnabledThumbnail, onClick, onLongClick)
+        FolderDisplaySettings.Display.LIST -> List(parent, isEnabledThumbnail, onClick, onLongClick)
     }
 
     override fun onBindViewHolder(holder: FileViewHolder<out ViewBinding>, position: Int) {
@@ -70,7 +69,7 @@ class FileListAdapter(
 
     inner class Grid(
         parent: ViewGroup,
-        val isEnabledThumbnail: Boolean,
+        private val isEnabledThumbnail: Boolean,
         onClick: (File, String, FragmentNavigator.Extras) -> Unit,
         onLongClick: (File) -> Unit,
     ) : FileViewHolder<FileItemGridBinding>(
@@ -157,7 +156,7 @@ class FileListAdapter(
 
     internal class List(
         parent: ViewGroup,
-        val isEnabledThumbnail: Boolean,
+        private val isEnabledThumbnail: Boolean,
         onClick: (File, String, FragmentNavigator.Extras) -> Unit,
         onLongClick: (File) -> Unit
     ) : FileViewHolder<FileItemListBinding>(

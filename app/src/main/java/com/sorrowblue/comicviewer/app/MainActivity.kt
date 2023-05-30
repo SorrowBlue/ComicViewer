@@ -33,6 +33,7 @@ import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkDynamicNavHostFragment
 import com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkFragmentNavigator
+import com.sorrowblue.comicviewer.tutorial.TutorialFragmentArgs
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
@@ -89,7 +90,10 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 commonViewModel.isRestored.first()
 
                 if (!runBlocking { viewModel.doneTutorialFlow.first() }) {
-                    navController.navigate(MobileNavigationDirections.actionGlobalTutorialNavigation())
+                    navController.navigate(
+                        MobileNavigationDirections.actionGlobalTutorialNavigation().actionId,
+                        TutorialFragmentArgs(R.id.mobile_navigation).toBundle()
+                    )
                 }
                 commonViewModel.shouldKeepOnScreen = false
             }
@@ -131,8 +135,8 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
 
         WorkManager.getInstance(applicationContext).getWorkInfosByTagLiveData("scan").asFlow()
-            .onEach {
-                it.forEach {
+            .onEach { workInfoList ->
+                workInfoList.forEach {
                     logcat("WORK") {
                         "id=[${it.id}], state=[${it.state}], progress=[${
                             it.progress.keyValueMap.values.joinToString(
@@ -218,7 +222,7 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
 }
 
 context (MainActivity)
-        internal fun ViewAuthBinding.applyViewModel(
+internal fun ViewAuthBinding.applyViewModel(
     viewModel: MainViewModel,
     navController: NavController
 ) {

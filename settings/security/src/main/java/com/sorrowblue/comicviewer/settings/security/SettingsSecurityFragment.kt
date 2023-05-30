@@ -42,17 +42,26 @@ internal class SettingsSecurityFragment :
         }
         binding.auth.setOnPreferenceChangeListener<Boolean> { _, newValue ->
             if (newValue) {
-                findNavController().navigate(SettingsSecurityFragmentDirections.actionSettingsSecurityToSettingsSecurityManagePassword(
-                    PasswordManageState.NEW.name))
+                findNavController().navigate(
+                    SettingsSecurityFragmentDirections.actionSettingsSecurityToSettingsSecurityManagePassword(
+                        PasswordManageState.NEW.name
+                    )
+                )
             } else {
-                findNavController().navigate(SettingsSecurityFragmentDirections.actionSettingsSecurityToSettingsSecurityManagePassword(
-                    PasswordManageState.DELETE.name))
+                findNavController().navigate(
+                    SettingsSecurityFragmentDirections.actionSettingsSecurityToSettingsSecurityManagePassword(
+                        PasswordManageState.DELETE.name
+                    )
+                )
             }
             false
         }
         binding.password.setOnPreferenceClickListener {
-            findNavController().navigate(SettingsSecurityFragmentDirections.actionSettingsSecurityToSettingsSecurityManagePassword(
-                PasswordManageState.CHANGE.name))
+            findNavController().navigate(
+                SettingsSecurityFragmentDirections.actionSettingsSecurityToSettingsSecurityManagePassword(
+                    PasswordManageState.CHANGE.name
+                )
+            )
             true
         }
         viewModel.securitySettingsFlow.map { it.useBiometrics }.distinctUntilChanged()

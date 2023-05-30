@@ -2,7 +2,6 @@
 <resources>
     <dimen name="file_list_item_space_small">4dp</dimen>
     <dimen name="file_list_item_space_medium">8dp</dimen>
-    <dimen name="file_list_item_space_large">16dp</dimen>
 
     <integer name="file_list_span_count_large">4</integer>
     <integer name="file_list_span_count_medium">5</integer>

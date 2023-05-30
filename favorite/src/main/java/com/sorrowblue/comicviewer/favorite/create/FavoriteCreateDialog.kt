@@ -7,8 +7,8 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteViewCreateBinding
-import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkDialogFragment
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithDialogLifecycle
+import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkDialogFragment
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.map

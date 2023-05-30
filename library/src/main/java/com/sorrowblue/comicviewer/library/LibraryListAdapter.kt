@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.library
 
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 import android.view.ViewGroup
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -10,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
 import com.sorrowblue.comicviewer.library.databinding.LibraryItemLocalFeatureBinding
 import com.sorrowblue.comicviewer.library.databinding.LibraryItemServiceBinding
+import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class LibraryListAdapter(private val onClick: (Library, FragmentNavigator.Extras) -> Unit) :
     ListAdapter<Library, RecyclerView.ViewHolder>(
@@ -45,7 +45,12 @@ internal class LibraryListAdapter(private val onClick: (Library, FragmentNavigat
 
         fun bind(item: LocalFeature) {
             binding.root.transitionName = item.name
-            binding.root.setOnClickListener { onClick.invoke(item, FragmentNavigatorExtras(it to it.transitionName)) }
+            binding.root.setOnClickListener {
+                onClick.invoke(
+                    item,
+                    FragmentNavigatorExtras(it to it.transitionName)
+                )
+            }
             when (item) {
                 LocalFeature.DOWNLOADED -> {
                     binding.headline.text = "ダウンロード済みの本"
@@ -67,7 +72,12 @@ internal class LibraryListAdapter(private val onClick: (Library, FragmentNavigat
 
         fun bind(item: CloudStorage) {
             binding.root.transitionName = item::class.qualifiedName
-            binding.root.setOnClickListener { onClick.invoke(item, FragmentNavigatorExtras(it to it.transitionName)) }
+            binding.root.setOnClickListener {
+                onClick.invoke(
+                    item,
+                    FragmentNavigatorExtras(it to it.transitionName)
+                )
+            }
             binding.headline.setText(item.titleRes)
             binding.leadingIcon.setImageResource(item.iconRes)
             binding.trailingIcon.setImageResource(if (item.isInstalled) FrameworkResourceR.drawable.ic_twotone_arrow_right_24 else FrameworkResourceR.drawable.ic_twotone_download_24)

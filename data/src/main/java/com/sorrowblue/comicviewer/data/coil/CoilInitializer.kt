@@ -6,9 +6,9 @@ import androidx.startup.Initializer
 import coil.Coil
 import coil.fetch.Fetcher
 import coil.size.Precision
+import com.sorrowblue.comicviewer.data.BookMapper
 import com.sorrowblue.comicviewer.data.BookPageRequestMapper
 import com.sorrowblue.comicviewer.data.FavoriteMapper
-import com.sorrowblue.comicviewer.data.BookMapper
 import com.sorrowblue.comicviewer.data.FolderMapper
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
 import com.sorrowblue.comicviewer.data.common.FileModel
@@ -38,7 +38,6 @@ internal class CoilInitializer : Initializer<Unit> {
             add(FavoriteMapper())
             add(MyComponent.favoriteThumbnailFetcher(context))
         }
-//            .logger(LogcatLogger())
             .allowRgb565(true)
             .bitmapConfig(Bitmap.Config.RGB_565)
             .precision(Precision.INEXACT)
@@ -63,6 +62,7 @@ internal class CoilInitializer : Initializer<Unit> {
         companion object {
             fun folderThumbnailFetcher(context: Context) =
                 EntryPointAccessors.fromApplication<MyComponent>(context).folderThumbnailFetcher()
+
             fun bookThumbnailFetcher(context: Context) =
                 EntryPointAccessors.fromApplication<MyComponent>(context).bookThumbnailFetcher()
 

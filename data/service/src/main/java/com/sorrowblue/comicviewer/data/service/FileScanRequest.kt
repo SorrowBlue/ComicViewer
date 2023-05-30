@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
 internal class FileScanRequest(
     val bookshelfModelId: BookshelfModelId,
     val path: String,
-    val scanTypeModel: ScanTypeModel,
+    internal val scanTypeModel: ScanTypeModel,
     val resolveImageFolder: Boolean,
     val supportExtensions: List<String>
 ) {

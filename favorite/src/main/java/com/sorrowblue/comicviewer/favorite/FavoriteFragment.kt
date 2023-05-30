@@ -35,7 +35,10 @@ internal class FavoriteFragment : FileListFragment(R.layout.favorite_fragment),
         super.onViewCreated(view, savedInstanceState)
 
         observeOpenFolder(R.id.favorite_fragment) { bookshelfId, parent ->
-            navigate(FavoriteFragmentDirections.actionFavoriteToFolder().actionId, FolderFragmentArgs(bookshelfId, parent).toBundle())
+            findNavController().navigate(
+                FavoriteFragmentDirections.actionFavoriteToFolder().actionId,
+                FolderFragmentArgs(bookshelfId, parent).toBundle()
+            )
         }
         binding.viewModel = viewModel
         binding.toolbar.setOnMenuItemClickListener(this)
@@ -44,7 +47,11 @@ internal class FavoriteFragment : FileListFragment(R.layout.favorite_fragment),
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.favorite_menu_edit -> {
-                navigate(FavoriteFragmentDirections.actionFavoriteToFavoriteEdit(viewModel.favoriteId.value))
+                findNavController().navigate(
+                    FavoriteFragmentDirections.actionFavoriteToFavoriteEdit(
+                        viewModel.favoriteId.value
+                    )
+                )
                 true
             }
 
@@ -72,14 +79,14 @@ internal class FavoriteFragment : FileListFragment(R.layout.favorite_fragment),
         extras: FragmentNavigator.Extras
     ) {
         when (file) {
-            is Book -> navigate(
+            is Book -> findNavController().navigate(
                 FavoriteFragmentDirections.actionFavoriteToBook().actionId,
-                BookFragmentArgs(file, transitionName,).toBundle(),
+                BookFragmentArgs(file, transitionName).toBundle(),
                 null,
                 extras
             )
 
-            is Folder -> navigate(
+            is Folder -> findNavController().navigate(
                 FavoriteFragmentDirections.actionFavoriteToFolder().actionId,
                 FolderFragmentArgs(
                     file.bookshelfId.value,

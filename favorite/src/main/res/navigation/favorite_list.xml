@@ -9,8 +9,8 @@
         android:name="com.sorrowblue.comicviewer.favorite.list.FavoriteListFragment"
         android:label="@string/favorite_list_title"
         app:bottomNavVisible="true"
-        app:fabLabel="@string/favorite_list_btn_new_favorite"
         app:fabIcon="@drawable/ic_twotone_add_24"
+        app:fabLabel="@string/favorite_list_btn_new_favorite"
         app:fabVisible="true"
         tools:layout="@layout/favorite_fragment_list">
         <action

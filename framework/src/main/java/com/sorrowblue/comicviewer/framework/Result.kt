@@ -24,20 +24,8 @@ sealed class Result<out S, out F> {
         is Error -> onError(error)
         is Exception -> onException(cause)
     }
-
-    inline fun <R> convert(onSuccess: (S) -> R): Result<R, F> = when (this) {
-        is Success -> Success(onSuccess(data))
-        is Error -> this
-        is Exception -> this
-    }
-    inline fun <R> convertError(onError: (F) -> R): Result<S, R> = when (this) {
-        is Success -> this
-        is Error -> Error(onError(error))
-        is Exception -> this
-    }
 }
 
-object LowFreeSpace : Result.Exception.Cause
 object NoNetwork : Result.Exception.Cause
 object IllegalArguments : Result.Exception.Cause
 class Unknown(val throws: Throwable) : Result.Exception.Cause

@@ -20,9 +20,9 @@
         android:title="画像をキャッシュする" />
 
     <DropDownPreference
-        app:useSimpleSummaryProvider="true"
         android:key="@string/settings_viewer_preference_key_binding_direction"
-        android:title="@string/settings_viewer_title_binding_direction" />
+        android:title="@string/settings_viewer_title_binding_direction"
+        app:useSimpleSummaryProvider="true" />
 
     <DropDownPreference
         android:key="@string/settings_viewer_preference_key_binding_direction"

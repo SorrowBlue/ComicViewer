@@ -20,7 +20,14 @@
         <action
             android:id="@+id/action_settings_to_settings_security"
             app:destination="@id/settings_security_navigation" />
+        <action
+            android:id="@+id/action_settings_to_settings_app"
+            app:destination="@id/settings_app_fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/settings_app_fragment"
+        android:name="com.sorrowblue.comicviewer.settings.app.AppInfoFragment"
+        android:label="AppInfoFragment" />
     <include app:graph="@navigation/settings_display" />
     <include app:graph="@navigation/settings_viewer" />
     <include app:graph="@navigation/settings_folder" />

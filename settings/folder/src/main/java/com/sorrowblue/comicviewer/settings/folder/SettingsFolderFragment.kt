@@ -44,7 +44,8 @@ internal class SettingsFolderFragment :
             false
         }
 
-        viewModel.resolveImageFolder.onEach(binding.resolveImageFolder::setChecked).launchInWithLifecycle()
+        viewModel.resolveImageFolder.onEach(binding.resolveImageFolder::setChecked)
+            .launchInWithLifecycle()
         binding.resolveImageFolder.setOnPreferenceChangeListener<Boolean> { _, newValue ->
             viewModel.updateResolveImageFolder(newValue)
             false

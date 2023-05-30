@@ -4,9 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.dropbox.core.oauth.DbxCredential
 import com.dropbox.core.v2.users.FullAccount
-import com.sorrowblue.comicviewer.library.dropbox.data.DropBoxApiRepository
 import com.sorrowblue.comicviewer.library.dropbox.data.DropBoxApiRepositoryImpl
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 
 internal class DropBoxSignInViewModel(application: Application) : AndroidViewModel(application) {

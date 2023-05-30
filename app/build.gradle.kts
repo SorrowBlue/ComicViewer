@@ -17,14 +17,10 @@ plugins {
 }
 
 fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex())) "-SNAPSHOT" else ""
-val gitVersion = providers.exec {
-    commandLine("git", "--version")
-}.standardOutput.asText.get()
 android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
         versionCode = 12
-        println("gitVersion=$gitVersion")
         versionName = grgit.describe {
             longDescr = false
             isTags = true
@@ -191,7 +187,7 @@ abstract class InstallApksTask : DefaultTask() {
     @get:InputFile
     abstract val bundletool: RegularFileProperty
 
-    @get:OutputFile
+    @get:InputFile
     abstract val output: RegularFileProperty
 
     @get:Inject
@@ -213,6 +209,19 @@ abstract class InstallApksTask : DefaultTask() {
                     bundletool.get(),
                     "install-apks",
                     "--apks=${output.get()}"
+                )
+            }
+            logger.lifecycle(stdout.toString().trim())
+            eo.exec {
+                commandLine(
+                    "cmd",
+                    "/c",
+                    "adb",
+                    "shell",
+                    "am",
+                    "start",
+                    "-n",
+                    "com.sorrowblue.comicviewer.debug/com.sorrowblue.comicviewer.app.MainActivity"
                 )
             }
             logger.lifecycle(stdout.toString().trim())

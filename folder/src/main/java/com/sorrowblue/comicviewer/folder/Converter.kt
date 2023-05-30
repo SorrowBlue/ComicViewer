@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.folder
 
 import com.sorrowblue.comicviewer.domain.entity.SearchCondition
-import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.paging.SortType
 
 object Converter {
@@ -60,7 +59,7 @@ object Converter {
         return if (isAsc) R.id.folder_search_order_asc else R.id.folder_search_order_desc
     }
 
-    fun buttonIdToSearchOrder(id: List<Int>): Boolean{
+    fun buttonIdToSearchOrder(id: List<Int>): Boolean {
         return when (id.firstOrNull()) {
             R.id.folder_search_order_desc -> false
             else -> true

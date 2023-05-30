@@ -26,14 +26,15 @@ import logcat.LogPriority
 import logcat.logcat
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AuthenticationProvider private constructor(private val appContext: Context) : BaseAuthenticationProvider() {
+class AuthenticationProvider private constructor(private val appContext: Context) :
+    BaseAuthenticationProvider() {
 
     companion object {
         private var instance: AuthenticationProvider? = null
 
         @Synchronized
         fun getInstance(context: Context) = instance
-                ?: AuthenticationProvider(context).also { instance = it }
+            ?: AuthenticationProvider(context).also { instance = it }
     }
 
     private var clientApplication = MutableStateFlow<ISingleAccountPublicClientApplication?>(null)
@@ -45,16 +46,19 @@ class AuthenticationProvider private constructor(private val appContext: Context
     suspend fun initialize() {
         if (clientApplication.value != null) return
         withContext(Dispatchers.IO) {
-            PublicClientApplication.createSingleAccountPublicClientApplication(appContext.applicationContext, R.raw.onedrive_auth_config_single_account, object : IPublicClientApplication.ISingleAccountApplicationCreatedListener {
-                override fun onCreated(application: ISingleAccountPublicClientApplication) {
-                    logcat(LogPriority.INFO) { "Success creating MSAL application." }
-                    clientApplication.value = application
-                }
+            PublicClientApplication.createSingleAccountPublicClientApplication(
+                appContext.applicationContext,
+                R.raw.onedrive_auth_config_single_account,
+                object : IPublicClientApplication.ISingleAccountApplicationCreatedListener {
+                    override fun onCreated(application: ISingleAccountPublicClientApplication) {
+                        logcat(LogPriority.INFO) { "Success creating MSAL application." }
+                        clientApplication.value = application
+                    }
 
-                override fun onError(exception: MsalException) {
-                    logcat(LogPriority.ERROR) { "Error creating MSAL application. ${exception.localizedMessage}" }
-                }
-            })
+                    override fun onError(exception: MsalException) {
+                        logcat(LogPriority.ERROR) { "Error creating MSAL application. ${exception.localizedMessage}" }
+                    }
+                })
         }
     }
 
@@ -69,13 +73,17 @@ class AuthenticationProvider private constructor(private val appContext: Context
             if (it == null) {
                 trySend(null).isSuccess
             } else {
-                it.getCurrentAccountAsync(object : ISingleAccountPublicClientApplication.CurrentAccountCallback {
+                it.getCurrentAccountAsync(object :
+                    ISingleAccountPublicClientApplication.CurrentAccountCallback {
                     override fun onAccountLoaded(activeAccount: IAccount?) {
                         logcat { "onAccountLoaded($activeAccount)" }
                         trySend(activeAccount != null).isSuccess
                     }
 
-                    override fun onAccountChanged(priorAccount: IAccount?, currentAccount: IAccount?) {
+                    override fun onAccountChanged(
+                        priorAccount: IAccount?,
+                        currentAccount: IAccount?
+                    ) {
                         logcat { "onAccountChanged($currentAccount)" }
                         trySend(currentAccount != null).isSuccess
                     }
@@ -93,7 +101,8 @@ class AuthenticationProvider private constructor(private val appContext: Context
 
     val currentAccountFlow = clientApplication.filterNotNull().flatMapLatest {
         callbackFlow {
-            it.getCurrentAccountAsync(object : ISingleAccountPublicClientApplication.CurrentAccountCallback {
+            it.getCurrentAccountAsync(object :
+                ISingleAccountPublicClientApplication.CurrentAccountCallback {
                 override fun onAccountLoaded(activeAccount: IAccount?) {
                     trySend(activeAccount).isSuccess
                 }
@@ -145,7 +154,8 @@ class AuthenticationProvider private constructor(private val appContext: Context
 
     private suspend fun acquireTokenSilently(): CompletableFuture<IAuthenticationResult> {
         val future = CompletableFuture<IAuthenticationResult>()
-        val authority = clientApplication.value?.configuration?.defaultAuthority?.authorityURL?.toString()
+        val authority =
+            clientApplication.value?.configuration?.defaultAuthority?.authorityURL?.toString()
                 ?: return future
         // TODO(https://github.com/AzureAD/microsoft-authentication-library-for-android/issues/1742)
         // val silentParameters = AcquireTokenSilentParameters.Builder().fromAuthority(authority).withCallback(getAuthenticationCallback(future)).withScopes(scopes).build()
@@ -161,20 +171,21 @@ class AuthenticationProvider private constructor(private val appContext: Context
         return future
     }
 
-    private fun getAuthenticationCallback(future: CompletableFuture<IAuthenticationResult>) = object : AuthenticationCallback {
-        override fun onCancel() {
-            logcat { "onCancel" }
-            future.cancel(true)
-        }
+    private fun getAuthenticationCallback(future: CompletableFuture<IAuthenticationResult>) =
+        object : AuthenticationCallback {
+            override fun onCancel() {
+                logcat { "onCancel" }
+                future.cancel(true)
+            }
 
-        override fun onSuccess(authenticationResult: IAuthenticationResult) {
-            logcat { "onSuccess" }
-            future.complete(authenticationResult)
-        }
+            override fun onSuccess(authenticationResult: IAuthenticationResult) {
+                logcat { "onSuccess" }
+                future.complete(authenticationResult)
+            }
 
-        override fun onError(exception: MsalException) {
-            logcat { "${exception.localizedMessage}, errorCode=${exception.errorCode}" }
-            future.completeExceptionally(exception)
+            override fun onError(exception: MsalException) {
+                logcat { "${exception.localizedMessage}, errorCode=${exception.errorCode}" }
+                future.completeExceptionally(exception)
+            }
         }
-    }
 }

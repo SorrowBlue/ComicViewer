@@ -12,6 +12,10 @@ internal class PagingFileInteractor @Inject constructor(
 ) : PagingFileUseCase() {
 
     override fun run(request: Request): Flow<PagingData<File>> {
-        return fileRepository.pagingDataFlow(request.pagingConfig, request.bookshelf, request.folder)
+        return fileRepository.pagingDataFlow(
+            request.pagingConfig,
+            request.bookshelf,
+            request.folder
+        )
     }
 }

@@ -27,7 +27,7 @@ internal class DropBoxListFragment : LibraryFileListFragment() {
 
     override val adapter
         get() = DropBoxListAdapter(::createFile) {
-            navigate(DropBoxListFragmentDirections.actionDropboxListSelf(it.parent))
+            findNavController().navigate(DropBoxListFragmentDirections.actionDropboxListSelf(it.parent))
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {

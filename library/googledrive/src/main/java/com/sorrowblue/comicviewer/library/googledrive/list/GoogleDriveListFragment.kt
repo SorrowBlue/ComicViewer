@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequestBuilder
@@ -20,10 +21,14 @@ import logcat.logcat
 
 internal class GoogleDriveListFragment : LibraryFileListFragment() {
 
-    override val viewModel: GoogleDriveListViewModel by navGraphViewModels(com.sorrowblue.comicviewer.library.R.id.googledrive) { GoogleDriveListViewModel.Factory(GoogleDriveApiRepositoryImpl(requireContext()))}
+    override val viewModel: GoogleDriveListViewModel by navGraphViewModels(com.sorrowblue.comicviewer.library.R.id.googledrive) {
+        GoogleDriveListViewModel.Factory(GoogleDriveApiRepositoryImpl(requireContext()))
+    }
     override val adapter
         get() = GoogleDriveListAdapter(::createFile) {
-            navigate(GoogleDriveListFragmentDirections.actionGoogledriveListSelf(it.path))
+            findNavController().navigate(
+                GoogleDriveListFragmentDirections.actionGoogledriveListSelf(it.path)
+            )
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,11 +55,11 @@ internal class GoogleDriveListFragment : LibraryFileListFragment() {
     }
 
     override fun navigateToSignIn() {
-        navigate(GoogleDriveListFragmentDirections.actionGoogledriveListToGoogledriveSignin())
+        findNavController().navigate(GoogleDriveListFragmentDirections.actionGoogledriveListToGoogledriveSignin())
     }
 
     override fun navigateToProfile() {
-        navigate(GoogleDriveListFragmentDirections.actionGoogledriveListToGoogledriveProfile())
+        findNavController().navigate(GoogleDriveListFragmentDirections.actionGoogledriveListToGoogledriveProfile())
     }
 
     override fun enqueueDownload(outputUri: String, file: File) {

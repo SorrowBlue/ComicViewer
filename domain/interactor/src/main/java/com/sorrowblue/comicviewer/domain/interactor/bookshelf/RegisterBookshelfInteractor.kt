@@ -30,8 +30,11 @@ internal class RegisterBookshelfInteractor @Inject constructor(
                         BookshelfRepositoryError.AuthenticationFailure -> Result.Error(
                             RegisterBookshelfError.InvalidAuth
                         )
+
                         BookshelfRepositoryError.PathDoesNotExist -> Result.Error(
-                            RegisterBookshelfError.InvalidPath)
+                            RegisterBookshelfError.InvalidPath
+                        )
+
                         BookshelfRepositoryError.IncorrectServerInfo -> Result.Error(
                             RegisterBookshelfError.InvalidBookshelfInfo
                         )
@@ -50,7 +53,10 @@ internal class RegisterBookshelfInteractor @Inject constructor(
             })
         }, {
             when (it) {
-                BookshelfRepositoryError.AuthenticationFailure -> Result.Error(RegisterBookshelfError.InvalidAuth)
+                BookshelfRepositoryError.AuthenticationFailure -> Result.Error(
+                    RegisterBookshelfError.InvalidAuth
+                )
+
                 BookshelfRepositoryError.PathDoesNotExist -> Result.Error(RegisterBookshelfError.InvalidPath)
                 BookshelfRepositoryError.IncorrectServerInfo -> Result.Error(RegisterBookshelfError.InvalidBookshelfInfo)
             }

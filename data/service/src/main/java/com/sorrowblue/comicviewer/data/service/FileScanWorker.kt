@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
@@ -23,9 +22,7 @@ import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlin.random.Random
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
-import logcat.logcat
 
 @HiltWorker
 internal class FileScanWorker @AssistedInject constructor(
@@ -51,19 +48,13 @@ internal class FileScanWorker @AssistedInject constructor(
         val fileModel = fileLocalDataSource.findBy(request.bookshelfModelId, request.path)
         val resolveImageFolder = request.resolveImageFolder
         supportExtensions = request.supportExtensions
-        var i = 0
-        while (i < 20) {
-            delay(2000)
-            setProgress(workDataOf("count" to i))
-            setForeground(createForegroundInfo("count = ${i++}"))
+        when (request.scanTypeModel) {
+            ScanTypeModel.FULL -> factory.create(serverModel)
+                .nestedListFiles(serverModel, rootFileModel, resolveImageFolder, true)
+
+            ScanTypeModel.QUICK -> factory.create(serverModel)
+                .nestedListFiles(serverModel, fileModel!!, resolveImageFolder, false)
         }
-//        when (request.scanTypeModel) {
-//            ScanTypeModel.FULL -> factory.create(serverModel)
-//                .nestedListFiles(serverModel, rootFileModel, resolveImageFolder, true)
-//
-//            ScanTypeModel.QUICK -> factory.create(serverModel)
-//                .nestedListFiles(serverModel, fileModel!!, resolveImageFolder, false)
-//        }
         return Result.success()
     }
 

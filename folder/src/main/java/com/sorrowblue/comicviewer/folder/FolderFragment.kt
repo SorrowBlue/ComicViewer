@@ -19,11 +19,9 @@ import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDirections
@@ -55,6 +53,7 @@ import com.sorrowblue.comicviewer.framework.ui.fragment.autoClearedValue
 import com.sorrowblue.comicviewer.framework.ui.fragment.checkSelfPermission
 import com.sorrowblue.comicviewer.framework.ui.fragment.makeSnackbar
 import com.sorrowblue.comicviewer.framework.ui.fragment.type
+import com.sorrowblue.comicviewer.framework.ui.fragment.windowInsetsControllerCompat
 import com.sorrowblue.comicviewer.framework.ui.navigation.setDialogFragmentResultListener
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -89,9 +88,9 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
             actionMode?.finish()
         }
 
-        viewModel.isEditing.onEach {
-            (binding.recyclerView.adapter as? FileListAdapter)?.isEditing = it
-            if (it) {
+        viewModel.isEditing.onEach { isEditing ->
+            (binding.recyclerView.adapter as? FileListAdapter)?.isEditing = isEditing
+            if (isEditing) {
                 actionMode = binding.toolbar.startActionMode(object : ActionMode.Callback {
                     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
                         MenuInflater(requireContext()).inflate(R.menu.folder_action, menu)
@@ -108,15 +107,19 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
                             R.id.folder_menu_download_selected -> {
                                 true
                             }
+
                             R.id.folder_menu_delete_selected -> {
                                 true
                             }
+
                             R.id.folder_menu_add_read_mark -> {
                                 true
                             }
+
                             R.id.folder_menu_remove_read_mark -> {
                                 true
                             }
+
                             else -> false
                         }
 
@@ -207,12 +210,12 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
         extras: FragmentNavigator.Extras
     ) {
         when (file) {
-            is Book -> navigate(
+            is Book -> findNavController().navigate(
                 FolderFragmentDirections.actionFolderToBook(file, transitionName),
                 extras
             )
 
-            is Folder -> navigate(
+            is Folder -> findNavController().navigate(
                 FolderFragmentDirections.actionFolderSelf(
                     file.bookshelfId.value,
                     file.base64Path(),
@@ -289,8 +292,14 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
         val searchAdapter = FileListAdapter(
             FolderDisplaySettings.Display.LIST,
             runBlocking { viewModel.isEnabledThumbnailFlow.first() },
-            { file, transitionName, extras -> navigateToFile(file, transitionName, extras) },
-            { navigate(FileInfoNavigation.getDeeplink(it)) }
+            { file, transitionName, extras ->
+                windowInsetsControllerCompat.hide(WindowInsetsCompat.Type.ime())
+                navigateToFile(file, transitionName, extras)
+            },
+            {
+                windowInsetsControllerCompat.hide(WindowInsetsCompat.Type.ime())
+                findNavController().navigate(FileInfoNavigation.getDeeplink(it))
+            }
         )
 
         binding.folderSearchView.searchRecyclerView.adapter = searchAdapter
@@ -351,9 +360,6 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-            } else {
-            }
         }
 
     private var isExplainNotificationPermission = true

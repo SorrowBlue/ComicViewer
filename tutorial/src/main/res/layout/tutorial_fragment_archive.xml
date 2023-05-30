@@ -48,9 +48,34 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet finibus elit. Vivamus scelerisque, risus eu accumsan interdum, nunc quam aliquet lectus, vel aliquam ipsum lectus eu urna. Morbi quis elementum turpis, sed ultrices sem. Nullam vel viverra libero. Cras in porttitor erat. Nunc eget velit a justo sagittis blandit lobortis a mi."
+        android:text="Supports viewing of archived and compressed files. Supported extensions are zip, rar, 7z, etc. Files with passwords are also supported."
         android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end"
         app:layout_constraintStart_toStartOf="@+id/guideline_begin"
         app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/extension_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+        app:layout_constraintStart_toStartOf="@+id/guideline_begin"
+        app:layout_constraintTop_toBottomOf="@+id/description">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=".zip" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=".7z" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=".rar" />
+    </com.google.android.material.chip.ChipGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

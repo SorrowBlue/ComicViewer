@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.library.box.list
 
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 import android.os.Bundle
 import android.view.View
 import androidx.core.app.NotificationChannelCompat
@@ -13,6 +12,7 @@ import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.library.filelist.LibraryFileListFragment
 import kotlinx.coroutines.flow.onEach
+import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class BoxListFragment : LibraryFileListFragment() {
 
@@ -23,7 +23,7 @@ internal class BoxListFragment : LibraryFileListFragment() {
     }
     override val adapter
         get() = BoxListAdapter(::createFile) {
-            navigate(BoxListFragmentDirections.actionBoxListSelf(it.path))
+            findNavController().navigate(BoxListFragmentDirections.actionBoxListSelf(it.path))
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +50,7 @@ internal class BoxListFragment : LibraryFileListFragment() {
     }
 
     override fun navigateToProfile() {
-        navigate(BoxListFragmentDirections.actionBoxListToBoxProfile())
+        findNavController().navigate(BoxListFragmentDirections.actionBoxListToBoxProfile())
     }
 
     override fun navigateToSignIn() {

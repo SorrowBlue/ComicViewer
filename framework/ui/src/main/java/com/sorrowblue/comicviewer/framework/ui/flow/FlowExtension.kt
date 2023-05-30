@@ -23,7 +23,8 @@ context(AppCompatActivity)
 fun <T> Flow<T>.launchInWithLifecycle() = flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
 
 context(Fragment)
-fun <T> Flow<T>.launchInWithLifecycle() = flowWithLifecycle(viewLifecycleOwner.lifecycle).launchIn(viewLifecycleOwner.lifecycleScope)
+fun <T> Flow<T>.launchInWithLifecycle() =
+    flowWithLifecycle(viewLifecycleOwner.lifecycle).launchIn(viewLifecycleOwner.lifecycleScope)
 
 context(Fragment)
 fun <T : Any, VH : RecyclerView.ViewHolder> Flow<PagingData<T>>.attachAdapter(adapter: PagingDataAdapter<T, VH>) {

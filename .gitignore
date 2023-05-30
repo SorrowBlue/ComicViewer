@@ -101,7 +101,6 @@ captures/
 output.json
 
 # IntelliJ
-*.iml
 .idea/*
 misc.xml
 deploymentTargetDropDown.xml

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.asFlow
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -22,7 +21,6 @@ import kotlinx.coroutines.flow.onEach
 
 internal class WorkFragment : FrameworkFragment(R.layout.fragment_work) {
 
-    private val args: WorkFragmentArgs by navArgs()
     private val binding: FragmentWorkBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,9 +29,9 @@ internal class WorkFragment : FrameworkFragment(R.layout.fragment_work) {
         val workInfo = workManager.getWorkInfosByTagLiveData("observable")
         val running = WorkInfoAdapter()
         val runningHeader = HeaderAdapter().apply { submitList(listOf("Running")) }
-        binding.recyclerView.adapter = ConcatAdapter(runningHeader,running)
-        workInfo.asFlow().map {
-            it.sortedBy {
+        binding.recyclerView.adapter = ConcatAdapter(runningHeader, running)
+        workInfo.asFlow().map { workInfoList ->
+            workInfoList.sortedBy {
                 when (it.state) {
                     WorkInfo.State.ENQUEUED -> 2
                     WorkInfo.State.RUNNING -> 0

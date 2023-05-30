@@ -35,7 +35,9 @@
 
         <item name="toolbarStyle">@style/Widget.ComicViewer.Toolbar</item>
         <item name="preferenceTheme">@style/ComicViewerPreferenceThemeOverlay</item>
-        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered</item>
+        <item name="materialAlertDialogTheme">
+            @style/ThemeOverlay.Material3.MaterialAlertDialog.Centered
+        </item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeCloseDrawable">@drawable/ic_twotone_close_24</item>

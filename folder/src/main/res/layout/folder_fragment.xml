@@ -40,8 +40,8 @@
         <com.google.android.material.search.SearchView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
-            android:text="@={viewModel.searchQueryFlow}"
             android:layout_height="match_parent"
+            android:text="@={viewModel.searchQueryFlow}"
             app:layout_anchor="@id/toolbar">
 
             <include

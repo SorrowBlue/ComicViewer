@@ -1,14 +1,6 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
-    <inspection_tool class="79b55584-eae9-34a7-ae4c-af0c117db780" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="SSBasedInspection" enabled="true" level="WARNING" enabled_by_default="true">
-      <searchConfiguration name="Framework以外でのNavController.navigateの使用禁止" uuid="79b55584-eae9-34a7-ae4c-af0c117db780" description="NavController.navigateはFramework以外では使用禁止。&#10;代わりに、Fragment.navigateを使用してください。" suppressId="FrameworkOnly" text="$Instance$.$MethodCall$($Parameter$)" recursive="true" caseInsensitive="false" type="Kotlin" pattern_context="default">
-        <constraint name="__context__" within="" contains="" />
-        <constraint name="Instance" nameOfExprType="androidx\.navigation\.NavController" within="" contains="" />
-        <constraint name="MethodCall" regexp="navigate" within="" contains="" />
-        <constraint name="Parameter" within="" contains="" />
-      </searchConfiguration>
-    </inspection_tool>
+    <inspection_tool class="SSBasedInspection" enabled="true" level="WARNING" enabled_by_default="true" />
   </profile>
 </component>

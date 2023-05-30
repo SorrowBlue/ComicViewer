@@ -82,7 +82,10 @@ internal class FavoriteRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFavoriteList(bookshelfId: BookshelfId, filePath: String): List<Favorite> {
+    override suspend fun getFavoriteList(
+        bookshelfId: BookshelfId,
+        filePath: String
+    ): List<Favorite> {
         return withContext(Dispatchers.IO) {
             favoriteLocalDataSource.getFavoriteList(BookshelfModelId(bookshelfId.value), filePath)
                 .map { it.toFavorite() }

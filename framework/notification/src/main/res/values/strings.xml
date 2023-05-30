@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="framework_notification_name_bookshelf_scan">本棚のスキャン</string>
-    <string name="framework_notification_description_bookshelf_scan">本棚のスキャンに関する通知</string>
+    <string name="framework_notification_name_bookshelf_scan">scan of bookshelf</string>
+    <string name="framework_notification_description_bookshelf_scan">Notifications for scanning bookshelves</string>
 
-    <string name="framework_notification_name_download">本のダウンロード</string>
-    <string name="framework_notification_description_download">本のダウンロードに関する通知</string>
+    <string name="framework_notification_name_download">book download</string>
+    <string name="framework_notification_description_download">Book download notification</string>
 </resources>

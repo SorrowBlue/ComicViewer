@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.book
 
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 import android.graphics.Bitmap
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -17,9 +16,10 @@ import com.sorrowblue.comicviewer.book.databinding.BookItemNextBinding
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.request.BookPageRequest
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
+import kotlin.properties.Delegates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.properties.Delegates
+import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class BookAdapter(
     val book: Book,
@@ -165,7 +165,7 @@ internal class BookAdapter(
                                 input
                             }
                         }
-                    },WhiteTrimTransformation)
+                    }, WhiteTrimTransformation)
                 }.apply {
                     job.invokeOnCompletion {
                         disposableList[item.index] = null
@@ -176,13 +176,13 @@ internal class BookAdapter(
 
         fun leftLoad(item: BookPage.Split) {
             binding.image.load(BookPageRequest(book to item.index)) {
-                transformations(MihirakiSplitTransformation(true),WhiteTrimTransformation)
+                transformations(MihirakiSplitTransformation(true), WhiteTrimTransformation)
             }
         }
 
         fun rightLoad(item: BookPage.Split) {
             binding.image.load(BookPageRequest(book to item.index)) {
-                transformations(MihirakiSplitTransformation(false),WhiteTrimTransformation)
+                transformations(MihirakiSplitTransformation(false), WhiteTrimTransformation)
             }
         }
 

@@ -55,14 +55,14 @@ internal class BookshelfListFragment :
         }
 
         fab.setOnClickListener {
-            navigate(BookshelfListFragmentDirections.actionBookshelfListToBookshelfManageList())
+            findNavController().navigate(BookshelfListFragmentDirections.actionBookshelfListToBookshelfManageList())
         }
 
         setDialogFragmentResultListener<BookshelfInfoRemoveResult>(
             R.id.bookshelf_list_fragment,
             "remove"
         ) {
-            navigate(
+            findNavController().navigate(
                 BookshelfListFragmentDirections.actionBookshelfListToBookshelfRemoveConfirm(it.bookshelfId.value)
             )
         }
@@ -73,7 +73,7 @@ internal class BookshelfListFragment :
         ) {
             when (it.type) {
                 "InternalStorage" -> {
-                    navigate(
+                    findNavController().navigate(
                         BookshelfListFragmentDirections.actionBookshelfListToBookshelfManageDevice(
                             it.bookshelfId.value
                         )
@@ -81,7 +81,7 @@ internal class BookshelfListFragment :
                 }
 
                 "SmbServer" -> {
-                    navigate(
+                    findNavController().navigate(
                         BookshelfListFragmentDirections.actionBookshelfListToBookshelfManageSmb(it.bookshelfId.value)
                     )
                 }

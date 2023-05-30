@@ -7,10 +7,10 @@
     android:paddingTop="16dp">
 
     <ImageView
-        android:layout_marginTop="4dp"
         android:id="@+id/dialog_body_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_twotone_info_24"

@@ -7,6 +7,11 @@
 
     <fragment
         android:id="@+id/tutorial_fragment"
-        tools:layout="@layout/tutorial_fragment"
-        android:name="com.sorrowblue.comicviewer.tutorial.TutorialFragment" />
+        android:name="com.sorrowblue.comicviewer.tutorial.TutorialFragment"
+        tools:layout="@layout/tutorial_fragment">
+        <argument
+            android:name="pop_back_id"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
 </navigation>

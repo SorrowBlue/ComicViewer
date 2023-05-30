@@ -29,10 +29,4 @@ data class FolderDisplaySettings(
     enum class Sort {
         NAME, DATE, SIZE
     }
-
-    val rawSpanCount
-        get() = when (display) {
-            Display.GRID -> spanCount
-            Display.LIST -> 1
-        }
 }

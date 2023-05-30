@@ -16,6 +16,7 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,7 +28,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -45,20 +45,33 @@ internal class BookViewModel @Inject constructor(
     val placeholder = args.placeholder
 
     val bookFlow =
-        getBookUseCase.execute(GetBookUseCase.Request(BookshelfId(args.serverId), args.path.decodeFromBase64()))
+        getBookUseCase.execute(
+            GetBookUseCase.Request(
+                BookshelfId(args.serverId),
+                args.path.decodeFromBase64()
+            )
+        )
             .map { it.dataOrNull }
             .stateIn { null }
 
-    val nextComic = bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest { it ->
-        getNextBookUseCase
-            .execute(GetNextBookUseCase.Request(it.bookshelfId, it.path, GetNextComicRel.NEXT))
-            .map { it.dataOrNull }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, null)
-    val prevComic = bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest { book ->
-        getNextBookUseCase
-            .execute(GetNextBookUseCase.Request(book.bookshelfId, book.path, GetNextComicRel.PREV))
-            .map { it.dataOrNull }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+    val nextComic =
+        bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest { it ->
+            getNextBookUseCase
+                .execute(GetNextBookUseCase.Request(it.bookshelfId, it.path, GetNextComicRel.NEXT))
+                .map { it.dataOrNull }
+        }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+    val prevComic =
+        bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest { book ->
+            getNextBookUseCase
+                .execute(
+                    GetNextBookUseCase.Request(
+                        book.bookshelfId,
+                        book.path,
+                        GetNextComicRel.PREV
+                    )
+                )
+                .map { it.dataOrNull }
+        }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     val state = MutableStateFlow(LoadingState.LOADING)
 

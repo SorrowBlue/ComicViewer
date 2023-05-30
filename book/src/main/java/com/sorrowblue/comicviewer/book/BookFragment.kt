@@ -98,7 +98,9 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         val bookAdapter = binding.viewPager2.adapter as? BookAdapter ?: return
         bookAdapter.currentList.getOrNull(binding.slider.value.toInt())?.let {
             val index = when (it) {
-                is BookPage.Next -> if (it.isNext) bookAdapter.currentList.filterIsInstance<BookPage.Split>().last().index else 0
+                is BookPage.Next -> if (it.isNext) bookAdapter.currentList.filterIsInstance<BookPage.Split>()
+                    .last().index else 0
+
                 is BookPage.Split -> it.index
             }
             viewModel.updateLastReadPage(index)
@@ -217,7 +219,8 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
         slider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
                 (adapter as? BookAdapter)?.let { adapter ->
-                    currentItem = adapter.currentList.filterIsInstance<BookPage.Split>().indexOfFirst { it.index == value.toInt() } + 1
+                    currentItem = adapter.currentList.filterIsInstance<BookPage.Split>()
+                        .indexOfFirst { it.index == value.toInt() } + 1
                 }
             }
         }

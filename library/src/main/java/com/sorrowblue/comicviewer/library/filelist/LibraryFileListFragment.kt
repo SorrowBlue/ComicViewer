@@ -28,9 +28,10 @@ abstract class LibraryFileListFragment : PagingFragment<File>(R.layout.library_f
     protected val binding: LibraryFragmentCloudBinding by viewBinding()
     abstract override val viewModel: LibraryFileListViewModel
     protected lateinit var file: File
-    protected val profileImage get() =
-        binding.toolbar.menu.findItem(R.id.menu_profile_image).actionView
-            ?.findViewById<MaterialButton>(R.id.profile_image_btn)!!
+    protected val profileImage
+        get() =
+            binding.toolbar.menu.findItem(R.id.menu_profile_image).actionView
+                ?.findViewById<MaterialButton>(R.id.profile_image_btn)!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,7 +69,7 @@ abstract class LibraryFileListFragment : PagingFragment<File>(R.layout.library_f
         createFileRequest.launch(intent)
     }
 
-    protected val createFileRequest =
+    private val createFileRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data?.data != null) {
                 enqueueDownload(it.data!!.data!!.toString(), file)

@@ -1,18 +1,12 @@
 package com.sorrowblue.comicviewer.settings.folder.supportextension
 
-import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.CheckBoxPreference
 import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceViewHolder
-import androidx.preference.SwitchPreferenceCompat
 import androidx.preference.children
-import com.google.android.material.snackbar.Snackbar
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.framework.settings.FrameworkPreferenceBinding
 import com.sorrowblue.comicviewer.framework.settings.FrameworkPreferenceFragment
