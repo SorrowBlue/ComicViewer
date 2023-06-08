@@ -105,7 +105,7 @@ androidx-startup-runtime = "androidx.startup:startup-runtime:1.1.1"
 
 androidx-viewpager2 = "androidx.viewpager2:viewpager2:1.1.0-beta02"
 
-androidx-window = "androidx.window:window:1.0.0"
+androidx-window = "androidx.window:window:1.1.0"
 
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 
