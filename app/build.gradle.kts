@@ -107,7 +107,7 @@ android {
 dependencies {
     api(libs.google.code.gson)
     api(libs.androidx.browser)
-    api("com.fasterxml.jackson.core:jackson-core:2.15.1")
+    api("com.fasterxml.jackson.core:jackson-core:2.15.2")
     api(libs.google.guava)
     implementation(projects.framework.ui)
     implementation(projects.framework.notification)
