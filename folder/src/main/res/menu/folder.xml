@@ -4,24 +4,35 @@
     <item
         android:id="@+id/folder_search"
         android:icon="@drawable/ic_twotone_search_24"
-        android:title="search_title"
+        android:title="Search"
         app:showAsAction="ifRoom" />
     <item
         android:id="@id/action_folder_to_folder_display"
         android:icon="@drawable/ic_twotone_view_list_24"
         android:menuCategory="secondary"
-        android:title="表示"
+        android:title="Sort &amp; Display"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/folder_menu_scan"
+        android:id="@+id/folder_menu_scan_group"
         android:icon="@drawable/ms_rounded_scan_24"
-        android:title="スキャン"
-        app:showAsAction="ifRoom"></item>
+        android:title="Scan"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/folder_menu_scan"
+                android:icon="@drawable/ms_rounded_scan_24"
+                android:title="Fast scan" />
+            <item
+                android:id="@+id/folder_menu_full_scan"
+                android:icon="@drawable/ms_rounded_scan_24"
+                android:title="All scan" />
+        </menu>
+    </item>
     <item
         android:id="@+id/folder_menu_edit"
         android:icon="@drawable/ic_twotone_edit_24"
-        android:title="編集"
-        app:showAsAction="ifRoom"></item>
+        android:title="Edit"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_global_settings_navigation"
         android:icon="@drawable/ic_twotone_settings_24"

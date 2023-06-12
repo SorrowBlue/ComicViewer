@@ -109,6 +109,7 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
                             }
 
                             R.id.folder_menu_delete_selected -> {
+                                viewModel.deleteHistoryBook((binding.recyclerView.adapter as? FileListAdapter)?.selectedItemIds.orEmpty())
                                 true
                             }
 
@@ -179,8 +180,7 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
         }
         viewLifecycleOwner.lifecycleScope.launch {
             pagingDataAdapter.loadStateFlow.mapNotNull { it.refresh as? LoadState.Error }
-                .distinctUntilChanged()
-                .collectLatest {
+                .distinctUntilChanged().collectLatest {
                     if (it.error is PagingException) {
                         Snackbar.make(
                             binding.root,
@@ -205,23 +205,17 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
     }
 
     override fun navigateToFile(
-        file: File,
-        transitionName: String,
-        extras: FragmentNavigator.Extras
+        file: File, transitionName: String, extras: FragmentNavigator.Extras
     ) {
         when (file) {
             is Book -> findNavController().navigate(
-                FolderFragmentDirections.actionFolderToBook(file, transitionName),
-                extras
+                FolderFragmentDirections.actionFolderToBook(file, transitionName), extras
             )
 
             is Folder -> findNavController().navigate(
                 FolderFragmentDirections.actionFolderSelf(
-                    file.bookshelfId.value,
-                    file.base64Path(),
-                    transitionName
-                ),
-                extras
+                    file.bookshelfId.value, file.base64Path(), transitionName
+                ), extras
             )
         }
     }
@@ -244,12 +238,13 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
             }
 
             else -> item.onNavDestinationSelected(findNavController())
+        }.also {
+            logcat { "onMenuItemClick(${item.title})=$it" }
         }
     }
 
     private fun FolderFragmentDirections.Companion.actionFolderToBook(
-        book: Book,
-        transitionName: String
+        book: Book, transitionName: String
     ) = object : NavDirections {
         override val actionId = actionFolderToBook().actionId
         override val arguments = BookFragmentArgs(book, transitionName).toBundle()
@@ -258,8 +253,9 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
     private fun switchSearchResultSheet(state: Int? = null) {
         if ((state ?: bottomSheetBehavior.state) == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            WindowInsetsControllerCompat(requireActivity().window, requireView())
-                .hide(WindowInsetsCompat.Type.ime())
+            WindowInsetsControllerCompat(requireActivity().window, requireView()).hide(
+                    WindowInsetsCompat.Type.ime()
+                )
             val avd = AnimatedVectorDrawableCompat.create(
                 requireContext(),
                 com.sorrowblue.comicviewer.framework.resource.R.drawable.ic_arrow_back_close
@@ -289,8 +285,7 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
 
     private fun setupSearchAdapter() {
         binding.folderSearchView.setViewModel(viewModel)
-        val searchAdapter = FileListAdapter(
-            FolderDisplaySettings.Display.LIST,
+        val searchAdapter = FileListAdapter(FolderDisplaySettings.Display.LIST,
             runBlocking { viewModel.isEnabledThumbnailFlow.first() },
             { file, transitionName, extras ->
                 windowInsetsControllerCompat.hide(WindowInsetsCompat.Type.ime())
@@ -299,8 +294,7 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
             {
                 windowInsetsControllerCompat.hide(WindowInsetsCompat.Type.ime())
                 findNavController().navigate(FileInfoNavigation.getDeeplink(it))
-            }
-        )
+            })
 
         binding.folderSearchView.searchRecyclerView.adapter = searchAdapter
         searchAdapter.loadStateFlow.distinctUntilChanged().onEach {
@@ -360,37 +354,43 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if(isGranted) {
+//                viewModel.fullScan(scanType) {
+//                    makeSnackbar("スキャン中", Snackbar.LENGTH_INDEFINITE).setAction("詳細") {
+//                        findNavController().navigate("comicviewer://comicviewer.sorrowblue.com/work?uuid=0".toUri())
+//                    }.show()
+//                }
+            }
         }
 
     private var isExplainNotificationPermission = true
 
     private fun scan(scanType: ScanType) {
-        viewModel.fullScan(scanType) {
-            makeSnackbar("スキャン中", Snackbar.LENGTH_INDEFINITE)
-                .setAction("詳細") {
-                    findNavController().navigate("comicviewer://comicviewer.sorrowblue.com/work?uuid=0".toUri())
-                }
-                .show()
-            when {
-                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
-                    // 通知権限がある場合、なにもしない
-                }
 
-                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
-                    // ユーザに通知権限が必要な理由を説明する
-                    findNavController().navigate(
-                        FolderFragmentDirections.actionFolderToNotificationRequestDialogFragment().actionId,
-                        bundleOf("request_key" to this::class.qualifiedName)
-                    )
+        when {
+            checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
+                // 通知権限がある場合
+                viewModel.fullScan(scanType) {
+                    makeSnackbar("スキャン中", Snackbar.LENGTH_INDEFINITE).setAction("詳細") {
+                            findNavController().navigate("comicviewer://comicviewer.sorrowblue.com/work?uuid=0".toUri())
+                        }.show()
                 }
+            }
 
-                isExplainNotificationPermission -> {
-                    findNavController().navigate(
-                        FolderFragmentDirections.actionFolderToNotificationRequestDialogFragment().actionId,
-                        bundleOf("request_key" to this::class.qualifiedName)
-                    )
-                    // 通知権限がない場合
-                }
+            shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                // ユーザに通知権限が必要な理由を説明する
+                findNavController().navigate(
+                    FolderFragmentDirections.actionFolderToNotificationRequestDialogFragment().actionId,
+                    bundleOf("request_key" to this::class.qualifiedName)
+                )
+            }
+
+            isExplainNotificationPermission -> {
+                // 通知権限がない場合
+                findNavController().navigate(
+                    FolderFragmentDirections.actionFolderToNotificationRequestDialogFragment().actionId,
+                    bundleOf("request_key" to this::class.qualifiedName)
+                )
             }
         }
     }

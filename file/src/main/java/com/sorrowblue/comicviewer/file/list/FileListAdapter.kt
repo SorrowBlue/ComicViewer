@@ -29,8 +29,7 @@ class FileListAdapter(
 ) : PagingDataAdapter<File, FileListAdapter.FileViewHolder<out ViewBinding>>(
     object : DiffUtil.ItemCallback<File>() {
         override fun areItemsTheSame(oldItem: File, newItem: File) = oldItem.path == newItem.path
-        override fun areContentsTheSame(oldItem: File, newItem: File) =
-            oldItem.path == newItem.path && oldItem.lastModifier == newItem.lastModifier && oldItem.size == newItem.size
+        override fun areContentsTheSame(oldItem: File, newItem: File) = oldItem == newItem
     }
 ) {
     var isEditing: Boolean = false

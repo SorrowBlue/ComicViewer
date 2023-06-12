@@ -54,4 +54,6 @@ interface FileRepository {
     fun pagingHistoryBookFlow(pagingConfig: PagingConfig): Flow<PagingData<File>>
 
     suspend fun deleteThumbnails()
+
+    suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>)
 }

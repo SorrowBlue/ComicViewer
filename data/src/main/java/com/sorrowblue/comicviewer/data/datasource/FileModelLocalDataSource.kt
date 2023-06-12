@@ -79,4 +79,5 @@ interface FileModelLocalDataSource {
     fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<FileModel>>
 
     suspend fun deleteThumbnails()
+    suspend fun deleteHistory(bookshelfModelId: BookshelfModelId, list: List<String>)
 }

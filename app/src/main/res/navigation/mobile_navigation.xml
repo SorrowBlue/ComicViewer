@@ -22,7 +22,6 @@
     <include app:graph="@navigation/settings" />
     <include app:graph="@navigation/library" />
     <include app:graph="@navigation/file" />
-    <include app:graph="@navigation/settings_feature" />
     <include app:graph="@navigation/tutorial" />
     <action
         android:id="@+id/action_global_settings_navigation"

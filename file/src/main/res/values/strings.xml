@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="file_info_label_last_read_time">Read on %s$1</string>
+    <string name="file_info_label_open_folder">Open folder</string>
+    <string name="file_info_label_add_favourites">Add to Favourites</string>
+    <string name="file_info_label_add_read_later">Add to Read Later</string>
+</resources>

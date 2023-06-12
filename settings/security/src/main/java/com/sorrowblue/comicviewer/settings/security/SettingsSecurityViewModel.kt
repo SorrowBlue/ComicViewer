@@ -8,7 +8,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-internal class SettingsSecurityFragmentViewModel @Inject constructor(
+internal class SettingsSecurityViewModel @Inject constructor(
     private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase
 ) : ViewModel() {
 
@@ -17,6 +17,11 @@ internal class SettingsSecurityFragmentViewModel @Inject constructor(
     fun updateUseBiometrics(newValue: Boolean) {
         viewModelScope.launch {
             manageSecuritySettingsUseCase.edit { it.copy(useBiometrics = newValue) }
+        }
+    }
+    fun updateLockOnBackground(newValue: Boolean) {
+        viewModelScope.launch {
+            manageSecuritySettingsUseCase.edit { it.copy(lockOnBackground = newValue) }
         }
     }
 }

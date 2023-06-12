@@ -7,6 +7,7 @@
     <string name="bookshelf_list_desc_thumbnail_this_bookshelf">この本棚のサムネイル</string>
     <string name="bookshelf_list_title_favorite">お気に入り</string>
     <string name="bookshelf_list_btn_new">本棚を追加</string>
+    <string name="bookshelf_list_label_files">%1$dファイル</string>
 
     <!--Bookshelf Info-->
     <string name="bookshelf_info_title">本棚情報</string>

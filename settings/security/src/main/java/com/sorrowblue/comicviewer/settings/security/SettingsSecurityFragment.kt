@@ -21,7 +21,7 @@ internal class SettingsSecurityFragment :
     FrameworkPreferenceFragment(R.xml.settings_security_preference) {
 
     private val binding: SettingsSecurityBinding by preferenceBinding()
-    private val viewModel: SettingsSecurityFragmentViewModel by hiltNavGraphViewModels(R.id.settings_security_navigation)
+    private val viewModel: SettingsSecurityViewModel by hiltNavGraphViewModels(R.id.settings_security_navigation)
     private val commonViewModel: CommonViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,14 +64,23 @@ internal class SettingsSecurityFragment :
             )
             true
         }
+
+        binding.backgroundLock.setOnPreferenceChangeListener<Boolean> { _, newValue ->
+            viewModel.updateLockOnBackground(newValue)
+            true
+        }
         viewModel.securitySettingsFlow.map { it.useBiometrics }.distinctUntilChanged()
             .onEach(binding.useBiometric::setChecked)
+            .launchInWithLifecycle()
+        viewModel.securitySettingsFlow.map { it.lockOnBackground }.distinctUntilChanged()
+            .onEach(binding.backgroundLock::setChecked)
             .launchInWithLifecycle()
         viewModel.securitySettingsFlow.map { it.password }.distinctUntilChanged()
             .onEach {
                 binding.auth.isChecked = it != null
                 binding.useBiometric.isEnabled = binding.auth.isChecked
                 binding.password.isEnabled = binding.auth.isChecked
+                binding.backgroundLock.isEnabled = binding.auth.isChecked
             }
             .launchInWithLifecycle()
     }

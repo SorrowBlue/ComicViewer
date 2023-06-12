@@ -19,7 +19,6 @@ import com.sorrowblue.comicviewer.data.database.entity.SimpleFile
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistory
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfo
 import kotlinx.coroutines.flow.Flow
-import logcat.logcat
 
 @Dao
 internal interface FileDao {
@@ -141,7 +140,6 @@ internal interface FileDao {
                 is SortEntity.SIZE -> if (sortEntity.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
             }.let(::orderBy)
         }.create()
-        logcat { "sql=${query.sql}" }
         @Suppress("DEPRECATION") return pagingSource(query)
     }
 
@@ -150,4 +148,7 @@ internal interface FileDao {
 
     @Query("UPDATE file SET cache_key = '' WHERE cache_key != ''")
     suspend fun deleteThumbnails()
+
+    @Query("UPDATE file set last_read = 0, last_read_page = 0  WHERE bookshelf_id = :bookshelfId AND path IN (:list)")
+    suspend fun deleteHistory(bookshelfId: Int, list: Array<String>)
 }

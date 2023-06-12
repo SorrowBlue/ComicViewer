@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/settings_navigation"
     app:startDestination="@id/settings_fragment">
-
     <fragment
         android:id="@+id/settings_fragment"
         android:name="com.sorrowblue.comicviewer.settings.SettingsFragment"
-        android:label="設定">
+        android:label="@string/settings_title">
         <action
             android:id="@+id/action_settings_to_display_settings"
             app:destination="@id/settings_display" />
@@ -26,8 +25,15 @@
     </fragment>
     <fragment
         android:id="@+id/settings_app_fragment"
-        android:name="com.sorrowblue.comicviewer.settings.app.AppInfoFragment"
-        android:label="AppInfoFragment" />
+        android:name="com.sorrowblue.comicviewer.settings.app.AppFragment"
+        android:label="AppInfoFragment" >
+        <action
+            android:id="@+id/action_settings_app_to_libs_support"
+            app:destination="@id/libs_support_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/libs_support_fragment"
+        android:name="com.mikepenz.aboutlibraries.ui.LibsSupportFragment" />
     <include app:graph="@navigation/settings_display" />
     <include app:graph="@navigation/settings_viewer" />
     <include app:graph="@navigation/settings_folder" />

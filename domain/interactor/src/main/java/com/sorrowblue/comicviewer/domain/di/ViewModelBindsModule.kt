@@ -4,6 +4,7 @@ import com.sorrowblue.comicviewer.domain.interactor.AddReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.interactor.GetNavigationHistoryInteractor
 import com.sorrowblue.comicviewer.domain.interactor.ScanBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.interactor.UpdateHistoryInteractor
+import com.sorrowblue.comicviewer.domain.interactor.bookshelf.DeleteHistoryInteractor
 import com.sorrowblue.comicviewer.domain.interactor.bookshelf.GetBookshelfBookInteractor
 import com.sorrowblue.comicviewer.domain.interactor.bookshelf.GetBookshelfFileInteractor
 import com.sorrowblue.comicviewer.domain.interactor.bookshelf.GetBookshelfFolderInteractor
@@ -38,6 +39,7 @@ import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.UpdateHistoryUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.DeleteHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFolderUseCase
@@ -109,6 +111,9 @@ internal abstract class ViewModelBindsModule {
 
     @Binds
     abstract fun bindGetBookshelfFolderUseCase(interactor: GetBookshelfFolderInteractor): GetBookshelfFolderUseCase
+
+    @Binds
+    abstract fun bindDeleteHistoryUseCase(interactor: DeleteHistoryInteractor): DeleteHistoryUseCase
 
     @Binds
     abstract fun bindGetBookshelfInfoUseCase(interactor: GetBookshelfInfoInteractor): GetBookshelfInfoUseCase

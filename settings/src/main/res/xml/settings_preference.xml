@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <Preference
+        app:icon="@drawable/ic_twotone_display_settings_24"
         app:key="@string/settings_preference_key_display"
         app:title="@string/settings_label_display" />
     <Preference
+        app:icon="@drawable/ic_twotone_folder_open_24"
         app:key="@string/settings_preference_key_folder"
         app:title="@string/settings_label_folder" />
     <Preference
+        app:icon="@drawable/ic_twotone_image_24"
         app:key="@string/settings_preference_key_viewer"
         app:title="@string/settings_label_viewer" />
     <Preference
+        app:icon="@drawable/ic_twotone_lock_24"
         app:key="@string/settings_preference_key_security"
         app:title="@string/settings_label_security" />
     <Preference
@@ -17,10 +21,7 @@
         app:key="@string/settings_preference_key_app"
         app:title="@string/settings_label_app" />
     <Preference
+        app:icon="@drawable/ic_twotone_start_24"
         app:key="@string/settings_preference_key_tutorial"
-        app:title="@string/settings_title_tutorial" />
-    <SwitchPreferenceCompat
-        app:defaultValue="false"
-        app:key="@string/settings_preference_key_restore_on_launch"
-        app:title="最後に読んだ本のフォルダまで移動する。" />
+        app:title="@string/settings_label_tutorial" />
 </PreferenceScreen>

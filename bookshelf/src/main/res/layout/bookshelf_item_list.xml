@@ -34,6 +34,7 @@
                 android:id="@+id/preview"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:background="?attr/colorSurfaceVariant"
                 android:contentDescription="@string/bookshelf_list_desc_thumbnail_this_bookshelf"
                 android:scaleType="centerCrop"
                 app:layout_constraintDimensionRatio="1:1"
@@ -55,38 +56,37 @@
                 tools:icon="@drawable/ic_twotone_dns_24" />
 
             <TextView
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/framework_ui_default_margin"
-                android:layout_marginTop="@dimen/framework_ui_default_margin"
-                android:layout_marginEnd="@dimen/framework_ui_default_margin"
-                android:gravity="top"
-                android:lines="2"
-                android:text="@{BookshelfConverter.displayName(bookshelf, folder)}"
-                android:textAppearance="?attr/textAppearanceTitleSmall"
-                app:layout_constraintBottom_toTopOf="@+id/file_count"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/preview"
-                app:layout_constraintVertical_chainStyle="spread_inside"
-                tools:text="@tools:sample/lorem" />
-
-            <TextView
                 android:id="@+id/file_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/framework_ui_default_margin"
-                android:layout_marginEnd="@dimen/framework_ui_default_margin"
-                android:layout_marginBottom="@dimen/framework_ui_default_margin"
-                android:gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:gravity="end"
                 android:maxLines="2"
-                android:text="@{`scaned ` + bookshelf.fileCount + ` files`}"
+                android:text="@{@string/bookshelf_list_label_files(bookshelf.fileCount)}"
                 android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/preview"
+                tools:text="999 files scanned" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:lines="2"
+                android:text="@{BookshelfConverter.displayName(bookshelf, folder)}"
+                android:textAppearance="?attr/textAppearanceLabelMedium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title"
+                app:layout_constraintTop_toBottomOf="@+id/file_count"
+                app:layout_constraintVertical_chainStyle="spread_inside"
                 tools:text="@tools:sample/lorem" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

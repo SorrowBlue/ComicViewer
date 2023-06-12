@@ -10,6 +10,8 @@
     <string name="settings_security_title_change_password">Change Password</string>
     <string name="settings_security_summary_use_biometric_auth">Use biometrics instead of passwords</string>
     <string name="settings_security_title_password">Password</string>
+    <string name="settings_security_preference_key_background_lock" translatable="false">settings_security_preference_key_background_lock</string>
+    <string name="settings_security_label_background_lock">Lock instantly in the background</string>
 
 
     <string name="settings_security_password_manage_dialog_title_password_setting">Password setting</string>

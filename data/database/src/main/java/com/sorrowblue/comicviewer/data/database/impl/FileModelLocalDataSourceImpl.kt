@@ -189,4 +189,8 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
     override suspend fun deleteThumbnails() {
         dao.deleteThumbnails()
     }
+
+    override suspend fun deleteHistory(bookshelfModelId: BookshelfModelId, list: List<String>) {
+        dao.deleteHistory(bookshelfModelId.value, list.toTypedArray())
+    }
 }

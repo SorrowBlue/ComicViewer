@@ -54,6 +54,10 @@ internal class FileRepositoryImpl @Inject constructor(
         fileModelLocalDataSource.deleteThumbnails()
     }
 
+    override suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>) {
+        fileModelLocalDataSource.deleteHistory(BookshelfModelId(bookshelfId.value), list)
+    }
+
     override suspend fun getBook(bookshelfId: BookshelfId, path: String): Response<Book?> {
         return Response.Success(
             fileModelLocalDataSource.findBy(BookshelfModelId(bookshelfId.value), path)

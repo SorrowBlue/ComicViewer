@@ -1,9 +1,8 @@
 package com.sorrowblue.comicviewer.app
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
-import android.view.inputmethod.EditorInfo
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -12,31 +11,26 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.asFlow
+import androidx.databinding.BindingAdapter
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.ui.setupWithNavController
-import androidx.work.WorkManager
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.splitcompat.SplitCompat
 import com.sorrowblue.comicviewer.app.databinding.ActivityMainBinding
-import com.sorrowblue.comicviewer.app.databinding.ViewAuthBinding
-import com.sorrowblue.comicviewer.app.ktx.findNavController
 import com.sorrowblue.comicviewer.app.ktx.isShown
-import com.sorrowblue.comicviewer.app.ktx.isShownWithImageResource
+import com.sorrowblue.comicviewer.app.ktx.setState
+import com.sorrowblue.comicviewer.app.ktx.setupWithNavControllerApp
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
-import com.sorrowblue.comicviewer.framework.ui.fragment.type
-import com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkDynamicNavHostFragment
-import com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkFragmentNavigator
 import com.sorrowblue.comicviewer.tutorial.TutorialFragmentArgs
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applyInsetter
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -58,37 +52,31 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        logcat("Configuration") { "screenWidthDp=${resources.configuration.screenWidthDp}" }
-        logcat("Configuration") { "orientation=${if (Configuration.ORIENTATION_LANDSCAPE == resources.configuration.orientation) "LANDSCAPE" else "PORTRAIT"}" }
-        val splashScreen = installSplashScreen()
-        DynamicColors.applyToActivityIfAvailable(this)
-        super.onCreate(savedInstanceState)
-        splashScreen.setOnExitAnimationListener(SplashScreenViewProvider::startSlideUpAnime)
-        splashScreen.setKeepOnScreenCondition {
-            commonViewModel.shouldKeepOnScreen
-        }
-        WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        commonViewModel.snackbarMessage.onEach {
-            Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT)
-                .setAnchorView(com.sorrowblue.comicviewer.framework.ui.R.id.framework_ui_fab)
-                .apply {
-                    isAnchorViewLayoutListenerEnabled = true
-                }
-                .show()
-        }.launchInWithLifecycle()
+        installSplashScreen().apply {
+            DynamicColors.applyToActivityIfAvailable(this@MainActivity)
+            super.onCreate(savedInstanceState)
+            setOnExitAnimationListener(SplashScreenViewProvider::startSlideUpAnime)
+            setKeepOnScreenCondition(commonViewModel::shouldKeepOnScreen)
+        }
 
 
         val navController =
-            binding.navHostFragmentActivityMain.findNavController<FrameworkDynamicNavHostFragment>()
-        binding.viewAuth.applyViewModel(viewModel, navController)
+            binding.navHostFragment.getFragment<NavHostFragment>().findNavController()
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        binding.viewModel = viewModel
+        binding.commonViewModel = commonViewModel
+        binding.bottomNavigation.setupWithNavControllerApp(navController)
+        navController.addOnDestinationChangedListener(commonViewModel)
+        setupAuthSheet()
+
         // 初期化処理未実施の場合
         if (commonViewModel.shouldKeepOnScreen) {
             // リストア Skip/完了 を待つ
             lifecycleScope.launch {
                 restoreNavigation(navController)
                 commonViewModel.isRestored.first()
-
                 if (!runBlocking { viewModel.doneTutorialFlow.first() }) {
                     navController.navigate(
                         MobileNavigationDirections.actionGlobalTutorialNavigation().actionId,
@@ -98,55 +86,44 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 commonViewModel.shouldKeepOnScreen = false
             }
         }
-        binding.bottomNavigation.setupWithNavController(navController)
-        binding.bottomNavigation.setOnItemReselectedListener {
-            logcat { navController.currentBackStack.value.lastOrNull()?.destination?.parent?.startDestDisplayName.orEmpty() }
-            if (navController.currentBackStack.value.lastOrNull()?.destination?.parent?.id != it.itemId) {
-                navController.popBackStack()
-            }
+
+        commonViewModel.isVisibleBottomNav.onEach(binding.bottomNavigation::isShown)
+            .launchInWithLifecycle()
+
+        commonViewModel.fabState.onEach(binding.frameworkUiFab::setState).launchInWithLifecycle()
+
+        commonViewModel.snackbarMessage.onEach {
+            Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).apply {
+                anchorView = binding.frameworkUiFab
+                isAnchorViewLayoutListenerEnabled = true
+            }.show()
+        }.launchInWithLifecycle()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (runBlocking { viewModel.securitySettingsFlow.first() }.lockOnBackground) {
+            viewModel.isShownAuthSheet.value = true
         }
-        commonViewModel.isVisibleBottomNav.onEach {
-            binding.bottomNavigation.isShown(it)
-        }.launchInWithLifecycle()
-        navController.currentBackStack.onEach {
-            logcat(
-                "NAVIGATION",
-                LogPriority.INFO
-            ) { it.joinToString(",") { it.destination.displayName.removePrefix("$packageName:") } }
-        }.launchInWithLifecycle()
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            logcat { destination.hierarchy.joinToString { it.displayName.removePrefix("$packageName:") } }
-            if (destination is FrameworkFragmentNavigator.Destination) {
-                commonViewModel.isVisibleBottomNav.tryEmit(destination.isVisibleBottomNavigation)
-                binding.frameworkUiFab.isShownWithImageResource(
-                    destination.isVisibleFab,
-                    destination.fabIcon,
-                    destination.fabLabel
-                )
+    }
+
+    private fun setupAuthSheet() {
+        binding.viewAuth.password.doAfterTextChanged {
+            binding.viewAuth.textInputLayout.error = null
+            binding.viewAuth.textInputLayout.isErrorEnabled = false
+        }
+        val windowInsetsController = WindowInsetsControllerCompat(window, binding.viewAuth.root)
+        viewModel.isShownAuthSheet.onEach { isShownAuthSheet ->
+            if (isShownAuthSheet) {
+                windowInsetsController.show(WindowInsetsCompat.Type.ime())
+                binding.viewAuth.password.requestFocus()
             } else {
-                binding.bottomNavigation.isShown(false)
-                binding.frameworkUiFab.isShownWithImageResource(false, 0, 0)
+                windowInsetsController.hide(WindowInsetsCompat.Type.ime())
+                binding.root.requestFocus()
             }
-        }
-        binding.frame.applyInsetter {
-            type(systemBars = true, displayCutout = true) {
-                margin(true)
-            }
-        }
-
-        WorkManager.getInstance(applicationContext).getWorkInfosByTagLiveData("scan").asFlow()
-            .onEach { workInfoList ->
-                workInfoList.forEach {
-                    logcat("WORK") {
-                        "id=[${it.id}], state=[${it.state}], progress=[${
-                            it.progress.keyValueMap.values.joinToString(
-                                ","
-                            ) { it.toString() }
-                        }]"
-                    }
-                }
-            }.launchInWithLifecycle()
-
+        }.launchInWithLifecycle()
+        viewModel.authError.filter { it != 0 }.map(::getString)
+            .onEach(binding.viewAuth.textInputLayout::setError).launchInWithLifecycle()
     }
 
     private suspend fun restoreNavigation(navController: NavController) {
@@ -170,9 +147,7 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 navController.navigate(
                     com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_list_to_folder,
                     FolderFragmentArgs(
-                        server.id.value,
-                        bookshelves.first().base64Path(),
-                        position = position
+                        server.id.value, bookshelves.first().base64Path(), position = position
                     ).toBundle()
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -182,9 +157,7 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 navController.navigate(
                     com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_list_to_folder,
                     FolderFragmentArgs(
-                        server.id.value,
-                        bookshelves.first().base64Path(),
-                        position = position
+                        server.id.value, bookshelves.first().base64Path(), position = position
                     ).toBundle()
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -201,11 +174,8 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     }
                 }
                 navController.navigate(
-                    com.sorrowblue.comicviewer.folder.R.id.action_folder_self,
-                    FolderFragmentArgs(
-                        server.id.value,
-                        bookshelves.last().base64Path(),
-                        position = position
+                    com.sorrowblue.comicviewer.folder.R.id.action_folder_self, FolderFragmentArgs(
+                        server.id.value, bookshelves.last().base64Path(), position = position
                     ).toBundle()
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -221,40 +191,21 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 }
 
-context (MainActivity)
-internal fun ViewAuthBinding.applyViewModel(
-    viewModel: MainViewModel,
-    navController: NavController
-) {
-    password.doAfterTextChanged {
-        textInputLayout.error = null
-        textInputLayout.isErrorEnabled = false
+@BindingAdapter("layout_behavior_expandedOffset")
+fun ViewGroup.setLayoutBehaviorExpandedOffset(expandedOffset: Int) {
+    BottomSheetBehavior.from(this).expandedOffset = expandedOffset
+}
+
+@BindingAdapter("layout_behavior_draggable")
+fun ViewGroup.setLayoutBehaviorDraggable(isDraggable: Boolean) {
+    BottomSheetBehavior.from(this).isDraggable = isDraggable
+}
+
+@BindingAdapter("layout_behavior_shown")
+fun ViewGroup.setLayoutBehaviorShown(isShown: Boolean) {
+    if (isShown) {
+        BottomSheetBehavior.from(this).state = BottomSheetBehavior.STATE_EXPANDED
+    } else {
+        BottomSheetBehavior.from(this).state = BottomSheetBehavior.STATE_HIDDEN
     }
-    password.setOnEditorActionListener { _, actionId, _ ->
-        if (actionId == EditorInfo.IME_ACTION_GO) {
-            logcat { "${password.editableText}=${runBlocking { viewModel.securitySettingsFlow.first() }.password}" }
-            if (password.editableText.toString() == runBlocking { viewModel.securitySettingsFlow.first() }.password) {
-                navController.navigate(MobileNavigationDirections.actionGlobalBookshelf())
-                BottomSheetBehavior.from(authBottomSheet).state = BottomSheetBehavior.STATE_HIDDEN
-                WindowInsetsControllerCompat(window, root).hide(WindowInsetsCompat.Type.ime())
-                true
-            } else {
-                textInputLayout.error = "パスワードが間違っています。"
-                true
-            }
-        } else {
-            false
-        }
-    }
-    viewModel.securitySettingsFlow.map { it.password != null }.onEach {
-        BottomSheetBehavior.from(authBottomSheet).apply {
-            expandedOffset = 0
-            isDraggable = false
-            state = if (it) {
-                BottomSheetBehavior.STATE_EXPANDED
-            } else {
-                BottomSheetBehavior.STATE_HIDDEN
-            }
-        }
-    }.launchInWithLifecycle()
 }

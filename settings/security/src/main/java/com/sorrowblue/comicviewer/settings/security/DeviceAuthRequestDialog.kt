@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 internal class DeviceAuthRequestDialog : DialogFragment() {
 
-    private val viewModel: SettingsSecurityFragmentViewModel by hiltNavGraphViewModels(R.id.settings_security_navigation)
+    private val viewModel: SettingsSecurityViewModel by hiltNavGraphViewModels(R.id.settings_security_navigation)
     private val commonViewModel: CommonViewModel by activityViewModels()
 
     private val resultLauncher =

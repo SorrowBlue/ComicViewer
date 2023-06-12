@@ -18,4 +18,5 @@
     <string name="settings_security_password_manage_dialog_hint_old_password">以前のパスワード</string>
 
     <string name="settings_security_password_manage_dialog_error_passwords_do_not_match">パスワードが一致しません。</string>
+    <string name="settings_security_label_background_lock">バックグラウンドですぐにロックする</string>
 </resources>

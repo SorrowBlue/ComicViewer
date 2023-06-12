@@ -30,6 +30,17 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/thumbnail_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:shapeAppearanceOverlay="@style/file_bottom_round"
+                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/book_thumbnail"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -42,25 +53,33 @@
                 app:shapeAppearanceOverlay="@style/file_bottom_round"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/folder_thumbnail"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/bg_folder"
-                android:backgroundTint="?attr/colorControlNormal"
-                android:paddingStart="12dp"
-                android:paddingTop="16dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="12dp"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 app:isVisible="@{file instanceof Folder}"
-                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/file_bottom_round"
-                tools:srcCompat="@tools:sample/avatars"
-                tools:visibility="gone" />
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/file_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="?attr/scrimBackground"
+                android:padding="2dp"
+                android:text="999 files"
+                app:isVisible="@{file instanceof Folder}"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="?attr/colorOnSurfaceInverse"
+                app:layout_constraintBottom_toTopOf="@+id/name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progress"
@@ -78,9 +97,9 @@
                 android:id="@+id/name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:minLines="2"
+                android:lines="2"
                 android:padding="4dp"
-                android:textAppearance="@style/TextAppearance.Material3.MostSmall"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
                 android:textColor="?attr/colorOnSecondaryContainer"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

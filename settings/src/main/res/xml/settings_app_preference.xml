@@ -10,6 +10,9 @@
         app:title="@string/settings_app_label_build"
         tools:summary="1997-01-01T00:00:00.000+09:00" />
     <Preference
+        app:key="@string/settings_app_preference_key_license"
+        app:title="@string/settings_app_label_license" />
+    <Preference
         app:icon="@drawable/ic_twotone_star_24"
         app:key="@string/settings_app_preference_key_rate"
         app:title="@string/settings_app_label_rate" />

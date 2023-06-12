@@ -145,7 +145,7 @@
                 android:id="@+id/last_read_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{Converter.dateTime(viewModel.fileFlow.lastModifier) + ` に読んだ`}"
+                android:text="@{@string/file_info_label_last_read_time(Converter.dateTime(viewModel.bookFlow.lastReadTime))}"
                 app:chipIcon="@drawable/ic_twotone_history_24"
                 app:isVisible="@{viewModel.bookFlow != null}"
                 tools:text="2023/01/01 23:59:59に読んだ" />
@@ -175,7 +175,7 @@
             style="@style/Widget.Material3.Button.TonalButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Read later"
+            android:text="@string/file_info_label_add_read_later"
             app:flow_horizontalBias="1"
             app:icon="@drawable/ic_twotone_watch_later_24"
             app:layout_wrapBehaviorInParent="skipped" />
@@ -185,7 +185,7 @@
             style="@style/Widget.Material3.Button.TonalButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save to favorites"
+            android:text="@string/file_info_label_add_favourites"
             app:icon="@drawable/ic_twotone_favorite_24" />
 
         <com.google.android.material.button.MaterialButton
@@ -193,7 +193,7 @@
             style="@style/Widget.Material3.Button.TonalButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Open folder"
+            android:text="@string/file_info_label_open_folder"
             app:icon="@drawable/ic_twotone_folder_open_24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

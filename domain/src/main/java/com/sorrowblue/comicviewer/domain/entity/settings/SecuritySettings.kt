@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SecuritySettings(
     val password: String? = null,
-    val useBiometrics: Boolean = false
+    val useBiometrics: Boolean = false,
+    val lockOnBackground: Boolean = false
 )

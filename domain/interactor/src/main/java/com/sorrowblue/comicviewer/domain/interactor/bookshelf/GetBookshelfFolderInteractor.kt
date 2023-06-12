@@ -5,10 +5,12 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.DeleteHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFolderUseCase
 import com.sorrowblue.comicviewer.framework.Result
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 internal class GetBookshelfFolderInteractor @Inject constructor(
@@ -32,6 +34,17 @@ internal class GetBookshelfFolderInteractor @Inject constructor(
                 Result.Error(GetLibraryInfoError.SYSTEM_ERROR)
             })
 
+        }
+    }
+}
+
+internal class DeleteHistoryInteractor @Inject constructor(
+    private val fileRepository: FileRepository
+) : DeleteHistoryUseCase() {
+
+    override fun run(request: Request): Flow<Result<Unit, GetLibraryInfoError>> {
+        return flow {
+            emit(Result.Success(fileRepository.deleteHistory(request.bookshelfId, request.list)))
         }
     }
 }

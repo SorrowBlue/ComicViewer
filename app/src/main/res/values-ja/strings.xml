@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_label_bookshelf">本棚</string>
+    <string name="app_label_favorite">お気に入り</string>
+    <string name="app_label_read_later">あとで読む</string>
+    <string name="app_label_library">ライブラリ</string>
+</resources>

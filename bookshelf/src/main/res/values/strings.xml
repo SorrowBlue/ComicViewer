@@ -7,6 +7,7 @@
     <string name="bookshelf_list_desc_thumbnail_this_bookshelf">Thumbnail for this bookshelf</string>
     <string name="bookshelf_list_title_favorite">Favorite</string>
     <string name="bookshelf_list_btn_new">Add bookshelf</string>
+    <string name="bookshelf_list_label_files">%1$d files</string>
 
     <!--Bookshelf Info-->
     <string name="bookshelf_info_title">Bookshelf Info</string>

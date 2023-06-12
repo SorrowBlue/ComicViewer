@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.domain.entity.SearchCondition
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.DeleteHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFolderUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
@@ -23,6 +24,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -38,6 +40,7 @@ internal class FolderViewModel @Inject constructor(
     pagingQueryFileUseCase: PagingQueryFileUseCase,
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     getBookshelfFolderUseCase: GetBookshelfFolderUseCase,
+    private val deleteHistoryUseCase: DeleteHistoryUseCase,
     private val scanBookshelfUseCase: ScanBookshelfUseCase,
     override val savedStateHandle: SavedStateHandle,
 ) : FileListViewModel(manageFolderDisplaySettingsUseCase), SupportSafeArgs {
@@ -66,6 +69,12 @@ internal class FolderViewModel @Inject constructor(
             val folder = serverFolderFlow.firstOrNull()?.folder ?: return@launch
             scanBookshelfUseCase.execute(ScanBookshelfUseCase.Request(folder, scanType))
                 .first().dataOrNull?.let { done.invoke(it) }
+        }
+    }
+
+    fun deleteHistoryBook(selectedItemIds: List<String>) {
+        viewModelScope.launch {
+            deleteHistoryUseCase.execute(DeleteHistoryUseCase.Request(serverFolderFlow.replayCache.first().bookshelf.id, selectedItemIds)).collect()
         }
     }
 

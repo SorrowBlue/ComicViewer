@@ -11,4 +11,8 @@ data class SimpleFileModel(
     val lastModifier: Long,
     val type: FileModel,
     val sortIndex: Int
-)
+) {
+
+    companion object {
+    }
+}

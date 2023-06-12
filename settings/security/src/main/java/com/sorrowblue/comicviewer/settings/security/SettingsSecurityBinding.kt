@@ -11,4 +11,5 @@ internal class SettingsSecurityBinding(fragment: FrameworkPreferenceFragment) :
     val auth by preference<SwitchPreferenceCompat>(R.string.settings_security_preference_key_auth_on_launch)
     val useBiometric by preference<SwitchPreferenceCompat>(R.string.settings_security_preference_key_use_biometric)
     val password by preference<Preference>(R.string.settings_security_preference_key_change_password)
+    val backgroundLock by preference<SwitchPreferenceCompat>(R.string.settings_security_preference_key_background_lock)
 }

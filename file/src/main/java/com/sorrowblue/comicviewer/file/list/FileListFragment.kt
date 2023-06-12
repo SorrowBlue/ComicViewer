@@ -16,7 +16,6 @@ import com.sorrowblue.comicviewer.file.R
 import com.sorrowblue.comicviewer.file.info.FileInfoNavigation
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
-import com.sorrowblue.comicviewer.framework.ui.fragment.type
 import com.sorrowblue.comicviewer.framework.ui.widget.ktx.setSpanCount
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
@@ -118,7 +117,7 @@ abstract class FileListFragment : PagingFragment<File> {
             WindowInsetsCompat.CONSUMED
         }
         toolbar.applyInsetter {
-            type(systemBars = true, displayCutout = true) {
+            type(statusBars = true, navigationBars = true) {
                 padding(horizontal = true)
                 margin(top = true)
             }

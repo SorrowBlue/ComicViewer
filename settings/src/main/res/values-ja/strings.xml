@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_title_tutorial">チュートリアル</string>
+    <string name="settings_title">設定</string>
+    <string name="settings_label_tutorial">チュートリアルを始める</string>
     <string name="settings_label_display">ディスプレイ</string>
     <string name="settings_label_folder">フォルダ</string>
     <string name="settings_label_viewer">ビューワー</string>
@@ -9,4 +10,5 @@
     <string name="settings_app_label_version">バージョン</string>
     <string name="settings_app_label_build">ビルド</string>
     <string name="settings_app_label_rate">アプリを評価する</string>
+    <string name="settings_app_label_license">ライセンス</string>
 </resources>
