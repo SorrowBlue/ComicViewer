@@ -1,16 +1,16 @@
 package com.sorrowblue.comicviewer.domain.interactor.favorite
 
-import com.sorrowblue.comicviewer.domain.repository.FavoriteRepository
+import com.sorrowblue.comicviewer.domain.repository.FavoriteFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.favorite.AddFavoriteFileUseCase
 import com.sorrowblue.comicviewer.framework.Result
 import javax.inject.Inject
 
 internal class AddFavoriteFileInteractor @Inject constructor(
-    private val favoriteRepository: FavoriteRepository,
+    private val favoriteFileRepository: FavoriteFileRepository,
 ) : AddFavoriteFileUseCase() {
     override suspend fun run(request: Request): Result<Unit, Unit> {
         return Result.Success(
-            favoriteRepository.add(request.favoriteFile)
+            favoriteFileRepository.add(request.favoriteFile)
         )
     }
 }

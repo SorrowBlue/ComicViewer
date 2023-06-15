@@ -43,9 +43,9 @@ class BookshelfLocalDataSourceTest {
     @Test
     fun testInsert() = runTest {
         val server = randomServer()
-        val column = bookshelfDao.insert(server)
+        val column = bookshelfDao.upsert(server)
         Assert.assertEquals(
-            bookshelfDao.selectById(column.toInt()).first(),
+            bookshelfDao.flow(column.toInt()).first(),
             server.copy(column.toInt())
         )
     }
@@ -56,7 +56,7 @@ class BookshelfLocalDataSourceTest {
         val column = bookshelfDao.upsert(server)
         logcat { "before=${server.id}, after=${column}" }
         Assert.assertEquals(
-            bookshelfDao.selectById(column.toInt()).first(),
+            bookshelfDao.flow(column.toInt()).first(),
             server.copy(column.toInt())
         )
     }
@@ -64,17 +64,17 @@ class BookshelfLocalDataSourceTest {
     @Test
     fun testUpdate() = runTest {
         val server = randomServer()
-        val column = bookshelfDao.insert(server)
-        println("update id = ${column.toInt()}: ${bookshelfDao.update(server.copy(id = column.toInt()))}")
-        println("update id = 5: ${bookshelfDao.update(server.copy(id = 5))}")
+        val column = bookshelfDao.upsert(server)
+        println("update id = ${column.toInt()}: ${bookshelfDao.upsert(server.copy(id = column.toInt()))}")
+        println("update id = 5: ${bookshelfDao.upsert(server.copy(id = 5))}")
     }
 
     @Test
     fun testInsertDuplicate() = runTest {
         val server = randomServer()
-        val column = bookshelfDao.insert(server)
+        val column = bookshelfDao.upsert(server)
         kotlin.runCatching {
-            bookshelfDao.insert(randomServer(column.toInt()))
+            bookshelfDao.upsert(randomServer(column.toInt()))
         }.let {
             Assert.assertThrows("", Exception::class.java) {
                 it.getOrThrow()
@@ -85,9 +85,9 @@ class BookshelfLocalDataSourceTest {
     @Test
     fun testSelectById() = runTest {
         val server = randomServer()
-        val column = bookshelfDao.insert(server)
+        val column = bookshelfDao.upsert(server)
         Assert.assertEquals(
-            bookshelfDao.selectById(column.toInt()).first(),
+            bookshelfDao.flow(column.toInt()).first(),
             server.copy(column.toInt())
         )
     }

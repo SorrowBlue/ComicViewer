@@ -81,7 +81,7 @@ internal class FavoriteFragment : FileListFragment(R.layout.favorite_fragment),
         when (file) {
             is Book -> findNavController().navigate(
                 FavoriteFragmentDirections.actionFavoriteToBook().actionId,
-                BookFragmentArgs(file, transitionName).toBundle(),
+                BookFragmentArgs(file, transitionName, viewModel.favoriteId).toBundle(),
                 null,
                 extras
             )

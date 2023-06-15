@@ -77,7 +77,7 @@ internal class BookPageFetcher(
             try {
                 fileReader =
                     remoteDataSourceFactory.create(
-                        bookshelfLocalDataSource.get(data.fileModel.bookshelfModelId).first()!!
+                        bookshelfLocalDataSource.flow(data.fileModel.bookshelfModelId).first()!!
                     ).fileReader(data.fileModel)
                         ?: throw RuntimeException("この拡張子はサポートされていません。")
                 var inputStream: InputStream = fileReader.pageInputStream(data.pageIndex)

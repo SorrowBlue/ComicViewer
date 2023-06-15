@@ -41,7 +41,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         lastReadPage: Int,
         lastRead: Long
     ) {
-        dao.update(UpdateFileHistory(path, bookshelfModelId.value, lastReadPage, lastRead))
+        dao.updateHistory(UpdateFileHistory(path, bookshelfModelId.value, lastReadPage, lastRead))
     }
 
     override suspend fun update(
@@ -50,7 +50,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         cacheKey: String,
         totalPage: Int
     ) {
-        dao.update(UpdateFileInfo(path, bookshelfModelId.value, cacheKey, totalPage))
+        dao.updateInfo(UpdateFileInfo(path, bookshelfModelId.value, cacheKey, totalPage))
     }
 
     override suspend fun updateAll(list: List<SimpleFileModel>) {
@@ -66,7 +66,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         path: String,
         list: List<String>
     ): List<FileModel> {
-        return dao.selectByNotPaths(bookshelfModelId.value, path, list).map(File::toModel)
+        return dao.findByNotPaths(bookshelfModelId.value, path, list).map(File::toModel)
     }
 
     override suspend fun deleteAll(list: List<FileModel>) {
@@ -74,16 +74,12 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun exists(bookshelfModelId: BookshelfModelId, path: String): Boolean {
-        return dao.selectBy(bookshelfModelId.value, path) != null
+        return dao.find(bookshelfModelId.value, path) != null
     }
 
     override suspend fun registerAll(list: List<FileModel>) {
         withTransaction {
-            val (exists, noexists) = list.partition {
-                dao.selectBy(it.bookshelfModelId.value, it.path) != null
-            }
-            dao.insertAll(noexists.map { File.fromModel(it) })
-            dao.updateAll(exists.map { File.fromModel(it) })
+            dao.upsertAll(list.map { File.fromModel(it) })
         }
     }
 
@@ -121,24 +117,46 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         return dao.selectRootBy(id.value)?.toModel() as? FileModel.Folder
     }
 
-    override suspend fun findBy(bookshelfModelId: BookshelfModelId): List<FileModel> {
-        return dao.selectBy(bookshelfModelId.value).map(File::toModel)
-    }
-
     override suspend fun findBy(bookshelfModelId: BookshelfModelId, path: String): FileModel? {
-        return dao.selectBy(bookshelfModelId.value, path)?.toModel()
+        return dao.find(bookshelfModelId.value, path)?.toModel()
     }
 
     override fun selectBy(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?> {
-        return dao.selectBy2(bookshelfModelId.value, path).map { it?.toModel() }
+        return dao.flow(bookshelfModelId.value, path).map { it?.toModel() }
     }
 
-    override fun nextFileModel(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?> {
-        return dao.selectNextFile(bookshelfModelId.value, path).map { it?.toModel() }
+    override fun nextFileModel(bookshelfModelId: BookshelfModelId, path: String, sortEntity: SortEntity): Flow<FileModel?> {
+        return when (sortEntity) {
+            is SortEntity.DATE -> {
+                if (sortEntity.isAsc) dao.flowNextOrderLastModifiedAsc(bookshelfModelId.value,path)
+                else dao.flowNextOrderLastModifiedDesc(bookshelfModelId.value,path)
+            }
+            is SortEntity.NAME -> {
+                if (sortEntity.isAsc) dao.flowNextOrderNameAsc(bookshelfModelId.value,path)
+                else dao.flowNextOrderNameDesc(bookshelfModelId.value,path)
+            }
+            is SortEntity.SIZE -> {
+                if (sortEntity.isAsc) dao.flowNextOrderSizeAsc(bookshelfModelId.value,path)
+                else dao.flowNextOrderSizeDesc(bookshelfModelId.value,path)
+            }
+        }.map { it?.toModel() }
     }
 
-    override fun prevFileModel(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?> {
-        return dao.selectPrevFile(bookshelfModelId.value, path).map { it?.toModel() }
+    override fun prevFileModel(bookshelfModelId: BookshelfModelId, path: String, sortEntity: SortEntity): Flow<FileModel?> {
+        return when (sortEntity) {
+            is SortEntity.DATE -> {
+                if (!sortEntity.isAsc) dao.flowNextOrderLastModifiedAsc(bookshelfModelId.value,path)
+                else dao.flowNextOrderLastModifiedDesc(bookshelfModelId.value,path)
+            }
+            is SortEntity.NAME -> {
+                if (!sortEntity.isAsc) dao.flowNextOrderNameAsc(bookshelfModelId.value,path)
+                else dao.flowNextOrderNameDesc(bookshelfModelId.value,path)
+            }
+            is SortEntity.SIZE -> {
+                if (!sortEntity.isAsc) dao.flowNextOrderSizeAsc(bookshelfModelId.value,path)
+                else dao.flowNextOrderSizeDesc(bookshelfModelId.value,path)
+            }
+        }.map { it?.toModel() }
     }
 
     override suspend fun getCacheKeys(

@@ -63,7 +63,7 @@ internal class BookThumbnailFetcher(
                     )
                 }
             }
-            val bookshelfModel = bookshelfLocalDataSource.get(book.bookshelfModelId).first()
+            val bookshelfModel = bookshelfLocalDataSource.flow(book.bookshelfModelId).first()
                 ?: throw RuntimeException("本棚が取得できない")
             var fileReader = remoteDataSourceFactory.create(bookshelfModel).fileReader(book)
                 ?: throw RuntimeException("FileReaderが取得できない")

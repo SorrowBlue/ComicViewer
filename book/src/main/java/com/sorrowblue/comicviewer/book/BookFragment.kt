@@ -136,6 +136,7 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
                     Position.END -> nextPage()
                 }
             }
+            adapter.favoriteId = viewModel.favoriteId
             binding.viewPager2.adapter = adapter
             binding.viewPager2.setCurrentItem(book.lastPageRead + 1, false)
             binding.viewPager2.isVisible = true

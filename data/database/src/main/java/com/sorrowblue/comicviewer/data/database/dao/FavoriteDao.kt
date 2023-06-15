@@ -16,20 +16,11 @@ internal interface FavoriteDao {
     suspend fun upsert(favorite: Favorite): Long
 
     @Delete
-    suspend fun delete(favorite: Favorite)
+    suspend fun delete(favorite: Favorite): Int
 
     @Query("SELECT *, (SELECT COUNT(*) FROM favorite_file WHERE favorite_id = :favoriteId) AS count FROM favorite WHERE id = :favoriteId")
-    suspend fun findBy(favoriteId: Int): FavoriteFileCount?
-
-    @Query("SELECT *, (SELECT COUNT(*) FROM favorite_file WHERE favorite_id = :favoriteId) AS count FROM favorite WHERE id = :favoriteId")
-    fun findByAsFlow(favoriteId: Int): Flow<FavoriteFileCount?>
-
-    @Query("SELECT favorite.* FROM favorite_file INNER JOIN favorite ON favorite.id = favorite_file.favorite_id WHERE favorite_file.bookshelf_id = :bookshelfId AND favorite_file.file_path = :filePath")
-    fun selectBy(bookshelfId: Int, filePath: String): List<Favorite>
-
-    @Query("SELECT * FROM favorite")
-    fun pagingSource(): PagingSource<Int, Favorite>
+    fun flow(favoriteId: Int): Flow<FavoriteFileCount?>
 
     @Query("SELECT *, (SELECT COUNT(*) FROM favorite_file WHERE favorite_id = id) AS count FROM favorite")
-    fun pagingSourceCount(): PagingSource<Int, FavoriteFileCount>
+    fun pagingSource(): PagingSource<Int, FavoriteFileCount>
 }

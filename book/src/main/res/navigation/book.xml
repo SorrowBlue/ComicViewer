@@ -30,5 +30,9 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="favorite_id"
+            android:defaultValue="-1"
+            app:argType="integer"/>
     </fragment>
 </navigation>

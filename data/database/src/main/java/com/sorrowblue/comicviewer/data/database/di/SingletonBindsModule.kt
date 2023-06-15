@@ -1,12 +1,12 @@
 package com.sorrowblue.comicviewer.data.database.di
 
 import com.sorrowblue.comicviewer.data.database.impl.BookshelfLocalDataSourceImpl
-import com.sorrowblue.comicviewer.data.database.impl.FavoriteBookLocalDataSourceImpl
+import com.sorrowblue.comicviewer.data.database.impl.FavoriteFileLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.FavoriteLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.FileModelLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.ReadLaterFileModelLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
-import com.sorrowblue.comicviewer.data.datasource.FavoriteBookLocalDataSource
+import com.sorrowblue.comicviewer.data.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.ReadLaterFileModelLocalDataSource
@@ -38,5 +38,5 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteBookLocalDataSource(dataSource: FavoriteBookLocalDataSourceImpl): FavoriteBookLocalDataSource
+    abstract fun bindFavoriteBookLocalDataSource(dataSource: FavoriteFileLocalDataSourceImpl): FavoriteFileLocalDataSource
 }

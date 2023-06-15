@@ -13,7 +13,7 @@ interface BookshelfLocalDataSource {
 
     suspend fun delete(bookshelfModel: BookshelfModel): Int
 
-    fun get(bookshelfModelId: BookshelfModelId): Flow<BookshelfModel?>
+    fun flow(bookshelfModelId: BookshelfModelId): Flow<BookshelfModel?>
 
     fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolderModel>>
 }

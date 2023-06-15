@@ -43,7 +43,7 @@ internal class FileScanWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         val request = FileScanRequest.fromWorkData(inputData) ?: return Result.failure()
-        val serverModel = bookshelfLocalDataSource.get(request.bookshelfModelId).first()!!
+        val serverModel = bookshelfLocalDataSource.flow(request.bookshelfModelId).first()!!
         val rootFileModel = fileLocalDataSource.root(serverModel.id)!!
         val fileModel = fileLocalDataSource.findBy(request.bookshelfModelId, request.path)
         val resolveImageFolder = request.resolveImageFolder

@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.domain.interactor.favorite.AddFavoriteFileInte
 import com.sorrowblue.comicviewer.domain.interactor.favorite.CreateFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.interactor.favorite.DeleteFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.interactor.favorite.GetFavoriteInteractor
-import com.sorrowblue.comicviewer.domain.interactor.favorite.GetFavoriteListInteractor
+import com.sorrowblue.comicviewer.domain.interactor.favorite.GetNextFavoriteBookInteractor
 import com.sorrowblue.comicviewer.domain.interactor.favorite.RemoveFavoriteFileInteractor
 import com.sorrowblue.comicviewer.domain.interactor.favorite.UpdateFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.interactor.file.DeleteThumbnailsInteractor
@@ -49,8 +49,8 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCas
 import com.sorrowblue.comicviewer.domain.usecase.favorite.AddFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.CreateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteListUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
+import com.sorrowblue.comicviewer.domain.usecase.favorite.GetNextFavoriteBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.RemoveFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.UpdateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteThumbnailsUseCase
@@ -122,6 +122,9 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindGetNextBookUseCase(interactor: GetNextBookInteractor): GetNextBookUseCase
 
     @Binds
+    abstract fun bindGetNextFavoriteBookUseCase(interactor: GetNextFavoriteBookInteractor): GetNextFavoriteBookUseCase
+
+    @Binds
     abstract fun bindUpdateHistoryUseCase(interactor: UpdateHistoryInteractor): UpdateHistoryUseCase
 
     @Binds
@@ -132,9 +135,6 @@ internal abstract class ViewModelBindsModule {
 
     @Binds
     abstract fun bindGetBookshelfFileUseCase(interactor: GetBookshelfFileInteractor): GetBookshelfFileUseCase
-
-    @Binds
-    abstract fun bindGetFavoriteListUseCase(interactor: GetFavoriteListInteractor): GetFavoriteListUseCase
 
     @Binds
     abstract fun bindAddFavoriteFileUseCase(interactor: AddFavoriteFileInteractor): AddFavoriteFileUseCase
