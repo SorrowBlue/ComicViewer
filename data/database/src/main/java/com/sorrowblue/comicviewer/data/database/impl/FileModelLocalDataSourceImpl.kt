@@ -114,7 +114,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun root(id: BookshelfModelId): FileModel.Folder? {
-        return dao.selectRootBy(id.value)?.toModel() as? FileModel.Folder
+        return dao.findRootFile(id.value)?.toModel() as? FileModel.Folder
     }
 
     override suspend fun findBy(bookshelfModelId: BookshelfModelId, path: String): FileModel? {
@@ -126,37 +126,11 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
     }
 
     override fun nextFileModel(bookshelfModelId: BookshelfModelId, path: String, sortEntity: SortEntity): Flow<FileModel?> {
-        return when (sortEntity) {
-            is SortEntity.DATE -> {
-                if (sortEntity.isAsc) dao.flowNextOrderLastModifiedAsc(bookshelfModelId.value,path)
-                else dao.flowNextOrderLastModifiedDesc(bookshelfModelId.value,path)
-            }
-            is SortEntity.NAME -> {
-                if (sortEntity.isAsc) dao.flowNextOrderNameAsc(bookshelfModelId.value,path)
-                else dao.flowNextOrderNameDesc(bookshelfModelId.value,path)
-            }
-            is SortEntity.SIZE -> {
-                if (sortEntity.isAsc) dao.flowNextOrderSizeAsc(bookshelfModelId.value,path)
-                else dao.flowNextOrderSizeDesc(bookshelfModelId.value,path)
-            }
-        }.map { it?.toModel() }
+        return dao.flowPrevNextFile(bookshelfModelId.value, path,true, sortEntity).map { it?.toModel() }
     }
 
     override fun prevFileModel(bookshelfModelId: BookshelfModelId, path: String, sortEntity: SortEntity): Flow<FileModel?> {
-        return when (sortEntity) {
-            is SortEntity.DATE -> {
-                if (!sortEntity.isAsc) dao.flowNextOrderLastModifiedAsc(bookshelfModelId.value,path)
-                else dao.flowNextOrderLastModifiedDesc(bookshelfModelId.value,path)
-            }
-            is SortEntity.NAME -> {
-                if (!sortEntity.isAsc) dao.flowNextOrderNameAsc(bookshelfModelId.value,path)
-                else dao.flowNextOrderNameDesc(bookshelfModelId.value,path)
-            }
-            is SortEntity.SIZE -> {
-                if (!sortEntity.isAsc) dao.flowNextOrderSizeAsc(bookshelfModelId.value,path)
-                else dao.flowNextOrderSizeDesc(bookshelfModelId.value,path)
-            }
-        }.map { it?.toModel() }
+        return dao.flowPrevNextFile(bookshelfModelId.value, path,false, sortEntity).map { it?.toModel() }
     }
 
     override suspend fun getCacheKeys(
@@ -164,7 +138,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         parent: String,
         limit: Int
     ): List<String> {
-        return dao.selectCacheKeysSortIndex(bookshelfModelId.value, "$parent%", limit)
+        return dao.findCacheKeyOrderSortIndex(bookshelfModelId.value, "$parent%", limit)
     }
 
     override suspend fun getCacheKeys(
@@ -174,19 +148,19 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         folderThumbnailOrderModel: FolderThumbnailOrderModel
     ): List<String> {
         return when (folderThumbnailOrderModel) {
-            FolderThumbnailOrderModel.NAME -> dao.selectCacheKeysSortIndex(
+            FolderThumbnailOrderModel.NAME -> dao.findCacheKeyOrderSortIndex(
                 bookshelfModelId.value,
                 "$parent%",
                 limit
             )
 
-            FolderThumbnailOrderModel.MODIFIED -> dao.selectCacheKeysSortLastModified(
+            FolderThumbnailOrderModel.MODIFIED -> dao.findCacheKeyOrderLastModified(
                 bookshelfModelId.value,
                 "$parent%",
                 limit
             )
 
-            FolderThumbnailOrderModel.LAST_READ -> dao.selectCacheKeysSortLastRead(
+            FolderThumbnailOrderModel.LAST_READ -> dao.findCacheKeysOrderLastRead(
                 bookshelfModelId.value,
                 "$parent%",
                 limit
@@ -195,17 +169,17 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun removeCacheKey(diskCacheKey: String) {
-        return dao.removeCacheKey(diskCacheKey)
+        return dao.deleteCacheKeyBy(diskCacheKey)
     }
 
     override fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<FileModel>> {
         return Pager(pagingConfig) {
-            dao.pagingHistoryBookSource()
+            dao.pagingSourceHistory()
         }.flow.map { pagingData -> pagingData.map { it.toModel() } }
     }
 
     override suspend fun deleteThumbnails() {
-        dao.deleteThumbnails()
+        dao.deleteAllCacheKey()
     }
 
     override suspend fun deleteHistory(bookshelfModelId: BookshelfModelId, list: List<String>) {

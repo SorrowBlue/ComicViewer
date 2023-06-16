@@ -31,7 +31,7 @@ internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
     override suspend fun getCacheKeyList(
         favoriteModelId: FavoriteModelId, limit: Int
     ): List<String> {
-        return favoriteFileDao.selectCacheKey(favoriteModelId.value, limit)
+        return favoriteFileDao.findCacheKey(favoriteModelId.value, limit)
     }
 
     override suspend fun add(favoriteFileModel: FavoriteFileModel) {
@@ -44,101 +44,23 @@ internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
 
     override fun flowNextFavoriteFile(favoriteFileModel: FavoriteFileModel, sortEntity: SortEntity): Flow<FileModel?> {
         val favoriteFile = FavoriteFile.fromModel(favoriteFileModel)
-        return when (sortEntity) {
-            is SortEntity.DATE ->
-                if (sortEntity.isAsc) {
-                    favoriteFileDao.flowNextOrderLastModifiedAsc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                } else {
-                    favoriteFileDao.flowNextOrderLastModifiedDesc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                }
-
-            is SortEntity.NAME ->
-                if (sortEntity.isAsc) {
-                    favoriteFileDao.flowNextOrderNameAsc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                } else {
-                    favoriteFileDao.flowNextOrderNameDesc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                }
-
-            is SortEntity.SIZE ->
-                if (sortEntity.isAsc) {
-                    favoriteFileDao.flowNextOrderSizeAsc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                } else {
-                    favoriteFileDao.flowNextOrderSizeDesc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                }
-        }.map { it?.toModel() }
+        return favoriteFileDao.flowPrevNext(
+            favoriteFile.favoriteId,
+            favoriteFile.serverId,
+            favoriteFile.filePath,
+            true,
+            sortEntity
+        ).map { it?.toModel() }
     }
 
     override fun flowPrevFavoriteFile(favoriteFileModel: FavoriteFileModel, sortEntity: SortEntity): Flow<FileModel?> {
         val favoriteFile = FavoriteFile.fromModel(favoriteFileModel)
-        return when (sortEntity) {
-            is SortEntity.DATE ->
-                if (!sortEntity.isAsc) {
-                    favoriteFileDao.flowNextOrderLastModifiedAsc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                } else {
-                    favoriteFileDao.flowNextOrderLastModifiedDesc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                }
-
-            is SortEntity.NAME ->
-                if (!sortEntity.isAsc) {
-                    favoriteFileDao.flowNextOrderNameAsc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                } else {
-                    favoriteFileDao.flowNextOrderNameDesc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                }
-
-            is SortEntity.SIZE ->
-                if (!sortEntity.isAsc) {
-                    favoriteFileDao.flowNextOrderSizeAsc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                } else {
-                    favoriteFileDao.flowNextOrderSizeDesc(
-                        favoriteFile.favoriteId,
-                        favoriteFile.serverId,
-                        favoriteFile.filePath
-                    )
-                }
-        }.map { it?.toModel() }
+        return favoriteFileDao.flowPrevNext(
+            favoriteFile.favoriteId,
+            favoriteFile.serverId,
+            favoriteFile.filePath,
+            false,
+            sortEntity
+        ).map { it?.toModel() }
     }
 }
