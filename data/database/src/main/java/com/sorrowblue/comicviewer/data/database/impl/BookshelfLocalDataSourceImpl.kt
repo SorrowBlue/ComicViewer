@@ -36,8 +36,8 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
         return dao.delete(Bookshelf.fromModel(bookshelfModel))
     }
 
-    override fun get(bookshelfModelId: BookshelfModelId): Flow<BookshelfModel?> {
-        return dao.selectById(bookshelfModelId.value).map { it?.toModel(0) }
+    override fun flow(bookshelfModelId: BookshelfModelId): Flow<BookshelfModel?> {
+        return dao.flow(bookshelfModelId.value).map { it?.toModel(0) }
     }
 
     override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolderModel>> {

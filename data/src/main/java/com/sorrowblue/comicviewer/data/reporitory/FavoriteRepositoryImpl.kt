@@ -4,16 +4,14 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModelId
-import com.sorrowblue.comicviewer.data.datasource.FavoriteBookLocalDataSource
+import com.sorrowblue.comicviewer.data.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.data.toFavorite
 import com.sorrowblue.comicviewer.data.toFavoriteBookModel
 import com.sorrowblue.comicviewer.data.toFile
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
@@ -22,27 +20,47 @@ import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.repository.FavoriteFileRepository
 import com.sorrowblue.comicviewer.domain.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
+import com.sorrowblue.comicviewer.framework.Result
+import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 internal class FavoriteFileRepositoryImpl @Inject constructor(
-    private val favoriteBookLocalDataSource: FavoriteBookLocalDataSource,
+    private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
     private val settingsCommonRepository: SettingsCommonRepository
 ) : FavoriteFileRepository {
+
+    override fun getNextRelFile(
+        favoriteFile: FavoriteFile,
+        isNext: Boolean
+    ): Flow<Result<File, Unit>> {
+        val sortEntity = runBlocking { settingsCommonRepository.folderDisplaySettings.first() }.sortType.let(SortEntity::from         )
+        return kotlin.runCatching {
+            if (isNext) {
+                favoriteFileLocalDataSource.flowNextFavoriteFile(favoriteFile.toFavoriteBookModel(), sortEntity)
+            } else {
+                favoriteFileLocalDataSource.flowPrevFavoriteFile(favoriteFile.toFavoriteBookModel(), sortEntity)
+            }
+        }.fold({ modelFlow ->
+            modelFlow.map { if (it != null) Result.Success(it.toFile()) else Result.Error(Unit) }
+        }, {
+            flowOf(Result.Exception(Unknown(it)))
+        })
+    }
 
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,
         favoriteId: FavoriteId
     ): Flow<PagingData<File>> {
-        return favoriteBookLocalDataSource.pagingSource(
-            pagingConfig,
-            FavoriteModelId(favoriteId.value)
+        return favoriteFileLocalDataSource.pagingSource(
+            pagingConfig, FavoriteModelId(favoriteId.value)
         ) {
             val settings = runBlocking { settingsCommonRepository.folderDisplaySettings.first() }
             when (settings.sort) {
@@ -53,6 +71,18 @@ internal class FavoriteFileRepositoryImpl @Inject constructor(
         }.map { it.map(FileModel::toFile) }
     }
 
+    override suspend fun add(favoriteFile: FavoriteFile) {
+        return withContext(Dispatchers.IO) {
+            favoriteFileLocalDataSource.add(favoriteFile.toFavoriteBookModel())
+        }
+    }
+
+    override suspend fun delete(favoriteFile: FavoriteFile) {
+        return withContext(Dispatchers.IO) {
+            favoriteFileLocalDataSource.delete(favoriteFile.toFavoriteBookModel())
+        }
+    }
+
 }
 
 internal class FavoriteRepositoryImpl @Inject constructor(
@@ -60,7 +90,7 @@ internal class FavoriteRepositoryImpl @Inject constructor(
 ) : FavoriteRepository {
 
     override fun get(favoriteId: FavoriteId): Flow<Favorite> {
-        return favoriteLocalDataSource.get(FavoriteModelId(favoriteId.value))
+        return favoriteLocalDataSource.flow(FavoriteModelId(favoriteId.value))
             .map(FavoriteModel::toFavorite).flowOn(Dispatchers.IO)
     }
 
@@ -68,9 +98,7 @@ internal class FavoriteRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             favoriteLocalDataSource.update(
                 FavoriteModel(
-                    FavoriteModelId(favorite.id.value),
-                    favorite.name,
-                    favorite.count
+                    FavoriteModelId(favorite.id.value), favorite.name, favorite.count
                 )
             ).toFavorite()
         }
@@ -82,30 +110,8 @@ internal class FavoriteRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFavoriteList(
-        bookshelfId: BookshelfId,
-        filePath: String
-    ): List<Favorite> {
-        return withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.getFavoriteList(BookshelfModelId(bookshelfId.value), filePath)
-                .map { it.toFavorite() }
-        }
-    }
-
-    override suspend fun add(favoriteFile: FavoriteFile) {
-        return withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.add(favoriteFile.toFavoriteBookModel())
-        }
-    }
-
-    override suspend fun remove(favoriteFile: FavoriteFile) {
-        return withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.remove(favoriteFile.toFavoriteBookModel())
-        }
-    }
-
     override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<Favorite>> {
-        return favoriteLocalDataSource.pagingSourceCount(pagingConfig).map { pagingData ->
+        return favoriteLocalDataSource.pagingDataFlow(pagingConfig).map { pagingData ->
             pagingData.map {
                 Favorite(FavoriteId(it.id.value), it.name, it.count)
             }

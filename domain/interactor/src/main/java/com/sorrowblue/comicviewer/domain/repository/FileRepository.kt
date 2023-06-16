@@ -48,7 +48,6 @@ interface FileRepository {
         isNext: Boolean
     ): Flow<Result<File, Unit>>
 
-    suspend fun list(bookshelfId: BookshelfId): List<File>
     suspend fun getFolder(bookshelf: Bookshelf, path: String): Result<Folder, FileRepositoryError>
 
     fun pagingHistoryBookFlow(pagingConfig: PagingConfig): Flow<PagingData<File>>

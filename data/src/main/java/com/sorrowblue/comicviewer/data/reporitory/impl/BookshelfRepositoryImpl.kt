@@ -81,7 +81,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
 
     override fun get(bookshelfId: BookshelfId): Flow<Result<Bookshelf, LibraryStatus>> {
         return kotlin.runCatching {
-            bookshelfLocalDataSource.get(BookshelfModelId(bookshelfId.value)).flowOn(Dispatchers.IO)
+            bookshelfLocalDataSource.flow(BookshelfModelId(bookshelfId.value)).flowOn(Dispatchers.IO)
         }.fold({ modelFlow ->
             modelFlow.map {
                 if (it != null) {

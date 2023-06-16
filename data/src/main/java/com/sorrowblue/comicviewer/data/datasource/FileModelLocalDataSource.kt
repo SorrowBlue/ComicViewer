@@ -48,11 +48,10 @@ interface FileModelLocalDataSource {
         sortType: () -> SortEntity
     ): Flow<PagingData<FileModel>>
 
-    suspend fun findBy(bookshelfModelId: BookshelfModelId): List<FileModel>
     fun selectBy(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
     suspend fun findBy(bookshelfModelId: BookshelfModelId, path: String): FileModel?
-    fun nextFileModel(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
-    fun prevFileModel(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
+    fun nextFileModel(bookshelfModelId: BookshelfModelId, path: String, sortEntity: SortEntity): Flow<FileModel?>
+    fun prevFileModel(bookshelfModelId: BookshelfModelId, path: String, sortEntity: SortEntity): Flow<FileModel?>
     suspend fun getCacheKeys(
         bookshelfModelId: BookshelfModelId,
         parent: String,

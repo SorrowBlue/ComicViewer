@@ -3,13 +3,12 @@ package com.sorrowblue.comicviewer.data.database.dao
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RawQuery
-import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Update
 import androidx.room.Upsert
+import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
@@ -26,76 +25,109 @@ internal interface FileDao {
     @Upsert
     suspend fun upsert(file: File): Long
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(file: File): Long
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(file: List<File>): List<Long>
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(file: File): Int
+    @Upsert
+    suspend fun upsertAll(file: List<File>): List<Long>
 
     @Update(entity = File::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(updateFileHistory: UpdateFileHistory): Int
+    suspend fun updateHistory(updateFileHistory: UpdateFileHistory): Int
 
     @Update(entity = File::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(updateFileInfo: UpdateFileInfo)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateAll(file: List<File>)
-
-    @Delete
-    suspend fun deleteAll(list: List<File>)
+    suspend fun updateInfo(updateFileInfo: UpdateFileInfo)
 
     @Update(entity = File::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateAllSimple(list: List<SimpleFile>)
 
+    @Delete
+    suspend fun deleteAll(list: List<File>)
+
     @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND path = :path")
-    suspend fun selectBy(bookshelfId: Int, path: String): File?
+    suspend fun find(bookshelfId: Int, path: String): File?
 
     @Query("SELECT * FROM file WHERE bookshelf_id= :bookshelfId AND path = :path")
-    fun selectBy2(bookshelfId: Int, path: String): Flow<File?>
-
-    @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId")
-    suspend fun selectBy(bookshelfId: Int): List<File>
+    fun flow(bookshelfId: Int, path: String): Flow<File?>
 
     @Query("SELECT * FROM file WHERE bookshelf_id = :id AND parent = :parent AND path NOT IN (:paths)")
-    suspend fun selectByNotPaths(id: Int, parent: String, paths: List<String>): List<File>
+    suspend fun findByNotPaths(id: Int, parent: String, paths: List<String>): List<File>
+
+    @Deprecated("使用禁止")
+    @RawQuery(observedEntities = [File::class])
+    fun flowPrevNextFile(supportSQLiteQuery: SupportSQLiteQuery): Flow<File?>
+
+    fun flowPrevNextFile(bookshelfId: Int, path: String, isNext: Boolean, sortEntity: SortEntity): Flow<File?> {
+        val column = when (sortEntity) {
+            is SortEntity.NAME -> "sort_index"
+            is SortEntity.DATE -> "last_modified"
+            is SortEntity.SIZE -> "size"
+        }
+        val comparison = if (isNext && sortEntity.isAsc) ">=" else "<="
+        val order = if (isNext && sortEntity.isAsc) "ASC" else "DESC"
+        val sqLiteQuery = object : SupportSQLiteQuery {
+            override val argCount: Int
+                get() = 2
+            override val sql = """
+                SELECT
+                  *
+                FROM
+                  file
+                  , (
+                    SELECT
+                      bookshelf_id c_bookshelf_id, parent c_parent, path c_path, $column c_$column
+                    FROM
+                      file
+                    WHERE
+                      bookshelf_id = :bookshelfId AND path = :path
+                  )
+                WHERE
+                  bookshelf_id = c_bookshelf_id
+                  AND parent = c_parent
+                  AND file_type != 'FOLDER'
+                  AND path != c_path
+                  AND $column $comparison c_$column
+                ORDER BY
+                  $column $order
+                LIMIT 1
+                ;
+            """.trimIndent()
+
+            override fun bindTo(statement: SupportSQLiteProgram) {
+                statement.bindLong(1, bookshelfId.toLong())
+                statement.bindString(2, path)
+            }
+        }
+        @Suppress("DEPRECATION")
+        return flowPrevNextFile(sqLiteQuery)
+    }
 
     @Deprecated("使用禁止")
     @RawQuery(observedEntities = [File::class])
     fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, File>
 
-    @RewriteQueriesToDropUnusedColumns
-    @Query("SELECT * FROM file, (SELECT sort_index AS current_sort_index, parent current_parent FROM file WHERE bookshelf_id = :bookshelfId AND path = :path) WHERE bookshelf_id = :bookshelfId AND parent = current_parent AND file_type != 'FOLDER' AND sort_index > current_sort_index ORDER BY sort_index LIMIT 1")
-    fun selectNextFile(bookshelfId: Int, path: String): Flow<File?>
-
-    @RewriteQueriesToDropUnusedColumns
-    @Query("SELECT * FROM file, (SELECT sort_index si, parent pa FROM file WHERE bookshelf_id = :bookshelfId AND path = :path) WHERE bookshelf_id = :bookshelfId AND parent = pa AND file_type != 'FOLDER' AND sort_index < si ORDER BY sort_index DESC LIMIT 1")
-    fun selectPrevFile(bookshelfId: Int, path: String): Flow<File?>
-
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit")
-    suspend fun selectCacheKeysSortIndex(bookshelfId: Int, parent: String, limit: Int): List<String>
+    suspend fun findCacheKeyOrderSortIndex(
+        bookshelfId: Int,
+        parent: String,
+        limit: Int
+    ): List<String>
 
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit")
-    suspend fun selectCacheKeysSortLastModified(
+    suspend fun findCacheKeyOrderLastModified(
         bookshelfId: Int,
         parent: String,
         limit: Int
     ): List<String>
 
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit")
-    suspend fun selectCacheKeysSortLastRead(
+    suspend fun findCacheKeysOrderLastRead(
         bookshelfId: Int,
         parent: String,
         limit: Int
     ): List<String>
 
     @Query("UPDATE file SET cache_key = '' WHERE cache_key = :cacheKey")
-    suspend fun removeCacheKey(cacheKey: String)
+    suspend fun deleteCacheKeyBy(cacheKey: String)
 
     @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND parent = ''")
-    suspend fun selectRootBy(bookshelfId: Int): File?
+    suspend fun findRootFile(bookshelfId: Int): File?
 
     fun pagingSource(
         bookshelfId: Int,
@@ -144,10 +176,10 @@ internal interface FileDao {
     }
 
     @Query("SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC")
-    fun pagingHistoryBookSource(): PagingSource<Int, File>
+    fun pagingSourceHistory(): PagingSource<Int, File>
 
     @Query("UPDATE file SET cache_key = '' WHERE cache_key != ''")
-    suspend fun deleteThumbnails()
+    suspend fun deleteAllCacheKey()
 
     @Query("UPDATE file set last_read = 0, last_read_page = 0  WHERE bookshelf_id = :bookshelfId AND path IN (:list)")
     suspend fun deleteHistory(bookshelfId: Int, list: Array<String>)

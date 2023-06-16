@@ -13,6 +13,7 @@ import coil.size.Size
 import coil.transform.Transformation
 import com.sorrowblue.comicviewer.book.databinding.BookItemBinding
 import com.sorrowblue.comicviewer.book.databinding.BookItemNextBinding
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.request.BookPageRequest
 import com.sorrowblue.comicviewer.framework.ui.recyclerview.ViewBindingViewHolder
@@ -31,6 +32,8 @@ internal class BookAdapter(
     var prevBook by Delegates.observable<Book?>(null) { _, _, _ ->
         notifyItemChanged(0)
     }
+
+    var favoriteId = FavoriteId(-1)
 
     var nextBook by Delegates.observable<Book?>(null) { _, _, _ ->
         notifyItemChanged(itemCount - 1)
@@ -85,7 +88,7 @@ internal class BookAdapter(
                 binding.bookNext.text = if (isNext) "次の本" else "前の本"
                 binding.bookNext.isVisible = true
                 binding.bookNext.setOnClickListener {
-                    val bundle = BookFragmentArgs(book).toBundle()
+                    val bundle = BookFragmentArgs(book, favoriteId = favoriteId).toBundle()
                     it.findNavController().navigate(
                         R.id.book_navigation,
                         bundle,

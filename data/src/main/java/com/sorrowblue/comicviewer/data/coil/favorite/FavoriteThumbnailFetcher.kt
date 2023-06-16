@@ -16,7 +16,7 @@ import coil.request.Options
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
-import com.sorrowblue.comicviewer.data.datasource.FavoriteBookLocalDataSource
+import com.sorrowblue.comicviewer.data.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.di.ThumbnailDiskCache
 import java.io.IOException
@@ -32,7 +32,7 @@ internal class FavoriteThumbnailFetcher(
     private val data: FavoriteModel,
     options: Options,
     diskCache: dagger.Lazy<DiskCache?>,
-    private val favoriteBookLocalDataSource: FavoriteBookLocalDataSource,
+    private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
 ) : FileModelFetcher(options, diskCache) {
 
@@ -50,7 +50,7 @@ internal class FavoriteThumbnailFetcher(
                     )
                 }
                 // サムネイル候補キャッシュを取得
-                val thumbnails = favoriteBookLocalDataSource.getCacheKeyList(data.id, size)
+                val thumbnails = favoriteFileLocalDataSource.getCacheKeyList(data.id, size)
                 // 候補が適格である場合、キャッシュから候補を返します。
                 if (snapshot.toFavoriteThumbnailMetadata() == FavoriteThumbnailMetadata(
                         data.id.value, thumbnails
@@ -95,7 +95,7 @@ internal class FavoriteThumbnailFetcher(
     }
 
     private suspend fun cacheList(size: Int): List<Pair<String, DiskCache.Snapshot>> {
-        val cacheKeyList = favoriteBookLocalDataSource.getCacheKeyList(data.id, size)
+        val cacheKeyList = favoriteFileLocalDataSource.getCacheKeyList(data.id, size)
         val notEnough = cacheKeyList.size < size
         val list = cacheKeyList.mapNotNull { cacheKey ->
             diskCache?.openSnapshot(cacheKey)?.let {
@@ -192,7 +192,7 @@ internal class FavoriteThumbnailFetcher(
 
     class Factory @Inject constructor(
         @ThumbnailDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
-        private val favoriteBookLocalDataSource: FavoriteBookLocalDataSource,
+        private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
         private val fileModelLocalDataSource: FileModelLocalDataSource
     ) : Fetcher.Factory<FavoriteModel> {
 
@@ -201,7 +201,7 @@ internal class FavoriteThumbnailFetcher(
                 data,
                 options,
                 diskCache,
-                favoriteBookLocalDataSource,
+                favoriteFileLocalDataSource,
                 fileModelLocalDataSource
             )
     }

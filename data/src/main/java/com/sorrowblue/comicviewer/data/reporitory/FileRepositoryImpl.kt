@@ -126,11 +126,6 @@ internal class FileRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun list(bookshelfId: BookshelfId): List<File> {
-        return fileModelLocalDataSource.findBy(BookshelfModelId(bookshelfId.value))
-            .map { it.toFile() }
-    }
-
     override suspend fun scan(folder: Folder, scanType: ScanType): String {
         val folderSettings = settingsCommonRepository.folderSettings.first()
         return fileScanService.enqueue(
@@ -186,11 +181,12 @@ internal class FileRepositoryImpl @Inject constructor(
         path: String,
         isNext: Boolean
     ): Flow<Result<File, Unit>> {
+        val sortEntity = runBlocking { settingsCommonRepository.folderDisplaySettings.first() }.sortType.let(SortEntity.Companion::from)
         return kotlin.runCatching {
             if (isNext) {
-                fileModelLocalDataSource.nextFileModel(BookshelfModelId(bookshelfId.value), path)
+                fileModelLocalDataSource.nextFileModel(BookshelfModelId(bookshelfId.value), path, sortEntity)
             } else {
-                fileModelLocalDataSource.prevFileModel(BookshelfModelId(bookshelfId.value), path)
+                fileModelLocalDataSource.prevFileModel(BookshelfModelId(bookshelfId.value), path, sortEntity)
             }
         }.fold({ modelFlow ->
             modelFlow.map { if (it != null) Result.Success(it.toFile()) else Result.Error(Unit) }
@@ -205,7 +201,7 @@ internal class FileRepositoryImpl @Inject constructor(
     }
 }
 
-private fun SortEntity.Companion.from(sortType: SortType): SortEntity {
+internal fun SortEntity.Companion.from(sortType: SortType): SortEntity {
     return when (sortType) {
         is SortType.DATE -> SortEntity.DATE(sortType.isAsc)
         is SortType.NAME -> SortEntity.NAME(sortType.isAsc)

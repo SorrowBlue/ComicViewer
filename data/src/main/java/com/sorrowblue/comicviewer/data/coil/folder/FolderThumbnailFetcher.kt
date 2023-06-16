@@ -85,7 +85,7 @@ internal class FolderThumbnailFetcher(
                 if (thumbnails.isEmpty()) {
                     // キャッシュがない場合、取得する。
                     val bookshelfModel =
-                        bookshelfLocalDataSource.get(folder.bookshelfModelId).first()!!
+                        bookshelfLocalDataSource.flow(folder.bookshelfModelId).first()!!
                     val supportExtensions =
                         settingsCommonRepository.folderSettings.first().supportExtension.map(
                             SupportExtension::extension
