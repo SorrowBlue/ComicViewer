@@ -15,7 +15,6 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
@@ -100,7 +99,6 @@ abstract class PagingFragment<T : Any> : FrameworkFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (recyclerView.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         onCreateAdapter(adapter)
     }
 

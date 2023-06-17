@@ -14,10 +14,12 @@ import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import com.sorrowblue.comicviewer.data.database.entity.File
+import com.sorrowblue.comicviewer.data.database.entity.FileWithCount
 import com.sorrowblue.comicviewer.data.database.entity.SimpleFile
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistory
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfo
 import kotlinx.coroutines.flow.Flow
+import logcat.logcat
 
 @Dao
 internal interface FileDao {
@@ -100,7 +102,7 @@ internal interface FileDao {
 
     @Deprecated("使用禁止")
     @RawQuery(observedEntities = [File::class])
-    fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, File>
+    fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileWithCount>
 
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit")
     suspend fun findCacheKeyOrderSortIndex(
@@ -133,9 +135,14 @@ internal interface FileDao {
         bookshelfId: Int,
         searchConditionEntity: SearchConditionEntity,
         sortEntity: SortEntity
-    ): PagingSource<Int, File> {
+    ): PagingSource<Int, FileWithCount> {
         val query = SupportSQLiteQueryBuilder.builder("file").apply {
-            columns(arrayOf("*"))
+            columns(arrayOf("*", """
+                CASE
+                  WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
+                  else 0
+                END count
+            """.trimIndent()))
             var selectionStr = "bookshelf_id = :bookshelfId"
             val bindArgs = mutableListOf<Any>(bookshelfId)
 
@@ -172,6 +179,7 @@ internal interface FileDao {
                 is SortEntity.SIZE -> if (sortEntity.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
             }.let(::orderBy)
         }.create()
+        logcat { query.sql }
         @Suppress("DEPRECATION") return pagingSource(query)
     }
 

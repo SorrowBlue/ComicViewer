@@ -12,25 +12,45 @@ import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import kotlinx.coroutines.flow.Flow
 
 interface FileModelLocalDataSource {
-    suspend fun register(fileModel: FileModel)
 
-    suspend fun update(
+    /**
+     * Add files. If it already exists, update it.
+     *
+     * @param fileModel
+     */
+    suspend fun addUpdate(fileModel: FileModel)
+
+    /**
+     * Update reading history.
+     *
+     * @param path
+     * @param bookshelfModelId
+     * @param lastReadPage Last page read
+     * @param lastReading Last read time
+     */
+    suspend fun updateHistory(
         path: String,
         bookshelfModelId: BookshelfModelId,
         lastReadPage: Int,
-        lastRead: Long
+        lastReading: Long
     )
 
-    suspend fun update(
+    /**
+     * Update additional information in the file.
+     *
+     * @param path
+     * @param bookshelfModelId
+     * @param cacheKey
+     * @param totalPage
+     */
+    suspend fun updateAdditionalInfo(
         path: String,
         bookshelfModelId: BookshelfModelId,
         cacheKey: String,
         totalPage: Int
     )
 
-    suspend fun updateAll(list: List<SimpleFileModel>)
-
-    suspend fun <R> withTransaction(block: suspend () -> R): R
+    suspend fun updateSimpleAll(list: List<SimpleFileModel>)
 
     suspend fun selectByNotPaths(
         bookshelfModelId: BookshelfModelId,
@@ -38,9 +58,22 @@ interface FileModelLocalDataSource {
         list: List<String>
     ): List<FileModel>
 
+    /**
+     * Delete all files.
+     *
+     * @param list
+     */
     suspend fun deleteAll(list: List<FileModel>)
+
+    /**
+     * Returns true if the file exists.
+     *
+     * @param bookshelfModelId
+     * @param path
+     * @return true if the file exists
+     */
     suspend fun exists(bookshelfModelId: BookshelfModelId, path: String): Boolean
-    suspend fun registerAll(list: List<FileModel>)
+
     fun pagingSource(
         pagingConfig: PagingConfig,
         bookshelfModel: BookshelfModel,
@@ -48,10 +81,20 @@ interface FileModelLocalDataSource {
         sortType: () -> SortEntity
     ): Flow<PagingData<FileModel>>
 
-    fun selectBy(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
+    fun flow(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
     suspend fun findBy(bookshelfModelId: BookshelfModelId, path: String): FileModel?
-    fun nextFileModel(bookshelfModelId: BookshelfModelId, path: String, sortEntity: SortEntity): Flow<FileModel?>
-    fun prevFileModel(bookshelfModelId: BookshelfModelId, path: String, sortEntity: SortEntity): Flow<FileModel?>
+    fun nextFileModel(
+        bookshelfModelId: BookshelfModelId,
+        path: String,
+        sortEntity: SortEntity
+    ): Flow<FileModel?>
+
+    fun prevFileModel(
+        bookshelfModelId: BookshelfModelId,
+        path: String,
+        sortEntity: SortEntity
+    ): Flow<FileModel?>
+
     suspend fun getCacheKeys(
         bookshelfModelId: BookshelfModelId,
         parent: String,
@@ -79,4 +122,5 @@ interface FileModelLocalDataSource {
 
     suspend fun deleteThumbnails()
     suspend fun deleteHistory(bookshelfModelId: BookshelfModelId, list: List<String>)
+    suspend fun updateHistory(fileModel: FileModel, files: List<FileModel>)
 }

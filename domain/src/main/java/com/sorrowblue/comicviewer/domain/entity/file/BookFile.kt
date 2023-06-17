@@ -14,4 +14,13 @@ data class BookFile(
     override val totalPageCount: Int,
     override val lastReadTime: Long,
     override val params: Map<String, String?> = emptyMap()
-) : Book
+) : Book {
+
+    override fun areContentsTheSame(file: File): Boolean {
+        return if (file is BookFile) {
+            bookshelfId == file.bookshelfId && path == file.path && totalPageCount == file.totalPageCount && lastPageRead == file.lastPageRead && lastReadTime == file.lastReadTime
+        } else {
+            false
+        }
+    }
+}

@@ -73,7 +73,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="?attr/scrimBackground"
                 android:padding="2dp"
-                android:text="999 files"
+                android:text="@{file instanceof Folder ? ((Folder)file).count + `files` : `0 files`}"
                 app:isVisible="@{file instanceof Folder}"
                 android:textAppearance="?attr/textAppearanceLabelSmall"
                 android:textColor="?attr/colorOnSurfaceInverse"

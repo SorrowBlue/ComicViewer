@@ -9,5 +9,15 @@ data class Folder(
     override val path: String,
     override val size: Long,
     override val lastModifier: Long,
-    override val params: Map<String, String?> = emptyMap()
-) : File
+    override val params: Map<String, String?> = emptyMap(),
+    val count: Int = 0
+) : File {
+
+    override fun areContentsTheSame(file: File): Boolean {
+        return if (file is Folder) {
+            bookshelfId == file.bookshelfId && path == file.path
+        } else {
+            false
+        }
+    }
+}

@@ -245,7 +245,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 cacheKey = "",
                 totalPageCount = 0,
                 lastReadPage = 0,
-                lastRead = 0
+                lastReading = 0
             )
         }
         return if (isDirectory) {
@@ -256,7 +256,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 parent = Path(url.path).parent?.toString().orEmpty().removeSuffix("/") + "/",
                 size = length(),
                 lastModifier = lastModified,
-                sortIndex = 0
+                sortIndex = 0,
             )
         } else {
             FileModel.File(
@@ -270,7 +270,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 cacheKey = "",
                 totalPageCount = 0,
                 lastReadPage = 0,
-                lastRead = 0
+                lastReading = 0
             )
         }
     }

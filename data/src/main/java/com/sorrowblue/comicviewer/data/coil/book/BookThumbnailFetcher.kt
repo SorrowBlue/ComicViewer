@@ -139,7 +139,7 @@ internal class BookThumbnailFetcher(
                 bitmap.compress(COMPRESS_FORMAT, 75, outputStream())
             }
             // DISKキャッシュキーとページ数を更新する。
-            fileModelLocalDataSource.update(
+            fileModelLocalDataSource.updateAdditionalInfo(
                 book.path, book.bookshelfModelId, diskCacheKey, fileReader.pageCount()
             )
             return editor.commitAndOpenSnapshot()

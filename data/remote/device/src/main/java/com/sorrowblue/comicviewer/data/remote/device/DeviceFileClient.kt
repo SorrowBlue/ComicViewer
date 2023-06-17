@@ -158,7 +158,7 @@ internal class DeviceFileClient @AssistedInject constructor(
                 cacheKey = "",
                 totalPageCount = 0,
                 lastReadPage = 0,
-                lastRead = 0
+                lastReading = 0
             )
         } else if (isFile) {
             FileModel.File(
@@ -172,7 +172,7 @@ internal class DeviceFileClient @AssistedInject constructor(
                 cacheKey = "",
                 totalPageCount = 0,
                 lastReadPage = 0,
-                lastRead = 0
+                lastReading = 0
             )
         } else {
             FileModel.Folder(

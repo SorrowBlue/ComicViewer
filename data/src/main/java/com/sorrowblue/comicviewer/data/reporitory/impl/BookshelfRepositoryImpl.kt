@@ -35,7 +35,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import logcat.logcat
 
 internal class BookshelfRepositoryImpl @Inject constructor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
@@ -69,7 +68,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
             is FileModel.Folder -> fileModel.copy(parent = "")
             is FileModel.ImageFolder -> fileModel.copy(parent = "")
         }.let {
-            fileModelLocalDataSource.register(it)
+            fileModelLocalDataSource.addUpdate(it)
         }
         return Result.Success(serverModel.toServer())
     }
@@ -123,8 +122,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             val r = bookshelfLocalDataSource.create(bookshelf.toServerModel())
             val model = folder.copy(bookshelfId = r.id.toServerId(), parent = "").toFileModel()
-            logcat { "model=${model}" }
-            fileModelLocalDataSource.register(model)
+            fileModelLocalDataSource.addUpdate(model)
             Result.Success(r.toServer())
         }
     }
