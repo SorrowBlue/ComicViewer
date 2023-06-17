@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.util.SortUtil
 import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
-import com.sorrowblue.comicviewer.data.database.entity.File
+import com.sorrowblue.comicviewer.data.database.entity.FileWithCount
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.di.IoDispatcher
@@ -29,26 +29,27 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
     @Assisted private val bookshelfModel: BookshelfModel,
     @Assisted private val fileModel: FileModel,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-    private val fileModelLocalDataSource: FileModelLocalDataSource,
+    private val fileModelLocalDataSource: FileModelLocalDataSource
 ) : FileModelRemoteMediator() {
 
     @AssistedFactory
     interface Factory : FileModelRemoteMediator.Factory {
+
         override fun create(
             bookshelfModel: BookshelfModel,
-            fileModel: FileModel,
+            fileModel: FileModel
         ): FileModelRemoteMediatorImpl
     }
 
     private val folderSettings = settingsCommonRepository.folderSettings
     private val remoteDataSource = remoteDataSourceFactory.create(bookshelfModel)
 
-    override suspend fun initialize(): InitializeAction {
-        return if (folderSettings.first().isAutoRefresh) InitializeAction.LAUNCH_INITIAL_REFRESH else InitializeAction.SKIP_INITIAL_REFRESH
-    }
+    override suspend fun initialize() =
+        if (folderSettings.first().isAutoRefresh) InitializeAction.LAUNCH_INITIAL_REFRESH else InitializeAction.SKIP_INITIAL_REFRESH
 
     override suspend fun load(
-        loadType: LoadType, state: PagingState<Int, File>,
+        loadType: LoadType,
+        state: PagingState<Int, FileWithCount>
     ): MediatorResult {
         kotlin.runCatching {
             withContext(dispatcher) {
@@ -61,30 +62,7 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
                     ) {
                         SortUtil.filter(it, supportExtensions)
                     })
-                fileModelLocalDataSource.withTransaction {
-
-                    // リモートになくてDBにある項目：削除対象
-                    val deleteFileData = fileModelLocalDataSource.selectByNotPaths(
-                        fileModel.bookshelfModelId,
-                        fileModel.path,
-                        files.map(FileModel::path)
-                    )
-                    // DBから削除
-                    fileModelLocalDataSource.deleteAll(deleteFileData)
-
-                    // existsFiles DBにある項目：更新対象
-                    // noExistsFiles DBにない項目：挿入対象
-                    val (existsFiles, noExistsFiles) = files.partition {
-                        fileModelLocalDataSource.exists(it.bookshelfModelId, it.path)
-                    }
-
-                    // DBにない項目を挿入
-                    fileModelLocalDataSource.registerAll(noExistsFiles)
-
-                    // DBにファイルを更新
-                    // ファイルサイズ、更新日時、タイプ ソート、インデックス
-                    fileModelLocalDataSource.updateAll(existsFiles.map(FileModel::simple))
-                }
+                fileModelLocalDataSource.updateHistory(fileModel, files)
             }
         }.fold({
             return MediatorResult.Success(endOfPaginationReached = true)

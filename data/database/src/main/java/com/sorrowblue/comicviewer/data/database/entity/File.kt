@@ -8,6 +8,64 @@ import androidx.room.Index
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 
+data class FileWithCount(
+    @ColumnInfo(File.PATH) val path: String,
+    @ColumnInfo(File.BOOKSHELF_ID) val bookshelfId: Int,
+    val name: String,
+    val parent: String,
+    val size: Long,
+    @ColumnInfo(name = "last_modified") val lastModified: Long,
+    @ColumnInfo(name = "file_type") val fileType: File.Type,
+    @ColumnInfo(name = "file_type_order") val fileTypeOrder: Int = fileType.order,
+    @ColumnInfo(name = "sort_index") val sortIndex: Int,
+    @Embedded val info: FileInfo,
+    @Embedded val history: FileHistory,
+    val count: Int
+) {
+
+    fun toModel(): FileModel {
+        return when (fileType) {
+            File.Type.FILE -> FileModel.File(
+                path = path,
+                bookshelfModelId = BookshelfModelId(bookshelfId),
+                parent = parent,
+                name = name,
+                size = size,
+                lastModifier = lastModified,
+                sortIndex = sortIndex,
+                cacheKey = info.cacheKey,
+                totalPageCount = info.totalPageCount,
+                lastReadPage = history.lastReadPage,
+                lastReading = history.lastReading
+            )
+
+            File.Type.FOLDER -> FileModel.Folder(
+                path = path,
+                bookshelfModelId = BookshelfModelId(bookshelfId),
+                name = name,
+                parent = parent,
+                size = size,
+                lastModifier = lastModified,
+                sortIndex = sortIndex,
+                count = count
+            )
+
+            File.Type.IMAGE_FOLDER -> FileModel.ImageFolder(
+                path = path,
+                bookshelfModelId = BookshelfModelId(bookshelfId),
+                name = name,
+                parent = parent,
+                size = size,
+                lastModifier = lastModified,
+                sortIndex = sortIndex,
+                cacheKey = info.cacheKey,
+                totalPageCount = info.totalPageCount,
+                lastReadPage = history.lastReadPage,
+                lastReading = history.lastReading,
+            )
+        }
+    }
+}
 
 @Entity(
     tableName = "file",
@@ -50,7 +108,7 @@ data class File(
                     fileType = Type.FILE,
                     sortIndex = model.sortIndex,
                     info = FileInfo(model.cacheKey, model.totalPageCount),
-                    history = FileHistory(model.lastReadPage, model.lastRead)
+                    history = FileHistory(model.lastReadPage, model.lastReading)
                 )
 
                 is FileModel.Folder -> File(
@@ -76,7 +134,7 @@ data class File(
                     fileType = Type.IMAGE_FOLDER,
                     sortIndex = model.sortIndex,
                     info = FileInfo(model.cacheKey, model.totalPageCount),
-                    history = FileHistory(model.lastReadPage, model.lastRead)
+                    history = FileHistory(model.lastReadPage, model.lastReading)
                 )
             }
 
@@ -96,7 +154,7 @@ data class File(
                 cacheKey = info.cacheKey,
                 totalPageCount = info.totalPageCount,
                 lastReadPage = history.lastReadPage,
-                lastRead = history.lastRead
+                lastReading = history.lastReading
             )
 
             Type.FOLDER -> FileModel.Folder(
@@ -120,7 +178,7 @@ data class File(
                 cacheKey = info.cacheKey,
                 totalPageCount = info.totalPageCount,
                 lastReadPage = history.lastReadPage,
-                lastRead = history.lastRead,
+                lastReading = history.lastReading,
             )
         }
     }

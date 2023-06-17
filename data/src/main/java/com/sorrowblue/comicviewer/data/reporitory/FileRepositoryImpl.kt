@@ -67,7 +67,7 @@ internal class FileRepositoryImpl @Inject constructor(
 
     override fun getFile(bookshelfId: BookshelfId, path: String): Flow<Result<File, Unit>> {
         return kotlin.runCatching {
-            fileModelLocalDataSource.selectBy(BookshelfModelId(bookshelfId.value), path)
+            fileModelLocalDataSource.flow(BookshelfModelId(bookshelfId.value), path)
         }.fold({ fileModelFlow ->
             fileModelFlow.map {
                 if (it != null) Result.Success(it.toFile()) else Result.Error(Unit)
@@ -83,7 +83,7 @@ internal class FileRepositoryImpl @Inject constructor(
         lastReadPage: Int,
         lastReadTime: Long
     ) {
-        fileModelLocalDataSource.update(
+        fileModelLocalDataSource.updateHistory(
             path,
             BookshelfModelId(bookshelfId.value),
             lastReadPage,

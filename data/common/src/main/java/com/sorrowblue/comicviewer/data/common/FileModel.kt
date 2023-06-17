@@ -14,14 +14,14 @@ sealed interface FileModel {
 
     val extension get() = path.extension
 
-    fun simple() =
+    fun toSimpleModel() =
         SimpleFileModel(path, bookshelfModelId, name, parent, size, lastModifier, this, sortIndex)
 
     sealed interface Book : FileModel {
         val cacheKey: String
         val totalPageCount: Int
         val lastReadPage: Int
-        val lastRead: Long
+        val lastReading: Long
     }
 
     data class File(
@@ -35,7 +35,7 @@ sealed interface FileModel {
         override val cacheKey: String,
         override val totalPageCount: Int,
         override val lastReadPage: Int,
-        override val lastRead: Long
+        override val lastReading: Long
     ) : Book
 
     data class Folder(
@@ -46,6 +46,7 @@ sealed interface FileModel {
         override val size: Long,
         override val lastModifier: Long,
         override val sortIndex: Int,
+        val count: Int = 0
     ) : FileModel
 
     data class ImageFolder(
@@ -59,6 +60,6 @@ sealed interface FileModel {
         override val cacheKey: String,
         override val totalPageCount: Int,
         override val lastReadPage: Int,
-        override val lastRead: Long
+        override val lastReading: Long
     ) : Book
 }

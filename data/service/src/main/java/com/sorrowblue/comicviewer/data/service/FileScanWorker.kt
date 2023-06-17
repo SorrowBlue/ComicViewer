@@ -70,25 +70,7 @@ internal class FileScanWorker @AssistedInject constructor(
         val fileModelList = SortUtil.sortedIndex(listFiles(fileModel, resolveImageFolder) {
             SortUtil.filter(it, supportExtensions)
         })
-        fileLocalDataSource.withTransaction {
-            // リモートになくてDBにある項目：削除対象
-            val deleteFileData = fileLocalDataSource.selectByNotPaths(
-                bookshelfModel.id,
-                fileModel.path,
-                fileModelList.map(FileModel::path)
-            )
-            // DBから削除
-            fileLocalDataSource.deleteAll(deleteFileData)
-            // existsFiles DBにある項目：更新対象
-            // noExistsFiles DBにない項目：挿入対象
-            val (existsFiles, noExistsFiles) = fileModelList.partition {
-                fileLocalDataSource.exists(it.bookshelfModelId, it.path)
-            }
-            // DBにない項目を挿入
-            fileLocalDataSource.registerAll(noExistsFiles)
-            // DBにファイルを更新
-            fileLocalDataSource.updateAll(existsFiles.map(FileModel::simple))
-        }
+        fileLocalDataSource.updateHistory(fileModel, fileModelList)
         if (isNested) {
             fileModelList.filter { it is FileModel.Folder || it is FileModel.ImageFolder }
                 .forEach { nestedListFiles(bookshelfModel, it, resolveImageFolder, true) }

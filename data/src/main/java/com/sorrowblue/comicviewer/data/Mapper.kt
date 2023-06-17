@@ -31,7 +31,8 @@ internal fun FileModel.Folder.toFolder() = Folder(
     parent = parent,
     path = path,
     size = size,
-    lastModifier = lastModifier
+    lastModifier = lastModifier,
+    count = count
 )
 
 internal fun SmbServer.Auth.toServerModelAuth(): BookshelfModel.SmbServer.Auth {
@@ -106,7 +107,7 @@ internal fun FileModel.toFile(): File {
             cacheKey,
             lastReadPage,
             totalPageCount,
-            lastRead
+            lastReading
         )
 
         is FileModel.Folder -> Folder(
@@ -115,7 +116,8 @@ internal fun FileModel.toFile(): File {
             parent,
             path,
             size,
-            lastModifier
+            lastModifier,
+            count = count
         )
 
         is FileModel.ImageFolder -> BookFolder(
@@ -128,7 +130,7 @@ internal fun FileModel.toFile(): File {
             cacheKey,
             lastReadPage,
             totalPageCount,
-            lastRead
+            lastReading
         )
     }
 }
@@ -142,7 +144,7 @@ internal fun File.toFileModel(): FileModel {
             parent = parent,
             size = size,
             lastModifier = lastModifier,
-            sortIndex = 0
+            sortIndex = 0,
         )
 
         is BookFile -> FileModel.File(
@@ -156,7 +158,7 @@ internal fun File.toFileModel(): FileModel {
             cacheKey = cacheKey,
             totalPageCount = totalPageCount,
             lastReadPage = lastPageRead,
-            lastRead = lastReadTime
+            lastReading = lastReadTime
         )
 
         is BookFolder -> FileModel.ImageFolder(
@@ -170,7 +172,7 @@ internal fun File.toFileModel(): FileModel {
             cacheKey = cacheKey,
             totalPageCount = totalPageCount,
             lastReadPage = lastPageRead,
-            lastRead = lastReadTime
+            lastReading = lastReadTime
         )
     }
 }
