@@ -15,4 +15,6 @@ sealed interface File {
 
     fun base64Parent(): String = parent.encodeToBase64()
     fun base64Path(): String = path.encodeToBase64()
+
+    fun areContentsTheSame(file: File): Boolean
 }
