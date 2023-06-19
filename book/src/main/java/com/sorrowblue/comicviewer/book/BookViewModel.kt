@@ -52,7 +52,7 @@ internal class BookViewModel @Inject constructor(
     val bookFlow =
         getBookUseCase.execute(
             GetBookUseCase.Request(
-                BookshelfId(args.serverId),
+                BookshelfId(args.bookshelfId),
                 args.path.decodeFromBase64()
             )
         )
@@ -112,7 +112,7 @@ internal class BookViewModel @Inject constructor(
             bookFlow.filterNotNull().collectLatest {
                 updateHistoryUseCase.execute(
                     UpdateHistoryUseCase.Request(
-                        History(BookshelfId(args.serverId), it.parent, args.position)
+                        History(BookshelfId(args.bookshelfId), it.parent, args.position)
                     )
                 )
             }

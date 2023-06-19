@@ -49,16 +49,16 @@ internal class FolderViewModel @Inject constructor(
 
     override val transitionName = args.transitionName
 
-    private val serverFolderFlow = getBookshelfFolderUseCase.execute(
-        GetBookshelfFolderUseCase.Request(BookshelfId(args.serverId), args.path.decodeFromBase64())
+    private val bookshelfFolderFlow = getBookshelfFolderUseCase.execute(
+        GetBookshelfFolderUseCase.Request(BookshelfId(args.bookshelfId), args.path.decodeFromBase64())
     ).mapNotNull { it.dataOrNull }.shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
     var position = args.position
-    val titleFlow = serverFolderFlow.map { it.bookshelf.displayName }.stateIn { "" }
-    val subTitleFlow = serverFolderFlow.map { it.folder.name }.stateIn { "" }
+    val titleFlow = bookshelfFolderFlow.map { it.bookshelf.displayName }.stateIn { "" }
+    val subTitleFlow = bookshelfFolderFlow.map { it.folder.name }.stateIn { "" }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val pagingDataFlow = serverFolderFlow.flatMapLatest {
+    override val pagingDataFlow = bookshelfFolderFlow.flatMapLatest {
         pagingFileUseCase.execute(
             PagingFileUseCase.Request(PagingConfig(100), it.bookshelf, it.folder)
         )
@@ -66,7 +66,7 @@ internal class FolderViewModel @Inject constructor(
 
     fun fullScan(scanType: ScanType, done: (String) -> Unit) {
         viewModelScope.launch {
-            val folder = serverFolderFlow.firstOrNull()?.folder ?: return@launch
+            val folder = bookshelfFolderFlow.firstOrNull()?.folder ?: return@launch
             scanBookshelfUseCase.execute(ScanBookshelfUseCase.Request(folder, scanType))
                 .first().dataOrNull?.let { done.invoke(it) }
         }
@@ -74,7 +74,7 @@ internal class FolderViewModel @Inject constructor(
 
     fun deleteHistoryBook(selectedItemIds: List<String>) {
         viewModelScope.launch {
-            deleteHistoryUseCase.execute(DeleteHistoryUseCase.Request(serverFolderFlow.replayCache.first().bookshelf.id, selectedItemIds)).collect()
+            deleteHistoryUseCase.execute(DeleteHistoryUseCase.Request(bookshelfFolderFlow.replayCache.first().bookshelf.id, selectedItemIds)).collect()
         }
     }
 
@@ -87,7 +87,7 @@ internal class FolderViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val searchPagingDataFlow = combine(
-        serverFolderFlow,
+        bookshelfFolderFlow,
         searchQueryFlow,
         searchRangeFlow,
         searchPeriodFlow

@@ -11,7 +11,7 @@
         android:label="ViewerFragment"
         tools:layout="@layout/book_fragment">
         <argument
-            android:name="server_id"
+            android:name="bookshelf_id"
             app:argType="integer" />
         <argument
             android:name="path"

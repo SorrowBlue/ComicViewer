@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.data.toFileModel
 import com.sorrowblue.comicviewer.data.toServer
 import com.sorrowblue.comicviewer.data.toServerFolder
 import com.sorrowblue.comicviewer.data.toServerId
-import com.sorrowblue.comicviewer.data.toServerModel
+import com.sorrowblue.comicviewer.data.toBookshelfModel
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
@@ -53,7 +53,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
         path: String
     ): Result<Boolean, BookshelfRepositoryStatus> {
         return Result.Success(
-            remoteDataSourceFactory.create(bookshelf.toServerModel()).exists(path)
+            remoteDataSourceFactory.create(bookshelf.toBookshelfModel()).exists(path)
         )
     }
 
@@ -61,7 +61,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
         bookshelf: Bookshelf,
         path: String
     ): Result<Bookshelf, RegisterLibraryError> {
-        val serverModel = bookshelfLocalDataSource.create(bookshelf.toServerModel())
+        val serverModel = bookshelfLocalDataSource.create(bookshelf.toBookshelfModel())
         val fileModel = remoteDataSourceFactory.create(serverModel).fileModel(path)
         when (fileModel) {
             is FileModel.File -> fileModel.copy(parent = "")
@@ -74,7 +74,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
     }
 
     override suspend fun delete(bookshelf: Bookshelf): Response<Boolean> {
-        bookshelfLocalDataSource.delete(bookshelf.toServerModel())
+        bookshelfLocalDataSource.delete(bookshelf.toBookshelfModel())
         return Response.Success(true)
     }
 
@@ -99,7 +99,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
         path: String
     ): Result<Unit, BookshelfRepositoryError> {
         return withContext(Dispatchers.IO) {
-            val remoteDataSource = remoteDataSourceFactory.create(bookshelf.toServerModel())
+            val remoteDataSource = remoteDataSourceFactory.create(bookshelf.toBookshelfModel())
             kotlin.runCatching {
                 remoteDataSource.connect(path)
                 Result.Success(Unit)
@@ -120,7 +120,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
         folder: Folder
     ): Result<Bookshelf, BookshelfRepositoryError> {
         return withContext(Dispatchers.IO) {
-            val r = bookshelfLocalDataSource.create(bookshelf.toServerModel())
+            val r = bookshelfLocalDataSource.create(bookshelf.toBookshelfModel())
             val model = folder.copy(bookshelfId = r.id.toServerId(), parent = "").toFileModel()
             fileModelLocalDataSource.addUpdate(model)
             Result.Success(r.toServer())

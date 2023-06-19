@@ -4,4 +4,10 @@
     <string name="file_info_label_open_folder">Open folder</string>
     <string name="file_info_label_add_favourites">Add to Favourites</string>
     <string name="file_info_label_add_read_later">Add to Read Later</string>
+
+    <plurals name="file_list_label_files">
+        <item quantity="zero">0 file</item>
+        <item quantity="one">1 file</item>
+        <item quantity="other">%1$d files</item>
+    </plurals>
 </resources>

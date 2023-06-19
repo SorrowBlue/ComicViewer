@@ -132,7 +132,7 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
             commonViewModel.isRestored.emit(true)
             return
         }
-        val (server, bookshelves, position) = viewModel.getNavigationHistory().first()?.triple
+        val (bookshelf, folders, position) = viewModel.getNavigationHistory().first()?.triple
             ?: kotlin.run {
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                     "Do not restore navigation(GET_HISTORY_ERROR)."
@@ -141,47 +141,47 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 return
             }
         logcat("RESTORE_NAVIGATION", LogPriority.INFO) { "Start restore navigation." }
-        if (bookshelves.isNotEmpty()) {
+        if (folders.isNotEmpty()) {
             // library -> folder
-            if (bookshelves.size == 1) {
+            if (folders.size == 1) {
                 navController.navigate(
                     com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_list_to_folder,
                     FolderFragmentArgs(
-                        server.id.value, bookshelves.first().base64Path(), position = position
+                        bookshelf.id.value, folders.first().base64Path(), position = position
                     ).toBundle()
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                    "server(${server.id}) -> folder(${bookshelves.first().path})"
+                    "bookshelf(${bookshelf.id}) -> folder(${folders.first().path})"
                 }
             } else {
                 navController.navigate(
                     com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_list_to_folder,
                     FolderFragmentArgs(
-                        server.id.value, bookshelves.first().base64Path(), position = position
+                        bookshelf.id.value, folders.first().base64Path(), position = position
                     ).toBundle()
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                    "server(${server.id}) -> folder(${bookshelves.first().path})"
+                    "bookshelf(${bookshelf.id}) -> folder(${folders.first().path})"
                 }
-                bookshelves.drop(1).dropLast(1).forEachIndexed { index, folder ->
+                folders.drop(1).dropLast(1).forEachIndexed { index, folder ->
                     // folder -> folder
                     navController.navigate(
                         com.sorrowblue.comicviewer.folder.R.id.action_folder_self,
-                        FolderFragmentArgs(server.id.value, folder.base64Path()).toBundle()
+                        FolderFragmentArgs(bookshelf.id.value, folder.base64Path()).toBundle()
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "folder(${bookshelves[index].path}) -> folder${bookshelves[index + 1].path}"
+                        "folder(${folders[index].path}) -> folder${folders[index + 1].path}"
                     }
                 }
                 navController.navigate(
                     com.sorrowblue.comicviewer.folder.R.id.action_folder_self, FolderFragmentArgs(
-                        server.id.value, bookshelves.last().base64Path(), position = position
+                        bookshelf.id.value, folders.last().base64Path(), position = position
                     ).toBundle()
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                     "folder(${
-                        bookshelves.dropLast(1).last().path
-                    }) -> folder${bookshelves.last().path}"
+                        folders.dropLast(1).last().path
+                    }) -> folder${folders.last().path}"
                 }
             }
         } else {

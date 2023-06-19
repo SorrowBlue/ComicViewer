@@ -91,8 +91,9 @@ internal class FolderThumbnailFetcher(
                             SupportExtension::extension
                         )
                     snapshot = remoteDataSourceFactory.create(bookshelfModel)
-                        .listFiles(folder, false) { SortUtil.filter(it, supportExtensions) }
-                        .firstOrNull { it is FileModel.File }?.let {
+                        .listFiles(folder, false) { SortUtil.filter(it, supportExtensions) }.let {
+                            SortUtil.sortedIndex(it)
+                        }.firstOrNull { it is FileModel.File }?.let {
                             val fileReader =
                                 remoteDataSourceFactory.create(bookshelfModel).fileReader(it)
                                     ?: throw RuntimeException("FileReaderが取得できない")

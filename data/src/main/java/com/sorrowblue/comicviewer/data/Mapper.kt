@@ -46,7 +46,7 @@ internal fun SmbServer.Auth.toServerModelAuth(): BookshelfModel.SmbServer.Auth {
     }
 }
 
-internal fun Bookshelf.toServerModel() = when (this) {
+internal fun Bookshelf.toBookshelfModel() = when (this) {
     is InternalStorage -> BookshelfModel.InternalStorage(
         id = BookshelfModelId(id.value),
         name = displayName,

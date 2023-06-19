@@ -11,7 +11,7 @@
         app:bottomNavVisible="true"
         tools:layout="@layout/folder_fragment">
         <argument
-            android:name="server_id"
+            android:name="bookshelf_id"
             app:argType="integer" />
         <argument
             android:name="path"
@@ -28,7 +28,7 @@
         <deepLink
             android:id="@+id/folder_fragment_deeplink"
             android:autoVerify="true"
-            app:uri="comicviewer://comicviewer.sorrowblue.com/folder?serverId={server_id}&amp;path={path}&amp;transitionName={transition_name}&amp;position={position}" />
+            app:uri="comicviewer://comicviewer.sorrowblue.com/folder?bookshelf_id={bookshelf_id}&amp;path={path}&amp;transitionName={transition_name}&amp;position={position}" />
         <action
             android:id="@+id/action_folder_self"
             app:destination="@id/folder_fragment" />

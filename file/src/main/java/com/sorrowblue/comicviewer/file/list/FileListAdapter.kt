@@ -28,7 +28,7 @@ class FileListAdapter(
     private val onLongClick: (File) -> Unit
 ) : PagingDataAdapter<File, FileListAdapter.FileViewHolder<out ViewBinding>>(
     object : DiffUtil.ItemCallback<File>() {
-        override fun areItemsTheSame(oldItem: File, newItem: File) = oldItem.path == newItem.path
+        override fun areItemsTheSame(oldItem: File, newItem: File) = oldItem.bookshelfId == newItem.bookshelfId && oldItem.path == newItem.path
         override fun areContentsTheSame(oldItem: File, newItem: File) = oldItem.areContentsTheSame(newItem)
     }
 ) {
