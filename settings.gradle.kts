@@ -41,6 +41,8 @@ dependencyResolutionManagement {
         // com.github.omicronapps:7-Zip-JBinding-4Android
         maven { url = uri("https://jitpack.io/") }
 
+        maven {url = uri("https://androidx.dev/storage/compose-compiler/repository/")}
+
         maven {
             url =
                 uri("https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1")
