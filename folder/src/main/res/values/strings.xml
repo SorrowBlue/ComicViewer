@@ -6,4 +6,5 @@
     <string name="folder_label_remove_read_mark">Remove read mark</string>
     <string name="folder_label_delete_selected">Delete selected</string>
     <string name="folder_download_selected">Download Selected</string>
+    <string name="folder_label_no_file">No file</string>
 </resources>

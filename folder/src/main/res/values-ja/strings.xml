@@ -2,4 +2,5 @@
 <resources>
     <string name="folder_message_scan">スキャンの進行状況を通知で表示できるようにしてください。</string>
     <string name="folder_message_info_scan">本棚のスキャンは、通知権限がない場合でも実行されます。</string>
+    <string name="folder_label_no_file">ファイルがない</string>
 </resources>
