@@ -21,13 +21,13 @@ import dev.chrisbanes.insetter.applyInsetter
 
 @AndroidEntryPoint
 internal class BookshelfListFragment :
-    PagingFragment<BookshelfFolder>(R.layout.bookshelf_fragment_list),
+    PagingFragment<BookshelfFolder, BookshelfListAdapter>(R.layout.bookshelf_fragment_list),
     Toolbar.OnMenuItemClickListener {
 
     private val binding: BookshelfFragmentListBinding by viewBinding()
     override val viewModel: BookshelfListViewModel by viewModels()
 
-    override val adapter get() = BookshelfListAdapter()
+    override fun onCreatePagingDataAdapter() = BookshelfListAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

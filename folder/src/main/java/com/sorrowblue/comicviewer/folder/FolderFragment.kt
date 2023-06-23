@@ -29,7 +29,6 @@ import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.paging.LoadState
-import androidx.paging.PagingDataAdapter
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.search.SearchView
@@ -58,6 +57,7 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.setDialogFragmentResul
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -169,10 +169,7 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
                 logcat { "通知は表示されません。" }
             }
         }
-    }
 
-    override fun onCreateAdapter(pagingDataAdapter: PagingDataAdapter<File, *>) {
-        super.onCreateAdapter(pagingDataAdapter)
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sortTypeFlow.collectLatest {
                 pagingDataAdapter.refresh()
@@ -205,7 +202,9 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
     }
 
     override fun navigateToFile(
-        file: File, transitionName: String, extras: FragmentNavigator.Extras
+        file: File,
+        transitionName: String,
+        extras: FragmentNavigator.Extras
     ) {
         when (file) {
             is Book -> findNavController().navigate(
@@ -228,6 +227,10 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
             }
 
             R.id.folder_menu_scan -> {
+                scan(ScanType.QUICK)
+                true
+            }
+            R.id.folder_menu_full_scan -> {
                 scan(ScanType.FULL)
                 true
             }
@@ -254,8 +257,8 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
         if ((state ?: bottomSheetBehavior.state) == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             WindowInsetsControllerCompat(requireActivity().window, requireView()).hide(
-                    WindowInsetsCompat.Type.ime()
-                )
+                WindowInsetsCompat.Type.ime()
+            )
             val avd = AnimatedVectorDrawableCompat.create(
                 requireContext(),
                 com.sorrowblue.comicviewer.framework.resource.R.drawable.ic_arrow_back_close
@@ -302,10 +305,9 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
         }.launchInWithLifecycle()
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.searchSortTypeFlow.collectLatest {
-//                searchAdapter.refresh()
+                searchAdapter.refresh()
             }
         }
-        viewModel.searchPagingDataFlow.attachAdapter(searchAdapter)
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -334,14 +336,31 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
         callback.isEnabled =
             binding.searchView.currentTransitionState == SearchView.TransitionState.SHOWING || binding.searchView.currentTransitionState == SearchView.TransitionState.SHOWN
 
-        binding.searchView.addTransitionListener { _, _, newState ->
-            if (newState == SearchView.TransitionState.HIDDEN) {
+        var job: Job? = null
+        binding.searchView.addTransitionListener { _, previousState, newState ->
+            if (previousState == SearchView.TransitionState.SHOWN && newState == SearchView.TransitionState.HIDING) {
+                // Start hide
                 commonViewModel.isVisibleBottomNav.tryEmit(true)
-            } else if (newState == SearchView.TransitionState.SHOWN) {
+                job?.cancel()
+                job = null
+            } else if (previousState == SearchView.TransitionState.HIDDEN && newState == SearchView.TransitionState.SHOWING) {
+                // Start show
                 commonViewModel.isVisibleBottomNav.tryEmit(false)
+                job?.cancel()
+                job = viewModel.searchPagingDataFlow.attachAdapter(searchAdapter)
             }
             callback.isEnabled =
                 newState == SearchView.TransitionState.SHOWING || newState == SearchView.TransitionState.SHOWN
+        }
+        if (binding.searchView.currentTransitionState == SearchView.TransitionState.SHOWING || binding.searchView.currentTransitionState == SearchView.TransitionState.SHOWN) {
+            commonViewModel.isVisibleBottomNav.tryEmit(false)
+            job?.cancel()
+            job = viewModel.searchPagingDataFlow.attachAdapter(searchAdapter)
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchQueryFlow.collectLatest {
+                binding.folderSearchView.searchRecyclerView.scrollToPosition(0)
+            }
         }
         binding.searchView.toolbar.inflateMenu(R.menu.folder_search)
         binding.searchView.toolbar.menu.findItem(R.id.folder_search_menu_filter)
@@ -354,7 +373,7 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if(isGranted) {
+            if (isGranted) {
 //                viewModel.fullScan(scanType) {
 //                    makeSnackbar("スキャン中", Snackbar.LENGTH_INDEFINITE).setAction("詳細") {
 //                        findNavController().navigate("comicviewer://comicviewer.sorrowblue.com/work?uuid=0".toUri())
@@ -372,8 +391,8 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
                 // 通知権限がある場合
                 viewModel.fullScan(scanType) {
                     makeSnackbar("スキャン中", Snackbar.LENGTH_INDEFINITE).setAction("詳細") {
-                            findNavController().navigate("comicviewer://comicviewer.sorrowblue.com/work?uuid=0".toUri())
-                        }.show()
+                        findNavController().navigate("comicviewer://comicviewer.sorrowblue.com/work?uuid=0".toUri())
+                    }.show()
                 }
             }
 

@@ -19,16 +19,17 @@ import com.sorrowblue.comicviewer.library.filelist.LibraryFileListFragment
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
 
-internal class DropBoxListFragment : LibraryFileListFragment() {
+internal class DropBoxListFragment : LibraryFileListFragment<DropBoxListAdapter>() {
 
     override val viewModel: DropBoxListViewModel by viewModels {
         DropBoxListViewModel.Factory(DropBoxApiRepositoryImpl(requireContext()))
     }
 
-    override val adapter
-        get() = DropBoxListAdapter(::createFile) {
+    override fun onCreatePagingDataAdapter(): DropBoxListAdapter {
+        return DropBoxListAdapter(::createFile) {
             findNavController().navigate(DropBoxListFragmentDirections.actionDropboxListSelf(it.parent))
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

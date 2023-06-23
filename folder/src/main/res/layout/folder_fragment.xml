@@ -62,7 +62,7 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:itemCount="30"
-            tools:listitem="@layout/folder_item"
+            tools:listitem="@layout/file_item_grid"
             tools:spanCount="3" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -97,7 +97,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="ファイルはありません"
+                android:text="@string/folder_label_no_file"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

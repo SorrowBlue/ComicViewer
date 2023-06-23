@@ -14,17 +14,19 @@ import com.sorrowblue.comicviewer.library.filelist.LibraryFileListFragment
 import kotlinx.coroutines.flow.onEach
 import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
-internal class BoxListFragment : LibraryFileListFragment() {
+internal class BoxListFragment : LibraryFileListFragment<BoxListAdapter>() {
 
     private val boxApiViewModel: BoxApiViewModel by navGraphViewModels(com.sorrowblue.comicviewer.library.R.id.box_navigation)
 
     override val viewModel: BoxListViewModel by viewModels {
         BoxListViewModel.Factory(boxApiViewModel.repository)
     }
-    override val adapter
-        get() = BoxListAdapter(::createFile) {
+
+    override fun onCreatePagingDataAdapter(): BoxListAdapter {
+        return BoxListAdapter(::createFile) {
             findNavController().navigate(BoxListFragmentDirections.actionBoxListSelf(it.path))
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

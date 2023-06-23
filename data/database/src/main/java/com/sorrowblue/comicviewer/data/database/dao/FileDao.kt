@@ -179,7 +179,7 @@ internal interface FileDao {
                 is SortEntity.SIZE -> if (sortEntity.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
             }.let(::orderBy)
         }.create()
-        logcat { query.sql }
+        logcat { query.sql.trimIndent().replace(Regex("""\r\n|\n|\r"""), "") }
         @Suppress("DEPRECATION") return pagingSource(query)
     }
 

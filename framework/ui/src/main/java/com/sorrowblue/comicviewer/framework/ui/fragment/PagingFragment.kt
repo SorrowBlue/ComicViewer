@@ -4,13 +4,14 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
@@ -51,7 +52,7 @@ abstract class PagingAndroidViewModel<T : Any>(application: Application) :
     override val isEmptyDataFlow = MutableStateFlow(false)
 }
 
-abstract class PagingFragment<T : Any> : FrameworkFragment {
+abstract class PagingFragment<T : Any, AD : PagingDataAdapter<T, *>> : FrameworkFragment {
 
     constructor() : super()
     constructor(contentLayoutId: Int) : super(contentLayoutId)
@@ -71,47 +72,26 @@ abstract class PagingFragment<T : Any> : FrameworkFragment {
                 )
                 setPathMotion(MaterialArcMotion())
             }
-            exitTransition = MaterialElevationScale(false).apply {
-                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
-            }
-            reenterTransition = MaterialElevationScale(true).apply {
-                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
-            }
+            exitTransition = MaterialElevationScale(false)
+            reenterTransition = MaterialElevationScale(true)
         } else {
-            enterTransition = MaterialFadeThrough().apply {
-                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
-            }
-            exitTransition = MaterialFadeThrough().apply {
-                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
-            }
+            enterTransition = MaterialFadeThrough()
+            exitTransition = MaterialFadeThrough()
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        postponeEnterTransition()
-        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        onCreateAdapter(adapter)
-    }
-
-    protected open fun onCreateAdapter(pagingDataAdapter: PagingDataAdapter<T, *>) {
-        recyclerView.apply {
-            adapter = pagingDataAdapter
-            doOnPreDraw {
-                startPostponedEnterTransition()
-            }
-        }
+        postponeEnterTransition()
+        recyclerView.adapter = pagingDataAdapter
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pagingDataFlow.collectLatest {
-                pagingDataAdapter.submitDataWithLifecycle(it)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.pagingDataFlow.collectLatest {
+                    pagingDataAdapter.submitDataWithLifecycle(it)
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        startPostponedEnterTransition()
+                    }
+                }
             }
         }
         pagingDataAdapter.loadStateFlow.map { it.refresh }.distinctUntilChanged()
@@ -123,5 +103,9 @@ abstract class PagingFragment<T : Any> : FrameworkFragment {
             }.launchInWithLifecycle()
     }
 
-    abstract val adapter: PagingDataAdapter<T, *>
+    @Suppress("UNCHECKED_CAST")
+    val pagingDataAdapter: AD
+        get() = recyclerView.adapter as? AD ?: onCreatePagingDataAdapter()
+
+    abstract fun onCreatePagingDataAdapter(): AD
 }

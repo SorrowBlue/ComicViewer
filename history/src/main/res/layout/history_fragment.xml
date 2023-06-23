@@ -36,9 +36,10 @@
             android:orientation="vertical"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:spanCount="3"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/folder_item_list" />
+            tools:listitem="@layout/file_item_grid" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_indicator"

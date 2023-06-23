@@ -19,17 +19,19 @@ import com.sorrowblue.comicviewer.library.googledrive.DriveDownloadWorker
 import kotlinx.coroutines.flow.onEach
 import logcat.logcat
 
-internal class GoogleDriveListFragment : LibraryFileListFragment() {
+internal class GoogleDriveListFragment : LibraryFileListFragment<GoogleDriveListAdapter>() {
 
     override val viewModel: GoogleDriveListViewModel by navGraphViewModels(com.sorrowblue.comicviewer.library.R.id.googledrive) {
         GoogleDriveListViewModel.Factory(GoogleDriveApiRepositoryImpl(requireContext()))
     }
-    override val adapter
-        get() = GoogleDriveListAdapter(::createFile) {
+
+    override fun onCreatePagingDataAdapter(): GoogleDriveListAdapter {
+        return GoogleDriveListAdapter(::createFile) {
             findNavController().navigate(
                 GoogleDriveListFragmentDirections.actionGoogledriveListSelf(it.path)
             )
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

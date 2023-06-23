@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.paging.PagingDataAdapter
 import coil.ImageLoader
 import coil.imageLoader
 import coil.request.Disposable
@@ -23,7 +24,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.onEach
 
-abstract class LibraryFileListFragment : PagingFragment<File>(R.layout.library_fragment_cloud) {
+abstract class LibraryFileListFragment<AD: PagingDataAdapter<File, *>> : PagingFragment<File, AD>(R.layout.library_fragment_cloud) {
 
     protected val binding: LibraryFragmentCloudBinding by viewBinding()
     abstract override val viewModel: LibraryFileListViewModel

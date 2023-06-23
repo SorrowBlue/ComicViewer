@@ -32,10 +32,22 @@ import logcat.logcat
 import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class OneDriveListFragment :
-    PagingFragment<File>(com.sorrowblue.comicviewer.library.R.layout.library_fragment_file_list) {
+    PagingFragment<File, OneDriveListAdapter>(com.sorrowblue.comicviewer.library.R.layout.library_fragment_file_list) {
 
     private val binding: LibraryFragmentFileListBinding by viewBinding()
     override val viewModel: OneDriveListViewModel by viewModels()
+    private lateinit var file: File
+
+    override fun onCreatePagingDataAdapter(): OneDriveListAdapter {
+        return OneDriveListAdapter {
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            intent.type = "*/*"
+            intent.putExtra(Intent.EXTRA_TITLE, it.name)
+            file = it
+            createFileRequest.launch(intent)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,17 +108,6 @@ internal class OneDriveListFragment :
         notificationManager.createNotificationChannel(channel)
     }
 
-    override val adapter
-        get() = OneDriveListAdapter {
-            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
-            intent.type = "*/*"
-            intent.putExtra(Intent.EXTRA_TITLE, it.name)
-            file = it
-            createFileRequest.launch(intent)
-        }
-
-    private lateinit var file: File
 
     private val createFileRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

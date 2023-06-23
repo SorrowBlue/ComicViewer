@@ -10,32 +10,17 @@ import com.sorrowblue.comicviewer.book.BookFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
-import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.file.info.FileInfoNavigation
 import com.sorrowblue.comicviewer.file.info.observeOpenFolder
-import com.sorrowblue.comicviewer.file.list.FileListAdapter
-import com.sorrowblue.comicviewer.framework.ui.fragment.PagingFragment
-import com.sorrowblue.comicviewer.framework.ui.fragment.type
+import com.sorrowblue.comicviewer.file.list.FileListFragment
 import com.sorrowblue.comicviewer.history.databinding.HistoryFragmentBinding
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applyInsetter
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
-internal class HistoryFragment : PagingFragment<File>(R.layout.history_fragment) {
+internal class HistoryFragment : FileListFragment(R.layout.history_fragment) {
 
     private val binding: HistoryFragmentBinding by viewBinding()
     override val viewModel: HistoryViewModel by viewModels()
-
-    override val adapter
-        get() = FileListAdapter(
-            FolderDisplaySettings.Display.LIST,
-            runBlocking { viewModel.isEnabledThumbnailFlow.first() },
-            { file, transitionName, extras -> navigateToFile(file, transitionName, extras) },
-            { findNavController().navigate(FileInfoNavigation.getDeeplink(it)) }
-        )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,23 +33,9 @@ internal class HistoryFragment : PagingFragment<File>(R.layout.history_fragment)
         }
 
         binding.viewModel = viewModel
-
-        binding.toolbar.setupWithNavController()
-        binding.toolbar.applyInsetter {
-            type(systemBars = true, displayCutout = true) {
-                padding(horizontal = true)
-                margin(top = true)
-            }
-        }
-
-        binding.recyclerView.applyInsetter {
-            type(systemBars = true, displayCutout = true) {
-                padding(horizontal = true, bottom = true)
-            }
-        }
     }
 
-    private fun navigateToFile(
+    override fun navigateToFile(
         file: File,
         transitionName: String,
         extras: FragmentNavigator.Extras

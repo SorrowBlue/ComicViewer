@@ -18,18 +18,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
 
 @AndroidEntryPoint
-internal class FavoriteListFragment : PagingFragment<Favorite>(R.layout.favorite_fragment_list) {
+internal class FavoriteListFragment : PagingFragment<Favorite, FavoriteListAdapter>(R.layout.favorite_fragment_list) {
 
     private val binding: FavoriteFragmentListBinding by viewBinding()
 
     override val viewModel: FavoriteListViewModel by viewModels()
-    override val adapter
-        get() = FavoriteListAdapter { favorite, extras ->
+
+    override fun onCreatePagingDataAdapter(): FavoriteListAdapter {
+        return FavoriteListAdapter { favorite, extras ->
             findNavController().navigate(
                 FavoriteListFragmentDirections.actionFavoriteListToFavorite(favorite),
                 extras
             )
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

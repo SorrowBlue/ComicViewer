@@ -12,6 +12,7 @@ import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sorrowblue.comicviewer.framework.ui.fragment.submitDataWithLifecycle
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -27,8 +28,8 @@ fun <T> Flow<T>.launchInWithLifecycle() =
     flowWithLifecycle(viewLifecycleOwner.lifecycle).launchIn(viewLifecycleOwner.lifecycleScope)
 
 context(Fragment)
-fun <T : Any, VH : RecyclerView.ViewHolder> Flow<PagingData<T>>.attachAdapter(adapter: PagingDataAdapter<T, VH>) {
-    viewLifecycleOwner.lifecycleScope.launch {
+fun <T : Any, VH : RecyclerView.ViewHolder> Flow<PagingData<T>>.attachAdapter(adapter: PagingDataAdapter<T, VH>): Job {
+    return viewLifecycleOwner.lifecycleScope.launch {
         collectLatest {
             adapter.submitDataWithLifecycle(it)
         }

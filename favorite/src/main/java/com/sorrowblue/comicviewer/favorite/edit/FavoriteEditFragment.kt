@@ -15,12 +15,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
 
 @AndroidEntryPoint
-internal class FavoriteEditFragment : PagingFragment<File>(R.layout.favorite_fragment_edit) {
+internal class FavoriteEditFragment : PagingFragment<File, FavoriteEditAdapter>(R.layout.favorite_fragment_edit) {
 
     private val binding: FavoriteFragmentEditBinding by viewBinding()
     override val viewModel: FavoriteEditViewModel by viewModels()
 
-    override val adapter get() = FavoriteEditAdapter(viewModel::removeFile)
+    override fun onCreatePagingDataAdapter(): FavoriteEditAdapter {
+        return FavoriteEditAdapter(viewModel::removeFile)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

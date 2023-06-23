@@ -29,7 +29,7 @@ internal class FileInfoViewModel @Inject constructor(
     val fileFlow =
         getFileUseCase.execute(
             GetFileUseCase.Request(
-                args.bookshelfId,
+                BookshelfId(args.bookshelfId),
                 args.path.decodeFromBase64()
             )
         )
@@ -47,6 +47,4 @@ internal class FileInfoViewModel @Inject constructor(
             }, {}, {})
         }
     }
-
-    private val FileInfoFragmentArgs.bookshelfId get() = BookshelfId(serverIdValue)
 }
