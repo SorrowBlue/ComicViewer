@@ -127,7 +127,7 @@ google-android-gms-play-services-auth = "com.google.android.gms:play-services-au
 google-api-client-android = "com.google.api-client:google-api-client-android:2.2.0"
 google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev20230610-2.0.0"
 google-http-client-gson = "com.google.http-client:google-http-client-gson:1.43.3"
-
+google-accompanist-themeadapter-material3 = "com.google.accompanist:accompanist-themeadapter-material3:0.30.1"
 
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.11"
 dropbox-core-sdk = "com.dropbox.core:dropbox-core-sdk:5.4.5"
