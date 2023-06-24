@@ -28,18 +28,15 @@
                 tools:title="@string/bookshelf_list_title" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@id/recycler_view"
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/compose_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/framework_ui_default_margin"
             android:paddingTop="@dimen/framework_ui_default_margin"
             android:paddingBottom="88dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:spanCount="@integer/bookshelf_list_span_count"
-            tools:listitem="@layout/bookshelf_item_list" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/linear_progress"
