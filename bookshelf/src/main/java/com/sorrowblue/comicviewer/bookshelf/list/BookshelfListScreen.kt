@@ -1,0 +1,130 @@
+package com.sorrowblue.comicviewer.bookshelf.list
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
+import com.sorrowblue.comicviewer.bookshelf.R
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+internal fun BookshelfListScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    viewModel: BookshelfListViewModel = viewModel()
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val lazyListState = rememberLazyGridState()
+    val state = rememberTopAppBarState()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        navBackStackEntry?.destination?.label?.toString().orEmpty(),
+                        modifier = Modifier.basicMarquee()
+                    )
+                },
+                scrollBehavior = scrollBehavior,
+                actions = {
+                    IconButton(onClick = {
+                        navController.navigate(R.id.action_global_settings_navigation)
+                    }) {
+                        Icon(Icons.TwoTone.Settings, null)
+                    }
+                }
+            )
+        },
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) { contentPadding ->
+        val articles = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+        val nestedScrollConnection = rememberNestedScrollInteropConnection()
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            state = lazyListState,
+            contentPadding = PaddingValues(
+                start = contentPadding.calculateStartPadding(LocalLayoutDirection.current) + 16.dp,
+                top = contentPadding.calculateTopPadding() + 16.dp,
+                end = contentPadding.calculateEndPadding(LocalLayoutDirection.current) + 16.dp,
+                bottom = contentPadding.calculateBottomPadding() + 16.dp + 72.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.nestedScroll(nestedScrollConnection)
+        ) {
+            items(count = articles.itemCount,
+                key = articles.itemKey { it.bookshelf.id.value },
+                contentType = {articles.itemContentType { "contentType" }}
+            ) {
+                val item = articles[it]
+                if (item != null) {
+                    BookshelfFolderRow(
+                        bookshelfFolder = item, modifier = Modifier
+                            .fillMaxWidth()
+                            .combinedClickable(
+                                onLongClick = {
+                                    navController.navigate(
+                                        BookshelfListFragmentDirections.actionBookshelfListToBookshelfInfo(
+                                            item.bookshelf.id.value
+                                        )
+                                    )
+                                },
+                                onClick = {
+                                    navController.navigate(
+                                        BookshelfListFragmentDirections.actionBookshelfListToFolder(
+                                            item.folder
+                                        )
+                                    )
+                                }
+                            )
+                    )
+                }
+            }
+        }
+    }
+}
+
+private fun BookshelfListFragmentDirections.Companion.actionBookshelfListToFolder(
+    folder: Folder,
+) = object : NavDirections {
+    override val actionId = actionBookshelfListToFolder().actionId
+    override val arguments = FolderFragmentArgs(
+        folder.bookshelfId.value,
+        folder.base64Path(),
+    ).toBundle()
+
+}

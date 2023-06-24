@@ -34,6 +34,7 @@ dependencies {
     api(libs.sorrowblue.binding.ktx)
     api(libs.androidx.paging.runtime.ktx)
     api(libs.androidx.paging.compose)
+    api(libs.androidx.hilt.navigation.compose)
 
     api(platform(libs.androidx.compose.bom))
     api(libs.bundles.androidx.compose)
