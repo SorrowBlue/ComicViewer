@@ -11,8 +11,7 @@
         app:bottomNavVisible="true"
         app:fabIcon="@drawable/ic_twotone_add_24"
         app:fabLabel="@string/bookshelf_list_btn_new"
-        app:fabVisible="true"
-        tools:layout="@layout/bookshelf_fragment_list">
+        app:fabVisible="true">
         <action
             android:id="@+id/action_bookshelf_list_to_folder"
             app:destination="@id/folder_navigation" />
