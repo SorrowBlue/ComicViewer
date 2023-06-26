@@ -22,6 +22,10 @@ android {
 
 dependencies {
     implementation(projects.framework.ui)
+    implementation(projects.framework.compose)
     implementation(projects.domain)
     implementation(projects.folder)
+    debugImplementation(libs.bundles.androidx.compose.debug)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 }
