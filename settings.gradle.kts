@@ -20,7 +20,7 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version ("0.5.0")
-    id("com.android.settings") version "8.0.2"
+    id("com.android.settings") version "8.1.0-rc01"
 }
 
 @Suppress("UnstableApiUsage")
@@ -56,6 +56,7 @@ include(":app")
 
 // framework
 include(":framework")
+include(":framework:compose")
 include(":framework:notification")
 include(":framework:resource")
 include(":framework:settings")

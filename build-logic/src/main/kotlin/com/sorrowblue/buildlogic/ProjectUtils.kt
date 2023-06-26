@@ -2,7 +2,6 @@ package com.sorrowblue.buildlogic
 
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Action
-import org.gradle.api.JavaVersion
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog
@@ -48,23 +47,23 @@ fun <T : Any?> NamedDomainObjectContainer<T>.debug(action: T.() -> Unit) {
     }
 }
 
-internal fun CommonExtension<*, *, *, *>.applyCommonConfigure(project: Project) {
+internal fun CommonExtension<*, *, *, *, *>.applyCommonConfigure(project: Project) {
     namespace = project.inferNameSpace(project.name).also {
         project.logger.lifecycle("nameSpace=$it")
     }
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_11
+//        targetCompatibility = JavaVersion.VERSION_11
+//    }
     kotlinOptions {
         freeCompilerArgs = listOf("-Xcontext-receivers")
     }
 }
 
-internal fun CommonExtension<*, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
+internal fun CommonExtension<*, *, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
     (this as ExtensionAware).extensions.configure("kotlinOptions", block)
 }
 
