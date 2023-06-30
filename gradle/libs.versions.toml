@@ -119,7 +119,7 @@ google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev202
 google-http-client-gson = "com.google.http-client:google-http-client-gson:1.43.3"
 
 
-squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.11"
+squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.12"
 dropbox-core-sdk = "com.dropbox.core:dropbox-core-sdk:5.4.5"
 
 coil = "io.coil-kt:coil:2.4.0"
