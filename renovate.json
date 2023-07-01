@@ -16,5 +16,15 @@
   ],
   "dependencyDashboardLabels": [
     "renovate"
+  ],
+  "packageRules": [
+    {
+      "matchPackagePrefixes": [
+        "androidx.compose.compiler",
+        "org.jetbrains.kotlin:"
+      ],
+      "groupName": "Compose Compiler and Kotlin",
+      "groupSlug": "compose_compiler_and_kotlin"
+    }
   ]
 }
