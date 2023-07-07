@@ -84,7 +84,7 @@ internal class TutorialViewModel @Inject constructor(
 
     val currentItem = MutableStateFlow(0)
 
-    val items = TutorialScreen.values()
+    val items = TutorialScreen.entries
 
     fun done() {
         viewModelScope.launch {
@@ -100,7 +100,7 @@ enum class TutorialScreen {
     READING_DIRECTION
 }
 
-internal class TutorialAdapter(fragment: Fragment, private val items: Array<TutorialScreen>) :
+internal class TutorialAdapter(fragment: Fragment, private val items: List<TutorialScreen>) :
     FragmentStateAdapter(fragment.childFragmentManager, fragment.viewLifecycleOwner.lifecycle) {
 
     override fun getItemCount() = items.size

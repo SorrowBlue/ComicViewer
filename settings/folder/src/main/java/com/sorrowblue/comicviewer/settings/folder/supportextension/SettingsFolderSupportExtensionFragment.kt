@@ -33,7 +33,7 @@ internal class SettingsFolderSupportExtensionFragment :
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         super.onCreatePreferences(savedInstanceState, rootKey)
-        SupportExtension.Archive.values().forEach {
+        SupportExtension.Archive.entries.forEach {
             val pref = CheckBoxPreference(requireContext())
             pref.key = it.name
             pref.title = it.extension
@@ -48,7 +48,7 @@ internal class SettingsFolderSupportExtensionFragment :
             }
             binding.archive.addPreference(pref)
         }
-        SupportExtension.Document.values().forEach {
+        SupportExtension.Document.entries.forEach {
             val pref = CheckBoxPreference(requireContext())
             pref.key = it.name
             pref.title = it.extension
