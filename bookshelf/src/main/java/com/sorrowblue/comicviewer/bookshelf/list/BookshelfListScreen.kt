@@ -48,7 +48,7 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -68,7 +68,7 @@ import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 internal fun BookshelfListScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: BookshelfListViewModel = viewModel()
+    viewModel: BookshelfListViewModel = hiltViewModel()
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val lazyListState = rememberLazyGridState()
