@@ -2,8 +2,8 @@ package com.sorrowblue.comicviewer.domain
 
 sealed class PagingException : RuntimeException() {
 
-    object NoNetwork : PagingException()
-    object InvalidAuth : PagingException()
-    object InvalidServer : PagingException()
-    object NotFound : PagingException()
+    data object NoNetwork : PagingException()
+    data object InvalidAuth : PagingException()
+    data object InvalidServer : PagingException()
+    data object NotFound : PagingException()
 }

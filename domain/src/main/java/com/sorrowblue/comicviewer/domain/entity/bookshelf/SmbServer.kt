@@ -25,6 +25,6 @@ data class SmbServer(
             val password: String
         ) : Auth
 
-        object Guest : Auth
+        data object Guest : Auth
     }
 }

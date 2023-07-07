@@ -50,7 +50,7 @@ sealed interface FabState {
         override val isShown = true
     }
 
-    object Hide : FabState {
+    data object Hide : FabState {
         override val isShown = true
     }
 }
