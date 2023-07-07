@@ -62,7 +62,7 @@ internal class LibraryListFragment : FrameworkFragment(R.layout.library_fragment
                 )
             }
         }
-        adapter.submitList(LocalFeature.values().asList() + viewModel.cloudStorageList)
+        adapter.submitList(LocalFeature.entries + viewModel.cloudStorageList)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.applyInsetter {
             type(systemBars = true, displayCutout = true) {

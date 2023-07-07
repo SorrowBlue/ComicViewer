@@ -33,13 +33,13 @@ internal class SettingsDisplayFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.darkMode.entryValues = DarkMode.values().map(DarkMode::name).toTypedArray()
+        binding.darkMode.entryValues = DarkMode.entries.map(DarkMode::name).toTypedArray()
         binding.darkMode.setOnPreferenceChangeListener<String> { _, newValue ->
             viewModel.updateDarkMode(DarkMode.valueOf(newValue))
             false
         }
         binding.folderThumbnails.entryValues =
-            FolderThumbnailOrder.values().map(FolderThumbnailOrder::name).toTypedArray()
+            FolderThumbnailOrder.entries.map(FolderThumbnailOrder::name).toTypedArray()
         binding.folderThumbnails.setOnPreferenceChangeListener<String> { _, newValue ->
             viewModel.updateFolderThumbnailOrder(FolderThumbnailOrder.valueOf(newValue))
             false

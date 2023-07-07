@@ -23,7 +23,7 @@ sealed interface BookshelfModel {
 
         sealed interface Auth
 
-        object Guest : Auth
+        data object Guest : Auth
         data class UsernamePassword(
             val domain: String,
             val username: String,

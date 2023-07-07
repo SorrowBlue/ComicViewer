@@ -17,7 +17,7 @@ class TutorialArchiveFragment : FrameworkFragment(R.layout.tutorial_fragment_arc
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        SupportExtension.Archive.values().forEach {
+        SupportExtension.Archive.entries.forEach {
             TutorialViewExtensionBinding.inflate(LayoutInflater.from(requireContext())).apply {
                 extension.text = "." + it.extension
                 binding.extensionGroup.addView(root)

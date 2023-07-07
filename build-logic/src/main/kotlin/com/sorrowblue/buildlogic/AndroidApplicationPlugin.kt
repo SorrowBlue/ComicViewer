@@ -20,7 +20,7 @@ internal class AndroidApplicationPlugin : Plugin<Project> {
                 }
             }
             kotlin {
-                jvmToolchain(11)
+                jvmToolchain(17)
             }
         }
     }

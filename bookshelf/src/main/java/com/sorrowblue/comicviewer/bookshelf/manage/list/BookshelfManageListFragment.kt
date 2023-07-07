@@ -54,7 +54,7 @@ internal class BookshelfManageListFragment :
 
         val adapter = BookshelfManageListAdapter()
         binding.recyclerView.adapter = adapter
-        adapter.submitList(BookshelfSource.values().asList())
+        adapter.submitList(BookshelfSource.entries)
         binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
     }
 }

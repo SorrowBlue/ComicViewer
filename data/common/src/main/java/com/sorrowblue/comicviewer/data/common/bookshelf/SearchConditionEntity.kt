@@ -7,7 +7,7 @@ class SearchConditionEntity(
 ) {
 
     sealed class Range {
-        object BOOKSHELF : Range()
+        data object BOOKSHELF : Range()
         data class IN_FOLDER(val parent: String) : Range()
         data class FOLDER_BELOW(val parent: String) : Range()
     }

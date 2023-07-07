@@ -20,7 +20,7 @@ internal class SettingsFeatureListViewModel @Inject constructor(
 
     init {
         val modules = splitInstallManager.installedModules
-        stateList = MutableStateFlow(Feature.values().map {
+        stateList = MutableStateFlow(Feature.entries.map {
             FeatureItem(
                 it,
                 if (modules.contains(it.moduleName)) InstallStatus.Installed else InstallStatus.NotInstall

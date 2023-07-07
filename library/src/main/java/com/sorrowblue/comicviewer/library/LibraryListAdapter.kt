@@ -25,7 +25,7 @@ internal class LibraryListAdapter(private val onClick: (Library, FragmentNavigat
     override fun getItemViewType(position: Int) = getItem(position).viewType.value
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        when (LibraryListViewType.values()[viewType]) {
+        when (LibraryListViewType.entries[viewType]) {
             LibraryListViewType.LOCAL_FEATURE -> LocalFeatureViewHolder(parent)
             LibraryListViewType.CLOUD_STORAGE -> CloudStorageViewHolder(parent)
         }
