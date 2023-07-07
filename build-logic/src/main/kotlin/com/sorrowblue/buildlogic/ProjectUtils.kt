@@ -48,7 +48,7 @@ fun <T : Any?> NamedDomainObjectContainer<T>.debug(action: T.() -> Unit) {
     }
 }
 
-internal fun CommonExtension<*, *, *, *>.applyCommonConfigure(project: Project) {
+internal fun CommonExtension<*, *, *, *, *>.applyCommonConfigure(project: Project) {
     namespace = project.inferNameSpace(project.name).also {
         project.logger.lifecycle("nameSpace=$it")
     }
@@ -56,15 +56,15 @@ internal fun CommonExtension<*, *, *, *>.applyCommonConfigure(project: Project) 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         freeCompilerArgs = listOf("-Xcontext-receivers")
     }
 }
 
-internal fun CommonExtension<*, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
+internal fun CommonExtension<*, *, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
     (this as ExtensionAware).extensions.configure("kotlinOptions", block)
 }
 

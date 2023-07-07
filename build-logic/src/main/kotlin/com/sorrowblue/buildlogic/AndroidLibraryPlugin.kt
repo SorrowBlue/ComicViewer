@@ -32,7 +32,7 @@ internal class AndroidLibraryPlugin : Plugin<Project> {
                 }
             }
             kotlin {
-                jvmToolchain(11)
+                jvmToolchain(17)
             }
         }
     }

@@ -31,7 +31,7 @@ internal class AndroidDynamicFeaturePlugin : Plugin<Project> {
                 }
             }
             kotlin {
-                jvmToolchain(11)
+                jvmToolchain(17)
             }
         }
     }
