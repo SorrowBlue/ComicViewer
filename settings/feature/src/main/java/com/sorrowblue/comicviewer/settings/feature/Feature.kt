@@ -59,9 +59,9 @@ sealed class InstallStatus {
         @SplitInstallSessionStatus val status: Int, val bytesDownloaded: Long, val bytesTotal: Long
     ) : InstallStatus()
 
-    object Cancelled : InstallStatus()
+    data object Cancelled : InstallStatus()
     data class Failed(@SplitInstallErrorCode val errorCode: Int) : InstallStatus()
-    object Installed : InstallStatus()
-    object NotInstall : InstallStatus()
+    data object Installed : InstallStatus()
+    data object NotInstall : InstallStatus()
 }
 

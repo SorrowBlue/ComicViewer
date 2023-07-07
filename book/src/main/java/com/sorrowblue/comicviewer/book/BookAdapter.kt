@@ -54,7 +54,7 @@ internal class BookAdapter(
     override fun getItemViewType(position: Int) = currentList[position].viewType.ordinal
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (BookViewType.values()[viewType]) {
+        return when (BookViewType.entries[viewType]) {
             BookViewType.NExT -> NextViewHolder(parent)
             BookViewType.SPLIT -> SplitViewHolder(parent)
         }

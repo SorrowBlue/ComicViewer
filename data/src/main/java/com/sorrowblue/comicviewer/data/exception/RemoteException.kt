@@ -2,8 +2,8 @@ package com.sorrowblue.comicviewer.data.exception
 
 sealed class RemoteException : RuntimeException() {
 
-    object NoNetwork : RemoteException()
-    object InvalidAuth : RemoteException()
-    object InvalidServer : RemoteException()
-    object NotFound : RemoteException()
+    data object NoNetwork : RemoteException()
+    data object InvalidAuth : RemoteException()
+    data object InvalidServer : RemoteException()
+    data object NotFound : RemoteException()
 }

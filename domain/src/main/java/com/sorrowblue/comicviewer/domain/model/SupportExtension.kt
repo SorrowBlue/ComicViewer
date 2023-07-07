@@ -29,7 +29,7 @@ sealed interface SupportExtension {
 
     companion object {
         fun valueOf(key: String): SupportExtension {
-            return Archive.values().firstOrNull { it.name == key } ?: Document.values()
+            return Archive.entries.firstOrNull { it.name == key } ?: Document.entries
                 .firstOrNull { it.name == key } ?: throw IllegalArgumentException("")
         }
     }

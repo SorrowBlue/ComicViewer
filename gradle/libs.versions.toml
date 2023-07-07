@@ -5,9 +5,9 @@ android-min-sdk = "30"
 android-target-sdk = "33"
 android-buildtools = "33.0.2"
 
-kotlin = "1.8.22"
-google-ksp = "1.8.22-1.0.11"
-kotlinx-coroutines = "1.7.1"
+kotlin = "1.9.0"
+google-ksp = "1.9.0-1.0.11"
+kotlinx-coroutines = "1.7.2"
 kotlinx-serialization = "1.5.1"
 
 androidx-datastore = "1.0.0"

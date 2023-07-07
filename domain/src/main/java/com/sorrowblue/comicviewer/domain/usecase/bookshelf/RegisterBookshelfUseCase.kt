@@ -16,7 +16,7 @@ abstract class RegisterBookshelfUseCase :
 }
 
 sealed class RegisterBookshelfError : UseCaseError {
-    object InvalidBookshelfInfo : RegisterBookshelfError()
-    object InvalidAuth : RegisterBookshelfError()
-    object InvalidPath : RegisterBookshelfError()
+    data object InvalidBookshelfInfo : RegisterBookshelfError()
+    data object InvalidAuth : RegisterBookshelfError()
+    data object InvalidPath : RegisterBookshelfError()
 }
