@@ -19,6 +19,20 @@
     <string name="bookshelf_info_btn_edit">Edit</string>
     <string name="bookshelf_info_btn_remove">Remove</string>
 
+    <!--Bookshelf Edit-->
+    <string name="bookshelf_edit_smb_input_label_host">Server name / IP address</string>
+    <string name="bookshelf_edit_smb_input_error_host">Please enter the server name or IP address.</string>
+    <string name="bookshelf_edit_smb_input_label_port">Port</string>
+    <string name="bookshelf_edit_smb_input_error_port">Please enter in the range of 0 to 65535.</string>
+    <string name="bookshelf_edit_smb_input_label_path">Path</string>
+    <string name="bookshelf_edit_smb_input_prefix_path">/</string>
+    <string name="bookshelf_edit_smb_input_suffix_path">/</string>
+    <string name="bookshelf_edit_smb_input_label_username">Username</string>
+    <string name="bookshelf_edit_smb_input_error_username">Please enter username.</string>
+    <string name="bookshelf_edit_smb_input_label_password">Password</string>
+    <string name="bookshelf_edit_smb_input_error_password">Please enter password.</string>
+    <string name="bookshelf_edit_smb_message_error">There are some input errors.</string>
+
     <!--Bookshelf Manage-->
     <string name="bookshelf_manage_title_list">Selection of bookshelves</string>
     <string name="bookshelf_manage_title_smb" translatable="false">SMB/LAN</string>

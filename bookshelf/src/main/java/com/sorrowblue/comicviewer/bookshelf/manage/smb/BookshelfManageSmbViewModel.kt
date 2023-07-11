@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.bookshelf.manage.HostNameTextValidator
 import com.sorrowblue.comicviewer.bookshelf.manage.PortTextValidator
 import com.sorrowblue.comicviewer.bookshelf.manage.RequireValidator
 import com.sorrowblue.comicviewer.bookshelf.manage.isErrorFlow
+import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
@@ -21,6 +22,7 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -40,7 +42,7 @@ internal class BookshelfManageSmbViewModel @Inject constructor(
 ) : ViewModel(), SupportSafeArgs {
 
     private val args: BookshelfManageSmbFragmentArgs by navArgs()
-    private val bookshelfFolderFlow =
+    val bookshelfFolderFlow: Flow<BookshelfFolder?> =
         getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(BookshelfId(args.bookshelfId)))
             .map { it.dataOrNull }
     private val smbServerFlow =

@@ -40,11 +40,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -60,42 +61,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.sorrowblue.comicviewer.bookshelf.R
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.copy
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-
-internal class FakeBookshelfSmbEditViewModel : BookshelfSmbEditViewModel()
-
-@HiltViewModel
-internal open class BookshelfSmbEditViewModel @Inject constructor() : ViewModel() {
-    var message = mutableStateOf("")
-
-    val host = mutableStateOf("")
-    val port = mutableStateOf("")
-    val path = mutableStateOf("")
-    val displayName = mutableStateOf("")
-    val domain = mutableStateOf("")
-    val username = mutableStateOf("")
-    val password = mutableStateOf("")
-}
-
-@Preview
-@Composable
-fun PreviewBookshelfSmbEditScreen() {
-    AppMaterialTheme {
-        val viewModel = FakeBookshelfSmbEditViewModel()
-        viewModel.port.value = "0"
-        BookshelfSmbEditScreen(rememberNavController(), viewModel)
-    }
-}
+import kotlinx.coroutines.launch
 
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class,
     ExperimentalComposeUiApi::class
 )
 @Composable
@@ -106,14 +80,6 @@ internal fun BookshelfSmbEditScreen(
     val topAppBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topAppBarState)
     val snackbarHostState = SnackbarHostState()
-    if (viewModel.message.value.isNotEmpty()) {
-        LaunchedEffect(snackbarHostState) {
-            snackbarHostState.showSnackbar(
-                message = viewModel.message.value,
-                duration = SnackbarDuration.Short
-            )
-        }
-    }
     Scaffold(
         Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         snackbarHost = {
@@ -143,95 +109,190 @@ internal fun BookshelfSmbEditScreen(
                 .overscroll(ScrollableDefaults.overscrollEffect())
                 .padding(paddingValues.copy(all = 16.dp))
         ) {
-            HostTextField(
-                value = viewModel.host.value,
+            val hostValidatorState =
+                stringResource(id = R.string.bookshelf_edit_smb_input_error_host).let { message ->
+                    rememberValidatorState { if (it.isNotEmpty()) null else message }
+                }
+            val isInvalidHost = viewModel.isInvalidHost.collectAsState(false)
+            OutlinedTextField(
+                value = viewModel.host.collectAsState().value,
                 onValueChange = { viewModel.host.value = it },
-                modifier = Modifier.fillMaxWidth()
-            )
-            PortTextField(
-                value = viewModel.port.value,
-                onValueChange = { viewModel.port.value = it },
-                modifier = Modifier.fillMaxWidth()
-            )
-            val pathValidatorState =
-                rememberValidatorState { if (it.isNotEmpty()) null else "なにか入力してください。" }
-            ValidatorTextField(
-                value = viewModel.path.value,
-                onValueChange = { viewModel.path.value = it },
-                label = {
-                    Text(text = stringResource(id = R.string.bookshelf_manage_hint_path))
-                },
+                isError = isInvalidHost.value,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Uri,
                     imeAction = ImeAction.Next
+                )
+            )
+            val portValidatorState =
+                stringResource(id = R.string.bookshelf_edit_smb_input_error_port).let { message ->
+                    rememberValidatorState {
+                        if (it.isNotEmpty() && it.matches("^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))\$".toRegex())) null else message
+                    }
+                }
+            val port by viewModel.port.collectAsState()
+            OutlinedTextField(
+                value = port,
+                onValueChange = { viewModel.port.value = it },
+                label = {
+                    Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_port))
+                },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
                 ),
-                validatorState = pathValidatorState
+            )
+            val path by viewModel.path.collectAsState()
+            OutlinedTextField(
+                value = path,
+                onValueChange = { viewModel.path.value = it },
+                label = {
+                    Text(text = stringResource(id = R.string.bookshelf_manage_hint_path))
+                },
+                prefix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_prefix_path)) },
+                suffix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_suffix_path)) },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Uri,
+                    imeAction = ImeAction.Next
+                )
             )
             val displayNameValidatorState =
                 rememberValidatorState { if (it.isNotEmpty()) null else "なにか入力してください。" }
+            val authMode by viewModel.authMode.collectAsState()
+            val displayName by viewModel.displayName.collectAsState()
             ValidatorTextField(
-                value = viewModel.displayName.value,
-                onValueChange = { viewModel.displayName.value = it },
+                value = displayName,
+                onValueChange = {  },
                 label = {
                     Text(text = stringResource(id = R.string.bookshelf_manage_hint_display_name))
                 },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
+                    imeAction = if (authMode == AuthMode.USERPASS) ImeAction.Next else ImeAction.Done
                 ),
                 validatorState = displayNameValidatorState
             )
 
             Spacer(modifier = Modifier.padding(top = 8.dp))
 
-            var selectedIndex by remember { mutableStateOf(0) }
             ToggleGroup(
                 listOf(
                     stringResource(id = R.string.bookshelf_manage_label_guest),
                     stringResource(id = R.string.bookshelf_manage_label_username_password)
-                ), selectedIndex
+                ),
+                AuthMode.entries.indexOf(authMode)
             ) {
-                selectedIndex = it
+                viewModel.authMode.value = AuthMode.entries[it]
             }
-            if (selectedIndex != 0) {
-                ValidatorTextField(
-                    value = viewModel.domain.value,
-                    onValueChange = { viewModel.domain.value = it },
-                    label = {
-                        Text(text = stringResource(id = R.string.bookshelf_manage_hint_domain))
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    ),
-                    validatorState = rememberValidatorState { if (it.isNotEmpty()) null else "なにか入力してください。" }
-                )
+            val usernameValidator =
+                stringResource(id = R.string.bookshelf_edit_smb_input_error_username).let { message ->
+                    rememberValidatorState { if (it.isNotEmpty()) null else message }
+                }
+            val passwordValidator =
+                stringResource(id = R.string.bookshelf_edit_smb_input_error_password).let { message ->
+                    rememberValidatorState { if (it.isNotEmpty()) null else message }
+                }
+            when (authMode) {
+                AuthMode.GUEST -> {
+                    usernameValidator.isError = false
+                    passwordValidator.isError = false
+                }
 
-                ValidatorTextField(
-                    value = viewModel.username.value,
-                    onValueChange = { viewModel.username.value = it },
-                    label = {
-                        Text(text = stringResource(id = R.string.bookshelf_manage_hint_username))
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    ),
-                    validatorState = rememberValidatorState { if (it.isNotEmpty()) null else "なにか入力してください。" }
-                )
-
-                PasswordInput(viewModel.password)
+                AuthMode.USERPASS -> {
+                    val domain by viewModel.domain.collectAsState()
+                    OutlinedTextField(
+                        value = domain,
+                        onValueChange = { viewModel.domain.value = it },
+                        label = {
+                            Text(text = stringResource(id = R.string.bookshelf_manage_hint_domain))
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Next
+                        )
+                    )
+                    val username by viewModel.username.collectAsState()
+                    ValidatorTextField(
+                        value = username,
+                        onValueChange = { viewModel.username.value = it },
+                        label = {
+                            Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_username))
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Next
+                        ),
+                        validatorState = usernameValidator
+                    )
+                    val password by viewModel.password.collectAsState()
+                    ValidatorTextField(
+                        value = password,
+                        onValueChange = { viewModel.password.value = it },
+                        label = {
+                            Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_password))
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done
+                        ),
+                        validatorState = passwordValidator
+                    )
+                }
             }
             Spacer(modifier = Modifier.padding(top = 8.dp))
             val keyboardController = LocalSoftwareKeyboardController.current
+            val errorMessage = stringResource(id = R.string.bookshelf_edit_smb_message_error)
+            val scope = rememberCoroutineScope()
             TextButton(
                 onClick = {
-                    pathValidatorState.revalidate()
+                    hostValidatorState.revalidate()
+                    portValidatorState.revalidate()
                     displayNameValidatorState.revalidate()
+                    when (authMode) {
+                        AuthMode.GUEST -> {
+                            if (hostValidatorState.isError || portValidatorState.isError || displayNameValidatorState.isError) {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = errorMessage,
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                            } else {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "GUEST OK",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                            }
+                        }
+
+                        AuthMode.USERPASS -> {
+                            usernameValidator.revalidate()
+                            passwordValidator.revalidate()
+                            if (hostValidatorState.isError || portValidatorState.isError || displayNameValidatorState.isError || usernameValidator.isError || passwordValidator.isError) {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = errorMessage,
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                            } else {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "USER OK",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                            }
+                        }
+                    }
                     keyboardController?.hide()
                 },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
@@ -247,6 +308,11 @@ internal fun BookshelfSmbEditScreen(
             }
         }
     }
+}
+
+enum class AuthMode(val index: Int) {
+    GUEST(0),
+    USERPASS(1)
 }
 
 @Composable
@@ -370,114 +436,5 @@ fun PasswordInput(password: MutableState<String>, initPasswordVisibility: Boolea
         modifier = Modifier.fillMaxWidth(),
         supportingText = {
         }
-    )
-}
-
-@Composable
-fun HostTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var error by remember { mutableStateOf<String?>(null) }
-    OutlinedTextField(
-        value = value,
-        label = {
-            Text(text = stringResource(id = R.string.bookshelf_manage_hint_host))
-        },
-        isError = error != null,
-        onValueChange = {
-            error = if (it.isEmpty()) "Please enter something." else null
-            onValueChange(it)
-        },
-        modifier = modifier,
-        supportingText = {
-            error?.let { Text(text = it) }
-        },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Next
-        )
-    )
-}
-
-@Composable
-fun PortTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var error by remember { mutableStateOf<String?>(null) }
-    OutlinedTextField(
-        value = value,
-        label = {
-            Text(text = stringResource(id = R.string.bookshelf_manage_hint_port))
-        },
-        isError = error != null,
-        onValueChange = {
-            error =
-                if (it.isNotEmpty() && it.matches("^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))\$".toRegex())) null else "0～65535の間で入力してください"
-            onValueChange(it)
-        },
-        modifier = modifier,
-        supportingText = {
-            error?.let { Text(text = it) }
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Next
-        )
-    )
-}
-
-data class ValidatorState(
-    val isError: Boolean,
-    val message: String?,
-    val validate: (String) -> Unit,
-    val revalidate: () -> Unit
-)
-
-@Composable
-fun rememberValidatorState(validate: (String) -> String?): ValidatorState {
-    var error by remember { mutableStateOf<String?>(null) }
-    var text by remember { mutableStateOf("") }
-    return remember(error) {
-        ValidatorState(
-            isError = error != null,
-            message = error,
-            validate = {
-                text = it
-                error = validate.invoke(it)
-            },
-            revalidate = {
-                error = validate.invoke(text)
-            }
-        )
-    }
-}
-
-@Composable
-fun ValidatorTextField(
-    value: String,
-    label: @Composable () -> Unit,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    validatorState: ValidatorState = rememberValidatorState(validate = { null })
-) {
-    OutlinedTextField(
-        value = value,
-        label = label,
-        isError = validatorState.isError,
-        onValueChange = {
-            onValueChange(it)
-            validatorState.validate(it)
-        },
-        modifier = modifier,
-        supportingText = {
-            if (validatorState.message != null) {
-                Text(text = validatorState.message)
-            }
-        },
-        keyboardOptions = keyboardOptions
     )
 }
