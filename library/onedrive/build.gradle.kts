@@ -31,7 +31,9 @@ dependencies {
 
     implementation(libs.androidx.work.runtime.ktx)
 
-    implementation(libs.microsoft.graph)
+    implementation(libs.microsoft.graph) {
+        exclude("com.google.guava","guava")
+    }
     implementation(libs.microsoft.identity.client.msal)
 
     implementation(libs.kotlinx.coroutines.jdk8)
