@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.gestures.ScrollableDefaults
@@ -11,7 +12,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
@@ -19,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,17 +37,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.databinding.InverseMethod
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.material.transition.MaterialSharedAxis
@@ -132,15 +140,6 @@ fun MaiinContent(
     var port by remember { mutableStateOf(smbServer?.port?.toString().orEmpty()) }
     var path by remember { mutableStateOf(folder?.path.orEmpty()) }
     var displayName by remember { mutableStateOf(smbServer?.displayName.orEmpty()) }
-    var authMode by remember {
-        logcat("TAG") { "cal authMode" }
-        mutableStateOf(
-            when (smbServer?.auth ?: SmbServer.Auth.Guest) {
-                SmbServer.Auth.Guest -> AuthMode.GUEST
-                is SmbServer.Auth.UsernamePassword -> AuthMode.USERPASS
-            }
-        )
-    }
     var domain by remember {
         logcat("TAG") { "cal domain" }
         mutableStateOf(
@@ -191,32 +190,15 @@ fun MaiinContent(
             .fillMaxWidth()
             .padding(top = 8.dp)
         )
-
-        Row {
-            OutlinedButton(
-                onClick = { /*TODO*/ },
-                shape = MaterialTheme.shapes.small.copy(
-                    topEnd = CornerSize(0.dp),
-                    bottomEnd = CornerSize(0.dp)
-                )
-            ) {
-                Text(text = "Guest")
-            }
-            OutlinedButton(
-                onClick = { /*TODO*/ },
-                shape = MaterialTheme.shapes.small.copy(
-                    topStart = CornerSize(0.dp),
-                    bottomStart = CornerSize(0.dp)
-                )
-            ) {
-                Text(text = "Username/Password")
-            }
-        }
-
-        when (authMode) {
-            AuthMode.GUEST -> {
-            }
-
+        var selectedIndex by remember { mutableStateOf(0) }
+        MaterialButtons(
+            labels = remember { Labels(AuthMode.entries.map { it.name }) },
+            selectedIndex = selectedIndex,
+            onClick = { selectedIndex = it },
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        when (AuthMode.entries[selectedIndex]) {
+            AuthMode.GUEST -> Unit
             AuthMode.USERPASS -> {
                 OutlinedTextField(value = domain, onValueChange = { domain = it }, label = {
                     Text(text = stringResource(id = R.string.bookshelf_manage_hint_domain))
@@ -238,12 +220,71 @@ fun MaiinContent(
                 )
             }
         }
-        Button(onClick = { }) {
+        Button(
+            onClick = { onSaveClick() },
+            modifier = Modifier.padding(top = 8.dp)
+        ) {
             Text(text = "Save")
         }
     }
 }
 
+@Immutable
+data class Labels(
+    val l: List<String>
+)
+
+@Composable
+fun MaterialButtons(
+    labels: Labels,
+    selectedIndex: Int,
+    onClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier) {
+        labels.l.forEachIndexed { index, label ->
+            OutlinedButton(
+                onClick = { onClick(index) },
+                modifier = Modifier
+                    .offset((-1 * index).dp, 0.dp),
+                shape = if (index == 0) {
+                    MaterialTheme.shapes.small.copy(
+                        topEnd = CornerSize(0.dp),
+                        bottomEnd = CornerSize(0.dp)
+                    )
+                } else if (index != labels.l.lastIndex) {
+                    MaterialTheme.shapes.small.copy(
+                        topEnd = CornerSize(0.dp),
+                        bottomEnd = CornerSize(0.dp),
+                        topStart = CornerSize(0.dp),
+                        bottomStart = CornerSize(0.dp)
+                    )
+                } else {
+                    MaterialTheme.shapes.small.copy(
+                        topStart = CornerSize(0.dp),
+                        bottomStart = CornerSize(0.dp)
+                    )
+                },
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                colors = if (selectedIndex == index) {
+                    // selected colors
+                    ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                } else {
+                    // not selected colors
+                    ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+            ) {
+                Text(text = label)
+            }
+        }
+    }
+}
 
 internal object AuthConverter {
 

@@ -371,6 +371,7 @@ fun ToggleGroup(
                     }
                 ),
                 colors = if (selectedIndex == index) {
+                    ButtonDefaults.outlinedButtonColors()
                     // selected colors
                     ButtonDefaults.outlinedButtonColors(
                         containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
