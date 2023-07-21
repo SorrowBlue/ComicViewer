@@ -23,7 +23,7 @@ dagger-hilt-android = "2.47"
 
 android-gradle = "8.1.0-rc01"
 
-mikepenz-aboutlibraries = "10.8.2"
+mikepenz-aboutlibraries = "10.8.3"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
