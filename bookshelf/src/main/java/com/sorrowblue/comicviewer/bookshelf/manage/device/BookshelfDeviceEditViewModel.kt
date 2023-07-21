@@ -1,11 +1,9 @@
 package com.sorrowblue.comicviewer.bookshelf.manage.device
 
-import androidx.core.net.toUri
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.bookshelf.manage.RequireValidator
-import com.sorrowblue.comicviewer.bookshelf.manage.isErrorFlow
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
@@ -13,27 +11,26 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfErro
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.Unknown
-import com.sorrowblue.comicviewer.framework.ui.flow.mutableStateIn
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import logcat.logcat
 
 @HiltViewModel
-internal class BookshelfManageDeviceViewModel @Inject constructor(
+open class BookshelfDeviceEditViewModel @Inject constructor(
     getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val registerBookshelfUseCase: RegisterBookshelfUseCase,
     override val savedStateHandle: SavedStateHandle,
@@ -45,51 +42,65 @@ internal class BookshelfManageDeviceViewModel @Inject constructor(
             .map { it.dataOrNull }
     private val internalStorageFlow =
         bookshelfFolderFlow.map { it?.bookshelf as? InternalStorage }.stateIn { null }
-    val folder = bookshelfFolderFlow.map { it?.folder }.stateIn { null }
 
-    val data = folder.map { it?.path?.toUri() }.mutableStateIn(null)
-    val transitionName = args.transitionName
-    val displayNameValidator = listOf(RequireValidator())
+    val state = MutableStateFlow(BookshelfEditState.NONE)
+    val errorDisplayName = MutableStateFlow("")
+    val displayName = MutableStateFlow("")
+    val message = MutableStateFlow("")
+    val data = MutableStateFlow<Uri?>(null)
+    val dir: StateFlow<String> = data.mapNotNull {
+        it?.lastPathSegment?.split(":")?.lastOrNull()
+    }.stateIn(viewModelScope, SharingStarted.Lazily, "")
 
-    val displayName = internalStorageFlow.mapNotNull { it?.displayName }.mutableStateIn("")
-    val dir: StateFlow<String> = data.mapNotNull { it?.lastPathSegment?.removePrefix(":") }
-        .stateIn(viewModelScope, SharingStarted.Lazily, "")
-    val isError = combine(
-        data,
-        displayNameValidator.isErrorFlow(),
-    ) { data, displayName ->
-        data == null || displayName
-    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
-    val isConnecting = MutableStateFlow(false)
+    init {
+        viewModelScope.launch {
+            bookshelfFolderFlow.filterNotNull().onEach {
+                displayName.value = it.bookshelf.displayName
+            }.collect()
+        }
+    }
+
+    fun updateDisplayName(str: String) {
+        displayName.value = str
+        if (str.isEmpty()) {
+            errorDisplayName.value = "なにか入力してください"
+        } else {
+            errorDisplayName.value = ""
+        }
+    }
+
 
     fun connect(function: () -> Unit) {
         val internalStorage = internalStorageFlow.value ?: kotlin.run {
             if (args.bookshelfId == -1) null else return
         }
-        isConnecting.value = true
-        if (isError.value) {
-            isConnecting.value = false
-            message.tryEmit("入力してください")
+
+        state.value = BookshelfEditState.LOADING
+
+        updateDisplayName(displayName.value)
+
+        if (errorDisplayName.value.isNotEmpty()) {
+            state.value = BookshelfEditState.NONE
             return
         }
-        val library = internalStorage?.copy(displayName = displayName.value)
+        val storage = internalStorage?.copy(displayName = displayName.value)
             ?: InternalStorage(displayName.value)
         viewModelScope.launch {
-            when (val res = registerBookshelfUseCase.execute(
-                RegisterBookshelfUseCase.Request(
-                    library,
-                    data.value?.toString().orEmpty()
-                )
-            ).first()) {
-                is Result.Error -> when (res.error) {
+            val resultFlow = registerBookshelfUseCase.execute(
+                RegisterBookshelfUseCase.Request(storage, data.value?.toString().orEmpty())
+            )
+            when (val result = resultFlow.first()) {
+                is Result.Error -> when (result.error) {
                     RegisterBookshelfError.InvalidAuth -> message.emit("アクセス権限がありません。")
                     RegisterBookshelfError.InvalidPath -> message.emit("フォルダが存在しません。")
                     RegisterBookshelfError.InvalidBookshelfInfo -> Unit
+                    RegisterBookshelfError.Network -> message.emit("フォルダが存在しません。")
+                    RegisterBookshelfError.Unknown -> message.emit("フォルダが存在しません。")
                 }
 
                 is Result.Exception -> {
-                    if (res.cause is Unknown) {
-                        logcat { "Error: ${(res.cause as Unknown).throws}" }
+                    if (result.cause is Unknown) {
+                        logcat { "Error: ${(result.cause as Unknown).throws}" }
                     }
                 }
 
@@ -97,9 +108,7 @@ internal class BookshelfManageDeviceViewModel @Inject constructor(
                     function.invoke()
                 }
             }
-            isConnecting.value = false
+            state.value = BookshelfEditState.NONE
         }
     }
-
-    val message = MutableSharedFlow<String>(0, 1, BufferOverflow.DROP_OLDEST)
 }

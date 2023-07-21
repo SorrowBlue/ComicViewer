@@ -33,4 +33,14 @@ dependencies {
     api(libs.chrisbanes.insetter)
     api(libs.sorrowblue.binding.ktx)
     api(libs.androidx.paging.runtime.ktx)
+    api(libs.androidx.paging.compose)
+    api(libs.androidx.hilt.navigation.compose)
+
+    api(platform(libs.androidx.compose.bom))
+    api(libs.bundles.androidx.compose)
+    api(libs.coil.compose)
+    api(libs.google.accompanist.themeadapter.material3)
+    debugImplementation(libs.bundles.androidx.compose.debug)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 }

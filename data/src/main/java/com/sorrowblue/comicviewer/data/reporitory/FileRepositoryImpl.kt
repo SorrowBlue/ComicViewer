@@ -13,9 +13,9 @@ import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.di.ThumbnailDiskCache
+import com.sorrowblue.comicviewer.data.toBookshelfModel
 import com.sorrowblue.comicviewer.data.toFile
 import com.sorrowblue.comicviewer.data.toFileModel
-import com.sorrowblue.comicviewer.data.toBookshelfModel
 import com.sorrowblue.comicviewer.domain.entity.SearchCondition
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
@@ -164,15 +164,17 @@ internal class FileRepositoryImpl @Inject constructor(
         path: String
     ): Result<Folder, FileRepositoryError> {
         return withContext(Dispatchers.IO) {
-            val file =
+            kotlin.runCatching {
                 remoteDataSourceFactory.create(bookshelf.toBookshelfModel()).fileModel(path).toFile()
-            withContext(Dispatchers.IO) {
+            }.fold({ file ->
                 if (file is Folder) {
                     Result.Success(file)
                 } else {
                     Result.Error(FileRepositoryError.PathDoesNotExist)
                 }
-            }
+            }, {
+                Result.Error(FileRepositoryError.IncorrectServerInfo)
+            })
         }
     }
 

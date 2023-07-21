@@ -1,146 +1,333 @@
 package com.sorrowblue.comicviewer.bookshelf.manage.smb
 
-import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.isVisible
-import androidx.databinding.InverseMethod
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.color.MaterialColors
-import com.google.android.material.transition.MaterialArcMotion
-import com.google.android.material.transition.MaterialContainerTransform
+import android.view.ViewGroup
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.overscroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.findNavController
 import com.google.android.material.transition.MaterialSharedAxis
 import com.sorrowblue.comicviewer.bookshelf.R
-import com.sorrowblue.comicviewer.bookshelf.databinding.BookshelfFragmentManageSmbBinding
-import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
+import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.compose.copy
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
-import com.sorrowblue.comicviewer.framework.ui.fragment.type
-import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applyInsetter
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-internal class BookshelfManageSmbFragment :
-    FrameworkFragment(R.layout.bookshelf_fragment_manage_smb) {
-
-    private val binding: BookshelfFragmentManageSmbBinding by viewBinding()
-    private val viewModel: BookshelfManageSmbViewModel by viewModels()
-    private val commonViewModel: CommonViewModel by activityViewModels()
+internal class BookshelfManageSmbFragment : FrameworkFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (viewModel.transitionName != null) {
-            sharedElementEnterTransition = MaterialContainerTransform().apply {
-                fadeMode = MaterialContainerTransform.FADE_MODE_THROUGH
-                containerColor = MaterialColors.getColor(
-                    requireContext(),
-                    android.R.attr.colorBackground,
-                    containerColor
-                )
-                scrimColor = Color.TRANSPARENT
-                setPathMotion(MaterialArcMotion())
-            }
-            enterTransition = null
-            returnTransition = null
-        } else {
-            sharedElementEnterTransition = null
-            enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-            returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
-        }
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.toolbar.setupWithNavController()
-        binding.toolbar.applyInsetter {
-            type(systemBars = true, displayCutout = true) {
-                padding(horizontal = true)
-                margin(top = true)
-            }
-        }
-        binding.nestedScroll.applyInsetter {
-            type(systemBars = true, displayCutout = true, ime = true) {
-                padding(horizontal = true, bottom = true)
-            }
-        }
-        binding.root.transitionName = viewModel.transitionName
-        binding.viewModel = viewModel
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isConnecting.collectLatest {
-                binding.save.isVisible = !it
-            }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isError.collectLatest {
-                binding.save.isEnabled = !it
-            }
-        }
-        binding.save.setOnClickListener {
-            binding.host.editText?.setText(viewModel.hostFlow.value)
-            if (viewModel.isGuestFlow.value) {
-                binding.host.editText?.setText(viewModel.hostFlow.value)
-            } else {
-                binding.host.editText?.setText(viewModel.hostFlow.value)
-                binding.username.editText?.setText(viewModel.usernameFlow.value)
-                binding.password.editText?.setText(viewModel.passwordFlow.value)
-            }
-            WindowInsetsControllerCompat(requireActivity().window, binding.root)
-                .hide(WindowInsetsCompat.Type.ime())
-            viewModel.connect {
-                if (it) {
-                    // 初期登録
-                    findNavController().popBackStack(
-                        R.id.bookshelf_manage_list_fragment,
-                        true
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AppMaterialTheme {
+                    BookshelfEditSmbScreen(
+                        navigateUp = findNavController()::navigateUp,
+                        saveComplete = {
+                            findNavController().popBackStack(
+                                R.id.bookshelf_manage_list_fragment,
+                                true
+                            )
+                        }
                     )
-                } else {
-                    // 編集
-                    findNavController().popBackStack()
-                }
-            }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.message.collectLatest {
-                    commonViewModel.snackbarMessage.tryEmit(it)
                 }
             }
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@Composable
+internal fun BookshelfEditSmbScreen(
+    navigateUp: () -> Unit,
+    saveComplete: () -> Unit,
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    viewModel: BookshelfSmbEditViewModel = hiltViewModel()
+) {
+    val topAppBarState = rememberTopAppBarState()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topAppBarState)
+    val snackbarHostState = SnackbarHostState()
+    LaunchedEffect(viewModel.uiEvent) {
+        viewModel.uiEvent.collectLatest {
+            when (it) {
+                is BookshelfSmbEditViewModel.UiEvent.Error ->
+                    snackbarHostState.showSnackbar(it.e, duration = SnackbarDuration.Short)
 
-internal object AuthConverter {
-
-    @JvmStatic
-    @InverseMethod("buttonIdToBoolean")
-    fun booleanToButtonId(value: Boolean): Int {
-        return if (value) R.id.guest else R.id.username_password
+                BookshelfSmbEditViewModel.UiEvent.SaveComplete -> saveComplete()
+            }
+        }
     }
-
-    @JvmStatic
-    fun buttonIdToBoolean(value: Int): Boolean {
-        return value == R.id.guest
+    Scaffold(
+        Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(stringResource(id = R.string.bookshelf_manage_title_device)) },
+                navigationIcon = {
+                    IconButton(onClick = { navigateUp() }) {
+                        Icon(
+                            imageVector = Icons.TwoTone.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) { paddingValues ->
+        MainContent(
+            viewModel,
+            modifier = Modifier
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+                .overscroll(ScrollableDefaults.overscrollEffect())
+                .padding(paddingValues.copy(all = 16.dp))
+        )
+        val uiState by viewModel.uiState.collectAsState()
+        if (uiState == BookshelfSmbEditViewModel.UiState.CONNECTING) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(1f)
+                    .background(MaterialTheme.colorScheme.scrim)
+                    .clickable {},
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
     }
 }
 
+@Composable
+internal fun MainContent(
+    viewModel: BookshelfSmbEditViewModel,
+    modifier: Modifier = Modifier
+) {
+    val host by viewModel.host.flow.collectAsState()
+    val isInvalidHost by viewModel.host.isError.collectAsState(false)
+    val port by viewModel.port.flow.collectAsState()
+    val isInvalidPort by viewModel.port.isError.collectAsState(false)
+    val path by viewModel.path.flow.collectAsState()
+    val isInvalidPath by viewModel.path.isError.collectAsState(false)
+    val displayName by viewModel.displayName.flow.collectAsState()
+    val isInvalidDisplayName by viewModel.displayName.isError.collectAsState(false)
+    val isGuest by viewModel.isGuest.flow.collectAsState()
+    val domain by viewModel.domain.flow.collectAsState()
+    val username by viewModel.username.flow.collectAsState()
+    val isInvalidUsername by viewModel.username.isError.collectAsState(false)
+    val password by viewModel.password.flow.collectAsState()
+    val isInvalidPassword by viewModel.password.isError.collectAsState(false)
+    Column(modifier) {
+        OutlinedTextField(
+            value = host,
+            onValueChange = remember { viewModel.host::edit },
+            label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_host)) },
+            isError = isInvalidHost,
+            supportingText = {
+                if (isInvalidHost) {
+                    Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_host))
+                }
+            },
+            singleLine = viewModel.host.singleLine,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Uri,
+                imeAction = ImeAction.Next
 
-internal object PortConverter {
-
-    @JvmStatic
-    @InverseMethod("portToString")
-    fun stringToPort(value: String?) = value?.toIntOrNull()
-
-    @JvmStatic
-    fun portToString(value: Int?) = value?.toString()
+            ),
+        )
+        OutlinedTextField(
+            value = port,
+            onValueChange = remember { viewModel.port::edit },
+            label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_port)) },
+            isError = isInvalidPort,
+            supportingText = {
+                if (isInvalidPort) {
+                    Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_port))
+                }
+            },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.NumberPassword,
+                imeAction = ImeAction.Next
+            )
+        )
+        OutlinedTextField(
+            value = path,
+            onValueChange = remember { viewModel.path::edit },
+            label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_path)) },
+            isError = isInvalidPath,
+            supportingText = {
+                if (isInvalidPath) {
+                    Text(text = "エラー")
+                }
+            },
+            prefix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_prefix_path)) },
+            suffix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_suffix_path)) },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Uri,
+                imeAction = ImeAction.Next
+            )
+        )
+        OutlinedTextField(
+            value = displayName,
+            onValueChange = remember { viewModel.displayName::edit },
+            label = {
+                Text(text = stringResource(id = R.string.bookshelf_manage_hint_display_name))
+            },
+            isError = isInvalidDisplayName,
+            supportingText = {
+                if (isInvalidDisplayName) {
+                    Text(text = stringResource(id = R.string.bookshelf_manage_hint_display_name))
+                }
+            },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = if (isGuest) ImeAction.Done else ImeAction.Next
+            )
+        )
+        val selectedIndex by remember(isGuest) { derivedStateOf { if (isGuest) 0 else 1 } }
+        MaterialButtons(
+            size = remember { 2 },
+            label = {
+                Text(text = stringResource(id = if (it == 0) R.string.bookshelf_manage_label_guest else R.string.bookshelf_manage_label_username_password))
+            },
+            selectedIndex = selectedIndex,
+            onChange = remember { { viewModel.isGuest.edit(it == 0) } },
+            modifier = Modifier.padding(top = 16.dp)
+        )
+        if (!isGuest) {
+            OutlinedTextField(
+                value = domain,
+                onValueChange = remember { viewModel.domain::edit },
+                label = { Text(text = stringResource(id = R.string.bookshelf_manage_hint_domain)) },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                )
+            )
+            OutlinedTextField(
+                value = username,
+                onValueChange = remember { viewModel.username::edit },
+                label = { Text(text = stringResource(id = R.string.bookshelf_manage_hint_username)) },
+                isError = isInvalidUsername,
+                supportingText = {
+                    if (isInvalidUsername) {
+                        Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_username))
+                    }
+                },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                )
+            )
+            OutlinedTextField(
+                value = password,
+                onValueChange = remember { viewModel.password::edit },
+                isError = isInvalidPassword,
+                supportingText = {
+                    if (isInvalidPassword) {
+                        Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_password))
+                    }
+                },
+                label = { Text(text = stringResource(id = R.string.bookshelf_manage_hint_password)) },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                )
+            )
+        }
+        Button(
+            onClick = { viewModel.save() },
+            modifier = Modifier.padding(top = 8.dp)
+        ) {
+            Text(text = "Save")
+        }
+    }
 }
-

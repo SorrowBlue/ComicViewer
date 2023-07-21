@@ -72,11 +72,19 @@ abstract class PagingFragment<T : Any, AD : PagingDataAdapter<T, *>> : Framework
                 )
                 setPathMotion(MaterialArcMotion())
             }
-            exitTransition = MaterialElevationScale(false)
-            reenterTransition = MaterialElevationScale(true)
+            exitTransition = MaterialElevationScale(false).apply {
+                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
+            }
+            reenterTransition = MaterialElevationScale(true).apply {
+                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
+            }
         } else {
-            enterTransition = MaterialFadeThrough()
-            exitTransition = MaterialFadeThrough()
+            enterTransition = MaterialFadeThrough().apply {
+                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
+            }
+            exitTransition = MaterialFadeThrough().apply {
+                excludeTarget(com.google.android.material.R.id.search_view_scrim, true)
+            }
         }
     }
 
