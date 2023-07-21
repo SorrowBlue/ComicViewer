@@ -1,30 +1,30 @@
-@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
-
 plugins {
     id("build-logic.android.library")
-    id("com.sorrowblue.dagger-hilt")
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
 android {
-    resourcePrefix("bookshelf")
-
     buildFeatures {
-        dataBinding = true
-        viewBinding = true
         compose = true
     }
-
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
     }
 }
 
 dependencies {
-    implementation(projects.framework.ui)
-    implementation(projects.framework.compose)
-    implementation(projects.domain)
-    implementation(projects.folder)
+    api(projects.framework)
+    api(projects.framework.resource)
+
+    api(libs.androidx.fragment.ktx)
+    api(libs.bundles.androidx.lifecycle)
+    api(libs.bundles.androidx.navigation)
+
+    api(platform(libs.androidx.compose.bom))
+    api(libs.bundles.androidx.compose)
+    api(libs.androidx.hilt.navigation.compose)
+    api(libs.coil.compose)
+    api(libs.androidx.paging.compose)
+    api(libs.google.accompanist.themeadapter.material3)
     debugImplementation(libs.bundles.androidx.compose.debug)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

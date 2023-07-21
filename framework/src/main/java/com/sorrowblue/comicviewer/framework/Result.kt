@@ -29,3 +29,4 @@ sealed class Result<out S, out F> {
 object NoNetwork : Result.Exception.Cause
 object IllegalArguments : Result.Exception.Cause
 class Unknown(val throws: Throwable) : Result.Exception.Cause
+

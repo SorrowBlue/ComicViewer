@@ -19,4 +19,6 @@ sealed class RegisterBookshelfError : UseCaseError {
     data object InvalidBookshelfInfo : RegisterBookshelfError()
     data object InvalidAuth : RegisterBookshelfError()
     data object InvalidPath : RegisterBookshelfError()
+    data object Unknown : RegisterBookshelfError()
+    data object Network : RegisterBookshelfError()
 }

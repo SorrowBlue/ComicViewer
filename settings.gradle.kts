@@ -41,6 +41,8 @@ dependencyResolutionManagement {
         // com.github.omicronapps:7-Zip-JBinding-4Android
         maven { url = uri("https://jitpack.io/") }
 
+        maven {url = uri("https://androidx.dev/storage/compose-compiler/repository/")}
+
         maven {
             url =
                 uri("https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1")
@@ -54,6 +56,7 @@ include(":app")
 
 // framework
 include(":framework")
+include(":framework:compose")
 include(":framework:notification")
 include(":framework:resource")
 include(":framework:settings")

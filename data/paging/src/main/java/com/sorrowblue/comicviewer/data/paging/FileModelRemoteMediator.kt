@@ -73,6 +73,7 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
                     RemoteException.InvalidServer -> PagingException.InvalidServer
                     RemoteException.NoNetwork -> PagingException.NoNetwork
                     RemoteException.NotFound -> PagingException.NotFound
+                    RemoteException.Unknown -> PagingException.NotFound
                 }
             } else {
                 it
