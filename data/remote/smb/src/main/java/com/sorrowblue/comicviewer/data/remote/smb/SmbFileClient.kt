@@ -15,6 +15,7 @@ import java.io.InputStream
 import java.net.ConnectException
 import java.net.URI
 import java.net.URLDecoder
+import java.net.UnknownHostException
 import java.util.Properties
 import jcifs.CIFSContext
 import jcifs.DialectVersion
@@ -46,7 +47,10 @@ internal class SmbFileClient @AssistedInject constructor(
 
     override suspend fun connect(path: String) {
         kotlin.runCatching {
-            smbFile(path).use { it.exists() }
+            smbFile(path).use {
+                it.connect()
+                it.exists()
+            }
         }.fold({
             if (it) {
                 Result.Success(Unit)
@@ -62,7 +66,9 @@ internal class SmbFileClient @AssistedInject constructor(
                 }
 
                 is SmbException -> {
-                    if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
+                    if (it.cause is UnknownHostException) {
+                        throw FileClientException.NoNetwork
+                    } else if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
                         throw FileClientException.NoNetwork
                     } else {
                         logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }

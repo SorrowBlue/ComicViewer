@@ -94,6 +94,8 @@ open class BookshelfDeviceEditViewModel @Inject constructor(
                     RegisterBookshelfError.InvalidAuth -> message.emit("アクセス権限がありません。")
                     RegisterBookshelfError.InvalidPath -> message.emit("フォルダが存在しません。")
                     RegisterBookshelfError.InvalidBookshelfInfo -> Unit
+                    RegisterBookshelfError.Network -> message.emit("フォルダが存在しません。")
+                    RegisterBookshelfError.Unknown -> message.emit("フォルダが存在しません。")
                 }
 
                 is Result.Exception -> {

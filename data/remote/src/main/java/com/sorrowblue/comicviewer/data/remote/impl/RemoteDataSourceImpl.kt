@@ -53,8 +53,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
                         FileClientException.InvalidServer -> RemoteException.InvalidServer
                         FileClientException.NoNetwork -> RemoteException.NoNetwork
                     }
-
-                    else -> it
+                    else -> RemoteException.Unknown
                 }
             }
         }
