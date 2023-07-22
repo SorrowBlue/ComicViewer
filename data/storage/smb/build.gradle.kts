@@ -15,7 +15,7 @@ android {
 
 dependencies {
     implementation(projects.framework)
-    implementation(projects.data.remote)
+    implementation(projects.data.storage)
 
     implementation(libs.squareup.logcat)
     implementation(libs.jcifs.ng)

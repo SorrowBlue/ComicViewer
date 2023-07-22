@@ -34,6 +34,9 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
         }, {
             Result.Error(Unit)
         }, {
+            when (it) {
+
+            }
             Result.Error(Unit)
         })
     }

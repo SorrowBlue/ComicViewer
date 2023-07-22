@@ -7,8 +7,8 @@ dependencies {
     implementation(projects.data.datastore)
     implementation(projects.data.paging)
     implementation(projects.data.reader.zip)
-    implementation(projects.data.remote.device)
-    implementation(projects.data.remote.smb)
+    implementation(projects.data.storage.device)
+    implementation(projects.data.storage.smb)
     implementation(projects.data.service)
 
 }

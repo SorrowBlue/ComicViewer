@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 import com.sorrowblue.comicviewer.domain.usecase.FlowOneUseCase
-import com.sorrowblue.comicviewer.domain.usecase.UseCaseError
+import com.sorrowblue.comicviewer.framework.Resource
 
 abstract class RegisterBookshelfUseCase :
     FlowOneUseCase<RegisterBookshelfUseCase.Request, Bookshelf, RegisterBookshelfError>() {
@@ -15,10 +15,10 @@ abstract class RegisterBookshelfUseCase :
     }
 }
 
-sealed class RegisterBookshelfError : UseCaseError {
-    data object InvalidBookshelfInfo : RegisterBookshelfError()
-    data object InvalidAuth : RegisterBookshelfError()
-    data object InvalidPath : RegisterBookshelfError()
-    data object Unknown : RegisterBookshelfError()
-    data object Network : RegisterBookshelfError()
+sealed interface RegisterBookshelfError : Resource.ErrorEntity {
+    data object InvalidBookshelfInfo : RegisterBookshelfError
+    data object InvalidAuth : RegisterBookshelfError
+    data object InvalidPath : RegisterBookshelfError
+    data object Unknown : RegisterBookshelfError
+    data object Network : RegisterBookshelfError
 }

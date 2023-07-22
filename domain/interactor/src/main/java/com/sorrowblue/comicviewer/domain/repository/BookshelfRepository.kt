@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface BookshelfRepository {
 
-    sealed interface Error {
+    sealed interface Error: Resource.ErrorEntity {
         data object InvalidPath : Error
         data object InvalidAuth : Error
         data object InvalidServer : Error

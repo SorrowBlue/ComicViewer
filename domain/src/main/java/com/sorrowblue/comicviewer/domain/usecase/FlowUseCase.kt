@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.domain.usecase
 
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 import com.sorrowblue.comicviewer.framework.IllegalArguments
+import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.Result
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -33,4 +34,13 @@ abstract class FlowUseCase2<R : BaseRequest, S, E> {
     protected abstract fun run(request: R): Flow<Result<S, E>>
 }
 
-interface UseCaseError
+abstract class UseCase<in R : BaseRequest, out D, out E : Resource.ErrorEntity> {
+
+    interface Request
+
+    fun execute(request: R): Flow<Resource<D, E>> {
+        return run(request)
+    }
+
+    protected abstract fun run(request: R): Flow<Resource<D, E>>
+}

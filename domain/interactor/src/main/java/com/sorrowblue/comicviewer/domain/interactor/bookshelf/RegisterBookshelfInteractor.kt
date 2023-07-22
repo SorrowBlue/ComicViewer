@@ -7,8 +7,8 @@ import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryError
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfError
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
-import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.Result
+import com.sorrowblue.comicviewer.framework.onError
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 
@@ -23,16 +23,14 @@ internal class RegisterBookshelfInteractor @Inject constructor(
 ) : RegisterBookshelfUseCase() {
 
     override suspend fun run(request: Request): Result<Bookshelf, RegisterBookshelfError> {
-        val resource = bookshelfRepository.connect(request.bookshelf, request.path).first()
-        when (resource) {
-            is Resource.Error -> when (resource.error) {
-                BookshelfRepository.Error.InvalidAuth -> return Result.Error(RegisterBookshelfError.InvalidAuth)
-                BookshelfRepository.Error.InvalidPath -> return Result.Error(RegisterBookshelfError.InvalidPath)
-                BookshelfRepository.Error.InvalidServer -> return Result.Error(RegisterBookshelfError.InvalidBookshelfInfo)
-                BookshelfRepository.Error.NoNetwork -> return Result.Error(RegisterBookshelfError.Network)
-                BookshelfRepository.Error.Unknown -> return Result.Error(RegisterBookshelfError.Unknown)
+        bookshelfRepository.connect(request.bookshelf, request.path).first().onError {
+            return when (it) {
+                BookshelfRepository.Error.InvalidAuth -> Result.Error(RegisterBookshelfError.InvalidAuth)
+                BookshelfRepository.Error.InvalidPath -> Result.Error(RegisterBookshelfError.InvalidPath)
+                BookshelfRepository.Error.InvalidServer -> Result.Error(RegisterBookshelfError.InvalidBookshelfInfo)
+                BookshelfRepository.Error.NoNetwork -> Result.Error(RegisterBookshelfError.Network)
+                BookshelfRepository.Error.Unknown -> Result.Error(RegisterBookshelfError.Unknown)
             }
-            is Resource.Success -> Unit
         }
         return fileRepository.getFolder(request.bookshelf, request.path).fold({ folder ->
             bookshelfRepository.register(request.bookshelf, folder).fold({
