@@ -3,16 +3,14 @@ package com.sorrowblue.comicviewer.data.reporitory
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import coil.annotation.ExperimentalCoilApi
-import coil.disk.DiskCache
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
+import com.sorrowblue.comicviewer.data.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.di.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.toBookshelfModel
 import com.sorrowblue.comicviewer.data.toFile
 import com.sorrowblue.comicviewer.data.toFileModel
@@ -28,7 +26,7 @@ import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryError
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
-import com.sorrowblue.comicviewer.domain.usecase.paging.SortType
+import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject
@@ -41,16 +39,15 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 internal class FileRepositoryImpl @Inject constructor(
-    @ThumbnailDiskCache private val thumbnailDiskCache: dagger.Lazy<DiskCache>,
+    private val imageCacheDataSource: ImageCacheDataSource,
     private val fileScanService: FileScanService,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
     private val settingsCommonRepository: SettingsCommonRepository
 ) : FileRepository {
 
-    @OptIn(ExperimentalCoilApi::class)
     override suspend fun deleteThumbnails() {
-        thumbnailDiskCache.get().clear()
+        imageCacheDataSource.deleteThumbnails()
         fileModelLocalDataSource.deleteThumbnails()
     }
 

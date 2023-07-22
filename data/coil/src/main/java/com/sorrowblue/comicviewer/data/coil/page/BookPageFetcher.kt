@@ -11,11 +11,11 @@ import coil.fetch.Fetcher
 import coil.fetch.SourceResult
 import coil.request.Options
 import com.sorrowblue.comicviewer.data.coil.CoilFetcher
+import com.sorrowblue.comicviewer.data.coil.PageDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
 import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.di.PageDiskCache
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException

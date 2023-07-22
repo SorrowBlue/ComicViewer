@@ -63,9 +63,11 @@ include(":framework:settings")
 include(":framework:ui")
 
 include(":domain")
+include(":domain:common")
 include(":domain:interactor")
 
 include(":data")
+include(":data:coil")
 include(":data:common")
 include(":data:database")
 include(":data:datastore")

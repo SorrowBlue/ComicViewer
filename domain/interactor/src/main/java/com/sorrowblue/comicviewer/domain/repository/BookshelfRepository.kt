@@ -34,7 +34,7 @@ interface BookshelfRepository {
     suspend fun registerOrUpdate(
         bookshelf: Bookshelf,
         path: String
-    ): Result<Bookshelf, RegisterLibraryError>
+    ): Result<Bookshelf, BookshelfRepositoryStatus>
 
     fun get(bookshelfId: BookshelfId): Flow<Result<Bookshelf, LibraryStatus>>
     suspend fun delete(bookshelf: Bookshelf): Response<Boolean>

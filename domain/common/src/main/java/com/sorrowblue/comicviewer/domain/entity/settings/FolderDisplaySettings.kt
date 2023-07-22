@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.domain.entity.settings
 
-import com.sorrowblue.comicviewer.domain.usecase.paging.SortType
 import kotlinx.serialization.Serializable
 
 @Serializable

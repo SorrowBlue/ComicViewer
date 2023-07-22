@@ -13,6 +13,7 @@ import coil.fetch.FetchResult
 import coil.fetch.Fetcher
 import coil.fetch.SourceResult
 import coil.request.Options
+import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
 import com.sorrowblue.comicviewer.data.coil.book.thumbnailBitmap
@@ -20,13 +21,12 @@ import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
 import com.sorrowblue.comicviewer.data.common.util.SortUtil
 import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.data.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.di.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
-import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import javax.inject.Inject
 import kotlin.math.floor
 import kotlinx.coroutines.NonCancellable
@@ -43,13 +43,13 @@ internal class FolderThumbnailFetcher(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
-    private val settingsCommonRepository: SettingsCommonRepository,
+    private val datastoreDataSource: DatastoreDataSource,
 ) : FileModelFetcher(options, diskCache) {
 
     override suspend fun fetch(): FetchResult {
         val size = (requestWidth / (requestHeight / 11).toInt()).toInt() - 6
         val folderThumbnailOrder =
-            settingsCommonRepository.displaySettings.first().folderThumbnailOrder
+            datastoreDataSource.displaySettings.first().folderThumbnailOrder
         var snapshot = readFromDiskCache()
         try {
             if (snapshot != null) {
@@ -87,7 +87,7 @@ internal class FolderThumbnailFetcher(
                     val bookshelfModel =
                         bookshelfLocalDataSource.flow(folder.bookshelfModelId).first()!!
                     val supportExtensions =
-                        settingsCommonRepository.folderSettings.first().supportExtension.map(
+                        datastoreDataSource.folderSettings.first().supportExtension.map(
                             SupportExtension::extension
                         )
                     snapshot = remoteDataSourceFactory.create(bookshelfModel)
@@ -288,7 +288,7 @@ internal class FolderThumbnailFetcher(
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
         private val fileModelLocalDataSource: FileModelLocalDataSource,
-        private val settingsCommonRepository: SettingsCommonRepository,
+        private val datastoreDataSource: DatastoreDataSource,
     ) : Fetcher.Factory<FileModel.Folder> {
 
         override fun create(
@@ -301,7 +301,7 @@ internal class FolderThumbnailFetcher(
                 remoteDataSourceFactory,
                 bookshelfLocalDataSource,
                 fileModelLocalDataSource,
-                settingsCommonRepository
+                datastoreDataSource
             )
         }
     }

@@ -1,7 +1,8 @@
 package com.sorrowblue.comicviewer.domain.entity.file
 
-import com.sorrowblue.comicviewer.domain.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 sealed interface File {
     val bookshelfId: BookshelfId
@@ -13,8 +14,11 @@ sealed interface File {
 
     val params: Map<String, String?>
 
-    fun base64Parent(): String = parent.encodeToBase64()
-    fun base64Path(): String = path.encodeToBase64()
+    @OptIn(ExperimentalEncodingApi::class)
+    fun base64Parent(): String = Base64.encode(parent.encodeToByteArray())
+
+    @OptIn(ExperimentalEncodingApi::class)
+    fun base64Path(): String = Base64.encode(path.encodeToByteArray())
 
     fun areContentsTheSame(file: File): Boolean
 }

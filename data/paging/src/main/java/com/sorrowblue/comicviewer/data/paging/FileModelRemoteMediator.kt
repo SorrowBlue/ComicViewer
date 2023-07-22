@@ -8,13 +8,13 @@ import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.util.SortUtil
 import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
 import com.sorrowblue.comicviewer.data.database.entity.FileWithCount
+import com.sorrowblue.comicviewer.data.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.di.IoDispatcher
 import com.sorrowblue.comicviewer.data.exception.RemoteException
 import com.sorrowblue.comicviewer.domain.PagingException
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
-import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -25,7 +25,7 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalPagingApi::class)
 internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
     remoteDataSourceFactory: RemoteDataSource.Factory,
-    settingsCommonRepository: SettingsCommonRepository,
+    datastoreDataSource: DatastoreDataSource,
     @Assisted private val bookshelfModel: BookshelfModel,
     @Assisted private val fileModel: FileModel,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
@@ -41,7 +41,7 @@ internal class FileModelRemoteMediatorImpl @AssistedInject constructor(
         ): FileModelRemoteMediatorImpl
     }
 
-    private val folderSettings = settingsCommonRepository.folderSettings
+    private val folderSettings = datastoreDataSource.folderSettings
     private val remoteDataSource = remoteDataSourceFactory.create(bookshelfModel)
 
     override suspend fun initialize() =

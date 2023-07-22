@@ -6,10 +6,10 @@ plugins {
 
 dependencies {
     implementation(projects.framework)
-    implementation(projects.domain.interactor)
+    implementation(projects.domain.common)
     implementation(projects.data)
     implementation(projects.data.common)
     implementation(projects.data.database)
 
-    implementation(libs.squareup.logcat)
+    implementation(libs.androidx.paging.common)
 }

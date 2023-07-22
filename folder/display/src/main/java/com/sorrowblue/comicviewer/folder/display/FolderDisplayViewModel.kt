@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.folder.display
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.usecase.paging.SortType
+import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

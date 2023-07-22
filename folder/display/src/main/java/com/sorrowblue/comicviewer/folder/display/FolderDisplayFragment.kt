@@ -7,7 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.sidesheet.SideSheetDialog
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.usecase.paging.SortType
+import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.folder.display.databinding.FolderDisplayFragmentBinding
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithDialogLifecycle
 import com.sorrowblue.jetpack.binding.viewBinding

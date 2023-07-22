@@ -20,9 +20,9 @@ import com.sorrowblue.comicviewer.domain.entity.file.BookFolder
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 
-internal fun BookshelfModelId.toServerId() = BookshelfId(value)
+fun BookshelfModelId.toServerId() = BookshelfId(value)
 
-internal fun BookshelfFolderModel.toServerFolder() =
+fun BookshelfFolderModel.toServerFolder() =
     BookshelfFolder(value.first.toServer() to value.second.toFolder())
 
 internal fun FileModel.Folder.toFolder() = Folder(
@@ -46,7 +46,7 @@ internal fun SmbServer.Auth.toServerModelAuth(): BookshelfModel.SmbServer.Auth {
     }
 }
 
-internal fun Bookshelf.toBookshelfModel() = when (this) {
+fun Bookshelf.toBookshelfModel() = when (this) {
     is InternalStorage -> BookshelfModel.InternalStorage(
         id = BookshelfModelId(id.value),
         name = displayName,
@@ -63,7 +63,7 @@ internal fun Bookshelf.toBookshelfModel() = when (this) {
     )
 }
 
-internal fun BookshelfModel.toServer() = when (this) {
+fun BookshelfModel.toServer() = when (this) {
     is BookshelfModel.InternalStorage ->
         InternalStorage(
             id = id.toServerId(),
@@ -87,15 +87,15 @@ internal fun BookshelfModel.toServer() = when (this) {
     }
 }
 
-internal fun FavoriteModel.toFavorite(): Favorite {
+fun FavoriteModel.toFavorite(): Favorite {
     return Favorite(FavoriteId(id.value), name, count)
 }
 
-internal fun FavoriteFile.toFavoriteBookModel(): FavoriteFileModel {
+fun FavoriteFile.toFavoriteBookModel(): FavoriteFileModel {
     return FavoriteFileModel(FavoriteModelId(id.value), BookshelfModelId(bookshelfId.value), path)
 }
 
-internal fun FileModel.toFile(): File {
+fun FileModel.toFile(): File {
     return when (this) {
         is FileModel.File -> BookFile(
             bookshelfModelId.toServerId(),
@@ -135,7 +135,7 @@ internal fun FileModel.toFile(): File {
     }
 }
 
-internal fun File.toFileModel(): FileModel {
+fun File.toFileModel(): FileModel {
     return when (this) {
         is Folder -> FileModel.Folder(
             path = path,

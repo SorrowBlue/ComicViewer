@@ -6,5 +6,5 @@ plugins {
 
 dependencies {
     implementation(projects.framework)
-    api(projects.domain)
+    implementation(projects.domain)
 }

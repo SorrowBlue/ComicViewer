@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.folder
 
 import com.sorrowblue.comicviewer.domain.entity.SearchCondition
-import com.sorrowblue.comicviewer.domain.usecase.paging.SortType
+import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 
 object Converter {
 

@@ -24,7 +24,6 @@ import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepositoryError
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepositoryStatus
 import com.sorrowblue.comicviewer.domain.repository.LibraryStatus
-import com.sorrowblue.comicviewer.domain.usecase.RegisterLibraryError
 import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.Unknown
@@ -77,7 +76,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
     override suspend fun registerOrUpdate(
         bookshelf: Bookshelf,
         path: String
-    ): Result<Bookshelf, RegisterLibraryError> {
+    ): Result<Bookshelf, BookshelfRepositoryStatus> {
         val serverModel = bookshelfLocalDataSource.create(bookshelf.toBookshelfModel())
         val fileModel = remoteDataSourceFactory.create(serverModel).fileModel(path)
         when (fileModel) {
