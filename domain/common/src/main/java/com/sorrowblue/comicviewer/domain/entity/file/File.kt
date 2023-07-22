@@ -15,10 +15,10 @@ sealed interface File {
     val params: Map<String, String?>
 
     @OptIn(ExperimentalEncodingApi::class)
-    fun base64Parent(): String = Base64.encode(parent.encodeToByteArray())
+    fun base64Parent(): String = Base64.UrlSafe.encode(parent.encodeToByteArray())
 
     @OptIn(ExperimentalEncodingApi::class)
-    fun base64Path(): String = Base64.encode(path.encodeToByteArray())
+    fun base64Path(): String = Base64.UrlSafe.encode(path.encodeToByteArray())
 
     fun areContentsTheSame(file: File): Boolean
 }
