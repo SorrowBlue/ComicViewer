@@ -20,6 +20,7 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
@@ -91,7 +92,7 @@ internal class FileRepositoryImpl @Inject constructor(
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,
-        folder: Folder
+        folder: IFolder
     ): Flow<PagingData<File>> {
         return fileModelLocalDataSource.pagingSource(
             pagingConfig,
@@ -123,7 +124,7 @@ internal class FileRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun scan(folder: Folder, scanType: ScanType): String {
+    override suspend fun scan(folder: IFolder, scanType: ScanType): String {
         val folderSettings = settingsCommonRepository.folderSettings.first()
         return fileScanService.enqueue(
             folder.toFileModel(),

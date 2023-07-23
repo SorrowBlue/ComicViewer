@@ -36,6 +36,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.sorrowblue.comicviewer.book.BookFragmentArgs
 import com.sorrowblue.comicviewer.domain.PagingException
 import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.entity.file.BookFile
+import com.sorrowblue.comicviewer.domain.entity.file.BookFolder
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
@@ -207,10 +209,19 @@ internal class FolderFragment : FileListFragment(R.layout.folder_fragment),
         extras: FragmentNavigator.Extras
     ) {
         when (file) {
-            is Book -> findNavController().navigate(
+            is BookFile -> findNavController().navigate(
                 FolderFragmentDirections.actionFolderToBook(file, transitionName), extras
             )
-
+            is BookFolder -> {
+                findNavController().navigate(
+                    FolderFragmentDirections.actionFolderSelf(
+                        file.bookshelfId.value, file.base64Path(), transitionName
+                    ), extras
+                )
+                findNavController().navigate(
+                    FolderFragmentDirections.actionFolderToBook(file, transitionName), extras
+                )
+            }
             is Folder -> findNavController().navigate(
                 FolderFragmentDirections.actionFolderSelf(
                     file.bookshelfId.value, file.base64Path(), transitionName

@@ -60,6 +60,7 @@ sealed interface FileModel {
         override val cacheKey: String,
         override val totalPageCount: Int,
         override val lastReadPage: Int,
-        override val lastReading: Long
+        override val lastReading: Long,
+        val count: Int = 0
     ) : Book
 }

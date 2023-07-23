@@ -130,7 +130,8 @@ fun FileModel.toFile(): File {
             cacheKey,
             lastReadPage,
             totalPageCount,
-            lastReading
+            lastReading,
+            count = count
         )
     }
 }

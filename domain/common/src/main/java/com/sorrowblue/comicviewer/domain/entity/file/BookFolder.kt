@@ -13,8 +13,9 @@ data class BookFolder(
     override val lastPageRead: Int,
     override val totalPageCount: Int,
     override val lastReadTime: Long,
-    override val params: Map<String, String?> = emptyMap()
-) : Book {
+    override val params: Map<String, String?> = emptyMap(),
+    override val count: Int = 0
+) : Book, IFolder {
 
     override fun areContentsTheSame(file: File): Boolean {
         return if (file is BookFolder) {

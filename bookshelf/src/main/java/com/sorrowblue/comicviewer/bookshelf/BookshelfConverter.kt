@@ -4,11 +4,12 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 
 object BookshelfConverter {
 
     @JvmStatic
-    fun displayName(bookshelf: Bookshelf, folder: Folder) = when (bookshelf) {
+    fun displayName(bookshelf: Bookshelf, folder: IFolder) = when (bookshelf) {
         is InternalStorage -> bookshelf.displayName.ifEmpty { folder.name }
         is SmbServer -> bookshelf.displayName.ifEmpty { bookshelf.host }
     }

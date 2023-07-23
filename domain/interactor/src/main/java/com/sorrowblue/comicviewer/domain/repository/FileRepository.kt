@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.domain.entity.settings.SortType
@@ -26,13 +27,13 @@ interface FileRepository {
     fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,
-        folder: Folder,
+        folder: IFolder,
     ): Flow<PagingData<File>>
 
     suspend fun get(bookshelfId: BookshelfId, path: String): Response<File?>
     fun getFile(bookshelfId: BookshelfId, path: String): Flow<Result<File, Unit>>
     suspend fun getBook(bookshelfId: BookshelfId, path: String): Response<Book?>
-    suspend fun scan(folder: Folder, scanType: ScanType): String
+    suspend fun scan(folder: IFolder, scanType: ScanType): String
     fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,

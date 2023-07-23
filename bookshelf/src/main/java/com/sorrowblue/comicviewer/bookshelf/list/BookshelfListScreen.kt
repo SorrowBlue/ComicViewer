@@ -61,6 +61,7 @@ import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -260,7 +261,7 @@ internal fun BookshelfListScreen(
 }
 
 private fun BookshelfListFragmentDirections.Companion.actionBookshelfListToFolder(
-    folder: Folder,
+    folder: IFolder,
 ) = object : NavDirections {
     override val actionId = actionBookshelfListToFolder().actionId
     override val arguments = FolderFragmentArgs(

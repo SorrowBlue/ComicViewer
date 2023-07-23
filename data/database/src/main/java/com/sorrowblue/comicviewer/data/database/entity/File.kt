@@ -62,6 +62,7 @@ data class FileWithCount(
                 totalPageCount = info.totalPageCount,
                 lastReadPage = history.lastReadPage,
                 lastReading = history.lastReading,
+                count = count
             )
         }
     }
