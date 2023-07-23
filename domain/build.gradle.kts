@@ -6,5 +6,6 @@ plugins {
 dependencies {
     implementation(projects.framework)
     api(projects.domain.common)
-    api(libs.androidx.paging.common)
+
+    implementation(libs.androidx.paging.common)
 }

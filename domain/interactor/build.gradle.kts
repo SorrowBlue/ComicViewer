@@ -7,4 +7,6 @@ plugins {
 dependencies {
     implementation(projects.framework)
     implementation(projects.domain)
+
+    implementation(libs.androidx.paging.common)
 }

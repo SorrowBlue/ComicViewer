@@ -8,9 +8,5 @@ dependencies {
     implementation(projects.framework)
     implementation(projects.data.storage)
 
-    implementation(libs.squareup.logcat)
     implementation(libs.androidx.documentfile)
-
-    androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.bundles.androidx.instrumented.tests)
 }

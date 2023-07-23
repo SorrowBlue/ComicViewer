@@ -8,14 +8,8 @@ plugins {
 dependencies {
     implementation(projects.framework)
     implementation(projects.data)
-    api(projects.data.reader)
     api(projects.data.common)
-
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.coil)
-    implementation(libs.androidx.startup.runtime)
-    implementation(libs.squareup.logcat)
-    implementation(libs.androidx.exifinterface)
+    api(projects.data.reader)
 
     androidTestImplementation(libs.androidx.test.ext.junit.ktx)
     androidTestImplementation(libs.androidx.test.espresso.core)

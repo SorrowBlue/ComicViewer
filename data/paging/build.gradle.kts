@@ -8,7 +8,6 @@ dependencies {
     implementation(projects.framework)
     implementation(projects.domain.common)
     implementation(projects.data)
-    implementation(projects.data.common)
     implementation(projects.data.database)
 
     implementation(libs.androidx.paging.common)
