@@ -1,8 +1,8 @@
-package com.sorrowblue.comicviewer.data.remote
+package com.sorrowblue.comicviewer.data.storage
 
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.SUPPORTED_IMAGE
-import com.sorrowblue.comicviewer.data.remote.client.FileClient
+import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import java.io.InputStream
 import kotlinx.coroutines.runBlocking

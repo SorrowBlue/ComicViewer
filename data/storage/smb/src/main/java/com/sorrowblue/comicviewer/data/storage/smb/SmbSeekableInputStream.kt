@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.remote.smb
+package com.sorrowblue.comicviewer.data.storage.smb
 
 import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
 import jcifs.CIFSContext

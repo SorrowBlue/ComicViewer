@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.remote.client
+package com.sorrowblue.comicviewer.data.storage.client
 
 sealed interface ErrorType {
 

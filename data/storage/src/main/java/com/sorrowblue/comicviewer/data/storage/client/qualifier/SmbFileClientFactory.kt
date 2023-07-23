@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.remote.client.qualifier
+package com.sorrowblue.comicviewer.data.storage.client.qualifier
 
 import javax.inject.Qualifier
 

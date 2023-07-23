@@ -1,10 +1,10 @@
-package com.sorrowblue.comicviewer.data.remote.client.impl
+package com.sorrowblue.comicviewer.data.storage.client.impl
 
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.remote.client.FileClient
-import com.sorrowblue.comicviewer.data.remote.client.FileClientFactory
-import com.sorrowblue.comicviewer.data.remote.client.qualifier.DeviceFileClientFactory
-import com.sorrowblue.comicviewer.data.remote.client.qualifier.SmbFileClientFactory
+import com.sorrowblue.comicviewer.data.storage.client.FileClient
+import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.DeviceFileClientFactory
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClientFactory
 import javax.inject.Inject
 
 internal class FileClientFactoryImpl @Inject constructor(

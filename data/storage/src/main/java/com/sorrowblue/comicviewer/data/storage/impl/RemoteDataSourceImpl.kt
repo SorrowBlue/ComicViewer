@@ -1,13 +1,13 @@
-package com.sorrowblue.comicviewer.data.remote.impl
+package com.sorrowblue.comicviewer.data.storage.impl
 
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.exception.RemoteException
-import com.sorrowblue.comicviewer.data.remote.ImageFolderFileReader
-import com.sorrowblue.comicviewer.data.remote.client.FileClientException
-import com.sorrowblue.comicviewer.data.remote.client.FileClientFactory
-import com.sorrowblue.comicviewer.data.remote.client.FileReaderException
+import com.sorrowblue.comicviewer.data.storage.ImageFolderFileReader
+import com.sorrowblue.comicviewer.data.storage.client.FileClientException
+import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderException
 import com.sorrowblue.comicviewer.data.remote.reader.FileReader
 import com.sorrowblue.comicviewer.data.remote.reader.FileReaderFactory
 import dagger.assisted.Assisted

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.remote.device
+package com.sorrowblue.comicviewer.data.storage.device
 
 import android.content.Context
 import android.net.Uri

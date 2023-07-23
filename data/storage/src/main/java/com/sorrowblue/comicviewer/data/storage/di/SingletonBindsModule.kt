@@ -1,7 +1,7 @@
-package com.sorrowblue.comicviewer.data.remote.di
+package com.sorrowblue.comicviewer.data.storage.di
 
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.remote.impl.RemoteDataSourceImpl
+import com.sorrowblue.comicviewer.data.storage.impl.RemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
