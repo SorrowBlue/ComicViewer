@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.data.storage.device
 import android.content.Context
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
+import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 
 internal class DeviceSeekableInputStream(context: Context, uri: Uri) :
     SeekableInputStream {

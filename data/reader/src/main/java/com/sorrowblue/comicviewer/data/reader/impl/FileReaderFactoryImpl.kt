@@ -1,9 +1,9 @@
-package com.sorrowblue.comicviewer.data.remote.reader.impl
+package com.sorrowblue.comicviewer.data.reader.impl
 
 import android.content.Context
-import com.sorrowblue.comicviewer.data.remote.reader.FileReader
-import com.sorrowblue.comicviewer.data.remote.reader.FileReaderFactory
-import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
+import com.sorrowblue.comicviewer.data.reader.FileReader
+import com.sorrowblue.comicviewer.data.reader.FileReaderFactory
+import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Qualifier

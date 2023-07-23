@@ -1,7 +1,7 @@
-package com.sorrowblue.comicviewer.data.remote.reader.di
+package com.sorrowblue.comicviewer.data.reader.di
 
-import com.sorrowblue.comicviewer.data.remote.reader.FileReaderFactory
-import com.sorrowblue.comicviewer.data.remote.reader.impl.FileReaderFactoryImpl
+import com.sorrowblue.comicviewer.data.reader.FileReaderFactory
+import com.sorrowblue.comicviewer.data.reader.impl.FileReaderFactoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

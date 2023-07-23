@@ -2,8 +2,8 @@ package com.sorrowblue.comicviewer.data.reader.document
 
 import android.content.Context
 import androidx.annotation.Keep
-import com.sorrowblue.comicviewer.data.remote.reader.FileReader
-import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
+import com.sorrowblue.comicviewer.data.reader.FileReader
+import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 
 @Keep
 internal class XpsFileReader(context: Context, seekableInputStream: SeekableInputStream) :

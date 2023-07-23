@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.storage.smb
 
-import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
+import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import jcifs.CIFSContext
 import jcifs.SmbConstants
 import jcifs.smb.SmbRandomAccessFile

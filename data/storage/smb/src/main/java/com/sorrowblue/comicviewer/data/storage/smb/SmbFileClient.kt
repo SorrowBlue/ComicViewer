@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.extension
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
-import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
+import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import com.sorrowblue.comicviewer.framework.Result
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory

@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.reader.zip
 
-import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
+import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import net.sf.sevenzipjbinding.IInStream
 
 internal class IInStreamImpl(private val seekableInputStream: SeekableInputStream) : IInStream {

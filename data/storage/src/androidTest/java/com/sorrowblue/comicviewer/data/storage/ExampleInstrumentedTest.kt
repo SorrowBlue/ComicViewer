@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.remote
+package com.sorrowblue.comicviewer.data.storage
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Test

@@ -8,8 +8,8 @@ import com.sorrowblue.comicviewer.data.storage.ImageFolderFileReader
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderException
-import com.sorrowblue.comicviewer.data.remote.reader.FileReader
-import com.sorrowblue.comicviewer.data.remote.reader.FileReaderFactory
+import com.sorrowblue.comicviewer.data.reader.FileReader
+import com.sorrowblue.comicviewer.data.reader.FileReaderFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.data.datasource
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.exception.RemoteException
-import com.sorrowblue.comicviewer.data.remote.reader.FileReader
+import com.sorrowblue.comicviewer.data.reader.FileReader
 
 interface RemoteDataSource {
 

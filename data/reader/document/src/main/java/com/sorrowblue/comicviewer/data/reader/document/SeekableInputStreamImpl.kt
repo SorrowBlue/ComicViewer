@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.reader.document
 
 import androidx.annotation.Keep
-import com.sorrowblue.comicviewer.data.remote.reader.SeekableInputStream
+import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 
 @Keep
 internal class SeekableInputStreamImpl(private val seekableInputStream: SeekableInputStream) :

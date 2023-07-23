@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.remote.reader
+package com.sorrowblue.comicviewer.data.reader
 
 import java.io.Closeable
 
