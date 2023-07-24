@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.domain.usecase
 
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.domain.request.BaseRequest

@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 
 object BookshelfConverter {

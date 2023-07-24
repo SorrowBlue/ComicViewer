@@ -9,9 +9,9 @@ import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.IFolder
+import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.ScanType
-import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.framework.Result
 import kotlinx.coroutines.flow.Flow
 

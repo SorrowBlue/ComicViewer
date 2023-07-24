@@ -60,7 +60,6 @@ import com.sorrowblue.comicviewer.bookshelf.R
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 

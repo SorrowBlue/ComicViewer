@@ -21,13 +21,13 @@ import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.IFolder
+import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryError
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
-import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject
