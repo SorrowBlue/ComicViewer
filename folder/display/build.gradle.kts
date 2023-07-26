@@ -1,5 +1,3 @@
-@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
-
 plugins {
     id("build-logic.android.library")
     id("com.sorrowblue.dagger-hilt")

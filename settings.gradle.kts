@@ -20,10 +20,9 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version ("0.6.0")
-    id("com.android.settings") version "8.1.0-rc01"
+    id("com.android.settings") version "8.1.0"
 }
 
-@Suppress("UnstableApiUsage")
 extensions.configure<SettingsExtension> {
     buildToolsVersion = "33.0.2"
     compileSdk = 33
