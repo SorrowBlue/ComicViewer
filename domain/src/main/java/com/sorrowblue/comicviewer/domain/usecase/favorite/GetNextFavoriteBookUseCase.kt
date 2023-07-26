@@ -12,8 +12,5 @@ abstract class GetNextFavoriteBookUseCase :
 
     class Request(val favoriteFile: FavoriteFile, val relation: GetNextComicRel) :
         BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

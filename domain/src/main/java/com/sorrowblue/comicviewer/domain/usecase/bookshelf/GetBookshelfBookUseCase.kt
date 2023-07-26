@@ -10,8 +10,5 @@ abstract class GetBookshelfBookUseCase :
     FlowUseCase2<GetBookshelfBookUseCase.Request, BookshelfBook, GetLibraryFileResult>() {
 
     class Request(val bookshelfId: BookshelfId, val path: String) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

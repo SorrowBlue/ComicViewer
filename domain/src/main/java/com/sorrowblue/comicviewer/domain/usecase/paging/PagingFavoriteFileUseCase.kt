@@ -9,8 +9,5 @@ abstract class PagingFavoriteFileUseCase :
     PagingUseCase<PagingFavoriteFileUseCase.Request, File>() {
 
     class Request(val pagingConfig: PagingConfig, val favoriteId: FavoriteId) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

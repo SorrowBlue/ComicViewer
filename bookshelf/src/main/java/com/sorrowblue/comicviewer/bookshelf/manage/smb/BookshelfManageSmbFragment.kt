@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialSharedAxis
 import com.sorrowblue.comicviewer.bookshelf.R
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
@@ -65,7 +66,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 internal class BookshelfManageSmbFragment : FrameworkFragment() {
-
+    private val args: BookshelfManageSmbFragmentArgs by navArgs()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
@@ -82,10 +83,14 @@ internal class BookshelfManageSmbFragment : FrameworkFragment() {
                     BookshelfEditSmbScreen(
                         navigateUp = findNavController()::navigateUp,
                         saveComplete = {
-                            findNavController().popBackStack(
-                                R.id.bookshelf_manage_list_fragment,
-                                true
-                            )
+                            if (0 < args.bookshelfId) {
+                                findNavController().popBackStack()
+                            } else {
+                                findNavController().popBackStack(
+                                    R.id.bookshelf_manage_list_fragment,
+                                    true
+                                )
+                            }
                         }
                     )
                 }

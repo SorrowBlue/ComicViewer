@@ -141,7 +141,9 @@ internal fun BookshelfDeviceEditScreen(
             TextButton(
                 onClick = {
                     keyboardController?.hide()
-                    viewModel.connect { }
+                    viewModel.connect {
+                        navController.popBackStack(R.id.bookshelf_manage_list_fragment, true)
+                    }
                 },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 modifier = Modifier.align(Alignment.End)
@@ -165,14 +167,5 @@ internal fun BookshelfDeviceEditScreen(
         ) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
-    }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-internal fun PreviewBookshelfDeviceEditScreen() {
-    AppMaterialTheme {
-        val navController = rememberNavController()
-        BookshelfDeviceEditScreen(navController, {}, FakeBookshelfDeviceEditViewModel())
     }
 }

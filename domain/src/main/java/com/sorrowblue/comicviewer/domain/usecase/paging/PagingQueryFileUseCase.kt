@@ -16,8 +16,5 @@ abstract class PagingQueryFileUseCase : PagingUseCase<PagingQueryFileUseCase.Req
         val sortType: () -> SortType
     ) : BaseRequest {
 
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

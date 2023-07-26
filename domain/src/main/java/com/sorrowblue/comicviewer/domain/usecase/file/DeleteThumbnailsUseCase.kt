@@ -8,6 +8,5 @@ abstract class DeleteThumbnailsUseCase :
     FlowOneUseCase<DeleteThumbnailsUseCase.Request, Unit, GetLibraryInfoError>() {
 
     object Request : BaseRequest {
-        override fun validate() = true
     }
 }

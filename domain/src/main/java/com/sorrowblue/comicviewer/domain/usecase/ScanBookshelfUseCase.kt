@@ -8,8 +8,5 @@ abstract class ScanBookshelfUseCase :
     FlowOneUseCase<ScanBookshelfUseCase.Request, String, Unit>() {
 
     class Request(val folder: IFolder, val scanType: ScanType) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

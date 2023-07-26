@@ -10,8 +10,5 @@ abstract class PagingFileUseCase : PagingUseCase<PagingFileUseCase.Request, File
 
     class Request(val pagingConfig: PagingConfig, val bookshelf: Bookshelf, val folder: IFolder) :
         BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

@@ -1,33 +1,39 @@
 package com.sorrowblue.comicviewer.bookshelf.manage.device
 
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfError
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
-import com.sorrowblue.comicviewer.framework.Result
-import com.sorrowblue.comicviewer.framework.Unknown
+import com.sorrowblue.comicviewer.framework.Resource
+import com.sorrowblue.comicviewer.framework.onSuccess
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
-import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import logcat.logcat
+
+fun <D, E : Resource.AppError> Flow<Resource<D, E>>.error(function: suspend (E) -> Unit): Flow<Resource<D, E>> {
+    onEach {
+        if (it is Resource.Error) {
+            function.invoke(it.error)
+        }
+    }
+    return this
+}
 
 @HiltViewModel
 open class BookshelfDeviceEditViewModel @Inject constructor(
@@ -37,11 +43,6 @@ open class BookshelfDeviceEditViewModel @Inject constructor(
 ) : ViewModel(), SupportSafeArgs {
 
     private val args: BookshelfManageDeviceFragmentArgs by navArgs()
-    private val bookshelfFolderFlow =
-        getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(BookshelfId(args.bookshelfId)))
-            .map { it.dataOrNull }
-    private val internalStorageFlow =
-        bookshelfFolderFlow.map { it?.bookshelf as? InternalStorage }.stateIn { null }
 
     val state = MutableStateFlow(BookshelfEditState.NONE)
     val errorDisplayName = MutableStateFlow("")
@@ -54,9 +55,11 @@ open class BookshelfDeviceEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            bookshelfFolderFlow.filterNotNull().onEach {
-                displayName.value = it.bookshelf.displayName
-            }.collect()
+            getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(BookshelfId(args.bookshelfId)))
+                .first().onSuccess {
+                    data.value = it.folder.path.toUri()
+                    displayName.value = it.bookshelf.displayName
+                }
         }
     }
 
@@ -71,9 +74,6 @@ open class BookshelfDeviceEditViewModel @Inject constructor(
 
 
     fun connect(function: () -> Unit) {
-        val internalStorage = internalStorageFlow.value ?: kotlin.run {
-            if (args.bookshelfId == -1) null else return
-        }
 
         state.value = BookshelfEditState.LOADING
 
@@ -83,28 +83,19 @@ open class BookshelfDeviceEditViewModel @Inject constructor(
             state.value = BookshelfEditState.NONE
             return
         }
-        val storage = internalStorage?.copy(displayName = displayName.value)
-            ?: InternalStorage(displayName.value)
+        val storage = InternalStorage(BookshelfId(args.bookshelfId), displayName.value, 0)
         viewModelScope.launch {
             val resultFlow = registerBookshelfUseCase.execute(
                 RegisterBookshelfUseCase.Request(storage, data.value?.toString().orEmpty())
             )
             when (val result = resultFlow.first()) {
-                is Result.Error -> when (result.error) {
-                    RegisterBookshelfError.InvalidAuth -> message.emit("アクセス権限がありません。")
-                    RegisterBookshelfError.InvalidPath -> message.emit("フォルダが存在しません。")
-                    RegisterBookshelfError.InvalidBookshelfInfo -> Unit
-                    RegisterBookshelfError.Network -> message.emit("フォルダが存在しません。")
-                    RegisterBookshelfError.Unknown -> message.emit("フォルダが存在しません。")
+                is Resource.Error -> {
+                    logcat { "result=$result" }
+                    message.emit("フォルダが存在しません。")
                 }
 
-                is Result.Exception -> {
-                    if (result.cause is Unknown) {
-                        logcat { "Error: ${(result.cause as Unknown).throws}" }
-                    }
-                }
-
-                is Result.Success -> {
+                is Resource.Success -> {
+                    logcat { "result=$result" }
                     function.invoke()
                 }
             }

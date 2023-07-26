@@ -6,8 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfError
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
+import com.sorrowblue.comicviewer.framework.Resource
+import com.sorrowblue.comicviewer.framework.onSuccess
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,9 +18,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 private val portRegex =
@@ -31,7 +30,7 @@ private val hostRegex =
 internal open class BookshelfSmbEditViewModel @Inject constructor(
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val registerBookshelfUseCase: RegisterBookshelfUseCase,
-    override val savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle
 ) : ViewModel(), SupportSafeArgs {
 
     sealed interface UiEvent {
@@ -64,29 +63,27 @@ internal open class BookshelfSmbEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val bookshelfFolder =
-                getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(BookshelfId(args.bookshelfId)))
-                    .map { it.dataOrNull }.filter { it?.bookshelf is SmbServer }.first()
-                    ?: return@launch
-            val server = bookshelfFolder.bookshelf as SmbServer
-            val folder = bookshelfFolder.folder
-            host.edit(server.host)
-            port.edit(server.port.toString())
-            path.edit(folder.path)
-            displayName.edit(server.displayName)
-            when (val auth = server.auth) {
-                SmbServer.Auth.Guest -> {
-                    isGuest.edit(true)
-                }
+            getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(BookshelfId(args.bookshelfId)))
+                .first().onSuccess {
+                    val server = it.bookshelf as SmbServer
+                    val folder = it.folder
+                    host.edit(server.host)
+                    port.edit(server.port.toString())
+                    path.edit(folder.path)
+                    displayName.edit(server.displayName)
+                    when (val auth = server.auth) {
+                        SmbServer.Auth.Guest -> {
+                            isGuest.edit(true)
+                        }
 
-                is SmbServer.Auth.UsernamePassword -> {
-                    isGuest.edit(false)
-                    domain.edit(auth.domain)
-                    username.edit(auth.username)
-                    password.edit(auth.password)
-
+                        is SmbServer.Auth.UsernamePassword -> {
+                            isGuest.edit(false)
+                            domain.edit(auth.domain)
+                            username.edit(auth.username)
+                            password.edit(auth.password)
+                        }
+                    }
                 }
-            }
         }
     }
 
@@ -134,23 +131,20 @@ internal open class BookshelfSmbEditViewModel @Inject constructor(
                     }
                 )
             ).first()) {
-                is com.sorrowblue.comicviewer.framework.Result.Error -> {
-                    when (res.error) {
-                        RegisterBookshelfError.InvalidAuth -> _uiEvent.emit(UiEvent.Error("無効な認証です"))
-                        RegisterBookshelfError.InvalidBookshelfInfo -> _uiEvent.emit(UiEvent.Error("このサイトにクセスできません(${smbServer.host}${path} )。"))
-                        RegisterBookshelfError.InvalidPath -> _uiEvent.emit(UiEvent.Error("無効なパス"))
-                        RegisterBookshelfError.Network -> _uiEvent.emit(UiEvent.Error("ネットワークに接続されていません"))
-                        RegisterBookshelfError.Unknown -> _uiEvent.emit(UiEvent.Error("不明なエラー"))
-                    }
+                is Resource.Error -> when (res.error) {
+                    RegisterBookshelfUseCase.Error.Auth -> _uiEvent.emit(UiEvent.Error("無効な認証です"))
+                    RegisterBookshelfUseCase.Error.Host -> _uiEvent.emit(
+                        UiEvent.Error(
+                            "このサイトにクセスできません(${smbServer.host}${path} )。"
+                        )
+                    )
+
+                    RegisterBookshelfUseCase.Error.Network -> _uiEvent.emit(UiEvent.Error("ネットワークに接続されていません"))
+                    RegisterBookshelfUseCase.Error.Path -> _uiEvent.emit(UiEvent.Error("無効なパス"))
+                    RegisterBookshelfUseCase.Error.System -> _uiEvent.emit(UiEvent.Error("不明なエラー"))
                 }
 
-                is com.sorrowblue.comicviewer.framework.Result.Exception -> {
-                    _uiEvent.emit(UiEvent.Error("不明なエラー"))
-                }
-
-                is com.sorrowblue.comicviewer.framework.Result.Success -> {
-                    _uiEvent.emit(UiEvent.SaveComplete)
-                }
+                is Resource.Success -> _uiEvent.emit(UiEvent.SaveComplete)
             }
             _uiState.value = UiState.NONE
         }

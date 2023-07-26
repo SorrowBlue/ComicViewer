@@ -69,7 +69,7 @@
         tools:layout="@layout/bookshelf_fragment_manage_device">
         <argument
             android:name="bookshelf_id"
-            android:defaultValue="-1"
+            android:defaultValue="0"
             app:argType="integer" />
         <argument
             android:name="transition_name"

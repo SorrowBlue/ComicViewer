@@ -8,8 +8,5 @@ abstract class RemoveBookshelfUseCase :
     FlowUseCase<RemoveBookshelfUseCase.Request, Boolean, Unit>() {
 
     class Request(val bookshelf: Bookshelf) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

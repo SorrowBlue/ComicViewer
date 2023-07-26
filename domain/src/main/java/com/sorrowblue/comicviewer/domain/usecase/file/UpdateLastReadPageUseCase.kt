@@ -14,8 +14,5 @@ abstract class UpdateLastReadPageUseCase :
         val lastReadPage: Int,
         val timestamp: LocalDateTime = LocalDateTime.now()
     ) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

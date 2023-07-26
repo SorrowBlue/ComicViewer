@@ -8,8 +8,5 @@ import com.sorrowblue.comicviewer.domain.usecase.FlowUseCase2
 abstract class GetBookUseCase : FlowUseCase2<GetBookUseCase.Request, Book, Unit>() {
 
     class Request(val bookshelfId: BookshelfId, val path: String) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

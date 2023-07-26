@@ -10,9 +10,6 @@ abstract class GetBookshelfFolderUseCase :
     FlowUseCase2<GetBookshelfFolderUseCase.Request, BookshelfFolder, GetLibraryInfoError>() {
 
     class Request(val bookshelfId: BookshelfId, val path: String) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }
 
@@ -21,9 +18,6 @@ abstract class DeleteHistoryUseCase :
     FlowUseCase2<DeleteHistoryUseCase.Request, Unit, GetLibraryInfoError>() {
 
     class Request(val bookshelfId: BookshelfId, val list: List<String>) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }
 

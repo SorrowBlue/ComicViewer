@@ -6,8 +6,5 @@ import com.sorrowblue.comicviewer.domain.usecase.FlowOneUseCase
 
 abstract class DeleteFavoriteUseCase : FlowOneUseCase<DeleteFavoriteUseCase.Request, Unit, Unit>() {
     class Request(val favoriteId: FavoriteId) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

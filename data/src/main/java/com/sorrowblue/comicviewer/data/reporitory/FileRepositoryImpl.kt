@@ -28,13 +28,17 @@ import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryError
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
+import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -46,6 +50,15 @@ internal class FileRepositoryImpl @Inject constructor(
     private val fileModelLocalDataSource: FileModelLocalDataSource,
     private val settingsCommonRepository: SettingsCommonRepository
 ) : FileRepository {
+
+    override fun findByParent(
+        bookshelfId: BookshelfId,
+        parent: String
+    ): Flow<Resource<File, FileRepository.Error>> {
+        return flow {
+            emit(Resource.Success(fileModelLocalDataSource.root(BookshelfModelId(bookshelfId.value))!!.toFile()))
+        }.flowOn(Dispatchers.IO)
+    }
 
     override suspend fun deleteThumbnails() {
         imageCacheDataSource.deleteThumbnails()

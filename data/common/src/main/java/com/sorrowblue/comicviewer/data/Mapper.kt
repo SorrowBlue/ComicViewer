@@ -20,13 +20,13 @@ import com.sorrowblue.comicviewer.domain.entity.file.BookFolder
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 
-fun BookshelfModelId.toServerId() = BookshelfId(value)
+fun BookshelfModelId.toBookshelfId() = BookshelfId(value)
 
 fun BookshelfFolderModel.toServerFolder() =
-    BookshelfFolder(value.first.toServer() to value.second.toFolder())
+    BookshelfFolder(value.first.toBookshelf() to value.second.toFolder())
 
 internal fun FileModel.Folder.toFolder() = Folder(
-    bookshelfId = bookshelfModelId.toServerId(),
+    bookshelfId = bookshelfModelId.toBookshelfId(),
     name = name,
     parent = parent,
     path = path,
@@ -63,17 +63,17 @@ fun Bookshelf.toBookshelfModel() = when (this) {
     )
 }
 
-fun BookshelfModel.toServer() = when (this) {
+fun BookshelfModel.toBookshelf() = when (this) {
     is BookshelfModel.InternalStorage ->
         InternalStorage(
-            id = id.toServerId(),
+            id = id.toBookshelfId(),
             displayName = name,
             fileCount = fileCount
         )
 
     is BookshelfModel.SmbServer -> {
         SmbServer(
-            id = id.toServerId(),
+            id = id.toBookshelfId(),
             displayName = name,
             host = host,
             port = port,
@@ -98,7 +98,7 @@ fun FavoriteFile.toFavoriteBookModel(): FavoriteFileModel {
 fun FileModel.toFile(): File {
     return when (this) {
         is FileModel.File -> BookFile(
-            bookshelfModelId.toServerId(),
+            bookshelfModelId.toBookshelfId(),
             name,
             parent,
             path,
@@ -111,7 +111,7 @@ fun FileModel.toFile(): File {
         )
 
         is FileModel.Folder -> Folder(
-            bookshelfModelId.toServerId(),
+            bookshelfModelId.toBookshelfId(),
             name,
             parent,
             path,
@@ -121,7 +121,7 @@ fun FileModel.toFile(): File {
         )
 
         is FileModel.ImageFolder -> BookFolder(
-            bookshelfModelId.toServerId(),
+            bookshelfModelId.toBookshelfId(),
             name,
             parent,
             path,

@@ -9,8 +9,5 @@ import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError
 abstract class GetFileUseCase :
     FlowOneUseCase<GetFileUseCase.Request, File, GetLibraryInfoError>() {
     class Request(val bookshelfId: BookshelfId, val path: String) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

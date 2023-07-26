@@ -8,8 +8,5 @@ abstract class PagingBookshelfFolderUseCase :
     PagingUseCase<PagingBookshelfFolderUseCase.Request, BookshelfFolder>() {
 
     class Request(val pagingConfig: PagingConfig) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

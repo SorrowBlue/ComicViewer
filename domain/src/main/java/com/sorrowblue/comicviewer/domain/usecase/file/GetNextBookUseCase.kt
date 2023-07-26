@@ -12,8 +12,5 @@ abstract class GetNextBookUseCase :
 
     class Request(val bookshelfId: BookshelfId, val path: String, val relation: GetNextComicRel) :
         BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

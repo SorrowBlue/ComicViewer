@@ -7,8 +7,5 @@ import com.sorrowblue.comicviewer.domain.request.BaseRequest
 abstract class PagingFavoriteUseCase : PagingUseCase<PagingFavoriteUseCase.Request, Favorite>() {
 
     class Request(val pagingConfig: PagingConfig) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

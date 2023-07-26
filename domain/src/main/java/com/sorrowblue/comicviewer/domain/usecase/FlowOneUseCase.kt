@@ -9,9 +9,8 @@ import kotlinx.coroutines.flow.flow
 abstract class FlowOneUseCase<R : BaseRequest, S, E> {
 
     fun execute(request: R): Flow<Result<S, E>> {
-        val validated = request.validate()
         return flow {
-            emit(if (validated) run(request) else Result.Exception(IllegalArguments))
+            emit(run(request))
         }
     }
 

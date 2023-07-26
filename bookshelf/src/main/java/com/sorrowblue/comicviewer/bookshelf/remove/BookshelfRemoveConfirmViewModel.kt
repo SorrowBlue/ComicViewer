@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
+import com.sorrowblue.comicviewer.framework.onSuccess
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,13 +25,11 @@ internal class BookshelfRemoveConfirmViewModel @Inject constructor(
 
     fun remove(done: () -> Unit) {
         viewModelScope.launch {
-            val bookshelf =
-                getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(BookshelfId(args.bookshelfId)))
-                    .first().dataOrNull?.bookshelf
-            if (bookshelf != null) {
-                removeBookshelfUseCase.execute(RemoveBookshelfUseCase.Request(bookshelf))
-                done()
-            }
+            getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(BookshelfId(args.bookshelfId)))
+                .first().onSuccess {
+                    removeBookshelfUseCase.execute(RemoveBookshelfUseCase.Request(it.bookshelf))
+                    done()
+                }
         }
     }
 }

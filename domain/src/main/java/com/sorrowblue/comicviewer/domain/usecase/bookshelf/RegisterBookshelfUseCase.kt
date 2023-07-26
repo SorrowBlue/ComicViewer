@@ -1,24 +1,19 @@
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.request.BaseRequest
-import com.sorrowblue.comicviewer.domain.usecase.FlowOneUseCase
+import com.sorrowblue.comicviewer.domain.usecase.UseCase
 import com.sorrowblue.comicviewer.framework.Resource
 
 abstract class RegisterBookshelfUseCase :
-    FlowOneUseCase<RegisterBookshelfUseCase.Request, Bookshelf, RegisterBookshelfError>() {
+    UseCase<RegisterBookshelfUseCase.Request, Bookshelf, RegisterBookshelfUseCase.Error>() {
 
-    class Request(val bookshelf: Bookshelf, val path: String) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
+    class Request(val bookshelf: Bookshelf, val path: String) : UseCase.Request
+
+    sealed interface Error : Resource.AppError {
+        data object Host : Error
+        data object Path : Error
+        data object Auth : Error
+        data object Network : Error
+        data object System : Error
     }
-}
-
-sealed interface RegisterBookshelfError : Resource.ErrorEntity {
-    data object InvalidBookshelfInfo : RegisterBookshelfError
-    data object InvalidAuth : RegisterBookshelfError
-    data object InvalidPath : RegisterBookshelfError
-    data object Unknown : RegisterBookshelfError
-    data object Network : RegisterBookshelfError
 }

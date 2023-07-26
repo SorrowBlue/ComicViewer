@@ -7,8 +7,5 @@ import com.sorrowblue.comicviewer.domain.usecase.FlowOneUseCase
 abstract class UpdateFavoriteUseCase :
     FlowOneUseCase<UpdateFavoriteUseCase.Request, Favorite, Unit>() {
     class Request(val favorite: Favorite) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.data.common.ReadLaterFileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import com.sorrowblue.comicviewer.data.datasource.ReadLaterFileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.toFile
-import com.sorrowblue.comicviewer.data.toServerId
+import com.sorrowblue.comicviewer.data.toBookshelfId
 import com.sorrowblue.comicviewer.domain.entity.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.repository.ReadLaterRepository
@@ -38,4 +38,4 @@ internal class ReadLaterRepositoryImpl @Inject constructor(
 
 fun ReadLaterFile.toModel() = ReadLaterFileModel(BookshelfModelId(bookshelfId.value), path)
 
-fun ReadLaterFileModel.toReadLater() = ReadLaterFile(bookshelfModelId.toServerId(), path)
+fun ReadLaterFileModel.toReadLater() = ReadLaterFile(bookshelfModelId.toBookshelfId(), path)

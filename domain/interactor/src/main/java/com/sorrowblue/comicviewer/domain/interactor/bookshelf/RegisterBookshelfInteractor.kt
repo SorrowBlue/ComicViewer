@@ -1,16 +1,16 @@
 package com.sorrowblue.comicviewer.domain.interactor.bookshelf
 
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.repository.BookshelfRepositoryError
-import com.sorrowblue.comicviewer.domain.repository.FileRepository
-import com.sorrowblue.comicviewer.domain.repository.FileRepositoryError
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfError
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
-import com.sorrowblue.comicviewer.framework.Result
+import com.sorrowblue.comicviewer.framework.Resource
+import com.sorrowblue.comicviewer.framework.fold
 import com.sorrowblue.comicviewer.framework.onError
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 
 /**
  * サーバに接続して、接続できたら登録/更新する
@@ -18,48 +18,36 @@ import kotlinx.coroutines.flow.first
  * @property bookshelfRepository
  */
 internal class RegisterBookshelfInteractor @Inject constructor(
-    private val bookshelfRepository: BookshelfRepository,
-    private val fileRepository: FileRepository
+    private val bookshelfRepository: BookshelfRepository
 ) : RegisterBookshelfUseCase() {
 
-    override suspend fun run(request: Request): Result<Bookshelf, RegisterBookshelfError> {
-        bookshelfRepository.connect(request.bookshelf, request.path).first().onError {
-            return when (it) {
-                BookshelfRepository.Error.InvalidAuth -> Result.Error(RegisterBookshelfError.InvalidAuth)
-                BookshelfRepository.Error.InvalidPath -> Result.Error(RegisterBookshelfError.InvalidPath)
-                BookshelfRepository.Error.InvalidServer -> Result.Error(RegisterBookshelfError.InvalidBookshelfInfo)
-                BookshelfRepository.Error.NoNetwork -> Result.Error(RegisterBookshelfError.Network)
-                BookshelfRepository.Error.Unknown -> Result.Error(RegisterBookshelfError.Unknown)
+    override fun run(request: Request): Flow<Resource<Bookshelf, Error>> {
+        return flow {
+            bookshelfRepository.connect(request.bookshelf, request.path).first().onError {
+                emit(
+                    Resource.Error(
+                        when (it) {
+                            BookshelfRepository.Error.Network -> Error.Network
+                            BookshelfRepository.Error.System -> Error.Auth
+                            BookshelfRepository.Error.NotFound -> Error.Path
+                        }
+                    )
+                )
             }
+            val folder = Folder(request.bookshelf.id, "name", "", request.path, 0, 0)
+            val registerResource =
+                bookshelfRepository.register(request.bookshelf, folder).first().fold({
+                    Resource.Success(it)
+                }, {
+                    Resource.Error(
+                        when (it) {
+                            BookshelfRepository.Error.NotFound -> Error.Path
+                            BookshelfRepository.Error.Network -> Error.Network
+                            BookshelfRepository.Error.System -> Error.Auth
+                        }
+                    )
+                })
+            emit(registerResource)
         }
-        return fileRepository.getFolder(request.bookshelf, request.path).fold({ folder ->
-            bookshelfRepository.register(request.bookshelf, folder).fold({
-                Result.Success(it)
-            }, {
-                when (it) {
-                    BookshelfRepositoryError.AuthenticationFailure -> Result.Error(
-                        RegisterBookshelfError.InvalidAuth
-                    )
-
-                    BookshelfRepositoryError.PathDoesNotExist -> Result.Error(
-                        RegisterBookshelfError.InvalidPath
-                    )
-
-                    BookshelfRepositoryError.IncorrectServerInfo -> Result.Error(
-                        RegisterBookshelfError.InvalidBookshelfInfo
-                    )
-                }
-            }, {
-                Result.Exception(it)
-            })
-        }, {
-            when (it) {
-                FileRepositoryError.AuthenticationFailure -> Result.Error(RegisterBookshelfError.InvalidAuth)
-                FileRepositoryError.PathDoesNotExist -> Result.Error(RegisterBookshelfError.InvalidPath)
-                FileRepositoryError.IncorrectServerInfo -> Result.Error(RegisterBookshelfError.InvalidBookshelfInfo)
-            }
-        }, {
-            Result.Exception(it)
-        })
     }
 }

@@ -8,8 +8,5 @@ abstract class PagingReadLaterFileUseCase :
     PagingUseCase<PagingReadLaterFileUseCase.Request, File>() {
 
     class Request(val pagingConfig: PagingConfig) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

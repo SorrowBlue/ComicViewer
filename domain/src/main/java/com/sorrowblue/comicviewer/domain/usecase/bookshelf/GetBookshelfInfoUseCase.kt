@@ -2,16 +2,16 @@ package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.request.BaseRequest
-import com.sorrowblue.comicviewer.domain.usecase.FlowUseCase2
-import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError
+import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import com.sorrowblue.comicviewer.framework.Resource
 
 abstract class GetBookshelfInfoUseCase :
-    FlowUseCase2<GetBookshelfInfoUseCase.Request, BookshelfFolder, GetLibraryInfoError>() {
+    UseCase<GetBookshelfInfoUseCase.Request, BookshelfFolder, GetBookshelfInfoUseCase.Error>() {
 
-    class Request(val bookshelfId: BookshelfId) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
+    class Request(val bookshelfId: BookshelfId) : UseCase.Request
+
+    sealed interface Error : Resource.AppError {
+        data object NotFound : Error
+        data object System : Error
     }
 }

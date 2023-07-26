@@ -12,10 +12,16 @@ import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.ScanType
+import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.Result
 import kotlinx.coroutines.flow.Flow
 
 interface FileRepository {
+    sealed interface Error : Resource.AppError {
+        data object System: Error
+    }
+
+    fun findByParent(bookshelfId: BookshelfId, parent: String): Flow<Resource<File, Error>>
 
     suspend fun update(
         bookshelfId: BookshelfId,
@@ -40,6 +46,7 @@ interface FileRepository {
         searchCondition: SearchCondition,
         sortType: () -> SortType
     ): Flow<PagingData<File>>
+
 
     suspend fun get2(bookshelfId: BookshelfId, path: String): Result<File?, Unit>
     suspend fun getRoot(bookshelfId: BookshelfId): Result<File?, Unit>

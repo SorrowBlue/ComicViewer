@@ -8,8 +8,5 @@ abstract class RemoveFavoriteFileUseCase :
     FlowOneUseCase<RemoveFavoriteFileUseCase.Request, Unit, Unit>() {
 
     class Request(val favoriteFile: FavoriteFile) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }

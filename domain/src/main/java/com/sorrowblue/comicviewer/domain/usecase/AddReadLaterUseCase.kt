@@ -7,8 +7,5 @@ import com.sorrowblue.comicviewer.domain.request.BaseRequest
 abstract class AddReadLaterUseCase :
     FlowOneUseCase<AddReadLaterUseCase.Request, ReadLaterFile, Unit>() {
     class Request(val bookshelfId: BookshelfId, val path: String) : BaseRequest {
-        override fun validate(): Boolean {
-            return true
-        }
     }
 }
