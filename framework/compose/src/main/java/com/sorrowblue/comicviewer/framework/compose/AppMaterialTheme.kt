@@ -8,18 +8,31 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.themeadapter.material3.Mdc3Theme
 
 private val lightColorScheme = lightColorScheme()
 private val darkColorScheme = darkColorScheme()
+private val localAppDimens = staticCompositionLocalOf {
+    compactDimensions
+}
 
+object AppMaterialTheme {
+
+    val dimens: Dimensions
+        @Composable
+        get() = localAppDimens.current
+}
 @Composable
 fun AppMaterialTheme(
-    readXmlTheme: Boolean = false,
+    readXmlTheme: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    if (readXmlTheme) {
+    if (!readXmlTheme) {
         val darkTheme = isSystemInDarkTheme()
         val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
         val colors = when {
@@ -28,11 +41,25 @@ fun AppMaterialTheme(
             darkTheme -> darkColorScheme
             else -> lightColorScheme
         }
-        MaterialTheme(
-            colorScheme = colors,
-            content = content
-        )
+        val configuration = LocalConfiguration.current
+        val dimensions =
+            when (configuration.screenWidthDp) {
+                in 0..<600 -> compactDimensions
+                in 600..<840 -> mediumDimensions
+                else -> expandedDimensions
+            }
+        CompositionLocalProvider(localAppDimens provides remember { dimensions }) {
+            MaterialTheme(
+                colorScheme = colors,
+                content = content
+            )
+        }
     } else {
         Mdc3Theme(content = content)
     }
+}
+
+@Composable
+fun ProvideDimens(dimensions: Dimensions, content: () -> Unit) {
+
 }

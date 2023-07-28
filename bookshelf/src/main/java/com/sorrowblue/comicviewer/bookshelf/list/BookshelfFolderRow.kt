@@ -12,10 +12,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Dns
 import androidx.compose.material.icons.twotone.SdStorage
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
@@ -38,9 +40,9 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookshelfFolderRow(bookshelfFolder: BookshelfFolder, modifier: Modifier = Modifier) {
-    // M3 Surface, Scaffold, etc.
     ElevatedCard(modifier) {
         Column(Modifier.fillMaxSize()) {
             Box {
@@ -58,15 +60,24 @@ fun BookshelfFolderRow(bookshelfFolder: BookshelfFolder, modifier: Modifier = Mo
                         .clip(RoundedCornerShape(bottomEnd = 16.dp, bottomStart = 16.dp))
                 )
 
-                IconButton(
-                    modifier = Modifier.align(Alignment.TopEnd),
-                    colors = IconButtonDefaults.filledTonalIconButtonColors(),
-                    onClick = { }) {
-                    Icon(
-                        if (bookshelfFolder.bookshelf is SmbServer) Icons.TwoTone.Dns else Icons.TwoTone.SdStorage,
-                        contentDescription = "お気に入り"
-                    )
+                Box(modifier = Modifier.align(Alignment.TopEnd)) {
+                    PlainTooltipBox(
+                        tooltip = { Text("Settings") }
+                    ) {
+                        IconButton(
+                            modifier = Modifier
+                                .tooltipAnchor()
+                                .align(Alignment.TopEnd),
+                            colors = IconButtonDefaults.filledTonalIconButtonColors(),
+                            onClick = { }) {
+                            Icon(
+                                if (bookshelfFolder.bookshelf is SmbServer) Icons.TwoTone.Dns else Icons.TwoTone.SdStorage,
+                                contentDescription = "お気に入り"
+                            )
+                        }
+                    }
                 }
+
             }
 
             Text(

@@ -19,23 +19,12 @@
             android:id="@+id/action_bookshelf_list_to_bookshelf_manage_list"
             app:destination="@id/bookshelf_manage_list_fragment" />
         <action
-            android:id="@+id/action_bookshelf_list_to_bookshelf_remove_confirm"
-            app:destination="@id/bookshelf_remove_confirm_fragment" />
-        <action
             android:id="@+id/action_bookshelf_list_to_bookshelf_manage_smb"
             app:destination="@id/bookshelf_manage_smb_fragment" />
         <action
             android:id="@+id/action_bookshelf_list_to_bookshelf_manage_device"
             app:destination="@id/bookshelf_manage_device_fragment" />
     </fragment>
-    <dialog
-        android:id="@+id/bookshelf_remove_confirm_fragment"
-        android:name="com.sorrowblue.comicviewer.bookshelf.remove.BookshelfRemoveConfirmDialog"
-        android:label="@string/bookshelf_remove_title">
-        <argument
-            android:name="bookshelf_id"
-            app:argType="integer" />
-    </dialog>
     <fragment
         android:id="@+id/bookshelf_manage_list_fragment"
         android:name="com.sorrowblue.comicviewer.bookshelf.manage.list.BookshelfManageListFragment"

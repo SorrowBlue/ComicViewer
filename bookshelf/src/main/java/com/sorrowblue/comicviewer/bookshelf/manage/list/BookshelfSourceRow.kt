@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +20,7 @@ import com.sorrowblue.comicviewer.bookshelf.manage.BookshelfSource
 
 @Composable
 fun BookshelfSourceRow(source: BookshelfSource, modifier: Modifier = Modifier) {
-    ElevatedCard(modifier) {
+    OutlinedCard(modifier) {
         Column(Modifier.padding(16.dp)) {
             Text(
                 text = stringResource(

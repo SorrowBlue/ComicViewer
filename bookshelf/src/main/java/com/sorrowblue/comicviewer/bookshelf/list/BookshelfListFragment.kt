@@ -4,20 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.fragment.app.viewModels
+import androidx.navigation.NavHostController
 import androidx.navigation.fragment.findNavController
-import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.google.android.material.transition.MaterialFadeThrough
+import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 internal class BookshelfListFragment : FrameworkFragment() {
-
-    private val viewModel: BookshelfListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +33,8 @@ internal class BookshelfListFragment : FrameworkFragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                Mdc3Theme {
-                    BookshelfListScreen(Modifier, findNavController(), viewModel)
+                AppMaterialTheme {
+                    BookshelfListScreen(findNavController() as NavHostController)
                 }
             }
         }

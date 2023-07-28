@@ -210,8 +210,8 @@ internal class BookFragment : FrameworkFragment(R.layout.book_fragment) {
                 // 0 12345678 9
                 onChange.invoke(
                     when (position) {
-                        0 -> splitList.first().index
-                        bookAdapter.currentList.lastIndex -> splitList.last().index
+                        0 -> splitList.firstOrNull()?.index ?: 0
+                        bookAdapter.currentList.lastIndex -> splitList.lastOrNull()?.index ?: 0
                         else -> splitList[position - 1].index
                     }
                 )

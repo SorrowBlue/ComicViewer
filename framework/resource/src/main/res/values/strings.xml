@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name" translatable="false">ComicViewer</string>
     <string name="framework_title_settings">Settings</string>
+    <string name="framework_label_open_settings">Open settings</string>
 </resources>

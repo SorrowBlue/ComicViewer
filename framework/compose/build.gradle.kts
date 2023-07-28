@@ -14,6 +14,7 @@ android {
 dependencies {
     api(projects.framework)
     api(projects.framework.resource)
+    implementation(projects.framework.ui)
 
     api(libs.androidx.fragment.ktx)
     api(libs.bundles.androidx.lifecycle)
