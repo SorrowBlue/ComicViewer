@@ -21,7 +21,3 @@ data class Folder(
         }
     }
 }
-
-sealed interface IFolder : File {
-    val count: Int
-}
