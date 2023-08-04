@@ -3,14 +3,12 @@ package com.sorrowblue.comicviewer.domain.repository
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.entity.SearchCondition
-import com.sorrowblue.comicviewer.domain.entity.SearchCondition2
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.IFolder
-import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.framework.Resource
@@ -27,7 +25,7 @@ interface FileRepository {
     fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,
-        searchCondition: () -> SearchCondition2
+        searchCondition: () -> SearchCondition
     ): Flow<PagingData<File>>
 
     fun find(bookshelfId: BookshelfId, path: String): Flow<Resource<File, Error>>
@@ -51,13 +49,6 @@ interface FileRepository {
     fun getFile(bookshelfId: BookshelfId, path: String): Flow<Result<File, Unit>>
     suspend fun getBook(bookshelfId: BookshelfId, path: String): Response<Book?>
     suspend fun scan(folder: IFolder, scanType: ScanType): String
-    fun pagingDataFlow(
-        pagingConfig: PagingConfig,
-        bookshelf: Bookshelf,
-        searchCondition: SearchCondition,
-        sortType: () -> SortType
-    ): Flow<PagingData<File>>
-
 
     suspend fun get2(bookshelfId: BookshelfId, path: String): Result<File?, Unit>
     suspend fun getRoot(bookshelfId: BookshelfId): Result<File?, Unit>

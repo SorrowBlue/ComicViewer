@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
-import com.sorrowblue.comicviewer.domain.entity.SearchCondition2
+import com.sorrowblue.comicviewer.domain.entity.SearchCondition
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
@@ -104,27 +104,27 @@ internal class FolderViewModel @Inject constructor(
 
     val searchPagingDataFlow = pagingQueryFileUseCase.execute(
         PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
-            SearchCondition2(
+            SearchCondition(
                 query.value,
                 when (searchRange.value) {
-                    SearchRange.BOOKSHELF -> SearchCondition2.Range.BOOKSHELF
-                    SearchRange.IN_FOLDER -> SearchCondition2.Range.InFolder(path)
-                    SearchRange.FOLDER_BELOW -> SearchCondition2.Range.FolderBelow(args.path)
+                    SearchRange.BOOKSHELF -> SearchCondition.Range.BOOKSHELF
+                    SearchRange.IN_FOLDER -> SearchCondition.Range.InFolder(path)
+                    SearchRange.FOLDER_BELOW -> SearchCondition.Range.FolderBelow(args.path)
                 },
                 when (searchPeriod.value) {
-                    SearchPeriod.NONE -> SearchCondition2.Period.NONE
-                    SearchPeriod.HOUR_24 -> SearchCondition2.Period.HOUR_24
-                    SearchPeriod.WEEK_1 -> SearchCondition2.Period.WEEK_1
-                    SearchPeriod.MONTH_1 -> SearchCondition2.Period.MONTH_1
+                    SearchPeriod.NONE -> SearchCondition.Period.NONE
+                    SearchPeriod.HOUR_24 -> SearchCondition.Period.HOUR_24
+                    SearchPeriod.WEEK_1 -> SearchCondition.Period.WEEK_1
+                    SearchPeriod.MONTH_1 -> SearchCondition.Period.MONTH_1
                 },
                 when (searchOrder.value) {
-                    SearchOrder.NAME -> SearchCondition2.Order.NAME
-                    SearchOrder.TIMESTAMP -> SearchCondition2.Order.DATE
-                    SearchOrder.SIZE -> SearchCondition2.Order.SIZE
+                    SearchOrder.NAME -> SearchCondition.Order.NAME
+                    SearchOrder.TIMESTAMP -> SearchCondition.Order.DATE
+                    SearchOrder.SIZE -> SearchCondition.Order.SIZE
                 },
                 when (searchSort.value) {
-                    SearchSort.ASC -> SearchCondition2.Sort.ASC
-                    SearchSort.DESC -> SearchCondition2.Sort.DESC
+                    SearchSort.ASC -> SearchCondition.Sort.ASC
+                    SearchSort.DESC -> SearchCondition.Sort.DESC
                 }
             )
         }
