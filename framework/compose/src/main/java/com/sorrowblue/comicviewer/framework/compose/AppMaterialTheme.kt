@@ -13,6 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import com.google.accompanist.themeadapter.material3.Mdc3Theme
 
 private val lightColorScheme = lightColorScheme()
@@ -27,6 +29,7 @@ object AppMaterialTheme {
         @Composable
         get() = localAppDimens.current
 }
+
 @Composable
 fun AppMaterialTheme(
     readXmlTheme: Boolean = true,
@@ -57,9 +60,4 @@ fun AppMaterialTheme(
     } else {
         Mdc3Theme(content = content)
     }
-}
-
-@Composable
-fun ProvideDimens(dimensions: Dimensions, content: () -> Unit) {
-
 }

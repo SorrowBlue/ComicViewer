@@ -25,5 +25,9 @@ gradlePlugin {
             id = "com.sorrowblue.dagger-hilt"
             implementationClass = "com.sorrowblue.buildlogic.AndroidDaggerHiltPlugin"
         }
+        register("com.sorrowblue.jetpack-compose") {
+            id = "com.sorrowblue.jetpack-compose"
+            implementationClass = "com.sorrowblue.buildlogic.JetpackComposePlugin"
+        }
     }
 }

@@ -22,6 +22,7 @@ dependencies {
 
     api(platform(libs.androidx.compose.bom))
     api(libs.bundles.androidx.compose)
+    implementation("androidx.compose.ui:ui-util:1.4.3")
     api(libs.androidx.hilt.navigation.compose)
     api(libs.coil.compose)
     api(libs.androidx.paging.compose)

@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.domain.repository
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.entity.SearchCondition
+import com.sorrowblue.comicviewer.domain.entity.SearchCondition2
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
@@ -18,8 +19,18 @@ import kotlinx.coroutines.flow.Flow
 
 interface FileRepository {
     sealed interface Error : Resource.AppError {
-        data object System: Error
+        data object System : Error
     }
+
+    fun addReadLater(bookshelfId: BookshelfId, path: String): Flow<Resource<Unit, Error>>
+
+    fun pagingDataFlow(
+        pagingConfig: PagingConfig,
+        bookshelf: Bookshelf,
+        searchCondition: () -> SearchCondition2
+    ): Flow<PagingData<File>>
+
+    fun find(bookshelfId: BookshelfId, path: String): Flow<Resource<File, Error>>
 
     fun findByParent(bookshelfId: BookshelfId, parent: String): Flow<Resource<File, Error>>
 

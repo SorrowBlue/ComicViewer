@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.book.BookFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
-import com.sorrowblue.comicviewer.file.info.observeOpenFolder
+import com.sorrowblue.comicviewer.file.info.observeOpenFolder2
 import com.sorrowblue.comicviewer.file.list.FileListFragment
 import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.readlater.databinding.ReadlaterFragmentBinding
@@ -27,7 +27,7 @@ internal class ReadLaterFragment : FileListFragment(R.layout.readlater_fragment)
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
 
-        observeOpenFolder(R.id.readlater_fragment) { bookshelfId, parent ->
+        observeOpenFolder2(R.id.readlater_fragment) { bookshelfId, parent ->
             findNavController().navigate(
                 ReadLaterFragmentDirections.actionReadlaterToFolder().actionId,
                 FolderFragmentArgs(bookshelfId, parent).toBundle()

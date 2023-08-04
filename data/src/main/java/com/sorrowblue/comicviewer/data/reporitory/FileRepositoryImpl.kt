@@ -4,17 +4,21 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.common.FileModel
+import com.sorrowblue.comicviewer.data.common.ReadLaterFileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
+import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity2
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.ImageCacheDataSource
+import com.sorrowblue.comicviewer.data.datasource.ReadLaterFileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.toBookshelfModel
 import com.sorrowblue.comicviewer.data.toFile
 import com.sorrowblue.comicviewer.data.toFileModel
 import com.sorrowblue.comicviewer.domain.entity.SearchCondition
+import com.sorrowblue.comicviewer.domain.entity.SearchCondition2
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
@@ -38,7 +42,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -48,15 +51,59 @@ internal class FileRepositoryImpl @Inject constructor(
     private val fileScanService: FileScanService,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
-    private val settingsCommonRepository: SettingsCommonRepository
+    private val settingsCommonRepository: SettingsCommonRepository,
+    private val readLaterFileModelLocalDataSource: ReadLaterFileModelLocalDataSource
 ) : FileRepository {
+
+    override fun addReadLater(
+        bookshelfId: BookshelfId,
+        path: String
+    ): Flow<Resource<Unit, FileRepository.Error>> {
+        return flow {
+            readLaterFileModelLocalDataSource.add(ReadLaterFileModel(BookshelfModelId(bookshelfId.value), path))
+            emit(Resource.Success(Unit))
+        }.flowOn(Dispatchers.IO)
+    }
 
     override fun findByParent(
         bookshelfId: BookshelfId,
         parent: String
     ): Flow<Resource<File, FileRepository.Error>> {
         return flow {
-            emit(Resource.Success(fileModelLocalDataSource.root(BookshelfModelId(bookshelfId.value))!!.toFile()))
+            emit(
+                Resource.Success(
+                    fileModelLocalDataSource.root(BookshelfModelId(bookshelfId.value))!!.toFile()
+                )
+            )
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun pagingDataFlow(
+        pagingConfig: PagingConfig,
+        bookshelf: Bookshelf,
+        searchCondition: () -> SearchCondition2
+    ): Flow<PagingData<File>> {
+        return fileModelLocalDataSource.pagingSource(
+            pagingConfig,
+            BookshelfModelId(bookshelf.id.value)
+        ) {
+            searchCondition().toEntity()
+        }.map { pagingData -> pagingData.map(FileModel::toFile) }
+    }
+
+    override fun find(
+        bookshelfId: BookshelfId,
+        path: String
+    ): Flow<Resource<File, FileRepository.Error>> {
+        return flow {
+            emit(
+                Resource.Success(
+                    fileModelLocalDataSource.findBy(
+                        BookshelfModelId(bookshelfId.value),
+                        path
+                    )!!.toFile()
+                )
+            )
         }.flowOn(Dispatchers.IO)
     }
 
@@ -241,3 +288,35 @@ private fun SearchConditionEntity.Companion.from(searchCondition: SearchConditio
         }
     )
 }
+
+private fun SearchCondition2.Range.toEntity() = when (this) {
+    SearchCondition2.Range.BOOKSHELF -> SearchConditionEntity2.Range.BOOKSHELF
+    is SearchCondition2.Range.FolderBelow -> SearchConditionEntity2.Range.FolderBelow(parent)
+    is SearchCondition2.Range.InFolder -> SearchConditionEntity2.Range.InFolder(parent)
+}
+
+private fun SearchCondition2.Period.toEntity() = when (this) {
+    SearchCondition2.Period.NONE -> SearchConditionEntity2.Period.NONE
+    SearchCondition2.Period.HOUR_24 -> SearchConditionEntity2.Period.HOUR_24
+    SearchCondition2.Period.WEEK_1 -> SearchConditionEntity2.Period.WEEK_1
+    SearchCondition2.Period.MONTH_1 -> SearchConditionEntity2.Period.MONTH_1
+}
+
+private fun SearchCondition2.Order.toEntity() = when (this) {
+    SearchCondition2.Order.NAME -> SearchConditionEntity2.Order.NAME
+    SearchCondition2.Order.DATE -> SearchConditionEntity2.Order.DATE
+    SearchCondition2.Order.SIZE -> SearchConditionEntity2.Order.SIZE
+}
+
+private fun SearchCondition2.Sort.toEntity() = when (this) {
+    SearchCondition2.Sort.ASC -> SearchConditionEntity2.Sort.ASC
+    SearchCondition2.Sort.DESC -> SearchConditionEntity2.Sort.DESC
+}
+
+private fun SearchCondition2.toEntity() = SearchConditionEntity2(
+    query,
+    range.toEntity(),
+    period.toEntity(),
+    order.toEntity(),
+    sort.toEntity()
+)

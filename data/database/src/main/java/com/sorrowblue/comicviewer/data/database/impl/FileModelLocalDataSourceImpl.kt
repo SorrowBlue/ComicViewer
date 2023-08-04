@@ -12,6 +12,7 @@ import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
+import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity2
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import com.sorrowblue.comicviewer.data.database.ComicViewerDatabase
 import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
@@ -31,6 +32,14 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
     private val database: ComicViewerDatabase,
     private val factory: FileModelRemoteMediator.Factory
 ) : FileModelLocalDataSource {
+
+    override fun pagingSource(
+        pagingConfig: PagingConfig,
+        bookshelfModelId: BookshelfModelId,
+        searchConditionEntity: () -> SearchConditionEntity2
+    ) = Pager(pagingConfig) {
+        dao.pagingSource(bookshelfModelId.value, searchConditionEntity())
+    }.flow.map { it.map(FileWithCount::toModel) }
 
     override suspend fun addUpdate(fileModel: FileModel) {
         dao.upsert(File.fromModel(fileModel))

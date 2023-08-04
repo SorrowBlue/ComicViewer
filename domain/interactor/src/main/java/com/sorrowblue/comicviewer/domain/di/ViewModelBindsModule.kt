@@ -155,6 +155,7 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindUpdateFavoriteUseCase(interactor: UpdateFavoriteInteractor): UpdateFavoriteUseCase
 
     // Paging
+
     @Binds
     abstract fun bindPagingFileUseCase(interactor: PagingFileInteractor): PagingFileUseCase
 

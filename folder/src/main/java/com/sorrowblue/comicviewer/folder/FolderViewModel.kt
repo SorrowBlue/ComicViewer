@@ -1,116 +1,149 @@
 package com.sorrowblue.comicviewer.folder
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
-import com.sorrowblue.comicviewer.domain.entity.SearchCondition
+import com.sorrowblue.comicviewer.domain.entity.SearchCondition2
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.entity.settings.SortType
-import com.sorrowblue.comicviewer.domain.model.ScanType
-import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.DeleteHistoryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFolderUseCase
+import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.file.list.FileListViewModel
+import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
-import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flattenConcat
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import logcat.logcat
+
+enum class SearchRange {
+    BOOKSHELF, IN_FOLDER, FOLDER_BELOW
+}
+
+enum class SearchPeriod {
+    NONE,
+    HOUR_24,
+    WEEK_1,
+    MONTH_1
+}
+
+enum class SearchOrder {
+    NAME, TIMESTAMP, SIZE
+}
+
+enum class SearchSort {
+    ASC, DESC
+}
 
 @HiltViewModel
 internal class FolderViewModel @Inject constructor(
+    getFileUseCase: GetFileUseCase,
     pagingFileUseCase: PagingFileUseCase,
     pagingQueryFileUseCase: PagingQueryFileUseCase,
-    manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    getBookshelfFolderUseCase: GetBookshelfFolderUseCase,
-    private val deleteHistoryUseCase: DeleteHistoryUseCase,
-    private val scanBookshelfUseCase: ScanBookshelfUseCase,
+    private val addReadLaterUseCase: AddReadLaterUseCase,
     override val savedStateHandle: SavedStateHandle,
-) : FileListViewModel(manageFolderDisplaySettingsUseCase), SupportSafeArgs {
+) : ViewModel(), SupportSafeArgs {
 
     private val args: FolderFragmentArgs by navArgs()
+    private val bookshelfId = BookshelfId(args.bookshelfId)
+    private val path = args.path.decodeFromBase64()
 
-    override val transitionName = args.transitionName
-
-    private val bookshelfFolderFlow = getBookshelfFolderUseCase.execute(
-        GetBookshelfFolderUseCase.Request(BookshelfId(args.bookshelfId), args.path.decodeFromBase64())
-    ).mapNotNull { it.dataOrNull }.shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
-
-    var position = args.position
-    val titleFlow = bookshelfFolderFlow.map { it.bookshelf.displayName }.stateIn { "" }
-    val subTitleFlow = bookshelfFolderFlow.map { it.folder.name }.stateIn { "" }
+    val name = getFileUseCase.execute(GetFileUseCase.Request(bookshelfId, path)).filterSuccess()
+        .map { it.name }.stateIn(viewModelScope, SharingStarted.Lazily, "")
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val pagingDataFlow = bookshelfFolderFlow.flatMapLatest {
-        pagingFileUseCase.execute(
-            PagingFileUseCase.Request(PagingConfig(100), it.bookshelf, it.folder)
-        )
-    }.cachedIn(viewModelScope)
+    val pagingDataFlow = pagingFileUseCase.execute(
+        PagingFileUseCase.Request(PagingConfig(30), bookshelfId, path)
+    ).filterSuccess().flattenConcat().cachedIn(viewModelScope)
 
-    fun fullScan(scanType: ScanType, done: (String) -> Unit) {
-        viewModelScope.launch {
-            val folder = bookshelfFolderFlow.firstOrNull()?.folder ?: return@launch
-            scanBookshelfUseCase.execute(ScanBookshelfUseCase.Request(folder, scanType))
-                .first().dataOrNull?.let { done.invoke(it) }
-        }
+
+    private val _query = MutableStateFlow("")
+    val query = _query.asStateFlow()
+    fun updateQuery(query: String) {
+        _query.value = query
     }
 
-    fun deleteHistoryBook(selectedItemIds: List<String>) {
-        viewModelScope.launch {
-            deleteHistoryUseCase.execute(DeleteHistoryUseCase.Request(bookshelfFolderFlow.replayCache.first().bookshelf.id, selectedItemIds)).collect()
-        }
+    private val _searchRange = MutableStateFlow(SearchRange.BOOKSHELF)
+    val searchRange = _searchRange.asStateFlow()
+    fun updateSearchRange(range: SearchRange) {
+        _searchRange.value = range
     }
 
-    val isEditing = MutableStateFlow(false)
+    private val _searchPeriod = MutableStateFlow(SearchPeriod.NONE)
+    val searchPeriod = _searchPeriod.asStateFlow()
+    fun updateSearchPeriod(searchPeriod: SearchPeriod) {
+        _searchPeriod.value = searchPeriod
+    }
 
-    val searchQueryFlow = MutableStateFlow("")
-    val searchRangeFlow = MutableStateFlow<SearchCondition.Range>(SearchCondition.Range.BOOKSHELF)
-    val searchPeriodFlow = MutableStateFlow(SearchCondition.Period.NONE)
-    val searchSortTypeFlow = MutableStateFlow<SortType>(SortType.NAME(true))
+    private val _searchOrder = MutableStateFlow(SearchOrder.NAME)
+    val searchOrder = _searchOrder.asStateFlow()
+    fun updateSearchOrder(searchOrder: SearchOrder) {
+        _searchOrder.value = searchOrder
+    }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val searchPagingDataFlow = combine(
-        bookshelfFolderFlow,
-        searchQueryFlow,
-        searchRangeFlow,
-        searchPeriodFlow
-    ) { bookshelfFolder, query, range, period ->
-        bookshelfFolder to SearchCondition(
-            query,
-            when (range) {
-                SearchCondition.Range.BOOKSHELF -> SearchCondition.Range.BOOKSHELF
-                is SearchCondition.Range.FOLDER_BELOW ->
-                    SearchCondition.Range.FOLDER_BELOW(bookshelfFolder.folder.path)
+    private val _searchSort = MutableStateFlow(SearchSort.ASC)
+    val searchSort = _searchSort.asStateFlow()
+    fun updateSearchSort(searchSort: SearchSort) {
+        _searchSort.value = searchSort
+    }
 
-                is SearchCondition.Range.IN_FOLDER ->
-                    SearchCondition.Range.IN_FOLDER(bookshelfFolder.folder.path)
-            },
-            period
-        )
-    }.flatMapLatest {
-        pagingQueryFileUseCase.execute(
-            PagingQueryFileUseCase.Request(
-                PagingConfig(100),
-                it.first.bookshelf,
-                it.second
-            ) { searchSortTypeFlow.value }
-        )
-    }.cachedIn(viewModelScope)
+    val searchPagingDataFlow = pagingQueryFileUseCase.execute(
+        PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
+            SearchCondition2(
+                query.value,
+                when (searchRange.value) {
+                    SearchRange.BOOKSHELF -> SearchCondition2.Range.BOOKSHELF
+                    SearchRange.IN_FOLDER -> SearchCondition2.Range.InFolder(path)
+                    SearchRange.FOLDER_BELOW -> SearchCondition2.Range.FolderBelow(args.path)
+                },
+                when (searchPeriod.value) {
+                    SearchPeriod.NONE -> SearchCondition2.Period.NONE
+                    SearchPeriod.HOUR_24 -> SearchCondition2.Period.HOUR_24
+                    SearchPeriod.WEEK_1 -> SearchCondition2.Period.WEEK_1
+                    SearchPeriod.MONTH_1 -> SearchCondition2.Period.MONTH_1
+                },
+                when (searchOrder.value) {
+                    SearchOrder.NAME -> SearchCondition2.Order.NAME
+                    SearchOrder.TIMESTAMP -> SearchCondition2.Order.DATE
+                    SearchOrder.SIZE -> SearchCondition2.Order.SIZE
+                },
+                when (searchSort.value) {
+                    SearchSort.ASC -> SearchCondition2.Sort.ASC
+                    SearchSort.DESC -> SearchCondition2.Sort.DESC
+                }
+            )
+        }
+    ).cachedIn(viewModelScope)
+
+    fun add(file: File) {
+        viewModelScope.launch {
+            addReadLaterUseCase.execute(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
+                .first()
+        }
+    }
+}
+
+private fun <T, E : Resource.AppError> Flow<Resource<T, E>>.filterSuccess(): Flow<T> {
+    return filter {
+        logcat { "filter" }
+        it is Resource.Success<T>
+    }.map {
+        logcat { "map" }
+        (it as Resource.Success<T>).data
+    }
 }

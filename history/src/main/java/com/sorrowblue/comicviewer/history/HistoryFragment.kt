@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.book.BookFragmentArgs
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
-import com.sorrowblue.comicviewer.file.info.observeOpenFolder
+import com.sorrowblue.comicviewer.file.info.observeOpenFolder2
 import com.sorrowblue.comicviewer.file.list.FileListFragment
 import com.sorrowblue.comicviewer.history.databinding.HistoryFragmentBinding
 import com.sorrowblue.jetpack.binding.viewBinding
@@ -25,7 +25,7 @@ internal class HistoryFragment : FileListFragment(R.layout.history_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeOpenFolder(R.id.history_fragment) { bookshelfId, parent ->
+        observeOpenFolder2(R.id.history_fragment) { bookshelfId, parent ->
             findNavController().navigate(
                 HistoryFragmentDirections.actionHistoryToFolderNavigation().actionId,
                 BookFragmentArgs(bookshelfId, parent).toBundle()

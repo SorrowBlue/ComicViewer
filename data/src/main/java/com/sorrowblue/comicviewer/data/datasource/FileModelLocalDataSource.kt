@@ -8,10 +8,17 @@ import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
+import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity2
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import kotlinx.coroutines.flow.Flow
 
 interface FileModelLocalDataSource {
+
+    fun pagingSource(
+        pagingConfig: PagingConfig,
+        bookshelfModelId: BookshelfModelId,
+        searchConditionEntity: () -> SearchConditionEntity2
+    ): Flow<PagingData<FileModel>>
 
     /**
      * Add files. If it already exists, update it.

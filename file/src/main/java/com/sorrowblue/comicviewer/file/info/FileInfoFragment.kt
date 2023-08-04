@@ -48,7 +48,7 @@ internal class FileInfoFragment : BottomSheetDialogFragment(R.layout.file_fragme
     }
 }
 
-fun Fragment.observeOpenFolder(
+fun Fragment.observeOpenFolder2(
     fragmentId: Int,
     openFolder: (bookshelfId: Int, parent: String) -> Unit
 ) {

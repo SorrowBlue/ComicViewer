@@ -1,11 +1,14 @@
 package com.sorrowblue.comicviewer.domain.usecase
 
-import com.sorrowblue.comicviewer.domain.entity.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.request.BaseRequest
+import com.sorrowblue.comicviewer.framework.Resource
 
 abstract class AddReadLaterUseCase :
-    FlowOneUseCase<AddReadLaterUseCase.Request, ReadLaterFile, Unit>() {
-    class Request(val bookshelfId: BookshelfId, val path: String) : BaseRequest {
+    UseCase<AddReadLaterUseCase.Request, Unit, AddReadLaterUseCase.Error>() {
+
+    class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
+
+    enum class Error : Resource.AppError {
+        System
     }
 }
