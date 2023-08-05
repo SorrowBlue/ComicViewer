@@ -8,10 +8,10 @@ import androidx.documentfile.provider.DocumentFile
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.common.extension
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
+import com.sorrowblue.comicviewer.framework.extension
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -147,7 +147,7 @@ internal class DeviceFileClient @AssistedInject constructor(
     }
 
     private fun DocumentFile.toFileModel(resolveImageFolder: Boolean = false): FileModel {
-        return if (resolveImageFolder && listFiles().any { it.name.orEmpty().extension in SUPPORTED_IMAGE }) {
+        return if (resolveImageFolder && listFiles().any { it.name.orEmpty().extension() in SUPPORTED_IMAGE }) {
             FileModel.ImageFolder(
                 path = uri.toString(),
                 bookshelfModelId = bookshelfModel.id,

@@ -43,3 +43,7 @@ internal class FileReaderFactoryImpl @Inject constructor(
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class ZipFileReaderFactory
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ImageExtension

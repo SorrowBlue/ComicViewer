@@ -2,6 +2,8 @@ package com.sorrowblue.comicviewer.data.common.bookshelf
 
 sealed interface BookshelfModel {
 
+    companion object
+
     val id: BookshelfModelId
     val name: String
     val fileCount: Int
@@ -21,7 +23,9 @@ sealed interface BookshelfModel {
         override val fileCount: Int
     ) : BookshelfModel {
 
-        sealed interface Auth
+        sealed interface Auth {
+            companion object
+        }
 
         data object Guest : Auth
         data class UsernamePassword(

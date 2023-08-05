@@ -13,6 +13,5 @@ data class SimpleFileModel(
     val sortIndex: Int
 ) {
 
-    companion object {
-    }
+    companion object
 }

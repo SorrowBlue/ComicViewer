@@ -10,11 +10,11 @@ import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.exception.RemoteException
-import com.sorrowblue.comicviewer.data.toBookshelf
-import com.sorrowblue.comicviewer.data.toBookshelfId
-import com.sorrowblue.comicviewer.data.toBookshelfModel
-import com.sorrowblue.comicviewer.data.toFileModel
-import com.sorrowblue.comicviewer.data.toServerFolder
+import com.sorrowblue.comicviewer.data.mapper.from
+import com.sorrowblue.comicviewer.data.mapper.toBookshelf
+import com.sorrowblue.comicviewer.data.mapper.toBookshelfFolder
+import com.sorrowblue.comicviewer.data.mapper.toBookshelfId
+import com.sorrowblue.comicviewer.data.mapper.toBookshelfModel
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
@@ -66,15 +66,19 @@ internal class BookshelfRepositoryImpl @Inject constructor(
         return flow<Resource<Bookshelf, BookshelfRepository.Error>> {
             val bookshelfModel = bookshelfLocalDataSource.create(bookshelf.toBookshelfModel())
             val folderModel = when (folder) {
-                is BookFolder -> folder.copy(
-                    bookshelfId = bookshelfModel.id.toBookshelfId(),
-                    parent = ""
-                ).toFileModel()
+                is BookFolder -> FileModel.from(
+                    folder.copy(
+                        bookshelfId = bookshelfModel.id.toBookshelfId(),
+                        parent = ""
+                    )
+                )
 
-                is Folder -> folder.copy(
-                    bookshelfId = bookshelfModel.id.toBookshelfId(),
-                    parent = ""
-                ).toFileModel()
+                is Folder -> FileModel.from(
+                    folder.copy(
+                        bookshelfId = bookshelfModel.id.toBookshelfId(),
+                        parent = ""
+                    )
+                )
             }
             fileModelLocalDataSource.addUpdate(folderModel)
             emit(Resource.Success(bookshelfModel.toBookshelf()))
@@ -84,7 +88,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
     }
 
     override fun find(bookshelfId: BookshelfId): Flow<Resource<Bookshelf, BookshelfRepository.Error>> {
-        return bookshelfLocalDataSource.flow(BookshelfModelId(bookshelfId.value)).map {
+        return bookshelfLocalDataSource.flow(BookshelfModelId.from(bookshelfId)).map {
             it?.toBookshelf()?.let {
                 Resource.Success(it)
             } ?: Resource.Error(BookshelfRepository.Error.NotFound)
@@ -93,7 +97,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
 
     override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>> {
         return bookshelfLocalDataSource.pagingSource(pagingConfig).map {
-            it.map(BookshelfFolderModel::toServerFolder)
+            it.map(BookshelfFolderModel::toBookshelfFolder)
         }
     }
 
@@ -129,7 +133,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
 
     override fun get(bookshelfId: BookshelfId): Flow<Result<Bookshelf, LibraryStatus>> {
         return kotlin.runCatching {
-            bookshelfLocalDataSource.flow(BookshelfModelId(bookshelfId.value))
+            bookshelfLocalDataSource.flow(BookshelfModelId.from(bookshelfId))
                 .flowOn(Dispatchers.IO)
         }.fold({ modelFlow ->
             modelFlow.map {

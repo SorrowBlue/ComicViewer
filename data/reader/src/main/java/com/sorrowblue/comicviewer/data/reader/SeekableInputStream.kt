@@ -3,6 +3,10 @@ package com.sorrowblue.comicviewer.data.reader
 import java.io.Closeable
 
 interface SeekableInputStream : Closeable {
+    interface Factory<T> {
+
+        fun create(bookshelfModel: T, path: String): SeekableInputStream
+    }
 
     companion object {
         var SEEK_SET = 0

@@ -2,10 +2,10 @@ package com.sorrowblue.comicviewer.data.reader.zip
 
 import android.icu.text.Collator
 import android.icu.text.RuleBasedCollator
-import com.sorrowblue.comicviewer.data.common.SUPPORTED_IMAGE
-import com.sorrowblue.comicviewer.data.common.extension
 import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
+import com.sorrowblue.comicviewer.data.reader.impl.ImageExtension
+import com.sorrowblue.comicviewer.framework.extension
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -19,7 +19,8 @@ import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 
 internal class ZipFileReader @AssistedInject constructor(
-    @Assisted private val seekableInputStream: SeekableInputStream
+    @Assisted private val seekableInputStream: SeekableInputStream,
+    @ImageExtension supportedException: Set<String>
 ) : FileReader {
 
     @AssistedFactory
@@ -39,7 +40,7 @@ internal class ZipFileReader @AssistedInject constructor(
     private val archive = zipFile.simpleInterface
 
     private val entries =
-        archive.archiveItems.filter { !it.isFolder && it.path.extension in SUPPORTED_IMAGE }
+        archive.archiveItems.filter { !it.isFolder && it.path.extension() in supportedException }
             .sortedWith(Comparator.comparing({ it.path }, collator::compare))
     private val mutex = Mutex()
 

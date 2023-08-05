@@ -9,9 +9,9 @@ import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModelId
 import com.sorrowblue.comicviewer.data.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
-import com.sorrowblue.comicviewer.data.toFavorite
-import com.sorrowblue.comicviewer.data.toFavoriteBookModel
-import com.sorrowblue.comicviewer.data.toFile
+import com.sorrowblue.comicviewer.data.mapper.toFavorite
+import com.sorrowblue.comicviewer.data.mapper.toFavoriteBookModel
+import com.sorrowblue.comicviewer.data.mapper.toFile
 import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId

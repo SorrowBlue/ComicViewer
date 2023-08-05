@@ -4,6 +4,8 @@ import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 
 sealed interface FileModel {
 
+    companion object
+
     val path: String
     val bookshelfModelId: BookshelfModelId
     val name: String
@@ -12,7 +14,7 @@ sealed interface FileModel {
     val lastModifier: Long
     val sortIndex: Int
 
-    val extension get() = path.extension
+    val extension get() = path.substringAfterLast('.').lowercase()
 
     fun toSimpleModel() =
         SimpleFileModel(path, bookshelfModelId, name, parent, size, lastModifier, this, sortIndex)
