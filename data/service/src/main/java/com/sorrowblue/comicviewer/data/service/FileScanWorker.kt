@@ -13,7 +13,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
+import com.sorrowblue.comicviewer.data.common.model.ScanModel
 import com.sorrowblue.comicviewer.data.common.util.SortUtil
 import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
@@ -48,12 +48,11 @@ internal class FileScanWorker @AssistedInject constructor(
         val fileModel = fileLocalDataSource.findBy(request.bookshelfModelId, request.path)
         val resolveImageFolder = request.resolveImageFolder
         supportExtensions = request.supportExtensions
-        when (request.scanTypeModel) {
-            ScanTypeModel.FULL -> factory.create(serverModel)
-                .nestedListFiles(serverModel, rootFileModel, resolveImageFolder, true)
-
-            ScanTypeModel.QUICK -> factory.create(serverModel)
-                .nestedListFiles(serverModel, fileModel!!, resolveImageFolder, false)
+        //TODO(スキャン種別ごとに変える)
+        when (request.scanModel) {
+            ScanModel.ALL -> factory.create(serverModel).nestedListFiles(serverModel, rootFileModel, resolveImageFolder, true)
+            ScanModel.IN_FOLDER -> factory.create(serverModel).nestedListFiles(serverModel, fileModel!!, resolveImageFolder, false)
+            ScanModel.IN_FOLDER_SUB -> factory.create(serverModel).nestedListFiles(serverModel, fileModel!!, resolveImageFolder, false)
         }
         return Result.success()
     }

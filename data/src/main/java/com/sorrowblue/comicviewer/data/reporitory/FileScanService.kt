@@ -1,13 +1,13 @@
 package com.sorrowblue.comicviewer.data.reporitory
 
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
+import com.sorrowblue.comicviewer.data.common.model.ScanModel
 
 interface FileScanService {
 
     suspend fun enqueue(
         fileModel: FileModel,
-        scanTypeModel: ScanTypeModel,
+        scanModel: ScanModel,
         resolveImageFolder: Boolean,
         supportExtensions: List<String>
     ): String

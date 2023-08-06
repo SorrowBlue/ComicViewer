@@ -6,7 +6,7 @@ import androidx.paging.map
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.ReadLaterFileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
-import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
+import com.sorrowblue.comicviewer.data.common.model.ScanModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity2
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
@@ -16,6 +16,7 @@ import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.mapper.from
 import com.sorrowblue.comicviewer.data.mapper.toBookshelfModel
 import com.sorrowblue.comicviewer.data.mapper.toFile
+import com.sorrowblue.comicviewer.domain.entity.Scan
 import com.sorrowblue.comicviewer.domain.entity.SearchCondition
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
@@ -25,7 +26,6 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.domain.model.ScanType
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryError
@@ -168,13 +168,14 @@ internal class FileRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun scan(folder: IFolder, scanType: ScanType): String {
+    override suspend fun scan(folder: IFolder, scan: Scan): String {
         val folderSettings = settingsCommonRepository.folderSettings.first()
         return fileScanService.enqueue(
             FileModel.from(folder),
-            when (scanType) {
-                ScanType.FULL -> ScanTypeModel.FULL
-                ScanType.QUICK -> ScanTypeModel.QUICK
+            when (scan) {
+                Scan.ALL -> ScanModel.ALL
+                Scan.IN_FOLDER -> ScanModel.IN_FOLDER
+                Scan.IN_FOLDER_SUB -> ScanModel.IN_FOLDER_SUB
             },
             folderSettings.resolveImageFolder,
             folderSettings.supportExtension.map(SupportExtension::extension)

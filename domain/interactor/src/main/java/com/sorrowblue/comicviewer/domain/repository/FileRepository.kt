@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.domain.model.ScanType
+import com.sorrowblue.comicviewer.domain.entity.Scan
 import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.Result
 import kotlinx.coroutines.flow.Flow
@@ -48,7 +48,7 @@ interface FileRepository {
     suspend fun get(bookshelfId: BookshelfId, path: String): Response<File?>
     fun getFile(bookshelfId: BookshelfId, path: String): Flow<Result<File, Unit>>
     suspend fun getBook(bookshelfId: BookshelfId, path: String): Response<Book?>
-    suspend fun scan(folder: IFolder, scanType: ScanType): String
+    suspend fun scan(folder: IFolder, scan: Scan): String
 
     suspend fun get2(bookshelfId: BookshelfId, path: String): Result<File?, Unit>
     suspend fun getRoot(bookshelfId: BookshelfId): Result<File?, Unit>

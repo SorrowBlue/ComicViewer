@@ -7,7 +7,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.ScanTypeModel
+import com.sorrowblue.comicviewer.data.common.model.ScanModel
 import com.sorrowblue.comicviewer.data.reporitory.FileScanService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -17,7 +17,7 @@ internal class FileScanServiceImpl @Inject constructor(
 ) : FileScanService {
     override suspend fun enqueue(
         fileModel: FileModel,
-        scanTypeModel: ScanTypeModel,
+        scanModel: ScanModel,
         resolveImageFolder: Boolean,
         supportExtensions: List<String>
     ): String {
@@ -35,7 +35,7 @@ internal class FileScanServiceImpl @Inject constructor(
                 FileScanRequest(
                     fileModel.bookshelfModelId,
                     fileModel.path,
-                    scanTypeModel,
+                    scanModel,
                     resolveImageFolder,
                     supportExtensions
                 ).toWorkData()
