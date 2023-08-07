@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModelId
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
 import com.sorrowblue.comicviewer.data.database.entity.Favorite
+import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileCount
 import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -19,9 +20,8 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
 ) : FavoriteLocalDataSource {
 
     override fun flow(favoriteModelId: FavoriteModelId): Flow<FavoriteModel> {
-        return favoriteDao.flow(favoriteModelId.value).filterNotNull().map {
-            FavoriteModel(FavoriteModelId(it.favorite.id), it.favorite.name, it.count)
-        }
+        return favoriteDao.flow(favoriteModelId.value).filterNotNull()
+            .map(FavoriteFileCount::toModel)
     }
 
     override suspend fun update(favoriteModel: FavoriteModel): FavoriteModel {
@@ -37,9 +37,7 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
         return Pager(pagingConfig) {
             favoriteDao.pagingSource()
         }.flow.map { pagingData ->
-            pagingData.map {
-                FavoriteModel(FavoriteModelId(it.favorite.id), it.favorite.name, it.count)
-            }
+            pagingData.map(FavoriteFileCount::toModel)
         }
     }
 
