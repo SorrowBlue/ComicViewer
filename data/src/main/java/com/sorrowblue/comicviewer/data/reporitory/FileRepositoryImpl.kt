@@ -5,10 +5,11 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.ReadLaterFileModel
+import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
-import com.sorrowblue.comicviewer.data.common.model.ScanModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity2
+import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
+import com.sorrowblue.comicviewer.data.common.model.ScanModel
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.data.datasource.ReadLaterFileModelLocalDataSource
@@ -154,11 +155,22 @@ internal class FileRepositoryImpl @Inject constructor(
     ): Flow<PagingData<File>> {
         return fileModelLocalDataSource.pagingSource(
             pagingConfig,
-            bookshelf.toBookshelfModel(),
+            BookshelfModel.from(bookshelf),
             FileModel.from(folder)
         ) {
             val settings = runBlocking { settingsCommonRepository.folderDisplaySettings.first() }
             SortEntity.from(settings.sortType)
+            SearchConditionEntity(
+                SearchConditionEntity.NO_QUERY,
+                SearchConditionEntity.Range.InFolder(folder.path),
+                SearchConditionEntity.Period.NONE,
+                when (settings.sortType) {
+                    is SortType.DATE -> SearchConditionEntity.Order.DATE
+                    is SortType.NAME -> SearchConditionEntity.Order.NAME
+                    is SortType.SIZE -> SearchConditionEntity.Order.SIZE
+                },
+                if (settings.sortType.isAsc) SearchConditionEntity.Sort.ASC else SearchConditionEntity.Sort.DESC
+            )
         }.map { it.map(FileModel::toFile) }
     }
 
@@ -255,30 +267,30 @@ internal fun SortEntity.Companion.from(sortType: SortType): SortEntity {
 }
 
 private fun SearchCondition.Range.toEntity() = when (this) {
-    SearchCondition.Range.BOOKSHELF -> SearchConditionEntity2.Range.BOOKSHELF
-    is SearchCondition.Range.FolderBelow -> SearchConditionEntity2.Range.FolderBelow(parent)
-    is SearchCondition.Range.InFolder -> SearchConditionEntity2.Range.InFolder(parent)
+    SearchCondition.Range.BOOKSHELF -> SearchConditionEntity.Range.BOOKSHELF
+    is SearchCondition.Range.SubFolder -> SearchConditionEntity.Range.FolderBelow(parent)
+    is SearchCondition.Range.InFolder -> SearchConditionEntity.Range.InFolder(parent)
 }
 
 private fun SearchCondition.Period.toEntity() = when (this) {
-    SearchCondition.Period.NONE -> SearchConditionEntity2.Period.NONE
-    SearchCondition.Period.HOUR_24 -> SearchConditionEntity2.Period.HOUR_24
-    SearchCondition.Period.WEEK_1 -> SearchConditionEntity2.Period.WEEK_1
-    SearchCondition.Period.MONTH_1 -> SearchConditionEntity2.Period.MONTH_1
+    SearchCondition.Period.NONE -> SearchConditionEntity.Period.NONE
+    SearchCondition.Period.HOUR_24 -> SearchConditionEntity.Period.HOUR_24
+    SearchCondition.Period.WEEK_1 -> SearchConditionEntity.Period.WEEK_1
+    SearchCondition.Period.MONTH_1 -> SearchConditionEntity.Period.MONTH_1
 }
 
 private fun SearchCondition.Order.toEntity() = when (this) {
-    SearchCondition.Order.NAME -> SearchConditionEntity2.Order.NAME
-    SearchCondition.Order.DATE -> SearchConditionEntity2.Order.DATE
-    SearchCondition.Order.SIZE -> SearchConditionEntity2.Order.SIZE
+    SearchCondition.Order.NAME -> SearchConditionEntity.Order.NAME
+    SearchCondition.Order.DATE -> SearchConditionEntity.Order.DATE
+    SearchCondition.Order.SIZE -> SearchConditionEntity.Order.SIZE
 }
 
 private fun SearchCondition.Sort.toEntity() = when (this) {
-    SearchCondition.Sort.ASC -> SearchConditionEntity2.Sort.ASC
-    SearchCondition.Sort.DESC -> SearchConditionEntity2.Sort.DESC
+    SearchCondition.Sort.ASC -> SearchConditionEntity.Sort.ASC
+    SearchCondition.Sort.DESC -> SearchConditionEntity.Sort.DESC
 }
 
-private fun SearchCondition.toEntity() = SearchConditionEntity2(
+private fun SearchCondition.toEntity() = SearchConditionEntity(
     query,
     range.toEntity(),
     period.toEntity(),

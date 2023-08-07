@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
 import com.sorrowblue.comicviewer.data.common.bookshelf.FolderThumbnailOrderModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
-import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity2
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -17,7 +16,7 @@ interface FileModelLocalDataSource {
     fun pagingSource(
         pagingConfig: PagingConfig,
         bookshelfModelId: BookshelfModelId,
-        searchConditionEntity: () -> SearchConditionEntity2
+        searchConditionEntity: () -> SearchConditionEntity
     ): Flow<PagingData<FileModel>>
 
     /**
@@ -85,7 +84,7 @@ interface FileModelLocalDataSource {
         pagingConfig: PagingConfig,
         bookshelfModel: BookshelfModel,
         fileModel: FileModel,
-        sortType: () -> SortEntity
+        searchConditionEntity: () -> SearchConditionEntity
     ): Flow<PagingData<FileModel>>
 
     fun flow(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
@@ -116,12 +115,6 @@ interface FileModelLocalDataSource {
     ): List<String>
 
     suspend fun removeCacheKey(diskCacheKey: String)
-    fun pagingSource(
-        pagingConfig: PagingConfig,
-        bookshelfModelId: BookshelfModelId,
-        searchConditionEntity: SearchConditionEntity,
-        sortEntity: () -> SortEntity
-    ): Flow<PagingData<FileModel>>
 
     suspend fun root(id: BookshelfModelId): FileModel.Folder?
 

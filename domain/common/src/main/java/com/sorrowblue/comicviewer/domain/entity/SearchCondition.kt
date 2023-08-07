@@ -11,7 +11,7 @@ data class SearchCondition(
     sealed class Range {
         data object BOOKSHELF : Range()
         data class InFolder(val parent: String) : Range()
-        data class FolderBelow(val parent: String) : Range()
+        data class SubFolder(val parent: String) : Range()
     }
 
     enum class Period {

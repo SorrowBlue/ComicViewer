@@ -109,7 +109,7 @@ internal class FolderViewModel @Inject constructor(
                 when (searchRange.value) {
                     SearchRange.BOOKSHELF -> SearchCondition.Range.BOOKSHELF
                     SearchRange.IN_FOLDER -> SearchCondition.Range.InFolder(path)
-                    SearchRange.FOLDER_BELOW -> SearchCondition.Range.FolderBelow(args.path)
+                    SearchRange.FOLDER_BELOW -> SearchCondition.Range.SubFolder(args.path)
                 },
                 when (searchPeriod.value) {
                     SearchPeriod.NONE -> SearchCondition.Period.NONE

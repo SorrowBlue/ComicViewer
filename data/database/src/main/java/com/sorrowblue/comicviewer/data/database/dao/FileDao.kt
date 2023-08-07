@@ -12,7 +12,6 @@ import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
-import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity2
 import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import com.sorrowblue.comicviewer.data.database.entity.File
 import com.sorrowblue.comicviewer.data.database.entity.FileWithCount
@@ -134,59 +133,7 @@ internal interface FileDao {
 
     fun pagingSource(
         bookshelfId: Int,
-        searchConditionEntity: SearchConditionEntity,
-        sortEntity: SortEntity
-    ): PagingSource<Int, FileWithCount> {
-        val query = SupportSQLiteQueryBuilder.builder("file").apply {
-            columns(arrayOf("*", """
-                CASE
-                  WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
-                  else 0
-                END count
-            """.trimIndent()))
-            var selectionStr = "bookshelf_id = :bookshelfId"
-            val bindArgs = mutableListOf<Any>(bookshelfId)
-
-            when (val range = searchConditionEntity.range) {
-                is SearchConditionEntity.Range.IN_FOLDER -> {
-                    selectionStr += " AND parent = :parent"
-                    bindArgs += range.parent
-                }
-
-                is SearchConditionEntity.Range.FOLDER_BELOW -> {
-                    selectionStr += " AND parent LIKE :parent"
-                    bindArgs += "${range.parent}%"
-                }
-
-                SearchConditionEntity.Range.BOOKSHELF -> Unit
-            }
-
-            if (searchConditionEntity.query != null) {
-                selectionStr += " AND name LIKE :q"
-                bindArgs += "%${searchConditionEntity.query}%"
-            }
-
-            selectionStr += when (searchConditionEntity.period) {
-                SearchConditionEntity.Period.NONE -> ""
-                SearchConditionEntity.Period.HOUR_24 -> " AND last_modified > strftime('%s000', datetime('now', '-24 hours'))"
-                SearchConditionEntity.Period.WEEK_1 -> " AND last_modified > strftime('%s000', datetime('now', '-7 days'))"
-                SearchConditionEntity.Period.MONTH_1 -> " AND last_modified > strftime('%s000', datetime('now', '-1 months'))"
-            }
-
-            selection(selectionStr, bindArgs.toTypedArray())
-            when (sortEntity) {
-                is SortEntity.NAME -> if (sortEntity.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
-                is SortEntity.DATE -> if (sortEntity.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
-                is SortEntity.SIZE -> if (sortEntity.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
-            }.let(::orderBy)
-        }.create()
-        logcat { query.sql.trimIndent().replace(Regex("""\r\n|\n|\r"""), "") }
-        @Suppress("DEPRECATION") return pagingSource(query)
-    }
-
-    fun pagingSource(
-        bookshelfId: Int,
-        searchConditionEntity: SearchConditionEntity2
+        searchConditionEntity: SearchConditionEntity
     ): PagingSource<Int, FileWithCount> {
         val query = SupportSQLiteQueryBuilder.builder("file").apply {
             columns(
@@ -203,17 +150,17 @@ internal interface FileDao {
             val bindArgs = mutableListOf<Any>(bookshelfId)
 
             when (val range = searchConditionEntity.range) {
-                is SearchConditionEntity2.Range.InFolder -> {
+                is SearchConditionEntity.Range.InFolder -> {
                     selectionStr += " AND parent = :parent"
                     bindArgs += range.parent
                 }
 
-                is SearchConditionEntity2.Range.FolderBelow -> {
+                is SearchConditionEntity.Range.FolderBelow -> {
                     selectionStr += " AND parent LIKE :parent"
                     bindArgs += "${range.parent}%"
                 }
 
-                SearchConditionEntity2.Range.BOOKSHELF -> Unit
+                SearchConditionEntity.Range.BOOKSHELF -> Unit
             }
 
             if (searchConditionEntity.query.isNotEmpty()) {
@@ -222,21 +169,21 @@ internal interface FileDao {
             }
 
             selectionStr += when (searchConditionEntity.period) {
-                SearchConditionEntity2.Period.NONE -> ""
-                SearchConditionEntity2.Period.HOUR_24 -> " AND last_modified > strftime('%s000', datetime('now', '-24 hours'))"
-                SearchConditionEntity2.Period.WEEK_1 -> " AND last_modified > strftime('%s000', datetime('now', '-7 days'))"
-                SearchConditionEntity2.Period.MONTH_1 -> " AND last_modified > strftime('%s000', datetime('now', '-1 months'))"
+                SearchConditionEntity.Period.NONE -> ""
+                SearchConditionEntity.Period.HOUR_24 -> " AND last_modified > strftime('%s000', datetime('now', '-24 hours'))"
+                SearchConditionEntity.Period.WEEK_1 -> " AND last_modified > strftime('%s000', datetime('now', '-7 days'))"
+                SearchConditionEntity.Period.MONTH_1 -> " AND last_modified > strftime('%s000', datetime('now', '-1 months'))"
             }
 
             selection(selectionStr, bindArgs.toTypedArray())
             val sortStr = when (searchConditionEntity.sort) {
-                SearchConditionEntity2.Sort.ASC -> "ASC"
-                SearchConditionEntity2.Sort.DESC -> "DESC"
+                SearchConditionEntity.Sort.ASC -> "ASC"
+                SearchConditionEntity.Sort.DESC -> "DESC"
             }
             when (searchConditionEntity.order) {
-                SearchConditionEntity2.Order.NAME -> "file_type_order $sortStr, sort_index $sortStr"
-                SearchConditionEntity2.Order.DATE -> "file_type_order $sortStr, last_modified $sortStr, sort_index $sortStr"
-                SearchConditionEntity2.Order.SIZE -> "file_type_order $sortStr, size $sortStr, sort_index $sortStr"
+                SearchConditionEntity.Order.NAME -> "file_type_order $sortStr, sort_index $sortStr"
+                SearchConditionEntity.Order.DATE -> "file_type_order $sortStr, last_modified $sortStr, sort_index $sortStr"
+                SearchConditionEntity.Order.SIZE -> "file_type_order $sortStr, size $sortStr, sort_index $sortStr"
             }.let(::orderBy)
         }.create()
         logcat { query.sql.trimIndent().replace(Regex("""\r\n|\n|\r"""), "") }
