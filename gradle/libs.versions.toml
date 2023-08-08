@@ -158,7 +158,7 @@ dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compil
 junit = "junit:junit:4.13.2"
 box-java-sdk = "com.box:box-java-sdk:4.2.0"
 
-microsoft-identity-client-msal = "com.microsoft.identity.client:msal:4.6.2"
+microsoft-identity-client-msal = "com.microsoft.identity.client:msal:4.7.0"
 microsoft-graph = "com.microsoft.graph:microsoft-graph:5.64.0"
 
 androidx-test-core-ktx = "androidx.test:core-ktx:1.5.0"
