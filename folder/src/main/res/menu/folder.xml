@@ -7,7 +7,7 @@
         android:title="Search"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@id/action_folder_to_folder_display"
+        android:id="@+id/action_folder_to_folder_display"
         android:icon="@drawable/ic_twotone_view_list_24"
         android:menuCategory="secondary"
         android:title="Sort &amp; Display"

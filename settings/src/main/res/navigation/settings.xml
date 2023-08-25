@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/settings_app_fragment"
         android:name="com.sorrowblue.comicviewer.settings.app.AppFragment"
-        android:label="AppInfoFragment" >
+        android:label="AppInfoFragment">
         <action
             android:id="@+id/action_settings_app_to_libs_support"
             app:destination="@id/libs_support_fragment" />
@@ -38,4 +38,8 @@
     <include app:graph="@navigation/settings_viewer" />
     <include app:graph="@navigation/settings_folder" />
     <include app:graph="@navigation/settings_security" />
+    <deepLink
+        android:id="@+id/settingsDeeplink"
+        android:autoVerify="true"
+        app:uri="comicviewer://comicviewer.sorrowblue.com/settings" />
 </navigation>

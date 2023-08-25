@@ -23,8 +23,6 @@ dependencies {
     implementation(projects.framework.compose)
     implementation(projects.domain)
     implementation(projects.file)
-    implementation(projects.book)
-    implementation(projects.folder.display)
 
     implementation(libs.androidx.work.runtime.ktx)
 }

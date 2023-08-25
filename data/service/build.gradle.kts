@@ -9,5 +9,6 @@ dependencies {
     implementation(projects.data)
 
     implementation(libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.work.runtime.ktx)
 }

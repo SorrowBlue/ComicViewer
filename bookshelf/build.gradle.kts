@@ -22,6 +22,8 @@ dependencies {
     implementation(projects.framework.ui)
     implementation(projects.framework.compose)
     implementation(projects.domain)
+    implementation(projects.bookshelf.edit)
+    implementation(projects.bookshelf.selection)
     implementation(projects.folder)
     debugImplementation(libs.bundles.androidx.compose.debug)
     androidTestImplementation(platform(libs.androidx.compose.bom))

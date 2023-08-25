@@ -17,6 +17,7 @@ import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.domain.repository.FavoriteFileRepository
 import com.sorrowblue.comicviewer.domain.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
@@ -63,10 +64,10 @@ internal class FavoriteFileRepositoryImpl @Inject constructor(
             pagingConfig, FavoriteModelId(favoriteId.value)
         ) {
             val settings = runBlocking { settingsCommonRepository.folderDisplaySettings.first() }
-            when (settings.sort) {
-                FolderDisplaySettings.Sort.NAME -> SortEntity.NAME(settings.order == FolderDisplaySettings.Order.ASC)
-                FolderDisplaySettings.Sort.DATE -> SortEntity.DATE(settings.order == FolderDisplaySettings.Order.ASC)
-                FolderDisplaySettings.Sort.SIZE -> SortEntity.SIZE(settings.order == FolderDisplaySettings.Order.ASC)
+            when (settings.sortType) {
+                is SortType.DATE -> SortEntity.DATE(settings.sortType.isAsc)
+                is SortType.NAME -> SortEntity.NAME(settings.sortType.isAsc)
+                is SortType.SIZE -> SortEntity.SIZE(settings.sortType.isAsc)
             }
         }.map { it.map(FileModel::toFile) }
     }

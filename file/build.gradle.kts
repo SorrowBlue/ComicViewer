@@ -10,10 +10,16 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
     }
 }
 
 dependencies {
     implementation(projects.framework.ui)
+    implementation(projects.framework.compose)
     implementation(projects.domain)
 }

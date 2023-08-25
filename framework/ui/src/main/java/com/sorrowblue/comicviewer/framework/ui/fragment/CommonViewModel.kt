@@ -10,11 +10,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @HiltViewModel
 class CommonViewModel @Inject constructor() : ViewModel(),
     NavController.OnDestinationChangedListener {
 
+    val scrollingUp = MutableStateFlow(false)
     val snackbarMessage = MutableSharedFlow<String>(0, 1, BufferOverflow.SUSPEND)
     var shouldKeepOnScreen = true
 

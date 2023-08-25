@@ -16,7 +16,7 @@ internal class AndroidApplicationPlugin : Plugin<Project> {
             extensions.configure<BaseAppModuleExtension> {
                 applyCommonConfigure(target)
                 defaultConfig {
-                    targetSdk = libs.version("android-target-sdk").toInt()
+                    targetSdk = libs.version("targetSdk").toInt()
                 }
             }
             kotlin {

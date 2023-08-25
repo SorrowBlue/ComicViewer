@@ -17,6 +17,14 @@ data class SmbServer(
         auth,
         0
     )
+    constructor(id: BookshelfId, displayName: String, host: String, port: Int, auth: Auth) : this(
+        id,
+        displayName,
+        host,
+        port,
+        auth,
+        0
+    )
 
     sealed interface Auth {
         data class UsernamePassword(

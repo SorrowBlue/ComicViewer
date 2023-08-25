@@ -29,5 +29,9 @@ gradlePlugin {
             id = "com.sorrowblue.jetpack-compose"
             implementationClass = "com.sorrowblue.buildlogic.JetpackComposePlugin"
         }
+        register("com.sorrowblue.android-feature") {
+            id = name
+            implementationClass = "com.sorrowblue.buildlogic.ComicViewerAndroidFeaturePlugin"
+        }
     }
 }

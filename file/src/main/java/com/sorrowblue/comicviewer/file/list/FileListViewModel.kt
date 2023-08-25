@@ -14,6 +14,9 @@ abstract class FileListViewModel(
         manageFolderDisplaySettingsUseCase.settings.map { it.isEnabledThumbnail }
             .distinctUntilChanged()
 
+    val settingsFlow =
+        manageFolderDisplaySettingsUseCase.settings
+
     val displayFlow =
         manageFolderDisplaySettingsUseCase.settings.map { it.display }.distinctUntilChanged()
 

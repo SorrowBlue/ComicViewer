@@ -8,9 +8,7 @@ data class FolderDisplaySettings(
     val isEnabledThumbnail: Boolean = true,
     val spanCount: Int = 3,
     val columnSize: Size = Size.MEDIUM,
-    val sortType: SortType = SortType.NAME(true),
-    val sort: Sort = Sort.NAME,
-    val order: Order = Order.ASC
+    val sortType: SortType = SortType.NAME(true)
 ) {
 
     enum class Size {
@@ -19,13 +17,5 @@ data class FolderDisplaySettings(
 
     enum class Display {
         GRID, LIST
-    }
-
-    enum class Order {
-        ASC, DESC
-    }
-
-    enum class Sort {
-        NAME, DATE, SIZE
     }
 }

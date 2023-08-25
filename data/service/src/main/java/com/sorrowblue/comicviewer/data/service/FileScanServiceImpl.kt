@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.data.common.model.ScanModel
 import com.sorrowblue.comicviewer.data.reporitory.FileScanService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import logcat.logcat
 
 internal class FileScanServiceImpl @Inject constructor(
     @ApplicationContext private val context: Context
@@ -27,6 +28,7 @@ internal class FileScanServiceImpl @Inject constructor(
             // ユーザーのデバイスの保存容量が少なすぎる場合以外
             setRequiresStorageNotLow(true)
         }.build()
+        logcat { "OneTimeWorkRequest.Builder(FileScanWorker::class.java)" }
         val myWorkRequest = OneTimeWorkRequest.Builder(FileScanWorker::class.java)
             .setConstraints(constraints)
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)

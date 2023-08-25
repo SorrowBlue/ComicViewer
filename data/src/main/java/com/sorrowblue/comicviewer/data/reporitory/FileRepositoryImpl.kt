@@ -64,6 +64,16 @@ internal class FileRepositoryImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    override fun deleteReadLater(
+        bookshelfId: BookshelfId,
+        path: String
+    ): Flow<Resource<Unit, FileRepository.Error>> {
+        return flow {
+            readLaterFileModelLocalDataSource.delete(ReadLaterFileModel(BookshelfModelId.from(bookshelfId), path))
+            emit(Resource.Success(Unit))
+        }.flowOn(Dispatchers.IO)
+    }
+
     override fun findByParent(
         bookshelfId: BookshelfId,
         parent: String

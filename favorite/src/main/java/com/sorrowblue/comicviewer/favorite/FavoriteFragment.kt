@@ -17,7 +17,6 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.favorite.databinding.FavoriteFragmentBinding
 import com.sorrowblue.comicviewer.file.info.observeOpenFolder2
 import com.sorrowblue.comicviewer.file.list.FileListFragment
-import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,12 +33,13 @@ internal class FavoriteFragment : FileListFragment(R.layout.favorite_fragment),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeOpenFolder2(R.id.favorite_fragment) { bookshelfId, parent ->
-            findNavController().navigate(
-                FavoriteFragmentDirections.actionFavoriteToFolder().actionId,
-                FolderFragmentArgs(bookshelfId, parent).toBundle()
-            )
-        }
+//        observeOpenFolder2(R.id.favorite_fragment) { bookshelfId, parent ->
+//            findNavController().navigate(
+//                FavoriteFragmentDirections.actionFavoriteToFolder().actionId,
+//                FolderFragmentArgs(bookshelfId, parent).toBundle()
+//            )
+            TODO()
+//        }
         binding.viewModel = viewModel
         binding.toolbar.setOnMenuItemClickListener(this)
     }
@@ -47,11 +47,12 @@ internal class FavoriteFragment : FileListFragment(R.layout.favorite_fragment),
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.favorite_menu_edit -> {
-                findNavController().navigate(
-                    FavoriteFragmentDirections.actionFavoriteToFavoriteEdit(
-                        viewModel.favoriteId.value
-                    )
-                )
+//                findNavController().navigate(
+//                    FavoriteFragmentDirections.actionFavoriteToFavoriteEdit(
+//                        viewModel.favoriteId.value
+//                    )
+//                )
+                TODO()
                 true
             }
 
@@ -79,23 +80,29 @@ internal class FavoriteFragment : FileListFragment(R.layout.favorite_fragment),
         extras: FragmentNavigator.Extras
     ) {
         when (file) {
-            is Book -> findNavController().navigate(
-                FavoriteFragmentDirections.actionFavoriteToBook().actionId,
-                BookFragmentArgs(file, transitionName, viewModel.favoriteId).toBundle(),
-                null,
-                extras
-            )
+            is Book -> {
+//                findNavController().navigate(
+//                    FavoriteFragmentDirections.actionFavoriteToBook().actionId,
+//                    BookFragmentArgs(file, transitionName, viewModel.favoriteId).toBundle(),
+//                    null,
+//                    extras
+//                )
+                TODO()
+            }
 
-            is Folder -> findNavController().navigate(
-                FavoriteFragmentDirections.actionFavoriteToFolder().actionId,
-                FolderFragmentArgs(
-                    file.bookshelfId.value,
-                    file.base64Path(),
-                    transitionName
-                ).toBundle(),
-                null,
-                extras
-            )
-        }
+            is Folder -> {
+                TODO()
+//                findNavController().navigate(
+//                    FavoriteFragmentDirections.actionFavoriteToFolder().actionId,
+//                FolderFragmentArgs(
+//                    file.bookshelfId.value,
+//                    file.base64Path(),
+//                    transitionName
+//                ).toBundle(),
+//                null,
+//                extras
+//            )
+
+            }}
     }
 }

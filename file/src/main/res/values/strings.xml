@@ -3,11 +3,15 @@
     <string name="file_info_label_last_read_time">Read on %s$1</string>
     <string name="file_info_label_open_folder">Open folder</string>
     <string name="file_info_label_add_favourites">Add to Favourites</string>
-    <string name="file_info_label_add_read_later">Add to Read Later</string>
+    <string name="file_info_label_add_read_later">save to read later</string>
 
     <plurals name="file_list_label_files">
         <item quantity="zero">0 file</item>
         <item quantity="one">1 file</item>
         <item quantity="other">%1$d files</item>
     </plurals>
+
+
+    <string name="file_list_label_switch_list_view">Switch to list view</string>
+    <string name="file_list_label_switch_grid_view">Switch to grid view</string>
 </resources>

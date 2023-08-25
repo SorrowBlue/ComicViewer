@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.domain.repository
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.entity.Scan
 import com.sorrowblue.comicviewer.domain.entity.SearchCondition
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
@@ -10,7 +11,6 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.domain.entity.Scan
 import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.Result
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +21,7 @@ interface FileRepository {
     }
 
     fun addReadLater(bookshelfId: BookshelfId, path: String): Flow<Resource<Unit, Error>>
+    fun deleteReadLater(bookshelfId: BookshelfId, path: String): Flow<Resource<Unit, Error>>
 
     fun pagingDataFlow(
         pagingConfig: PagingConfig,

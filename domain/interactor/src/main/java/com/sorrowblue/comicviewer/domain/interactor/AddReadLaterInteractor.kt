@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.domain.interactor
 
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.framework.Resource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +14,19 @@ internal class AddReadLaterInteractor @Inject constructor(
 
     override fun run(request: Request): Flow<Resource<Unit, Error>> {
         return repository.addReadLater(request.bookshelfId, request.path).mapFold({
+            Resource.Success(Unit)
+        }, {
+            Resource.Error(Error.System)
+        })
+    }
+}
+
+internal class DeleteReadLaterInteractor @Inject constructor(
+    private val repository: FileRepository
+) : DeleteReadLaterUseCase() {
+
+    override fun run(request: Request): Flow<Resource<Unit, Error>> {
+        return repository.deleteReadLater(request.bookshelfId, request.path).mapFold({
             Resource.Success(Unit)
         }, {
             Resource.Error(Error.System)

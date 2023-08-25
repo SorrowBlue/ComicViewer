@@ -1,27 +1,24 @@
 [versions]
 
-android-compile-sdk = "33"
-android-min-sdk = "30"
-android-target-sdk = "33"
-android-buildtools = "33.0.2"
+targetSdk = "34"
 
-kotlin = "1.9.0"
-google-ksp = "1.9.0-1.0.12"
+kotlin = "1.9.10"
+google-ksp = "1.9.10-1.0.13"
 kotlinx-coroutines = "1.7.3"
-kotlinx-serialization = "1.5.1"
+kotlinx-serialization = "1.6.0"
 
 androidx-datastore = "1.0.0"
 androidx-lifecycle = "2.6.1"
-androidx-navigation = "2.6.0"
+androidx-navigation = "2.7.1"
 androidx-paging = "3.2.0"
 androidx-room = "2.5.2"
 androidx-work = "2.8.1"
 
-androidx-compose-compiler = "1.5.1"
+androidx-compose-compiler = "1.5.3-dev-k1.9.10-593b4c95fce"
 
 dagger-hilt-android = "2.47"
 
-android-gradle = "8.1.0"
+android-gradle = "8.1.1"
 
 mikepenz-aboutlibraries = "10.8.3"
 
@@ -58,16 +55,16 @@ androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 
 androidx-biometric = "androidx.biometric:biometric:1.2.0-alpha05"
 
-androidx-browser = "androidx.browser:browser:1.5.0"
+androidx-browser = "androidx.browser:browser:1.6.0"
 
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 
 androidx-coordinatorlayout = "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
 
-androidx-core-ktx = "androidx.core:core-ktx:1.10.1"
+androidx-core-ktx = "androidx.core:core-ktx:1.12.0-rc01"
 androidx-core-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 
-androidx-compose-bom = "androidx.compose:compose-bom:2023.06.01"
+androidx-compose-bom = "androidx.compose:compose-bom:2023.08.00"
 androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidx-compose-compiler"}
 
 androidx-compose-material3 = { module ="androidx.compose.material3:material3" }
@@ -107,7 +104,7 @@ androidx-paging-common = { module = "androidx.paging:paging-common", version.ref
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
 
-androidx-preference-ktx = "androidx.preference:preference-ktx:1.2.0"
+androidx-preference-ktx = "androidx.preference:preference-ktx:1.2.1"
 
 androidx-palette-ktx = "androidx.palette:palette-ktx:1.0.0"
 
@@ -135,7 +132,7 @@ google-android-gms-play-services-auth = "com.google.android.gms:play-services-au
 google-api-client-android = "com.google.api-client:google-api-client-android:2.2.0"
 google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev20230610-2.0.0"
 google-http-client-gson = "com.google.http-client:google-http-client-gson:1.43.3"
-google-accompanist-themeadapter-material3 = "com.google.accompanist:accompanist-themeadapter-material3:0.30.1"
+google-accompanist-themeadapter-material3 = "com.google.accompanist:accompanist-themeadapter-material3:0.32.0"
 
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.12"
 dropbox-core-sdk = "com.dropbox.core:dropbox-core-sdk:5.4.5"
@@ -148,7 +145,7 @@ slf4j-android = "org.slf4j:slf4j-android:1.7.36"
 sorrowblue-binding-ktx = "com.sorrowblue.jetpack:binding-ktx:3.0.5"
 github-omicronapps-SevenZipJBinding4Android = "com.github.omicronapps:7-Zip-JBinding-4Android:Release-16.02-2.02"
 
-artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.22.0"
+artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.23.0"
 squareup-logcat = "com.squareup.logcat:logcat:0.1"
 chrisbanes-insetter = "dev.chrisbanes.insetter:insetter-dbx:0.6.1"
 

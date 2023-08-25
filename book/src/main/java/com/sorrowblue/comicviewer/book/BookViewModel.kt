@@ -3,11 +3,9 @@ package com.sorrowblue.comicviewer.book
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.book.compose.BookArgs
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
-import com.sorrowblue.comicviewer.domain.entity.settings.History
 import com.sorrowblue.comicviewer.domain.usecase.GetNextComicRel
 import com.sorrowblue.comicviewer.domain.usecase.UpdateHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetNextFavoriteBookUseCase
@@ -16,14 +14,12 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
-import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -44,24 +40,21 @@ internal class BookViewModel @Inject constructor(
     override val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), SupportSafeArgs {
 
-    private val args: BookFragmentArgs by navArgs()
+    private val args = BookArgs(savedStateHandle)
 
-    val placeholder = args.placeholder
-    val favoriteId = FavoriteId(args.favoriteId)
+    val placeholder = ""
+    val favoriteId = FavoriteId(-1)
 
     val bookFlow =
         getBookUseCase.execute(
-            GetBookUseCase.Request(
-                BookshelfId(args.bookshelfId),
-                args.path.decodeFromBase64()
-            )
+            GetBookUseCase.Request(args.bookshelfId, args.path)
         )
             .map { it.dataOrNull }
             .stateIn { null }
 
     val nextComic =
         bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest { it ->
-            if (0 < args.favoriteId) {
+            if (0 < favoriteId.value) {
                 getNextFavoriteBookUseCase.execute(
                     GetNextFavoriteBookUseCase.Request(
                         FavoriteFile(
@@ -80,7 +73,7 @@ internal class BookViewModel @Inject constructor(
         }.stateIn(viewModelScope, SharingStarted.Lazily, null)
     val prevComic =
         bookFlow.filterNotNull().distinctUntilChangedBy { it.path }.flatMapLatest { it ->
-            if (0 < args.favoriteId) {
+            if (0 < favoriteId.value) {
                 getNextFavoriteBookUseCase.execute(
                     GetNextFavoriteBookUseCase.Request(
                         FavoriteFile(favoriteId, it.bookshelfId, it.path),
@@ -97,7 +90,7 @@ internal class BookViewModel @Inject constructor(
 
     val state = MutableStateFlow(LoadingState.LOADING)
 
-    val transitionName = args.transitionName
+    val transitionName = ""
     val isVisibleUI = MutableStateFlow(false)
     val viewerSettings = manageViewerSettingsUseCase.settings
 
@@ -108,15 +101,15 @@ internal class BookViewModel @Inject constructor(
     val pageIndex = MutableStateFlow(0)
 
     init {
-        viewModelScope.launch {
-            bookFlow.filterNotNull().collectLatest {
-                updateHistoryUseCase.execute(
-                    UpdateHistoryUseCase.Request(
-                        History(BookshelfId(args.bookshelfId), it.parent, args.position)
-                    )
-                )
-            }
-        }
+//        viewModelScope.launch {
+//            bookFlow.filterNotNull().collectLatest {
+//                updateHistoryUseCase.execute(
+//                    UpdateHistoryUseCase.Request(
+//                        History(BookshelfId(args.bookshelfId), it.parent, args.position)
+//                    )
+//                )
+//            }
+//        }
     }
 
     fun updateLastReadPage(index: Int) {

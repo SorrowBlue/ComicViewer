@@ -12,3 +12,13 @@ abstract class AddReadLaterUseCase :
         System
     }
 }
+
+abstract class DeleteReadLaterUseCase :
+    UseCase<DeleteReadLaterUseCase.Request, Unit, DeleteReadLaterUseCase.Error>() {
+
+    class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
+
+    enum class Error : Resource.AppError {
+        System
+    }
+}

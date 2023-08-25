@@ -26,9 +26,7 @@
             android:name="com.sorrowblue.comicviewer.framework.ui.navigation.FrameworkDynamicNavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/mobile_navigation"
-            tools:layout="@layout/bookshelf_fragment_list" />
+            app:defaultNavHost="true" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"

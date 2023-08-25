@@ -4,18 +4,26 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
-import com.sorrowblue.comicviewer.domain.entity.SearchCondition
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.entity.Scan
 import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.entity.file.IFolder
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.file.FileListType
+import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
+import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
+import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
+import com.sorrowblue.comicviewer.folder.section.Sort
+import com.sorrowblue.comicviewer.folder.section.SortSheetUiState
 import com.sorrowblue.comicviewer.framework.Resource
-import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
-import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
+import com.sorrowblue.comicviewer.framework.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,127 +31,198 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flattenConcat
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import logcat.logcat
 
-enum class SearchRange {
-    BOOKSHELF, IN_FOLDER, FOLDER_BELOW
-}
-
-enum class SearchPeriod {
-    NONE,
-    HOUR_24,
-    WEEK_1,
-    MONTH_1
-}
-
-enum class SearchOrder {
-    NAME, TIMESTAMP, SIZE
-}
-
-enum class SearchSort {
-    ASC, DESC
-}
-
 @HiltViewModel
-internal class FolderViewModel @Inject constructor(
+class FolderViewModel @Inject constructor(
     getFileUseCase: GetFileUseCase,
     pagingFileUseCase: PagingFileUseCase,
-    pagingQueryFileUseCase: PagingQueryFileUseCase,
+    private val scanBookshelfUseCase: ScanBookshelfUseCase,
+    private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     private val addReadLaterUseCase: AddReadLaterUseCase,
-    override val savedStateHandle: SavedStateHandle,
-) : ViewModel(), SupportSafeArgs {
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
 
-    private val args: FolderFragmentArgs by navArgs()
-    private val bookshelfId = BookshelfId(args.bookshelfId)
-    private val path = args.path.decodeFromBase64()
-
-    val name = getFileUseCase.execute(GetFileUseCase.Request(bookshelfId, path)).filterSuccess()
-        .map { it.name }.stateIn(viewModelScope, SharingStarted.Lazily, "")
+    private val args = FolderArgs(savedStateHandle)
+    val bookshelfId = args.bookshelfId
+    val path = args.path
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pagingDataFlow = pagingFileUseCase.execute(
+    val pagingDataFlow: Flow<PagingData<File>> = pagingFileUseCase.execute(
         PagingFileUseCase.Request(PagingConfig(30), bookshelfId, path)
     ).filterSuccess().flattenConcat().cachedIn(viewModelScope)
 
 
-    private val _query = MutableStateFlow("")
-    val query = _query.asStateFlow()
-    fun updateQuery(query: String) {
-        _query.value = query
-    }
-
-    private val _searchRange = MutableStateFlow(SearchRange.BOOKSHELF)
-    val searchRange = _searchRange.asStateFlow()
-    fun updateSearchRange(range: SearchRange) {
-        _searchRange.value = range
-    }
-
-    private val _searchPeriod = MutableStateFlow(SearchPeriod.NONE)
-    val searchPeriod = _searchPeriod.asStateFlow()
-    fun updateSearchPeriod(searchPeriod: SearchPeriod) {
-        _searchPeriod.value = searchPeriod
-    }
-
-    private val _searchOrder = MutableStateFlow(SearchOrder.NAME)
-    val searchOrder = _searchOrder.asStateFlow()
-    fun updateSearchOrder(searchOrder: SearchOrder) {
-        _searchOrder.value = searchOrder
-    }
-
-    private val _searchSort = MutableStateFlow(SearchSort.ASC)
-    val searchSort = _searchSort.asStateFlow()
-    fun updateSearchSort(searchSort: SearchSort) {
-        _searchSort.value = searchSort
-    }
-
-    val searchPagingDataFlow = pagingQueryFileUseCase.execute(
-        PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
-            SearchCondition(
-                query.value,
-                when (searchRange.value) {
-                    SearchRange.BOOKSHELF -> SearchCondition.Range.BOOKSHELF
-                    SearchRange.IN_FOLDER -> SearchCondition.Range.InFolder(path)
-                    SearchRange.FOLDER_BELOW -> SearchCondition.Range.SubFolder(args.path)
-                },
-                when (searchPeriod.value) {
-                    SearchPeriod.NONE -> SearchCondition.Period.NONE
-                    SearchPeriod.HOUR_24 -> SearchCondition.Period.HOUR_24
-                    SearchPeriod.WEEK_1 -> SearchCondition.Period.WEEK_1
-                    SearchPeriod.MONTH_1 -> SearchCondition.Period.MONTH_1
-                },
-                when (searchOrder.value) {
-                    SearchOrder.NAME -> SearchCondition.Order.NAME
-                    SearchOrder.TIMESTAMP -> SearchCondition.Order.DATE
-                    SearchOrder.SIZE -> SearchCondition.Order.SIZE
-                },
-                when (searchSort.value) {
-                    SearchSort.ASC -> SearchCondition.Sort.ASC
-                    SearchSort.DESC -> SearchCondition.Sort.DESC
+    private val _uiState = MutableStateFlow(
+        FolderScreenUiState(
+            folderAppBarUiState = FolderAppBarUiState(
+                "",
+                runBlocking { displaySettingsUseCase.settings.first().toFileListType() }),
+            sortSheetUiState = SortSheetUiState.Hide,
+            fileInfoSheetUiState = FileInfoSheetUiState.Hide,
+            fileListType = runBlocking { displaySettingsUseCase.settings.first().toFileListType() }
+        )
+    )
+    init {
+        viewModelScope.launch {
+            displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileListType)
+                .distinctUntilChanged().collectLatest {
+                    _uiState.value = _uiState.value.copy(
+                        folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(fileListType = runBlocking {
+                            displaySettingsUseCase.settings.first().toFileListType()
+                        }),
+                        fileListType = it
+                    )
                 }
-            )
         }
-    ).cachedIn(viewModelScope)
+        viewModelScope.launch {
+            getFileUseCase.execute(GetFileUseCase.Request(bookshelfId, path)).first().onSuccess {
+                _uiState.value = _uiState.value.copy(
+                    folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(title = it.name)
+                )
+            }
+        }
+    }
 
-    fun add(file: File) {
+    val uiState = _uiState.asStateFlow()
+
+    var isSkipFirstRefresh = true
+    var isScrollableTop = false
+
+    val displaySettings = displaySettingsUseCase.settings.stateIn(
+        viewModelScope,
+        SharingStarted.Eagerly,
+        runBlocking { displaySettingsUseCase.settings.first() }
+    )
+
+
+    fun openSort() {
+        val uiState = _uiState.value
+        _uiState.value = uiState.copy(
+            sortSheetUiState = SortSheetUiState.Show(
+                displaySettings.value.sortType.toSort()
+            )
+        )
+    }
+
+    val sort =
+        displaySettingsUseCase.settings.distinctUntilChangedBy(FolderDisplaySettings::sortType)
+            .map { it.sortType.toSort() }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                runBlocking { displaySettingsUseCase.settings.first().sortType.toSort() }
+            )
+
+    fun onSortChange(sort: Sort) {
+        isScrollableTop = true
+        isSkipFirstRefresh = false
+        onSortSheetDismissRequest()
+        viewModelScope.launch {
+            val sortType = when (sort) {
+                Sort.NAME_ASC -> SortType.NAME(true)
+                Sort.NAME_DESC -> SortType.NAME(false)
+                Sort.SIZE_DESC -> SortType.SIZE(true)
+                Sort.SIZE_ASC -> SortType.SIZE(false)
+                Sort.DATE_ASC -> SortType.DATE(true)
+                Sort.DATE_DESC -> SortType.DATE(false)
+            }
+            displaySettingsUseCase.edit { it.copy(sortType = sortType) }
+        }
+    }
+
+    fun onSortSheetDismissRequest() {
+        val uiState = _uiState.value
+        _uiState.value = uiState.copy(sortSheetUiState = SortSheetUiState.Hide)
+    }
+
+    fun onFileInfoSheetDismissRequest() {
+        val uiState = _uiState.value
+        _uiState.value = uiState.copy(fileInfoSheetUiState = FileInfoSheetUiState.Hide)
+    }
+
+    fun onClickLongFile(file: File) {
+        val uiState = _uiState.value
+        _uiState.value = uiState.copy(fileInfoSheetUiState = FileInfoSheetUiState.Show(file))
+    }
+
+    fun onAddReadLaterClick(file: File) {
+        onFileInfoSheetDismissRequest()
         viewModelScope.launch {
             addReadLaterUseCase.execute(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
                 .first()
         }
     }
+
+    fun toggleFileListType() {
+        viewModelScope.launch {
+            displaySettingsUseCase.edit {
+                it.copy(
+                    display = when (it.display) {
+                        FolderDisplaySettings.Display.GRID -> FolderDisplaySettings.Display.LIST
+                        FolderDisplaySettings.Display.LIST -> FolderDisplaySettings.Display.GRID
+                    }
+                )
+            }
+        }
+    }
+
+    fun scan() {
+        viewModelScope.launch {
+//            scanBookshelfUseCase.execute(
+//                ScanBookshelfUseCase.Request(
+//                    file.first() as IFolder,
+//                    Scan.ALL
+//                )
+//            ).collect()
+        }
+    }
+
+    fun onGridSizeChange() {
+        viewModelScope.launch {
+            displaySettingsUseCase.edit {
+                it.copy(
+                    spanCount = when (it.spanCount) {
+                        2 -> 3
+                        3 -> 4
+                        else -> 2
+                    }
+                )
+            }
+        }
+    }
+}
+
+private fun SortType.toSort(): Sort {
+    return when (this) {
+        is SortType.DATE -> if (isAsc) Sort.DATE_ASC else Sort.DATE_DESC
+        is SortType.NAME -> if (isAsc) Sort.NAME_ASC else Sort.NAME_DESC
+        is SortType.SIZE -> if (isAsc) Sort.SIZE_ASC else Sort.SIZE_DESC
+    }
 }
 
 private fun <T, E : Resource.AppError> Flow<Resource<T, E>>.filterSuccess(): Flow<T> {
     return filter {
-        logcat { "filter" }
         it is Resource.Success<T>
     }.map {
-        logcat { "map" }
         (it as Resource.Success<T>).data
+    }
+}
+
+private fun FolderDisplaySettings.toFileListType(): FileListType {
+    return when (display) {
+        FolderDisplaySettings.Display.GRID -> FileListType.Grid(spanCount)
+        FolderDisplaySettings.Display.LIST -> FileListType.List
     }
 }

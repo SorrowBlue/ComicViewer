@@ -31,8 +31,7 @@ internal class FavoriteEditViewModel @Inject constructor(
     override val savedStateHandle: SavedStateHandle
 ) : PagingViewModel<File>(), SupportSafeArgs {
 
-    private val args: FavoriteEditFragmentArgs by navArgs()
-    private val favoriteId = FavoriteId(args.favoriteId)
+    private val favoriteId = FavoriteId(0)
     private val favoriteFlow =
         getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId)).stateIn { null }
 

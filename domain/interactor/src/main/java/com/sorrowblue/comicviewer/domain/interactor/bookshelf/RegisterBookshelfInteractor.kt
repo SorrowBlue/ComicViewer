@@ -7,6 +7,7 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseC
 import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.fold
 import com.sorrowblue.comicviewer.framework.onError
+import com.sorrowblue.comicviewer.framework.onSuccess
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -34,7 +35,7 @@ internal class RegisterBookshelfInteractor @Inject constructor(
                     )
                 )
             }
-            val folder = Folder(request.bookshelf.id, "name", "", request.path, 0, 0)
+            val folder = Folder(request.bookshelf.id, request.bookshelf.displayName, "", request.path, 0, 0)
             val registerResource =
                 bookshelfRepository.register(request.bookshelf, folder).first().fold({
                     Resource.Success(it)

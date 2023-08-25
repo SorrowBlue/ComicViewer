@@ -94,6 +94,11 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
     }
 
     dynamicFeatures += setOf(
@@ -111,6 +116,7 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-core:2.15.2")
     api(libs.google.guava)
     implementation(projects.framework.ui)
+    implementation(projects.framework.compose)
     implementation(projects.framework.notification)
 
     implementation(projects.data.di)
@@ -118,6 +124,8 @@ dependencies {
     implementation(projects.settings)
     implementation(projects.folder)
     implementation(projects.file)
+    implementation(projects.feature.search)
+    implementation(projects.book)
     implementation(projects.bookshelf)
     implementation(projects.favorite)
     implementation(projects.readlater)
@@ -130,7 +138,7 @@ dependencies {
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.core.splashscreen)
 
-    debugImplementation(libs.squareup.leakcanary.android)
+//    debugImplementation(libs.squareup.leakcanary.android)
 
     androidTestImplementation(libs.androidx.test.ext.junit.ktx)
     androidTestImplementation(libs.androidx.test.espresso.core)

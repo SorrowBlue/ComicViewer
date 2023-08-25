@@ -24,10 +24,8 @@ import com.sorrowblue.comicviewer.app.databinding.ActivityMainBinding
 import com.sorrowblue.comicviewer.app.ktx.isShown
 import com.sorrowblue.comicviewer.app.ktx.setState
 import com.sorrowblue.comicviewer.app.ktx.setupWithNavControllerApp
-import com.sorrowblue.comicviewer.folder.FolderFragmentArgs
 import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
 import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
-import com.sorrowblue.comicviewer.tutorial.TutorialFragmentArgs
 import com.sorrowblue.jetpack.binding.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filter
@@ -78,10 +76,10 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 restoreNavigation(navController)
                 commonViewModel.isRestored.first()
                 if (!runBlocking { viewModel.doneTutorialFlow.first() }) {
-                    navController.navigate(
-                        MobileNavigationDirections.actionGlobalTutorialNavigation().actionId,
-                        TutorialFragmentArgs(R.id.mobile_navigation).toBundle()
-                    )
+//                    navController.navigate(
+//                        MobileNavigationDirections.actionGlobalTutorialNavigation().actionId,
+//                        TutorialFragmentArgs(R.id.mobile_navigation).toBundle()
+//                    )
                 }
                 commonViewModel.shouldKeepOnScreen = false
             }
@@ -144,40 +142,33 @@ internal class MainActivity : AppCompatActivity(R.layout.activity_main) {
         if (folders.isNotEmpty()) {
             // library -> folder
             if (folders.size == 1) {
-                navController.navigate(
-                    com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_list_to_folder,
-                    FolderFragmentArgs(
-                        bookshelf.id.value, folders.first().base64Path(), position = position
-                    ).toBundle()
-                )
+//                navController.navigate(
+//                    com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_list_to_folder,
+//                    FolderFragmentArgs(
+//                        bookshelf.id.value, folders.first().base64Path(), position = position
+//                    ).toBundle()
+//                )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                     "bookshelf(${bookshelf.id}) -> folder(${folders.first().path})"
                 }
             } else {
-                navController.navigate(
-                    com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_list_to_folder,
-                    FolderFragmentArgs(
-                        bookshelf.id.value, folders.first().base64Path(), position = position
-                    ).toBundle()
-                )
+//                navController.navigate(
+//                    com.sorrowblue.comicviewer.bookshelf.R.id.action_bookshelf_list_to_folder,
+//                    FolderFragmentArgs(
+//                        bookshelf.id.value, folders.first().base64Path(), position = position
+//                    ).toBundle()
+//                )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                     "bookshelf(${bookshelf.id}) -> folder(${folders.first().path})"
                 }
                 folders.drop(1).dropLast(1).forEachIndexed { index, folder ->
                     // folder -> folder
-                    navController.navigate(
-                        com.sorrowblue.comicviewer.folder.R.id.action_folder_self,
-                        FolderFragmentArgs(bookshelf.id.value, folder.base64Path()).toBundle()
-                    )
+                    TODO()
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "folder(${folders[index].path}) -> folder${folders[index + 1].path}"
                     }
                 }
-                navController.navigate(
-                    com.sorrowblue.comicviewer.folder.R.id.action_folder_self, FolderFragmentArgs(
-                        bookshelf.id.value, folders.last().base64Path(), position = position
-                    ).toBundle()
-                )
+                TODO()
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                     "folder(${
                         folders.dropLast(1).last().path

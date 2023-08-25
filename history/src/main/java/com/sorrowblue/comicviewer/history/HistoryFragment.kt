@@ -26,10 +26,7 @@ internal class HistoryFragment : FileListFragment(R.layout.history_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         observeOpenFolder2(R.id.history_fragment) { bookshelfId, parent ->
-            findNavController().navigate(
-                HistoryFragmentDirections.actionHistoryToFolderNavigation().actionId,
-                BookFragmentArgs(bookshelfId, parent).toBundle()
-            )
+            TODO()
         }
 
         binding.viewModel = viewModel

@@ -29,6 +29,16 @@ internal class ReadLaterFileModelLocalDataSourceImpl @Inject constructor(
         })
     }
 
+    override suspend fun delete(model: ReadLaterFileModel): Result<ReadLaterFileModel, Unit> {
+        return kotlin.runCatching {
+            readLaterFileDao.delete(ReadLaterFile.fromModel(model))
+        }.fold({
+            Result.Success(model)
+        }, {
+            Result.Error(Unit)
+        })
+    }
+
     override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<FileModel>> {
         return Pager(pagingConfig) { readLaterFileDao.pagingSource() }.flow
             .map { it.map(File::toModel) }

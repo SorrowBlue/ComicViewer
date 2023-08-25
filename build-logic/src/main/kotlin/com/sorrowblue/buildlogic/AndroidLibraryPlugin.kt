@@ -37,3 +37,4 @@ internal class AndroidLibraryPlugin : Plugin<Project> {
         }
     }
 }
+

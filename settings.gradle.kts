@@ -5,9 +5,9 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
     resolutionStrategy {
         eachPlugin {
@@ -20,13 +20,13 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version ("0.6.0")
-    id("com.android.settings") version "8.1.0"
+    id("com.android.settings") version "8.1.1"
 }
 
 extensions.configure<SettingsExtension> {
-    buildToolsVersion = "33.0.2"
-    compileSdk = 33
-    minSdk = 28
+    buildToolsVersion = "34.0.0"
+    compileSdk = 34
+    minSdk = 30
 }
 
 @Suppress("UnstableApiUsage")
@@ -82,10 +82,12 @@ include(":data:service")
 
 include(":book")
 include(":bookshelf")
+include(":feature:search")
+include(":bookshelf:selection")
+include(":bookshelf:edit")
 include(":favorite")
 include(":file")
 include(":folder")
-include(":folder:display")
 include(":library")
 include(":library:box")
 include(":library:dropbox")
