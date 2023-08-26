@@ -38,7 +38,6 @@ import com.sorrowblue.comicviewer.framework.compose.pullrefresh.PullRefreshIndic
 import com.sorrowblue.comicviewer.framework.compose.pullrefresh.PullRefreshState
 import com.sorrowblue.comicviewer.framework.compose.pullrefresh.pullRefresh
 import com.sorrowblue.comicviewer.framework.compose.pullrefresh.rememberPullRefreshState
-import logcat.logcat
 
 data class FolderScreenUiState(
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
@@ -71,7 +70,10 @@ internal fun FolderRoute(
         onSortChange = viewModel::onSortChange,
         onFileInfoSheetDismissRequest = viewModel::onFileInfoSheetDismissRequest,
         onAddReadLaterClick = viewModel::onAddReadLaterClick,
-        onAddFavoriteClick = onAddFavoriteClick,
+        onAddFavoriteClick = {
+            viewModel.onFileInfoSheetDismissRequest()
+            onAddFavoriteClick(it)
+        },
         onClickFile = onClickFile,
         onClickLongFile = viewModel::onClickLongFile,
         lazyGridState = lazyGridState,

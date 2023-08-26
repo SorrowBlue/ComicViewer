@@ -29,6 +29,14 @@ internal class ReadLaterViewModel @Inject constructor(
     pagingReadLaterFileUseCase: PagingReadLaterFileUseCase,
 ) : ViewModel() {
 
+    private val _uiState = MutableStateFlow(
+        ReadLaterScreenUiState(
+            runBlocking { manageFolderDisplaySettingsUseCase.settings.first().toFileListType() },
+            FileInfoSheetUiState.Hide
+        )
+    )
+    val uiState = _uiState.asStateFlow()
+
     init {
         viewModelScope.launch {
             manageFolderDisplaySettingsUseCase.settings.map(FolderDisplaySettings::toFileListType)
@@ -37,14 +45,6 @@ internal class ReadLaterViewModel @Inject constructor(
                 }
         }
     }
-
-    private val _uiState = MutableStateFlow(
-        ReadLaterScreenUiState(
-            runBlocking { manageFolderDisplaySettingsUseCase.settings.first().toFileListType() },
-            FileInfoSheetUiState.Hide
-        )
-    )
-    val uiState = _uiState.asStateFlow()
 
     val pagingDataFlow = pagingReadLaterFileUseCase
         .execute(PagingReadLaterFileUseCase.Request(PagingConfig(20)))

@@ -18,6 +18,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.bookshelfEdi
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.navigateToBookshelfEdit
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.BookshelfSelectionRoute
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.bookshelfSelectionScreen
+import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
 import com.sorrowblue.comicviewer.framework.compose.FabVisibleState
@@ -25,6 +26,8 @@ import com.sorrowblue.comicviewer.framework.compose.LocalLifecycleState
 import kotlinx.coroutines.launch
 
 const val BookshelfRoute = "bookshelf"
+
+val ShowNavigationBarBookshelfNavGraph = listOf(BookshelfRoute, folderRoute(BookshelfRoute))
 
 private fun NavGraphBuilder.bookshelfScreen(
     onSettingsClick: () -> Unit,
@@ -63,7 +66,7 @@ fun NavGraphBuilder.bookshelfGroup(
     onSettingsClick: () -> Unit,
     navigateToBook: (BookshelfId, String) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
-    onAddFavoriteClick: (File) -> Unit,
+    onAddFavoriteClick: (BookshelfId, String) -> Unit,
 ) {
     navigation(route = BookshelfGroupRoute, startDestination = BookshelfRoute) {
         bookshelfScreen(
@@ -101,7 +104,7 @@ fun NavGraphBuilder.bookshelfGroup(
             },
             onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
-            onAddFavoriteClick =onAddFavoriteClick
+            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path)}
         )
     }
 }

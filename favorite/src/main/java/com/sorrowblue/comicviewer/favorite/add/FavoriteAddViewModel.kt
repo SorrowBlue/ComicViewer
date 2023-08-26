@@ -9,8 +9,10 @@ import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.usecase.favorite.AddFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteAddArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.SupportSafeArgs
 import com.sorrowblue.comicviewer.framework.ui.navigation.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,23 +24,19 @@ import kotlinx.coroutines.launch
 internal class FavoriteAddViewModel @Inject constructor(
     pagingFavoriteUseCase: PagingFavoriteUseCase,
     private val addFavoriteFileUseCase: AddFavoriteFileUseCase,
-    override val savedStateHandle: SavedStateHandle
-) : ViewModel(), SupportSafeArgs {
-    private val args: FavoriteAddFragmentArgs by navArgs()
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    private val args = FavoriteAddArgs(savedStateHandle)
 
     val pagingDataFlow =
         pagingFavoriteUseCase.execute(PagingFavoriteUseCase.Request(PagingConfig(10)))
             .cachedIn(viewModelScope)
 
-    fun add(favorite: Favorite) {
+    fun add(favoriteId: FavoriteId) {
         viewModelScope.launch {
             addFavoriteFileUseCase.execute(
                 AddFavoriteFileUseCase.Request(
-                    FavoriteFile(
-                        favorite.id,
-                        BookshelfId(args.serverId),
-                        args.filePath.decodeFromBase64()
-                    )
+                    FavoriteFile(favoriteId, args.bookshelfId, args.path)
                 )
             ).collect()
         }

@@ -220,7 +220,7 @@ private fun <T, E : Resource.AppError> Flow<Resource<T, E>>.filterSuccess(): Flo
     }
 }
 
-private fun FolderDisplaySettings.toFileListType(): FileListType {
+fun FolderDisplaySettings.toFileListType(): FileListType {
     return when (display) {
         FolderDisplaySettings.Display.GRID -> FileListType.Grid(spanCount)
         FolderDisplaySettings.Display.LIST -> FileListType.List

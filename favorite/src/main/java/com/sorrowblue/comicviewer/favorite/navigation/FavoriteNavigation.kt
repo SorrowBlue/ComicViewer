@@ -1,34 +1,51 @@
 package com.sorrowblue.comicviewer.favorite.navigation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import com.sorrowblue.comicviewer.favorite.FavoriteListRoute
-import com.sorrowblue.comicviewer.framework.compose.FabVisibleState
+import androidx.navigation.navArgument
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
+import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.favorite.FavoriteRoute
 
-const val FavoriteRoute = "favorite"
+private const val favoriteIdArg = "favoriteId"
 
-private fun NavGraphBuilder.favoriteScreen(
-    fabState: FabVisibleState,
-    onSettingsClick: () -> Unit,
+internal class FavoriteArgs(
+    val favoriteId: FavoriteId,
 ) {
-    composable(FavoriteRoute) {
-        FavoriteListRoute(
+    constructor(savedStateHandle: SavedStateHandle) :
+            this(FavoriteId(checkNotNull(savedStateHandle[favoriteIdArg])))
+}
+
+internal const val FavoriteRoute = "$FavoriteListRoute/{$favoriteIdArg}"
+
+internal fun NavGraphBuilder.favoriteScreen(
+    onBackClick: () -> Unit,
+    onEditClick: (FavoriteId) -> Unit,
+    onSettingsClick: () -> Unit,
+    onClickFile: (File) -> Unit
+) {
+    composable(
+        route = FavoriteRoute,
+        arguments = listOf(
+            navArgument(favoriteIdArg) { type = NavType.IntType }
+        )
+    ) {
+        FavoriteRoute(
+            onBackClick = onBackClick,
+            onEditClick = onEditClick,
             onSettingsClick = onSettingsClick,
-            fabState = fabState
+            onClickFile = onClickFile
         )
     }
 }
 
-const val FavoriteGroupRoute = "${FavoriteRoute}_group"
-
-fun NavGraphBuilder.favoriteGroup(
-    navController: NavController,
-    fabState: FabVisibleState,
-    onSettingsClick: () -> Unit,
+internal fun NavController.navigateToFavorite(
+    favoriteId: FavoriteId,
+    navOptions: NavOptions? = null
 ) {
-    navigation(route = FavoriteGroupRoute, startDestination = FavoriteRoute) {
-        favoriteScreen(fabState, onSettingsClick)
-    }
+    navigate("$FavoriteListRoute/${favoriteId.value}", navOptions)
 }

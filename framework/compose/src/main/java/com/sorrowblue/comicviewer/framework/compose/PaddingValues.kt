@@ -31,6 +31,19 @@ fun PaddingValues.copy(
 )
 
 @Composable
+fun PaddingValues.copyZero(
+    start: Dp = calculateStartPadding(LocalLayoutDirection.current),
+    top: Dp = calculateTopPadding(),
+    end: Dp = calculateEndPadding(LocalLayoutDirection.current),
+    bottom: Dp = calculateBottomPadding()
+): PaddingValues = PaddingValues(
+    start = start,
+    top = top,
+    end = end,
+    bottom = bottom
+)
+
+@Composable
 fun PaddingValues.copy(horizontal: Dp = 0.dp, vertical: Dp = 0.dp): PaddingValues = PaddingValues(
     horizontal = max(
         calculateStartPadding(LocalLayoutDirection.current),

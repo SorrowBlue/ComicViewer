@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.favorite
+package com.sorrowblue.comicviewer.favorite.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
@@ -30,7 +30,7 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
-import com.sorrowblue.comicviewer.favorite.list.FavoriteListViewModel
+import com.sorrowblue.comicviewer.favorite.R
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListAppBar
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.FabVisibleState
@@ -42,18 +42,18 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun FavoriteListRoute(
     onSettingsClick: () -> Unit,
+    onFavoriteClick: (FavoriteId) -> Unit,
     fabState: FabVisibleState,
     viewModel: FavoriteListViewModel = hiltViewModel()
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    val favoriteName by viewModel.text.collectAsState()
-    val isShowCreateDialog by viewModel.isShowCreateDialog.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
     LocalLifecycleState(
         onStart = {
             scope.launch {
                 fabState.show(Icons.TwoTone.Add) {
-                    viewModel.onChangeDialog(true)
+                    viewModel.showCreateDialog()
                 }
             }
         },
@@ -62,26 +62,30 @@ internal fun FavoriteListRoute(
         }
     )
     FavoriteListScreen(
+        uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onSettingsClick = onSettingsClick,
-        onDismissRequest = {viewModel.onChangeDialog(false)},
-        favoriteName = favoriteName,
+        onDismissRequest = { viewModel.closeCreateDialog() },
         onCreateFavoriteClick = viewModel::create,
-        isShowCreateDialog = isShowCreateDialog,
-        onValueChange = viewModel::onChangeText
+        onValueChange = viewModel::onChangeText,
+        onFavoriteClick = onFavoriteClick
     )
 }
+
+internal data class FavoriteListScreenUiState(
+    val favoriteCreateDialogUiState: FavoriteCreateDialogUiState
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FavoriteListScreen(
+    uiState: FavoriteListScreenUiState,
     lazyPagingItems: LazyPagingItems<Favorite>,
-    isShowCreateDialog: Boolean = false,
-    favoriteName: String ="",
-    onDismissRequest: () -> Unit= {},
-    onCreateFavoriteClick: () -> Unit= {},
-    onValueChange: (String) -> Unit= {},
+    onDismissRequest: () -> Unit = {},
+    onCreateFavoriteClick: () -> Unit = {},
+    onValueChange: (String) -> Unit = {},
     onSettingsClick: () -> Unit = {},
+    onFavoriteClick: (FavoriteId) -> Unit = {}
 ) {
     val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -100,7 +104,7 @@ internal fun FavoriteListScreen(
                     val item = lazyPagingItems[it]
                     if (item != null) {
                         ListItem(
-                            modifier = Modifier.clickable { },
+                            modifier = Modifier.clickable(onClick = { onFavoriteClick(item.id) }),
                             headlineContent = { Text(item.name) },
                             supportingContent = {
                                 Text(
@@ -119,13 +123,36 @@ internal fun FavoriteListScreen(
             }
         }
     }
-    if (isShowCreateDialog) {
+    FavoriteCreateDialog(
+        uiState = uiState.favoriteCreateDialogUiState,
+        onNameChange = onValueChange,
+        onDismissRequest = onDismissRequest,
+        onCreateClick = onCreateFavoriteClick
+    )
+}
+
+internal sealed interface FavoriteCreateDialogUiState {
+    data class Show(
+        val name: String,
+    ) : FavoriteCreateDialogUiState
+
+    data object Hide : FavoriteCreateDialogUiState
+}
+
+@Composable
+internal fun FavoriteCreateDialog(
+    uiState: FavoriteCreateDialogUiState,
+    onNameChange: (String) -> Unit,
+    onDismissRequest: () -> Unit,
+    onCreateClick: () -> Unit
+) {
+    if (uiState is FavoriteCreateDialogUiState.Show) {
         AlertDialog(
             title = { Text("新しいお気に入り") },
-            text = { OutlinedTextField(value = favoriteName, onValueChange = onValueChange) },
+            text = { OutlinedTextField(value = uiState.name, onValueChange = onNameChange) },
             onDismissRequest = onDismissRequest,
             confirmButton = {
-                TextButton(onClick = { onCreateFavoriteClick() }) {
+                TextButton(onClick = onCreateClick) {
                     Text("作成")
                 }
             },
@@ -145,6 +172,5 @@ fun PreviewFavoriteListScreen() {
         val items = List(20) {
             Favorite(FavoriteId(it), "Favorite name $it", it * 100)
         }
-        FavoriteListScreen(flowOf(PagingData.from(items)).collectAsLazyPagingItems())
     }
 }

@@ -8,11 +8,13 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
 import com.sorrowblue.comicviewer.readlater.ReadLaterRoute
 
 const val ReadLaterRoute = "readlater"
+val ShowNavigationBarReadLaterNavGraph = listOf(ReadLaterRoute, folderRoute(ReadLaterRoute))
 
 internal fun NavGraphBuilder.readLaterScreen(
     onFileClick: (File) -> Unit,
@@ -37,7 +39,7 @@ fun NavGraphBuilder.readlaterGroup(
     navController: NavController,
     onBookClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
-    onAddFavoriteClick: (File) -> Unit,
+    onAddFavoriteClick: (BookshelfId, String) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit
 ) {
     navigation(route = ReadlaterGroupRoute, startDestination = ReadLaterRoute) {
@@ -53,7 +55,7 @@ fun NavGraphBuilder.readlaterGroup(
                         )
                 }
             },
-            onAddFavoriteClick = onAddFavoriteClick,
+            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
             onOpenFolderClick = {
                 navController.navigateToFolder(it.bookshelfId, it.path, prefix = ReadLaterRoute)
             },
@@ -75,7 +77,7 @@ fun NavGraphBuilder.readlaterGroup(
             },
             onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
-            onAddFavoriteClick = onAddFavoriteClick
+            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) }
         )
     }
 }
