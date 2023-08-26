@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorite_add_title">Add to Favourites</string>
+    <string name="favorite_add_btn_new_favorite">New favorite</string>
+</resources>

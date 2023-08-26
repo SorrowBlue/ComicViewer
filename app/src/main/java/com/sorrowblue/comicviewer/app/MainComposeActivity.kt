@@ -43,9 +43,9 @@ import com.sorrowblue.comicviewer.bookshelf.navigation.ShowNavigationBarBookshel
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGroup
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGroupRoute
 import com.sorrowblue.comicviewer.favorite.navigation.ShowNavigationBarFavoriteNavGraph
-import com.sorrowblue.comicviewer.favorite.navigation.favoriteAddScreen
+import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
-import com.sorrowblue.comicviewer.favorite.navigation.navigateToFavoriteAdd
+import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
 import com.sorrowblue.comicviewer.feature.search.navigation.navigateToSearch
 import com.sorrowblue.comicviewer.feature.search.navigation.searchScreen
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
