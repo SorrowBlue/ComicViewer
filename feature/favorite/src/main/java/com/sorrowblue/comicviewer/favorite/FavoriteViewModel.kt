@@ -13,10 +13,7 @@ import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteArgs
-import com.sorrowblue.comicviewer.folder.section.Sort
-import com.sorrowblue.comicviewer.folder.section.SortSheetUiState
 import com.sorrowblue.comicviewer.folder.toFileListType
-import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -71,9 +68,10 @@ internal class FavoriteViewModel @Inject constructor(
             displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileListType)
                 .distinctUntilChanged().collectLatest {
                     _uiState.value = _uiState.value.copy(
-                        favoriteAppBarUiState = _uiState.value.favoriteAppBarUiState.copy(fileListType = runBlocking {
-                            displaySettingsUseCase.settings.first().toFileListType()
-                        }),
+                        favoriteAppBarUiState = _uiState.value.favoriteAppBarUiState.copy(
+                            fileListType = runBlocking {
+                                displaySettingsUseCase.settings.first().toFileListType()
+                            }),
                         fileListType = it
                     )
                 }

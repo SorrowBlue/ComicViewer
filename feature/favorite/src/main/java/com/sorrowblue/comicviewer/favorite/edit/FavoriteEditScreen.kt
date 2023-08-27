@@ -37,7 +37,7 @@ import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.BookFile
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.favorite.R
+import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.copyZero
 import com.sorrowblue.comicviewer.framework.compose.isEmptyData

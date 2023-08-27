@@ -6,7 +6,6 @@ import androidx.compose.material.icons.twotone.Delete
 import androidx.compose.material.icons.twotone.Edit
 import androidx.compose.material.icons.twotone.Grid4x4
 import androidx.compose.material.icons.twotone.Settings
-import androidx.compose.material.icons.twotone.SortByAlpha
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.sorrowblue.comicviewer.favorite.R
+import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.FileListType
 import com.sorrowblue.comicviewer.file.FileListTypeIconButton
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme

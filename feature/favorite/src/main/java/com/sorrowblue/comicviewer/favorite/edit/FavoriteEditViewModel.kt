@@ -12,14 +12,12 @@ import com.sorrowblue.comicviewer.domain.usecase.favorite.RemoveFavoriteFileUseC
 import com.sorrowblue.comicviewer.domain.usecase.favorite.UpdateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteEditArgs
-import com.sorrowblue.comicviewer.framework.ui.flow.mutableStateIn
-import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -34,8 +32,6 @@ internal class FavoriteEditViewModel @Inject constructor(
     private val args = FavoriteEditArgs(savedStateHandle)
 
     private val favoriteId = args.favoriteId
-    private val favoriteFlow =
-        getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId)).stateIn { null }
 
     private val _uiState = MutableStateFlow(FavoriteEditScreenUiState())
     val uiState = _uiState.asStateFlow()
@@ -61,7 +57,7 @@ internal class FavoriteEditViewModel @Inject constructor(
 
     fun save(done: () -> Unit) {
         viewModelScope.launch {
-            val favorite = favoriteFlow.replayCache.firstOrNull()?.dataOrNull ?: return@launch
+            val favorite = getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId)).first().dataOrNull ?: return@launch
             updateFavoriteUseCase.execute(UpdateFavoriteUseCase.Request(favorite.copy(name = _uiState.value.name)))
                 .collect()
             done()

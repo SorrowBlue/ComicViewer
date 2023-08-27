@@ -166,7 +166,7 @@ class MainComposeActivity : AppCompatActivity() {
                             settingsScreen()
                             bookScreen(navController)
 
-                            favoriteAddScreen(onAddClick = {})
+                            favoriteAddScreen(onBackClick = navController::popBackStack)
                         }
                     }
                 }

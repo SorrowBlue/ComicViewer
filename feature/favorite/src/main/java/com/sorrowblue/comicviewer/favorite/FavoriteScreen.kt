@@ -26,11 +26,9 @@ import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBarUiState
+import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.FileListType
 import com.sorrowblue.comicviewer.folder.section.FileListSheet
-import com.sorrowblue.comicviewer.folder.section.Sort
-import com.sorrowblue.comicviewer.folder.section.SortSheet
-import com.sorrowblue.comicviewer.folder.section.SortSheetUiState
 import com.sorrowblue.comicviewer.framework.compose.isEmptyData
 import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 

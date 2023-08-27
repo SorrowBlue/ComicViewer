@@ -23,7 +23,8 @@ fun FavoriteItem(favorite: Favorite, onClick: () -> Unit) {
             Text(
                 pluralStringResource(
                     id = R.plurals.favorite_common_label_file_count,
-                    count = favorite.count
+                    count = favorite.count,
+                    favorite.count
                 )
             )
         },

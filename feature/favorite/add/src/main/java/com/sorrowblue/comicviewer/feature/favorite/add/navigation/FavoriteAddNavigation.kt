@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
 import com.sorrowblue.comicviewer.domain.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddRoute
 
 private const val bookshelfIdArg = "bookshelfId"
 private const val pathArg = "path"
@@ -26,7 +27,7 @@ internal class FavoriteAddArgs(
 
 private const val FavoriteAddRoute = "favorite/add"
 
-fun NavGraphBuilder.favoriteAddScreen(onAddClick: () -> Unit) {
+fun NavGraphBuilder.favoriteAddScreen(onBackClick: () -> Unit) {
     composable(
         route = "$FavoriteAddRoute?bookshelfId={$bookshelfIdArg}&path={$pathArg}",
         arguments = listOf(
@@ -35,7 +36,7 @@ fun NavGraphBuilder.favoriteAddScreen(onAddClick: () -> Unit) {
 
         )
     ) {
-        com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddRoute(onAddClick = onAddClick)
+        FavoriteAddRoute(onBackClick = onBackClick)
     }
 }
 
