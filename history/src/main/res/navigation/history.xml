@@ -7,9 +7,5 @@
         android:id="@+id/history_fragment"
         android:name="com.sorrowblue.comicviewer.history.HistoryFragment"
         android:label="@string/history_title">
-        <action
-            android:id="@+id/action_history_to_book"
-            app:destination="@id/book_navigation" />
     </fragment>
-    <include app:graph="@navigation/book" />
 </navigation>

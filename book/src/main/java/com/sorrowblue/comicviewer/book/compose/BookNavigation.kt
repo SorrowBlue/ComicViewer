@@ -7,46 +7,51 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.sorrowblue.comicviewer.book.BookScreen
-import com.sorrowblue.comicviewer.book.rememberBookScreenState
+import com.sorrowblue.comicviewer.book.BookRoute
 import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
 import com.sorrowblue.comicviewer.domain.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
+import com.sorrowblue.comicviewer.domain.entity.file.Book
 
 const val BookRoute = "book"
 
 private const val bookshelfIdArg = "bookshelfId"
+private const val favoriteIdArg = "favoriteId"
 private const val pathArg = "path"
 
-fun NavGraphBuilder.bookScreen(navController: NavController) {
+fun NavGraphBuilder.bookScreen(onBackClick: () -> Unit, onNextBookClick: (Book) -> Unit) {
     composable(
-        "$BookRoute/{$bookshelfIdArg}/{$pathArg}",
+        "$BookRoute/{$bookshelfIdArg}/{$pathArg}?favoriteId={$favoriteIdArg}",
         arguments = listOf(
             navArgument(bookshelfIdArg) { type = NavType.IntType },
-            navArgument(pathArg) { type = NavType.StringType }
+            navArgument(pathArg) { type = NavType.StringType },
+            navArgument(favoriteIdArg) { type = NavType.IntType },
         )
     ) {
-        val bookScreenState =
-            rememberBookScreenState(navController = navController, composableBackStackEntry = it)
-        BookScreen(bookScreenState)
+        BookRoute(onBackClick = onBackClick,onNextBookClick = onNextBookClick)
     }
 }
 
 
-fun NavController.navigateToBook(args: BookArgs, navOptions: NavOptions? = null) {
-    navigate("$BookRoute/${args.bookshelfId.value}/${args.base64Path}", navOptions)
+fun NavController.navigateToBook(
+    bookshelfId: BookshelfId,
+    path: String,
+    favoriteId: FavoriteId = FavoriteId(0),
+    navOptions: NavOptions? = null
+) {
+    navigate(
+        "$BookRoute/${bookshelfId.value}/${path.encodeToBase64()}?favoriteId=${favoriteId.value}",
+        navOptions
+    )
 }
 
-fun NavController.navigateToBook(bookshelfId: BookshelfId,path: String, navOptions: NavOptions? = null) {
-    navigate("$BookRoute/${bookshelfId.value}/${path.encodeToBase64()}", navOptions)
-}
-
-class BookArgs(val bookshelfId: BookshelfId, val path: String) {
-    val base64Path get() = path.encodeToBase64()
+class BookArgs(val bookshelfId: BookshelfId, val path: String, val favoriteId: FavoriteId) {
 
     constructor(savedStateHandle: SavedStateHandle) :
             this(
                 BookshelfId(checkNotNull(savedStateHandle[bookshelfIdArg])),
-                (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64()
+                (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64(),
+                FavoriteId(checkNotNull(savedStateHandle[favoriteIdArg]))
             )
 }

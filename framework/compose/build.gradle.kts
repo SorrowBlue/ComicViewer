@@ -30,7 +30,6 @@ dependencies {
     api(libs.androidx.hilt.navigation.compose)
     api(libs.coil.compose)
     api(libs.androidx.paging.compose)
-    api(libs.google.accompanist.themeadapter.material3)
     debugImplementation(libs.bundles.androidx.compose.debug)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

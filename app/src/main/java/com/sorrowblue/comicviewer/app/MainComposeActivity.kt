@@ -164,7 +164,9 @@ class MainComposeActivity : AppCompatActivity() {
                             )
                             searchScreen(navController::popBackStack)
                             settingsScreen()
-                            bookScreen(navController)
+                            bookScreen(onBackClick = navController::popBackStack, onNextBookClick = {
+                                navController.navigateToBook(it.bookshelfId, it.path)
+                            })
 
                             favoriteAddScreen(onBackClick = navController::popBackStack)
                         }

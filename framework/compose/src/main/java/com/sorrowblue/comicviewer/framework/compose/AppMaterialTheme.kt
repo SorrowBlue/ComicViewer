@@ -13,9 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import com.google.accompanist.themeadapter.material3.Mdc3Theme
 
 private val lightColorScheme = lightColorScheme()
 private val darkColorScheme = darkColorScheme()
@@ -32,22 +29,20 @@ object AppMaterialTheme {
 
 @Composable
 fun AppMaterialTheme(
-    readXmlTheme: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    if (!readXmlTheme) {
-        val darkTheme = isSystemInDarkTheme()
-        val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-        val colors = when {
-            dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
-            dynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
-            darkTheme -> darkColorScheme
-            else -> lightColorScheme
-        }
-        val configuration = LocalConfiguration.current
-        val dimensions =
-            when (configuration.screenWidthDp) {
-                in 0..<600 -> compactDimensions
+    val darkTheme = isSystemInDarkTheme()
+    val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val colors = when {
+        dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
+        dynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
+        darkTheme -> darkColorScheme
+        else -> lightColorScheme
+    }
+    val configuration = LocalConfiguration.current
+    val dimensions =
+        when (configuration.screenWidthDp) {
+            in 0..<600 -> compactDimensions
                 in 600..<840 -> mediumDimensions
                 else -> expandedDimensions
             }
@@ -57,7 +52,4 @@ fun AppMaterialTheme(
                 content = content
             )
         }
-    } else {
-        Mdc3Theme(content = content)
-    }
 }

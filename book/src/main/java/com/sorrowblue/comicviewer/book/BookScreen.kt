@@ -1,72 +1,141 @@
 package com.sorrowblue.comicviewer.book
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-import coil.compose.AsyncImage
+import com.sorrowblue.comicviewer.book.section.BookBottomBar
+import com.sorrowblue.comicviewer.book.section.BookPager
+import com.sorrowblue.comicviewer.book.section.BookPagerUiState
 import com.sorrowblue.comicviewer.domain.entity.file.Book
-import com.sorrowblue.comicviewer.domain.request.BookPageRequest
-import com.sorrowblue.comicviewer.framework.ui.fragment.CommonViewModel
+import com.sorrowblue.comicviewer.framework.compose.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.launch
 
-class BookRouter(val navController: NavController)
+internal sealed interface BookScreenUiState {
 
-abstract class BookScreenState {
+    data object Loading : BookScreenUiState
 
-    abstract val router: BookRouter
-    abstract val totalPageCount: Int @Composable get
-    abstract val book: Book? @Composable get
-}
-
-internal class BookScreenStateImpl(
-    private val viewModel: BookViewModel,
-    private val commonViewModel: CommonViewModel,
-    override val router: BookRouter
-) : BookScreenState() {
-    override val totalPageCount: Int
-        @Composable
-        get() = viewModel.pageCount.collectAsState().value
-
-    override val book: Book?
-        @Composable get() = viewModel.bookFlow.collectAsState().value
+    data class Loaded(
+        val book: Book,
+        val bookPagerUiState: BookPagerUiState,
+        val isVisibleTooltip: Boolean,
+    ) : BookScreenUiState
 }
 
 @Composable
-internal fun rememberBookScreenState(
-    navController: NavController,
-    composableBackStackEntry: NavBackStackEntry,
-    viewModel: BookViewModel = hiltViewModel(),
-    commonViewModel: CommonViewModel = hiltViewModel(remember(composableBackStackEntry) {
-        navController.getBackStackEntry("Parent")
-    }),
-): BookScreenState = remember {
-    BookScreenStateImpl(viewModel, commonViewModel, BookRouter(navController))
+internal fun BookRoute(
+    onBackClick: () -> Unit,
+    onNextBookClick: (Book) -> Unit,
+    viewModel: BookViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    BookScreen(
+        uiState,
+        onBackClick = onBackClick,
+        onContainerClick = viewModel::toggleTooltip,
+        onNextBookClick = onNextBookClick,
+        onPageIndexChange = viewModel::updateLastReadPage
+    )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-internal fun BookScreen(state: BookScreenState) {
-    val total = state.totalPageCount
-    val book = state.book
-    val pagerState = rememberPagerState(pageCount = { total })
-    HorizontalPager(
-        state = pagerState,
-        beyondBoundsPageCount = 2,
-        modifier = Modifier.fillMaxSize()
-    ) { page ->
-        if (book != null) {
-            AsyncImage(
-                model = BookPageRequest(book to page),
-                null,
-                modifier = Modifier.fillMaxSize()
+internal fun BookScreen(
+    uiState: BookScreenUiState,
+    onBackClick: () -> Unit,
+    onPageIndexChange: (Int) -> Unit,
+    onContainerClick: () -> Unit,
+    onNextBookClick: (Book) -> Unit
+) {
+    val scope = rememberCoroutineScope()
+    val sys = rememberSystemUiController()
+    when (uiState) {
+        is BookScreenUiState.Loaded -> {
+            val pagerState = rememberPagerState(
+                initialPage = uiState.book.lastPageRead + 1,
+                pageCount = { uiState.book.totalPageCount + 2 }
             )
+            sys.isSystemBarsVisible = uiState.isVisibleTooltip
+            LaunchedEffect(pagerState.currentPage) {
+                if (0 < pagerState.currentPage && pagerState.currentPage < uiState.book.totalPageCount) {
+                    onPageIndexChange(pagerState.currentPage - 1)
+                }
+            }
+            pagerState.currentPage
+            Scaffold(
+                topBar = {
+                    AnimatedVisibility(
+                        visible = uiState.isVisibleTooltip,
+                        enter = slideInVertically { -it },
+                        exit = slideOutVertically { -it }) {
+                        TopAppBar(
+                            title = { Text(text = uiState.book.name) },
+                            navigationIcon = {
+                                IconButton(onClick = onBackClick) {
+                                    Icon(Icons.TwoTone.ArrowBack, "Back")
+                                }
+                            },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                                    elevation = 3.0.dp
+                                )
+                            )
+                        )
+                    }
+                },
+                bottomBar = {
+                    BookBottomBar(
+                        uiState.isVisibleTooltip,
+                        pagerState.currentPage,
+                        uiState.book.totalPageCount
+                    ) {
+                        scope.launch {
+                            pagerState.animateScrollToPage(it.toInt())
+                        }
+                    }
+                }) {
+                BookPager(
+                    pagerState = pagerState,
+                    uiState = uiState.bookPagerUiState,
+                    onClick = onContainerClick,
+                    onNextBookClick = onNextBookClick
+                )
+            }
+
+        }
+
+        BookScreenUiState.Loading -> {
+            sys.isStatusBarVisible = true
+            sys.isNavigationBarVisible = true
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
         }
     }
 }

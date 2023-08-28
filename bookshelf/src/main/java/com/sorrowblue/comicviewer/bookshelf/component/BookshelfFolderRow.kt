@@ -36,7 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.sorrowblue.comicviewer.bookshelf.BookshelfConverter
 import com.sorrowblue.comicviewer.bookshelf.R
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
@@ -44,6 +43,7 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -54,12 +54,15 @@ fun BookshelfFolderRow(
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(onClick = {}) {
-        Column(Modifier.fillMaxSize().combinedClickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = rememberRipple(),
-                onClick = onClick,
-                onLongClick = onLongClick
-            )) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .combinedClickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(),
+                    onClick = onClick,
+                    onLongClick = onLongClick
+                )) {
             Box {
                 AsyncImage(
                     model = bookshelfFolder.folder,
@@ -125,7 +128,7 @@ fun BookshelfFolderRow(
 @Preview
 @Composable
 fun ArticleRowPreview() {
-    Mdc3Theme {
+    AppMaterialTheme {
         Surface {
             BookshelfFolderRow(
                 bookshelfFolder = BookshelfFolder(
