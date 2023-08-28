@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.readlater
+package com.sorrowblue.comicviewer.feature.readlater
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -50,9 +50,9 @@ import com.sorrowblue.comicviewer.feature.search.navigation.navigateToSearch
 import com.sorrowblue.comicviewer.feature.search.navigation.searchScreen
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.FabVisibleState
-import com.sorrowblue.comicviewer.readlater.navigation.ReadlaterGroupRoute
-import com.sorrowblue.comicviewer.readlater.navigation.ShowNavigationBarReadLaterNavGraph
-import com.sorrowblue.comicviewer.readlater.navigation.readlaterGroup
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGroupRoute
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ShowNavigationBarReadLaterNavGraph
+import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGroup
 import com.sorrowblue.comicviewer.settings.navigateToSettings
 import com.sorrowblue.comicviewer.settings.settingsScreen
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.readlater.navigation
+package com.sorrowblue.comicviewer.feature.readlater.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
-import com.sorrowblue.comicviewer.readlater.ReadLaterRoute
+import com.sorrowblue.comicviewer.feature.readlater.ReadLaterRoute
 
 const val ReadLaterRoute = "readlater"
 val ShowNavigationBarReadLaterNavGraph = listOf(ReadLaterRoute, folderRoute(ReadLaterRoute))
