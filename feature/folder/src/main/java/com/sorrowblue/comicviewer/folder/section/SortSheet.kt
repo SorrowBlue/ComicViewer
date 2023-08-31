@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.entity.settings.SortType
-import com.sorrowblue.comicviewer.folder.R
+import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 
 enum class Sort(val labelRes: Int) {

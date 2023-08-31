@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -75,6 +76,11 @@ internal fun BookScreen(
 ) {
     val scope = rememberCoroutineScope()
     val sys = rememberSystemUiController()
+    DisposableEffect(Unit) {
+        onDispose {
+            sys.isSystemBarsVisible = true
+        }
+    }
     when (uiState) {
         is BookScreenUiState.Loaded -> {
             val pagerState = rememberPagerState(

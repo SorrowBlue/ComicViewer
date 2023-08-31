@@ -124,7 +124,6 @@ dependencies {
     implementation(projects.data.di)
     implementation(projects.domain)
     implementation(projects.settings)
-    implementation(projects.folder)
     implementation(projects.feature.file)
     implementation(projects.feature.search)
     implementation(projects.feature.favorite)

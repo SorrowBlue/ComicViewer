@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -59,9 +60,9 @@ fun FileGrid(
                         .aspectRatio(1f)
                         .background(
                             MaterialTheme.colorScheme.surfaceVariant,
-                            shape = RoundedCornerShape(bottomEnd = 16.dp, bottomStart = 16.dp)
+                            shape = CardDefaults.elevatedShape
                         )
-                        .clip(RoundedCornerShape(bottomEnd = 16.dp, bottomStart = 16.dp))
+                        .clip(CardDefaults.elevatedShape)
                         .placeholder3(file == null)
                 )
                 if (file is Book && 0 < file.lastPageRead) {
@@ -75,11 +76,10 @@ fun FileGrid(
             }
             Text(
                 file?.name.orEmpty(),
-                style = Typography().labelSmall,
-                minLines = 2,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(4.dp)
+                    .padding(8.dp)
                     .placeholder3(file == null)
             )
         }

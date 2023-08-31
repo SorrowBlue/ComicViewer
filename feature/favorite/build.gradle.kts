@@ -12,5 +12,5 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.feature.favorite.common)
     implementation(projects.feature.file)
-    implementation(projects.folder)
+    implementation(projects.feature.folder)
 }

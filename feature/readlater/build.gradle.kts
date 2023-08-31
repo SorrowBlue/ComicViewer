@@ -11,5 +11,5 @@ dependencies {
     implementation(projects.framework.compose)
     implementation(projects.domain)
     implementation(projects.feature.file)
-    implementation(projects.folder)
+    implementation(projects.feature.folder)
 }

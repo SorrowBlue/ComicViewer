@@ -5,18 +5,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.PlainTooltipBox
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +32,6 @@ import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.file.info.Converter
 import com.sorrowblue.comicviewer.file.info.Converter.extension
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.copy
 import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
 
 sealed interface FileInfoSheetUiState {
@@ -51,15 +52,16 @@ fun FileInfoSheet(
 ) {
     if (uiState is FileInfoSheetUiState.Show) {
         val file = uiState.file
+        val sheetState = rememberModalBottomSheetState(true)
         ModalBottomSheet(
+            sheetState = sheetState,
             onDismissRequest = onDismissRequest,
             windowInsets = WindowInsets(0, 0, 0, 0)
         ) {
             Column(
-                modifier = Modifier.padding(
-                    WindowInsets.systemBars.asPaddingValues()
-                        .copy(horizontal = AppMaterialTheme.dimens.margin)
-                ),
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .padding(AppMaterialTheme.dimens.margin),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AsyncImage(

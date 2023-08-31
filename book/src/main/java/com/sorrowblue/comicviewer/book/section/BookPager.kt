@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.book.section
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
@@ -15,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.core.graphics.drawable.toBitmap
@@ -43,9 +42,7 @@ internal fun BookPager(
         state = pagerState,
         beyondBoundsPageCount = 2,
         reverseLayout = true,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Red)
+        modifier = Modifier.fillMaxSize()
     ) { pageIndex ->
         when (pageIndex) {
             0 ->
@@ -56,7 +53,11 @@ internal fun BookPager(
 
             else ->
                 Box(
-                    modifier = Modifier.clickable(onClick = onClick),
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onClick
+                    ),
                     contentAlignment = Alignment.Center
                 ) {
                     var state by remember {

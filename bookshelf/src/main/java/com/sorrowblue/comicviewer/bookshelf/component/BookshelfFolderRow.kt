@@ -103,7 +103,7 @@ fun BookshelfFolderRow(
                     id = R.string.bookshelf_list_label_files,
                     bookshelfFolder.bookshelf.fileCount
                 ),
-                style = Typography().labelSmall,
+                style = MaterialTheme.typography.labelSmall,
                 minLines = 2,
                 textAlign = TextAlign.End,
                 modifier = Modifier
@@ -115,7 +115,7 @@ fun BookshelfFolderRow(
                     bookshelfFolder.bookshelf,
                     bookshelfFolder.folder
                 ),
-                style = Typography().labelMedium,
+                style = MaterialTheme.typography.labelMedium,
                 minLines = 2,
                 modifier = Modifier
                     .fillMaxWidth()
