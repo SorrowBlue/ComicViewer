@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.dp
 @Stable
 class Dimensions(
     val margin: Dp,
-    val spacer: Dp
+    val spacer: Dp,
 )
 
 val compactDimensions = Dimensions(

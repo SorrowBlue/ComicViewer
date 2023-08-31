@@ -22,6 +22,7 @@ interface FileRepository {
 
     fun addReadLater(bookshelfId: BookshelfId, path: String): Flow<Resource<Unit, Error>>
     fun deleteReadLater(bookshelfId: BookshelfId, path: String): Flow<Resource<Unit, Error>>
+    fun deleteAllReadLater(): Flow<Resource<Unit, Error>>
 
     fun pagingDataFlow(
         pagingConfig: PagingConfig,

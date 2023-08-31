@@ -3,6 +3,8 @@ package com.sorrowblue.comicviewer.folder.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -18,24 +20,20 @@ import com.sorrowblue.comicviewer.folder.FolderRoute
 
 private const val bookshelfIdArg = "bookshelfId"
 private const val pathArg = "path"
-private const val prefixArg = "prefix"
 
 internal class FolderArgs(
     val bookshelfId: BookshelfId,
-    val path: String,
-    val prefix: String? = null
+    val path: String
 ) {
-    val base64Path get() = path.encodeToBase64()
-
     constructor(savedStateHandle: SavedStateHandle) :
             this(
                 BookshelfId(checkNotNull(savedStateHandle[bookshelfIdArg])),
-                (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64(),
-                (savedStateHandle[prefixArg])
+                (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64()
             )
 }
 
 fun NavGraphBuilder.folderScreen(
+    contentPadding: PaddingValues,
     prefix: String = "",
     navigateToSearch: (BookshelfId, String) -> Unit,
     onClickFile: (File) -> Unit,
@@ -48,11 +46,6 @@ fun NavGraphBuilder.folderScreen(
         arguments = listOf(
             navArgument(bookshelfIdArg) { type = NavType.IntType },
             navArgument(pathArg) { type = NavType.StringType },
-            navArgument(prefixArg) {
-                type = NavType.StringType
-                nullable = true
-                defaultValue = null
-            }
         ),
         enterTransition = {
             slideIntoContainer(
@@ -82,6 +75,7 @@ fun NavGraphBuilder.folderScreen(
 
     ) {
         FolderRoute(
+            contentPadding = contentPadding,
             onSearchClick = navigateToSearch,
             onAddFavoriteClick = onAddFavoriteClick,
             onClickFile = onClickFile,
@@ -91,10 +85,10 @@ fun NavGraphBuilder.folderScreen(
     }
 }
 
-const val FolderRoute = "folder"
+private const val FolderRoute = "folder"
 
 fun folderRoute(prefix: String) =
-    "$prefix/$FolderRoute/{$bookshelfIdArg}/{$pathArg}?prefix={$prefixArg}"
+    "$prefix/$FolderRoute/{$bookshelfIdArg}/{$pathArg}"
 
 fun NavController.navigateToFolder(
     bookshelfId: BookshelfId,

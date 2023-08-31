@@ -112,6 +112,7 @@ android {
 
 dependencies {
     api(libs.google.code.gson)
+    implementation(libs.androidx.activity.ktx)
     api(libs.androidx.browser)
     api("com.fasterxml.jackson.core:jackson-core:2.15.2")
     api(libs.google.guava)

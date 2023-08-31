@@ -18,8 +18,11 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.file.FileListType
+import com.sorrowblue.comicviewer.file.FileListType2
 import com.sorrowblue.comicviewer.file.FileListTypeIconButton
+import com.sorrowblue.comicviewer.file.FileListTypeIconButton2
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenuState
@@ -27,7 +30,7 @@ import com.sorrowblue.comicviewer.framework.compose.material3.rememberOverflowMe
 
 data class FolderAppBarUiState(
     val title: String = "",
-    val fileListType: FileListType = FileListType.Grid(3),
+    val fileListType: FileListType2 = FileListType2.Grid(FolderDisplaySettings.Size.MEDIUM),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,10 +62,10 @@ fun FolderAppBar(
                 }
             }
 
-            FileListTypeIconButton(uiState.fileListType, onFileListChange)
+            FileListTypeIconButton2(uiState.fileListType, onFileListChange)
 
             OverflowMenu(overflowMenuState) {
-                if (uiState.fileListType is FileListType.Grid) {
+                if (uiState.fileListType is FileListType2.Grid) {
                     DropdownMenuItem(
                         text = { Text(text = "Change Grid size") },
                         leadingIcon = { Icon(Icons.TwoTone.Grid4x4, "Change grid size") },

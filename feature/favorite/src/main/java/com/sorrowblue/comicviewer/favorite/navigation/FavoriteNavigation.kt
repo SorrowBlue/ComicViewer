@@ -20,7 +20,7 @@ internal class FavoriteArgs(
             this(FavoriteId(checkNotNull(savedStateHandle[favoriteIdArg])))
 }
 
-internal const val FavoriteRoute = "$FavoriteListRoute/{$favoriteIdArg}"
+const val FavoriteRoute = "$FavoriteListRoute/{$favoriteIdArg}"
 
 internal fun NavGraphBuilder.favoriteScreen(
     onBackClick: () -> Unit,

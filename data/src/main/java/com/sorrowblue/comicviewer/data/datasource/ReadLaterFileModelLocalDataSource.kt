@@ -12,4 +12,5 @@ interface ReadLaterFileModelLocalDataSource {
     suspend fun add(model: ReadLaterFileModel): Result<ReadLaterFileModel, Unit>
     suspend fun delete(model: ReadLaterFileModel): Result<ReadLaterFileModel, Unit>
     fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<FileModel>>
+    suspend fun deleteAll(): Result<Unit, Unit>
 }

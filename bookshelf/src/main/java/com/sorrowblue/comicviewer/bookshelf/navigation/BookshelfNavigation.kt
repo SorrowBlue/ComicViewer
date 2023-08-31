@@ -1,8 +1,7 @@
 package com.sorrowblue.comicviewer.bookshelf.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Add
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -12,7 +11,6 @@ import com.sorrowblue.comicviewer.bookshelf.BookshelfRoute
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
-import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.bookshelfEditScreen
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.navigateToBookshelfEdit
@@ -21,36 +19,21 @@ import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.bookshe
 import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
-import com.sorrowblue.comicviewer.framework.compose.FabVisibleState
-import com.sorrowblue.comicviewer.framework.compose.LocalLifecycleState
-import kotlinx.coroutines.launch
 
 const val BookshelfRoute = "bookshelf"
-
-val ShowNavigationBarBookshelfNavGraph = listOf(BookshelfRoute, folderRoute(BookshelfRoute))
+val BookshelfFolderRoute = folderRoute(BookshelfRoute)
 
 private fun NavGraphBuilder.bookshelfScreen(
+    contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
     onBookshelfClick: (BookshelfFolder) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
     onClickFab: () -> Unit,
-    fabState: FabVisibleState
 ) {
     composable(BookshelfRoute) {
-        val scope = rememberCoroutineScope()
-        LocalLifecycleState(
-            onStart = {
-                scope.launch {
-                    fabState.show(Icons.TwoTone.Add) {
-                        onClickFab()
-                    }
-                }
-            },
-            onStop = {
-                fabState.hide()
-            }
-        )
         BookshelfRoute(
+            contentPadding = contentPadding,
+            onClickFab = onClickFab,
             onSettingsClick = onSettingsClick,
             onBookshelfClick = onBookshelfClick,
             onEditClick = onEditClick
@@ -61,8 +44,8 @@ private fun NavGraphBuilder.bookshelfScreen(
 const val BookshelfGroupRoute = "bookshelf_group"
 
 fun NavGraphBuilder.bookshelfGroup(
+    contentPadding: PaddingValues,
     navController: NavController,
-    fabState: FabVisibleState,
     onSettingsClick: () -> Unit,
     navigateToBook: (BookshelfId, String) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
@@ -70,6 +53,7 @@ fun NavGraphBuilder.bookshelfGroup(
 ) {
     navigation(route = BookshelfGroupRoute, startDestination = BookshelfRoute) {
         bookshelfScreen(
+            contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
             onBookshelfClick = {
                 navController.navigateToFolder(
@@ -79,7 +63,6 @@ fun NavGraphBuilder.bookshelfGroup(
             },
             onEditClick = navController::navigateToBookshelfEdit,
             onClickFab = navController::navigateToBookshelfSelection,
-            fabState = fabState
         )
         bookshelfSelectionScreen(
             onBackClick = navController::popBackStack,
@@ -90,6 +73,7 @@ fun NavGraphBuilder.bookshelfGroup(
             onComplete = { navController.popBackStack(BookshelfSelectionRoute, true) }
         )
         folderScreen(
+            contentPadding = contentPadding,
             prefix = BookshelfRoute,
             navigateToSearch = navigateToSearch,
             onClickFile = {

@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.FileListType
@@ -26,6 +27,7 @@ import kotlinx.coroutines.runBlocking
 internal class ReadLaterViewModel @Inject constructor(
     private val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     private val addReadLaterUseCase: AddReadLaterUseCase,
+    private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
     pagingReadLaterFileUseCase: PagingReadLaterFileUseCase,
 ) : ViewModel() {
 
@@ -90,6 +92,12 @@ internal class ReadLaterViewModel @Inject constructor(
 
     fun onFileLongClick(file: File) {
         _uiState.value = _uiState.value.copy(fileInfoSheetUiState = FileInfoSheetUiState.Show(file))
+    }
+
+    fun clearAll() {
+        viewModelScope.launch {
+            deleteAllReadLaterUseCase.execute(DeleteAllReadLaterUseCase.Request).first()
+        }
     }
 }
 

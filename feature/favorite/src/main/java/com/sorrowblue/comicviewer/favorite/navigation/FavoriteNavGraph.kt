@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.favorite.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
@@ -9,16 +10,13 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
-import com.sorrowblue.comicviewer.framework.compose.FabVisibleState
 
 const val FavoriteGroupRoute = "${FavoriteListRoute}_group"
-
-val ShowNavigationBarFavoriteNavGraph =
-    listOf(FavoriteListRoute, FavoriteRoute, folderRoute(FavoriteListRoute))
+val FavoriteFolderRoute = folderRoute(FavoriteListRoute)
 
 fun NavGraphBuilder.favoriteGroup(
+    contentPadding: PaddingValues,
     navController: NavController,
-    fabState: FabVisibleState,
     onBookClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
@@ -27,7 +25,7 @@ fun NavGraphBuilder.favoriteGroup(
     navigation(route = FavoriteGroupRoute, startDestination = FavoriteListRoute) {
 
         favoriteListScreen(
-            fabState = fabState,
+            contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
             onFavoriteClick = navController::navigateToFavorite
         )
@@ -48,7 +46,9 @@ fun NavGraphBuilder.favoriteGroup(
             onBackClick = navController::popBackStack,
             onComplete = navController::popBackStack
         )
-        folderScreen(prefix = FavoriteListRoute,
+        folderScreen(
+            contentPadding = contentPadding,
+            prefix = FavoriteListRoute,
             navigateToSearch = navigateToSearch,
             onClickFile = {
                 when (it) {
@@ -59,7 +59,7 @@ fun NavGraphBuilder.favoriteGroup(
             },
             onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
-            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) }
+            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
         )
     }
 }

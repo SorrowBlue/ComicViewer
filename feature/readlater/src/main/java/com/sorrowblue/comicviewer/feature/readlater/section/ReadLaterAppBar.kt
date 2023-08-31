@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.readlater.section
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.ClearAll
 import androidx.compose.material.icons.twotone.Grid4x4
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.DropdownMenuItem
@@ -24,7 +25,8 @@ internal fun ReadLaterAppBar(
     topAppBarScrollBehavior: TopAppBarScrollBehavior? = null,
     onFileListTypeClick: () -> Unit = {},
     onGridSizeClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {},
+    onClearAllClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {}
 ) {
     TopAppBar(
         title = { Text(stringResource(R.string.readlater_title)) },
@@ -45,6 +47,19 @@ internal fun ReadLaterAppBar(
                         }
                     )
                 }
+                DropdownMenuItem(
+                    text = { Text("Clear Read Later") },
+                    trailingIcon = {
+                        Icon(
+                            Icons.TwoTone.ClearAll,
+                            "Clear Read Later"
+                        )
+                    },
+                    onClick = {
+                        overflowMenuState.collapse()
+                        onClearAllClick()
+                    }
+                )
                 DropdownMenuItem(
                     text = { Text(stringResource(com.sorrowblue.comicviewer.framework.resource.R.string.framework_title_settings)) },
                     trailingIcon = {

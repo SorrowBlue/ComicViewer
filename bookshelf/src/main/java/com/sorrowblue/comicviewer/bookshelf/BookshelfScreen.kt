@@ -3,6 +3,8 @@ package com.sorrowblue.comicviewer.bookshelf
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,8 +13,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Add
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -30,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -51,6 +56,8 @@ import com.sorrowblue.comicviewer.framework.compose.isEmptyData
 
 @Composable
 fun BookshelfRoute(
+    contentPadding: PaddingValues,
+    onClickFab: () -> Unit,
     onSettingsClick: () -> Unit,
     onBookshelfClick: (BookshelfFolder) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
@@ -59,6 +66,8 @@ fun BookshelfRoute(
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     BookshelfScreen(
         lazyPagingItems,
+        onClickFab = onClickFab,
+        contentPadding = contentPadding,
         onSettingsClick = onSettingsClick,
         onBookshelfClick = onBookshelfClick,
         onEditClick = onEditClick,
@@ -70,14 +79,18 @@ fun BookshelfRoute(
 @Composable
 fun BookshelfScreen(
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
+    contentPadding: PaddingValues,
+    onClickFab: () -> Unit,
     onSettingsClick: () -> Unit,
     onBookshelfClick: (BookshelfFolder) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
     onRemoveClick: (Bookshelf) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val localLayoutDirection = LocalLayoutDirection.current
     var showBookshelfInfoSheet by remember { mutableStateOf(false) }
     var selectedBookshelfInfo by remember { mutableStateOf<BookshelfFolder?>(null) }
+    val lazyGridState = rememberLazyGridState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -95,6 +108,20 @@ fun BookshelfScreen(
                 scrollBehavior = scrollBehavior
             )
         },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = onClickFab,
+                text = { Text("New Bookshelf") },
+                icon = { Icon(Icons.TwoTone.Add, contentDescription = null) },
+                expanded = !lazyGridState.canScrollForward || !lazyGridState.canScrollBackward
+            )
+        },
+        contentWindowInsets = WindowInsets(
+            left = contentPadding.calculateLeftPadding(localLayoutDirection),
+            top = contentPadding.calculateTopPadding(),
+            right = contentPadding.calculateRightPadding(localLayoutDirection),
+            bottom = contentPadding.calculateBottomPadding()
+        ),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         if (lazyPagingItems.isEmptyData) {
@@ -123,7 +150,7 @@ fun BookshelfScreen(
             }
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                state = rememberLazyGridState(),
+                state = lazyGridState,
                 contentPadding = contentPadding.copy(
                     start = AppMaterialTheme.dimens.margin,
                     end = AppMaterialTheme.dimens.margin,

@@ -1,14 +1,13 @@
 package com.sorrowblue.comicviewer.folder
 
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.sorrowblue.comicviewer.domain.entity.Scan
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.file.IFolder
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
@@ -17,6 +16,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.FileListType
+import com.sorrowblue.comicviewer.file.FileListType2
 import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -42,7 +41,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import logcat.logcat
 
 @HiltViewModel
 class FolderViewModel @Inject constructor(
@@ -68,20 +66,18 @@ class FolderViewModel @Inject constructor(
         FolderScreenUiState(
             folderAppBarUiState = FolderAppBarUiState(
                 "",
-                runBlocking { displaySettingsUseCase.settings.first().toFileListType() }),
+                runBlocking { displaySettingsUseCase.settings.first().toFileListType2() }),
             sortSheetUiState = SortSheetUiState.Hide,
             fileInfoSheetUiState = FileInfoSheetUiState.Hide,
-            fileListType = runBlocking { displaySettingsUseCase.settings.first().toFileListType() }
+            fileListType = runBlocking { displaySettingsUseCase.settings.first().toFileListType2() }
         )
     )
     init {
         viewModelScope.launch {
-            displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileListType)
+            displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileListType2)
                 .distinctUntilChanged().collectLatest {
                     _uiState.value = _uiState.value.copy(
-                        folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(fileListType = runBlocking {
-                            displaySettingsUseCase.settings.first().toFileListType()
-                        }),
+                        folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(fileListType = runBlocking { it }),
                         fileListType = it
                     )
                 }
@@ -193,10 +189,10 @@ class FolderViewModel @Inject constructor(
         viewModelScope.launch {
             displaySettingsUseCase.edit {
                 it.copy(
-                    spanCount = when (it.spanCount) {
-                        2 -> 3
-                        3 -> 4
-                        else -> 2
+                    columnSize = when (it.columnSize) {
+                        FolderDisplaySettings.Size.SMALL -> FolderDisplaySettings.Size.LARGE
+                        FolderDisplaySettings.Size.MEDIUM -> FolderDisplaySettings.Size.SMALL
+                        FolderDisplaySettings.Size.LARGE -> FolderDisplaySettings.Size.MEDIUM
                     }
                 )
             }
@@ -224,5 +220,13 @@ fun FolderDisplaySettings.toFileListType(): FileListType {
     return when (display) {
         FolderDisplaySettings.Display.GRID -> FileListType.Grid(spanCount)
         FolderDisplaySettings.Display.LIST -> FileListType.List
+    }
+}
+
+
+fun FolderDisplaySettings.toFileListType2(): FileListType2 {
+    return when (display) {
+        FolderDisplaySettings.Display.GRID -> FileListType2.Grid(columnSize)
+        FolderDisplaySettings.Display.LIST -> FileListType2.List
     }
 }

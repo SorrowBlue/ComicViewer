@@ -49,7 +49,7 @@ kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 
-androidx-activity = "androidx.activity:activity:1.7.2"
+androidx-activity-ktx = "androidx.activity:activity-ktx:1.8.0-alpha07"
 
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 
@@ -75,7 +75,7 @@ androidx-compose-ui-test-manifest = { module ="androidx.compose.ui:ui-test-manif
 androidx-compose-material-icons-extended = { module ="androidx.compose.material:material-icons-extended" }
 androidx-compose-material3-window = { module ="androidx.compose.material3:material3-window-size-class" }
 
-androidx-activity-compose = "androidx.activity:activity-compose:1.7.2"
+androidx-activity-compose = "androidx.activity:activity-compose:1.8.0-alpha07"
 androidx-lifecycle-viewmodel-compose = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
 
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "androidx.datastore" }

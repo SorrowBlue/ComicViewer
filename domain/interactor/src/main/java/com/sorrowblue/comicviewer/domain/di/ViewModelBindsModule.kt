@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.domain.di
 
 import com.sorrowblue.comicviewer.domain.interactor.AddReadLaterInteractor
+import com.sorrowblue.comicviewer.domain.interactor.DeleteAllReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.interactor.DeleteReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.interactor.GetNavigationHistoryInteractor
 import com.sorrowblue.comicviewer.domain.interactor.ScanBookshelfInteractor
@@ -37,6 +38,7 @@ import com.sorrowblue.comicviewer.domain.interactor.settings.ManageFolderSetting
 import com.sorrowblue.comicviewer.domain.interactor.settings.ManageOneTimeFlagInteractor
 import com.sorrowblue.comicviewer.domain.interactor.settings.ManageSecuritySettingsInteractor
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
@@ -107,6 +109,9 @@ internal abstract class ViewModelBindsModule {
 
     @Binds
     abstract fun bindDeleteReadLaterUseCase(interactor: DeleteReadLaterInteractor): DeleteReadLaterUseCase
+
+    @Binds
+    abstract fun bindDeleteAllReadLaterUseCase(interactor: DeleteAllReadLaterInteractor): DeleteAllReadLaterUseCase
 
     @Binds
     abstract fun bindGetNavigationHistoryUseCase(interactor: GetNavigationHistoryInteractor): GetNavigationHistoryUseCase

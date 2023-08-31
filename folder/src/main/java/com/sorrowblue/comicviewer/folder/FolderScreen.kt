@@ -1,9 +1,12 @@
 package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -16,16 +19,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.file.FileListType
+import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.file.FileListType2
+import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheet
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
-import com.sorrowblue.comicviewer.folder.section.FileListSheet
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderEmptyContent
@@ -43,26 +48,28 @@ data class FolderScreenUiState(
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
     val sortSheetUiState: SortSheetUiState = SortSheetUiState.Hide,
     val fileInfoSheetUiState: FileInfoSheetUiState = FileInfoSheetUiState.Hide,
-    val fileListType: FileListType = FileListType.Grid(3),
+    val fileListType: FileListType2 = FileListType2.Grid(FolderDisplaySettings.Size.MEDIUM),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FolderRoute(
-    viewModel: FolderViewModel = hiltViewModel(),
+    contentPadding: PaddingValues,
     onSearchClick: (BookshelfId, String) -> Unit,
     onAddFavoriteClick: (File) -> Unit,
     onClickFile: (File) -> Unit,
     onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
+    viewModel: FolderViewModel = hiltViewModel()
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsState()
-    val lazyGridState = rememberLazyGridState()
+    val lazyStaggeredGridState = rememberLazyStaggeredGridState()
     val isRefreshing =
         remember(lazyPagingItems.loadState.refresh) { lazyPagingItems.loadState.refresh is LoadState.Loading }
     val pullRefreshState = rememberPullRefreshState(isRefreshing, lazyPagingItems::refresh)
     FolderScreen(
+        contentPadding = contentPadding,
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onSearchClick = { onSearchClick(viewModel.bookshelfId, viewModel.path) },
@@ -76,7 +83,7 @@ internal fun FolderRoute(
         },
         onClickFile = onClickFile,
         onClickLongFile = viewModel::onClickLongFile,
-        lazyGridState = lazyGridState,
+        lazyStaggeredGridState = lazyStaggeredGridState,
         isRefreshing = isRefreshing,
         pullRefreshState = pullRefreshState,
         onFileListChange = viewModel::toggleFileListType,
@@ -88,7 +95,7 @@ internal fun FolderRoute(
     LaunchedEffect(lazyPagingItems.loadState) {
         if (lazyPagingItems.isLoadedData && viewModel.isScrollableTop) {
             viewModel.isScrollableTop = false
-            lazyGridState.scrollToItem(0)
+            lazyStaggeredGridState.scrollToItem(0)
         }
     }
 
@@ -103,6 +110,7 @@ internal fun FolderRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FolderScreen(
+    contentPadding: PaddingValues,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onSearchClick: () -> Unit,
@@ -113,7 +121,7 @@ internal fun FolderScreen(
     onAddFavoriteClick: (File) -> Unit,
     onClickFile: (File) -> Unit,
     onClickLongFile: (File) -> Unit,
-    lazyGridState: LazyGridState = rememberLazyGridState(),
+    lazyStaggeredGridState: LazyStaggeredGridState,
     isRefreshing: Boolean,
     pullRefreshState: PullRefreshState = rememberPullRefreshState(false, { }),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
@@ -123,6 +131,7 @@ internal fun FolderScreen(
     onBackClick: () -> Unit,
     onSortClick: () -> Unit,
 ) {
+    val localLayoutDirection = LocalLayoutDirection.current
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -137,19 +146,29 @@ internal fun FolderScreen(
                 onSettingsClick = onSettingsClick,
                 scrollBehavior = scrollBehavior,
             )
-        }
-    ) { contentPadding ->
+        },
+        contentWindowInsets = WindowInsets(
+            left = contentPadding.calculateLeftPadding(localLayoutDirection),
+            top = contentPadding.calculateTopPadding(),
+            right = contentPadding.calculateRightPadding(localLayoutDirection),
+            bottom = contentPadding.calculateBottomPadding()
+        ),
+    ) { innerPadding ->
         Box(Modifier.pullRefresh(pullRefreshState)) {
             if (lazyPagingItems.isEmptyData) {
-                FolderEmptyContent(Modifier.fillMaxSize())
+                FolderEmptyContent(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                )
             } else {
-                FileListSheet(
+                FileContent(
                     fileListType = uiState.fileListType,
                     lazyPagingItems = lazyPagingItems,
-                    contentPadding = contentPadding,
+                    contentPadding = innerPadding,
                     onClickItem = onClickFile,
                     onLongClickItem = onClickLongFile,
-                    state = lazyGridState
+                    state = lazyStaggeredGridState
                 )
             }
             PullRefreshIndicator(

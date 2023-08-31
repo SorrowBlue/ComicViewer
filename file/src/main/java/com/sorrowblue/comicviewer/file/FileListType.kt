@@ -30,6 +30,11 @@ sealed interface FileListType {
     }
 }
 
+sealed interface FileListType2 {
+    data class Grid(val size: FolderDisplaySettings.Size) : FileListType2
+    data object List : FileListType2
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FileListTypeIconButton(fileListType: FileListType, onClick: () -> Unit) {
@@ -46,6 +51,35 @@ fun FileListTypeIconButton(fileListType: FileListType, onClick: () -> Unit) {
         }
 
         FileListType.List -> {
+            PlainTooltipBox(tooltip = { Text(stringResource(id = R.string.file_list_label_switch_grid_view)) }) {
+                IconButton(onClick, Modifier.tooltipAnchor()) {
+                    Icon(
+                        Icons.TwoTone.GridView,
+                        stringResource(id = R.string.file_list_label_switch_grid_view)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FileListTypeIconButton2(fileListType: FileListType2, onClick: () -> Unit) {
+    when (fileListType) {
+        is FileListType2.Grid -> {
+            PlainTooltipBox(tooltip = { Text(stringResource(id = R.string.file_list_label_switch_list_view)) }) {
+                IconButton(onClick, Modifier.tooltipAnchor()) {
+                    Icon(
+                        Icons.TwoTone.ViewList,
+                        stringResource(id = R.string.file_list_label_switch_list_view)
+                    )
+                }
+            }
+        }
+
+        FileListType2.List -> {
             PlainTooltipBox(tooltip = { Text(stringResource(id = R.string.file_list_label_switch_grid_view)) }) {
                 IconButton(onClick, Modifier.tooltipAnchor()) {
                     Icon(

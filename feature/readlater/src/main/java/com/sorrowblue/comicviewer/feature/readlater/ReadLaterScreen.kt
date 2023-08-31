@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.readlater
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -10,23 +11,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.entity.file.BookFile
 import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.feature.readlater.section.EmptyContent
+import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
 import com.sorrowblue.comicviewer.file.FileListType
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheet
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.folder.section.FileListSheet
 import com.sorrowblue.comicviewer.framework.compose.isEmptyData
-import com.sorrowblue.comicviewer.feature.readlater.section.EmptyContent
-import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import kotlinx.coroutines.flow.flowOf
 
 @Composable
 internal fun ReadLaterRoute(
@@ -34,6 +30,7 @@ internal fun ReadLaterRoute(
     onAddFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
+    contentPadding: PaddingValues,
     viewModel: ReadLaterViewModel = hiltViewModel()
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -49,7 +46,9 @@ internal fun ReadLaterRoute(
         onOpenFolderClick = onOpenFolderClick,
         onFileListTypeClick = viewModel::toggleDisplay,
         onGridSizeClick = viewModel::toggleSpanCount,
-        onSettingsClick = onSettingsClick
+        onSettingsClick = onSettingsClick,
+        onClearAllClick = viewModel::clearAll,
+        contentPadding = contentPadding,
     )
 }
 
@@ -72,8 +71,11 @@ internal fun ReadLaterScreen(
     onFileListTypeClick: () -> Unit = {},
     onGridSizeClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
+    onClearAllClick: () -> Unit = {},
+    contentPadding: PaddingValues,
 ) {
     val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val localLayoutDirection = LocalLayoutDirection.current
     Scaffold(
         topBar = {
             ReadLaterAppBar(
@@ -81,21 +83,28 @@ internal fun ReadLaterScreen(
                 topAppBarScrollBehavior = appBarScrollBehavior,
                 onFileListTypeClick = onFileListTypeClick,
                 onGridSizeClick = onGridSizeClick,
-                onSettingsClick = onSettingsClick
+                onSettingsClick = onSettingsClick,
+                onClearAllClick = onClearAllClick
             )
         },
+        contentWindowInsets = WindowInsets(
+            left = contentPadding.calculateLeftPadding(localLayoutDirection),
+            top = contentPadding.calculateTopPadding(),
+            right = contentPadding.calculateRightPadding(localLayoutDirection),
+            bottom = contentPadding.calculateBottomPadding()
+        ),
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
-    ) { contentPadding ->
+    ) { innerPadding ->
         if (lazyPagingItems.isEmptyData) {
             EmptyContent(
                 Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding))
+                    .padding(innerPadding)
+            )
         } else {
             FileListSheet(
                 fileListType = uiState.fileListType,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = contentPadding,
+                contentPadding = innerPadding,
                 onClickItem = onFileClick,
                 onLongClickItem = onFileLongClick
             )
