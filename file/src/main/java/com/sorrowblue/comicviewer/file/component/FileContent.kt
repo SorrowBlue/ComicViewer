@@ -2,16 +2,19 @@ package com.sorrowblue.comicviewer.file.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 
 sealed interface FileContentLayout {
 
@@ -54,6 +57,7 @@ fun FileContent(
     LazyVerticalStaggeredGrid(
         columns = uiState.layout.columns,
         state = state,
+        modifier = Modifier.padding(horizontal = AppMaterialTheme.dimens.margin),
         contentPadding = contentPadding,
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)

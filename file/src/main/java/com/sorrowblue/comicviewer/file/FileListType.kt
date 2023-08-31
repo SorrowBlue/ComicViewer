@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.file.component.FileContentLayout
 
 sealed interface FileListType {
 
@@ -66,9 +67,9 @@ fun FileListTypeIconButton(fileListType: FileListType, onClick: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FileListTypeIconButton2(fileListType: FileListType2, onClick: () -> Unit) {
-    when (fileListType) {
-        is FileListType2.Grid -> {
+fun FileListTypeIconButton2(fileContentLayout: FileContentLayout, onClick: () -> Unit) {
+    when (fileContentLayout) {
+        is FileContentLayout.Grid -> {
             PlainTooltipBox(tooltip = { Text(stringResource(id = R.string.file_list_label_switch_list_view)) }) {
                 IconButton(onClick, Modifier.tooltipAnchor()) {
                     Icon(
@@ -79,7 +80,7 @@ fun FileListTypeIconButton2(fileListType: FileListType2, onClick: () -> Unit) {
             }
         }
 
-        FileListType2.List -> {
+        FileContentLayout.List -> {
             PlainTooltipBox(tooltip = { Text(stringResource(id = R.string.file_list_label_switch_grid_view)) }) {
                 IconButton(onClick, Modifier.tooltipAnchor()) {
                     Icon(

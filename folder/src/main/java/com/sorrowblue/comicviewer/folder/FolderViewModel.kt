@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.folder
 
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,7 +15,8 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.FileListType
-import com.sorrowblue.comicviewer.file.FileListType2
+import com.sorrowblue.comicviewer.file.component.FileContentLayout
+import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
@@ -66,19 +66,19 @@ class FolderViewModel @Inject constructor(
         FolderScreenUiState(
             folderAppBarUiState = FolderAppBarUiState(
                 "",
-                runBlocking { displaySettingsUseCase.settings.first().toFileListType2() }),
+                runBlocking { displaySettingsUseCase.settings.first().toFileContentLayout() }),
             sortSheetUiState = SortSheetUiState.Hide,
             fileInfoSheetUiState = FileInfoSheetUiState.Hide,
-            fileListType = runBlocking { displaySettingsUseCase.settings.first().toFileListType2() }
+            fileContentUiState = FileContentUiState(runBlocking { displaySettingsUseCase.settings.first().toFileContentLayout() })
         )
     )
     init {
         viewModelScope.launch {
-            displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileListType2)
+            displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
                 .distinctUntilChanged().collectLatest {
                     _uiState.value = _uiState.value.copy(
-                        folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(fileListType = runBlocking { it }),
-                        fileListType = it
+                        folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(fileContentLayout = it),
+                        fileContentUiState = FileContentUiState(it)
                     )
                 }
         }
@@ -224,9 +224,15 @@ fun FolderDisplaySettings.toFileListType(): FileListType {
 }
 
 
-fun FolderDisplaySettings.toFileListType2(): FileListType2 {
+fun FolderDisplaySettings.toFileContentLayout(): FileContentLayout {
     return when (display) {
-        FolderDisplaySettings.Display.GRID -> FileListType2.Grid(columnSize)
-        FolderDisplaySettings.Display.LIST -> FileListType2.List
+        FolderDisplaySettings.Display.GRID -> FileContentLayout.Grid(
+            when (columnSize) {
+                FolderDisplaySettings.Size.SMALL -> FileContentLayout.GridSize.Small
+                FolderDisplaySettings.Size.MEDIUM -> FileContentLayout.GridSize.Medium
+                FolderDisplaySettings.Size.LARGE -> FileContentLayout.GridSize.Large
+            }
+        )
+        FolderDisplaySettings.Display.LIST -> FileContentLayout.List
     }
 }

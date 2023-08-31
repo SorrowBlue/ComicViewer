@@ -29,6 +29,7 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.file.FileListType2
 import com.sorrowblue.comicviewer.file.component.FileContent
+import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheet
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
@@ -48,7 +49,7 @@ data class FolderScreenUiState(
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
     val sortSheetUiState: SortSheetUiState = SortSheetUiState.Hide,
     val fileInfoSheetUiState: FileInfoSheetUiState = FileInfoSheetUiState.Hide,
-    val fileListType: FileListType2 = FileListType2.Grid(FolderDisplaySettings.Size.MEDIUM),
+    val fileContentUiState: FileContentUiState,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -163,7 +164,7 @@ internal fun FolderScreen(
                 )
             } else {
                 FileContent(
-                    fileListType = uiState.fileListType,
+                    uiState = uiState.fileContentUiState,
                     lazyPagingItems = lazyPagingItems,
                     contentPadding = innerPadding,
                     onClickItem = onClickFile,
