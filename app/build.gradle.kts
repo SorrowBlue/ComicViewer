@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.konan.properties.propertyString
 plugins {
     id("build-logic.android.application")
     id("com.sorrowblue.dagger-hilt")
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
     alias(libs.plugins.mikepenz.aboutlibraries.plugin)
     alias(libs.plugins.grgit)

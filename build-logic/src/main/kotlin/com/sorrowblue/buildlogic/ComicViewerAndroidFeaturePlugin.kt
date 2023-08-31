@@ -14,7 +14,7 @@ internal class ComicViewerAndroidFeaturePlugin : Plugin<Project> {
             plugins {
                 id("com.android.library")
                 id("org.jetbrains.kotlin.android")
-                id("org.jetbrains.kotlin.kapt")
+                id("com.google.devtools.ksp")
                 id("dagger.hilt.android.plugin")
             }
 
@@ -47,12 +47,9 @@ internal class ComicViewerAndroidFeaturePlugin : Plugin<Project> {
             }
 
             dependencies {
-                add("implementation", libs.findLibrary("dagger-hilt-android-core").get())
-                add("kapt", libs.findLibrary("dagger-hilt-android-compiler").get())
-            }
-
-            kapt {
-                correctErrorTypes = true
+                add("implementation", libs.findLibrary("google-dagger-hilt-android").get())
+                add("ksp", libs.findLibrary("google-dagger-compiler").get())
+                add("ksp", libs.findLibrary("google-dagger-hilt-compiler").get())
             }
         }
     }

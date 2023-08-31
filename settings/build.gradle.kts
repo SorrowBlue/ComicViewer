@@ -1,6 +1,7 @@
 plugins {
     id("build-logic.android.library")
     id("com.sorrowblue.dagger-hilt")
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
@@ -34,5 +35,4 @@ dependencies {
     implementation(libs.androidx.browser)
     implementation("com.google.android.play:review-ktx:2.0.1")
     implementation(libs.androidx.hilt.navigation.fragment)
-    kapt(libs.androidx.hilt.compiler)
 }

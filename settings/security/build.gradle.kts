@@ -1,6 +1,7 @@
 plugins {
     id("build-logic.android.library")
     id("com.sorrowblue.dagger-hilt")
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
@@ -13,6 +14,9 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
 dependencies {
     implementation(projects.framework.settings)
     implementation(projects.domain)
@@ -20,5 +24,4 @@ dependencies {
     implementation(libs.androidx.biometric)
 
     implementation(libs.androidx.hilt.navigation.fragment)
-    kapt(libs.androidx.hilt.compiler)
 }

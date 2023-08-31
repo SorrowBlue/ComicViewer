@@ -1,6 +1,7 @@
 plugins {
     id("build-logic.android.library")
     id("com.sorrowblue.dagger-hilt")
+    id("org.jetbrains.kotlin.kapt")
 }
 
 dependencies {
@@ -9,6 +10,6 @@ dependencies {
     implementation(projects.data)
 
     implementation(libs.androidx.hilt.work)
-    kapt(libs.androidx.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.work.runtime.ktx)
 }
