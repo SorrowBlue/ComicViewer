@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,8 +27,8 @@ import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBarUiState
 import com.sorrowblue.comicviewer.feature.favorite.R
-import com.sorrowblue.comicviewer.file.FileListType
-import com.sorrowblue.comicviewer.folder.section.FileListSheet
+import com.sorrowblue.comicviewer.file.component.FileContent
+import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.framework.compose.isEmptyData
 import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
@@ -58,7 +58,7 @@ internal fun FavoriteRoute(
 
 internal data class FavoriteScreenUiState(
     val favoriteAppBarUiState: FavoriteAppBarUiState = FavoriteAppBarUiState(),
-    val fileListType: FileListType = FileListType.Grid(3)
+    val fileContentUiState: FileContentUiState = FileContentUiState()
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,7 +74,7 @@ private fun FavoriteScreen(
     onSettingsClick: () -> Unit = {},
     onClickFile: (File) -> Unit = {},
     onClickLongFile: (File) -> Unit = {},
-    lazyGridState: LazyGridState = rememberLazyGridState(),
+    lazyStaggeredGridState: LazyStaggeredGridState = rememberLazyStaggeredGridState(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -107,13 +107,13 @@ private fun FavoriteScreen(
                 Text(stringResource(id = R.string.favorite_label_no_favorites))
             }
         } else {
-            FileListSheet(
-                fileListType = uiState.fileListType,
+            FileContent(
+                uiState = uiState.fileContentUiState,
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = contentPadding,
                 onClickItem = onClickFile,
                 onLongClickItem = onClickLongFile,
-                state = lazyGridState
+                state = lazyStaggeredGridState
             )
         }
     }

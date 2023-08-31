@@ -10,7 +10,8 @@ import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.file.FileListType
+import com.sorrowblue.comicviewer.file.component.FileContentUiState
+import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -33,17 +34,21 @@ internal class ReadLaterViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         ReadLaterScreenUiState(
-            runBlocking { manageFolderDisplaySettingsUseCase.settings.first().toFileListType() },
-            FileInfoSheetUiState.Hide
+            FileInfoSheetUiState.Hide,
+            FileContentUiState(runBlocking {
+                manageFolderDisplaySettingsUseCase.settings.first().toFileContentLayout()
+            })
         )
     )
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            manageFolderDisplaySettingsUseCase.settings.map(FolderDisplaySettings::toFileListType)
+            manageFolderDisplaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
                 .distinctUntilChanged().collectLatest {
-                    _uiState.value = _uiState.value.copy(fileListType = it)
+                    _uiState.value = _uiState.value.copy(
+                        fileContentUiState = _uiState.value.fileContentUiState.copy(layout = it)
+                    )
                 }
         }
     }
@@ -98,12 +103,5 @@ internal class ReadLaterViewModel @Inject constructor(
         viewModelScope.launch {
             deleteAllReadLaterUseCase.execute(DeleteAllReadLaterUseCase.Request).first()
         }
-    }
-}
-
-private fun FolderDisplaySettings.toFileListType(): FileListType {
-    return when (display) {
-        FolderDisplaySettings.Display.GRID -> FileListType.Grid(spanCount)
-        FolderDisplaySettings.Display.LIST -> FileListType.List
     }
 }

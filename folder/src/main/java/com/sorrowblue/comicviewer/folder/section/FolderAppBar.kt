@@ -18,8 +18,8 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.sorrowblue.comicviewer.file.FileListTypeIconButton2
 import com.sorrowblue.comicviewer.file.component.FileContentLayout
+import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenuState
@@ -59,7 +59,7 @@ fun FolderAppBar(
                 }
             }
 
-            FileListTypeIconButton2(uiState.fileContentLayout, onFileListChange)
+            FileContentLayoutButton(uiState.fileContentLayout, onFileListChange)
 
             OverflowMenu(overflowMenuState) {
                 if (uiState.fileContentLayout is FileContentLayout.Grid) {

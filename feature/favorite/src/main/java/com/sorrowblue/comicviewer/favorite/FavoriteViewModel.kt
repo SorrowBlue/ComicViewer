@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteArgs
-import com.sorrowblue.comicviewer.folder.toFileListType
+import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -22,11 +22,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 @HiltViewModel
 internal class FavoriteViewModel @Inject constructor(
@@ -65,14 +63,11 @@ internal class FavoriteViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileListType)
+            displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
                 .distinctUntilChanged().collectLatest {
                     _uiState.value = _uiState.value.copy(
-                        favoriteAppBarUiState = _uiState.value.favoriteAppBarUiState.copy(
-                            fileListType = runBlocking {
-                                displaySettingsUseCase.settings.first().toFileListType()
-                            }),
-                        fileListType = it
+                        favoriteAppBarUiState = _uiState.value.favoriteAppBarUiState.copy(fileContentLayout = it),
+                        fileContentUiState = _uiState.value.fileContentUiState.copy(layout = it)
                     )
                 }
         }

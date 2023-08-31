@@ -18,10 +18,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.feature.readlater.section.EmptyContent
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
-import com.sorrowblue.comicviewer.file.FileListType
+import com.sorrowblue.comicviewer.file.component.FileContent
+import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheet
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
-import com.sorrowblue.comicviewer.folder.section.FileListSheet
 import com.sorrowblue.comicviewer.framework.compose.isEmptyData
 
 @Composable
@@ -53,8 +53,8 @@ internal fun ReadLaterRoute(
 }
 
 data class ReadLaterScreenUiState(
-    val fileListType: FileListType,
-    val fileInfoSheetUiState: FileInfoSheetUiState
+    val fileInfoSheetUiState: FileInfoSheetUiState,
+    val fileContentUiState: FileContentUiState
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,9 +79,9 @@ internal fun ReadLaterScreen(
     Scaffold(
         topBar = {
             ReadLaterAppBar(
-                fileListType = uiState.fileListType,
+                fileContentLayout = uiState.fileContentUiState.layout,
                 topAppBarScrollBehavior = appBarScrollBehavior,
-                onFileListTypeClick = onFileListTypeClick,
+                onFileContentLayoutClick = onFileListTypeClick,
                 onGridSizeClick = onGridSizeClick,
                 onSettingsClick = onSettingsClick,
                 onClearAllClick = onClearAllClick
@@ -101,8 +101,8 @@ internal fun ReadLaterScreen(
                     .padding(innerPadding)
             )
         } else {
-            FileListSheet(
-                fileListType = uiState.fileListType,
+            FileContent(
+                uiState = uiState.fileContentUiState,
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = innerPadding,
                 onClickItem = onFileClick,

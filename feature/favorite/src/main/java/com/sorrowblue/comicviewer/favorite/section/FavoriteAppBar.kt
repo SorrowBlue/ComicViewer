@@ -20,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.feature.favorite.R
-import com.sorrowblue.comicviewer.file.FileListType
-import com.sorrowblue.comicviewer.file.FileListTypeIconButton
+import com.sorrowblue.comicviewer.file.component.FileContentLayout
+import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenuState
@@ -29,7 +29,7 @@ import com.sorrowblue.comicviewer.framework.compose.material3.rememberOverflowMe
 
 internal data class FavoriteAppBarUiState(
     val title: String = "",
-    val fileListType: FileListType = FileListType.Grid(3)
+    val fileContentLayout: FileContentLayout = FileContentLayout.Grid()
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,10 +59,10 @@ internal fun FavoriteAppBar(
                 }
             }
 
-            FileListTypeIconButton(uiState.fileListType, onFileListTypeChange)
+            FileContentLayoutButton(fileContentLayout = uiState.fileContentLayout, onFileListTypeChange)
 
             OverflowMenu(overflowMenuState) {
-                if (uiState.fileListType is FileListType.Grid) {
+                if (uiState.fileContentLayout is FileContentLayout.Grid) {
                     DropdownMenuItem(
                         text = { Text(text = "Change Grid size") },
                         leadingIcon = { Icon(Icons.TwoTone.Grid4x4, "Change grid size") },

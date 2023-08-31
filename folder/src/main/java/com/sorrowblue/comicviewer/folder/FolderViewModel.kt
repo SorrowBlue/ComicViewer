@@ -14,9 +14,8 @@ import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.file.FileListType
-import com.sorrowblue.comicviewer.file.component.FileContentLayout
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
+import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
@@ -213,26 +212,5 @@ private fun <T, E : Resource.AppError> Flow<Resource<T, E>>.filterSuccess(): Flo
         it is Resource.Success<T>
     }.map {
         (it as Resource.Success<T>).data
-    }
-}
-
-fun FolderDisplaySettings.toFileListType(): FileListType {
-    return when (display) {
-        FolderDisplaySettings.Display.GRID -> FileListType.Grid(spanCount)
-        FolderDisplaySettings.Display.LIST -> FileListType.List
-    }
-}
-
-
-fun FolderDisplaySettings.toFileContentLayout(): FileContentLayout {
-    return when (display) {
-        FolderDisplaySettings.Display.GRID -> FileContentLayout.Grid(
-            when (columnSize) {
-                FolderDisplaySettings.Size.SMALL -> FileContentLayout.GridSize.Small
-                FolderDisplaySettings.Size.MEDIUM -> FileContentLayout.GridSize.Medium
-                FolderDisplaySettings.Size.LARGE -> FileContentLayout.GridSize.Large
-            }
-        )
-        FolderDisplaySettings.Display.LIST -> FileContentLayout.List
     }
 }
