@@ -129,6 +129,7 @@ dependencies {
     implementation(projects.feature.search)
     implementation(projects.feature.favorite)
     implementation(projects.feature.favorite.add)
+    implementation(projects.feature.history)
     implementation(projects.feature.readlater)
     implementation(projects.book)
     implementation(projects.bookshelf)

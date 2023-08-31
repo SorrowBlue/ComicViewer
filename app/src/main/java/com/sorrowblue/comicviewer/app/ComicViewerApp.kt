@@ -32,6 +32,10 @@ import com.sorrowblue.comicviewer.favorite.navigation.FavoriteRoute
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
+import com.sorrowblue.comicviewer.feature.history.navigation.HistoryFolderRoute
+import com.sorrowblue.comicviewer.feature.history.navigation.HistoryGroupRoute
+import com.sorrowblue.comicviewer.feature.history.navigation.HistoryRoute
+import com.sorrowblue.comicviewer.feature.history.navigation.historyGroup
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterFolderRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGroupRoute
@@ -113,6 +117,14 @@ private fun NavGraphBuilder.mainScreen(
                 onAddFavoriteClick = navController::navigateToFavoriteAdd,
                 navigateToSearch = navController::navigateToSearch
             )
+            historyGroup(
+                contentPadding = contentPadding,
+                navController = mainNestedNavController,
+                onBookClick = navController::navigateToBook,
+                onSettingsClick = navController::navigateToSettings,
+                onAddFavoriteClick = navController::navigateToFavoriteAdd,
+                navigateToSearch = navController::navigateToSearch
+            )
         },
     )
 }
@@ -125,6 +137,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
             BookshelfRoute, BookshelfFolderRoute -> MainScreenTab.Bookshelf
             FavoriteListRoute, FavoriteRoute, FavoriteFolderRoute -> MainScreenTab.Favorite
             ReadLaterRoute, ReadLaterFolderRoute -> MainScreenTab.Readlater
+            HistoryRoute, HistoryFolderRoute -> MainScreenTab.Library
             else -> MainScreenTab.Bookshelf
         }
     }
@@ -137,7 +150,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
             MainScreenTab.Bookshelf -> BookshelfGroupRoute
             MainScreenTab.Favorite -> FavoriteGroupRoute
             MainScreenTab.Readlater -> ReadlaterGroupRoute
-            MainScreenTab.Library -> TODO()
+            MainScreenTab.Library -> HistoryGroupRoute
         }.let { route ->
             navController.navigate(
                 route,

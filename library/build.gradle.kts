@@ -16,5 +16,5 @@ android {
 dependencies {
     implementation(projects.framework.ui)
     implementation(projects.domain)
-    implementation(projects.history)
+    implementation(projects.feature.history)
 }

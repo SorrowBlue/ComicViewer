@@ -2,16 +2,19 @@ package com.sorrowblue.comicviewer.file.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 
 data class FileContentUiState(
     val layout: FileContentLayout = FileContentLayout.Grid()
@@ -56,6 +59,7 @@ private fun FileGridContent(
     state: LazyStaggeredGridState
 ) {
     LazyVerticalStaggeredGrid(
+        modifier = Modifier.padding(AppMaterialTheme.dimens.margin),
         columns = StaggeredGridCells.Adaptive(
             when (size) {
                 FileContentLayout.GridSize.Small -> 88.dp
@@ -89,15 +93,15 @@ private fun FileListContent(
     state: LazyStaggeredGridState
 ) {
     LazyVerticalStaggeredGrid(
+        modifier = Modifier.padding(AppMaterialTheme.dimens.margin),
         columns = StaggeredGridCells.Fixed(1),
         state = state,
         contentPadding = contentPadding,
         verticalItemSpacing = 8.dp,
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
             val item = lazyPagingItems[it]
-            FileGrid(
+            FileList(
                 file = item,
                 onClick = { onClickItem(item!!) },
                 onLongClick = { onLongClickItem(item!!) },
