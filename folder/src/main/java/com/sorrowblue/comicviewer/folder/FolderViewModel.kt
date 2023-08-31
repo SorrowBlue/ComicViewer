@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySet
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
-import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
+import com.sorrowblue.comicviewer.file.component.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.Sort
 import com.sorrowblue.comicviewer.folder.section.SortSheetUiState

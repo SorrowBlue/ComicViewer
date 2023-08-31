@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.file.R
+import com.sorrowblue.comicviewer.feature.file.R
 
 sealed interface FileContentLayout {
 

@@ -22,7 +22,7 @@ dependencies {
     implementation(projects.framework.ui)
     implementation(projects.framework.compose)
     implementation(projects.domain)
-    implementation(projects.file)
+    implementation(projects.feature.file)
 
     implementation(libs.androidx.work.runtime.ktx)
 }

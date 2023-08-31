@@ -125,7 +125,7 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.settings)
     implementation(projects.folder)
-    implementation(projects.file)
+    implementation(projects.feature.file)
     implementation(projects.feature.search)
     implementation(projects.feature.favorite)
     implementation(projects.feature.favorite.add)

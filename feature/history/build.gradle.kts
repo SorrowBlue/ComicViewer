@@ -10,6 +10,6 @@ android {
 dependencies {
     implementation(projects.framework.compose)
     implementation(projects.domain)
-    implementation(projects.file)
+    implementation(projects.feature.file)
     implementation(projects.folder)
 }

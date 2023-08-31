@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.domain.usecase.paging.PagingHistoryBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
-import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
+import com.sorrowblue.comicviewer.file.component.FileInfoSheetUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

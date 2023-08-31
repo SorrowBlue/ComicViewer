@@ -20,8 +20,8 @@ import com.sorrowblue.comicviewer.feature.history.section.EmptyContent
 import com.sorrowblue.comicviewer.feature.history.section.HistoryAppBar
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
-import com.sorrowblue.comicviewer.folder.section.FileInfoSheet
-import com.sorrowblue.comicviewer.folder.section.FileInfoSheetUiState
+import com.sorrowblue.comicviewer.file.component.FileInfoSheet
+import com.sorrowblue.comicviewer.file.component.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.framework.compose.isEmptyData
 
 @Composable

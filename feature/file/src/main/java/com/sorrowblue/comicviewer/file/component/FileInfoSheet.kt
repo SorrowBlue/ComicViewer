@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.folder.section
+package com.sorrowblue.comicviewer.file.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,17 +26,17 @@ import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
-import com.sorrowblue.comicviewer.file.R
+import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.file.info.Converter
 import com.sorrowblue.comicviewer.file.info.Converter.extension
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.copy
 import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
 
-
 sealed interface FileInfoSheetUiState {
 
     data object Hide : FileInfoSheetUiState
+
     data class Show(val file: File) : FileInfoSheetUiState
 }
 
