@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import java.lang.Integer.max
 import logcat.logcat
 
 @Composable
@@ -59,7 +60,7 @@ internal fun BookBottomBar(
                     onCurrentPageChange(it)
                 },
                 valueRange = range,
-                steps = totalPage - 2
+                steps = max(totalPage - 2, 0)
             )
             Text(
                 text =

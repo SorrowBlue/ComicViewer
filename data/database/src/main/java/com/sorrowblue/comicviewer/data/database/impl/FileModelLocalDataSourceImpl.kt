@@ -204,4 +204,12 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
             updateSimpleAll(existsFiles.map(FileModel::toSimpleModel))
         }
     }
+
+    override suspend fun deleteAll2(bookshelfModelId: BookshelfModelId) {
+        dao.deleteAll(bookshelfModelId.value)
+    }
+
+    override suspend fun getCacheKeyList(bookshelfModelId: BookshelfModelId): List<String> {
+        return dao.cacheKeyList(bookshelfModelId.value)
+    }
 }

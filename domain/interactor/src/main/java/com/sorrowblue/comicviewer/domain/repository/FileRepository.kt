@@ -67,4 +67,6 @@ interface FileRepository {
     suspend fun deleteThumbnails()
 
     suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>)
+    suspend fun deleteAllDB(bookshelfId: BookshelfId)
+    suspend fun deleteAllCache(id: BookshelfId)
 }

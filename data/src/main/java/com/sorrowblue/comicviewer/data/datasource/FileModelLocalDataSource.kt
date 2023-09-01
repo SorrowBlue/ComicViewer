@@ -123,4 +123,6 @@ interface FileModelLocalDataSource {
     suspend fun deleteThumbnails()
     suspend fun deleteHistory(bookshelfModelId: BookshelfModelId, list: List<String>)
     suspend fun updateHistory(fileModel: FileModel, files: List<FileModel>)
+    suspend fun deleteAll2(bookshelfModelId: BookshelfModelId)
+    suspend fun getCacheKeyList(bookshelfModelId: BookshelfModelId): List<String>
 }

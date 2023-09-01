@@ -10,7 +10,14 @@ internal class ImageCacheDataSourceImpl @Inject constructor(
 ) : ImageCacheDataSource {
 
     @OptIn(ExperimentalCoilApi::class)
-    override suspend fun deleteThumbnails() {
-        thumbnailDiskCache.get().clear()
+    override suspend fun deleteThumbnails(list: List<String>) {
+        val diskCache = thumbnailDiskCache.get() ?: return
+        if (list.isEmpty()) {
+            diskCache.clear()
+        } else {
+            list.forEach {
+                diskCache.remove(it)
+            }
+        }
     }
 }

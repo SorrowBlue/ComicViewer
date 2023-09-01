@@ -70,7 +70,7 @@ fun NavGraphBuilder.bookshelfGroup(
         )
         bookshelfEditScreen(
             onBackClick = navController::popBackStack,
-            onComplete = { navController.popBackStack(BookshelfSelectionRoute, true) }
+            onComplete = { navController.popBackStack(BookshelfRoute, false) }
         )
         folderScreen(
             contentPadding = contentPadding,

@@ -1,13 +1,12 @@
 package com.sorrowblue.comicviewer.domain.interactor.bookshelf
 
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.fold
 import com.sorrowblue.comicviewer.framework.onError
-import com.sorrowblue.comicviewer.framework.onSuccess
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.flow
  * @property bookshelfRepository
  */
 internal class RegisterBookshelfInteractor @Inject constructor(
+    private val fileRepository: FileRepository,
     private val bookshelfRepository: BookshelfRepository
 ) : RegisterBookshelfUseCase() {
 
@@ -35,19 +35,41 @@ internal class RegisterBookshelfInteractor @Inject constructor(
                     )
                 )
             }
-            val folder = Folder(request.bookshelf.id, request.bookshelf.displayName, "", request.path, 0, 0)
-            val registerResource =
-                bookshelfRepository.register(request.bookshelf, folder).first().fold({
-                    Resource.Success(it)
-                }, {
-                    Resource.Error(
-                        when (it) {
-                            BookshelfRepository.Error.NotFound -> Error.Path
-                            BookshelfRepository.Error.Network -> Error.Network
-                            BookshelfRepository.Error.System -> Error.Auth
+            val registerResource = fileRepository
+                .getFolder(request.bookshelf, request.path)
+                .fold(
+                    { folder ->
+                        val root = fileRepository.getRoot(request.bookshelf.id).dataOrNull
+                        if (root != null && root.path != folder.path) {
+                            // 別の本棚を登録する場合、一旦削除
+                            fileRepository.deleteAllCache(request.bookshelf.id)
+                            fileRepository.deleteAllDB(request.bookshelf.id)
                         }
-                    )
-                })
+                        bookshelfRepository
+                            .register(request.bookshelf, folder)
+                            .first()
+                            .fold(
+                                {
+                                    Resource.Success(it)
+                                },
+                                {
+                                    Resource.Error(
+                                        when (it) {
+                                            BookshelfRepository.Error.NotFound -> Error.Path
+                                            BookshelfRepository.Error.Network -> Error.Network
+                                            BookshelfRepository.Error.System -> Error.Auth
+                                        }
+                                    )
+                                }
+                            )
+                    },
+                    {
+                        Resource.Error(Error.System)
+                    },
+                    {
+                        Resource.Error(Error.System)
+                    }
+                )
             emit(registerResource)
         }
     }

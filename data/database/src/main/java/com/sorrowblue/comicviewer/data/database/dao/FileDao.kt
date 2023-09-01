@@ -198,4 +198,10 @@ internal interface FileDao {
 
     @Query("UPDATE file set last_read = 0, last_read_page = 0  WHERE bookshelf_id = :bookshelfId AND path IN (:list)")
     suspend fun deleteHistory(bookshelfId: Int, list: Array<String>)
+
+    @Query("DELETE FROM file WHERE bookshelf_id = :id")
+    suspend fun deleteAll(id: Int)
+
+    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :id")
+    suspend fun cacheKeyList(id: Int): List<String>
 }
