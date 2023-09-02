@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.book.section
+package com.sorrowblue.comicviewer.feature.book.section
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
-import com.sorrowblue.comicviewer.book.trimBorders
+import com.sorrowblue.comicviewer.feature.book.trimBorders
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.request.BookPageRequest
 

@@ -1,10 +1,8 @@
-package com.sorrowblue.comicviewer.book
+package com.sorrowblue.comicviewer.feature.book
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.book.compose.BookArgs
-import com.sorrowblue.comicviewer.book.section.BookPagerUiState
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.usecase.GetNextComicRel
@@ -12,6 +10,8 @@ import com.sorrowblue.comicviewer.domain.usecase.favorite.GetNextFavoriteBookUse
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
+import com.sorrowblue.comicviewer.feature.book.navigation.BookArgs
+import com.sorrowblue.comicviewer.feature.book.section.BookPagerUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,11 +42,15 @@ internal class BookViewModel @Inject constructor(
                 nextBook = nextBook(GetNextComicRel.PREV),
                 prevBook = nextBook(GetNextComicRel.NEXT),
             )
-            _uiState.value = BookScreenUiState.Loaded(
-                book,
-                bookPagerUiState,
-                true
-            )
+            if (book.totalPageCount <= 0) {
+                _uiState.value = BookScreenUiState.Empty(book)
+            } else {
+                _uiState.value = BookScreenUiState.Loaded(
+                    book,
+                    bookPagerUiState,
+                    true
+                )
+            }
         }
     }
 
@@ -72,7 +76,8 @@ internal class BookViewModel @Inject constructor(
         val uiState = _uiState.value
         _uiState.value = when (uiState) {
             is BookScreenUiState.Loaded -> uiState.copy(isVisibleTooltip = !uiState.isVisibleTooltip)
-            BookScreenUiState.Loading -> uiState
+            BookScreenUiState.Loading -> return
+            is BookScreenUiState.Empty -> return
         }
     }
 

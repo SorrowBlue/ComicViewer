@@ -1,12 +1,18 @@
-package com.sorrowblue.comicviewer.book
+package com.sorrowblue.comicviewer.feature.book
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
@@ -28,18 +34,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sorrowblue.comicviewer.book.section.BookBottomBar
-import com.sorrowblue.comicviewer.book.section.BookPager
-import com.sorrowblue.comicviewer.book.section.BookPagerUiState
 import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
+import com.sorrowblue.comicviewer.feature.book.section.BookPager
+import com.sorrowblue.comicviewer.feature.book.section.BookPagerUiState
+import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
 internal sealed interface BookScreenUiState {
 
     data object Loading : BookScreenUiState
+
+    data class Empty(val book: Book) : BookScreenUiState
 
     data class Loaded(
         val book: Book,
@@ -93,7 +103,6 @@ internal fun BookScreen(
                     onPageIndexChange(pagerState.currentPage - 1)
                 }
             }
-            pagerState.currentPage
             Scaffold(
                 topBar = {
                     AnimatedVisibility(
@@ -133,7 +142,6 @@ internal fun BookScreen(
                     onNextBookClick = onNextBookClick
                 )
             }
-
         }
 
         BookScreenUiState.Loading -> {
@@ -143,5 +151,47 @@ internal fun BookScreen(
                 CircularProgressIndicator()
             }
         }
+
+        is BookScreenUiState.Empty -> {
+            sys.isStatusBarVisible = true
+            sys.isNavigationBarVisible = true
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text(text = uiState.book.name) },
+                        navigationIcon = {
+                            IconButton(onClick = onBackClick) {
+                                Icon(Icons.TwoTone.ArrowBack, "Back")
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                                elevation = 3.0.dp
+                            )
+                        )
+                    )
+                }
+            ) {
+                PreviewEmpty(modifier = Modifier.padding(it))
+            }
+        }
+    }
+}
+
+@Composable
+fun PreviewEmpty(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(AppMaterialTheme.dimens.margin),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = com.sorrowblue.comicviewer.framework.compose.R.drawable.ic_undraw_faq_re_31cw),
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(text = "Couldn't open the book", style = MaterialTheme.typography.headlineSmall)
     }
 }

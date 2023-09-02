@@ -19,8 +19,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.sorrowblue.comicviewer.book.compose.bookScreen
-import com.sorrowblue.comicviewer.book.compose.navigateToBook
+import com.sorrowblue.comicviewer.feature.book.navigation.bookScreen
+import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfFolderRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGroupRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfRoute

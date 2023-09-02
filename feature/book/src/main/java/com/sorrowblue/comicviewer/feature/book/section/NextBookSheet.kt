@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.book.section
+package com.sorrowblue.comicviewer.feature.book.section
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

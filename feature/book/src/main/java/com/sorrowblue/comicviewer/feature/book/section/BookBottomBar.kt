@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.book.section
+package com.sorrowblue.comicviewer.feature.book.section
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically

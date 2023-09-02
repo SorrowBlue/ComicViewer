@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.book
+package com.sorrowblue.comicviewer.feature.book
 
 import android.graphics.Bitmap
 

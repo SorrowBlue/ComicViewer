@@ -25,8 +25,6 @@ dependencies {
     api(libs.androidx.window)
     implementation("androidx.compose.ui:ui-util:1.5.0")
     api("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
-    api("com.google.accompanist:accompanist-permissions:0.33.0-alpha")
-    api("com.google.accompanist:accompanist-systemuicontroller:0.33.0-alpha")
     api(libs.androidx.hilt.navigation.compose)
     api(libs.coil.compose)
     api(libs.androidx.paging.compose)
