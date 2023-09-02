@@ -38,7 +38,6 @@ dependencies {
     api(platform(libs.androidx.compose.bom))
     api(libs.bundles.androidx.compose)
     api(libs.coil.compose)
-    debugImplementation(libs.bundles.androidx.compose.debug)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 }

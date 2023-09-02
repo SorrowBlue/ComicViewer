@@ -23,7 +23,7 @@ dependencies {
     api(platform(libs.androidx.compose.bom))
     api(libs.bundles.androidx.compose)
     api(libs.androidx.window)
-    implementation("androidx.compose.ui:ui-util:1.5.0")
+    implementation(libs.androidx.compose.ui.util)
     api("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
     api(libs.androidx.hilt.navigation.compose)
     api(libs.coil.compose)
