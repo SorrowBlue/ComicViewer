@@ -29,6 +29,10 @@ android {
         logger.lifecycle("versionName=$versionName")
     }
 
+    androidResources {
+        generateLocaleConfig = true
+    }
+
     signingConfigs {
         release {
             storeFile =
@@ -140,6 +144,9 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.browser)
+    implementation("com.google.android.play:review-ktx:2.0.1")
+    implementation(libs.mikepenz.aboutlibraries)
 
 //    debugImplementation(libs.squareup.leakcanary.android)
 
