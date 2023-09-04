@@ -61,6 +61,7 @@ import com.sorrowblue.comicviewer.settings.section.SettingsTopAppBar
 @Composable
 fun SettingsScreen(
     onBackClick: () -> Unit = {},
+    onDisplayClick: () -> Unit = {},
     onAppInfoClick: () -> Unit = {},
     onAppLanguageClick: () -> Unit = {},
 ) {
@@ -83,7 +84,7 @@ fun SettingsScreen(
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_display)) },
                 leadingContent = { Icon(Icons.TwoTone.DisplaySettings, null) },
-                modifier = Modifier.clickable { },
+                modifier = Modifier.clickable(onClick = onDisplayClick),
             )
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_folder)) },

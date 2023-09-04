@@ -4,12 +4,13 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.settings.DarkMode
-import com.sorrowblue.comicviewer.domain.entity.settings.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.framework.ui.navigation.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -17,10 +18,14 @@ internal class SettingsDisplayViewModel @Inject constructor(
     private val settingsUseCase: ManageDisplaySettingsUseCase
 ) : ViewModel() {
 
-    val darkMode = settingsUseCase.settings.map { it.darkMode }.stateIn { null }
+    private val _uiState = MutableStateFlow(SettingsDisplayScreenUiState())
+    val uiState = _uiState.asStateFlow()
 
-    val folderThumbnailOrder =
-        settingsUseCase.settings.map { it.folderThumbnailOrder }.stateIn { null }
+    init {
+        settingsUseCase.settings.onEach {
+            _uiState.value = _uiState.value.copy(darkMode = it.darkMode)
+        }.launchIn(viewModelScope)
+    }
 
     fun updateDarkMode(newDarkMode: DarkMode) {
         viewModelScope.launch {
@@ -30,12 +35,6 @@ internal class SettingsDisplayViewModel @Inject constructor(
                 DarkMode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
                 DarkMode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
             }.let(AppCompatDelegate::setDefaultNightMode)
-        }
-    }
-
-    fun updateFolderThumbnailOrder(folderThumbnailOrder: FolderThumbnailOrder) {
-        viewModelScope.launch {
-            settingsUseCase.edit { it.copy(folderThumbnailOrder = folderThumbnailOrder) }
         }
     }
 }

@@ -8,6 +8,8 @@ import androidx.navigation.navigation
 import com.sorrowblue.comicviewer.settings.SettingsScreen
 import com.sorrowblue.comicviewer.settings.app.navigation.navigateToSettingsAppInfo
 import com.sorrowblue.comicviewer.settings.app.navigation.settingsAppInfoScreen
+import com.sorrowblue.comicviewer.settings.display.navigation.navigateToSettingsDisplay
+import com.sorrowblue.comicviewer.settings.display.navigation.settingsDisplayScreen
 import com.sorrowblue.comicviewer.settings.language.InAppLanguagePickerScreen
 
 private const val SettingsNavGraphRoute = "settings_group"
@@ -15,13 +17,15 @@ private const val SettingsRoute = "settings"
 private const val InAppLanguagePickerRoute = "settings/inapplanguagepicker"
 
 private fun NavGraphBuilder.settingsScreen(
-    onAppInfoClick: () -> Unit,
     onBackClick: () -> Unit,
+    onDisplayClick: () -> Unit,
+    onAppInfoClick: () -> Unit,
     onAppLanguageClick: () -> Unit
 ) {
     composable(SettingsRoute) {
         SettingsScreen(
             onBackClick = onBackClick,
+            onDisplayClick = onDisplayClick,
             onAppInfoClick = onAppInfoClick,
             onAppLanguageClick = onAppLanguageClick
         )
@@ -43,10 +47,12 @@ fun NavGraphBuilder.settingsNavGraph(
 ) {
     navigation(route = SettingsNavGraphRoute, startDestination = SettingsRoute) {
         settingsScreen(
-            onAppInfoClick = navController::navigateToSettingsAppInfo,
             onBackClick = navController::popBackStack,
+            onDisplayClick = navController::navigateToSettingsDisplay,
+            onAppInfoClick = navController::navigateToSettingsAppInfo,
             onAppLanguageClick = navController::navigateToInAppLanguagePickerScreen
         )
+        settingsDisplayScreen(onBackClick = navController::popBackStack)
         settingsAppInfoScreen(
             onBackClick = navController::popBackStack,
             onLicenceClick = onLicenceClick,
