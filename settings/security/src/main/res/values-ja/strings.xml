@@ -8,8 +8,6 @@
     <string name="settings_security_summary_use_biometric_auth">パスワードの代わりに生体認証を使用します</string>
     <string name="settings_security_title_password">パスワード</string>
 
-
-    <!--パスワード設定/変更/削除ダイアログ-->
     <string name="settings_security_password_manage_dialog_title_password_setting">パスワードの設定</string>
     <string name="settings_security_password_manage_dialog_title_change_password">パスワードの変更</string>
     <string name="settings_security_password_manage_dialog_title_delete_password">パスワードの削除</string>

@@ -25,7 +25,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -39,13 +38,8 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditor
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.DeviceStorageInfoEditor
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbServerInfoEditor
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.compose.CollectAsEffect
 import com.sorrowblue.comicviewer.framework.compose.copy
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 sealed interface BookshelfEditScreenUiState {
 
@@ -60,16 +54,6 @@ sealed interface BookshelfEditScreenUiState {
 
 sealed interface UiEvent {
     data class ShowSnackbar(val message: String) : UiEvent
-}
-
-@Composable
-fun <T> Flow<T>.collectAsEffect(
-    context: CoroutineContext = EmptyCoroutineContext,
-    block: suspend (T) -> Unit
-) {
-    LaunchedEffect(key1 = Unit) {
-        onEach(block).flowOn(context).launchIn(this)
-    }
 }
 
 @Composable
@@ -93,7 +77,7 @@ internal fun BookshelfEditRoute(
             Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
     }
     val snackbarHostState = remember { SnackbarHostState() }
-    viewModel.uiEvents.collectAsEffect {
+    viewModel.uiEvents.CollectAsEffect {
         when (it) {
             is UiEvent.ShowSnackbar -> snackbarHostState.showSnackbar(it.message)
         }

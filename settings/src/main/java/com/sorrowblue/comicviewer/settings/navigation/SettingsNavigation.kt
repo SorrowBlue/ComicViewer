@@ -15,6 +15,8 @@ import com.sorrowblue.comicviewer.settings.folder.navigation.navigateToSettingsS
 import com.sorrowblue.comicviewer.settings.folder.navigation.settingsFolderScreen
 import com.sorrowblue.comicviewer.settings.folder.navigation.settingsSupportExtensionScreen
 import com.sorrowblue.comicviewer.settings.language.InAppLanguagePickerScreen
+import com.sorrowblue.comicviewer.settings.security.navigation.navigateToSettingsSecurity
+import com.sorrowblue.comicviewer.settings.security.navigation.settingsSecurityScreen
 
 private const val SettingsNavGraphRoute = "settings_group"
 private const val SettingsRoute = "settings"
@@ -24,6 +26,7 @@ private fun NavGraphBuilder.settingsScreen(
     onBackClick: () -> Unit,
     onDisplayClick: () -> Unit,
     onFolderClick: () -> Unit,
+    onSecurityClick: () -> Unit,
     onAppInfoClick: () -> Unit,
     onAppLanguageClick: () -> Unit
 ) {
@@ -32,6 +35,7 @@ private fun NavGraphBuilder.settingsScreen(
             onBackClick = onBackClick,
             onDisplayClick = onDisplayClick,
             onFolderClick = onFolderClick,
+            onSecurityClick = onSecurityClick,
             onAppInfoClick = onAppInfoClick,
             onAppLanguageClick = onAppLanguageClick
         )
@@ -56,11 +60,16 @@ fun NavGraphBuilder.settingsNavGraph(
             onBackClick = navController::popBackStack,
             onDisplayClick = navController::navigateToSettingsDisplay,
             onFolderClick = navController::navigateToSettingsFolder,
+            onSecurityClick = navController::navigateToSettingsSecurity,
             onAppInfoClick = navController::navigateToSettingsAppInfo,
             onAppLanguageClick = navController::navigateToInAppLanguagePickerScreen
         )
         settingsDisplayScreen(onBackClick = navController::popBackStack)
-        settingsFolderScreen(onBackClick = navController::popBackStack, onExtensionClick = navController::navigateToSettingsSupportExtension)
+        settingsFolderScreen(
+            onBackClick = navController::popBackStack,
+            onExtensionClick = navController::navigateToSettingsSupportExtension
+        )
+        settingsSecurityScreen(onBackClick = navController::popBackStack)
         settingsSupportExtensionScreen(onBackClick = navController::popBackStack)
         settingsAppInfoScreen(
             onBackClick = navController::popBackStack,

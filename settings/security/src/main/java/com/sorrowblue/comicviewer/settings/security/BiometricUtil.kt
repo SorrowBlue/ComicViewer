@@ -1,18 +1,21 @@
 package com.sorrowblue.comicviewer.settings.security
 
+import androidx.annotation.IntDef
 import androidx.biometric.BiometricManager
 
-fun <R> BiometricManager.check(
-    onSuccess: () -> R,
-    noneEnrolled: () -> R,
-    notSupported: (Int) -> R
-): R {
-    return when (val state = canAuthenticateWeak()) {
-        BiometricManager.BIOMETRIC_SUCCESS -> onSuccess()
-        BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> noneEnrolled()
-        else -> notSupported(state)
-    }
-}
-
-fun BiometricManager.canAuthenticateWeak() =
+@AuthenticationStatus
+fun BiometricManager.canAuthenticateWeak(): Int =
     canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+
+@Target(AnnotationTarget.FUNCTION)
+@IntDef(
+    BiometricManager.BIOMETRIC_SUCCESS,
+    BiometricManager.BIOMETRIC_STATUS_UNKNOWN,
+    BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
+    BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE,
+    BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED,
+    BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
+    BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED
+)
+@Retention(AnnotationRetention.SOURCE)
+annotation class AuthenticationStatus

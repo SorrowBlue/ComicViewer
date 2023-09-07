@@ -1,27 +1,14 @@
 plugins {
-    id("build-logic.android.library")
-    id("com.sorrowblue.dagger-hilt")
-    id("org.jetbrains.kotlin.kapt")
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    id("com.sorrowblue.android-feature")
 }
 
 android {
-    resourcePrefix("settings_security")
-
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
+    namespace = "com.sorrowblue.comicviewer.settings.security"
 }
 
-kapt {
-    correctErrorTypes = true
-}
 dependencies {
-    implementation(projects.framework.settings)
+    implementation(projects.framework.compose)
     implementation(projects.domain)
 
     implementation(libs.androidx.biometric)
-
-    implementation(libs.androidx.hilt.navigation.fragment)
 }
