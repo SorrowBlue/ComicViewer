@@ -192,8 +192,5 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindManageFolderDisplaySettingsUseCase(interactor: ManageFolderDisplaySettingsInteractor): ManageFolderDisplaySettingsUseCase
 
     @Binds
-    abstract fun bindManageFolderSettingsUseCase(interactor: ManageFolderSettingsInteractor): ManageFolderSettingsUseCase
-
-    @Binds
     abstract fun bindManageSecuritySettingsUseCase(interactor: ManageSecuritySettingsInteractor): ManageSecuritySettingsUseCase
 }

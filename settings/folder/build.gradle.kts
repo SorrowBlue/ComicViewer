@@ -1,19 +1,15 @@
 plugins {
-    id("build-logic.android.library")
-    id("com.sorrowblue.dagger-hilt")
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    id("com.sorrowblue.android-feature")
 }
 
 android {
+    namespace = "com.sorrowblue.comicviewer.settings.folder"
     resourcePrefix("settings_folder")
-
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
 }
 
 dependencies {
-    implementation(projects.framework.settings)
+    implementation(projects.framework.compose)
     implementation(projects.domain)
+
+    implementation(libs.androidx.startup.runtime)
 }

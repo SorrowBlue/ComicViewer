@@ -7,9 +7,13 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySet
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -19,11 +23,17 @@ internal class SettingsFolderViewModel @Inject constructor(
     private val deleteThumbnailsUseCase: DeleteThumbnailsUseCase
 ) : ViewModel() {
 
-    val showPreview = manageFolderDisplaySettingsUseCase.settings.map { it.isEnabledThumbnail }
-        .distinctUntilChanged()
-    val resolveImageFolder =
-        manageFolderSettingsUseCase.settings.map { it.resolveImageFolder }.distinctUntilChanged()
+    private val _uiState = MutableStateFlow(SettingsFolderScreenUiState())
+    val uiState = _uiState.asStateFlow()
 
+    init {
+        manageFolderDisplaySettingsUseCase.settings.onEach {
+            _uiState.value = _uiState.value.copy(isThumbnailEnabled = it.isEnabledThumbnail)
+        }.launchIn(viewModelScope)
+        manageFolderSettingsUseCase.settings.onEach {
+            _uiState.value = _uiState.value.copy(isOpenImageFolder = it.resolveImageFolder)
+        }.launchIn(viewModelScope)
+    }
     fun updateShowPreview(newValue: Boolean) {
         viewModelScope.launch {
             manageFolderDisplaySettingsUseCase.edit {

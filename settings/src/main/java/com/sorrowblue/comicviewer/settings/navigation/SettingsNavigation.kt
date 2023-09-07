@@ -10,6 +10,10 @@ import com.sorrowblue.comicviewer.settings.app.navigation.navigateToSettingsAppI
 import com.sorrowblue.comicviewer.settings.app.navigation.settingsAppInfoScreen
 import com.sorrowblue.comicviewer.settings.display.navigation.navigateToSettingsDisplay
 import com.sorrowblue.comicviewer.settings.display.navigation.settingsDisplayScreen
+import com.sorrowblue.comicviewer.settings.folder.navigation.navigateToSettingsFolder
+import com.sorrowblue.comicviewer.settings.folder.navigation.navigateToSettingsSupportExtension
+import com.sorrowblue.comicviewer.settings.folder.navigation.settingsFolderScreen
+import com.sorrowblue.comicviewer.settings.folder.navigation.settingsSupportExtensionScreen
 import com.sorrowblue.comicviewer.settings.language.InAppLanguagePickerScreen
 
 private const val SettingsNavGraphRoute = "settings_group"
@@ -19,6 +23,7 @@ private const val InAppLanguagePickerRoute = "settings/inapplanguagepicker"
 private fun NavGraphBuilder.settingsScreen(
     onBackClick: () -> Unit,
     onDisplayClick: () -> Unit,
+    onFolderClick: () -> Unit,
     onAppInfoClick: () -> Unit,
     onAppLanguageClick: () -> Unit
 ) {
@@ -26,6 +31,7 @@ private fun NavGraphBuilder.settingsScreen(
         SettingsScreen(
             onBackClick = onBackClick,
             onDisplayClick = onDisplayClick,
+            onFolderClick = onFolderClick,
             onAppInfoClick = onAppInfoClick,
             onAppLanguageClick = onAppLanguageClick
         )
@@ -49,10 +55,13 @@ fun NavGraphBuilder.settingsNavGraph(
         settingsScreen(
             onBackClick = navController::popBackStack,
             onDisplayClick = navController::navigateToSettingsDisplay,
+            onFolderClick = navController::navigateToSettingsFolder,
             onAppInfoClick = navController::navigateToSettingsAppInfo,
             onAppLanguageClick = navController::navigateToInAppLanguagePickerScreen
         )
         settingsDisplayScreen(onBackClick = navController::popBackStack)
+        settingsFolderScreen(onBackClick = navController::popBackStack, onExtensionClick = navController::navigateToSettingsSupportExtension)
+        settingsSupportExtensionScreen(onBackClick = navController::popBackStack)
         settingsAppInfoScreen(
             onBackClick = navController::popBackStack,
             onLicenceClick = onLicenceClick,
