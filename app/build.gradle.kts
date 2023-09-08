@@ -139,7 +139,6 @@ dependencies {
     implementation(projects.library)
     implementation(projects.tutorial)
     implementation(projects.settings.security)
-    implementation(projects.settings.feature)
 
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.biometric)

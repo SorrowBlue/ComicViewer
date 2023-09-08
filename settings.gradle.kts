@@ -106,4 +106,3 @@ include(":settings:security")
 include(":settings:viewer")
 
 includeBuild("build-logic")
-include(":settings:feature")
