@@ -63,6 +63,7 @@ fun SettingsScreen(
     onBackClick: () -> Unit = {},
     onDisplayClick: () -> Unit = {},
     onFolderClick: () -> Unit = {},
+    onViewerClick: () -> Unit = {},
     onSecurityClick: () -> Unit = {},
     onAppInfoClick: () -> Unit = {},
     onAppLanguageClick: () -> Unit = {},
@@ -96,7 +97,7 @@ fun SettingsScreen(
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_viewer)) },
                 leadingContent = { Icon(Icons.TwoTone.Image, null) },
-                modifier = Modifier.clickable { },
+                modifier = Modifier.clickable(onClick = onViewerClick),
             )
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_security)) },

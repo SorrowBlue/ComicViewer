@@ -2,12 +2,13 @@ package com.sorrowblue.comicviewer.settings.viewer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -15,63 +16,92 @@ internal class SettingsViewerViewModel @Inject constructor(
     private val settingsUseCase: ManageViewerSettingsUseCase,
 ) : ViewModel() {
 
-    val settings = settingsUseCase.settings
-    val showStatusBar = settingsUseCase.settings.map { it.showStatusBar }.distinctUntilChanged()
-    val showNavigationBar =
-        settingsUseCase.settings.map { it.showNavigationBar }.distinctUntilChanged()
-    val notTurnOffScreen = settingsUseCase.settings.map { it.keepOnScreen }.distinctUntilChanged()
-    val brightnessControl =
-        settingsUseCase.settings.map { it.enableBrightnessControl }.distinctUntilChanged()
-    val brightnessLevel =
-        settingsUseCase.settings.map { it.screenBrightness }.distinctUntilChanged()
-    val imageQuality = settingsUseCase.settings.map { it.imageQuality }.distinctUntilChanged()
-    val preloadPages = settingsUseCase.settings.map { it.readAheadPageCount }.distinctUntilChanged()
+    private val _uiState = MutableStateFlow(SettingsViewerScreenUiState())
+    val uiState = _uiState.asStateFlow()
 
-    fun updateStatusBar(newValue: Boolean) {
+    init {
+        settingsUseCase.settings.onEach {
+            it.imageQuality
+            _uiState.value = _uiState.value.copy(
+                isStatusBarShow = it.showStatusBar,
+                isNavigationBarShow = it.showNavigationBar,
+                isTurnOnScreen = it.keepOnScreen,
+                isCacheImage = false,
+                isDisplayFirstPage = false,
+                isCutWhitespace = false,
+                preloadPages = it.readAheadPageCount.toFloat(),
+                imageQuality = it.imageQuality.toFloat(),
+                isFixScreenBrightness = it.enableBrightnessControl,
+                screenBrightness = it.screenBrightness
+            )
+        }.launchIn(viewModelScope)
+    }
+
+    fun onStatusBarShowChange(value: Boolean) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(showStatusBar = newValue) }
+            settingsUseCase.edit {
+                it.copy(showStatusBar = value)
+            }
         }
     }
 
-    fun updateNavigationBar(newValue: Boolean) {
+    fun onNavigationBarShowChange(value: Boolean) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(showNavigationBar = newValue) }
+            settingsUseCase.edit {
+                it.copy(showNavigationBar = value)
+            }
         }
     }
 
-    fun updateBrightnessLevel(brightness: Float) {
+    fun onTurnOnScreenChange(value: Boolean) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(screenBrightness = brightness) }
+            settingsUseCase.edit {
+                it.copy(keepOnScreen = value)
+            }
         }
     }
 
-    fun updateReadAheadPageCount(readAheadPageCount: Int) {
+    fun onCutWhitespaceChange(value: Boolean) {
+        /*TODO("Not yet implemented")*/
+    }
+
+    fun onCacheImageChange(value: Boolean) {
+        /*TODO("Not yet implemented")*/
+    }
+
+    fun onDisplayFirstPageChange(value: Boolean) {
+        /*TODO("Not yet implemented")*/
+    }
+
+    fun onImageQualityChange(value: Float) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(readAheadPageCount = readAheadPageCount) }
+            settingsUseCase.edit {
+                it.copy(imageQuality = value.toInt())
+            }
         }
     }
 
-    fun updateBrightnessControl(newValue: Boolean) {
+    fun onPreloadPagesChange(value: Float) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(enableBrightnessControl = newValue) }
+            settingsUseCase.edit {
+                it.copy(readAheadPageCount = value.toInt())
+            }
         }
     }
 
-    fun updateKeepOnScreen(newValue: Boolean) {
+    fun onFixScreenBrightnessChange(value: Boolean) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(keepOnScreen = newValue) }
+            settingsUseCase.edit {
+                it.copy(enableBrightnessControl = value)
+            }
         }
     }
 
-    fun updateImageQuality(newValue: Int) {
+    fun onScreenBrightnessChange(value: Float) {
         viewModelScope.launch {
-            settingsUseCase.edit { it.copy(imageQuality = newValue) }
-        }
-    }
-
-    fun updateBindingDirection(newValue: ViewerSettings.BindingDirection) {
-        viewModelScope.launch {
-            settingsUseCase.edit { it.copy(bindingDirection = newValue) }
+            settingsUseCase.edit {
+                it.copy(screenBrightness = value)
+            }
         }
     }
 }
