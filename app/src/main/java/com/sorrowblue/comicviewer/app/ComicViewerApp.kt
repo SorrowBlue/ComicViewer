@@ -48,10 +48,10 @@ import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGroupRou
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGroup
 import com.sorrowblue.comicviewer.feature.search.navigation.navigateToSearch
 import com.sorrowblue.comicviewer.feature.search.navigation.searchScreen
+import com.sorrowblue.comicviewer.feature.settings.navigation.navigateToSettings
+import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavGraph
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
-import com.sorrowblue.comicviewer.settings.navigation.navigateToSettings
-import com.sorrowblue.comicviewer.settings.navigation.settingsNavGraph
 import logcat.asLog
 import logcat.logcat
 

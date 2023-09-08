@@ -127,7 +127,6 @@ dependencies {
 
     implementation(projects.data.di)
     implementation(projects.domain)
-    implementation(projects.settings)
     implementation(projects.feature.book)
     implementation(projects.feature.bookshelf)
     implementation(projects.feature.file)
@@ -136,9 +135,10 @@ dependencies {
     implementation(projects.feature.history)
     implementation(projects.feature.readlater)
     implementation(projects.feature.search)
+    implementation(projects.feature.settings)
+    implementation(projects.feature.settings.security)
     implementation(projects.library)
     implementation(projects.tutorial)
-    implementation(projects.settings.security)
 
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.biometric)
