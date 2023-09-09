@@ -67,6 +67,7 @@ fun SettingsScreen(
     onSecurityClick: () -> Unit = {},
     onAppInfoClick: () -> Unit = {},
     onAppLanguageClick: () -> Unit = {},
+    onStartTutorialClick: () -> Unit = {},
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -114,7 +115,7 @@ fun SettingsScreen(
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_tutorial)) },
                 leadingContent = { Icon(Icons.TwoTone.Start, null) },
-                modifier = Modifier.clickable { },
+                modifier = Modifier.clickable(onClick = onStartTutorialClick),
             )
             val context = LocalContext.current
             ListItem(

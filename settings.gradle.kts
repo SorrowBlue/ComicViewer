@@ -58,7 +58,6 @@ include(":framework")
 include(":framework:compose")
 include(":framework:notification")
 include(":framework:resource")
-include(":framework:settings")
 include(":framework:ui")
 
 include(":domain")

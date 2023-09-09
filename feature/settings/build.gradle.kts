@@ -15,7 +15,6 @@ android {
 
 dependencies {
     implementation(projects.framework.compose)
-    implementation(projects.framework.settings)
     implementation(projects.domain)
     implementation(projects.feature.settings.display)
     implementation(projects.feature.settings.viewer)

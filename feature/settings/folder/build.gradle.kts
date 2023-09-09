@@ -12,4 +12,5 @@ dependencies {
     implementation(projects.domain)
 
     implementation(libs.androidx.startup.runtime)
+    implementation(libs.google.android.play.feature.delivery.ktx)
 }

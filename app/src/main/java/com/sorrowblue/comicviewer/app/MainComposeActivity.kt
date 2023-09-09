@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -15,11 +16,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainComposeActivity : AppCompatActivity() {
 
+    private val viewModel: ComicViewerAppViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        installSplashScreen()
-
-        super.onCreate(savedInstanceState)
+        installSplashScreen().apply {
+            super.onCreate(savedInstanceState)
+            setKeepOnScreenCondition(viewModel::shouldKeepOnScreen)
+        }
 
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
@@ -27,7 +31,7 @@ class MainComposeActivity : AppCompatActivity() {
 
         setContent {
             val windowSize = calculateWindowSizeClass(this)
-            ComicViewerApp(windowSize)
+            ComicViewerApp(windowsSize = windowSize, viewModel = viewModel)
         }
     }
 }

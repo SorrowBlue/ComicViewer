@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.navigateToS
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.settingsViewerScreen
 
 private const val SettingsNavGraphRoute = "settings_group"
-private const val SettingsRoute = "settings"
+const val SettingsRoute = "settings"
 private const val InAppLanguagePickerRoute = "settings/inapplanguagepicker"
 
 private fun NavGraphBuilder.settingsScreen(
@@ -31,7 +31,8 @@ private fun NavGraphBuilder.settingsScreen(
     onViewerClick: () -> Unit,
     onSecurityClick: () -> Unit,
     onAppInfoClick: () -> Unit,
-    onAppLanguageClick: () -> Unit
+    onAppLanguageClick: () -> Unit,
+    onStartTutorialClick: () -> Unit
 ) {
     composable(SettingsRoute) {
         SettingsScreen(
@@ -41,7 +42,8 @@ private fun NavGraphBuilder.settingsScreen(
             onViewerClick = onViewerClick,
             onSecurityClick = onSecurityClick,
             onAppInfoClick = onAppInfoClick,
-            onAppLanguageClick = onAppLanguageClick
+            onAppLanguageClick = onAppLanguageClick,
+            onStartTutorialClick = onStartTutorialClick
         )
     }
 }
@@ -58,6 +60,7 @@ fun NavGraphBuilder.settingsNavGraph(
     navController: NavController,
     onLicenceClick: () -> Unit,
     onRateAppClick: () -> Unit,
+    onStartTutorialClick: () -> Unit,
 ) {
     navigation(route = SettingsNavGraphRoute, startDestination = SettingsRoute) {
         settingsScreen(
@@ -67,7 +70,8 @@ fun NavGraphBuilder.settingsNavGraph(
             onViewerClick = navController::navigateToSettingsViewer,
             onSecurityClick = navController::navigateToSettingsSecurity,
             onAppInfoClick = navController::navigateToSettingsAppInfo,
-            onAppLanguageClick = navController::navigateToInAppLanguagePickerScreen
+            onAppLanguageClick = navController::navigateToInAppLanguagePickerScreen,
+            onStartTutorialClick = onStartTutorialClick
         )
         settingsDisplayScreen(onBackClick = navController::popBackStack)
         settingsFolderScreen(

@@ -13,6 +13,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -52,21 +54,56 @@ import com.sorrowblue.comicviewer.feature.settings.navigation.navigateToSettings
 import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavGraph
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
+import com.sorrowblue.comicviewer.tutorial.navigation.TutorialRoute
+import com.sorrowblue.comicviewer.tutorial.navigation.navigateToTutorial
+import com.sorrowblue.comicviewer.tutorial.navigation.tutorialScreen
 import logcat.asLog
 import logcat.logcat
+
+sealed interface ComicViewerAppUiState {
+
+    data object Initializing : ComicViewerAppUiState
+
+    sealed interface Completed : ComicViewerAppUiState {
+
+        val startDestination: String
+    }
+
+    data object Tutorial : Completed {
+        override val startDestination = TutorialRoute
+    }
+
+    data object Main : Completed {
+        override val startDestination = mainScreenRoute
+    }
+}
 
 @Composable
 fun ComicViewerApp(
     windowsSize: WindowSizeClass,
+    viewModel: ComicViewerAppViewModel,
     modifier: Modifier = Modifier
 ) {
+    val navController = rememberNavController()
+
     AppMaterialTheme {
         CompositionLocalProvider(LocalWindowSize provides windowsSize) {
             Surface(
                 modifier = modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background,
             ) {
-                ComicViewerNavHost(windowsSize = windowsSize)
+                val uiState by viewModel.uiState.collectAsState()
+                when (uiState) {
+                    ComicViewerAppUiState.Initializing -> Unit
+                    is ComicViewerAppUiState.Completed -> {
+                        ComicViewerNavHost(
+                            uiState = uiState as ComicViewerAppUiState.Completed,
+                            windowsSize = windowsSize,
+                            navController = navController,
+                            onTutorialComplete = viewModel::completeTutorial
+                        )
+                    }
+                }
             }
         }
     }
@@ -74,13 +111,17 @@ fun ComicViewerApp(
 
 @Composable
 fun ComicViewerNavHost(
+    uiState: ComicViewerAppUiState.Completed,
     windowsSize: WindowSizeClass,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController,
+    onTutorialComplete: () -> Unit
 ) {
 
     val context = LocalContext.current
-
-    NavHostWithSharedAxisX(navController = navController, startDestination = mainScreenRoute) {
+    NavHostWithSharedAxisX(
+        navController = navController,
+        startDestination = uiState.startDestination
+    ) {
         mainScreen(windowsSize, navController)
         searchScreen(navController::popBackStack)
         settingsNavGraph(
@@ -112,7 +153,18 @@ fun ComicViewerNavHost(
                         )
                     }
                 }
-            })
+            },
+            onStartTutorialClick = navController::navigateToTutorial
+        )
+        tutorialScreen(
+            onComplete = {
+                if (uiState == ComicViewerAppUiState.Tutorial) {
+                    onTutorialComplete()
+                } else {
+                    navController.popBackStack()
+                }
+            }
+        )
         bookScreen(
             onBackClick = navController::popBackStack,
             onNextBookClick = {

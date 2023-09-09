@@ -1,149 +1,20 @@
 package com.sorrowblue.comicviewer.tutorial
 
-import android.os.Bundle
-import android.view.View
-import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.android.play.core.ktx.bytesDownloaded
 import com.google.android.play.core.ktx.errorCode
-import com.google.android.play.core.ktx.moduleNames
-import com.google.android.play.core.ktx.requestInstall
-import com.google.android.play.core.ktx.status
-import com.google.android.play.core.ktx.totalBytesToDownload
-import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallSessionState
-import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
-import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
-import com.sorrowblue.comicviewer.framework.ui.flow.launchInWithLifecycle
-import com.sorrowblue.comicviewer.framework.ui.fragment.FrameworkFragment
-import com.sorrowblue.comicviewer.framework.ui.fragment.makeSnackbar
-import com.sorrowblue.comicviewer.tutorial.databinding.TutorialFragmentDocumentBinding
-import com.sorrowblue.jetpack.binding.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
-class TutorialDocumentFragment : FrameworkFragment(R.layout.tutorial_fragment_document) {
+internal sealed interface SplitInstallError {
+    val message: String
 
-    private val binding: TutorialFragmentDocumentBinding by viewBinding()
-    private val viewModel: TutorialDocumentViewModel by viewModels()
+    data class NotSupport(override val message: String) : SplitInstallError
+    data class App(override val message: String) : SplitInstallError
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.lifecycle.addObserver(viewModel)
-        binding.install.setOnClickListener {
-            binding.install.isEnabled = false
-            viewModel.requestInstall()
-        }
-        viewModel.state.onEach {
-            when (it?.status) {
-                SplitInstallSessionStatus.PENDING -> {
-                    binding.install.text = "PENDING"
-                    binding.install.isEnabled = false
-                    binding.progress.isVisible = true
-                    binding.progress.isIndeterminate = true
-                }
-
-                SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION -> {
-                    binding.install.text = "REQUIRES_USER_CONFIRMATION"
-                    binding.install.isEnabled = false
-                    binding.progress.isVisible = true
-                    binding.progress.isIndeterminate = true
-                    viewModel.splitInstallManager.startConfirmationDialogForResult(
-                        it,
-                        requireActivity(),
-                        200
-                    )
-                }
-
-                SplitInstallSessionStatus.DOWNLOADING -> {
-                    binding.install.text = "DOWNLOADING"
-                    binding.install.isEnabled = false
-                    binding.progress.isVisible = true
-                    binding.progress.isIndeterminate = false
-                    binding.progress.max = it.totalBytesToDownload.toInt()
-                    binding.progress.progress = it.bytesDownloaded.toInt()
-                }
-
-                SplitInstallSessionStatus.DOWNLOADED -> {
-                    binding.install.text = "DOWNLOADED"
-                    binding.install.isEnabled = false
-                    binding.progress.isVisible = true
-                    binding.progress.isIndeterminate = true
-                }
-
-                SplitInstallSessionStatus.INSTALLING -> {
-                    binding.install.text = "INSTALLING"
-                    binding.install.isEnabled = false
-                    binding.progress.isVisible = true
-                    binding.progress.isIndeterminate = true
-                }
-
-                SplitInstallSessionStatus.INSTALLED -> {
-                    binding.install.text = "INSTALLED"
-                    binding.install.isEnabled = false
-                    binding.progress.isVisible = false
-                }
-
-                SplitInstallSessionStatus.FAILED -> {
-                    makeSnackbar(it.err.message).show()
-                    when (it.err) {
-                        is SplitInstallError.App -> {
-                            binding.install.text = "DOWNLOAD"
-                            binding.install.isEnabled = true
-                            binding.progress.isVisible = false
-                        }
-
-                        is SplitInstallError.NotSupport -> {
-                            binding.install.text = "NOT SUPPORT"
-                            binding.install.isEnabled = false
-                            binding.progress.isVisible = false
-                        }
-
-                        is SplitInstallError.Retryable -> {
-                            binding.install.text = "DOWNLOAD"
-                            binding.install.isEnabled = true
-                            binding.progress.isVisible = false
-                        }
-                    }
-                }
-
-                SplitInstallSessionStatus.CANCELING -> {
-                    binding.install.text = "CANCELING"
-                    binding.install.isEnabled = false
-                    binding.progress.isVisible = true
-                    binding.progress.isIndeterminate = true
-
-                }
-
-                SplitInstallSessionStatus.CANCELED -> {
-                    makeSnackbar("キャンセルされました。").show()
-                    binding.install.text = "DOWNLOAD"
-                    binding.install.isVisible = true
-                    binding.install.isEnabled = true
-                    binding.progress.isVisible = false
-                }
-
-                else -> {
-                    binding.install.text = "DOWNLOAD"
-                    binding.install.isEnabled = true
-                    binding.progress.isVisible = false
-                }
-            }
-        }.launchInWithLifecycle()
-    }
+    data class Retryable(override val message: String) : SplitInstallError
+    // 再試行可能
 }
 
-val SplitInstallSessionState.err: SplitInstallError
+internal val SplitInstallSessionState.err: SplitInstallError
     get() {
         return when (errorCode) {
 
@@ -244,54 +115,3 @@ val SplitInstallSessionState.err: SplitInstallError
             else -> throw RuntimeException("想定外")
         }
     }
-
-sealed interface SplitInstallError {
-    val message: String
-
-    data class NotSupport(override val message: String) : SplitInstallError
-    data class App(override val message: String) : SplitInstallError
-
-    data class Retryable(override val message: String) : SplitInstallError
-    // 再試行可能
-}
-
-@HiltViewModel
-internal class TutorialDocumentViewModel @Inject constructor(val splitInstallManager: SplitInstallManager) :
-    ViewModel(), DefaultLifecycleObserver, SplitInstallStateUpdatedListener {
-
-    fun requestInstall() {
-        viewModelScope.launch {
-            splitInstallManager.requestInstall(listOf("document"))
-        }
-    }
-
-    override fun onStart(owner: LifecycleOwner) {
-        super.onStart(owner)
-        splitInstallManager.registerListener(this)
-    }
-
-    override fun onStop(owner: LifecycleOwner) {
-        super.onStop(owner)
-        splitInstallManager.unregisterListener(this)
-    }
-
-    val state = MutableStateFlow<SplitInstallSessionState?>(
-        if (splitInstallManager.installedModules.contains("document"))
-            SplitInstallSessionState.create(
-                0,
-                SplitInstallSessionStatus.INSTALLED,
-                SplitInstallErrorCode.NO_ERROR,
-                0,
-                0,
-                emptyList(),
-                emptyList()
-            )
-        else
-            null
-    )
-
-    override fun onStateUpdate(state: SplitInstallSessionState) {
-        if (!state.moduleNames.contains("document")) return
-        this.state.value = state
-    }
-}
