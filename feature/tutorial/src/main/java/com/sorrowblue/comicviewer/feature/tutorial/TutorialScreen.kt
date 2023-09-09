@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.tutorial
+package com.sorrowblue.comicviewer.feature.tutorial
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -28,13 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.sorrowblue.comicviewer.domain.entity.settings.BindingDirection
+import com.sorrowblue.comicviewer.feature.tutorial.section.ArchiveSheet
+import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheet
+import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheetUiState
+import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheet
+import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheetUiState
+import com.sorrowblue.comicviewer.feature.tutorial.section.WelcomeSheet
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.tutorial.section.ArchiveSheet
-import com.sorrowblue.comicviewer.tutorial.section.DirectionSheet
-import com.sorrowblue.comicviewer.tutorial.section.DirectionSheetUiState
-import com.sorrowblue.comicviewer.tutorial.section.DocumentSheet
-import com.sorrowblue.comicviewer.tutorial.section.DocumentSheetUiState
-import com.sorrowblue.comicviewer.tutorial.section.WelcomeSheet
 import kotlinx.coroutines.launch
 
 internal enum class TutorialSheet {

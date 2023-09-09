@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.tutorial
+package com.sorrowblue.comicviewer.feature.tutorial
 
 import com.google.android.play.core.ktx.errorCode
 import com.google.android.play.core.splitinstall.SplitInstallSessionState

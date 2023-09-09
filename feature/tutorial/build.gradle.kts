@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.sorrowblue.comicviewer.tutorial"
+    namespace = "com.sorrowblue.comicviewer.feature.tutorial"
     resourcePrefix("tutorial")
 }
 

@@ -52,11 +52,11 @@ import com.sorrowblue.comicviewer.feature.search.navigation.navigateToSearch
 import com.sorrowblue.comicviewer.feature.search.navigation.searchScreen
 import com.sorrowblue.comicviewer.feature.settings.navigation.navigateToSettings
 import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavGraph
+import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialRoute
+import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
+import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
-import com.sorrowblue.comicviewer.tutorial.navigation.TutorialRoute
-import com.sorrowblue.comicviewer.tutorial.navigation.navigateToTutorial
-import com.sorrowblue.comicviewer.tutorial.navigation.tutorialScreen
 import logcat.asLog
 import logcat.logcat
 

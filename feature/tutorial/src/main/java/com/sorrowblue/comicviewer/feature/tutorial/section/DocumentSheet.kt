@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.tutorial.section
+package com.sorrowblue.comicviewer.feature.tutorial.section
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import com.google.android.play.core.splitinstall.SplitInstallSessionState
 import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
+import com.sorrowblue.comicviewer.feature.tutorial.SplitInstallError
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.tutorial.SplitInstallError
 
 internal sealed interface DocumentSheetUiState {
 

@@ -137,8 +137,8 @@ dependencies {
     implementation(projects.feature.search)
     implementation(projects.feature.settings)
     implementation(projects.feature.settings.security)
+    implementation(projects.feature.tutorial)
     implementation(projects.library)
-    implementation(projects.tutorial)
 
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.biometric)

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.tutorial
+package com.sorrowblue.comicviewer.feature.tutorial
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -15,7 +15,7 @@ import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListene
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.sorrowblue.comicviewer.domain.entity.settings.BindingDirection
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
-import com.sorrowblue.comicviewer.tutorial.section.DocumentSheetUiState
+import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheetUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

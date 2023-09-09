@@ -1,10 +1,10 @@
-package com.sorrowblue.comicviewer.tutorial.navigation
+package com.sorrowblue.comicviewer.feature.tutorial.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.sorrowblue.comicviewer.tutorial.TutorialRoute
+import com.sorrowblue.comicviewer.feature.tutorial.TutorialRoute
 
 const val TutorialRoute = "tutorial"
 
