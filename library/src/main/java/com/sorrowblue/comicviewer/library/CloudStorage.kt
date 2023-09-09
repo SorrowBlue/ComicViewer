@@ -3,10 +3,19 @@ package com.sorrowblue.comicviewer.library
 import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 sealed interface CloudStorage : Library {
+
+    companion object {
+        val entries = listOf(
+            GoogleDrive(false),
+            OneDrive(false),
+            Dropbox(false),
+            Box(false)
+        )
+    }
+
     val isInstalled: Boolean
     val iconRes: Int
     val titleRes: Int
-    override val viewType get() = LibraryListViewType.CLOUD_STORAGE
 
     data class GoogleDrive(override val isInstalled: Boolean) : CloudStorage {
         override val iconRes =

@@ -1,8 +1,11 @@
 package com.sorrowblue.comicviewer.library
 
-enum class LocalFeature : Library {
-    HISTORY,
-    DOWNLOADED;
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Download
+import androidx.compose.material.icons.twotone.History
+import androidx.compose.ui.graphics.vector.ImageVector
 
-    override val viewType = LibraryListViewType.LOCAL_FEATURE
+enum class LocalFeature(val label: String, val icon: ImageVector) : Library {
+    HISTORY("履歴", Icons.TwoTone.History),
+    DOWNLOADED("ダウンロード", Icons.TwoTone.Download);
 }

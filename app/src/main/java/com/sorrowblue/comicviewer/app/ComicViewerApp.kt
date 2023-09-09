@@ -40,9 +40,7 @@ import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryFolderRoute
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryGroupRoute
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryRoute
-import com.sorrowblue.comicviewer.feature.history.navigation.historyGroup
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterFolderRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGroupRoute
@@ -57,6 +55,9 @@ import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.CollectAsEffect
 import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
+import com.sorrowblue.comicviewer.library.navigation.LibraryGroupRoute
+import com.sorrowblue.comicviewer.library.navigation.LibraryRoute
+import com.sorrowblue.comicviewer.library.navigation.libraryGroup
 import logcat.asLog
 import logcat.logcat
 
@@ -209,7 +210,7 @@ private fun NavGraphBuilder.mainScreen(
                 onAddFavoriteClick = navController::navigateToFavoriteAdd,
                 navigateToSearch = navController::navigateToSearch
             )
-            historyGroup(
+            libraryGroup(
                 contentPadding = contentPadding,
                 navController = mainNestedNavController,
                 onBookClick = navController::navigateToBook,
@@ -229,7 +230,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
             BookshelfRoute, BookshelfFolderRoute -> MainScreenTab.Bookshelf
             FavoriteListRoute, FavoriteRoute, FavoriteFolderRoute -> MainScreenTab.Favorite
             ReadLaterRoute, ReadLaterFolderRoute -> MainScreenTab.Readlater
-            HistoryRoute, HistoryFolderRoute -> MainScreenTab.Library
+            LibraryRoute, HistoryRoute, HistoryFolderRoute -> MainScreenTab.Library
             else -> MainScreenTab.Bookshelf
         }
     }
@@ -242,7 +243,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
             MainScreenTab.Bookshelf -> BookshelfGroupRoute
             MainScreenTab.Favorite -> FavoriteGroupRoute
             MainScreenTab.Readlater -> ReadlaterGroupRoute
-            MainScreenTab.Library -> HistoryGroupRoute
+            MainScreenTab.Library -> LibraryGroupRoute
         }.let { route ->
             navController.navigate(
                 route,

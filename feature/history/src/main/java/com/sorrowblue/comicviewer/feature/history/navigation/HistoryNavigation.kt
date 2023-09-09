@@ -38,6 +38,8 @@ internal fun NavGraphBuilder.historyScreen(
 
 const val HistoryGroupRoute = "history_group"
 
+fun NavController.navigateToHistoryGroup() = navigate(HistoryGroupRoute)
+
 fun NavGraphBuilder.historyGroup(
     contentPadding: PaddingValues,
     navController: NavController,
