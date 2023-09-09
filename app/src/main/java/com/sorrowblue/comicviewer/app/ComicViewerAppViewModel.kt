@@ -5,40 +5,42 @@ import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @HiltViewModel
 class ComicViewerAppViewModel @Inject constructor(
     private val loadSettingsUseCase: LoadSettingsUseCase
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow<ComicViewerAppUiState>(ComicViewerAppUiState.Initializing)
-    val uiState = _uiState.asStateFlow()
+    private val _uiEvents =
+        MutableSharedFlow<ComicViewerAppUiEvent>(0, 2, BufferOverflow.DROP_OLDEST)
+    val uiEvents = _uiEvents.asSharedFlow()
 
     var shouldKeepOnScreen = true
 
-    init {
+    fun initialize() {
         viewModelScope.launch {
             if (!loadSettingsUseCase.settings.first().doneTutorial) {
-                _uiState.value = ComicViewerAppUiState.Tutorial
+                _uiEvents.emit(ComicViewerAppUiEvent.StartTutorial)
                 shouldKeepOnScreen = false
             } else {
-                _uiState.value = ComicViewerAppUiState.Main
                 shouldKeepOnScreen = false
             }
         }
     }
 
     fun completeTutorial() {
+        val oldDoneTutorial = runBlocking { loadSettingsUseCase.settings.first() }.doneTutorial
+        _uiEvents.tryEmit(ComicViewerAppUiEvent.CompleteTutorial(!oldDoneTutorial))
         viewModelScope.launch {
             loadSettingsUseCase.edit {
                 it.copy(doneTutorial = true)
             }
-            _uiState.value = ComicViewerAppUiState.Main
         }
     }
 }
