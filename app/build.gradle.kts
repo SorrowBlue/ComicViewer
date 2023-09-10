@@ -110,7 +110,7 @@ android {
         projects.data.reader.document.projectString(),
 //        projects.library.box.projectString(),
 //        projects.library.dropbox.projectString(),
-//        projects.library.googledrive.projectString(),
+        projects.library.googledrive.projectString(),
 //        projects.library.onedrive.projectString(),
     )
 }

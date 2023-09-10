@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.library.googledrive.list
+package com.sorrowblue.comicviewer.library.googledrive
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -10,7 +10,10 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class DrivePagingSource(private val driverService: Drive, private val parent: String) :
+internal class GoogleDrivePagingSource(
+    private val driverService: Drive,
+    private val parent: String
+) :
     PagingSource<String, File>() {
     override fun getRefreshKey(state: PagingState<String, File>): String? {
         return state.anchorPosition?.let {

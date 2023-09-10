@@ -30,8 +30,13 @@ import com.sorrowblue.comicviewer.library.component.LibraryTopAppBar
 internal fun LibraryRoute(
     contentPadding: PaddingValues,
     onFeatureClick: (LocalFeature) -> Unit,
+    onCloudClick: (CloudStorage) -> Unit,
 ) {
-    LibraryScreen(contentPadding = contentPadding, onFeatureClick = onFeatureClick)
+    LibraryScreen(
+        contentPadding = contentPadding,
+        onFeatureClick = onFeatureClick,
+        onCloudClick = onCloudClick
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,6 +45,7 @@ private fun LibraryScreen(
     contentPadding: PaddingValues = PaddingValues(),
     onBackClick: () -> Unit = {},
     onFeatureClick: (LocalFeature) -> Unit = {},
+    onCloudClick: (CloudStorage) -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 ) {
     val localLayoutDirection = LocalLayoutDirection.current
@@ -81,7 +87,10 @@ private fun LibraryScreen(
                             imageVector = Icons.TwoTone.ArrowRight,
                             contentDescription = null
                         )
-                    }
+                    },
+                    modifier = Modifier.clickable(onClick = {
+                        onCloudClick(it)
+                    })
                 )
             }
         }

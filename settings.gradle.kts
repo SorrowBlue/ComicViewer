@@ -100,7 +100,7 @@ include(":feature:tutorial")
 include(":library")
 //include(":library:box")
 //include(":library:dropbox")
-//include(":library:googledrive")
+include(":library:googledrive")
 //include(":library:onedrive")
 
 includeBuild("build-logic")

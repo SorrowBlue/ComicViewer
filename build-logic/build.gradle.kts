@@ -29,5 +29,9 @@ gradlePlugin {
             id = name
             implementationClass = "com.sorrowblue.buildlogic.ComicViewerAndroidFeaturePlugin"
         }
+        register("com.sorrowblue.android-dynamic-feature") {
+            id = name
+            implementationClass = "com.sorrowblue.buildlogic.ComicViewerAndroidDynamicFeaturePlugin"
+        }
     }
 }

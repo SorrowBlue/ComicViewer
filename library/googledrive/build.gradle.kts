@@ -1,17 +1,10 @@
 plugins {
-    id("build-logic.android.dynamic-feature")
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    id("com.sorrowblue.android-dynamic-feature")
 }
 
 android {
     resourcePrefix("googledrive")
-
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
-
+    namespace = "com.sorrowblue.comicviewer.library.googledrive"
     packaging {
         resources.excludes += "META-INF/DEPENDENCIES"
     }
@@ -19,7 +12,7 @@ android {
 
 dependencies {
     implementation(projects.app)
-    implementation(projects.framework.ui)
+    implementation(projects.framework.compose)
     implementation(projects.framework.notification)
     implementation(projects.domain)
     implementation(projects.library)
@@ -30,8 +23,4 @@ dependencies {
     implementation(libs.google.api.client.android)
     implementation(libs.google.api.services.drive)
     implementation(libs.kotlinx.coroutines.play.services)
-}
-
-kapt {
-    correctErrorTypes = true
 }
