@@ -11,3 +11,4 @@ interface DropBoxNavigation {
     fun NavGraphBuilder.dropBoxScreen(navController: NavController)
     fun NavController.navigateToDropBox(path: String = "")
 }
+

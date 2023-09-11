@@ -12,6 +12,7 @@ import com.sorrowblue.comicviewer.library.CloudStorage
 import com.sorrowblue.comicviewer.library.LibraryRoute
 import com.sorrowblue.comicviewer.library.LocalFeature
 import com.sorrowblue.comicviewer.library.serviceloader.DropBoxNavigation
+import com.sorrowblue.comicviewer.library.serviceloader.GoogleDriveNavigation
 import java.util.ServiceLoader
 
 const val LibraryRoute = "library"
@@ -45,6 +46,10 @@ fun NavGraphBuilder.libraryGroup(
             DropBoxNavigation.Provider::class.java,
             DropBoxNavigation.Provider::class.java.classLoader
         ).iterator().next().get()
+        val googleDriveNavigation = ServiceLoader.load(
+            GoogleDriveNavigation.Provider::class.java,
+            GoogleDriveNavigation.Provider::class.java.classLoader
+        ).iterator().next().get()
         libraryScreen(
             contentPadding = contentPadding,
             onFeatureClick = {
@@ -57,7 +62,7 @@ fun NavGraphBuilder.libraryGroup(
                 when (it) {
                     is CloudStorage.Box -> TODO()
                     is CloudStorage.Dropbox -> with(dropBoxNavigation) { navController.navigateToDropBox() }
-                    is CloudStorage.GoogleDrive -> navController.navigate("GoogleDrive")
+                    is CloudStorage.GoogleDrive -> with(googleDriveNavigation) { navController.navigateToGoogleDrive() }
                     is CloudStorage.OneDrive -> TODO()
                 }
             }
@@ -71,13 +76,9 @@ fun NavGraphBuilder.libraryGroup(
             onAddFavoriteClick = onAddFavoriteClick,
             navigateToSearch = navigateToSearch
         )
-//        Class.forName("com.sorrowblue.comicviewer.library.googledrive.navigation.GoogleDriveNavigationKt")
-//            .getDeclaredMethod(
-//                "googleDriveScreen",
-//                NavGraphBuilder::class.java,
-//                NavController::class.java
-//            )
-//            .invoke(null, this, navController)
+
+        with(googleDriveNavigation) { googleDriveScreen(navController) }
+
         with(dropBoxNavigation) { dropBoxScreen(navController) }
     }
 }

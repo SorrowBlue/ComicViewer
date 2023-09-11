@@ -58,7 +58,7 @@ internal class GoogleDriveViewModel(
 
     private val args = GoogleDriveArgs(savedStateHandle)
 
-    private val path = args.path ?: "root"
+    private val path = args.path
 
     init {
         repository.googleSignInAccount.onEach {
