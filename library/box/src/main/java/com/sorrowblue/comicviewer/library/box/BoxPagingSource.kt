@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.library.box.list
+package com.sorrowblue.comicviewer.library.box
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -9,10 +9,9 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.library.box.data.BoxApiRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import logcat.logcat
 
 internal class BoxPagingSource(
-    private val parent: String?,
+    private val parent: String,
     private val repository: BoxApiRepository,
 ) :
     PagingSource<Int, File>() {
@@ -27,7 +26,6 @@ internal class BoxPagingSource(
             repository.list(parent, params.loadSize.toLong(), params.key?.toLong() ?: 0)
         }
         val list = result?.mapNotNull {
-            logcat { "${it.type},${it.name}" }
             when (it.type) {
                 "folder" -> {
                     Folder(
@@ -47,7 +45,7 @@ internal class BoxPagingSource(
                         parent.orEmpty(),
                         it.id,
                         it.size,
-                        it.modifiedAt.time,
+                        0,
                         "",
                         0,
                         0,

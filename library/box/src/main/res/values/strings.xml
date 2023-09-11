@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="box_title">Box</string>
     <string name="box_label_file_size_b" translatable="false">%1$d B</string>
     <string name="box_label_file_size_kb" translatable="false">%1$d KB</string>
     <string name="box_label_file_size_mb" translatable="false">%1$d MB</string>

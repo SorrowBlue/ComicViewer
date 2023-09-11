@@ -9,8 +9,6 @@ import com.box.sdk.BoxFile
 import com.box.sdk.BoxFolder
 import com.box.sdk.BoxItem
 import com.box.sdk.BoxUser
-import com.box.sdk.PagingParameters
-import com.box.sdk.SortParameters
 import java.io.OutputStream
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -80,14 +78,19 @@ internal class BoxApiRepositoryImpl(
     }
 
     override val userInfoFlow = dropboxCredentialDataStore.data.map {
-        try {
-            BoxUser.getCurrentUser(api).getInfo("id", "avatar_url", "name")
-        } catch (e: BoxAPIResponseException) {
-            if (e.responseCode == 401) {
-                logcat { "トークン切れ" }
-                dropboxCredentialDataStore.updateData { it.copy(state = null) }
+        if (it.state != null) {
+            try {
+                BoxUser.getCurrentUser(api).getInfo("id", "avatar_url", "name")
+            } catch (e: BoxAPIResponseException) {
+                if (e.responseCode == 401) {
+                    logcat { "トークン切れ" }
+                    dropboxCredentialDataStore.updateData { it.copy(state = null) }
+                } else {
+                    logcat { "エラー" + e.asLog() }
+                }
+                null
             }
-            logcat { e.asLog() }
+        } else {
             null
         }
     }.flowOn(Dispatchers.IO)
@@ -112,9 +115,9 @@ internal class BoxApiRepositoryImpl(
         }
     }
 
-    override suspend fun list(path: String?, limit: Long, offset: Long): List<BoxItem.Info> {
+    override suspend fun list(path: String, limit: Long, offset: Long): List<BoxItem.Info> {
         val folder = try {
-            if (path == null) {
+            if (path.isEmpty()) {
                 BoxFolder.getRootFolder(api)
             } else {
                 BoxFolder(api, path)
@@ -125,24 +128,7 @@ internal class BoxApiRepositoryImpl(
             dropboxCredentialDataStore.updateData { it.copy(state = null) }
             return emptyList()
         }
-        val sorting = SortParameters.none()
-        val paging = PagingParameters.offset(offset, limit)
-        val iterator =
-            folder.getChildren(sorting, paging, "id", "name", "type", "size", "modified_at")
-        return try {
-            iterator.onEach {
-                logcat { "フォルダ, id=${it.id}, ${it.name}" }
-            }.toList().apply {
-                logcat { "フォルダリスト size=${size}" }
-            }
-        } catch (e: BoxAPIResponseException) {
-            logcat { e.asLog() }
-            if (e.responseCode == 401) {
-                logcat { "トークン切れ" }
-                dropboxCredentialDataStore.updateData { it.copy(state = null) }
-            }
-            return emptyList()
-        }
+        return folder.toList()
     }
 
     override suspend fun fileThumbnail(id: String): String? {

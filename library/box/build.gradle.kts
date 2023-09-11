@@ -1,22 +1,16 @@
 plugins {
-    id("build-logic.android.dynamic-feature")
-    alias(libs.plugins.kotlin.kapt)
+    id("com.sorrowblue.android-dynamic-feature")
     alias(libs.plugins.kotlin.plugin.serialization)
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
 android {
+    namespace = "com.sorrowblue.comicviewer.library.box"
     resourcePrefix("box")
-
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
 }
 
 dependencies {
     implementation(projects.app)
-    implementation(projects.framework.ui)
+    implementation(projects.framework.compose)
     implementation(projects.framework.notification)
     implementation(projects.domain)
     implementation(projects.library)
@@ -26,8 +20,4 @@ dependencies {
 
     implementation(libs.box.java.sdk)
     implementation(libs.kotlinx.serialization.protobuf)
-}
-
-kapt {
-    correctErrorTypes = true
 }

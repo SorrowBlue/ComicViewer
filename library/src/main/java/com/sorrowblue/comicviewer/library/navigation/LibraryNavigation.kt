@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistoryGr
 import com.sorrowblue.comicviewer.library.CloudStorage
 import com.sorrowblue.comicviewer.library.LibraryRoute
 import com.sorrowblue.comicviewer.library.LocalFeature
+import com.sorrowblue.comicviewer.library.serviceloader.BoxNavigation
 import com.sorrowblue.comicviewer.library.serviceloader.DropBoxNavigation
 import com.sorrowblue.comicviewer.library.serviceloader.GoogleDriveNavigation
 import java.util.ServiceLoader
@@ -50,6 +51,10 @@ fun NavGraphBuilder.libraryGroup(
             GoogleDriveNavigation.Provider::class.java,
             GoogleDriveNavigation.Provider::class.java.classLoader
         ).iterator().next().get()
+        val boxNavigation = ServiceLoader.load(
+            BoxNavigation.Provider::class.java,
+            BoxNavigation.Provider::class.java.classLoader
+        ).iterator().next().get()
         libraryScreen(
             contentPadding = contentPadding,
             onFeatureClick = {
@@ -60,7 +65,7 @@ fun NavGraphBuilder.libraryGroup(
             },
             onCloudClick = {
                 when (it) {
-                    is CloudStorage.Box -> TODO()
+                    is CloudStorage.Box -> with(boxNavigation) { navController.navigateToBox() }
                     is CloudStorage.Dropbox -> with(dropBoxNavigation) { navController.navigateToDropBox() }
                     is CloudStorage.GoogleDrive -> with(googleDriveNavigation) { navController.navigateToGoogleDrive() }
                     is CloudStorage.OneDrive -> TODO()
@@ -80,5 +85,6 @@ fun NavGraphBuilder.libraryGroup(
         with(googleDriveNavigation) { googleDriveScreen(navController) }
 
         with(dropBoxNavigation) { dropBoxScreen(navController) }
+        with(boxNavigation) { boxScreen(navController) }
     }
 }

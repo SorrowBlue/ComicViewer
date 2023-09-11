@@ -155,7 +155,7 @@ google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version
 google-dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "google-dagger" }
 
 junit = "junit:junit:4.13.2"
-box-java-sdk = "com.box:box-java-sdk:4.2.0"
+box-java-sdk = "com.box:box-java-sdk:4.4.0"
 
 microsoft-identity-client-msal = "com.microsoft.identity.client:msal:4.6.2"
 microsoft-graph = "com.microsoft.graph:microsoft-graph:5.64.0"
