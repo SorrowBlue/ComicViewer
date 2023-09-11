@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.library.onedrive.list
+package com.sorrowblue.comicviewer.library.onedrive
 
 import android.Manifest
 import android.content.Context

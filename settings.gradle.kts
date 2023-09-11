@@ -101,6 +101,6 @@ include(":library")
 include(":library:box")
 include(":library:dropbox")
 include(":library:googledrive")
-//include(":library:onedrive")
+include(":library:onedrive")
 
 includeBuild("build-logic")

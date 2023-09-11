@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.library.LocalFeature
 import com.sorrowblue.comicviewer.library.serviceloader.BoxNavigation
 import com.sorrowblue.comicviewer.library.serviceloader.DropBoxNavigation
 import com.sorrowblue.comicviewer.library.serviceloader.GoogleDriveNavigation
+import com.sorrowblue.comicviewer.library.serviceloader.OneDriveNavigation
 import java.util.ServiceLoader
 
 const val LibraryRoute = "library"
@@ -55,6 +56,10 @@ fun NavGraphBuilder.libraryGroup(
             BoxNavigation.Provider::class.java,
             BoxNavigation.Provider::class.java.classLoader
         ).iterator().next().get()
+        val oneDriveNavigation = ServiceLoader.load(
+            OneDriveNavigation.Provider::class.java,
+            OneDriveNavigation.Provider::class.java.classLoader
+        ).iterator().next().get()
         libraryScreen(
             contentPadding = contentPadding,
             onFeatureClick = {
@@ -68,7 +73,7 @@ fun NavGraphBuilder.libraryGroup(
                     is CloudStorage.Box -> with(boxNavigation) { navController.navigateToBox() }
                     is CloudStorage.Dropbox -> with(dropBoxNavigation) { navController.navigateToDropBox() }
                     is CloudStorage.GoogleDrive -> with(googleDriveNavigation) { navController.navigateToGoogleDrive() }
-                    is CloudStorage.OneDrive -> TODO()
+                    is CloudStorage.OneDrive -> with(oneDriveNavigation) { navController.navigateToOneDrive() }
                 }
             }
         )
@@ -86,5 +91,6 @@ fun NavGraphBuilder.libraryGroup(
 
         with(dropBoxNavigation) { dropBoxScreen(navController) }
         with(boxNavigation) { boxScreen(navController) }
+        with(oneDriveNavigation) { oneDriveScreen(navController) }
     }
 }

@@ -1,16 +1,10 @@
 plugins {
-    id("build-logic.android.dynamic-feature")
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    id("com.sorrowblue.android-dynamic-feature")
 }
 
 android {
+    namespace = "com.sorrowblue.comicviewer.library.onedrive"
     resourcePrefix("onedrive")
-
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
 
     packaging {
         resources.excludes += "META-INF/services/org.codehaus.stax2.validation.XMLValidationSchemaFactory.dtd"
@@ -22,7 +16,7 @@ android {
 
 dependencies {
     implementation(projects.app)
-    implementation(projects.framework.ui)
+    implementation(projects.framework.compose)
     implementation(projects.framework.notification)
     implementation(projects.domain)
     implementation(projects.library)
@@ -35,8 +29,4 @@ dependencies {
     implementation(libs.microsoft.identity.client.msal)
 
     implementation(libs.kotlinx.coroutines.jdk8)
-}
-
-kapt {
-    correctErrorTypes = true
 }

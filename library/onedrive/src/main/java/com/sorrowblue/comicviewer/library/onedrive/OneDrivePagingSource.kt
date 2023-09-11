@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.library.onedrive.list
+package com.sorrowblue.comicviewer.library.onedrive
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
