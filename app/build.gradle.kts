@@ -89,7 +89,6 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
-            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
@@ -109,7 +108,7 @@ android {
     dynamicFeatures += setOf(
         projects.data.reader.document.projectString(),
 //        projects.library.box.projectString(),
-//        projects.library.dropbox.projectString(),
+        projects.library.dropbox.projectString(),
         projects.library.googledrive.projectString(),
 //        projects.library.onedrive.projectString(),
     )

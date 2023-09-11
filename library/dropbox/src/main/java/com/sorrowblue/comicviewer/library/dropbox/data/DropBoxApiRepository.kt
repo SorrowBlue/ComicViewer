@@ -7,7 +7,7 @@ import com.dropbox.core.v2.users.FullAccount
 import java.io.OutputStream
 import kotlinx.coroutines.flow.Flow
 
-interface DropBoxApiRepository {
+internal interface DropBoxApiRepository {
 
     suspend fun storeCredential(dbxCredential: DbxCredential)
 

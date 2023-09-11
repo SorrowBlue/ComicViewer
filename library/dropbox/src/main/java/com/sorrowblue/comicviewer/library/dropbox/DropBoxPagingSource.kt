@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.library.dropbox.list
+package com.sorrowblue.comicviewer.library.dropbox
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoBuf
 
 @Serializable
-data class DropboxCredential(val credential: String? = null) {
+internal data class DropboxCredential(val credential: String? = null) {
 
     @ExperimentalSerializationApi
     internal class Serializer(private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO) :

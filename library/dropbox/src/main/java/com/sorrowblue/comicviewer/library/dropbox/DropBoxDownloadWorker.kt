@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.library.dropbox.list
+package com.sorrowblue.comicviewer.library.dropbox
 
 import android.Manifest
 import android.content.Context

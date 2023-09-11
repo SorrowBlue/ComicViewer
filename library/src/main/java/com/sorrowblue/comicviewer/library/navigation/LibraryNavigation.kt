@@ -11,6 +11,8 @@ import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistoryGr
 import com.sorrowblue.comicviewer.library.CloudStorage
 import com.sorrowblue.comicviewer.library.LibraryRoute
 import com.sorrowblue.comicviewer.library.LocalFeature
+import com.sorrowblue.comicviewer.library.serviceloader.DropBoxNavigation
+import java.util.ServiceLoader
 
 const val LibraryRoute = "library"
 
@@ -39,6 +41,10 @@ fun NavGraphBuilder.libraryGroup(
     navigateToSearch: (BookshelfId, String) -> Unit
 ) {
     navigation(route = LibraryGroupRoute, startDestination = LibraryRoute) {
+        val dropBoxNavigation = ServiceLoader.load(
+            DropBoxNavigation.Provider::class.java,
+            DropBoxNavigation.Provider::class.java.classLoader
+        ).iterator().next().get()
         libraryScreen(
             contentPadding = contentPadding,
             onFeatureClick = {
@@ -50,7 +56,7 @@ fun NavGraphBuilder.libraryGroup(
             onCloudClick = {
                 when (it) {
                     is CloudStorage.Box -> TODO()
-                    is CloudStorage.Dropbox -> TODO()
+                    is CloudStorage.Dropbox -> with(dropBoxNavigation) { navController.navigateToDropBox() }
                     is CloudStorage.GoogleDrive -> navController.navigate("GoogleDrive")
                     is CloudStorage.OneDrive -> TODO()
                 }
@@ -65,12 +71,13 @@ fun NavGraphBuilder.libraryGroup(
             onAddFavoriteClick = onAddFavoriteClick,
             navigateToSearch = navigateToSearch
         )
-        Class.forName("com.sorrowblue.comicviewer.library.googledrive.navigation.GoogleDriveNavigationKt")
-            .getDeclaredMethod(
-                "googleDriveScreen",
-                NavGraphBuilder::class.java,
-                NavController::class.java
-            )
-            .invoke(null, this, navController)
+//        Class.forName("com.sorrowblue.comicviewer.library.googledrive.navigation.GoogleDriveNavigationKt")
+//            .getDeclaredMethod(
+//                "googleDriveScreen",
+//                NavGraphBuilder::class.java,
+//                NavController::class.java
+//            )
+//            .invoke(null, this, navController)
+        with(dropBoxNavigation) { dropBoxScreen(navController) }
     }
 }
