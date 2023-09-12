@@ -43,6 +43,7 @@ import com.sorrowblue.comicviewer.domain.entity.file.BookFile
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.compose.LifecycleEffect
 import com.sorrowblue.comicviewer.library.box.component.FileListItem
 import com.sorrowblue.comicviewer.library.onedrive.component.OneDriveTopAppBar
 import com.sorrowblue.comicviewer.library.onedrive.section.OneDriveAccountDialog
@@ -91,6 +92,8 @@ internal fun OneDriveRoute(
         onDialogDismissRequest = viewModel::onDialogDismissRequest,
         onLogoutClick = viewModel::signOut,
     )
+
+    LifecycleEffect(lifecycleObserver = viewModel)
 }
 
 internal sealed interface OneDriveScreenUiState {
@@ -99,7 +102,7 @@ internal sealed interface OneDriveScreenUiState {
     data class Loaded(
         val oneDriveDialogUiState: OneDriveDialogUiState = OneDriveDialogUiState.Hide,
         val path: String = "",
-        val profileUri: InputStream = byteArrayOf().inputStream(),
+        val profileUri: suspend () -> InputStream? = { null },
     ) : OneDriveScreenUiState
 }
 
@@ -249,7 +252,6 @@ private fun PreviewLoadedOneDriveScreen() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun PreviewLoginOneDriveScreen() {
@@ -258,7 +260,6 @@ private fun PreviewLoginOneDriveScreen() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun PreviewLoadingOneDriveScreen() {

@@ -2,6 +2,8 @@ package com.sorrowblue.comicviewer.library.onedrive
 
 import android.app.Activity
 import android.content.Context
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -36,7 +38,7 @@ internal class OneDriveViewModel(
     private val provider: AuthenticationProvider,
     private val repository: OneDriveApiRepository,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : ViewModel(), DefaultLifecycleObserver {
 
     lateinit var file: Book
     private val args = OneDriveArgs(savedStateHandle)
@@ -47,11 +49,13 @@ internal class OneDriveViewModel(
     init {
         viewModelScope.launch {
             provider.initialize()
-            repository.currentUserFlow.onEach {
-                if (it != null) {
+            provider.account.onEach { account ->
+                if (account != null) {
                     _uiState.value = OneDriveScreenUiState.Loaded(
                         path = args.itemId.orEmpty(),
-                        profileUri = repository.profileImage()
+                        profileUri = {
+                            repository.profileImage()
+                        }
                     )
                 } else {
                     _uiState.value = OneDriveScreenUiState.Login()
@@ -63,6 +67,7 @@ internal class OneDriveViewModel(
     fun signOut() {
         viewModelScope.launch {
             provider.signOut()
+            onDialogDismissRequest()
         }
     }
 
@@ -89,20 +94,26 @@ internal class OneDriveViewModel(
         }
     }
 
-    val pagingDataFlow = repository.currentUserFlow.filterNotNull().flatMapLatest {
+    val pagingDataFlow = provider.account.filterNotNull().flatMapLatest {
         Pager(PagingConfig(20)) {
             OneDrivePagingSource(args.driveId, args.itemId.orEmpty(), repository)
         }.flow
     }.cachedIn(viewModelScope)
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        repository.loadAccount()
+    }
 
     fun signIn(activity: Activity) {
         viewModelScope.launch {
             kotlin.runCatching {
                 provider.signIn(activity).await()
             }.onSuccess {
-                logcat { "success signin. id=${it.account.id}" }
+                logcat { "success account.id=${it.account.id}" }
+                logcat { "success account.idToken=${it.account.idToken}" }
                 if (it.account.idToken != null) {
-
+                    repository.loadAccount()
                 }
             }.onFailure {
                 it.printStackTrace()

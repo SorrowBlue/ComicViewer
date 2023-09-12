@@ -8,7 +8,6 @@ import com.microsoft.graph.requests.GraphServiceClient
 import java.io.InputStream
 import java.io.OutputStream
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import logcat.logcat
 
@@ -25,7 +24,7 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
             }
 
             override fun logDebug(message: String) {
-                logcat { message }
+//                logcat { message }
             }
 
             override fun logError(message: String, throwable: Throwable?) {
@@ -38,7 +37,7 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
 
     override suspend fun getCurrentUser(): User? {
         return withContext(Dispatchers.IO) {
-            if (!authenticationProvider.isSingIned) {
+            if (!authenticationProvider.isSignIned) {
                 null
             } else {
                 graphClient.me().buildRequest().get()
@@ -51,16 +50,6 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
             graphClient.me().photo().content().buildRequest().get()!!
         }
     }
-
-    override val currentUserFlow = authenticationProvider.currentAccountFlow.map {
-        if (it != null) {
-            getCurrentUser()
-        } else {
-            null
-        }
-    }
-
-    override val isAuthenticated = authenticationProvider.isAuthenticated
 
     override suspend fun driveId(): String {
         return withContext(Dispatchers.IO) {
@@ -82,6 +71,10 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
                     onProgress.invoke(it / size)
                 })
         }
+    }
+
+    override fun loadAccount() {
+        authenticationProvider.loadAccount()
     }
 
     override suspend fun list(

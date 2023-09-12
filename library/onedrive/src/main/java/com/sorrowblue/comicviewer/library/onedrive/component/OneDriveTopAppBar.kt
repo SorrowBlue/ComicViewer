@@ -15,22 +15,35 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
 import java.io.InputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3Api
 @Composable
 internal fun OneDriveTopAppBar(
     path: String,
-    profileUri: InputStream,
+    profileUri: suspend () -> InputStream?,
     onBackClick: () -> Unit,
     onProfileImageClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?
 ) {
+    var inputStream by remember { mutableStateOf<ByteArray?>(null) }
+    LaunchedEffect(profileUri) {
+        launch(Dispatchers.IO) {
+            inputStream = profileUri()?.readBytes()
+        }
+    }
     TopAppBar(
         title = {
             Column {
@@ -51,7 +64,7 @@ internal fun OneDriveTopAppBar(
         },
         actions = {
             AsyncImage(
-                model = profileUri,
+                model = inputStream,
                 placeholder = debugPlaceholder(),
                 contentDescription = null,
                 modifier = Modifier
