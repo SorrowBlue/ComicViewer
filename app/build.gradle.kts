@@ -107,10 +107,10 @@ android {
 
     dynamicFeatures += setOf(
         projects.data.reader.document.projectString(),
-        projects.library.box.projectString(),
-        projects.library.dropbox.projectString(),
-        projects.library.googledrive.projectString(),
-        projects.library.onedrive.projectString(),
+        projects.feature.library.box.projectString(),
+        projects.feature.library.dropbox.projectString(),
+        projects.feature.library.googledrive.projectString(),
+        projects.feature.library.onedrive.projectString(),
     )
 }
 
@@ -137,7 +137,7 @@ dependencies {
     implementation(projects.feature.settings)
     implementation(projects.feature.settings.security)
     implementation(projects.feature.tutorial)
-    implementation(projects.library)
+    implementation(projects.feature.library)
 
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.biometric)

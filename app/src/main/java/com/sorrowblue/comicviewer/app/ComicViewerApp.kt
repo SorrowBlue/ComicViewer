@@ -41,6 +41,9 @@ import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScr
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryFolderRoute
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryRoute
+import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGroupRoute
+import com.sorrowblue.comicviewer.feature.library.navigation.LibraryRoute
+import com.sorrowblue.comicviewer.feature.library.navigation.libraryGroup
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterFolderRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGroupRoute
@@ -55,9 +58,6 @@ import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.CollectAsEffect
 import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
-import com.sorrowblue.comicviewer.library.navigation.LibraryGroupRoute
-import com.sorrowblue.comicviewer.library.navigation.LibraryRoute
-import com.sorrowblue.comicviewer.library.navigation.libraryGroup
 import logcat.asLog
 import logcat.logcat
 
