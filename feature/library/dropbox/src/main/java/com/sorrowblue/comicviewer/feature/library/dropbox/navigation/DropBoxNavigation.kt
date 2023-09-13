@@ -22,7 +22,7 @@ private const val DropBoxRoute = "DropBox"
 
 object DropBoxNavigationImpl : DropBoxNavigation {
 
-    override fun NavGraphBuilder.dropBoxScreen(navController: NavController) {
+    override fun NavGraphBuilder.addOnScreen(navController: NavController) {
         composable(
             route = "$DropBoxRoute?path={$pathArg}",
             arguments = listOf(navArgument(pathArg) {
@@ -37,7 +37,11 @@ object DropBoxNavigationImpl : DropBoxNavigation {
         }
     }
 
-    override fun NavController.navigateToDropBox(path: String) =
+    override fun NavController.navigateToAddOnScreen() {
+        navigateToDropBox()
+    }
+
+    private fun NavController.navigateToDropBox(path: String = "") =
         navigate("$DropBoxRoute?path=${path.encodeToBase64()}")
 }
 

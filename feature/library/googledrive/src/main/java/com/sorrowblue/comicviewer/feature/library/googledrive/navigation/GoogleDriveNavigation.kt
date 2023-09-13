@@ -21,7 +21,8 @@ internal class GoogleDriveArgs(val path: String) {
 const val GoogleDriveRoute = "GoogleDrive"
 
 object GoogleDriveNavigationImpl : GoogleDriveNavigation {
-    override fun NavGraphBuilder.googleDriveScreen(navController: NavController) {
+
+    override fun NavGraphBuilder.addOnScreen(navController: NavController) {
         composable(
             route = "$GoogleDriveRoute?path={$pathArg}",
             arguments = listOf(navArgument("pathArg") {
@@ -38,7 +39,11 @@ object GoogleDriveNavigationImpl : GoogleDriveNavigation {
         }
     }
 
-    override fun NavController.navigateToGoogleDrive(path: String) {
+    override fun NavController.navigateToAddOnScreen() {
+        navigateToGoogleDrive()
+    }
+
+    private fun NavController.navigateToGoogleDrive(path: String = "root") {
         navigate("$GoogleDriveRoute?path=${path.encodeToBase64()}")
     }
 }

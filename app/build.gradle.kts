@@ -238,7 +238,7 @@ abstract class InstallApksTask : DefaultTask() {
                     "am",
                     "start",
                     "-n",
-                    "com.sorrowblue.comicviewer.debug/com.sorrowblue.comicviewer.app.MainActivity"
+                    "com.sorrowblue.comicviewer.debug/com.sorrowblue.comicviewer.app.MainComposeActivity"
                 )
             }
             logger.lifecycle(stdout.toString().trim())

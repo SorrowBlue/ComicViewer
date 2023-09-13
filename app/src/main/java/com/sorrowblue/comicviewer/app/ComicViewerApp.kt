@@ -13,7 +13,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +31,7 @@ import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfFolderRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGroupRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGroup
+import com.sorrowblue.comicviewer.domain.AddOn
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteFolderRoute
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGroupRoute
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteListRoute
@@ -44,6 +46,11 @@ import com.sorrowblue.comicviewer.feature.history.navigation.HistoryRoute
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGroupRoute
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryRoute
 import com.sorrowblue.comicviewer.feature.library.navigation.libraryGroup
+import com.sorrowblue.comicviewer.feature.library.serviceloader.AddOnNavigation
+import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
+import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavigation
+import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavigation
+import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavigation
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterFolderRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGroupRoute
@@ -57,7 +64,10 @@ import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.CollectAsEffect
+import com.sorrowblue.comicviewer.framework.compose.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
+import java.util.ServiceLoader
+import kotlinx.collections.immutable.PersistentList
 import logcat.asLog
 import logcat.logcat
 
@@ -73,19 +83,18 @@ fun ComicViewerApp(
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
-
     AppMaterialTheme {
         CompositionLocalProvider(LocalWindowSize provides windowsSize) {
             Surface(
                 modifier = modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background,
             ) {
+                val addOnList by viewModel.addOnList.collectAsState()
                 ComicViewerNavHost(
                     windowsSize = windowsSize,
                     navController = navController,
-                    onTutorialComplete = {
-                        viewModel.completeTutorial()
-                    }
+                    addOnList = addOnList,
+                    onTutorialComplete = viewModel::completeTutorial
                 )
             }
         }
@@ -115,18 +124,16 @@ fun ComicViewerApp(
                 }
         }
     }
-    LaunchedEffect(Unit) {
-        viewModel.initialize()
-    }
+    LifecycleEffect(lifecycleObserver = viewModel)
 }
 
 @Composable
 fun ComicViewerNavHost(
     windowsSize: WindowSizeClass,
     navController: NavHostController,
+    addOnList: PersistentList<AddOn>,
     onTutorialComplete: () -> Unit
 ) {
-
     val context = LocalContext.current
     NavHostWithSharedAxisX(navController = navController, startDestination = mainScreenRoute) {
         mainScreen(windowsSize, navController)
@@ -174,6 +181,37 @@ fun ComicViewerNavHost(
             })
 
         favoriteAddScreen(onBackClick = navController::popBackStack)
+
+        addOnList.forEach {
+            with(it.loadDynamicFeature() ?: return@forEach) {
+                addOnScreen(navController)
+            }
+        }
+    }
+}
+
+private fun AddOn.loadDynamicFeature(): AddOnNavigation? {
+    return when (this) {
+        AddOn.Document -> null
+        AddOn.GoogleDrive -> ServiceLoader.load(
+            GoogleDriveNavigation.Provider::class.java,
+            GoogleDriveNavigation.Provider::class.java.classLoader
+        ).iterator().next().get()
+
+        AddOn.OneDrive -> ServiceLoader.load(
+            OneDriveNavigation.Provider::class.java,
+            OneDriveNavigation.Provider::class.java.classLoader
+        ).iterator().next().get()
+
+        AddOn.Dropbox -> ServiceLoader.load(
+            DropBoxNavigation.Provider::class.java,
+            DropBoxNavigation.Provider::class.java.classLoader
+        ).iterator().next().get()
+
+        AddOn.Box -> ServiceLoader.load(
+            BoxNavigation.Provider::class.java,
+            BoxNavigation.Provider::class.java.classLoader
+        ).iterator().next().get()
     }
 }
 
@@ -216,7 +254,14 @@ private fun NavGraphBuilder.mainScreen(
                 onBookClick = navController::navigateToBook,
                 onSettingsClick = navController::navigateToSettings,
                 onAddFavoriteClick = navController::navigateToFavoriteAdd,
-                navigateToSearch = navController::navigateToSearch
+                navigateToSearch = navController::navigateToSearch,
+                onAddOnClick = { addOn ->
+                    addOn.addOn.loadDynamicFeature()?.let {
+                        with(it) {
+                            navController.navigateToAddOnScreen()
+                        }
+                    }
+                }
             )
         },
     )

@@ -1,14 +1,7 @@
 package com.sorrowblue.comicviewer.feature.library.serviceloader
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
+interface DropBoxNavigation : AddOnNavigation {
 
-interface DropBoxNavigation {
-    interface Provider {
-        fun get(): DropBoxNavigation
-    }
-
-    fun NavGraphBuilder.dropBoxScreen(navController: NavController)
-    fun NavController.navigateToDropBox(path: String = "")
+    interface Provider : AddOnNavigation.Provider
 }
 

@@ -8,31 +8,10 @@ import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.history.navigation.historyGroup
 import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistoryGroup
-import com.sorrowblue.comicviewer.feature.library.CloudStorage
 import com.sorrowblue.comicviewer.feature.library.LibraryRoute
-import com.sorrowblue.comicviewer.feature.library.LocalFeature
-import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
-import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavigation
-import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavigation
-import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavigation
-import java.util.ServiceLoader
+import com.sorrowblue.comicviewer.feature.library.section.Feature
 
 const val LibraryRoute = "library"
-
-private fun NavGraphBuilder.libraryScreen(
-    contentPadding: PaddingValues,
-    onFeatureClick: (LocalFeature) -> Unit,
-    onCloudClick: (CloudStorage) -> Unit,
-) {
-    composable(LibraryRoute) {
-        LibraryRoute(
-            contentPadding = contentPadding,
-            onFeatureClick = onFeatureClick,
-            onCloudClick = onCloudClick
-        )
-    }
-}
-
 const val LibraryGroupRoute = "${LibraryRoute}_group"
 
 fun NavGraphBuilder.libraryGroup(
@@ -41,39 +20,17 @@ fun NavGraphBuilder.libraryGroup(
     onBookClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
     onAddFavoriteClick: (BookshelfId, String) -> Unit,
-    navigateToSearch: (BookshelfId, String) -> Unit
+    navigateToSearch: (BookshelfId, String) -> Unit,
+    onAddOnClick: (Feature.AddOn) -> Unit
 ) {
     navigation(route = LibraryGroupRoute, startDestination = LibraryRoute) {
-        val dropBoxNavigation = ServiceLoader.load(
-            DropBoxNavigation.Provider::class.java,
-            DropBoxNavigation.Provider::class.java.classLoader
-        ).iterator().next().get()
-        val googleDriveNavigation = ServiceLoader.load(
-            GoogleDriveNavigation.Provider::class.java,
-            GoogleDriveNavigation.Provider::class.java.classLoader
-        ).iterator().next().get()
-        val boxNavigation = ServiceLoader.load(
-            BoxNavigation.Provider::class.java,
-            BoxNavigation.Provider::class.java.classLoader
-        ).iterator().next().get()
-        val oneDriveNavigation = ServiceLoader.load(
-            OneDriveNavigation.Provider::class.java,
-            OneDriveNavigation.Provider::class.java.classLoader
-        ).iterator().next().get()
         libraryScreen(
             contentPadding = contentPadding,
             onFeatureClick = {
                 when (it) {
-                    LocalFeature.HISTORY -> navController.navigateToHistoryGroup()
-                    LocalFeature.DOWNLOADED -> Unit /*TODO()*/
-                }
-            },
-            onCloudClick = {
-                when (it) {
-                    is CloudStorage.Box -> with(boxNavigation) { navController.navigateToBox() }
-                    is CloudStorage.Dropbox -> with(dropBoxNavigation) { navController.navigateToDropBox() }
-                    is CloudStorage.GoogleDrive -> with(googleDriveNavigation) { navController.navigateToGoogleDrive() }
-                    is CloudStorage.OneDrive -> with(oneDriveNavigation) { navController.navigateToOneDrive() }
+                    is Feature.AddOn -> onAddOnClick(it)
+                    Feature.Basic.History -> navController.navigateToHistoryGroup()
+                    Feature.Basic.Download -> TODO()
                 }
             }
         )
@@ -86,11 +43,17 @@ fun NavGraphBuilder.libraryGroup(
             onAddFavoriteClick = onAddFavoriteClick,
             navigateToSearch = navigateToSearch
         )
+    }
+}
 
-        with(googleDriveNavigation) { googleDriveScreen(navController) }
-
-        with(dropBoxNavigation) { dropBoxScreen(navController) }
-        with(boxNavigation) { boxScreen(navController) }
-        with(oneDriveNavigation) { oneDriveScreen(navController) }
+private fun NavGraphBuilder.libraryScreen(
+    contentPadding: PaddingValues,
+    onFeatureClick: (Feature) -> Unit,
+) {
+    composable(LibraryRoute) {
+        LibraryRoute(
+            contentPadding = contentPadding,
+            onFeatureClick = onFeatureClick,
+        )
     }
 }

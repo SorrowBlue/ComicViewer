@@ -33,7 +33,7 @@ private const val BoxRoute = "Box"
 
 object BoxNavigationImpl : BoxNavigation {
 
-    override fun NavGraphBuilder.boxScreen(navController: NavController) {
+    override fun NavGraphBuilder.addOnScreen(navController: NavController) {
         composable(
             route = "$BoxRoute?path={$pathArg}",
             arguments = listOf(navArgument(pathArg) {
@@ -72,7 +72,11 @@ object BoxNavigationImpl : BoxNavigation {
         }
     }
 
-    override fun NavController.navigateToBox(path: String) =
+    override fun NavController.navigateToAddOnScreen() {
+        navigateToBox()
+    }
+
+    private fun NavController.navigateToBox(path: String = "") =
         navigate("$BoxRoute?path=${path.encodeToBase64()}")
 }
 

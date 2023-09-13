@@ -21,7 +21,7 @@ private const val OneDriveRoute = "OneDrive"
 
 object OneDriveNavigationImpl : OneDriveNavigation {
 
-    override fun NavGraphBuilder.oneDriveScreen(navController: NavController) {
+    override fun NavGraphBuilder.addOnScreen(navController: NavController) {
         composable(
             route = "$OneDriveRoute?drive_id={$driveIdArg}&item_id={$itemIdArg}",
             arguments = listOf(
@@ -44,7 +44,11 @@ object OneDriveNavigationImpl : OneDriveNavigation {
         }
     }
 
-    override fun NavController.navigateToOneDrive(driveId: String?, itemId: String?) {
+    override fun NavController.navigateToAddOnScreen() {
+        navigateToOneDrive()
+    }
+
+    private fun NavController.navigateToOneDrive(driveId: String? = null, itemId: String? = null) {
         if (driveId == null) {
             navigate(OneDriveRoute)
         } else {
