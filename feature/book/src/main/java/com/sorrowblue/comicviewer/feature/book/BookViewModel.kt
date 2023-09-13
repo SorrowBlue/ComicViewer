@@ -39,8 +39,8 @@ internal class BookViewModel @Inject constructor(
                 .first().dataOrNull ?: return@launch
             val bookPagerUiState = BookPagerUiState(
                 book,
-                nextBook = nextBook(GetNextComicRel.PREV),
-                prevBook = nextBook(GetNextComicRel.NEXT),
+                nextBook = nextBook(GetNextComicRel.NEXT),
+                prevBook = nextBook(GetNextComicRel.PREV),
             )
             if (book.totalPageCount <= 0) {
                 _uiState.value = BookScreenUiState.Empty(book)
