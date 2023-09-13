@@ -14,7 +14,6 @@ import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.compose.material3.rememberOverflowMenuState
 import com.sorrowblue.comicviewer.framework.resource.R
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FavoriteListAppBar(

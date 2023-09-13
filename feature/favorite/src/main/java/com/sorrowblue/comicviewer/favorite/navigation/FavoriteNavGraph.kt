@@ -5,14 +5,16 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
 
-const val FavoriteGroupRoute = "${FavoriteListRoute}_group"
-val FavoriteFolderRoute = folderRoute(FavoriteListRoute)
+const val favoriteGraphRoute = "favorite_graph"
+val routeInFavoriteGraph
+    get() = listOf(FavoriteListRoute, favoriteRoute, folderRoute(FavoriteListRoute))
 
 fun NavGraphBuilder.favoriteGroup(
     contentPadding: PaddingValues,
@@ -21,8 +23,9 @@ fun NavGraphBuilder.favoriteGroup(
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onAddFavoriteClick: (BookshelfId, String) -> Unit,
+    onEditClick: (FavoriteId) -> Unit,
 ) {
-    navigation(route = FavoriteGroupRoute, startDestination = FavoriteListRoute) {
+    navigation(route = favoriteGraphRoute, startDestination = FavoriteListRoute) {
 
         favoriteListScreen(
             contentPadding = contentPadding,
@@ -32,7 +35,7 @@ fun NavGraphBuilder.favoriteGroup(
 
         favoriteScreen(
             onBackClick = navController::popBackStack,
-            onEditClick = navController::navigateToFavoriteEdit,
+            onEditClick = onEditClick,
             onSettingsClick = onSettingsClick,
             onClickFile = {
                 when (it) {
@@ -42,10 +45,7 @@ fun NavGraphBuilder.favoriteGroup(
                 }
             }
         )
-        favoriteEditScreen(
-            onBackClick = navController::popBackStack,
-            onComplete = navController::popBackStack
-        )
+
         folderScreen(
             contentPadding = contentPadding,
             prefix = FavoriteListRoute,

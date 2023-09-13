@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -38,9 +37,6 @@ internal class FavoriteViewModel @Inject constructor(
     private val args = FavoriteArgs(savedStateHandle)
 
     val favoriteId = args.favoriteId
-
-    private val favoriteFlow = getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
-        .mapNotNull { it.dataOrNull }
 
     private val _uiState = MutableStateFlow(FavoriteScreenUiState())
     val uiState = _uiState.asStateFlow()

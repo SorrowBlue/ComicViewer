@@ -18,11 +18,9 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.component.FileContentLayout
 import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenuState
 import com.sorrowblue.comicviewer.framework.compose.material3.rememberOverflowMenuState
@@ -59,7 +57,10 @@ internal fun FavoriteAppBar(
                 }
             }
 
-            FileContentLayoutButton(fileContentLayout = uiState.fileContentLayout, onFileListTypeChange)
+            FileContentLayoutButton(
+                fileContentLayout = uiState.fileContentLayout,
+                onFileListTypeChange
+            )
 
             OverflowMenu(overflowMenuState) {
                 if (uiState.fileContentLayout is FileContentLayout.Grid) {
@@ -93,13 +94,4 @@ internal fun FavoriteAppBar(
         },
         scrollBehavior = scrollBehavior
     )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-internal fun PreviewFavoriteAppBar() {
-    AppMaterialTheme {
-        FavoriteAppBar()
-    }
 }

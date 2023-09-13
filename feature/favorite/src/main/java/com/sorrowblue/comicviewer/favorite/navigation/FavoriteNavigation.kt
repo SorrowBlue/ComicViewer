@@ -20,7 +20,14 @@ internal class FavoriteArgs(
             this(FavoriteId(checkNotNull(savedStateHandle[favoriteIdArg])))
 }
 
-const val FavoriteRoute = "$FavoriteListRoute/{$favoriteIdArg}"
+internal const val favoriteRoute = "$FavoriteListRoute/{$favoriteIdArg}"
+
+internal fun NavController.navigateToFavorite(
+    favoriteId: FavoriteId,
+    navOptions: NavOptions? = null
+) {
+    navigate("$FavoriteListRoute/${favoriteId.value}", navOptions)
+}
 
 internal fun NavGraphBuilder.favoriteScreen(
     onBackClick: () -> Unit,
@@ -29,7 +36,7 @@ internal fun NavGraphBuilder.favoriteScreen(
     onClickFile: (File) -> Unit
 ) {
     composable(
-        route = FavoriteRoute,
+        route = favoriteRoute,
         arguments = listOf(
             navArgument(favoriteIdArg) { type = NavType.IntType }
         )
@@ -41,11 +48,4 @@ internal fun NavGraphBuilder.favoriteScreen(
             onClickFile = onClickFile
         )
     }
-}
-
-internal fun NavController.navigateToFavorite(
-    favoriteId: FavoriteId,
-    navOptions: NavOptions? = null
-) {
-    navigate("$FavoriteListRoute/${favoriteId.value}", navOptions)
 }

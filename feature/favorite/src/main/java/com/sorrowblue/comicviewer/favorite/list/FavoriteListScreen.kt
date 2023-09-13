@@ -74,7 +74,7 @@ internal data class FavoriteListScreenUiState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun FavoriteListScreen(
+private fun FavoriteListScreen(
     uiState: FavoriteListScreenUiState = FavoriteListScreenUiState(FavoriteCreateDialogUiState.Hide),
     lazyPagingItems: LazyPagingItems<Favorite>,
     onDismissRequest: () -> Unit = {},
@@ -151,7 +151,7 @@ internal fun FavoriteListScreen(
 
 @Preview
 @Composable
-fun PreviewFavoriteListScreen() {
+private fun PreviewFavoriteListScreen() {
     AppMaterialTheme {
         val items = List(20) {
             Favorite(FavoriteId(it), "Favorite name $it", it * 100)

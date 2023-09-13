@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.favorite.list.FavoriteListRoute
 
-const val FavoriteListRoute = "favorite"
+internal const val FavoriteListRoute = "favorite"
 
 internal fun NavGraphBuilder.favoriteListScreen(
     onSettingsClick: () -> Unit,

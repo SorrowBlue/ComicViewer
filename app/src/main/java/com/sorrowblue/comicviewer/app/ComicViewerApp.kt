@@ -31,11 +31,9 @@ import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraphRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGroup
 import com.sorrowblue.comicviewer.bookshelf.navigation.routeInBookshelfGraph
 import com.sorrowblue.comicviewer.domain.AddOn
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteFolderRoute
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGroupRoute
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteListRoute
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteRoute
+import com.sorrowblue.comicviewer.favorite.navigation.favoriteGraphRoute
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
+import com.sorrowblue.comicviewer.favorite.navigation.routeInFavoriteGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.BookRoute
 import com.sorrowblue.comicviewer.feature.book.navigation.bookScreen
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
@@ -46,6 +44,8 @@ import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.bookshe
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.navigateToBookshelfSelection
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
+import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.favoriteEditScreen
+import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.navigateToFavoriteEdit
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryFolderRoute
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryRoute
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGroupRoute
@@ -152,6 +152,12 @@ fun ComicViewerNavHost(
             onComplete = { navController.popBackStack(bookshelfSelectionRoute, true) }
         )
 
+        favoriteAddScreen(onBackClick = navController::popBackStack)
+        favoriteEditScreen(
+            onBackClick = navController::popBackStack,
+            onComplete = navController::popBackStack
+        )
+
         searchScreen(navController::popBackStack)
         settingsNavGraph(
             navController = navController,
@@ -199,7 +205,6 @@ fun ComicViewerNavHost(
                 })
             })
 
-        favoriteAddScreen(onBackClick = navController::popBackStack)
 
         addOnList.forEach {
             with(it.loadDynamicFeature() ?: return@forEach) {
@@ -260,6 +265,7 @@ private fun NavGraphBuilder.mainScreen(
                 onSettingsClick = navController::navigateToSettings,
                 navigateToSearch = navController::navigateToSearch,
                 onAddFavoriteClick = navController::navigateToFavoriteAdd,
+                onEditClick = navController::navigateToFavoriteEdit
             )
             readlaterGroup(
                 contentPadding = contentPadding,
@@ -294,7 +300,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
     override fun routeToTab(route: String): MainScreenTab {
         return when (route) {
             in routeInBookshelfGraph -> MainScreenTab.Bookshelf
-            FavoriteListRoute, FavoriteRoute, FavoriteFolderRoute -> MainScreenTab.Favorite
+            in routeInFavoriteGraph -> MainScreenTab.Favorite
             ReadLaterRoute, ReadLaterFolderRoute -> MainScreenTab.Readlater
             LibraryRoute, HistoryRoute, HistoryFolderRoute -> MainScreenTab.Library
             else -> MainScreenTab.Bookshelf
@@ -307,7 +313,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
     ) {
         when (tab) {
             MainScreenTab.Bookshelf -> bookshelfGraphRoute
-            MainScreenTab.Favorite -> FavoriteGroupRoute
+            MainScreenTab.Favorite -> favoriteGraphRoute
             MainScreenTab.Readlater -> ReadlaterGroupRoute
             MainScreenTab.Library -> LibraryGroupRoute
         }.let { route ->

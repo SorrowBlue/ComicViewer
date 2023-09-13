@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.favorite.edit
+package com.sorrowblue.comicviewer.feature.favorite.edit
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.RemoveFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.UpdateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteEditArgs
+import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.FavoriteEditArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,7 +57,8 @@ internal class FavoriteEditViewModel @Inject constructor(
 
     fun save(done: () -> Unit) {
         viewModelScope.launch {
-            val favorite = getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId)).first().dataOrNull ?: return@launch
+            val favorite = getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
+                .first().dataOrNull ?: return@launch
             updateFavoriteUseCase.execute(UpdateFavoriteUseCase.Request(favorite.copy(name = _uiState.value.name)))
                 .collect()
             done()

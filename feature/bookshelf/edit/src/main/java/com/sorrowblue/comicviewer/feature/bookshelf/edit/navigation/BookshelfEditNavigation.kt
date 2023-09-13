@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditRoute
 
-private const val bookshelfEditRoute = "bookshelf_edit_route"
+private const val bookshelfEditRoute = "bookshelf/edit"
 
 fun NavController.navigateToBookshelfEdit(
     bookshelfId: BookshelfId,
