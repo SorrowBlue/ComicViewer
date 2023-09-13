@@ -65,6 +65,9 @@ internal class BookThumbnailFetcher(
             }
             val bookshelfModel = bookshelfLocalDataSource.flow(book.bookshelfModelId).first()
                 ?: throw RuntimeException("本棚が取得できない")
+            if (!remoteDataSourceFactory.create(bookshelfModel).exists(book.path)) {
+                throw RuntimeException("ファイルがない(${book.path})")
+            }
             var fileReader = remoteDataSourceFactory.create(bookshelfModel).fileReader(book)
                 ?: throw RuntimeException("FileReaderが取得できない")
             val bitmap = fileReader.thumbnailBitmap(requestWidth.toInt(), requestHeight.toInt())
