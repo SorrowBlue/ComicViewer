@@ -14,8 +14,11 @@ import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
 
-const val HistoryRoute = "history"
-val HistoryFolderRoute = folderRoute(HistoryRoute)
+private const val historyRoute = "history"
+private const val historyGraphRoute = "${historyRoute}_graph"
+val routeInHistoryGraph get() = listOf(historyRoute, folderRoute(historyRoute))
+
+fun NavController.navigateToHistoryGroup() = navigate(historyGraphRoute)
 
 internal fun NavGraphBuilder.historyScreen(
     contentPadding: PaddingValues,
@@ -24,7 +27,7 @@ internal fun NavGraphBuilder.historyScreen(
     onOpenFolderClick: (File) -> Unit,
     onSettingsClick: () -> Unit
 ) {
-    composable(route = HistoryRoute) {
+    composable(route = historyRoute) {
         HistoryRoute(
             contentPadding = contentPadding,
             onFileClick = onFileClick,
@@ -35,11 +38,6 @@ internal fun NavGraphBuilder.historyScreen(
     }
 }
 
-
-const val HistoryGroupRoute = "history_group"
-
-fun NavController.navigateToHistoryGroup() = navigate(HistoryGroupRoute)
-
 fun NavGraphBuilder.historyGroup(
     contentPadding: PaddingValues,
     navController: NavController,
@@ -48,7 +46,7 @@ fun NavGraphBuilder.historyGroup(
     onAddFavoriteClick: (BookshelfId, String) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit
 ) {
-    navigation(route = HistoryGroupRoute, startDestination = HistoryRoute) {
+    navigation(route = historyGraphRoute, startDestination = historyRoute) {
         historyScreen(
             contentPadding = contentPadding,
             onFileClick = {
@@ -56,7 +54,7 @@ fun NavGraphBuilder.historyGroup(
                     is Book -> onBookClick(it.bookshelfId, it.path)
                     is Folder ->
                         navController.navigateToFolder(
-                            prefix = HistoryRoute,
+                            prefix = historyRoute,
                             it.bookshelfId,
                             it.path
                         )
@@ -64,20 +62,20 @@ fun NavGraphBuilder.historyGroup(
             },
             onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
             onOpenFolderClick = {
-                navController.navigateToFolder(prefix = HistoryRoute, it.bookshelfId, it.path)
+                navController.navigateToFolder(prefix = historyRoute, it.bookshelfId, it.path)
             },
             onSettingsClick = onSettingsClick
         )
         folderScreen(
             contentPadding = contentPadding,
-            prefix = HistoryRoute,
+            prefix = historyRoute,
             navigateToSearch = navigateToSearch,
             onClickFile = {
                 when (it) {
                     is Book -> onBookClick(it.bookshelfId, it.path)
                     is Folder ->
                         navController.navigateToFolder(
-                            prefix = HistoryRoute,
+                            prefix = historyRoute,
                             it.bookshelfId,
                             it.path
                         )

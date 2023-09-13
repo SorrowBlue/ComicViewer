@@ -4,11 +4,11 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <application>
-        <activity
-            android:name="com.microsoft.identity.client.BrowserTabActivity"
-            android:exported="true" />
-    </application>
+    <!--    <application>-->
+    <!--        <activity-->
+    <!--            android:name="com.microsoft.identity.client.BrowserTabActivity"-->
+    <!--            android:exported="true" />-->
+    <!--    </application>-->
     <dist:module
         dist:instant="false"
         dist:title="@string/title_onedrive">

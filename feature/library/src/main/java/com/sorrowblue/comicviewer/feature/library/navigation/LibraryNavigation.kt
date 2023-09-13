@@ -8,11 +8,26 @@ import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.history.navigation.historyGroup
 import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistoryGroup
+import com.sorrowblue.comicviewer.feature.history.navigation.routeInHistoryGraph
 import com.sorrowblue.comicviewer.feature.library.LibraryRoute
 import com.sorrowblue.comicviewer.feature.library.section.Feature
 
-const val LibraryRoute = "library"
-const val LibraryGroupRoute = "${LibraryRoute}_group"
+private const val libraryRoute = "library"
+const val libraryGraphRoute = "${libraryRoute}_graph"
+
+val routeInLibraryGraph get() = listOf(libraryRoute) + routeInHistoryGraph
+
+private fun NavGraphBuilder.libraryScreen(
+    contentPadding: PaddingValues,
+    onFeatureClick: (Feature) -> Unit,
+) {
+    composable(libraryRoute) {
+        LibraryRoute(
+            contentPadding = contentPadding,
+            onFeatureClick = onFeatureClick,
+        )
+    }
+}
 
 fun NavGraphBuilder.libraryGroup(
     contentPadding: PaddingValues,
@@ -23,7 +38,7 @@ fun NavGraphBuilder.libraryGroup(
     navigateToSearch: (BookshelfId, String) -> Unit,
     onAddOnClick: (Feature.AddOn) -> Unit
 ) {
-    navigation(route = LibraryGroupRoute, startDestination = LibraryRoute) {
+    navigation(route = libraryGraphRoute, startDestination = libraryRoute) {
         libraryScreen(
             contentPadding = contentPadding,
             onFeatureClick = {
@@ -42,18 +57,6 @@ fun NavGraphBuilder.libraryGroup(
             onSettingsClick = onSettingsClick,
             onAddFavoriteClick = onAddFavoriteClick,
             navigateToSearch = navigateToSearch
-        )
-    }
-}
-
-private fun NavGraphBuilder.libraryScreen(
-    contentPadding: PaddingValues,
-    onFeatureClick: (Feature) -> Unit,
-) {
-    composable(LibraryRoute) {
-        LibraryRoute(
-            contentPadding = contentPadding,
-            onFeatureClick = onFeatureClick,
         )
     }
 }

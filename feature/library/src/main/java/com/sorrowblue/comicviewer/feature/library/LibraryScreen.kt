@@ -34,13 +34,13 @@ import com.sorrowblue.comicviewer.framework.compose.LifecycleEffect
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 
-class StringResource(private val resId: Int, private vararg val formatArgs: Any) {
+internal class StringResource(private val resId: Int, private vararg val formatArgs: Any) {
     fun getString(context: Context): String {
         return context.getString(resId, *formatArgs)
     }
 }
 
-sealed interface LibraryScreenUiEvent {
+internal sealed interface LibraryScreenUiEvent {
     data class Message(
         val text: String,
         val actionLabel: String? = null,
@@ -111,7 +111,7 @@ internal fun LibraryRoute(
     LifecycleEffect(lifecycleObserver = viewModel)
 }
 
-data class LibraryScreenUiState(
+internal data class LibraryScreenUiState(
     val addOnList: PersistentList<Feature.AddOn>,
     val requestInstallDialogUiState: RequestInstallDialogUiState = RequestInstallDialogUiState.Hide
 )

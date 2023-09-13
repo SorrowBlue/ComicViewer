@@ -46,11 +46,9 @@ import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScr
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
 import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.favoriteEditScreen
 import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.navigateToFavoriteEdit
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryFolderRoute
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryRoute
-import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGroupRoute
-import com.sorrowblue.comicviewer.feature.library.navigation.LibraryRoute
+import com.sorrowblue.comicviewer.feature.library.navigation.libraryGraphRoute
 import com.sorrowblue.comicviewer.feature.library.navigation.libraryGroup
+import com.sorrowblue.comicviewer.feature.library.navigation.routeInLibraryGraph
 import com.sorrowblue.comicviewer.feature.library.serviceloader.AddOnNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavigation
@@ -301,7 +299,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
             in routeInBookshelfGraph -> MainScreenTab.Bookshelf
             in routeInFavoriteGraph -> MainScreenTab.Favorite
             in routeInReadlaterGraph -> MainScreenTab.Readlater
-            LibraryRoute, HistoryRoute, HistoryFolderRoute -> MainScreenTab.Library
+            in routeInLibraryGraph -> MainScreenTab.Library
             else -> MainScreenTab.Bookshelf
         }
     }
@@ -314,7 +312,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
             MainScreenTab.Bookshelf -> bookshelfGraphRoute
             MainScreenTab.Favorite -> favoriteGraphRoute
             MainScreenTab.Readlater -> readlaterGraphRoute
-            MainScreenTab.Library -> LibraryGroupRoute
+            MainScreenTab.Library -> libraryGraphRoute
         }.let { route ->
             navController.navigate(
                 route,

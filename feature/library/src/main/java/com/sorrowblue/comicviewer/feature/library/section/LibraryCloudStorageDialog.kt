@@ -13,14 +13,14 @@ import androidx.compose.ui.window.DialogProperties
 import com.sorrowblue.comicviewer.feature.library.component.AddOnItemState
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 
-sealed interface RequestInstallDialogUiState {
+internal sealed interface RequestInstallDialogUiState {
 
     data object Hide : RequestInstallDialogUiState
     data class Show(val feature: Feature.AddOn) : RequestInstallDialogUiState
 }
 
 @Composable
-fun LibraryCloudStorageDialog(
+internal fun LibraryCloudStorageDialog(
     uiState: RequestInstallDialogUiState,
     onInstallClick: () -> Unit,
     onCancelClick: () -> Unit,

@@ -128,8 +128,6 @@ dependencies {
     implementation(projects.feature.favorite)
     implementation(projects.feature.favorite.add)
     implementation(projects.feature.favorite.edit)
-    implementation(projects.feature.file)
-    implementation(projects.feature.history)
     implementation(projects.feature.readlater)
     implementation(projects.feature.search)
     implementation(projects.feature.settings)

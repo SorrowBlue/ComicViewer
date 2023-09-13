@@ -237,7 +237,7 @@ internal class LibraryViewModel @Inject constructor(
     }
 }
 
-val allowInstallStatus = listOf(
+private val allowInstallStatus = listOf(
     SplitInstallSessionStatus.INSTALLED,
     SplitInstallSessionStatus.FAILED,
     SplitInstallSessionStatus.CANCELED,
