@@ -115,11 +115,6 @@ android {
 }
 
 dependencies {
-    api(libs.google.code.gson)
-    implementation(libs.androidx.activity.ktx)
-    api(libs.androidx.browser)
-    api("com.fasterxml.jackson.core:jackson-core:2.15.2")
-    api(libs.google.guava)
     implementation(projects.framework.ui)
     implementation(projects.framework.compose)
     implementation(projects.framework.notification)
@@ -139,11 +134,12 @@ dependencies {
     implementation(projects.feature.tutorial)
     implementation(projects.feature.library)
 
-    implementation(libs.androidx.hilt.work)
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.biometric)
-    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.browser)
-    implementation("com.google.android.play:review-ktx:2.0.1")
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.hilt.work)
+    implementation(libs.google.android.play.review.ktx)
     implementation(libs.mikepenz.aboutlibraries)
 
 //    debugImplementation(libs.squareup.leakcanary.android)

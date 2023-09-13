@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.feature.library)
 
+    implementation(libs.androidx.browser)
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.work.runtime.ktx)
 

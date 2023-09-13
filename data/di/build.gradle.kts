@@ -13,4 +13,9 @@ dependencies {
     implementation(projects.data.service)
     implementation(projects.data.storage.device)
     implementation(projects.data.storage.smb)
+
+    // :feature:library:dropbox :feature:library:onedrive
+    implementation(libs.fasterxml.jackson.core)
+    // :feature:library:googledrive :feature:library:onedrive
+    implementation(libs.google.code.gson)
 }

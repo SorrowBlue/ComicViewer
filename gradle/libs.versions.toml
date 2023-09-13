@@ -127,6 +127,7 @@ androidx-window = "androidx.window:window:1.1.0"
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 
 google-android-play-feature-delivery-ktx = "com.google.android.play:feature-delivery-ktx:2.1.0"
+google-android-play-review-ktx = "com.google.android.play:review-ktx:2.0.1"
 google-code-gson = "com.google.code.gson:gson:2.10.1"
 google-guava = "com.google.guava:guava:32.0.1-jre"
 google-material = "com.google.android.material:material:1.9.0"
@@ -149,6 +150,7 @@ github-omicronapps-SevenZipJBinding4Android = "com.github.omicronapps:7-Zip-JBin
 artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.23.3"
 squareup-logcat = "com.squareup.logcat:logcat:0.1"
 chrisbanes-insetter = "dev.chrisbanes.insetter:insetter-dbx:0.6.1"
+fasterxml-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.15.2"
 
 google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "google-dagger" }
 google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "google-dagger" }
