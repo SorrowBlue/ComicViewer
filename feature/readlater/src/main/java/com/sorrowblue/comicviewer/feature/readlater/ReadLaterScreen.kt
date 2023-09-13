@@ -52,14 +52,14 @@ internal fun ReadLaterRoute(
     )
 }
 
-data class ReadLaterScreenUiState(
+internal data class ReadLaterScreenUiState(
     val fileInfoSheetUiState: FileInfoSheetUiState,
     val fileContentUiState: FileContentUiState
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ReadLaterScreen(
+private fun ReadLaterScreen(
     uiState: ReadLaterScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onFileClick: (File) -> Unit = {},

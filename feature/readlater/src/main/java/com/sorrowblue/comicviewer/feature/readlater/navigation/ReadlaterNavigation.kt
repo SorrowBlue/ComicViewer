@@ -14,29 +14,9 @@ import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
 
-const val ReadLaterRoute = "readlater"
-val ReadLaterFolderRoute = folderRoute(ReadLaterRoute)
-
-internal fun NavGraphBuilder.readLaterScreen(
-    contentPadding: PaddingValues,
-    onFileClick: (File) -> Unit,
-    onAddFavoriteClick: (File) -> Unit,
-    onOpenFolderClick: (File) -> Unit,
-    onSettingsClick: () -> Unit
-) {
-    composable(route = ReadLaterRoute) {
-        ReadLaterRoute(
-            contentPadding = contentPadding,
-            onFileClick = onFileClick,
-            onAddFavoriteClick = onAddFavoriteClick,
-            onOpenFolderClick = onOpenFolderClick,
-            onSettingsClick = onSettingsClick
-        )
-    }
-}
-
-
-const val ReadlaterGroupRoute = "readlater_group"
+private const val readLaterRoute = "readlater"
+val routeInReadlaterGraph get() = listOf(readLaterRoute, folderRoute(readLaterRoute))
+const val readlaterGraphRoute = "readlater_graph"
 
 fun NavGraphBuilder.readlaterGroup(
     contentPadding: PaddingValues,
@@ -46,7 +26,7 @@ fun NavGraphBuilder.readlaterGroup(
     onAddFavoriteClick: (BookshelfId, String) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit
 ) {
-    navigation(route = ReadlaterGroupRoute, startDestination = ReadLaterRoute) {
+    navigation(route = readlaterGraphRoute, startDestination = readLaterRoute) {
         readLaterScreen(
             contentPadding = contentPadding,
             onFileClick = {
@@ -54,7 +34,7 @@ fun NavGraphBuilder.readlaterGroup(
                     is Book -> onBookClick(it.bookshelfId, it.path)
                     is Folder ->
                         navController.navigateToFolder(
-                            prefix = ReadLaterRoute,
+                            prefix = readLaterRoute,
                             it.bookshelfId,
                             it.path
                         )
@@ -62,20 +42,20 @@ fun NavGraphBuilder.readlaterGroup(
             },
             onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
             onOpenFolderClick = {
-                navController.navigateToFolder(prefix = ReadLaterRoute, it.bookshelfId, it.path)
+                navController.navigateToFolder(prefix = readLaterRoute, it.bookshelfId, it.path)
             },
             onSettingsClick = onSettingsClick
         )
         folderScreen(
             contentPadding = contentPadding,
-            prefix = ReadLaterRoute,
+            prefix = readLaterRoute,
             navigateToSearch = navigateToSearch,
             onClickFile = {
                 when (it) {
                     is Book -> onBookClick(it.bookshelfId, it.path)
                     is Folder ->
                         navController.navigateToFolder(
-                            prefix = ReadLaterRoute,
+                            prefix = readLaterRoute,
                             it.bookshelfId,
                             it.path
                         )
@@ -84,6 +64,24 @@ fun NavGraphBuilder.readlaterGroup(
             onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
             onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
+        )
+    }
+}
+
+private fun NavGraphBuilder.readLaterScreen(
+    contentPadding: PaddingValues,
+    onFileClick: (File) -> Unit,
+    onAddFavoriteClick: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
+    onSettingsClick: () -> Unit
+) {
+    composable(route = readLaterRoute) {
+        ReadLaterRoute(
+            contentPadding = contentPadding,
+            onFileClick = onFileClick,
+            onAddFavoriteClick = onAddFavoriteClick,
+            onOpenFolderClick = onOpenFolderClick,
+            onSettingsClick = onSettingsClick
         )
     }
 }

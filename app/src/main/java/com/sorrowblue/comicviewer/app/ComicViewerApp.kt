@@ -56,10 +56,9 @@ import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavigation
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterFolderRoute
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterRoute
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGroupRoute
+import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGraphRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGroup
+import com.sorrowblue.comicviewer.feature.readlater.navigation.routeInReadlaterGraph
 import com.sorrowblue.comicviewer.feature.search.navigation.navigateToSearch
 import com.sorrowblue.comicviewer.feature.search.navigation.searchScreen
 import com.sorrowblue.comicviewer.feature.settings.navigation.navigateToSettings
@@ -301,7 +300,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
         return when (route) {
             in routeInBookshelfGraph -> MainScreenTab.Bookshelf
             in routeInFavoriteGraph -> MainScreenTab.Favorite
-            ReadLaterRoute, ReadLaterFolderRoute -> MainScreenTab.Readlater
+            in routeInReadlaterGraph -> MainScreenTab.Readlater
             LibraryRoute, HistoryRoute, HistoryFolderRoute -> MainScreenTab.Library
             else -> MainScreenTab.Bookshelf
         }
@@ -314,7 +313,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
         when (tab) {
             MainScreenTab.Bookshelf -> bookshelfGraphRoute
             MainScreenTab.Favorite -> favoriteGraphRoute
-            MainScreenTab.Readlater -> ReadlaterGroupRoute
+            MainScreenTab.Readlater -> readlaterGraphRoute
             MainScreenTab.Library -> LibraryGroupRoute
         }.let { route ->
             navController.navigate(
