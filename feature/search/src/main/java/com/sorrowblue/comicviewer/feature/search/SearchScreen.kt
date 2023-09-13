@@ -48,7 +48,7 @@ import com.sorrowblue.comicviewer.framework.compose.isLoadedData
 import kotlinx.coroutines.launch
 import logcat.logcat
 
-data class SearchScreenUiState(
+internal data class SearchScreenUiState(
     val searchResultSheetUiState: SearchResultSheetUiState = SearchResultSheetUiState(),
     val searchConditionSheetUiState: SearchConditionSheetUiState = SearchConditionSheetUiState(),
     val searchQuery: String = "",
@@ -108,10 +108,10 @@ internal fun SearchRoute(viewModel: SearchViewModel = hiltViewModel(), onBackCli
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SearchScreen(
+private fun SearchScreen(
     uiState: SearchScreenUiState,
     scaffoldState: BottomSheetScaffoldState,
-    lazyListState: LazyListState ,
+    lazyListState: LazyListState,
     lazyPagingItems: LazyPagingItems<File>,
     onSearchQueryChange: (String) -> Unit = {},
     onBackClick: () -> Unit = {},

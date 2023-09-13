@@ -42,7 +42,7 @@ import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
 import com.sorrowblue.comicviewer.framework.compose.placeholder.placeholder3
 
-data class SearchResultSheetUiState(
+internal data class SearchResultSheetUiState(
     val isShrink: Boolean = false,
 )
 
@@ -112,7 +112,7 @@ internal fun SearchResultSheet(
 }
 
 @Composable
-fun FileList(file: File?, modifier: Modifier = Modifier) {
+private fun FileList(file: File?, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier.padding(start = 16.dp, top = 8.dp, end = 24.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically

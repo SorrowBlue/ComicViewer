@@ -12,14 +12,29 @@ import com.sorrowblue.comicviewer.domain.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.search.SearchRoute
 
-const val searchRoute = "search"
+private const val bookshelfIdArg = "bookshelfId"
+private const val pathArg = "path"
+
+internal class SearchArgs(val bookshelfId: BookshelfId, val path: String) {
+
+    constructor(savedStateHandle: SavedStateHandle) :
+            this(
+                BookshelfId(checkNotNull(savedStateHandle[bookshelfIdArg])),
+                (checkNotNull<String>(savedStateHandle[pathArg])).decodeFromBase64(),
+            )
+}
+
+private const val searchRoute = "search"
 
 fun NavController.navigateToSearch(
     bookshelfId: BookshelfId,
     path: String,
     navOptions: NavOptions? = null
 ) {
-    this.navigate("$searchRoute?bookshelf_id=${bookshelfId.value}&path=${path.encodeToBase64()}", navOptions)
+    this.navigate(
+        "$searchRoute?bookshelf_id=${bookshelfId.value}&path=${path.encodeToBase64()}",
+        navOptions
+    )
 }
 
 fun NavGraphBuilder.searchScreen(onBackClick: () -> Unit) {
@@ -36,18 +51,4 @@ fun NavGraphBuilder.searchScreen(onBackClick: () -> Unit) {
     ) {
         SearchRoute(onBackClick = onBackClick)
     }
-}
-
-private const val bookshelfIdArg = "bookshelfId"
-private const val pathArg = "path"
-
-internal class SearchArgs(val bookshelfId: BookshelfId, val path: String) {
-
-    val base64Path get() = path.encodeToBase64()
-
-    constructor(savedStateHandle: SavedStateHandle) :
-            this(
-                BookshelfId(checkNotNull(savedStateHandle[bookshelfIdArg])),
-                (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64(),
-            )
 }

@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.material3.SingleChoiceChipRow
 
-data class SearchConditionSheetUiState(
+internal data class SearchConditionSheetUiState(
     val range: Range = Range.BOOKSHELF,
     val period: Period = Period.NONE,
     val order: Order = Order.NAME,
@@ -88,7 +88,7 @@ internal fun SearchConditionSheet(
 
 @Preview
 @Composable
-fun PreviewSearchConditionSheet() {
+private fun PreviewSearchConditionSheet() {
     AppMaterialTheme {
         Surface(Modifier.fillMaxSize()) {
             SearchConditionSheet()
