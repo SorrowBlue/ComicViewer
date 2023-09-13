@@ -3,10 +3,10 @@ package com.sorrowblue.comicviewer.file.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +27,7 @@ fun FileContent(
     contentPadding: PaddingValues,
     onClickItem: (File) -> Unit,
     onLongClickItem: (File) -> Unit,
-    state: LazyStaggeredGridState = rememberLazyStaggeredGridState()
+    state: LazyGridState = rememberLazyGridState()
 ) {
     when (uiState.layout) {
         is FileContentLayout.Grid -> FileGridContent(
@@ -56,11 +56,11 @@ private fun FileGridContent(
     contentPadding: PaddingValues,
     onClickItem: (File) -> Unit,
     onLongClickItem: (File) -> Unit,
-    state: LazyStaggeredGridState
+    state: LazyGridState
 ) {
-    LazyVerticalStaggeredGrid(
+    LazyVerticalGrid(
         modifier = Modifier.padding(AppMaterialTheme.dimens.margin),
-        columns = StaggeredGridCells.Adaptive(
+        columns = GridCells.Adaptive(
             when (size) {
                 FileContentLayout.GridSize.Small -> 88.dp
                 FileContentLayout.GridSize.Medium -> 120.dp
@@ -69,7 +69,7 @@ private fun FileGridContent(
         ),
         state = state,
         contentPadding = contentPadding,
-        verticalItemSpacing = 8.dp,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
@@ -90,14 +90,14 @@ private fun FileListContent(
     contentPadding: PaddingValues,
     onClickItem: (File) -> Unit,
     onLongClickItem: (File) -> Unit,
-    state: LazyStaggeredGridState
+    state: LazyGridState
 ) {
-    LazyVerticalStaggeredGrid(
+    LazyVerticalGrid(
         modifier = Modifier.padding(AppMaterialTheme.dimens.margin),
-        columns = StaggeredGridCells.Fixed(1),
+        columns = GridCells.Fixed(1),
         state = state,
         contentPadding = contentPadding,
-        verticalItemSpacing = 8.dp,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
             val item = lazyPagingItems[it]

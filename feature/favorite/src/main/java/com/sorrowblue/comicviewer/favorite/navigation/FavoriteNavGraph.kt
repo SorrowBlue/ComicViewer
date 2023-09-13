@@ -38,7 +38,7 @@ fun NavGraphBuilder.favoriteGroup(
                 when (it) {
                     is Book -> onBookClick(it.bookshelfId, it.path)
                     is Folder ->
-                        navController.navigateToFolder(it.bookshelfId, it.path, FavoriteListRoute)
+                        navController.navigateToFolder(FavoriteListRoute, it.bookshelfId, it.path)
                 }
             }
         )
@@ -54,7 +54,7 @@ fun NavGraphBuilder.favoriteGroup(
                 when (it) {
                     is Book -> onBookClick(it.bookshelfId, it.path)
                     is Folder ->
-                        navController.navigateToFolder(it.bookshelfId, it.path, FavoriteListRoute)
+                        navController.navigateToFolder(FavoriteListRoute, it.bookshelfId, it.path)
                 }
             },
             onSettingsClick = onSettingsClick,

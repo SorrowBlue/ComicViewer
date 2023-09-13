@@ -27,18 +27,23 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.mikepenz.aboutlibraries.LibsBuilder
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfFolderRoute
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGroupRoute
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfRoute
+import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraphRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGroup
+import com.sorrowblue.comicviewer.bookshelf.navigation.routeInBookshelfGraph
 import com.sorrowblue.comicviewer.domain.AddOn
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteFolderRoute
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGroupRoute
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteListRoute
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteRoute
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
+import com.sorrowblue.comicviewer.feature.book.navigation.BookRoute
 import com.sorrowblue.comicviewer.feature.book.navigation.bookScreen
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.bookshelfEditScreen
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.navigateToBookshelfEdit
+import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.bookshelfSelectionRoute
+import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.bookshelfSelectionScreen
+import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.navigateToBookshelfSelection
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryFolderRoute
@@ -137,6 +142,16 @@ fun ComicViewerNavHost(
     val context = LocalContext.current
     NavHostWithSharedAxisX(navController = navController, startDestination = mainScreenRoute) {
         mainScreen(windowsSize, navController)
+
+        bookshelfSelectionScreen(
+            onBackClick = navController::popBackStack,
+            onSourceClick = navController::navigateToBookshelfEdit
+        )
+        bookshelfEditScreen(
+            onBackClick = navController::popBackStack,
+            onComplete = { navController.popBackStack(bookshelfSelectionRoute, true) }
+        )
+
         searchScreen(navController::popBackStack)
         settingsNavGraph(
             navController = navController,
@@ -177,7 +192,11 @@ fun ComicViewerNavHost(
         bookScreen(
             onBackClick = navController::popBackStack,
             onNextBookClick = {
-                navController.navigateToBook(it.bookshelfId, it.path)
+                navController.navigateToBook(it.bookshelfId, it.path, navOptions = navOptions {
+                    popUpTo("$BookRoute/{bookshelfId}/{path}?favoriteId={favoriteId}") {
+                        inclusive = true
+                    }
+                })
             })
 
         favoriteAddScreen(onBackClick = navController::popBackStack)
@@ -231,6 +250,8 @@ private fun NavGraphBuilder.mainScreen(
                 navigateToBook = navController::navigateToBook,
                 navigateToSearch = navController::navigateToSearch,
                 onAddFavoriteClick = navController::navigateToFavoriteAdd,
+                onEditClick = navController::navigateToBookshelfEdit,
+                onAddClick = navController::navigateToBookshelfSelection
             )
             favoriteGroup(
                 contentPadding = contentPadding,
@@ -268,11 +289,11 @@ private fun NavGraphBuilder.mainScreen(
 }
 
 class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
-    override val startDestination: String = BookshelfGroupRoute
+    override val startDestination: String = bookshelfGraphRoute
 
     override fun routeToTab(route: String): MainScreenTab {
         return when (route) {
-            BookshelfRoute, BookshelfFolderRoute -> MainScreenTab.Bookshelf
+            in routeInBookshelfGraph -> MainScreenTab.Bookshelf
             FavoriteListRoute, FavoriteRoute, FavoriteFolderRoute -> MainScreenTab.Favorite
             ReadLaterRoute, ReadLaterFolderRoute -> MainScreenTab.Readlater
             LibraryRoute, HistoryRoute, HistoryFolderRoute -> MainScreenTab.Library
@@ -285,7 +306,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
         tab: MainScreenTab,
     ) {
         when (tab) {
-            MainScreenTab.Bookshelf -> BookshelfGroupRoute
+            MainScreenTab.Bookshelf -> bookshelfGraphRoute
             MainScreenTab.Favorite -> FavoriteGroupRoute
             MainScreenTab.Readlater -> ReadlaterGroupRoute
             MainScreenTab.Library -> LibraryGroupRoute

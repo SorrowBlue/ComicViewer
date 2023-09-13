@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -74,7 +74,7 @@ private fun FavoriteScreen(
     onSettingsClick: () -> Unit = {},
     onClickFile: (File) -> Unit = {},
     onClickLongFile: (File) -> Unit = {},
-    lazyStaggeredGridState: LazyStaggeredGridState = rememberLazyStaggeredGridState(),
+    lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -113,7 +113,7 @@ private fun FavoriteScreen(
                 contentPadding = contentPadding,
                 onClickItem = onClickFile,
                 onLongClickItem = onClickLongFile,
-                state = lazyStaggeredGridState
+                state = lazyGridState
             )
         }
     }

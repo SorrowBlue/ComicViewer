@@ -54,15 +54,15 @@ fun NavGraphBuilder.readlaterGroup(
                     is Book -> onBookClick(it.bookshelfId, it.path)
                     is Folder ->
                         navController.navigateToFolder(
+                            prefix = ReadLaterRoute,
                             it.bookshelfId,
-                            it.path,
-                            prefix = ReadLaterRoute
+                            it.path
                         )
                 }
             },
             onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
             onOpenFolderClick = {
-                navController.navigateToFolder(it.bookshelfId, it.path, prefix = ReadLaterRoute)
+                navController.navigateToFolder(prefix = ReadLaterRoute, it.bookshelfId, it.path)
             },
             onSettingsClick = onSettingsClick
         )
@@ -75,9 +75,9 @@ fun NavGraphBuilder.readlaterGroup(
                     is Book -> onBookClick(it.bookshelfId, it.path)
                     is Folder ->
                         navController.navigateToFolder(
+                            prefix = ReadLaterRoute,
                             it.bookshelfId,
-                            it.path,
-                            prefix = ReadLaterRoute
+                            it.path
                         )
                 }
             },

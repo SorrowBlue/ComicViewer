@@ -25,7 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGroupRoute
+import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraphRoute
 import kotlinx.collections.immutable.toPersistentList
 
 const val mainScreenRoute = "main"
@@ -112,7 +112,7 @@ fun MainScreen(
         ) {
             NavHost(
                 navController = navController,
-                startDestination = BookshelfGroupRoute,
+                startDestination = bookshelfGraphRoute,
                 modifier = Modifier,
                 enterTransition = { materialFadeThroughIn() },
                 exitTransition = { materialFadeThroughOut() },

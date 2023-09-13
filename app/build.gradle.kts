@@ -123,6 +123,8 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.feature.book)
     implementation(projects.feature.bookshelf)
+    implementation(projects.feature.bookshelf.edit)
+    implementation(projects.feature.bookshelf.selection)
     implementation(projects.feature.file)
     implementation(projects.feature.favorite)
     implementation(projects.feature.favorite.add)

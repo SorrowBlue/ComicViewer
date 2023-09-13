@@ -10,7 +10,5 @@ android {
 dependencies {
     implementation(projects.framework.compose)
     implementation(projects.domain)
-    implementation(projects.feature.bookshelf.edit)
-    implementation(projects.feature.bookshelf.selection)
     implementation(projects.feature.folder)
 }

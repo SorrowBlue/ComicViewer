@@ -1,10 +1,6 @@
 package com.sorrowblue.comicviewer.folder.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -25,16 +21,32 @@ internal class FolderArgs(
     val bookshelfId: BookshelfId,
     val path: String
 ) {
-    constructor(savedStateHandle: SavedStateHandle) :
-            this(
-                BookshelfId(checkNotNull(savedStateHandle[bookshelfIdArg])),
-                (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64()
-            )
+    constructor(savedStateHandle: SavedStateHandle) : this(
+        BookshelfId(checkNotNull(savedStateHandle[bookshelfIdArg])),
+        (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64()
+    )
+}
+
+private const val FolderRoute = "folder"
+
+fun folderRoute(prefix: String) =
+    "$prefix/$FolderRoute/{$bookshelfIdArg}/{$pathArg}"
+
+fun NavController.navigateToFolder(
+    prefix: String,
+    bookshelfId: BookshelfId,
+    path: String,
+    navOptions: NavOptions? = null
+) {
+    navigate(
+        "$prefix/$FolderRoute/${bookshelfId.value}/${path.encodeToBase64()}",
+        navOptions
+    )
 }
 
 fun NavGraphBuilder.folderScreen(
+    prefix: String,
     contentPadding: PaddingValues,
-    prefix: String = "",
     navigateToSearch: (BookshelfId, String) -> Unit,
     onClickFile: (File) -> Unit,
     onSettingsClick: () -> Unit,
@@ -46,33 +58,7 @@ fun NavGraphBuilder.folderScreen(
         arguments = listOf(
             navArgument(bookshelfIdArg) { type = NavType.IntType },
             navArgument(pathArg) { type = NavType.StringType },
-        ),
-        enterTransition = {
-            slideIntoContainer(
-                AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(700)
-            )
-        },
-        exitTransition = {
-            slideOutOfContainer(
-                AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(700)
-            )
-            fadeOut()
-        },
-        popEnterTransition = {
-            slideIntoContainer(
-                AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(700)
-            )
-        },
-        popExitTransition = {
-            slideOutOfContainer(
-                AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(700)
-            )
-        }
-
+        )
     ) {
         FolderRoute(
             contentPadding = contentPadding,
@@ -83,21 +69,4 @@ fun NavGraphBuilder.folderScreen(
             onBackClick = onBackClick,
         )
     }
-}
-
-private const val FolderRoute = "folder"
-
-fun folderRoute(prefix: String) =
-    "$prefix/$FolderRoute/{$bookshelfIdArg}/{$pathArg}"
-
-fun NavController.navigateToFolder(
-    bookshelfId: BookshelfId,
-    path: String,
-    prefix: String = "",
-    navOptions: NavOptions? = null
-) {
-    navigate(
-        "$prefix/$FolderRoute/${bookshelfId.value}/${path.encodeToBase64()}?prefix=$prefix",
-        navOptions
-    )
 }

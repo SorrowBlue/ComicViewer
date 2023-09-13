@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -63,7 +63,7 @@ internal fun FolderRoute(
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsState()
-    val lazyStaggeredGridState = rememberLazyStaggeredGridState()
+    val lazyGridState = rememberLazyGridState()
     val isRefreshing =
         remember(lazyPagingItems.loadState.refresh) { lazyPagingItems.loadState.refresh is LoadState.Loading }
     val pullRefreshState = rememberPullRefreshState(isRefreshing, lazyPagingItems::refresh)
@@ -82,7 +82,7 @@ internal fun FolderRoute(
         },
         onClickFile = onClickFile,
         onClickLongFile = viewModel::onClickLongFile,
-        lazyStaggeredGridState = lazyStaggeredGridState,
+        lazyGridState = lazyGridState,
         isRefreshing = isRefreshing,
         pullRefreshState = pullRefreshState,
         onFileListChange = viewModel::toggleFileListType,
@@ -94,7 +94,7 @@ internal fun FolderRoute(
     LaunchedEffect(lazyPagingItems.loadState) {
         if (lazyPagingItems.isLoadedData && viewModel.isScrollableTop) {
             viewModel.isScrollableTop = false
-            lazyStaggeredGridState.scrollToItem(0)
+            lazyGridState.scrollToItem(0)
         }
     }
 
@@ -120,7 +120,7 @@ internal fun FolderScreen(
     onAddFavoriteClick: (File) -> Unit,
     onClickFile: (File) -> Unit,
     onClickLongFile: (File) -> Unit,
-    lazyStaggeredGridState: LazyStaggeredGridState,
+    lazyGridState: LazyGridState,
     isRefreshing: Boolean,
     pullRefreshState: PullRefreshState = rememberPullRefreshState(false, { }),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
@@ -167,7 +167,7 @@ internal fun FolderScreen(
                     contentPadding = innerPadding,
                     onClickItem = onClickFile,
                     onLongClickItem = onClickLongFile,
-                    state = lazyStaggeredGridState
+                    state = lazyGridState
                 )
             }
             PullRefreshIndicator(

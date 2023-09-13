@@ -56,15 +56,15 @@ fun NavGraphBuilder.historyGroup(
                     is Book -> onBookClick(it.bookshelfId, it.path)
                     is Folder ->
                         navController.navigateToFolder(
+                            prefix = HistoryRoute,
                             it.bookshelfId,
-                            it.path,
-                            prefix = HistoryRoute
+                            it.path
                         )
                 }
             },
             onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
             onOpenFolderClick = {
-                navController.navigateToFolder(it.bookshelfId, it.path, prefix = HistoryRoute)
+                navController.navigateToFolder(prefix = HistoryRoute, it.bookshelfId, it.path)
             },
             onSettingsClick = onSettingsClick
         )
@@ -77,9 +77,9 @@ fun NavGraphBuilder.historyGroup(
                     is Book -> onBookClick(it.bookshelfId, it.path)
                     is Folder ->
                         navController.navigateToFolder(
+                            prefix = HistoryRoute,
                             it.bookshelfId,
-                            it.path,
-                            prefix = HistoryRoute
+                            it.path
                         )
                 }
             },
