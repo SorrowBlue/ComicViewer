@@ -58,9 +58,14 @@ class ComicViewerAppViewModel @Inject constructor(
             if (!settings.doneTutorial) {
                 _uiEvents.emit(ComicViewerAppUiEvent.StartTutorial)
                 shouldKeepOnScreen = false
-            } else if (settings.restoreOnLaunch || true) {
-                history.value =
+            } else if (settings.restoreOnLaunch) {
+                val his =
                     getNavigationHistoryUseCase.execute(EmptyRequest).map { it.dataOrNull }.first()
+                if (his != null) {
+                    history.value = his
+                } else {
+                    shouldKeepOnScreen = false
+                }
             } else {
                 shouldKeepOnScreen = false
             }
