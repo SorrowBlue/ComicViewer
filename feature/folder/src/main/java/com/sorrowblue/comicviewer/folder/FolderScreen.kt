@@ -130,7 +130,7 @@ internal fun FolderScreen(
     onClickLongFile: (File) -> Unit,
     lazyGridState: LazyGridState,
     isRefreshing: Boolean,
-    pullRefreshState: PullRefreshState = rememberPullRefreshState(false, { }),
+    pullRefreshState: PullRefreshState = rememberPullRefreshState(isRefreshing, { }),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     onFileListChange: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -182,7 +182,9 @@ internal fun FolderScreen(
                 refreshing = isRefreshing,
                 state = pullRefreshState,
                 scale = true,
-                modifier = Modifier.align(Alignment.TopCenter)
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .align(Alignment.TopCenter)
             )
         }
     }
