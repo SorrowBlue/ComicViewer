@@ -164,7 +164,10 @@ internal fun FolderScreen(
             bottom = contentPadding.calculateBottomPadding()
         ),
     ) { innerPadding ->
-        Box(Modifier.pullRefresh(pullRefreshState)) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)) {
             val isEmptyData by remember {
                 derivedStateOf { lazyPagingItems.isEmptyData }
             }
