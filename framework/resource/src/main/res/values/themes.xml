@@ -34,9 +34,4 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
     </style>
-
-    <style name="ShapeAppearanceOverlay.ComicViewer.Circle" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
 </resources>
