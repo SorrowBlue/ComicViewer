@@ -77,7 +77,7 @@ class FolderViewModel @Inject constructor(
             displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
                 .distinctUntilChanged().collectLatest {
                     _uiState.value = _uiState.value.copy(
-                        folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(fileContentLayout = it),
+//                        folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(fileContentLayout = it),
                         fileContentUiState = _uiState.value.fileContentUiState.copy(layout = it)
                     )
                 }

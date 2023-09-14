@@ -15,32 +15,26 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.placeholder.placeholder3
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FileGrid(
-    file: File?,
+    file: File,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(modifier) {
-        var expand by remember { mutableStateOf(false) }
         Column(
             Modifier.combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -61,7 +55,6 @@ fun FileGrid(
                         shape = CardDefaults.elevatedShape
                     )
                     .clip(CardDefaults.elevatedShape)
-                    .placeholder3(file == null)
             )
             if (file is Book && 0 < file.lastPageRead) {
                 LinearProgressIndicator(
@@ -71,12 +64,11 @@ fun FileGrid(
                 )
             }
             Text(
-                file?.name.orEmpty(),
+                file.name,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .placeholder3(file == null)
             )
         }
     }

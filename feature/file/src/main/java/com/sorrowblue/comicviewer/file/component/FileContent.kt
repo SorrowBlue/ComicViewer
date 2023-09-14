@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.file.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -8,6 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,6 +18,7 @@ import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 
+@Stable
 data class FileContentUiState(
     val layout: FileContentLayout = FileContentLayout.Grid()
 )
@@ -49,6 +52,7 @@ fun FileContent(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FileGridContent(
     size: FileContentLayout.GridSize,
@@ -73,12 +77,14 @@ private fun FileGridContent(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
-            val item = lazyPagingItems[it]
-            FileGrid(
-                file = item,
-                onClick = { onClickItem(item!!) },
-                onLongClick = { onLongClickItem(item!!) },
-            )
+            lazyPagingItems[it]?.let { item ->
+                FileGrid(
+                    file = item,
+                    onClick = { onClickItem(item) },
+                    onLongClick = { onLongClickItem(item) },
+                    modifier = Modifier.animateItemPlacement()
+                )
+            }
         }
     }
 }
