@@ -73,6 +73,7 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         prerelease {
+            initWith(getByName("release"))
             applicationIdSuffix = ".prerelease"
             isMinifyEnabled = true
             proguardFiles(
@@ -81,6 +82,7 @@ android {
             signingConfig = signingConfigs.getByName("prerelease")
         }
         internal {
+            initWith(getByName("release"))
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"

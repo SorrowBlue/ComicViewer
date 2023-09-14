@@ -18,4 +18,8 @@ dependencies {
     implementation(libs.fasterxml.jackson.core)
     // :feature:library:googledrive :feature:library:onedrive
     implementation(libs.google.code.gson)
+
+    // :feature:library:googledrive
+    // Type com.google.common.util.concurrent.ListenableFuture is defined multiple times:
+    implementation(libs.google.guava)
 }
