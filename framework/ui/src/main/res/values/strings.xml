@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="label_file_size_b" translatable="false">%1$s B</string>
-    <string name="label_file_size_kb" translatable="false">%1$s KB</string>
-    <string name="label_file_size_mb" translatable="false">%1$s MB</string>
-    <string name="label_file_size_gb" translatable="false">%1$s GB</string>
-</resources>

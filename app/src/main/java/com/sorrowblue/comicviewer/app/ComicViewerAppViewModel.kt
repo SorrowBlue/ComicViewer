@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @HiltViewModel
-class ComicViewerAppViewModel @Inject constructor(
+internal class ComicViewerAppViewModel @Inject constructor(
     private val splitInstallManager: SplitInstallManager,
     private val loadSettingsUseCase: LoadSettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,

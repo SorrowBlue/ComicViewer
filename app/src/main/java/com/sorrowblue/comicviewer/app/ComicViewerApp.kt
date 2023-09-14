@@ -3,11 +3,6 @@ package com.sorrowblue.comicviewer.app
 import android.app.Activity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Book
-import androidx.compose.material.icons.twotone.Favorite
-import androidx.compose.material.icons.twotone.LibraryBooks
-import androidx.compose.material.icons.twotone.WatchLater
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -16,7 +11,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import androidx.navigation.NavController
@@ -27,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.mikepenz.aboutlibraries.LibsBuilder
+import com.sorrowblue.comicviewer.app.component.NavHostWithSharedAxisX
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraphRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGroup
 import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfFolder
@@ -56,6 +51,10 @@ import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavigation
+import com.sorrowblue.comicviewer.feature.main.MainNestedGraphStateHolder
+import com.sorrowblue.comicviewer.feature.main.MainScreenTab
+import com.sorrowblue.comicviewer.feature.main.mainRoute
+import com.sorrowblue.comicviewer.feature.main.mainScreen
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGraphRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGroup
 import com.sorrowblue.comicviewer.feature.readlater.navigation.routeInReadlaterGraph
@@ -76,13 +75,13 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
-sealed interface ComicViewerAppUiEvent {
+internal sealed interface ComicViewerAppUiEvent {
     data object StartTutorial : ComicViewerAppUiEvent
     data class CompleteTutorial(val isInitial: Boolean) : ComicViewerAppUiEvent
 }
 
 @Composable
-fun ComicViewerApp(
+internal fun ComicViewerApp(
     windowsSize: WindowSizeClass,
     viewModel: ComicViewerAppViewModel,
     modifier: Modifier = Modifier
@@ -111,7 +110,7 @@ fun ComicViewerApp(
         when (it) {
             ComicViewerAppUiEvent.StartTutorial -> navController.navigateToTutorial(
                 navOptions {
-                    popUpTo(mainScreenRoute) {
+                    popUpTo(mainRoute) {
                         inclusive = true
                     }
                 }
@@ -120,7 +119,7 @@ fun ComicViewerApp(
             is ComicViewerAppUiEvent.CompleteTutorial ->
                 if (it.isInitial) {
                     navController.navigate(
-                        mainScreenRoute,
+                        mainRoute,
                         navOptions {
                             popUpTo(TutorialRoute) {
                                 inclusive = true
@@ -136,7 +135,7 @@ fun ComicViewerApp(
 }
 
 @Composable
-fun ComicViewerNavHost(
+private fun ComicViewerNavHost(
     windowsSize: WindowSizeClass,
     navController: NavHostController,
     addOnList: PersistentList<AddOn>,
@@ -145,7 +144,7 @@ fun ComicViewerNavHost(
     restoreComplete: () -> Unit
 ) {
     val context = LocalContext.current
-    NavHostWithSharedAxisX(navController = navController, startDestination = mainScreenRoute) {
+    NavHostWithSharedAxisX(navController = navController, startDestination = mainRoute) {
         mainScreen(windowsSize, navController, history = history, restoreComplete = restoreComplete)
 
         bookshelfSelectionScreen(
@@ -356,7 +355,7 @@ private fun NavGraphBuilder.mainScreen(
     )
 }
 
-class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
+private class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
     override val startDestination: String = bookshelfGraphRoute
 
     override fun routeToTab(route: String): MainScreenTab {
@@ -369,10 +368,7 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
         }
     }
 
-    override fun onTabSelected(
-        navController: NavController,
-        tab: MainScreenTab,
-    ) {
+    override fun onTabSelected(navController: NavController, tab: MainScreenTab) {
         when (tab) {
             MainScreenTab.Bookshelf -> bookshelfGraphRoute
             MainScreenTab.Favorite -> favoriteGraphRoute
@@ -391,21 +387,4 @@ class ComicViewerAppMainNestedGraphStateHolder : MainNestedGraphStateHolder {
             )
         }
     }
-}
-
-enum class MainScreenTab(
-    val label: Int,
-    val icon: ImageVector,
-    val contentDescription: Int
-) {
-
-    Bookshelf(R.string.app_label_bookshelf, Icons.TwoTone.Book, R.string.app_label_bookshelf),
-    Favorite(R.string.app_label_favorite, Icons.TwoTone.Favorite, R.string.app_label_favorite),
-    Readlater(
-        R.string.app_label_read_later,
-        Icons.TwoTone.WatchLater,
-        R.string.app_label_read_later
-    ),
-    Library(R.string.app_label_library, Icons.TwoTone.LibraryBooks, R.string.app_label_library),
-
 }

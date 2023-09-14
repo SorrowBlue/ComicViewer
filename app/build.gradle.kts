@@ -117,7 +117,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.ui)
     implementation(projects.framework.compose)
     implementation(projects.framework.notification)
 
@@ -130,6 +129,7 @@ dependencies {
     implementation(projects.feature.favorite)
     implementation(projects.feature.favorite.add)
     implementation(projects.feature.favorite.edit)
+    implementation(projects.feature.main)
     implementation(projects.feature.readlater)
     implementation(projects.feature.search)
     implementation(projects.feature.settings)
@@ -143,6 +143,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.hilt.work)
     implementation(libs.google.android.play.review.ktx)
+    implementation(libs.google.android.play.feature.delivery.ktx)
     implementation(libs.mikepenz.aboutlibraries)
 
 //    debugImplementation(libs.squareup.leakcanary.android)

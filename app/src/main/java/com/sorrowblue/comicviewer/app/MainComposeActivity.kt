@@ -10,11 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.splashscreen.SplashScreenViewProvider
 import dagger.hilt.android.AndroidEntryPoint
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @AndroidEntryPoint
-class MainComposeActivity : AppCompatActivity() {
+internal class MainComposeActivity : AppCompatActivity() {
 
     private val viewModel: ComicViewerAppViewModel by viewModels()
 
@@ -23,6 +24,7 @@ class MainComposeActivity : AppCompatActivity() {
         installSplashScreen().apply {
             super.onCreate(savedInstanceState)
             setKeepOnScreenCondition(viewModel::shouldKeepOnScreen)
+            setOnExitAnimationListener(SplashScreenViewProvider::startSlideUpAnime)
         }
 
         enableEdgeToEdge(
