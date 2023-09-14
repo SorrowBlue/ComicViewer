@@ -18,6 +18,10 @@ private const val bookshelfRoute = "bookshelf"
 const val bookshelfGraphRoute = "bookshelf_graph"
 val routeInBookshelfGraph get() = listOf(bookshelfRoute, folderRoute(bookshelfRoute))
 
+fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String, position: Int = -1) {
+    navigateToFolder(prefix = bookshelfRoute, bookshelfId = id, path = path, position = position)
+}
+
 private fun NavGraphBuilder.bookshelfScreen(
     contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
@@ -40,11 +44,12 @@ fun NavGraphBuilder.bookshelfGroup(
     contentPadding: PaddingValues,
     navController: NavController,
     onSettingsClick: () -> Unit,
-    navigateToBook: (BookshelfId, String) -> Unit,
+    navigateToBook: (BookshelfId, String, Int) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onAddFavoriteClick: (BookshelfId, String) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    onRestoreComplete: () -> Unit
 ) {
     navigation(route = bookshelfGraphRoute, startDestination = bookshelfRoute) {
         bookshelfScreen(
@@ -63,18 +68,19 @@ fun NavGraphBuilder.bookshelfGroup(
             prefix = bookshelfRoute,
             contentPadding = contentPadding,
             navigateToSearch = navigateToSearch,
-            onClickFile = {
-                when (it) {
-                    is Book -> navigateToBook(it.bookshelfId, it.path)
+            onClickFile = { file, position ->
+                when (file) {
+                    is Book -> navigateToBook(file.bookshelfId, file.path, position)
                     is Folder -> navController.navigateToFolder(
                         prefix = bookshelfRoute,
-                        bookshelfId = it.bookshelfId,
-                        path = it.path
+                        bookshelfId = file.bookshelfId,
+                        path = file.path
                     )
                 }
             },
             onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
+            onRestoreComplete = onRestoreComplete,
             onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) }
         )
     }

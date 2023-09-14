@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.entity.settings.History
 import com.sorrowblue.comicviewer.domain.usecase.GetNextComicRel
+import com.sorrowblue.comicviewer.domain.usecase.UpdateHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetNextFavoriteBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
@@ -26,6 +28,7 @@ internal class BookViewModel @Inject constructor(
     private val getNextBookUseCase: GetNextBookUseCase,
     private val getNextFavoriteBookUseCase: GetNextFavoriteBookUseCase,
     private val updateLastReadPageUseCase: UpdateLastReadPageUseCase,
+    private val updateHistoryUseCase: UpdateHistoryUseCase,
 ) : ViewModel() {
 
     private val args = BookArgs(savedStateHandle)
@@ -51,6 +54,15 @@ internal class BookViewModel @Inject constructor(
                     true
                 )
             }
+            updateHistoryUseCase.execute(
+                UpdateHistoryUseCase.Request(
+                    History(
+                        book.bookshelfId,
+                        book.parent,
+                        args.position
+                    )
+                )
+            )
         }
     }
 

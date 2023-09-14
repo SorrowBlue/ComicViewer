@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.sorrowblue.comicviewer.domain.AddOn
+import com.sorrowblue.comicviewer.domain.model.EmptyRequest
+import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
+import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,13 +18,15 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @HiltViewModel
 class ComicViewerAppViewModel @Inject constructor(
     private val splitInstallManager: SplitInstallManager,
-    private val loadSettingsUseCase: LoadSettingsUseCase
+    private val loadSettingsUseCase: LoadSettingsUseCase,
+    private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiEvents =
@@ -29,6 +34,8 @@ class ComicViewerAppViewModel @Inject constructor(
     val uiEvents = _uiEvents.asSharedFlow()
 
     var shouldKeepOnScreen = true
+
+    val history = MutableStateFlow<NavigationHistory?>(null)
 
     val addOnList = MutableStateFlow(
         splitInstallManager.installedModules
@@ -47,9 +54,13 @@ class ComicViewerAppViewModel @Inject constructor(
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
         viewModelScope.launch {
-            if (!loadSettingsUseCase.settings.first().doneTutorial) {
+            val settings = loadSettingsUseCase.settings.first()
+            if (!settings.doneTutorial) {
                 _uiEvents.emit(ComicViewerAppUiEvent.StartTutorial)
                 shouldKeepOnScreen = false
+            } else if (settings.restoreOnLaunch || true) {
+                history.value =
+                    getNavigationHistoryUseCase.execute(EmptyRequest).map { it.dataOrNull }.first()
             } else {
                 shouldKeepOnScreen = false
             }
@@ -64,5 +75,10 @@ class ComicViewerAppViewModel @Inject constructor(
                 it.copy(doneTutorial = true)
             }
         }
+    }
+
+    fun restoreComplete() {
+        history.value = null
+        shouldKeepOnScreen = false
     }
 }

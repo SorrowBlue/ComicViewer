@@ -22,7 +22,7 @@ fun NavController.navigateToHistoryGroup() = navigate(historyGraphRoute)
 
 internal fun NavGraphBuilder.historyScreen(
     contentPadding: PaddingValues,
-    onFileClick: (File) -> Unit,
+    onFileClick: (File, Int) -> Unit,
     onAddFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
     onSettingsClick: () -> Unit
@@ -41,7 +41,7 @@ internal fun NavGraphBuilder.historyScreen(
 fun NavGraphBuilder.historyGroup(
     contentPadding: PaddingValues,
     navController: NavController,
-    onBookClick: (BookshelfId, String) -> Unit,
+    onBookClick: (BookshelfId, String, Int) -> Unit,
     onSettingsClick: () -> Unit,
     onAddFavoriteClick: (BookshelfId, String) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit
@@ -49,13 +49,13 @@ fun NavGraphBuilder.historyGroup(
     navigation(route = historyGraphRoute, startDestination = historyRoute) {
         historyScreen(
             contentPadding = contentPadding,
-            onFileClick = {
-                when (it) {
-                    is Book -> onBookClick(it.bookshelfId, it.path)
+            onFileClick = { file, position ->
+                when (file) {
+                    is Book -> onBookClick(file.bookshelfId, file.path, position)
                     is Folder -> navController.navigateToFolder(
                         prefix = historyRoute,
-                        bookshelfId = it.bookshelfId,
-                        path = it.parent
+                        bookshelfId = file.bookshelfId,
+                        path = file.parent
                     )
                 }
             },
@@ -64,7 +64,7 @@ fun NavGraphBuilder.historyGroup(
                 navController.navigateToFolder(
                     prefix = historyRoute,
                     bookshelfId = it.bookshelfId,
-                    path = it.parent
+                    path = it.parent,
                 )
             },
             onSettingsClick = onSettingsClick
@@ -73,14 +73,14 @@ fun NavGraphBuilder.historyGroup(
             contentPadding = contentPadding,
             prefix = historyRoute,
             navigateToSearch = navigateToSearch,
-            onClickFile = {
-                when (it) {
-                    is Book -> onBookClick(it.bookshelfId, it.path)
+            onClickFile = { file, position ->
+                when (file) {
+                    is Book -> onBookClick(file.bookshelfId, file.path, position)
                     is Folder ->
                         navController.navigateToFolder(
                             prefix = historyRoute,
-                            it.bookshelfId,
-                            it.path
+                            file.bookshelfId,
+                            file.path,
                         )
                 }
             },

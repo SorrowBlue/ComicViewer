@@ -32,7 +32,7 @@ private fun NavGraphBuilder.libraryScreen(
 fun NavGraphBuilder.libraryGroup(
     contentPadding: PaddingValues,
     navController: NavController,
-    onBookClick: (BookshelfId, String) -> Unit,
+    onBookClick: (BookshelfId, String, Int) -> Unit,
     onSettingsClick: () -> Unit,
     onAddFavoriteClick: (BookshelfId, String) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,

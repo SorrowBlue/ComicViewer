@@ -29,8 +29,10 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.mikepenz.aboutlibraries.LibsBuilder
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraphRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGroup
+import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfFolder
 import com.sorrowblue.comicviewer.bookshelf.navigation.routeInBookshelfGraph
 import com.sorrowblue.comicviewer.domain.AddOn
+import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGraphRoute
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
 import com.sorrowblue.comicviewer.favorite.navigation.routeInFavoriteGraph
@@ -70,6 +72,7 @@ import com.sorrowblue.comicviewer.framework.compose.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
 import java.util.ServiceLoader
 import kotlinx.collections.immutable.PersistentList
+import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
@@ -92,11 +95,14 @@ fun ComicViewerApp(
                 color = MaterialTheme.colorScheme.background,
             ) {
                 val addOnList by viewModel.addOnList.collectAsState()
+                val history by viewModel.history.collectAsState()
                 ComicViewerNavHost(
                     windowsSize = windowsSize,
                     navController = navController,
                     addOnList = addOnList,
-                    onTutorialComplete = viewModel::completeTutorial
+                    onTutorialComplete = viewModel::completeTutorial,
+                    history = history,
+                    restoreComplete = viewModel::restoreComplete
                 )
             }
         }
@@ -134,11 +140,13 @@ fun ComicViewerNavHost(
     windowsSize: WindowSizeClass,
     navController: NavHostController,
     addOnList: PersistentList<AddOn>,
-    onTutorialComplete: () -> Unit
+    onTutorialComplete: () -> Unit,
+    history: NavigationHistory?,
+    restoreComplete: () -> Unit
 ) {
     val context = LocalContext.current
     NavHostWithSharedAxisX(navController = navController, startDestination = mainScreenRoute) {
-        mainScreen(windowsSize, navController)
+        mainScreen(windowsSize, navController, history = history, restoreComplete = restoreComplete)
 
         bookshelfSelectionScreen(
             onBackClick = navController::popBackStack,
@@ -240,6 +248,8 @@ private fun AddOn.loadDynamicFeature(): AddOnNavigation? {
 private fun NavGraphBuilder.mainScreen(
     windowSize: WindowSizeClass,
     navController: NavHostController,
+    history: NavigationHistory?,
+    restoreComplete: () -> Unit
 ) {
     mainScreen(
         windowSize = windowSize,
@@ -249,16 +259,21 @@ private fun NavGraphBuilder.mainScreen(
                 contentPadding = contentPadding,
                 navController = mainNestedNavController,
                 onSettingsClick = navController::navigateToSettings,
-                navigateToBook = navController::navigateToBook,
+                navigateToBook = { id, path, pos ->
+                    navController.navigateToBook(id, path, position = pos)
+                },
                 navigateToSearch = navController::navigateToSearch,
                 onAddFavoriteClick = navController::navigateToFavoriteAdd,
                 onEditClick = navController::navigateToBookshelfEdit,
-                onAddClick = navController::navigateToBookshelfSelection
+                onAddClick = navController::navigateToBookshelfSelection,
+                onRestoreComplete = restoreComplete
             )
             favoriteGroup(
                 contentPadding = contentPadding,
                 navController = mainNestedNavController,
-                onBookClick = navController::navigateToBook,
+                onBookClick = { id, path, pos ->
+                    navController.navigateToBook(id, path, position = pos)
+                },
                 onSettingsClick = navController::navigateToSettings,
                 navigateToSearch = navController::navigateToSearch,
                 onAddFavoriteClick = navController::navigateToFavoriteAdd,
@@ -267,7 +282,9 @@ private fun NavGraphBuilder.mainScreen(
             readlaterGroup(
                 contentPadding = contentPadding,
                 navController = mainNestedNavController,
-                onBookClick = navController::navigateToBook,
+                onBookClick = { id, path, pos ->
+                    navController.navigateToBook(id, path, position = pos)
+                },
                 onSettingsClick = navController::navigateToSettings,
                 onAddFavoriteClick = navController::navigateToFavoriteAdd,
                 navigateToSearch = navController::navigateToSearch
@@ -275,7 +292,9 @@ private fun NavGraphBuilder.mainScreen(
             libraryGroup(
                 contentPadding = contentPadding,
                 navController = mainNestedNavController,
-                onBookClick = navController::navigateToBook,
+                onBookClick = { id, path, pos ->
+                    navController.navigateToBook(id, path, position = pos)
+                },
                 onSettingsClick = navController::navigateToSettings,
                 onAddFavoriteClick = navController::navigateToFavoriteAdd,
                 navigateToSearch = navController::navigateToSearch,
@@ -287,6 +306,52 @@ private fun NavGraphBuilder.mainScreen(
                     }
                 }
             )
+            if (history != null) {
+                val (bookshelf, folders, position) = history.triple
+                logcat("RESTORE_NAVIGATION", LogPriority.INFO) { "Start restore navigation." }
+                if (folders.isNotEmpty()) {
+                    // library -> folder
+                    if (folders.size == 1) {
+                        mainNestedNavController.navigateToBookshelfFolder(
+                            bookshelf.id,
+                            folders.first().path,
+                            position
+                        )
+                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                            "bookshelf(${bookshelf.id}) -> folder(${folders.first().path})"
+                        }
+                    } else {
+                        mainNestedNavController.navigateToBookshelfFolder(
+                            bookshelf.id,
+                            folders.first().path
+                        )
+                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                            "bookshelf(${bookshelf.id}) -> folder(${folders.first().path})"
+                        }
+                        folders.drop(1).dropLast(1).forEachIndexed { index, folder ->
+                            // folder -> folder
+                            mainNestedNavController.navigateToBookshelfFolder(
+                                bookshelf.id,
+                                folder.path
+                            )
+                            logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                                "folder(${folders[index].path}) -> folder${folders[index + 1].path}"
+                            }
+                        }
+                        mainNestedNavController.navigateToBookshelfFolder(
+                            bookshelf.id,
+                            folders.last().path,
+                            position
+                        )
+                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                            "folder(${
+                                folders.dropLast(1).last().path
+                            }) -> folder${folders.last().path}"
+                        }
+                    }
+                }
+                restoreComplete()
+            }
         },
     )
 }

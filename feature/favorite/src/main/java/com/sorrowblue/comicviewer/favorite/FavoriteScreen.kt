@@ -37,11 +37,12 @@ internal fun FavoriteRoute(
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,
-    onClickFile: (File) -> Unit,
+    onClickFile: (File, Int) -> Unit,
     viewModel: FavoriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+    val lazyGridState = rememberLazyGridState()
     FavoriteScreen(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
@@ -51,8 +52,9 @@ internal fun FavoriteRoute(
         onGridSizeChange = viewModel::toggleGridSize,
         onDeleteClick = { viewModel.delete(onBackClick) },
         onSettingsClick = onSettingsClick,
-        onClickFile = onClickFile,
+        onClickFile = { onClickFile(it, lazyGridState.firstVisibleItemIndex) },
         onClickLongFile = viewModel::showFileInfoSheet,
+        lazyGridState = lazyGridState,
     )
 }
 

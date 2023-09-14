@@ -16,30 +16,34 @@ import com.sorrowblue.comicviewer.folder.FolderRoute
 
 private const val bookshelfIdArg = "bookshelfId"
 private const val pathArg = "path"
+private const val positionArg = "position"
 
 internal class FolderArgs(
     val bookshelfId: BookshelfId,
-    val path: String
+    val path: String,
+    val position: Int
 ) {
     constructor(savedStateHandle: SavedStateHandle) : this(
         BookshelfId(checkNotNull(savedStateHandle[bookshelfIdArg])),
-        (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64()
+        (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64(),
+        checkNotNull(savedStateHandle[positionArg])
     )
 }
 
 private const val FolderRoute = "folder"
 
 fun folderRoute(prefix: String) =
-    "$prefix/$FolderRoute/{$bookshelfIdArg}/{$pathArg}"
+    "$prefix/$FolderRoute/{$bookshelfIdArg}/{$pathArg}?position={${positionArg}}"
 
 fun NavController.navigateToFolder(
     prefix: String,
     bookshelfId: BookshelfId,
     path: String,
+    position: Int = -1,
     navOptions: NavOptions? = null
 ) {
     navigate(
-        "$prefix/$FolderRoute/${bookshelfId.value}/${path.encodeToBase64()}",
+        "$prefix/$FolderRoute/${bookshelfId.value}/${path.encodeToBase64()}?position=$position",
         navOptions
     )
 }
@@ -48,25 +52,28 @@ fun NavGraphBuilder.folderScreen(
     prefix: String,
     contentPadding: PaddingValues,
     navigateToSearch: (BookshelfId, String) -> Unit,
-    onClickFile: (File) -> Unit,
+    onClickFile: (File, Int) -> Unit,
     onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
     onAddFavoriteClick: (File) -> Unit,
+    onRestoreComplete: () -> Unit = {},
 ) {
     composable(
         route = folderRoute(prefix),
         arguments = listOf(
             navArgument(bookshelfIdArg) { type = NavType.IntType },
             navArgument(pathArg) { type = NavType.StringType },
+            navArgument(positionArg) { type = NavType.IntType },
         )
     ) {
         FolderRoute(
             contentPadding = contentPadding,
             onSearchClick = navigateToSearch,
             onAddFavoriteClick = onAddFavoriteClick,
-            onClickFile = onClickFile,
             onSettingsClick = onSettingsClick,
             onBackClick = onBackClick,
+            onRestoreComplete = onRestoreComplete,
+            onClickFile = onClickFile,
         )
     }
 }

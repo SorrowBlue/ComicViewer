@@ -19,7 +19,7 @@ val routeInFavoriteGraph
 fun NavGraphBuilder.favoriteGroup(
     contentPadding: PaddingValues,
     navController: NavController,
-    onBookClick: (BookshelfId, String) -> Unit,
+    onBookClick: (BookshelfId, String, Int) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onAddFavoriteClick: (BookshelfId, String) -> Unit,
@@ -37,11 +37,15 @@ fun NavGraphBuilder.favoriteGroup(
             onBackClick = navController::popBackStack,
             onEditClick = onEditClick,
             onSettingsClick = onSettingsClick,
-            onClickFile = {
-                when (it) {
-                    is Book -> onBookClick(it.bookshelfId, it.path)
+            onClickFile = { file, position ->
+                when (file) {
+                    is Book -> onBookClick(file.bookshelfId, file.path, position)
                     is Folder ->
-                        navController.navigateToFolder(FavoriteListRoute, it.bookshelfId, it.path)
+                        navController.navigateToFolder(
+                            FavoriteListRoute,
+                            file.bookshelfId,
+                            file.path
+                        )
                 }
             }
         )
@@ -50,11 +54,15 @@ fun NavGraphBuilder.favoriteGroup(
             contentPadding = contentPadding,
             prefix = FavoriteListRoute,
             navigateToSearch = navigateToSearch,
-            onClickFile = {
-                when (it) {
-                    is Book -> onBookClick(it.bookshelfId, it.path)
+            onClickFile = { file, position ->
+                when (file) {
+                    is Book -> onBookClick(file.bookshelfId, file.path, position)
                     is Folder ->
-                        navController.navigateToFolder(FavoriteListRoute, it.bookshelfId, it.path)
+                        navController.navigateToFolder(
+                            FavoriteListRoute,
+                            file.bookshelfId,
+                            file.path
+                        )
                 }
             },
             onSettingsClick = onSettingsClick,

@@ -56,9 +56,10 @@ internal fun FolderRoute(
     contentPadding: PaddingValues,
     onSearchClick: (BookshelfId, String) -> Unit,
     onAddFavoriteClick: (File) -> Unit,
-    onClickFile: (File) -> Unit,
     onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
+    onRestoreComplete: () -> Unit,
+    onClickFile: (File, Int) -> Unit,
     viewModel: FolderViewModel = hiltViewModel()
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -80,7 +81,9 @@ internal fun FolderRoute(
             viewModel.onFileInfoSheetDismissRequest()
             onAddFavoriteClick(it)
         },
-        onClickFile = onClickFile,
+        onClickFile = {
+            onClickFile.invoke(it, lazyGridState.firstVisibleItemIndex)
+        },
         onClickLongFile = viewModel::onClickLongFile,
         lazyGridState = lazyGridState,
         isRefreshing = isRefreshing,
@@ -92,7 +95,12 @@ internal fun FolderRoute(
         onSortClick = viewModel::openSort,
     )
     LaunchedEffect(lazyPagingItems.loadState) {
-        if (lazyPagingItems.isLoadedData && viewModel.isScrollableTop) {
+        if (0 < viewModel.position && lazyPagingItems.loadState.refresh is LoadState.NotLoading && lazyPagingItems.itemCount > 0) {
+            val position = viewModel.position
+            viewModel.position = -1
+            lazyGridState.scrollToItem(position)
+            onRestoreComplete()
+        } else if (lazyPagingItems.isLoadedData && viewModel.isScrollableTop) {
             viewModel.isScrollableTop = false
             lazyGridState.scrollToItem(0)
         }

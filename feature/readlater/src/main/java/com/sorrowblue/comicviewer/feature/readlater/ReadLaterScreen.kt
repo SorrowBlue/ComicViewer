@@ -3,6 +3,8 @@ package com.sorrowblue.comicviewer.feature.readlater
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -26,22 +28,23 @@ import com.sorrowblue.comicviewer.framework.compose.isEmptyData
 
 @Composable
 internal fun ReadLaterRoute(
-    onFileClick: (File) -> Unit,
+    onFileClick: (File, Int) -> Unit,
     onAddFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     contentPadding: PaddingValues,
     viewModel: ReadLaterViewModel = hiltViewModel()
 ) {
+    val lazyGridState = rememberLazyGridState()
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsState()
     ReadLaterScreen(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
-        onFileClick = onFileClick,
+        onFileClick = { onFileClick(it, lazyGridState.firstVisibleItemIndex) },
         onFileLongClick = viewModel::onFileLongClick,
-        onFileInfoDismissRequest = viewModel::onFileInfoDismissRequest,
         onAddReadLaterClick = viewModel::addsReadLater,
+        onFileInfoDismissRequest = viewModel::onFileInfoDismissRequest,
         onAddFavoriteClick = onAddFavoriteClick,
         onOpenFolderClick = onOpenFolderClick,
         onFileListTypeClick = viewModel::toggleDisplay,
@@ -49,6 +52,7 @@ internal fun ReadLaterRoute(
         onSettingsClick = onSettingsClick,
         onClearAllClick = viewModel::clearAll,
         contentPadding = contentPadding,
+        lazyGridState = lazyGridState
     )
 }
 
@@ -73,6 +77,7 @@ private fun ReadLaterScreen(
     onSettingsClick: () -> Unit = {},
     onClearAllClick: () -> Unit = {},
     contentPadding: PaddingValues,
+    lazyGridState: LazyGridState,
 ) {
     val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val localLayoutDirection = LocalLayoutDirection.current
@@ -106,7 +111,8 @@ private fun ReadLaterScreen(
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = innerPadding,
                 onClickItem = onFileClick,
-                onLongClickItem = onFileLongClick
+                onLongClickItem = onFileLongClick,
+                state = lazyGridState
             )
         }
     }

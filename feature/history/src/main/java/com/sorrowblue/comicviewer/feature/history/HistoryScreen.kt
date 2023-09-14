@@ -3,6 +3,8 @@ package com.sorrowblue.comicviewer.feature.history
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -26,7 +28,7 @@ import com.sorrowblue.comicviewer.framework.compose.isEmptyData
 
 @Composable
 internal fun HistoryRoute(
-    onFileClick: (File) -> Unit,
+    onFileClick: (File, Int) -> Unit,
     onAddFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
@@ -34,20 +36,22 @@ internal fun HistoryRoute(
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    val uiState:ReadLaterScreenUiState by viewModel.uiState.collectAsState()
+    val uiState: ReadLaterScreenUiState by viewModel.uiState.collectAsState()
+    val lazyGridState = rememberLazyGridState()
     HistoryScreen(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
-        onFileClick = onFileClick,
+        onFileClick = { onFileClick(it, lazyGridState.firstVisibleItemIndex) },
         onFileLongClick = viewModel::onFileLongClick,
-        onFileInfoDismissRequest = viewModel::onFileInfoDismissRequest,
         onAddReadLaterClick = viewModel::addsReadLater,
+        onFileInfoDismissRequest = viewModel::onFileInfoDismissRequest,
         onAddFavoriteClick = onAddFavoriteClick,
         onOpenFolderClick = onOpenFolderClick,
         onFileListTypeClick = viewModel::toggleDisplay,
         onGridSizeClick = viewModel::onGridSizeChange,
         onSettingsClick = onSettingsClick,
         contentPadding = contentPadding,
+        lazyGridState = lazyGridState
     )
 }
 
@@ -71,6 +75,7 @@ internal fun HistoryScreen(
     onGridSizeClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     contentPadding: PaddingValues,
+    lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
     val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val localLayoutDirection = LocalLayoutDirection.current
@@ -100,7 +105,8 @@ internal fun HistoryScreen(
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = innerPadding,
                 onClickItem = onFileClick,
-                onLongClickItem = onFileLongClick
+                onLongClickItem = onFileLongClick,
+                state = lazyGridState
             )
         }
     }
