@@ -10,13 +10,11 @@ import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.feature.history.HistoryRoute
-import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
 
 private const val historyRoute = "history"
 private const val historyGraphRoute = "${historyRoute}_graph"
-val routeInHistoryGraph get() = listOf(historyRoute, folderRoute(historyRoute))
 
 fun NavController.navigateToHistoryGroup() = navigate(historyGraphRoute)
 

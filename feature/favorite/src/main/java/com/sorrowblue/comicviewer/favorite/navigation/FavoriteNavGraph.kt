@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.favoriteEditScreen
 import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.navigateToFavoriteEdit
@@ -21,7 +22,9 @@ fun NavGraphBuilder.favoriteGroup(
     contentPadding: PaddingValues,
     navController: NavController,
     onBookClick: (BookshelfId, String, Int) -> Unit,
+    onClickLongFile: (File) -> Unit,
     onSettingsClick: () -> Unit,
+    onAddClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
 ) {
     navigation(route = favoriteGraphRoute, startDestination = FavoriteListRoute) {
@@ -29,6 +32,7 @@ fun NavGraphBuilder.favoriteGroup(
         favoriteListScreen(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
+            onAddClick = onAddClick,
             onFavoriteClick = navController::navigateToFavorite
         )
 
@@ -46,7 +50,8 @@ fun NavGraphBuilder.favoriteGroup(
                             file.path
                         )
                 }
-            }
+            },
+            onClickLongFile = onClickLongFile
         )
 
         favoriteEditScreen(

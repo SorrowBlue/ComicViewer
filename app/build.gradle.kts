@@ -113,6 +113,7 @@ dependencies {
     implementation(projects.feature.book)
     implementation(projects.feature.bookshelf)
     implementation(projects.feature.favorite)
+    implementation(projects.feature.favorite.create)
     implementation(projects.feature.file.info)
     implementation(projects.feature.readlater)
     implementation(projects.feature.search)

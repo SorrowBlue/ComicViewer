@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -54,7 +57,9 @@ internal fun MainScreen(
 ) {
     Row(modifier = Modifier.fillMaxSize()) {
         val backStackEntry by navController.currentBackStackEntryAsState()
-        val currentTab = backStackEntry?.destination?.hierarchy?.firstOrNull()?.route?.routeToTab()
+        var currentTab by remember {
+            mutableStateOf(backStackEntry?.destination?.hierarchy?.firstOrNull()?.route?.routeToTab())
+        }
         val navigationType: NavigationType = when (LocalWindowSize.current.widthSizeClass) {
             WindowWidthSizeClass.Compact -> NavigationType.BottomNavigation
             WindowWidthSizeClass.Medium -> NavigationType.NavigationRail
@@ -62,8 +67,14 @@ internal fun MainScreen(
             else -> NavigationType.BottomNavigation
         }
 
-        val visible = remember(backStackEntry) {
-            backStackEntry?.destination?.route in routeInNavigationBar
+        var visible by remember { mutableStateOf(false) }
+        LaunchedEffect(backStackEntry) {
+            if (backStackEntry?.destination?.navigatorName == "dialog") {
+                return@LaunchedEffect
+            }
+            visible = backStackEntry?.destination?.route in routeInNavigationBar
+            currentTab = backStackEntry?.destination?.hierarchy?.firstOrNull()?.route?.routeToTab()
+                ?: return@LaunchedEffect
         }
         AnimatedVisibility(visible = navigationType == NavigationType.NavigationRail) {
             ComicViewerNavigationRail(
@@ -71,13 +82,13 @@ internal fun MainScreen(
                 onTabSelected = { tab ->
                     onTabSelected(navController, tab)
                 },
-                currentTab = currentTab ?: MainScreenTab.Bookshelf,
+                currentTab = currentTab,
             )
         }
         Scaffold(
             bottomBar = {
                 AnimatedContent(
-                    targetState = visible,
+                    targetState = navigationType == NavigationType.BottomNavigation && visible,
                     transitionSpec = { slideInVertically { height -> height } togetherWith slideOutVertically { height -> height } },
                     label = "test"
                 ) { isVisible ->

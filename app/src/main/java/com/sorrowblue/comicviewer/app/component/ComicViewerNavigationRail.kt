@@ -15,7 +15,7 @@ import kotlinx.collections.immutable.PersistentList
 fun ComicViewerNavigationRail(
     mainScreenTabs: PersistentList<MainScreenTab>,
     onTabSelected: (MainScreenTab) -> Unit,
-    currentTab: MainScreenTab,
+    currentTab: MainScreenTab?,
     modifier: Modifier = Modifier,
 ) {
     NavigationRail(

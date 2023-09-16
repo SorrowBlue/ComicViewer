@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorite_create_title">新しいお気に入り</string>
+    <string name="favorite_create_label_create">作成</string>
+    <string name="favorite_create_message_error">名前を空にすることはできません。</string>
+    <string name="favorite_create_label_favorite_name">お気に入りの名前</string>
+</resources>

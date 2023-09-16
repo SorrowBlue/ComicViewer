@@ -103,9 +103,4 @@ internal class FavoriteViewModel @Inject constructor(
             }
         }
     }
-
-    fun showFileInfoSheet(file: File) {
-
-    }
-
 }

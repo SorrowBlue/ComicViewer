@@ -12,6 +12,8 @@ import com.sorrowblue.comicviewer.domain.AddOn
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
 import com.sorrowblue.comicviewer.feature.book.navigation.bookGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
+import com.sorrowblue.comicviewer.feature.favorite.create.navigation.favoriteCreateScreen
+import com.sorrowblue.comicviewer.feature.favorite.create.navigation.navigateToFavoriteCreate
 import com.sorrowblue.comicviewer.feature.library.navigation.libraryGroup
 import com.sorrowblue.comicviewer.feature.library.serviceloader.AddOnNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
@@ -39,7 +41,7 @@ internal fun NavGraphBuilder.mainGraph(
     contentPadding: PaddingValues,
     restoreComplete: () -> Unit,
     onTutorialExit: () -> Unit,
-    addOnList: PersistentList<AddOn>
+    addOnList: PersistentList<AddOn>,
 ) {
     bookshelfGraph(
         contentPadding = contentPadding,
@@ -48,24 +50,23 @@ internal fun NavGraphBuilder.mainGraph(
         navigateToBook = navController::navigateToBook,
         navigateToSearch = navController::navigateToSearch,
         onRestoreComplete = restoreComplete,
-        onClickLongFile = {
-            navController.navigateToFileInfo(it.bookshelfId, it.path)
-        }
+        onClickLongFile = { navController.navigateToFileInfo(it.bookshelfId, it.path, false) }
     )
     favoriteGroup(
         contentPadding = contentPadding,
         navController = navController,
         onBookClick = navController::navigateToBook,
+        onClickLongFile = { navController.navigateToFileInfo(it.bookshelfId, it.path) },
         onSettingsClick = navController::navigateToSettings,
+        onAddClick = navController::navigateToFavoriteCreate,
         navigateToSearch = navController::navigateToSearch,
     )
+    favoriteCreateScreen(onDismissRequest = navController::popBackStack)
     readlaterGroup(
         contentPadding = contentPadding,
         navController = navController,
         onBookClick = navController::navigateToBook,
-        onFileLongClick = {
-            navController.navigateToFileInfo(it.bookshelfId, it.path)
-        },
+        onFileLongClick = { navController.navigateToFileInfo(it.bookshelfId, it.path) },
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
     )
@@ -89,8 +90,13 @@ internal fun NavGraphBuilder.mainGraph(
         },
     )
 
-    fileInfoGraph(navController = navController, onOpenFolderClick =
-    {})
+    fileInfoGraph(
+        navController = navController,
+        contentPadding = contentPadding,
+        onClickBook = navController::navigateToBook,
+        navigateToSearch = navController::navigateToSearch,
+        onSettingsClick = navController::navigateToSettings
+    )
 
     searchScreen(navController::popBackStack)
     settingsNavGraph(

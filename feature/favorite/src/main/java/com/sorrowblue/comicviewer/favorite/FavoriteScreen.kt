@@ -38,6 +38,7 @@ internal fun FavoriteRoute(
     onEditClick: (FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,
     onClickFile: (File, Int) -> Unit,
+    onClickLongFile: (File) -> Unit,
     viewModel: FavoriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -53,7 +54,7 @@ internal fun FavoriteRoute(
         onDeleteClick = { viewModel.delete(onBackClick) },
         onSettingsClick = onSettingsClick,
         onClickFile = { onClickFile(it, lazyGridState.firstVisibleItemIndex) },
-        onClickLongFile = viewModel::showFileInfoSheet,
+        onClickLongFile = onClickLongFile,
         lazyGridState = lazyGridState,
     )
 }

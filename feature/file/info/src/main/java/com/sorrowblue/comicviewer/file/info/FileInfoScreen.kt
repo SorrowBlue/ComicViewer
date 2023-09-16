@@ -67,6 +67,8 @@ internal class FileInfoViewModel @Inject constructor(
     private val _file = MutableStateFlow<File?>(null)
     val file = _file.asStateFlow()
 
+    val isVisibleOpenFolder = args.isVisibleOpenFolder
+
     init {
         getFileUseCase.execute(GetFileUseCase.Request(args.bookshelfId, args.path)).map {
             it.fold({ it }, { null })
@@ -87,6 +89,7 @@ internal fun FileInfoRoute(
     val file by viewModel.file.collectAsState()
     FileInfoScreen(
         file = file,
+        isVisibleOpenFolder = viewModel.isVisibleOpenFolder,
         onDismissRequest = onDismissRequest,
         onAddReadLaterClick = viewModel::onAddReadLaterClick,
         onAddFavoriteClick = onAddFavoriteClick,
@@ -99,6 +102,7 @@ internal fun FileInfoRoute(
 @Composable
 private fun FileInfoScreen(
     file: File?,
+    isVisibleOpenFolder: Boolean,
     onDismissRequest: () -> Unit = {},
     onAddReadLaterClick: (File) -> Unit = {},
     onAddFavoriteClick: (File) -> Unit = {},
@@ -188,8 +192,10 @@ private fun FileInfoScreen(
                 FilledTonalButton(onClick = { onAddFavoriteClick(file) }) {
                     Text(stringResource(id = R.string.file_info_label_add_favourites))
                 }
-                FilledTonalButton(onClick = { onOpenFolderClick(file) }) {
-                    Text(stringResource(id = R.string.file_info_label_open_folder))
+                if (isVisibleOpenFolder) {
+                    FilledTonalButton(onClick = { onOpenFolderClick(file) }) {
+                        Text(stringResource(id = R.string.file_info_label_open_folder))
+                    }
                 }
             }
         }

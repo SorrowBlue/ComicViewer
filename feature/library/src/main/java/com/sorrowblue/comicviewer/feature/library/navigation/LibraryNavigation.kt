@@ -9,14 +9,13 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.feature.history.navigation.historyGroup
 import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistoryGroup
-import com.sorrowblue.comicviewer.feature.history.navigation.routeInHistoryGraph
 import com.sorrowblue.comicviewer.feature.library.LibraryRoute
 import com.sorrowblue.comicviewer.feature.library.section.Feature
 
 private const val libraryRoute = "library"
 const val libraryGraphRoute = "${libraryRoute}_graph"
 
-val routeInLibraryGraph get() = listOf(libraryRoute) + routeInHistoryGraph
+val routeInLibraryGraph get() = listOf(libraryRoute)
 
 private fun NavGraphBuilder.libraryScreen(
     contentPadding: PaddingValues,
@@ -37,7 +36,7 @@ fun NavGraphBuilder.libraryGroup(
     onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
-    onAddOnClick: (Feature.AddOn) -> Unit
+    onAddOnClick: (Feature.AddOn) -> Unit,
 ) {
     navigation(route = libraryGraphRoute, startDestination = libraryRoute) {
         libraryScreen(
