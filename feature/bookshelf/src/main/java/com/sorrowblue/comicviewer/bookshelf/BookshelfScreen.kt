@@ -60,7 +60,7 @@ fun BookshelfRoute(
     contentPadding: PaddingValues,
     onClickFab: () -> Unit,
     onSettingsClick: () -> Unit,
-    onBookshelfClick: (BookshelfFolder) -> Unit,
+    onBookshelfClick: (BookshelfId, String) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
     viewModel: BookshelfViewModel = hiltViewModel()
 ) {
@@ -83,7 +83,7 @@ fun BookshelfScreen(
     contentPadding: PaddingValues,
     onClickFab: () -> Unit,
     onSettingsClick: () -> Unit,
-    onBookshelfClick: (BookshelfFolder) -> Unit,
+    onBookshelfClick: (BookshelfId, String) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
     onRemoveClick: (Bookshelf) -> Unit,
 ) {
@@ -170,7 +170,7 @@ fun BookshelfScreen(
                     if (item != null) {
                         BookshelfFolderRow(
                             bookshelfFolder = item,
-                            onClick = { onBookshelfClick(item) },
+                            onClick = { onBookshelfClick(item.bookshelf.id, item.folder.path) },
                             onLongClick = {
                                 selectedBookshelfInfo = item
                                 showBookshelfInfoSheet = true

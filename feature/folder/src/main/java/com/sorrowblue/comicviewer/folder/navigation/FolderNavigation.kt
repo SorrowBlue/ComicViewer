@@ -53,9 +53,9 @@ fun NavGraphBuilder.folderScreen(
     contentPadding: PaddingValues,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onClickFile: (File, Int) -> Unit,
+    onClickLongFile: (File) -> Unit = {},
     onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
-    onAddFavoriteClick: (File) -> Unit,
     onRestoreComplete: () -> Unit = {},
 ) {
     composable(
@@ -69,11 +69,11 @@ fun NavGraphBuilder.folderScreen(
         FolderRoute(
             contentPadding = contentPadding,
             onSearchClick = navigateToSearch,
-            onAddFavoriteClick = onAddFavoriteClick,
             onSettingsClick = onSettingsClick,
             onBackClick = onBackClick,
             onRestoreComplete = onRestoreComplete,
             onClickFile = onClickFile,
+            onClickLongFile = onClickLongFile,
         )
     }
 }

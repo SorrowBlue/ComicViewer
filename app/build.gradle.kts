@@ -10,17 +10,16 @@ import org.jetbrains.kotlin.konan.properties.propertyString
 
 plugins {
     id("build-logic.android.application")
-    id("com.sorrowblue.dagger-hilt")
-    id("org.jetbrains.kotlin.kapt")
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
     alias(libs.plugins.mikepenz.aboutlibraries.plugin)
     alias(libs.plugins.grgit)
 }
 
 fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex())) "-SNAPSHOT" else ""
 android {
+    namespace = "com.sorrowblue.comicviewer.app"
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 12
         versionName = grgit.describe {
             longDescr = false
@@ -28,7 +27,6 @@ android {
         }?.toVersion() ?: "0.0.1-SNAPSHOT"
         logger.lifecycle("versionName=$versionName")
     }
-
     androidResources {
         generateLocaleConfig = true
     }
@@ -73,7 +71,7 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         prerelease {
-            initWith(getByName("release"))
+//            initWith(getByName("release"))
             applicationIdSuffix = ".prerelease"
             isMinifyEnabled = true
             proguardFiles(
@@ -82,7 +80,7 @@ android {
             signingConfig = signingConfigs.getByName("prerelease")
         }
         internal {
-            initWith(getByName("release"))
+//            initWith(getByName("release"))
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
@@ -95,16 +93,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
-    }
-
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
     }
 
     dynamicFeatures += setOf(
@@ -124,12 +112,8 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.feature.book)
     implementation(projects.feature.bookshelf)
-    implementation(projects.feature.bookshelf.edit)
-    implementation(projects.feature.bookshelf.selection)
     implementation(projects.feature.favorite)
-    implementation(projects.feature.favorite.add)
-    implementation(projects.feature.favorite.edit)
-    implementation(projects.feature.main)
+    implementation(projects.feature.file.info)
     implementation(projects.feature.readlater)
     implementation(projects.feature.search)
     implementation(projects.feature.settings)

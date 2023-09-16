@@ -16,7 +16,7 @@
         android:theme="@style/Theme.ComicViewer"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".MainComposeActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting"
             android:windowSoftInputMode="adjustResize">

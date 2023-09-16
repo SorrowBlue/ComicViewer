@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace = "com.sorrowblue.comicviewer.data.reader.zip"
     packaging {
         jniLibs {
             useLegacyPackaging = false

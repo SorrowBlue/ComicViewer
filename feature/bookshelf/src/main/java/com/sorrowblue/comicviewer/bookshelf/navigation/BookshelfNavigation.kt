@@ -6,10 +6,15 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.bookshelf.BookshelfRoute
-import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.bookshelfEditScreen
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.navigateToBookshelfEdit
+import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.bookshelfSelectionRoute
+import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.bookshelfSelectionScreen
+import com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation.navigateToBookshelfSelection
 import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
@@ -25,7 +30,7 @@ fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String, posit
 private fun NavGraphBuilder.bookshelfScreen(
     contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
-    onBookshelfClick: (BookshelfFolder) -> Unit,
+    onBookshelfClick: (BookshelfId, String) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
     onClickFab: () -> Unit,
 ) {
@@ -40,34 +45,36 @@ private fun NavGraphBuilder.bookshelfScreen(
     }
 }
 
-fun NavGraphBuilder.bookshelfGroup(
+fun NavGraphBuilder.bookshelfGraph(
     contentPadding: PaddingValues,
     navController: NavController,
+    onClickLongFile: (File) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToBook: (BookshelfId, String, Int) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
-    onAddFavoriteClick: (BookshelfId, String) -> Unit,
-    onEditClick: (BookshelfId) -> Unit,
-    onAddClick: () -> Unit,
     onRestoreComplete: () -> Unit
 ) {
     navigation(route = bookshelfGraphRoute, startDestination = bookshelfRoute) {
         bookshelfScreen(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
-            onBookshelfClick = {
-                navController.navigateToFolder(
-                    bookshelfRoute,
-                    it.bookshelf.id, it.folder.path
-                )
-            },
-            onEditClick = onEditClick,
-            onClickFab = onAddClick,
+            onBookshelfClick = navController::navigateToBookshelfFolder,
+            onEditClick = navController::navigateToBookshelfEdit,
+            onClickFab = navController::navigateToBookshelfSelection,
+        )
+        bookshelfSelectionScreen(
+            onBackClick = navController::popBackStack,
+            onSourceClick = navController::navigateToBookshelfEdit
+        )
+        bookshelfEditScreen(
+            onBackClick = navController::popBackStack,
+            onComplete = { navController.popBackStack(bookshelfSelectionRoute, true) }
         )
         folderScreen(
             prefix = bookshelfRoute,
             contentPadding = contentPadding,
             navigateToSearch = navigateToSearch,
+            onClickLongFile = onClickLongFile,
             onClickFile = { file, position ->
                 when (file) {
                     is Book -> navigateToBook(file.bookshelfId, file.path, position)
@@ -81,7 +88,6 @@ fun NavGraphBuilder.bookshelfGroup(
             onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
             onRestoreComplete = onRestoreComplete,
-            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) }
         )
     }
 }

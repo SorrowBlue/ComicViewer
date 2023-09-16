@@ -3,6 +3,10 @@ plugins {
     id("com.sorrowblue.dagger-hilt")
 }
 
+android {
+    namespace = "com.sorrowblue.comicviewer.data.paging"
+}
+
 dependencies {
     implementation(projects.framework)
     implementation(projects.domain.common)

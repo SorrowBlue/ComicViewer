@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="file_info_label_last_read_time">%s$1に読んだ</string>
+    <string name="file_info_label_open_folder">フォルダを開く</string>
+    <string name="file_info_label_add_favourites">お気に入りに追加</string>
+    <string name="file_info_label_add_read_later">後で読むに保存</string>
+</resources>

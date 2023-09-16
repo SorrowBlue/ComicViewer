@@ -4,15 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
-import com.sorrowblue.comicviewer.file.component.FileInfoSheetUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,14 +24,12 @@ import kotlinx.coroutines.runBlocking
 @HiltViewModel
 internal class ReadLaterViewModel @Inject constructor(
     private val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    private val addReadLaterUseCase: AddReadLaterUseCase,
     private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
     pagingReadLaterFileUseCase: PagingReadLaterFileUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         ReadLaterScreenUiState(
-            FileInfoSheetUiState.Hide,
             FileContentUiState(runBlocking {
                 manageFolderDisplaySettingsUseCase.settings.first().toFileContentLayout()
             })
@@ -82,21 +77,6 @@ internal class ReadLaterViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    fun addsReadLater(file: File) {
-        viewModelScope.launch {
-            addReadLaterUseCase.execute(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
-                .first()
-        }
-    }
-
-    fun onFileInfoDismissRequest() {
-        _uiState.value = _uiState.value.copy(fileInfoSheetUiState = FileInfoSheetUiState.Hide)
-    }
-
-    fun onFileLongClick(file: File) {
-        _uiState.value = _uiState.value.copy(fileInfoSheetUiState = FileInfoSheetUiState.Show(file))
     }
 
     fun clearAll() {

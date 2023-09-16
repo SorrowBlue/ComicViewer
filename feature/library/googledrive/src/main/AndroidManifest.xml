@@ -3,7 +3,7 @@
 
     <dist:module
         dist:instant="false"
-        dist:title="@string/title_googledrive">
+        dist:title="@string/googledrive_title">
         <dist:delivery>
             <dist:on-demand />
         </dist:delivery>

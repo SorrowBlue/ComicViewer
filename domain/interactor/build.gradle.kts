@@ -3,6 +3,10 @@ plugins {
     id("com.sorrowblue.dagger-hilt")
 }
 
+android {
+    namespace = "com.sorrowblue.comicviewer.domain.interactor"
+}
+
 dependencies {
     implementation(projects.framework)
     implementation(projects.domain)

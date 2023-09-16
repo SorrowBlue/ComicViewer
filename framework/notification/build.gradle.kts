@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace = "com.sorrowblue.comicviewer.framework.notification"
 
     resourcePrefix("framework_notification")
 }

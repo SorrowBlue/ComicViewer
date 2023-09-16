@@ -22,15 +22,12 @@ import com.sorrowblue.comicviewer.feature.readlater.section.EmptyContent
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
-import com.sorrowblue.comicviewer.file.component.FileInfoSheet
-import com.sorrowblue.comicviewer.file.component.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.framework.compose.isEmptyData
 
 @Composable
 internal fun ReadLaterRoute(
     onFileClick: (File, Int) -> Unit,
-    onAddFavoriteClick: (File) -> Unit,
-    onOpenFolderClick: (File) -> Unit,
+    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     contentPadding: PaddingValues,
     viewModel: ReadLaterViewModel = hiltViewModel()
@@ -42,11 +39,7 @@ internal fun ReadLaterRoute(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onFileClick = { onFileClick(it, lazyGridState.firstVisibleItemIndex) },
-        onFileLongClick = viewModel::onFileLongClick,
-        onAddReadLaterClick = viewModel::addsReadLater,
-        onFileInfoDismissRequest = viewModel::onFileInfoDismissRequest,
-        onAddFavoriteClick = onAddFavoriteClick,
-        onOpenFolderClick = onOpenFolderClick,
+        onFileLongClick = onFileLongClick,
         onFileListTypeClick = viewModel::toggleDisplay,
         onGridSizeClick = viewModel::toggleSpanCount,
         onSettingsClick = onSettingsClick,
@@ -57,7 +50,6 @@ internal fun ReadLaterRoute(
 }
 
 internal data class ReadLaterScreenUiState(
-    val fileInfoSheetUiState: FileInfoSheetUiState,
     val fileContentUiState: FileContentUiState
 )
 
@@ -68,10 +60,6 @@ private fun ReadLaterScreen(
     lazyPagingItems: LazyPagingItems<File>,
     onFileClick: (File) -> Unit = {},
     onFileLongClick: (File) -> Unit = {},
-    onAddReadLaterClick: (File) -> Unit = {},
-    onFileInfoDismissRequest: () -> Unit = {},
-    onAddFavoriteClick: (File) -> Unit = {},
-    onOpenFolderClick: (File) -> Unit = {},
     onFileListTypeClick: () -> Unit = {},
     onGridSizeClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
@@ -116,12 +104,4 @@ private fun ReadLaterScreen(
             )
         }
     }
-
-    FileInfoSheet(
-        uiState = uiState.fileInfoSheetUiState,
-        onDismissRequest = onFileInfoDismissRequest,
-        onAddReadLaterClick = onAddReadLaterClick,
-        onAddFavoriteClick = onAddFavoriteClick,
-        onOpenFolderClick = onOpenFolderClick
-    )
 }

@@ -9,13 +9,11 @@ import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.entity.settings.SortType
-import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
-import com.sorrowblue.comicviewer.file.component.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
@@ -47,7 +45,6 @@ class FolderViewModel @Inject constructor(
     pagingFileUseCase: PagingFileUseCase,
     private val scanBookshelfUseCase: ScanBookshelfUseCase,
     private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    private val addReadLaterUseCase: AddReadLaterUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -68,10 +65,12 @@ class FolderViewModel @Inject constructor(
                 "",
                 runBlocking { displaySettingsUseCase.settings.first().toFileContentLayout() }),
             sortSheetUiState = SortSheetUiState.Hide,
-            fileInfoSheetUiState = FileInfoSheetUiState.Hide,
-            fileContentUiState = FileContentUiState(runBlocking { displaySettingsUseCase.settings.first().toFileContentLayout() })
+            fileContentUiState = FileContentUiState(runBlocking {
+                displaySettingsUseCase.settings.first().toFileContentLayout()
+            })
         )
     )
+
     init {
         viewModelScope.launch {
             displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
@@ -141,24 +140,6 @@ class FolderViewModel @Inject constructor(
     fun onSortSheetDismissRequest() {
         val uiState = _uiState.value
         _uiState.value = uiState.copy(sortSheetUiState = SortSheetUiState.Hide)
-    }
-
-    fun onFileInfoSheetDismissRequest() {
-        val uiState = _uiState.value
-        _uiState.value = uiState.copy(fileInfoSheetUiState = FileInfoSheetUiState.Hide)
-    }
-
-    fun onClickLongFile(file: File) {
-        val uiState = _uiState.value
-        _uiState.value = uiState.copy(fileInfoSheetUiState = FileInfoSheetUiState.Show(file))
-    }
-
-    fun onAddReadLaterClick(file: File) {
-        onFileInfoSheetDismissRequest()
-        viewModelScope.launch {
-            addReadLaterUseCase.execute(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
-                .first()
-        }
     }
 
     fun toggleFileListType() {

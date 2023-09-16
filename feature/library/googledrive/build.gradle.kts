@@ -3,8 +3,8 @@ plugins {
 }
 
 android {
-    resourcePrefix("googledrive")
     namespace = "com.sorrowblue.comicviewer.feature.library.googledrive"
+    resourcePrefix("googledrive")
     packaging {
         resources.excludes += "META-INF/DEPENDENCIES"
     }

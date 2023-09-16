@@ -31,8 +31,6 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
-import com.sorrowblue.comicviewer.file.component.FileInfoSheet
-import com.sorrowblue.comicviewer.file.component.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderEmptyContent
@@ -49,7 +47,6 @@ import com.sorrowblue.comicviewer.framework.compose.pullrefresh.rememberPullRefr
 data class FolderScreenUiState(
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
     val sortSheetUiState: SortSheetUiState = SortSheetUiState.Hide,
-    val fileInfoSheetUiState: FileInfoSheetUiState = FileInfoSheetUiState.Hide,
     val fileContentUiState: FileContentUiState,
 )
 
@@ -58,11 +55,11 @@ data class FolderScreenUiState(
 internal fun FolderRoute(
     contentPadding: PaddingValues,
     onSearchClick: (BookshelfId, String) -> Unit,
-    onAddFavoriteClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
     onRestoreComplete: () -> Unit,
     onClickFile: (File, Int) -> Unit,
+    onClickLongFile: (File) -> Unit,
     viewModel: FolderViewModel = hiltViewModel()
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -78,16 +75,10 @@ internal fun FolderRoute(
         onSearchClick = { onSearchClick(viewModel.bookshelfId, viewModel.path) },
         onSortSheetDismissRequest = viewModel::onSortSheetDismissRequest,
         onSortChange = viewModel::onSortChange,
-        onFileInfoSheetDismissRequest = viewModel::onFileInfoSheetDismissRequest,
-        onAddReadLaterClick = viewModel::onAddReadLaterClick,
-        onAddFavoriteClick = {
-            viewModel.onFileInfoSheetDismissRequest()
-            onAddFavoriteClick(it)
-        },
         onClickFile = {
             onClickFile.invoke(it, lazyGridState.firstVisibleItemIndex)
         },
-        onClickLongFile = viewModel::onClickLongFile,
+        onClickLongFile = onClickLongFile,
         lazyGridState = lazyGridState,
         isRefreshing = isRefreshing,
         pullRefreshState = pullRefreshState,
@@ -126,9 +117,6 @@ internal fun FolderScreen(
     onSearchClick: () -> Unit,
     onSortSheetDismissRequest: () -> Unit,
     onSortChange: (Sort) -> Unit,
-    onFileInfoSheetDismissRequest: () -> Unit,
-    onAddReadLaterClick: (File) -> Unit,
-    onAddFavoriteClick: (File) -> Unit,
     onClickFile: (File) -> Unit,
     onClickLongFile: (File) -> Unit,
     lazyGridState: LazyGridState,
@@ -202,12 +190,6 @@ internal fun FolderScreen(
         uiState = uiState.sortSheetUiState,
         onDismissRequest = onSortSheetDismissRequest,
         onClick = onSortChange
-    )
-    FileInfoSheet(
-        uiState = uiState.fileInfoSheetUiState,
-        onDismissRequest = onFileInfoSheetDismissRequest,
-        onAddReadLaterClick = onAddReadLaterClick,
-        onAddFavoriteClick = onAddFavoriteClick
     )
 //    FolderScanInfoDialog(state.permissionRequestFolderScanInfoDialogUiState)
 }

@@ -7,6 +7,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navOptions
+import androidx.navigation.navigation
 import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
 import com.sorrowblue.comicviewer.domain.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
@@ -14,24 +16,56 @@ import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.feature.book.BookRoute
 
-const val BookRoute = "book"
+private const val bookGraphRoute = "book_graph"
+const val bookRoute = "book"
 
 private const val bookshelfIdArg = "bookshelfId"
 private const val favoriteIdArg = "favoriteId"
 private const val pathArg = "path"
 private const val positionArg = "position"
+private const val BOOK_ROUTE_BASE =
+    "$bookRoute/{$bookshelfIdArg}/{$pathArg}?favoriteId={$favoriteIdArg}&position={${positionArg}}"
 
-fun NavGraphBuilder.bookScreen(onBackClick: () -> Unit, onNextBookClick: (Book) -> Unit) {
+fun NavGraphBuilder.bookGraph(
+    navController: NavController,
+    onBackClick: () -> Unit
+) {
+    navigation(route = bookGraphRoute, startDestination = bookRoute) {
+        bookScreen(
+            onBackClick = onBackClick,
+            onNextBookClick = {
+                navController.navigateToBook(
+                    it.bookshelfId,
+                    it.path,
+                    -1,
+                    navOptions = navOptions {
+                        popUpTo(BOOK_ROUTE_BASE) { inclusive = true }
+                    }
+                )
+            }
+        )
+    }
+}
+
+private fun NavGraphBuilder.bookScreen(onBackClick: () -> Unit, onNextBookClick: (Book) -> Unit) {
     composable(
-        "$BookRoute/{$bookshelfIdArg}/{$pathArg}?favoriteId={$favoriteIdArg}&position={${positionArg}}",
+        BOOK_ROUTE_BASE,
         arguments = listOf(
             navArgument(bookshelfIdArg) { type = NavType.IntType },
             navArgument(pathArg) { type = NavType.StringType },
-            navArgument(favoriteIdArg) { type = NavType.IntType },
-            navArgument(positionArg) { type = NavType.IntType },
+            navArgument(favoriteIdArg) {
+                type = NavType.IntType
+                nullable = false
+                defaultValue = -1
+            },
+            navArgument(positionArg) {
+                type = NavType.IntType
+                nullable = false
+                defaultValue = -1
+            },
         )
     ) {
-        BookRoute(onBackClick = onBackClick,onNextBookClick = onNextBookClick)
+        BookRoute(onBackClick = onBackClick, onNextBookClick = onNextBookClick)
     }
 }
 
@@ -39,12 +73,24 @@ fun NavGraphBuilder.bookScreen(onBackClick: () -> Unit, onNextBookClick: (Book) 
 fun NavController.navigateToBook(
     bookshelfId: BookshelfId,
     path: String,
-    favoriteId: FavoriteId = FavoriteId(0),
     position: Int = -1,
     navOptions: NavOptions? = null
 ) {
     navigate(
-        "$BookRoute/${bookshelfId.value}/${path.encodeToBase64()}?favoriteId=${favoriteId.value}&position=$position",
+        "$bookRoute/${bookshelfId.value}/${path.encodeToBase64()}?position=$position",
+        navOptions
+    )
+}
+
+
+fun NavController.navigateToBook(
+    bookshelfId: BookshelfId,
+    path: String,
+    favoriteId: FavoriteId = FavoriteId(0),
+    navOptions: NavOptions? = null
+) {
+    navigate(
+        "$bookRoute/${bookshelfId.value}/${path.encodeToBase64()}?favoriteId=${favoriteId.value}",
         navOptions
     )
 }

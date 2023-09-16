@@ -2,6 +2,10 @@ plugins {
     id("build-logic.android.library")
 }
 
+android {
+    namespace = "com.sorrowblue.comicviewer.data.di"
+}
+
 dependencies {
     implementation(projects.data)
     implementation(projects.data.coil)

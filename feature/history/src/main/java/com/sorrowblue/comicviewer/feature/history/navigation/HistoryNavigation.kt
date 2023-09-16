@@ -23,16 +23,14 @@ fun NavController.navigateToHistoryGroup() = navigate(historyGraphRoute)
 internal fun NavGraphBuilder.historyScreen(
     contentPadding: PaddingValues,
     onFileClick: (File, Int) -> Unit,
-    onAddFavoriteClick: (File) -> Unit,
-    onOpenFolderClick: (File) -> Unit,
+    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit
 ) {
     composable(route = historyRoute) {
         HistoryRoute(
             contentPadding = contentPadding,
             onFileClick = onFileClick,
-            onAddFavoriteClick = onAddFavoriteClick,
-            onOpenFolderClick = onOpenFolderClick,
+            onFileLongClick = onFileLongClick,
             onSettingsClick = onSettingsClick
         )
     }
@@ -42,8 +40,8 @@ fun NavGraphBuilder.historyGroup(
     contentPadding: PaddingValues,
     navController: NavController,
     onBookClick: (BookshelfId, String, Int) -> Unit,
+    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
-    onAddFavoriteClick: (BookshelfId, String) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit
 ) {
     navigation(route = historyGraphRoute, startDestination = historyRoute) {
@@ -59,14 +57,7 @@ fun NavGraphBuilder.historyGroup(
                     )
                 }
             },
-            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
-            onOpenFolderClick = {
-                navController.navigateToFolder(
-                    prefix = historyRoute,
-                    bookshelfId = it.bookshelfId,
-                    path = it.parent,
-                )
-            },
+            onFileLongClick = onFileLongClick,
             onSettingsClick = onSettingsClick
         )
         folderScreen(
@@ -86,7 +77,6 @@ fun NavGraphBuilder.historyGroup(
             },
             onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
-            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
         )
     }
 }

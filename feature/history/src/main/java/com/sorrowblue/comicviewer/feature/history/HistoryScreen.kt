@@ -22,16 +22,13 @@ import com.sorrowblue.comicviewer.feature.history.section.EmptyContent
 import com.sorrowblue.comicviewer.feature.history.section.HistoryAppBar
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
-import com.sorrowblue.comicviewer.file.component.FileInfoSheet
-import com.sorrowblue.comicviewer.file.component.FileInfoSheetUiState
 import com.sorrowblue.comicviewer.framework.compose.isEmptyData
 
 @Composable
 internal fun HistoryRoute(
     onFileClick: (File, Int) -> Unit,
-    onAddFavoriteClick: (File) -> Unit,
-    onOpenFolderClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
+    onFileLongClick: (File) -> Unit,
     contentPadding: PaddingValues,
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
@@ -42,11 +39,7 @@ internal fun HistoryRoute(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onFileClick = { onFileClick(it, lazyGridState.firstVisibleItemIndex) },
-        onFileLongClick = viewModel::onFileLongClick,
-        onAddReadLaterClick = viewModel::addsReadLater,
-        onFileInfoDismissRequest = viewModel::onFileInfoDismissRequest,
-        onAddFavoriteClick = onAddFavoriteClick,
-        onOpenFolderClick = onOpenFolderClick,
+        onFileLongClick = onFileLongClick,
         onFileListTypeClick = viewModel::toggleDisplay,
         onGridSizeClick = viewModel::onGridSizeChange,
         onSettingsClick = onSettingsClick,
@@ -56,7 +49,6 @@ internal fun HistoryRoute(
 }
 
 data class ReadLaterScreenUiState(
-    val fileInfoSheetUiState: FileInfoSheetUiState,
     val fileContentUiState: FileContentUiState
 )
 
@@ -67,10 +59,6 @@ internal fun HistoryScreen(
     lazyPagingItems: LazyPagingItems<File>,
     onFileClick: (File) -> Unit = {},
     onFileLongClick: (File) -> Unit = {},
-    onAddReadLaterClick: (File) -> Unit = {},
-    onFileInfoDismissRequest: () -> Unit = {},
-    onAddFavoriteClick: (File) -> Unit = {},
-    onOpenFolderClick: (File) -> Unit = {},
     onFileListTypeClick: () -> Unit = {},
     onGridSizeClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
@@ -110,12 +98,4 @@ internal fun HistoryScreen(
             )
         }
     }
-
-    FileInfoSheet(
-        uiState = uiState.fileInfoSheetUiState,
-        onDismissRequest = onFileInfoDismissRequest,
-        onAddReadLaterClick = onAddReadLaterClick,
-        onAddFavoriteClick = onAddFavoriteClick,
-        onOpenFolderClick = onOpenFolderClick
-    )
 }

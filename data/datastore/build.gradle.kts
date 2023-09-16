@@ -3,6 +3,10 @@ plugins {
     id("com.sorrowblue.dagger-hilt")
 }
 
+android {
+    namespace = "com.sorrowblue.comicviewer.data.datastore"
+}
+
 dependencies {
     implementation(projects.framework)
     implementation(projects.domain.common)

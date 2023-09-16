@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.main.component
+package com.sorrowblue.comicviewer.app.component
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationRail
@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.sorrowblue.comicviewer.feature.main.MainScreenTab
+import com.sorrowblue.comicviewer.app.MainScreenTab
 import kotlinx.collections.immutable.PersistentList
 
 @Composable

@@ -4,6 +4,10 @@ plugins {
     alias(libs.plugins.google.ksp)
 }
 
+android {
+    namespace = "com.sorrowblue.comicviewer.data.database"
+}
+
 dependencies {
     implementation(projects.framework)
     implementation(projects.data)

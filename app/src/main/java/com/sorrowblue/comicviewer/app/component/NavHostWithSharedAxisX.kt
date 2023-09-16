@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.sorrowblue.comicviewer.framework.compose.LogCompositions
 
 @Composable
 internal fun NavHostWithSharedAxisX(
@@ -30,6 +31,7 @@ internal fun NavHostWithSharedAxisX(
     route: String? = null,
     builder: NavGraphBuilder.() -> Unit,
 ) {
+    LogCompositions("NavHostWithSharedAxisX", "")
     val slideDistance = rememberSlideDistance()
     NavHost(
         navController = navController,

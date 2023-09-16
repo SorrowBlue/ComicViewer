@@ -5,6 +5,10 @@ plugins {
     alias(libs.plugins.kotlin.plugin.serialization)
 }
 
+android {
+    namespace = "com.sorrowblue.comicviewer.data"
+}
+
 dependencies {
     implementation(projects.framework)
     implementation(projects.domain.common)

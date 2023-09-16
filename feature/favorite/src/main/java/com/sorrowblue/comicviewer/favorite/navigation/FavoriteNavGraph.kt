@@ -5,9 +5,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.favoriteEditScreen
+import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.navigateToFavoriteEdit
 import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
@@ -22,8 +23,6 @@ fun NavGraphBuilder.favoriteGroup(
     onBookClick: (BookshelfId, String, Int) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
-    onAddFavoriteClick: (BookshelfId, String) -> Unit,
-    onEditClick: (FavoriteId) -> Unit,
 ) {
     navigation(route = favoriteGraphRoute, startDestination = FavoriteListRoute) {
 
@@ -35,7 +34,7 @@ fun NavGraphBuilder.favoriteGroup(
 
         favoriteScreen(
             onBackClick = navController::popBackStack,
-            onEditClick = onEditClick,
+            onEditClick = navController::navigateToFavoriteEdit,
             onSettingsClick = onSettingsClick,
             onClickFile = { file, position ->
                 when (file) {
@@ -50,6 +49,10 @@ fun NavGraphBuilder.favoriteGroup(
             }
         )
 
+        favoriteEditScreen(
+            onBackClick = navController::popBackStack,
+            onComplete = navController::popBackStack
+        )
         folderScreen(
             contentPadding = contentPadding,
             prefix = FavoriteListRoute,
@@ -67,7 +70,6 @@ fun NavGraphBuilder.favoriteGroup(
             },
             onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
-            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
         )
     }
 }

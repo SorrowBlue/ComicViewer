@@ -4,6 +4,10 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
 }
 
+android {
+    namespace = "com.sorrowblue.comicviewer.data.service"
+}
+
 dependencies {
     implementation(projects.framework)
     implementation(projects.framework.notification)

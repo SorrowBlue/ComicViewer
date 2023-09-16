@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.main
+package com.sorrowblue.comicviewer.app
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Book
@@ -12,14 +12,27 @@ enum class MainScreenTab(
     val icon: ImageVector,
     val contentDescription: Int
 ) {
-
-    Bookshelf(R.string.main_label_bookshelf, Icons.TwoTone.Book, R.string.main_label_bookshelf),
-    Favorite(R.string.main_label_favorite, Icons.TwoTone.Favorite, R.string.main_label_favorite),
-    Readlater(
-        R.string.main_label_read_later,
-        Icons.TwoTone.WatchLater,
-        R.string.main_label_read_later
+    Bookshelf(
+        R.string.app_label_bookshelf,
+        Icons.TwoTone.Book,
+        R.string.app_label_bookshelf
     ),
-    Library(R.string.main_label_library, Icons.TwoTone.LibraryBooks, R.string.main_label_library),
 
+    Favorite(
+        R.string.app_label_favorite,
+        Icons.TwoTone.Favorite,
+        R.string.app_label_favorite
+    ),
+
+    Readlater(
+        R.string.app_label_read_later,
+        Icons.TwoTone.WatchLater,
+        R.string.app_label_read_later
+    ),
+
+    Library(
+        R.string.app_label_library,
+        Icons.TwoTone.LibraryBooks,
+        R.string.app_label_library
+    ),
 }

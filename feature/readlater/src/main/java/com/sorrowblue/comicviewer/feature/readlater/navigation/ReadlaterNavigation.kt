@@ -22,8 +22,8 @@ fun NavGraphBuilder.readlaterGroup(
     contentPadding: PaddingValues,
     navController: NavController,
     onBookClick: (BookshelfId, String, Int) -> Unit,
+    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
-    onAddFavoriteClick: (BookshelfId, String) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit
 ) {
     navigation(route = readlaterGraphRoute, startDestination = readLaterRoute) {
@@ -40,15 +40,8 @@ fun NavGraphBuilder.readlaterGroup(
                         )
                 }
             },
-            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
-            onOpenFolderClick = {
-                navController.navigateToFolder(
-                    prefix = readLaterRoute,
-                    it.bookshelfId,
-                    it.path
-                )
-            },
-            onSettingsClick = onSettingsClick
+            onFileLongClick = onFileLongClick,
+            onSettingsClick = onSettingsClick,
         )
         folderScreen(
             contentPadding = contentPadding,
@@ -67,7 +60,6 @@ fun NavGraphBuilder.readlaterGroup(
             },
             onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
-            onAddFavoriteClick = { onAddFavoriteClick(it.bookshelfId, it.path) },
         )
     }
 }
@@ -75,17 +67,15 @@ fun NavGraphBuilder.readlaterGroup(
 private fun NavGraphBuilder.readLaterScreen(
     contentPadding: PaddingValues,
     onFileClick: (File, Int) -> Unit,
-    onAddFavoriteClick: (File) -> Unit,
-    onOpenFolderClick: (File) -> Unit,
+    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit
 ) {
     composable(route = readLaterRoute) {
         ReadLaterRoute(
-            contentPadding = contentPadding,
             onFileClick = onFileClick,
-            onAddFavoriteClick = onAddFavoriteClick,
-            onOpenFolderClick = onOpenFolderClick,
-            onSettingsClick = onSettingsClick
+            onFileLongClick = onFileLongClick,
+            onSettingsClick = onSettingsClick,
+            contentPadding = contentPadding,
         )
     }
 }

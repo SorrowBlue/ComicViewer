@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace = "com.sorrowblue.comicviewer.framework.compose"
     buildFeatures {
         compose = true
     }
@@ -25,6 +26,7 @@ dependencies {
     api(libs.androidx.paging.compose)
     api(libs.androidx.window)
     api(libs.coil.compose)
+    api(libs.google.accompanist.navigation.material)
     api(libs.kotlinx.collections.immutable)
 
     debugImplementation(libs.bundles.androidx.compose.debug)
