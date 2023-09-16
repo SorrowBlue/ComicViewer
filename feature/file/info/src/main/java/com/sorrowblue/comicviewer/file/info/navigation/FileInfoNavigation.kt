@@ -81,6 +81,7 @@ fun NavGraphBuilder.fileInfoGraph(
     onClickBook: (BookshelfId, String, Int) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
+    onAddClick: () -> Unit,
 ) {
     navigation(route = fileInfoGraph, startDestination = fileInfoRoute) {
         fileInfoScreen(
@@ -92,7 +93,7 @@ fun NavGraphBuilder.fileInfoGraph(
                 navController.navigateToFolder(fileInfoRoute, it.bookshelfId, it.parent)
             }
         )
-        favoriteAddScreen(onBackClick = navController::popBackStack)
+        favoriteAddScreen(onBackClick = navController::popBackStack, onAddClick = onAddClick)
         folderScreen(
             fileInfoRoute,
             contentPadding = contentPadding,

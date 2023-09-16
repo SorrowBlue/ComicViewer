@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -37,8 +38,8 @@ import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListAppBar
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
-import com.sorrowblue.comicviewer.feature.favorite.common.section.FavoriteCreateDialogUiState
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.compose.copy
 import com.sorrowblue.comicviewer.framework.compose.isEmptyData
 import kotlinx.coroutines.flow.flowOf
 import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
@@ -60,10 +61,6 @@ internal fun FavoriteListRoute(
         onFavoriteClick = onFavoriteClick
     )
 }
-
-internal data class FavoriteListScreenUiState(
-    val favoriteCreateDialogUiState: FavoriteCreateDialogUiState,
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,7 +117,7 @@ private fun FavoriteListScreen(
                 )
             }
         } else {
-            LazyColumn(contentPadding = innerPadding, state = lazyListState) {
+            LazyColumn(contentPadding = innerPadding.copy(bottom = 60.dp), state = lazyListState) {
                 items(lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.id.value }) {
                     val item = lazyPagingItems[it]
                     if (item != null) {

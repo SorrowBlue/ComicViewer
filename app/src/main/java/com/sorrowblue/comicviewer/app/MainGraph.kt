@@ -95,7 +95,8 @@ internal fun NavGraphBuilder.mainGraph(
         contentPadding = contentPadding,
         onClickBook = navController::navigateToBook,
         navigateToSearch = navController::navigateToSearch,
-        onSettingsClick = navController::navigateToSettings
+        onSettingsClick = navController::navigateToSettings,
+        onAddClick = navController::navigateToFavoriteCreate
     )
 
     searchScreen(navController::popBackStack)
