@@ -10,6 +10,9 @@ import com.mikepenz.aboutlibraries.LibsBuilder
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraph
 import com.sorrowblue.comicviewer.domain.AddOn
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
+import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
+import com.sorrowblue.comicviewer.feature.authentication.navigation.authenticationScreen
+import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
 import com.sorrowblue.comicviewer.feature.book.navigation.bookGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
 import com.sorrowblue.comicviewer.feature.favorite.create.navigation.favoriteCreateScreen
@@ -41,8 +44,30 @@ internal fun NavGraphBuilder.mainGraph(
     contentPadding: PaddingValues,
     restoreComplete: () -> Unit,
     onTutorialExit: () -> Unit,
+    onBackClick: () -> Unit,
+    onAuthCompleted: (Boolean) -> Unit,
     addOnList: PersistentList<AddOn>,
 ) {
+    authenticationScreen(
+        onBack = onBackClick,
+        onAuthCompleted = { back, mode ->
+            when (mode) {
+                Mode.Register -> {
+                    navController.popBackStack()
+                }
+
+                Mode.Change -> {
+                    navController.popBackStack()
+                }
+
+                Mode.Erase -> {
+                    navController.popBackStack()
+                }
+
+                Mode.Authentication -> onAuthCompleted(back)
+            }
+        }
+    )
     bookshelfGraph(
         contentPadding = contentPadding,
         navController = navController,
@@ -100,42 +125,11 @@ internal fun NavGraphBuilder.mainGraph(
     )
 
     searchScreen(navController::popBackStack)
-    settingsNavGraph(
-        navController = navController,
-        onLicenceClick = {
-            val intent = LibsBuilder()
-                .withActivityTitle("Licence")
-                .withSearchEnabled(true)
-                .withEdgeToEdge(true)
-                .intent(context)
-            extraNavController.startActivity(intent)
-        },
-        onRateAppClick = {
-            val manager = ReviewManagerFactory.create(context)
-            manager.requestReviewFlow().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    manager.launchReviewFlow(context as Activity, task.result)
-                        .addOnCompleteListener { a ->
-                            if (a.isSuccessful) {
-                                logcat { "成功" }
-                            } else {
-                                logcat { a.exception?.asLog().toString() }
-                                extraNavController.launchUrl("http://play.google.com/store/apps/details?id=${context.packageName}")
-                            }
-                        }
-                } else {
-                    logcat { task.exception?.asLog().toString() }
-                    extraNavController.launchUrl("http://play.google.com/store/apps/details?id=${context.packageName}")
-                }
-            }
-        },
-        onStartTutorialClick = navController::navigateToTutorial
-    )
+
     tutorialScreen(onComplete = onTutorialExit)
 
     bookGraph(navController = navController, onBackClick = navController::popBackStack)
 
-    searchScreen(navController::popBackStack)
     settingsNavGraph(
         navController = navController,
         onLicenceClick = {
@@ -161,10 +155,15 @@ internal fun NavGraphBuilder.mainGraph(
                 }
             }
         },
-        onStartTutorialClick = navController::navigateToTutorial
-    )
-    tutorialScreen(
-        onComplete = onTutorialExit
+        onStartTutorialClick = navController::navigateToTutorial,
+        onPasswordChangeClick = { navController.navigateToAuthentication(Mode.Change) },
+        onChangeAuthEnabled = {
+            if (it) {
+                navController.navigateToAuthentication(Mode.Register)
+            } else {
+                navController.navigateToAuthentication(Mode.Erase)
+            }
+        }
     )
 
     addOnList.forEach {

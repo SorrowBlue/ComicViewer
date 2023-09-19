@@ -110,15 +110,6 @@ internal class SettingsSecurityViewModel @Inject constructor(
         }
     }
 
-    fun onChangeAuthEnabled(enabled: Boolean) {
-        val uiState = _uiState.value
-        _uiState.value = if (enabled) {
-            uiState.copy(passwordDialogUiState = PasswordDialogUiState.Activation())
-        } else {
-            uiState.copy(passwordDialogUiState = PasswordDialogUiState.Invalidation())
-        }
-    }
-
     fun onChangeBackgroundLockEnabled(enabled: Boolean) {
         viewModelScope.launch {
             manageSecuritySettingsUseCase.edit {
@@ -160,11 +151,6 @@ internal class SettingsSecurityViewModel @Inject constructor(
             biometricPromptMode = false
             _uiEvents.tryEmit(SettingsSecurityUiEvent.BiometricPrompt(false))
         }
-    }
-
-    fun onPasswordChangeClick() {
-        val uiState = _uiState.value
-        _uiState.value = uiState.copy(passwordDialogUiState = PasswordDialogUiState.Change())
     }
 
     fun onPasswordChange(text: String) {

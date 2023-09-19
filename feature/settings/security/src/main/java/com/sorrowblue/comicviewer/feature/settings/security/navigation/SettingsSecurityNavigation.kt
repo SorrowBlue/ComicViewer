@@ -8,10 +8,16 @@ import com.sorrowblue.comicviewer.feature.settings.security.SettingsSecurityRout
 
 private const val SettingsSecurityRoute = "settings/security"
 
-fun NavGraphBuilder.settingsSecurityScreen(onBackClick: () -> Unit) {
+fun NavGraphBuilder.settingsSecurityScreen(
+    onBackClick: () -> Unit,
+    onChangeAuthEnabled: (Boolean) -> Unit,
+    onPasswordChangeClick: () -> Unit,
+) {
     composable(SettingsSecurityRoute) {
         SettingsSecurityRoute(
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onChangeAuthEnabled = onChangeAuthEnabled,
+            onPasswordChangeClick = onPasswordChangeClick
         )
     }
 }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.entity.settings.DarkMode
+import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class SettingsDisplayViewModel @Inject constructor(
-    private val settingsUseCase: ManageDisplaySettingsUseCase
+    private val settingsUseCase: ManageDisplaySettingsUseCase,
+    private val loadSettingsUseCase: LoadSettingsUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsDisplayScreenUiState())
@@ -24,6 +26,9 @@ internal class SettingsDisplayViewModel @Inject constructor(
     init {
         settingsUseCase.settings.onEach {
             _uiState.value = _uiState.value.copy(darkMode = it.darkMode)
+        }.launchIn(viewModelScope)
+        loadSettingsUseCase.settings.onEach {
+            _uiState.value = _uiState.value.copy(restoreOnLaunch = it.restoreOnLaunch)
         }.launchIn(viewModelScope)
     }
 
@@ -35,6 +40,14 @@ internal class SettingsDisplayViewModel @Inject constructor(
                 DarkMode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
                 DarkMode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
             }.let(AppCompatDelegate::setDefaultNightMode)
+        }
+    }
+
+    fun onRestoreOnLaunchChange(value: Boolean) {
+        viewModelScope.launch {
+            loadSettingsUseCase.edit {
+                it.copy(restoreOnLaunch = value)
+            }
         }
     }
 }

@@ -89,11 +89,11 @@ internal fun FolderRoute(
         onSortClick = viewModel::openSort,
     )
     LaunchedEffect(lazyPagingItems.loadState) {
-        if (0 < viewModel.position && lazyPagingItems.loadState.refresh is LoadState.NotLoading && lazyPagingItems.itemCount > 0) {
+        if (0 <= viewModel.position && lazyPagingItems.loadState.refresh is LoadState.NotLoading && lazyPagingItems.itemCount > 0) {
             val position = viewModel.position
             viewModel.position = -1
-            lazyGridState.scrollToItem(position)
             onRestoreComplete()
+            lazyGridState.scrollToItem(position)
         } else if (lazyPagingItems.isLoadedData && viewModel.isScrollableTop) {
             viewModel.isScrollableTop = false
             lazyGridState.scrollToItem(0)

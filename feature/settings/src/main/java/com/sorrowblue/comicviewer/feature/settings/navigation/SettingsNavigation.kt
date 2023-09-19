@@ -60,6 +60,8 @@ fun NavGraphBuilder.settingsNavGraph(
     navController: NavController,
     onLicenceClick: () -> Unit,
     onRateAppClick: () -> Unit,
+    onChangeAuthEnabled: (Boolean) -> Unit,
+    onPasswordChangeClick: () -> Unit,
     onStartTutorialClick: () -> Unit,
 ) {
     navigation(route = SettingsNavGraphRoute, startDestination = SettingsRoute) {
@@ -78,7 +80,11 @@ fun NavGraphBuilder.settingsNavGraph(
             onBackClick = navController::popBackStack,
             onExtensionClick = navController::navigateToSettingsSupportExtension
         )
-        settingsSecurityScreen(onBackClick = navController::popBackStack)
+        settingsSecurityScreen(
+            onBackClick = navController::popBackStack,
+            onChangeAuthEnabled = onChangeAuthEnabled,
+            onPasswordChangeClick = onPasswordChangeClick
+        )
         settingsViewerScreen(onBackClick = navController::popBackStack)
         settingsSupportExtensionScreen(onBackClick = navController::popBackStack)
         settingsAppInfoScreen(

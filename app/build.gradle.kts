@@ -110,6 +110,7 @@ dependencies {
 
     implementation(projects.data.di)
     implementation(projects.domain)
+    implementation(projects.feature.authentication)
     implementation(projects.feature.book)
     implementation(projects.feature.bookshelf)
     implementation(projects.feature.favorite)

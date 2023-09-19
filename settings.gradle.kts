@@ -78,6 +78,7 @@ include(":data:storage:device")
 include(":data:storage:smb")
 include(":data:service")
 
+include(":feature:authentication")
 include(":feature:book")
 include(":feature:bookshelf")
 include(":feature:bookshelf:edit")

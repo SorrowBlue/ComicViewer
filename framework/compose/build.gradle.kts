@@ -24,6 +24,7 @@ dependencies {
     api(libs.androidx.hilt.navigation.compose)
     api(libs.androidx.navigation.compose)
     api(libs.androidx.paging.compose)
+    api(libs.androidx.lifecycle.compose)
     api(libs.androidx.window)
     api(libs.coil.compose)
     api(libs.google.accompanist.navigation.material)

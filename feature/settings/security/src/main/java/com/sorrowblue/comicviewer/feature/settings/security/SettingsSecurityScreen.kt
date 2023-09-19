@@ -57,7 +57,9 @@ sealed interface SettingsSecurityUiEvent {
 @Composable
 internal fun SettingsSecurityRoute(
     onBackClick: () -> Unit,
-    viewModel: SettingsSecurityViewModel = hiltViewModel()
+    onChangeAuthEnabled: (Boolean) -> Unit,
+    onPasswordChangeClick: () -> Unit,
+    viewModel: SettingsSecurityViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -99,8 +101,8 @@ internal fun SettingsSecurityRoute(
         uiState = uiState,
         snackbarHostState = snackbarHostState,
         onBackClick = onBackClick,
-        onChangeAuthEnabled = viewModel::onChangeAuthEnabled,
-        onPasswordChangeClick = viewModel::onPasswordChangeClick,
+        onChangeAuthEnabled = onChangeAuthEnabled,
+        onPasswordChangeClick = onPasswordChangeClick,
         onChangeBiometricEnabled = viewModel::onChangeBiometricEnabled,
         onChangeBackgroundLockEnabled = viewModel::onChangeBackgroundLockEnabled,
         onPasswordChange = viewModel::onPasswordChange,

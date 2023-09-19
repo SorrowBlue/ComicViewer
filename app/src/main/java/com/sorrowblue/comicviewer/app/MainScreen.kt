@@ -45,6 +45,8 @@ private enum class NavigationType {
 private val routeInNavigationBar =
     routeInBookshelfGraph + routeInFavoriteGraph + routeInReadlaterGraph + routeInLibraryGraph
 
+internal const val mainGraphRoute = "main"
+
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 internal fun MainScreen(
@@ -109,6 +111,7 @@ internal fun MainScreen(
             ModalBottomSheetLayout(bottomSheetNavigator) {
                 NavHostWithSharedAxisX(
                     navController = navController,
+                    route = mainGraphRoute,
                     startDestination = startDestination,
                     modifier = Modifier
                 ) {

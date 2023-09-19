@@ -35,21 +35,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.domain.entity.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.display.section.SettingsDisplayTopAppBar
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.compose.material3.ListItemSwitch
 
 data class SettingsDisplayScreenUiState(
-    val darkMode: DarkMode = DarkMode.DEVICE
+    val darkMode: DarkMode = DarkMode.DEVICE,
+    val restoreOnLaunch: Boolean = false,
 )
 
 @Composable
 internal fun SettingsDisplayRoute(
     onBackClick: () -> Unit,
-    viewModel: SettingsDisplayViewModel = hiltViewModel()
+    viewModel: SettingsDisplayViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     SettingsDisplayScreen(
         uiState = uiState,
         onBackClick = onBackClick,
-        onDarkModeChange = viewModel::updateDarkMode
+        onDarkModeChange = viewModel::updateDarkMode,
+        onRestoreOnLaunchChange = viewModel::onRestoreOnLaunchChange,
     )
 }
 
@@ -59,6 +62,7 @@ private fun SettingsDisplayScreen(
     uiState: SettingsDisplayScreenUiState = SettingsDisplayScreenUiState(),
     onBackClick: () -> Unit = {},
     onDarkModeChange: (DarkMode) -> Unit = {},
+    onRestoreOnLaunchChange: (Boolean) -> Unit = {},
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -76,6 +80,13 @@ private fun SettingsDisplayScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(contentPadding)
         ) {
+
+            ListItemSwitch(
+                headlineContent = {
+                    Text(text = "最後に表示したフォルダを復元する")
+                }, checked =
+                uiState.restoreOnLaunch, onCheckedChange = onRestoreOnLaunchChange
+            )
             Box {
                 var expanded by remember { mutableStateOf(false) }
                 ListItem(

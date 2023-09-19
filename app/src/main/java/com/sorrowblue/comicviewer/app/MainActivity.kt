@@ -23,15 +23,13 @@ internal class MainActivity : AppCompatActivity() {
 
         installSplashScreen().apply {
             super.onCreate(savedInstanceState)
-            setKeepOnScreenCondition(viewModel::shouldKeepOnScreen)
+            setKeepOnScreenCondition(viewModel::shouldKeepSplash)
             setOnExitAnimationListener(SplashScreenViewProvider::startSlideUpAnime)
         }
 
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
         )
-
-        viewModel.restoreComplete()
 
         setContent {
             val windowSize = calculateWindowSizeClass(this)
