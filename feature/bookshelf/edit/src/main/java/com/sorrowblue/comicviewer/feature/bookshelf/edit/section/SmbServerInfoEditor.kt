@@ -4,8 +4,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -38,9 +42,14 @@ fun SmbServerInfoEditor(
     onDomainChange: (String) -> Unit = {},
     onUsernameChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
-    onSaveClick: () -> Unit = {}
+    onSaveClick: () -> Unit = {},
 ) {
-    Column(modifier) {
+    Column(
+        modifier
+            .verticalScroll(rememberScrollState())
+            .padding(AppMaterialTheme.dimens.margin)
+            .imePadding()
+    ) {
         OutlinedTextField(
             value = uiState.displayName,
             onValueChange = onDisplayNameChange,
@@ -59,10 +68,9 @@ fun SmbServerInfoEditor(
                     AuthMethod.USERPASS -> ImeAction.Next
                 }
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
+            modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.size(8.dp))
         OutlinedTextField(
             value = uiState.host,
             onValueChange = onHostChange,
@@ -78,10 +86,9 @@ fun SmbServerInfoEditor(
                 keyboardType = KeyboardType.Uri,
                 imeAction = ImeAction.Next
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
+            modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.size(8.dp))
         OutlinedTextField(
             value = uiState.port,
             onValueChange = onPortChange,
@@ -97,25 +104,24 @@ fun SmbServerInfoEditor(
                 keyboardType = KeyboardType.NumberPassword,
                 imeAction = ImeAction.Next
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
+            modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.size(8.dp))
         OutlinedTextField(
             value = uiState.path,
             onValueChange = onPathChange,
             label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_path)) },
             prefix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_prefix_path)) },
             suffix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_suffix_path)) },
+            supportingText = {},
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Uri,
                 imeAction = ImeAction.Next
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
+            modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.size(16.dp))
         MaterialButtons(
             size = AuthMethod.entries.size,
             label = {
@@ -132,19 +138,18 @@ fun SmbServerInfoEditor(
             onChange = {
                 onAuthMethodChange(AuthMethod.entries[it])
             },
-            modifier = Modifier.padding(top = 16.dp)
         )
         when (uiState.authMethod) {
             AuthMethod.GUEST -> Unit
             AuthMethod.USERPASS -> {
+                Spacer(modifier = Modifier.size(8.dp))
                 OutlinedTextField(
                     value = uiState.domain,
                     onValueChange = onDomainChange,
                     label = { Text(text = stringResource(id = R.string.bookshelf_manage_hint_domain)) },
                     singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
+                    supportingText = {},
+                    modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -154,6 +159,7 @@ fun SmbServerInfoEditor(
                     autofillTypes = listOf(AutofillType.Username),
                     onFill = onUsernameChange
                 )
+                Spacer(modifier = Modifier.size(8.dp))
                 OutlinedTextField(
                     value = uiState.username,
                     onValueChange = {
@@ -170,7 +176,6 @@ fun SmbServerInfoEditor(
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
                         .connectNode(handler = usernameAutoFillHandler)
                         .defaultFocusChangeAutoFill(handler = usernameAutoFillHandler),
                     keyboardOptions = KeyboardOptions(
@@ -182,6 +187,7 @@ fun SmbServerInfoEditor(
                     autofillTypes = listOf(AutofillType.Password),
                     onFill = onPasswordChange
                 )
+                Spacer(modifier = Modifier.size(8.dp))
                 OutlinedTextField(
                     value = uiState.password,
                     onValueChange = {
@@ -198,7 +204,6 @@ fun SmbServerInfoEditor(
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
                         .connectNode(handler = passwordAutoFillHandler)
                         .defaultFocusChangeAutoFill(handler = passwordAutoFillHandler),
                     keyboardOptions = KeyboardOptions(
@@ -208,12 +213,12 @@ fun SmbServerInfoEditor(
                 )
             }
         }
+        Spacer(modifier = Modifier.size(16.dp))
         Row {
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
                 onClick = onSaveClick,
-                modifier = Modifier.padding(top = 8.dp)
             ) {
                 Text(text = "Save")
             }

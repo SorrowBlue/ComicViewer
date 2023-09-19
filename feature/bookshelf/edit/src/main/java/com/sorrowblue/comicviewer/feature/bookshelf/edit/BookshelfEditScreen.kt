@@ -6,10 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
@@ -48,7 +45,7 @@ sealed interface BookshelfEditScreenUiState {
     data object Complete : BookshelfEditScreenUiState
 
     data class Editing(
-        val editorUiState: BookshelfEditorUiState = BookshelfEditorUiState.SmbServer()
+        val editorUiState: BookshelfEditorUiState = BookshelfEditorUiState.SmbServer(),
     ) : BookshelfEditScreenUiState
 }
 
@@ -58,7 +55,6 @@ sealed interface UiEvent {
 
 @Composable
 internal fun BookshelfEditRoute(
-    modifier: Modifier = Modifier,
     viewModel: BookshelfEditViewModel = hiltViewModel(),
     onBackClick: () -> Unit = {},
     onComplete: () -> Unit = {},
@@ -117,7 +113,7 @@ fun BookshelfEditScreen(
     onDomainChange: (String) -> Unit = {},
     onUsernameChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
-    onSaveClick: () -> Unit = {}
+    onSaveClick: () -> Unit = {},
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(
@@ -151,10 +147,7 @@ fun BookshelfEditScreen(
 
                     is BookshelfEditorUiState.SmbServer ->
                         SmbServerInfoEditor(
-                            modifier = Modifier
-                                .imePadding()
-                                .padding(contentPaddings.copy(horizontal = AppMaterialTheme.dimens.margin))
-                                .verticalScroll(rememberScrollState()),
+                            modifier = Modifier.padding(contentPaddings),
                             uiState = uiState.editorUiState,
                             onDisplayNameChange = onDisplayNameChange,
                             onHostChange = onHostChange,
