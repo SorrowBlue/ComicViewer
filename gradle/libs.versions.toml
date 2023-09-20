@@ -105,7 +105,7 @@ androidx-navigation-dynamic-features-fragment = { module = "androidx.navigation:
 
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }
-androidx-paging-compose = { module = "androidx.paging:paging-compose", version = "3.2.0-rc01" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version = "3.2.1" }
 
 androidx-preference-ktx = "androidx.preference:preference-ktx:1.2.0"
 
