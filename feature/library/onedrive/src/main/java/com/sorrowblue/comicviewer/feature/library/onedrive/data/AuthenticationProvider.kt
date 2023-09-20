@@ -10,6 +10,7 @@ import com.microsoft.identity.client.IPublicClientApplication
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication.CurrentAccountCallback
 import com.microsoft.identity.client.PublicClientApplication
+import com.microsoft.identity.client.SignInParameters
 import com.microsoft.identity.client.exception.MsalException
 import com.sorrowblue.comicviewer.feature.library.onedrive.R
 import java.net.URL
@@ -72,17 +73,14 @@ class AuthenticationProvider private constructor(private val appContext: Context
 
     suspend fun signIn(activity: Activity): CompletableFuture<IAuthenticationResult> {
         val future = CompletableFuture<IAuthenticationResult>()
-        // TODO(https://github.com/AzureAD/microsoft-authentication-library-for-android/issues/1742)
-        // val parameters = SignInParameters.builder().withActivity(activity).withLoginHint(null).withScopes(scopes).withCallback(getAuthenticationCallback(future)).build()
-        // clientApplication.signIn(parameters)
+        val parameters = SignInParameters.builder()
+            .withActivity(activity)
+            .withLoginHint(null)
+            .withScopes(scopes)
+            .withCallback(getAuthenticationCallback(future))
+            .build()
         withContext(Dispatchers.IO) {
-            @Suppress("DEPRECATION")
-            clientApplication?.signIn(
-                activity,
-                null,
-                scopes.toTypedArray(),
-                getAuthenticationCallback(future)
-            )
+            clientApplication?.signIn(parameters)
         }
         return future
     }
