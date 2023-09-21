@@ -31,6 +31,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
-import com.sorrowblue.comicviewer.feature.book.section.BookPager
+import com.sorrowblue.comicviewer.feature.book.section.BookPage
+import com.sorrowblue.comicviewer.feature.book.section.BookPager2
 import com.sorrowblue.comicviewer.feature.book.section.BookPagerUiState
 import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.systemuicontroller.rememberSystemUiController
@@ -62,7 +65,7 @@ internal sealed interface BookScreenUiState {
 internal fun BookRoute(
     onBackClick: () -> Unit,
     onNextBookClick: (Book) -> Unit,
-    viewModel: BookViewModel = hiltViewModel()
+    viewModel: BookViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     BookScreen(
@@ -82,7 +85,7 @@ internal fun BookScreen(
     onBackClick: () -> Unit,
     onPageIndexChange: (Int) -> Unit,
     onContainerClick: () -> Unit,
-    onNextBookClick: (Book) -> Unit
+    onNextBookClick: (Book) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val sys = rememberSystemUiController()
@@ -93,10 +96,16 @@ internal fun BookScreen(
     }
     when (uiState) {
         is BookScreenUiState.Loaded -> {
+            val currentList = remember(uiState.book.totalPageCount) {
+                mutableStateListOf<BookPage>().apply {
+                    addAll(getBookPageList(uiState.book.totalPageCount))
+                }
+            }
             val pagerState = rememberPagerState(
                 initialPage = uiState.book.lastPageRead + 1,
-                pageCount = { uiState.book.totalPageCount + 2 }
+                pageCount = { currentList.size }
             )
+
             sys.isSystemBarsVisible = uiState.isVisibleTooltip
             LaunchedEffect(pagerState.currentPage) {
                 if (0 < pagerState.currentPage && pagerState.currentPage < uiState.book.totalPageCount) {
@@ -127,7 +136,10 @@ internal fun BookScreen(
                 bottomBar = {
                     BookBottomBar(
                         uiState.isVisibleTooltip,
-                        pagerState.currentPage,
+                        when (val a = currentList[pagerState.currentPage]) {
+                            is BookPage.Next -> if (a.isNext) uiState.book.totalPageCount else 0
+                            is BookPage.Split -> a.index
+                        },
                         uiState.book.totalPageCount
                     ) {
                         scope.launch {
@@ -135,9 +147,10 @@ internal fun BookScreen(
                         }
                     }
                 }) {
-                BookPager(
-                    pagerState = pagerState,
+                BookPager2(
                     uiState = uiState.bookPagerUiState,
+                    pagerState = pagerState,
+                    currentList = currentList,
                     onClick = onContainerClick,
                     onNextBookClick = onNextBookClick
                 )
@@ -177,6 +190,15 @@ internal fun BookScreen(
         }
     }
 }
+
+private fun getBookPageList(totalPageCount: Int) =
+    (0..<totalPageCount).map {
+        when (it) {
+            0 -> BookPage.Next(false)
+            totalPageCount - 1 -> BookPage.Next(true)
+            else -> BookPage.Split(it - 1, BookPage.Split.State.NOT_LOADED)
+        }
+    }
 
 @Composable
 fun PreviewEmpty(modifier: Modifier = Modifier) {

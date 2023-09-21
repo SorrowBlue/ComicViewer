@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book.section
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -7,12 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -20,23 +18,23 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
-import com.sorrowblue.comicviewer.feature.book.trimBorders
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.request.BookPageRequest
 
 internal data class BookPagerUiState(
     val book: Book,
     val prevBook: Book?,
-    val nextBook: Book?
+    val nextBook: Book?,
 )
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun BookPager(
-    pagerState: PagerState,
+internal fun BookPager2(
     uiState: BookPagerUiState,
+    pagerState: PagerState,
+    currentList: SnapshotStateList<BookPage>,
     onClick: () -> Unit,
-    onNextBookClick: (Book) -> Unit
+    onNextBookClick: (Book) -> Unit,
 ) {
     HorizontalPager(
         state = pagerState,
@@ -44,53 +42,168 @@ internal fun BookPager(
         reverseLayout = true,
         modifier = Modifier.fillMaxSize()
     ) { pageIndex ->
-        when (pageIndex) {
-            0 ->
-                NextBookSheet(uiState.prevBook, false, onClick = onNextBookClick)
-
-            uiState.book.totalPageCount + 1 ->
-                NextBookSheet(uiState.nextBook, true, onClick = onNextBookClick)
-
-            else ->
-                Box(
-                    modifier = Modifier.clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = onClick
-                    ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    var state by remember {
-                        mutableStateOf<AsyncImagePainter.State>(
-                            AsyncImagePainter.State.Empty
-                        )
-                    }
-                    AsyncImage(
-                        model = BookPageRequest(uiState.book to pageIndex - 1),
-                        null,
-                        onState = { state = it },
-                        transform = {
-                            when (it) {
-                                AsyncImagePainter.State.Empty -> it
-                                is AsyncImagePainter.State.Error -> it
-                                is AsyncImagePainter.State.Loading -> it
-                                is AsyncImagePainter.State.Success -> {
-                                    it.copy(
-                                        painter = BitmapPainter(
-                                            it.result.drawable.toBitmap().trimBorders(
-                                                android.graphics.Color.WHITE
-                                            ).asImageBitmap()
-                                        ),
-                                    )
-                                }
-                            }
-                        },
-                    modifier = Modifier.fillMaxSize()
-                )
-                if (state is AsyncImagePainter.State.Loading) {
-                    CircularProgressIndicator()
+        when (val item = currentList[pageIndex]) {
+            is BookPage.Next -> {
+                if (item.isNext) {
+                    NextBookSheet(uiState.nextBook, true, onClick = onNextBookClick)
+                } else {
+                    NextBookSheet(uiState.prevBook, false, onClick = onNextBookClick)
                 }
             }
+
+            is BookPage.Split -> BookSplitPage(currentList, uiState.book, item, onClick)
         }
+    }
+}
+
+@Composable
+fun BookSplitPage(
+    currentList: SnapshotStateList<BookPage>,
+    book: Book,
+    bookPage: BookPage.Split,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier.clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null,
+            onClick = onClick
+        ),
+        contentAlignment = Alignment.Center
+    ) {
+        when (bookPage.state) {
+            BookPage.Split.State.NOT_LOADED -> {
+                AsyncImage(
+                    model = BookPageRequest(book to bookPage.index),
+                    contentDescription = null,
+                    transform = {
+                        if (it is AsyncImagePainter.State.Success) {
+                            val input = it.result.drawable.toBitmap()
+                            if (input.height <= input.width) {
+                                // 分割表示する必要あり
+                                val index: Int
+                                currentList.apply {
+                                    index = indexOf(bookPage)
+                                    if (0 < index) {
+                                        set(
+                                            index,
+                                            bookPage.copy(state = BookPage.Split.State.LOADED_SPLIT_RIGHT)
+                                        )
+                                        add(
+                                            index + 1,
+                                            bookPage.copy(state = BookPage.Split.State.LOADED_SPLIT_LEFT)
+                                        )
+                                    }
+                                }
+                                it.copy(
+                                    painter = BitmapPainter(
+                                        Bitmap.createBitmap(
+                                            input,
+                                            input.width / 2,
+                                            0,
+                                            input.width / 2,
+                                            input.height
+                                        ).asImageBitmap()
+                                    )
+                                )
+                            } else {
+                                // 分割表示する必要なし
+                                val index: Int
+                                currentList.apply {
+                                    index = indexOf(bookPage)
+                                    if (0 < index) {
+                                        set(
+                                            index,
+                                            bookPage.copy(state = BookPage.Split.State.LOADED_SPLIT_NON)
+                                        )
+                                    }
+                                }
+                                it
+                            }
+                        } else {
+                            it
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            BookPage.Split.State.LOADED_SPLIT_NON -> {
+                AsyncImage(
+                    model = BookPageRequest(book to bookPage.index),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            BookPage.Split.State.LOADED_SPLIT_LEFT -> BookImage(book, bookPage.index, isLeft = true)
+            BookPage.Split.State.LOADED_SPLIT_RIGHT -> BookImage(
+                book,
+                bookPage.index,
+                isLeft = false
+            )
+        }
+    }
+}
+
+@Composable
+fun BookImage(book: Book, index: Int, isLeft: Boolean) {
+    AsyncImage(
+        model = BookPageRequest(book to index),
+        contentDescription = null,
+        transform = {
+            if (it is AsyncImagePainter.State.Success) {
+                it.copy(
+                    painter = BitmapPainter(
+                        mihirakiSplitTransformation(
+                            it.result.drawable.toBitmap(),
+                            isLeft
+                        ).asImageBitmap()
+                    )
+                )
+            } else {
+                it
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+enum class BookViewType {
+    NExT,
+    SPLIT,
+}
+
+sealed interface BookPage {
+
+    val viewType: BookViewType
+
+    data class Next(val isNext: Boolean) : BookPage {
+
+        override val viewType = BookViewType.NExT
+    }
+
+    data class Split(val index: Int, val state: State) : BookPage {
+
+        override val viewType = BookViewType.SPLIT
+
+        enum class State {
+            NOT_LOADED,
+            LOADED_SPLIT_NON,
+            LOADED_SPLIT_LEFT,
+            LOADED_SPLIT_RIGHT,
+        }
+    }
+}
+
+fun mihirakiSplitTransformation(input: Bitmap, isLeft: Boolean): Bitmap {
+    return Bitmap.createBitmap(
+        input,
+        if (isLeft) 0 else input.width / 2,
+        0,
+        input.width / 2,
+        input.height
+    ).apply {
+        input.recycle()
     }
 }
