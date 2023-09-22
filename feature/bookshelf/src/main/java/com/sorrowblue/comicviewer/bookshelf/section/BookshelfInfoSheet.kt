@@ -1,42 +1,82 @@
 package com.sorrowblue.comicviewer.bookshelf.section
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Close
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
+import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.bookshelf.BookshelfConverter.source
-import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
+import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.feature.bookshelf.R
+import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookshelfInfoSheet(
     bookshelfFolder: BookshelfFolder,
-    onDismissRequest: () -> Unit,
     onRemove: () -> Unit,
     onEdit: () -> Unit,
-    sheetState: SheetState = rememberModalBottomSheetState(false)
+    onCloseClick: () -> Unit,
+    contentPadding: PaddingValues,
 ) {
-    val bookshelf = bookshelfFolder.bookshelf
-    val folder = bookshelfFolder.folder
-    ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
-        Column(Modifier.padding(horizontal = 16.dp)) {
+    Row {
+        Box(
+            Modifier
+                .fillMaxHeight()
+                .width(1.dp)
+                .background(color = DividerDefaults.color)
+        )
+        Column(
+            Modifier
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState())
+                .padding(contentPadding)
+                .padding(24.dp)
+        ) {
+            Row {
+                Text(
+                    text = "Bookshelf Info",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .weight(1f)
+                )
+                Spacer(modifier = Modifier.size(12.dp))
+                IconButton(onClick = onCloseClick) {
+                    Icon(imageVector = Icons.TwoTone.Close, contentDescription = null)
+                }
+            }
+
+            val bookshelf = bookshelfFolder.bookshelf
+            val folder = bookshelfFolder.folder
             Text(
                 text = stringResource(id = bookshelf.source()),
                 style = MaterialTheme.typography.labelSmall,
@@ -90,13 +130,14 @@ fun BookshelfInfoSheet(
                     )
                 }
             }
+            Spacer(modifier = Modifier.weight(1f))
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             ) {
-                Button(onClick = onRemove) {
+                TextButton(onClick = onRemove) {
                     Text(text = stringResource(id = R.string.bookshelf_info_btn_remove))
                 }
                 FilledTonalButton(onClick = onEdit) {
@@ -105,5 +146,23 @@ fun BookshelfInfoSheet(
             }
         }
     }
+}
 
+@Preview
+@Composable
+private fun PreviewBookshelfInfoSheet() {
+    val bookshelfFolder = BookshelfFolder(
+        SmbServer(
+            BookshelfId(0),
+            "displayName",
+            "0.0.0.0",
+            445,
+            SmbServer.Auth.UsernamePassword("domain", "username", "password")
+        ) to Folder(BookshelfId(0), "", "", "", 0, 0, emptyMap(), 0)
+    )
+    AppMaterialTheme {
+        PermanentDrawerSheet {
+            BookshelfInfoSheet(bookshelfFolder, {}, {}, {}, PaddingValues())
+        }
+    }
 }

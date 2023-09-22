@@ -1,5 +1,9 @@
 package com.sorrowblue.comicviewer.app.component
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
@@ -19,7 +23,8 @@ fun ComicViewerNavigationRail(
     modifier: Modifier = Modifier,
 ) {
     NavigationRail(
-        modifier = modifier
+        modifier = modifier,
+        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.Start)
     ) {
         mainScreenTabs.forEach { tab ->
             NavigationRailItem(

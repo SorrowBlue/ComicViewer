@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--Bookshelf List-->
     <string name="bookshelf_list_title">List of bookshelves</string>
     <string name="bookshelf_list_message_no_bookshelves_added_yet">No bookshelves added yet</string>
-    <string name="bookshelf_list_desc_add_bookshelf">Add bookshelf</string>
-    <string name="bookshelf_list_desc_thumbnail_this_bookshelf">Thumbnail for this bookshelf</string>
-    <string name="bookshelf_list_title_favorite">Favorite</string>
-    <string name="bookshelf_list_btn_new">Add bookshelf</string>
     <string name="bookshelf_list_label_files">%1$d files</string>
-
-    <!--Bookshelf Info-->
     <string name="bookshelf_info_title">Bookshelf Info</string>
+    <string name="bookshelf_info_label_display_name">Display name</string>
     <string name="bookshelf_info_label_host">IP/Host</string>
     <string name="bookshelf_info_label_path">Path</string>
     <string name="bookshelf_info_label_internal_storage">Internal storage</string>
@@ -18,39 +12,8 @@
     <string name="bookshelf_info_label_port">Port</string>
     <string name="bookshelf_info_btn_edit">Edit</string>
     <string name="bookshelf_info_btn_remove">Remove</string>
-
-    <!--Bookshelf Edit-->
-    <string name="bookshelf_edit_smb_input_label_host">Server name / IP address</string>
-    <string name="bookshelf_edit_smb_input_error_host">Please enter the server name or IP address.</string>
-    <string name="bookshelf_edit_smb_input_label_port">Port</string>
-    <string name="bookshelf_edit_smb_input_error_port">Please enter in the range of 0 to 65535.</string>
-    <string name="bookshelf_edit_smb_input_label_path">Path</string>
-    <string name="bookshelf_edit_smb_input_prefix_path">/</string>
-    <string name="bookshelf_edit_smb_input_suffix_path">/</string>
-    <string name="bookshelf_edit_smb_input_label_username">Username</string>
-    <string name="bookshelf_edit_smb_input_error_username">Please enter username.</string>
-    <string name="bookshelf_edit_smb_input_label_password">Password</string>
-    <string name="bookshelf_edit_smb_input_error_password">Please enter password.</string>
-    <string name="bookshelf_edit_smb_message_error">There are some input errors.</string>
-
-    <!--Bookshelf Manage-->
-    <string name="bookshelf_manage_title_list">Selection of bookshelves</string>
-    <string name="bookshelf_manage_title_smb" translatable="false">SMB/LAN</string>
-    <string name="bookshelf_manage_title_device" translatable="false">Device</string>
-    <string name="bookshelf_manage_desc_device">Add a folder on this terminal as a bookshelf.</string>
-    <string name="bookshelf_manage_desc_smb">Folders shared by Windows, NAS, etc. can be added as bookshelves.</string>
-    <string name="bookshelf_manage_hint_host">Server name or IP address</string>
-    <string name="bookshelf_manage_hint_path">Path</string>
-    <string name="bookshelf_manage_hint_display_name">Display name</string>
-    <string name="bookshelf_manage_label_guest">Guest</string>
-    <string name="bookshelf_manage_label_username_password">Username/password</string>
-    <string name="bookshelf_manage_hint_username">Username</string>
-    <string name="bookshelf_manage_hint_password">Password</string>
-    <string name="bookshelf_manage_desc_finish_edit_bookshelf">Finish editing the bookshelf</string>
-    <string name="bookshelf_manage_desc_finish_add_bookshelf">Finish adding a bookshelf</string>
-    <string name="bookshelf_manage_hint_port">Port number</string>
-    <string name="bookshelf_manage_hint_domain">Domain</string>
-    <string name="bookshelf_manage_hint_select_folder">Select folder</string>
-    <string name="bookshelf_manage_smb_save">Save</string>
-    <string name="bookshelf_remove_title">本棚を削除</string>
+    <string name="bookshelf_remove_title">Delete bookshelf</string>
+    <string name="bookshelf_remove_label">Do you want to remove %1$s?</string>
+    <string name="bookshelf_remove_label_delete">Delete</string>
+    <string name="bookshelf_label_new_bookshelf">New Bookshelf</string>
 </resources>

@@ -5,11 +5,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -88,24 +86,26 @@ internal fun MainScreen(
             )
         }
         Scaffold(
-            bottomBar = {
-                AnimatedContent(
-                    targetState = navigationType == NavigationType.BottomNavigation && visible,
-                    transitionSpec = { slideInVertically { height -> height } togetherWith slideOutVertically { height -> height } },
-                    label = "test"
-                ) { isVisible ->
-                    if (isVisible) {
-                        ComicViewerNavigationBar(
-                            mainScreenTabs = MainScreenTab.entries.toPersistentList(),
-                            onTabSelected = { tab ->
-                                onTabSelected(navController, tab)
-                            },
-                            currentTab = currentTab ?: MainScreenTab.Bookshelf,
-                        )
-                    } else {
-                        Box(modifier = Modifier.fillMaxWidth())
+            bottomBar = if (navigationType == NavigationType.BottomNavigation) {
+                {
+                    AnimatedContent(
+                        targetState = visible,
+                        transitionSpec = { slideInVertically { height -> height } togetherWith slideOutVertically { height -> height } },
+                        label = "test"
+                    ) { isVisible ->
+                        if (isVisible) {
+                            ComicViewerNavigationBar(
+                                mainScreenTabs = MainScreenTab.entries.toPersistentList(),
+                                onTabSelected = { tab ->
+                                    onTabSelected(navController, tab)
+                                },
+                                currentTab = currentTab ?: MainScreenTab.Bookshelf,
+                            )
+                        }
                     }
                 }
+            } else {
+                {}
             }
         ) { contentPadding ->
             ModalBottomSheetLayout(bottomSheetNavigator) {
