@@ -1,15 +1,14 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import com.sorrowblue.buildlogic.debug
-import com.sorrowblue.buildlogic.internal
-import com.sorrowblue.buildlogic.prerelease
-import com.sorrowblue.buildlogic.projectString
-import com.sorrowblue.buildlogic.release
+import com.sorrowblue.comicviewer.ComicBuildType
+import com.sorrowblue.comicviewer.projectString
 import org.jetbrains.kotlin.konan.properties.propertyString
 
 plugins {
-    id("build-logic.android.application")
+    id("comicviewer.android.application")
+    id("comicviewer.android.application.compose")
+    id("comicviewer.android.hilt")
     alias(libs.plugins.mikepenz.aboutlibraries.plugin)
     alias(libs.plugins.grgit)
 }
@@ -32,63 +31,64 @@ android {
     }
 
     signingConfigs {
-        release {
-            storeFile =
-                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
-            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
-            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
-            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
-        }
-        prerelease {
-            storeFile =
-                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
-            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
-            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
-            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
-        }
-        internal {
-            storeFile =
-                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
-            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
-            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
-            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
-        }
-        debug {
+        getByName("debug") {
             storeFile =
                 file(gradleLocalProperties(rootDir).propertyString("debug.storeFile").orEmpty())
             storePassword = gradleLocalProperties(rootDir).propertyString("debug.storePassword")
             keyAlias = gradleLocalProperties(rootDir).propertyString("debug.keyAlias")
             keyPassword = gradleLocalProperties(rootDir).propertyString("debug.keyPassword")
         }
+        create("release") {
+            storeFile =
+                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
+            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
+            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
+            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
+        }
+        create("prerelease") {
+            storeFile =
+                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
+            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
+            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
+            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
+        }
+        create("internal") {
+            storeFile =
+                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
+            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
+            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
+            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
+        }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            applicationIdSuffix = ComicBuildType.RELEASE.applicationIdSuffix
+            isMinifyEnabled = ComicBuildType.RELEASE.isMinifyEnabled
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
         }
-        prerelease {
-//            initWith(getByName("release"))
-            applicationIdSuffix = ".prerelease"
-            isMinifyEnabled = true
+        create("prerelease") {
+            applicationIdSuffix = ComicBuildType.PRRELEASE.applicationIdSuffix
+            isMinifyEnabled = ComicBuildType.PRRELEASE.isMinifyEnabled
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("prerelease")
         }
-        internal {
-//            initWith(getByName("release"))
-            isMinifyEnabled = true
+        create("internal") {
+            applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix
+            isMinifyEnabled = ComicBuildType.INTERNAL.isMinifyEnabled
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("internal")
         }
         debug {
-            applicationIdSuffix = ".debug"
+            applicationIdSuffix = ComicBuildType.DEBUG.applicationIdSuffix
+            isMinifyEnabled = ComicBuildType.DEBUG.isMinifyEnabled
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
@@ -107,6 +107,7 @@ android {
 dependencies {
     implementation(projects.framework.compose)
     implementation(projects.framework.notification)
+    implementation(projects.framework.designsystem)
 
     implementation(projects.data.di)
     implementation(projects.domain)

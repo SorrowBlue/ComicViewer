@@ -1,5 +1,6 @@
 plugins {
-    id("com.sorrowblue.android-dynamic-feature")
+    id("comicviewer.android.dynamic-feature")
+    id("comicviewer.android.dynamic-feature.compose")
     alias(libs.plugins.kotlin.plugin.serialization)
 }
 

@@ -25,7 +25,7 @@ import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavig
 import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavigation
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGroup
 import com.sorrowblue.comicviewer.feature.search.navigation.navigateToSearch
-import com.sorrowblue.comicviewer.feature.search.navigation.searchScreen
+import com.sorrowblue.comicviewer.feature.search.navigation.searchGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.navigateToSettings
 import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
@@ -124,7 +124,13 @@ internal fun NavGraphBuilder.mainGraph(
         onAddClick = navController::navigateToFavoriteCreate
     )
 
-    searchScreen(navController::popBackStack)
+    searchGraph(
+        contentPadding = contentPadding,
+        navController = navController,
+        onClickLongFile = { navController.navigateToFileInfo(it.bookshelfId, it.path) },
+        onBookClick = navController::navigateToBook,
+        onSettingsClick = navController::navigateToSettings
+    )
 
     tutorialScreen(onComplete = onTutorialExit)
 

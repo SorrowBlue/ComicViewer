@@ -1,5 +1,5 @@
 plugins {
-    id("com.sorrowblue.android-feature")
+    id("comicviewer.android.feature")
 }
 
 android {

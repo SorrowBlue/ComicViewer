@@ -22,10 +22,10 @@ import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialRoute
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
 import com.sorrowblue.comicviewer.framework.compose.LaunchedEffectUiEvent
 import com.sorrowblue.comicviewer.framework.compose.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import logcat.LogPriority
 import logcat.logcat
 
@@ -53,7 +53,7 @@ internal fun ComicViewerApp(
     val navController = rememberNavController(bottomSheetNavigator)
     val extraNavController = rememberExtraNavController()
     val graphStateHolder = rememberGraphStateHolder()
-    AppMaterialTheme {
+    ComicTheme {
         CompositionLocalProvider(LocalWindowSize provides windowsSize) {
             Surface(
                 modifier = modifier.fillMaxSize(),

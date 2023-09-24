@@ -1,7 +1,6 @@
 plugins {
-    id("build-logic.android.library")
-    id("com.sorrowblue.dagger-hilt")
-    alias(libs.plugins.google.ksp)
+    id("comicviewer.android.library")
+    id("comicviewer.android.hilt")
 }
 
 android {

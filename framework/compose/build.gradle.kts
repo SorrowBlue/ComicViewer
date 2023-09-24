@@ -1,5 +1,6 @@
 plugins {
-    id("build-logic.android.library")
+    id("comicviewer.android.library")
+    id("comicviewer.android.library.compose")
 }
 
 android {
@@ -16,7 +17,6 @@ dependencies {
     api(projects.framework)
     api(projects.framework.resource)
 
-    api(platform(libs.androidx.compose.bom))
     api(libs.bundles.androidx.compose)
 
     api(libs.androidx.appcompat)
@@ -32,6 +32,5 @@ dependencies {
 
     debugImplementation(libs.bundles.androidx.compose.debug)
 
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 }

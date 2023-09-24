@@ -9,13 +9,6 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-    resolutionStrategy {
-        eachPlugin {
-//            if (requested.id.id == "dagger.hilt.android.plugin") {
-//                useModule("com.google.dagger:hilt-android-gradle-plugin:${requested.version}")
-//            }
-        }
-    }
 }
 
 plugins {
@@ -49,7 +42,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ComicViewer"
+rootProject.name = "comicviewer"
 
 include(":app")
 
@@ -58,6 +51,8 @@ include(":framework")
 include(":framework:compose")
 include(":framework:notification")
 include(":framework:resource")
+include(":framework:designsystem")
+include(":framework:ui")
 
 include(":domain")
 include(":domain:common")

@@ -1,5 +1,5 @@
 plugins {
-    id("build-logic.android.library")
+    id("comicviewer.android.library")
     alias(libs.plugins.kotlin.plugin.serialization)
 }
 

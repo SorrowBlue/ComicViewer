@@ -1,5 +1,5 @@
 plugins {
-    id("build-logic.android.dynamic-feature")
+    id("comicviewer.android.dynamic-feature")
 }
 
 android {

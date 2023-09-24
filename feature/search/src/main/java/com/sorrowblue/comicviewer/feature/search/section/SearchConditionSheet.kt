@@ -1,23 +1,29 @@
 package com.sorrowblue.comicviewer.feature.search.section
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.material3.SingleChoiceChipRow
+import androidx.compose.ui.unit.dp
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.material3.SingleChoiceChipRow
 
 internal data class SearchConditionSheetUiState(
+    val isVisible: Boolean = false,
     val range: Range = Range.BOOKSHELF,
     val period: Period = Period.NONE,
     val order: Order = Order.NAME,
-    val sort: Sort = Sort.ASC
+    val sort: Sort = Sort.ASC,
 ) {
 
     enum class Range {
@@ -42,11 +48,17 @@ internal data class SearchConditionSheetUiState(
 internal fun SearchConditionSheet(
     uiState: SearchConditionSheetUiState = SearchConditionSheetUiState(),
     onChangeRange: (SearchConditionSheetUiState.Range) -> Unit = {},
-    onChangePeriod: (SearchConditionSheetUiState.Period) -> Unit= {},
-    onChangeSort: (SearchConditionSheetUiState.Sort) -> Unit= {},
-    onChangeOrder: (SearchConditionSheetUiState.Order) -> Unit= {}
+    onChangePeriod: (SearchConditionSheetUiState.Period) -> Unit = {},
+    onChangeSort: (SearchConditionSheetUiState.Sort) -> Unit = {},
+    onChangeOrder: (SearchConditionSheetUiState.Order) -> Unit = {},
 ) {
-    Column(Modifier.padding(AppMaterialTheme.dimens.margin)) {
+    Column(
+        Modifier
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 16.dp)
+            .navigationBarsPadding()
+    ) {
+        Text(text = "検索場所", style = MaterialTheme.typography.bodyMedium)
         SingleChoiceChipRow {
             SearchConditionSheetUiState.Range.entries.forEachIndexed { index, searchRange ->
                 FilterChip(
@@ -56,6 +68,9 @@ internal fun SearchConditionSheet(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(text = "検索期間", style = MaterialTheme.typography.bodyMedium)
         SingleChoiceChipRow {
             SearchConditionSheetUiState.Period.entries.forEachIndexed { index, searchPeriod ->
                 FilterChip(
@@ -65,6 +80,9 @@ internal fun SearchConditionSheet(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(text = "ソート", style = MaterialTheme.typography.bodyMedium)
         SingleChoiceChipRow {
             SearchConditionSheetUiState.Order.entries.forEachIndexed { index, searchOrder ->
                 FilterChip(
@@ -74,6 +92,9 @@ internal fun SearchConditionSheet(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(text = "ソート順", style = MaterialTheme.typography.bodyMedium)
         SingleChoiceChipRow {
             SearchConditionSheetUiState.Sort.entries.forEachIndexed { index, searchSort ->
                 FilterChip(
@@ -89,7 +110,7 @@ internal fun SearchConditionSheet(
 @Preview
 @Composable
 private fun PreviewSearchConditionSheet() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface(Modifier.fillMaxSize()) {
             SearchConditionSheet()
         }

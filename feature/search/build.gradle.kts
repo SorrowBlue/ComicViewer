@@ -1,5 +1,5 @@
 plugins {
-    id("com.sorrowblue.android-feature")
+    id("comicviewer.android.feature")
 }
 
 android {
@@ -7,7 +7,7 @@ android {
     resourcePrefix("search")
 }
 
-dependencies {	
-    implementation(projects.framework.compose)
+dependencies {
     implementation(projects.domain)
+    implementation(projects.feature.folder)
 }

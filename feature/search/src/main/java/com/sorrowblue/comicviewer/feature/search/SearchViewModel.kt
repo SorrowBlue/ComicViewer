@@ -104,4 +104,13 @@ internal class SearchViewModel @Inject constructor(
         if (isSkipFirstRefresh) isSkipFirstRefresh = false
     }
 
+    fun toggleSearchFilter() {
+        val uiState = _uiState.value
+        _uiState.value = uiState.copy(
+            searchConditionSheetUiState = uiState.searchConditionSheetUiState.copy(
+                isVisible = !uiState.searchConditionSheetUiState.isVisible
+            )
+        )
+    }
+
 }
