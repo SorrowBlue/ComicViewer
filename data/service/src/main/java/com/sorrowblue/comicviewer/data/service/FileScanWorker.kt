@@ -14,10 +14,11 @@ import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.model.model.ScanModel
-import com.sorrowblue.comicviewer.data.model.util.SortUtil
+import com.sorrowblue.comicviewer.domain.model.Scan
+import com.sorrowblue.comicviewer.domain.model.SortUtil
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -43,36 +44,41 @@ internal class FileScanWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         val request = FileScanRequest.fromWorkData(inputData) ?: return Result.failure()
-        val serverModel = bookshelfLocalDataSource.flow(request.bookshelfModelId).first()!!
+        val serverModel = bookshelfLocalDataSource.flow(request.bookshelfId).first()!!
         val rootFileModel = fileLocalDataSource.root(serverModel.id)!!
-        val fileModel = fileLocalDataSource.findBy(request.bookshelfModelId, request.path)
+        val fileModel = fileLocalDataSource.findBy(request.bookshelfId, request.path)
         val resolveImageFolder = request.resolveImageFolder
         supportExtensions = request.supportExtensions
         //TODO(スキャン種別ごとに変える)
-        when (request.scanModel) {
-            ScanModel.ALL -> factory.create(serverModel).nestedListFiles(serverModel, rootFileModel, resolveImageFolder, true)
-            ScanModel.IN_FOLDER -> factory.create(serverModel).nestedListFiles(serverModel, fileModel!!, resolveImageFolder, false)
-            ScanModel.IN_FOLDER_SUB -> factory.create(serverModel).nestedListFiles(serverModel, fileModel!!, resolveImageFolder, false)
+        when (request.scan) {
+            Scan.ALL -> factory.create(serverModel)
+                .nestedListFiles(serverModel, rootFileModel, resolveImageFolder, true)
+
+            Scan.IN_FOLDER -> factory.create(serverModel)
+                .nestedListFiles(serverModel, fileModel!!, resolveImageFolder, false)
+
+            Scan.IN_FOLDER_SUB -> factory.create(serverModel)
+                .nestedListFiles(serverModel, fileModel!!, resolveImageFolder, false)
         }
         return Result.success()
     }
 
     private suspend fun RemoteDataSource.nestedListFiles(
-        bookshelfModel: BookshelfModel,
-        fileModel: FileModel,
+        bookshelf: Bookshelf,
+        file: File,
         resolveImageFolder: Boolean,
-        isNested: Boolean
+        isNested: Boolean,
     ) {
-        setProgress(workDataOf("path" to fileModel.path))
-        setForeground(createForegroundInfo(fileModel.path))
+        setProgress(workDataOf("path" to file.path))
+        setForeground(createForegroundInfo(file.path))
 
-        val fileModelList = SortUtil.sortedIndex(listFiles(fileModel, resolveImageFolder) {
+        val fileModelList = SortUtil.sortedIndex(listFiles(file, resolveImageFolder) {
             SortUtil.filter(it, supportExtensions)
         })
-        fileLocalDataSource.updateHistory(fileModel, fileModelList)
+        fileLocalDataSource.updateHistory(file, fileModelList)
         if (isNested) {
-            fileModelList.filter { it is FileModel.Folder || it is FileModel.ImageFolder }
-                .forEach { nestedListFiles(bookshelfModel, it, resolveImageFolder, true) }
+            fileModelList.filterIsInstance<IFolder>()
+                .forEach { nestedListFiles(bookshelf, it, resolveImageFolder, true) }
         }
     }
 

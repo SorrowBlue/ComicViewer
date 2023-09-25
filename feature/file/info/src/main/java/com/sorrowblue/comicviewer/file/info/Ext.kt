@@ -20,7 +20,6 @@ val Long.asFileSize: String
             }
         }
     }
-val String.extension get() = substringAfterLast('.').lowercase()
 
 val Long.asDateTime: String
     get() = Instant.ofEpochMilli(this)

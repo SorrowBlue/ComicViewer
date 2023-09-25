@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.file
 
+import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
-import com.sorrowblue.comicviewer.framework.Result
 import java.time.ZoneOffset
 import javax.inject.Inject
 

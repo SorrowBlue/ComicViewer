@@ -5,11 +5,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
-import com.sorrowblue.comicviewer.data.database.entity.Favorite
-import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileCount
+import com.sorrowblue.comicviewer.data.database.entity.FavoriteEntity
+import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileCountEntity
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteLocalDataSource
-import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
-import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModelId
+import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -19,29 +19,29 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
     private val favoriteDao: FavoriteDao
 ) : FavoriteLocalDataSource {
 
-    override fun flow(favoriteModelId: FavoriteModelId): Flow<FavoriteModel> {
+    override fun flow(favoriteModelId: FavoriteId): Flow<Favorite> {
         return favoriteDao.flow(favoriteModelId.value).filterNotNull()
-            .map(FavoriteFileCount::toModel)
+            .map(FavoriteFileCountEntity::toModel)
     }
 
-    override suspend fun update(favoriteModel: FavoriteModel): FavoriteModel {
-        favoriteDao.upsert(Favorite.fromModel(favoriteModel))
+    override suspend fun update(favoriteModel: Favorite): Favorite {
+        favoriteDao.upsert(FavoriteEntity.fromModel(favoriteModel))
         return favoriteModel
     }
 
-    override suspend fun delete(favoriteModelId: FavoriteModelId) {
-        favoriteDao.delete(Favorite(favoriteModelId.value, ""))
+    override suspend fun delete(favoriteModelId: FavoriteId) {
+        favoriteDao.delete(FavoriteEntity(favoriteModelId.value, ""))
     }
 
-    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<FavoriteModel>> {
+    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<Favorite>> {
         return Pager(pagingConfig) {
             favoriteDao.pagingSource()
         }.flow.map { pagingData ->
-            pagingData.map(FavoriteFileCount::toModel)
+            pagingData.map(FavoriteFileCountEntity::toModel)
         }
     }
 
-    override suspend fun create(favoriteModel: FavoriteModel) {
-        favoriteDao.upsert(Favorite.fromModel(favoriteModel))
+    override suspend fun create(favoriteModel: Favorite) {
+        favoriteDao.upsert(FavoriteEntity.fromModel(favoriteModel))
     }
 }

@@ -5,13 +5,16 @@ import android.content.Intent
 import android.os.ParcelFileDescriptor
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.SUPPORTED_IMAGE
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
-import com.sorrowblue.comicviewer.framework.extension
+import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.extension
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.file.BookFolder
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -19,21 +22,21 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStream
 
 internal class DeviceFileClient @AssistedInject constructor(
-    @Assisted override val bookshelfModel: BookshelfModel.InternalStorage,
-    @ApplicationContext private val context: Context
+    @Assisted override val bookshelf: InternalStorage,
+    @ApplicationContext private val context: Context,
 ) : FileClient {
 
     @AssistedFactory
-    interface Factory : FileClient.Factory<BookshelfModel.InternalStorage> {
-        override fun create(bookshelfModel: BookshelfModel.InternalStorage): DeviceFileClient
+    interface Factory : FileClient.Factory<InternalStorage> {
+        override fun create(bookshelfModel: InternalStorage): DeviceFileClient
     }
 
     private val contentResolver = context.contentResolver
 
-    override suspend fun inputStream(fileModel: FileModel): InputStream {
+    override suspend fun inputStream(file: File): InputStream {
         return kotlin.runCatching {
             ParcelFileDescriptor.AutoCloseInputStream(
-                contentResolver.openFileDescriptor(fileModel.uri, "r")
+                contentResolver.openFileDescriptor(file.uri, "r")
             )
         }.getOrElse {
             it.printStackTrace()
@@ -65,9 +68,9 @@ internal class DeviceFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun exists(fileModel: FileModel): Boolean {
+    override suspend fun exists(file: File): Boolean {
         return kotlin.runCatching {
-            fileModel.documentFile.exists()
+            file.documentFile.exists()
         }.getOrElse {
             it.printStackTrace()
             when (it) {
@@ -91,7 +94,7 @@ internal class DeviceFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun current(path: String): FileModel {
+    override suspend fun current(path: String): File {
         return kotlin.runCatching {
             documentFile(path).toFileModel()
         }.getOrElse {
@@ -104,9 +107,9 @@ internal class DeviceFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun current(fileModel: FileModel): FileModel {
+    override suspend fun current(file: File): File {
         return kotlin.runCatching {
-            fileModel.documentFile.toFileModel()
+            file.documentFile.toFileModel()
         }.getOrElse {
             it.printStackTrace()
             when (it) {
@@ -118,11 +121,11 @@ internal class DeviceFileClient @AssistedInject constructor(
     }
 
     override suspend fun listFiles(
-        fileModel: FileModel,
-        resolveImageFolder: Boolean
-    ): List<FileModel> {
+        file: File,
+        resolveImageFolder: Boolean,
+    ): List<File> {
         return kotlin.runCatching {
-            fileModel.documentFile.listFiles().map { it.toFileModel(resolveImageFolder) }
+            file.documentFile.listFiles().map { it.toFileModel(resolveImageFolder) }
         }.getOrElse {
             it.printStackTrace()
             when (it) {
@@ -133,9 +136,9 @@ internal class DeviceFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun seekableInputStream(fileModel: FileModel): SeekableInputStream {
+    override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return kotlin.runCatching {
-            DeviceSeekableInputStream(context, fileModel.uri)
+            DeviceSeekableInputStream(context, file.uri)
         }.getOrElse {
             it.printStackTrace()
             when (it) {
@@ -146,11 +149,13 @@ internal class DeviceFileClient @AssistedInject constructor(
         }
     }
 
-    private fun DocumentFile.toFileModel(resolveImageFolder: Boolean = false): FileModel {
-        return if (resolveImageFolder && listFiles().any { it.name.orEmpty().extension() in SUPPORTED_IMAGE }) {
-            FileModel.ImageFolder(
+    private fun DocumentFile.toFileModel(resolveImageFolder: Boolean = false): File {
+        return if (resolveImageFolder && listFiles().any {
+                it.name.orEmpty().extension() in SUPPORTED_IMAGE
+            }) {
+            BookFolder(
                 path = uri.toString(),
-                bookshelfModelId = bookshelfModel.id,
+                bookshelfId = bookshelf.id,
                 name = name?.removeSuffix("/").orEmpty(),
                 parent = parentFile?.uri?.toString().orEmpty(),
                 size = length(),
@@ -158,13 +163,13 @@ internal class DeviceFileClient @AssistedInject constructor(
                 sortIndex = 0,
                 cacheKey = "",
                 totalPageCount = 0,
-                lastReadPage = 0,
-                lastReading = 0
+                lastPageRead = 0,
+                lastReadTime = 0
             )
         } else if (isFile) {
-            FileModel.File(
+            BookFile(
                 path = uri.toString(),
-                bookshelfModelId = bookshelfModel.id,
+                bookshelfId = bookshelf.id,
                 name = name?.removeSuffix("/").orEmpty(),
                 parent = parentFile?.uri?.toString().orEmpty(),
                 size = length(),
@@ -172,13 +177,13 @@ internal class DeviceFileClient @AssistedInject constructor(
                 sortIndex = 0,
                 cacheKey = "",
                 totalPageCount = 0,
-                lastReadPage = 0,
-                lastReading = 0
+                lastPageRead = 0,
+                lastReadTime = 0
             )
         } else {
-            FileModel.Folder(
+            Folder(
                 path = uri.toString(),
-                bookshelfModelId = bookshelfModel.id,
+                bookshelfId = bookshelf.id,
                 name = name?.removeSuffix("/").orEmpty(),
                 parent = parentFile?.uri?.toString().orEmpty(),
                 size = length(),
@@ -188,12 +193,12 @@ internal class DeviceFileClient @AssistedInject constructor(
         }
     }
 
-    private val FileModel.uri get() = path.toUri()
+    private val File.uri get() = path.toUri()
 
     private fun documentFile(path: String): DocumentFile =
         DocumentFile.fromTreeUri(context, path.toUri())!!
 
-    private val FileModel.documentFile: DocumentFile
+    private val File.documentFile: DocumentFile
         get() = DocumentFile.fromTreeUri(
             context,
             uri

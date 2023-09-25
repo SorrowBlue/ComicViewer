@@ -2,14 +2,16 @@ package com.sorrowblue.comicviewer.data.storage.impl
 
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.exception.RemoteException
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.data.reader.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.ImageFolderFileReader
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderException
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -31,15 +33,15 @@ private suspend fun <R> withLock(action: suspend () -> R): R {
 internal class RemoteDataSourceImpl @AssistedInject constructor(
     fileClientFactory: FileClientFactory,
     private val fileReaderFactory: FileReaderFactory,
-    @Assisted private val bookshelfModel: BookshelfModel
+    @Assisted private val bookshelf: Bookshelf,
 ) : RemoteDataSource {
 
     @AssistedFactory
     interface Factory : RemoteDataSource.Factory {
-        override fun create(bookshelfModel: BookshelfModel): RemoteDataSourceImpl
+        override fun create(bookshelf: Bookshelf): RemoteDataSourceImpl
     }
 
-    private val fileClient = fileClientFactory.create(bookshelfModel)
+    private val fileClient = fileClientFactory.create(bookshelf)
 
     override suspend fun connect(path: String) {
         withLock {
@@ -53,6 +55,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
                         FileClientException.InvalidServer -> RemoteException.InvalidServer
                         FileClientException.NoNetwork -> RemoteException.NoNetwork
                     }
+
                     else -> RemoteException.Unknown
                 }
             }
@@ -60,13 +63,13 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
     }
 
     override suspend fun listFiles(
-        fileModel: FileModel,
+        file: com.sorrowblue.comicviewer.domain.model.file.File,
         resolveImageFolder: Boolean,
-        filter: (FileModel) -> Boolean
-    ): List<FileModel> {
+        filter: (com.sorrowblue.comicviewer.domain.model.file.File) -> Boolean,
+    ): List<com.sorrowblue.comicviewer.domain.model.file.File> {
         return withLock {
             runCatching {
-                fileClient.listFiles(fileModel, resolveImageFolder).filter(filter)
+                fileClient.listFiles(file, resolveImageFolder).filter(filter)
             }.getOrElse {
                 throw when (it) {
                     is FileClientException -> when (it) {
@@ -82,7 +85,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }
     }
 
-    override suspend fun fileModel(path: String): FileModel {
+    override suspend fun file(path: String): com.sorrowblue.comicviewer.domain.model.file.File {
         return withLock {
             runCatching {
                 fileClient.current(path)
@@ -120,16 +123,16 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }
     }
 
-    override suspend fun fileReader(fileModel: FileModel): FileReader? {
+    override suspend fun fileReader(book: Book): FileReader? {
         return withLock {
             runCatching {
-                if (fileModel is FileModel.ImageFolder) {
-                    ImageFolderFileReader(fileClient, fileModel)
-                } else {
-                    fileReaderFactory.create(
-                        fileModel.extension,
-                        fileClient.seekableInputStream(fileModel)
+                when (book) {
+                    is BookFile -> fileReaderFactory.create(
+                        book.extension,
+                        fileClient.seekableInputStream(book)
                     )
+
+                    is BookFolder -> ImageFolderFileReader(fileClient, book)
                 }
             }.getOrElse {
                 throw when (it) {

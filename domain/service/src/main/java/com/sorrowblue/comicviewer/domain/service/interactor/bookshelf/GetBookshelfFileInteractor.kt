@@ -1,12 +1,12 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 
 import com.sorrowblue.comicviewer.domain.model.BookshelfFile
+import com.sorrowblue.comicviewer.domain.model.Result
+import com.sorrowblue.comicviewer.domain.model.Unknown
 import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryFileResult
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFileUseCase
-import com.sorrowblue.comicviewer.framework.Result
-import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

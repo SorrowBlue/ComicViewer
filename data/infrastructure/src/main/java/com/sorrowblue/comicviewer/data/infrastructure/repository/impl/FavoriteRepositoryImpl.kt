@@ -5,23 +5,15 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteLocalDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.mapper.toFavorite
-import com.sorrowblue.comicviewer.data.infrastructure.mapper.toFavoriteBookModel
-import com.sorrowblue.comicviewer.data.infrastructure.mapper.toFile
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.SortEntity
-import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
-import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModelId
+import com.sorrowblue.comicviewer.domain.model.Result
+import com.sorrowblue.comicviewer.domain.model.Unknown
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import com.sorrowblue.comicviewer.domain.service.repository.FavoriteFileRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.service.repository.SettingsCommonRepository
-import com.sorrowblue.comicviewer.framework.Result
-import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -34,31 +26,23 @@ import kotlinx.coroutines.withContext
 
 internal class FavoriteFileRepositoryImpl @Inject constructor(
     private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
-    private val settingsCommonRepository: SettingsCommonRepository
+    private val settingsCommonRepository: SettingsCommonRepository,
 ) : FavoriteFileRepository {
 
     override fun getNextRelFile(
         favoriteFile: FavoriteFile,
-        isNext: Boolean
+        isNext: Boolean,
     ): Flow<Result<File, Unit>> {
-        val sortEntity =
-            runBlocking { settingsCommonRepository.folderDisplaySettings.first() }.sortType.let(
-                SortEntity::from
-            )
+        val sortType =
+            runBlocking { settingsCommonRepository.folderDisplaySettings.first() }.sortType
         return kotlin.runCatching {
             if (isNext) {
-                favoriteFileLocalDataSource.flowNextFavoriteFile(
-                    favoriteFile.toFavoriteBookModel(),
-                    sortEntity
-                )
+                favoriteFileLocalDataSource.flowNextFavoriteFile(favoriteFile, sortType)
             } else {
-                favoriteFileLocalDataSource.flowPrevFavoriteFile(
-                    favoriteFile.toFavoriteBookModel(),
-                    sortEntity
-                )
+                favoriteFileLocalDataSource.flowPrevFavoriteFile(favoriteFile, sortType)
             }
         }.fold({ modelFlow ->
-            modelFlow.map { if (it != null) Result.Success(it.toFile()) else Result.Error(Unit) }
+            modelFlow.map { if (it != null) Result.Success(it) else Result.Error(Unit) }
         }, {
             flowOf(Result.Exception(Unknown(it)))
         })
@@ -66,56 +50,45 @@ internal class FavoriteFileRepositoryImpl @Inject constructor(
 
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,
-        favoriteId: FavoriteId
+        favoriteId: FavoriteId,
     ): Flow<PagingData<File>> {
-        return favoriteFileLocalDataSource.pagingSource(
-            pagingConfig, FavoriteModelId(favoriteId.value)
-        ) {
-            val settings = runBlocking { settingsCommonRepository.folderDisplaySettings.first() }
-            when (settings.sortType) {
-                is SortType.DATE -> SortEntity.DATE(settings.sortType.isAsc)
-                is SortType.NAME -> SortEntity.NAME(settings.sortType.isAsc)
-                is SortType.SIZE -> SortEntity.SIZE(settings.sortType.isAsc)
-            }
-        }.map { it.map(FileModel::toFile) }
+        return favoriteFileLocalDataSource.pagingSource(pagingConfig, favoriteId) {
+            runBlocking { settingsCommonRepository.folderDisplaySettings.first() }.sortType
+        }
     }
 
     override suspend fun add(favoriteFile: FavoriteFile) {
         return withContext(Dispatchers.IO) {
-            favoriteFileLocalDataSource.add(favoriteFile.toFavoriteBookModel())
+            favoriteFileLocalDataSource.add(favoriteFile)
         }
     }
 
     override suspend fun delete(favoriteFile: FavoriteFile) {
         return withContext(Dispatchers.IO) {
-            favoriteFileLocalDataSource.delete(favoriteFile.toFavoriteBookModel())
+            favoriteFileLocalDataSource.delete(favoriteFile)
         }
     }
 
 }
 
 internal class FavoriteRepositoryImpl @Inject constructor(
-    private val favoriteLocalDataSource: FavoriteLocalDataSource
+    private val favoriteLocalDataSource: FavoriteLocalDataSource,
 ) : FavoriteRepository {
 
     override fun get(favoriteId: FavoriteId): Flow<Favorite> {
-        return favoriteLocalDataSource.flow(FavoriteModelId(favoriteId.value))
-            .map(FavoriteModel::toFavorite).flowOn(Dispatchers.IO)
+        return favoriteLocalDataSource.flow(favoriteId)
+            .flowOn(Dispatchers.IO)
     }
 
     override suspend fun update(favorite: Favorite): Favorite {
         return withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.update(
-                FavoriteModel(
-                    FavoriteModelId(favorite.id.value), favorite.name, favorite.count
-                )
-            ).toFavorite()
+            favoriteLocalDataSource.update(favorite)
         }
     }
 
     override suspend fun delete(favoriteId: FavoriteId) {
         return withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.delete(FavoriteModelId(favoriteId.value))
+            favoriteLocalDataSource.delete(favoriteId)
         }
     }
 
@@ -129,7 +102,7 @@ internal class FavoriteRepositoryImpl @Inject constructor(
 
     override suspend fun create(title: String) {
         withContext(Dispatchers.IO) {
-            favoriteLocalDataSource.create(FavoriteModel(title))
+            favoriteLocalDataSource.create(Favorite(title))
         }
     }
 }

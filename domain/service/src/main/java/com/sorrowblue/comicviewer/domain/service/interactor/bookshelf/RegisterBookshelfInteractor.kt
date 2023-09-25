@@ -1,12 +1,12 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.fold
+import com.sorrowblue.comicviewer.domain.model.onError
 import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
-import com.sorrowblue.comicviewer.framework.Resource
-import com.sorrowblue.comicviewer.framework.fold
-import com.sorrowblue.comicviewer.framework.onError
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

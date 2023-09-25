@@ -6,9 +6,10 @@ import com.sorrowblue.comicviewer.data.coil.favorite.FavoriteThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.folder.FolderThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.page.BookPageFetcher
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.ImageCacheDataSource
-import com.sorrowblue.comicviewer.data.model.BookPageRequestData
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.domain.model.BookPageRequest
+import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,19 +22,19 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindBookPageFetcherFetcher(factory: BookPageFetcher.Factory): Fetcher.Factory<BookPageRequestData>
+    abstract fun bindBookPageFetcherFetcher(factory: BookPageFetcher.Factory): Fetcher.Factory<BookPageRequest>
 
     @Singleton
     @Binds
-    abstract fun bindBookThumbnailFetcherFetcher(factory: BookThumbnailFetcher.Factory): Fetcher.Factory<FileModel.Book>
+    abstract fun bindBookThumbnailFetcherFetcher(factory: BookThumbnailFetcher.Factory): Fetcher.Factory<Book>
 
     @Singleton
     @Binds
-    abstract fun bindFolderThumbnailFetcherFetcher(factory: FolderThumbnailFetcher.Factory): Fetcher.Factory<FileModel.Folder>
+    abstract fun bindFolderThumbnailFetcherFetcher(factory: FolderThumbnailFetcher.Factory): Fetcher.Factory<Folder>
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteThumbnailFetcherFetcher(factory: FavoriteThumbnailFetcher.Factory): Fetcher.Factory<FavoriteModel>
+    abstract fun bindFavoriteThumbnailFetcherFetcher(factory: FavoriteThumbnailFetcher.Factory): Fetcher.Factory<Favorite>
 
     @Singleton
     @Binds

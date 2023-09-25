@@ -12,5 +12,7 @@ dependencies {
     implementation(projects.framework.designsystem)
 
     api(libs.androidx.compose.material3)
+    implementation(libs.androidx.lifecycle.viewmodelKtx)
+    implementation(libs.androidx.core.ktx)
     api(libs.androidx.paging.compose)
 }

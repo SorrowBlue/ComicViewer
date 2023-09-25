@@ -2,25 +2,18 @@ package com.sorrowblue.comicviewer.data.infrastructure.repository.impl
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.map
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.ReadLaterFileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.mapper.from
-import com.sorrowblue.comicviewer.data.infrastructure.mapper.toBookshelfModel
-import com.sorrowblue.comicviewer.data.infrastructure.mapper.toFile
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.ReadLaterFileModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModelId
-import com.sorrowblue.comicviewer.data.model.bookshelf.SearchConditionEntity
-import com.sorrowblue.comicviewer.data.model.bookshelf.SortEntity
-import com.sorrowblue.comicviewer.data.model.model.ScanModel
+import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.Response
+import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.Scan
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
+import com.sorrowblue.comicviewer.domain.model.Unknown
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -31,9 +24,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepositoryError
 import com.sorrowblue.comicviewer.domain.service.repository.SettingsCommonRepository
-import com.sorrowblue.comicviewer.framework.Resource
-import com.sorrowblue.comicviewer.framework.Result
-import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -51,25 +41,25 @@ internal class FileRepositoryImpl @Inject constructor(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
     private val settingsCommonRepository: SettingsCommonRepository,
-    private val readLaterFileModelLocalDataSource: ReadLaterFileModelLocalDataSource
+    private val readLaterFileModelLocalDataSource: ReadLaterFileModelLocalDataSource,
 ) : FileRepository {
 
     override fun addReadLater(
         bookshelfId: BookshelfId,
-        path: String
+        path: String,
     ): Flow<Resource<Unit, FileRepository.Error>> {
         return flow {
-            readLaterFileModelLocalDataSource.add(ReadLaterFileModel(BookshelfModelId.from(bookshelfId), path))
+            readLaterFileModelLocalDataSource.add(ReadLaterFile(bookshelfId, path))
             emit(Resource.Success(Unit))
         }.flowOn(Dispatchers.IO)
     }
 
     override fun deleteReadLater(
         bookshelfId: BookshelfId,
-        path: String
+        path: String,
     ): Flow<Resource<Unit, FileRepository.Error>> {
         return flow {
-            readLaterFileModelLocalDataSource.delete(ReadLaterFileModel(BookshelfModelId.from(bookshelfId), path))
+            readLaterFileModelLocalDataSource.delete(ReadLaterFile(bookshelfId, path))
             emit(Resource.Success(Unit))
         }.flowOn(Dispatchers.IO)
     }
@@ -83,12 +73,12 @@ internal class FileRepositoryImpl @Inject constructor(
 
     override fun findByParent(
         bookshelfId: BookshelfId,
-        parent: String
+        parent: String,
     ): Flow<Resource<File, FileRepository.Error>> {
         return flow {
             emit(
                 Resource.Success(
-                    fileModelLocalDataSource.root(BookshelfModelId.from(bookshelfId))!!.toFile()
+                    fileModelLocalDataSource.root(bookshelfId)!!
                 )
             )
         }.flowOn(Dispatchers.IO)
@@ -97,29 +87,21 @@ internal class FileRepositoryImpl @Inject constructor(
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,
-        searchCondition: () -> SearchCondition
+        searchCondition: () -> SearchCondition,
     ): Flow<PagingData<File>> {
         return fileModelLocalDataSource.pagingSource(
             pagingConfig,
-            BookshelfModelId.from(bookshelf.id)
-        ) {
-            searchCondition().toEntity()
-        }.map { pagingData -> pagingData.map(FileModel::toFile) }
+            bookshelf.id,
+            searchCondition
+        )
     }
 
     override fun find(
         bookshelfId: BookshelfId,
-        path: String
+        path: String,
     ): Flow<Resource<File, FileRepository.Error>> {
         return flow {
-            emit(
-                Resource.Success(
-                    fileModelLocalDataSource.findBy(
-                        BookshelfModelId.from(bookshelfId),
-                        path
-                    )!!.toFile()
-                )
-            )
+            emit(Resource.Success(fileModelLocalDataSource.findBy(bookshelfId, path)!!))
         }.flowOn(Dispatchers.IO)
     }
 
@@ -129,34 +111,31 @@ internal class FileRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>) {
-        fileModelLocalDataSource.deleteHistory(BookshelfModelId.from(bookshelfId), list)
+        fileModelLocalDataSource.deleteHistory(bookshelfId, list)
     }
 
     override suspend fun deleteAllDB(bookshelfId: BookshelfId) {
-        fileModelLocalDataSource.deleteAll2(BookshelfModelId.from(bookshelfId))
+        fileModelLocalDataSource.deleteAll2(bookshelfId)
     }
 
     override suspend fun deleteAllCache(id: BookshelfId) {
         imageCacheDataSource.deleteThumbnails(
-            fileModelLocalDataSource.getCacheKeyList(
-                BookshelfModelId.from(id)
-            )
+            fileModelLocalDataSource.getCacheKeyList(id)
         )
     }
 
     override suspend fun getBook(bookshelfId: BookshelfId, path: String): Response<Book?> {
         return Response.Success(
-            fileModelLocalDataSource.findBy(BookshelfModelId.from(bookshelfId), path)
-                ?.toFile() as? Book
+            fileModelLocalDataSource.findBy(bookshelfId, path) as? Book
         )
     }
 
     override fun getFile(bookshelfId: BookshelfId, path: String): Flow<Result<File, Unit>> {
         return kotlin.runCatching {
-            fileModelLocalDataSource.flow(BookshelfModelId.from(bookshelfId), path)
+            fileModelLocalDataSource.flow(bookshelfId, path)
         }.fold({ fileModelFlow ->
             fileModelFlow.map {
-                if (it != null) Result.Success(it.toFile()) else Result.Error(Unit)
+                if (it != null) Result.Success(it) else Result.Error(Unit)
             }
         }, {
             flowOf(Result.Exception(Unknown(it)))
@@ -167,56 +146,44 @@ internal class FileRepositoryImpl @Inject constructor(
         bookshelfId: BookshelfId,
         path: String,
         lastReadPage: Int,
-        lastReadTime: Long
+        lastReadTime: Long,
     ) {
-        fileModelLocalDataSource.updateHistory(
-            path,
-            BookshelfModelId.from(bookshelfId),
-            lastReadPage,
-            lastReadTime
-        )
+        fileModelLocalDataSource.updateHistory(path, bookshelfId, lastReadPage, lastReadTime)
     }
 
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,
-        folder: IFolder
+        folder: IFolder,
     ): Flow<PagingData<File>> {
-        return fileModelLocalDataSource.pagingSource(
-            pagingConfig,
-            BookshelfModel.from(bookshelf),
-            FileModel.from(folder)
-        ) {
+        return fileModelLocalDataSource.pagingSource(pagingConfig, bookshelf, folder) {
             val settings = runBlocking { settingsCommonRepository.folderDisplaySettings.first() }
-            SortEntity.from(settings.sortType)
-            SearchConditionEntity(
-                SearchConditionEntity.NO_QUERY,
-                SearchConditionEntity.Range.InFolder(folder.path),
-                SearchConditionEntity.Period.NONE,
+            SearchCondition(
+                "",
+                SearchCondition.Range.InFolder(folder.path),
+                SearchCondition.Period.NONE,
                 when (settings.sortType) {
-                    is SortType.DATE -> SearchConditionEntity.Order.DATE
-                    is SortType.NAME -> SearchConditionEntity.Order.NAME
-                    is SortType.SIZE -> SearchConditionEntity.Order.SIZE
+                    is SortType.DATE -> SearchCondition.Order.DATE
+                    is SortType.NAME -> SearchCondition.Order.NAME
+                    is SortType.SIZE -> SearchCondition.Order.SIZE
                 },
-                if (settings.sortType.isAsc) SearchConditionEntity.Sort.ASC else SearchConditionEntity.Sort.DESC
+                if (settings.sortType.isAsc) SearchCondition.Sort.ASC else SearchCondition.Sort.DESC
             )
-        }.map { it.map(FileModel::toFile) }
+        }
     }
 
     override suspend fun get(bookshelfId: BookshelfId, path: String): Response<File?> {
-        return Response.Success(
-            fileModelLocalDataSource.findBy(BookshelfModelId.from(bookshelfId), path)?.toFile()
-        )
+        return Response.Success(fileModelLocalDataSource.findBy(bookshelfId, path))
     }
 
     override suspend fun scan(folder: IFolder, scan: Scan): String {
         val folderSettings = settingsCommonRepository.folderSettings.first()
         return fileScanService.enqueue(
-            FileModel.from(folder),
+            folder,
             when (scan) {
-                Scan.ALL -> ScanModel.ALL
-                Scan.IN_FOLDER -> ScanModel.IN_FOLDER
-                Scan.IN_FOLDER_SUB -> ScanModel.IN_FOLDER_SUB
+                Scan.ALL -> Scan.ALL
+                Scan.IN_FOLDER -> Scan.IN_FOLDER
+                Scan.IN_FOLDER_SUB -> Scan.IN_FOLDER_SUB
             },
             folderSettings.resolveImageFolder,
             folderSettings.supportExtension.map(SupportExtension::extension)
@@ -225,9 +192,9 @@ internal class FileRepositoryImpl @Inject constructor(
 
     override suspend fun get2(bookshelfId: BookshelfId, path: String): Result<File?, Unit> {
         return kotlin.runCatching {
-            fileModelLocalDataSource.findBy(BookshelfModelId.from(bookshelfId), path)
+            fileModelLocalDataSource.findBy(bookshelfId, path)
         }.fold({
-            Result.Success(it?.toFile())
+            Result.Success(it)
         }, {
             Result.Exception(Unknown(it))
         })
@@ -235,9 +202,9 @@ internal class FileRepositoryImpl @Inject constructor(
 
     override suspend fun getRoot(bookshelfId: BookshelfId): Result<File?, Unit> {
         return kotlin.runCatching {
-            fileModelLocalDataSource.root(BookshelfModelId.from(bookshelfId))
+            fileModelLocalDataSource.root(bookshelfId)
         }.fold({
-            Result.Success(it?.toFile())
+            Result.Success(it)
         }, {
             Result.Exception(Unknown(it))
         })
@@ -245,11 +212,11 @@ internal class FileRepositoryImpl @Inject constructor(
 
     override suspend fun getFolder(
         bookshelf: Bookshelf,
-        path: String
+        path: String,
     ): Result<Folder, FileRepositoryError> {
         return withContext(Dispatchers.IO) {
             kotlin.runCatching {
-                remoteDataSourceFactory.create(bookshelf.toBookshelfModel()).fileModel(path).toFile()
+                remoteDataSourceFactory.create(bookshelf).file(path)
             }.fold({ file ->
                 if (file is Folder) {
                     Result.Success(file)
@@ -265,28 +232,18 @@ internal class FileRepositoryImpl @Inject constructor(
     override fun getNextRelFile(
         bookshelfId: BookshelfId,
         path: String,
-        isNext: Boolean
+        isNext: Boolean,
     ): Flow<Result<File, Unit>> {
-        val sortEntity =
-            runBlocking { settingsCommonRepository.folderDisplaySettings.first() }.sortType.let(
-                SortEntity.Companion::from
-            )
+        val sortType =
+            runBlocking { settingsCommonRepository.folderDisplaySettings.first() }.sortType
         return kotlin.runCatching {
             if (isNext) {
-                fileModelLocalDataSource.nextFileModel(
-                    BookshelfModelId.from(bookshelfId),
-                    path,
-                    sortEntity
-                )
+                fileModelLocalDataSource.nextFileModel(bookshelfId, path, sortType)
             } else {
-                fileModelLocalDataSource.prevFileModel(
-                    BookshelfModelId.from(bookshelfId),
-                    path,
-                    sortEntity
-                )
+                fileModelLocalDataSource.prevFileModel(bookshelfId, path, sortType)
             }
         }.fold({ modelFlow ->
-            modelFlow.map { if (it != null) Result.Success(it.toFile()) else Result.Error(Unit) }
+            modelFlow.map { if (it != null) Result.Success(it) else Result.Error(Unit) }
         }, {
             flowOf(Result.Exception(Unknown(it)))
         })
@@ -294,46 +251,5 @@ internal class FileRepositoryImpl @Inject constructor(
 
     override fun pagingHistoryBookFlow(pagingConfig: PagingConfig): Flow<PagingData<File>> {
         return fileModelLocalDataSource.pagingHistoryBookSource(pagingConfig)
-            .map { pagingData -> pagingData.map(FileModel::toFile) }
     }
 }
-
-internal fun SortEntity.Companion.from(sortType: SortType): SortEntity {
-    return when (sortType) {
-        is SortType.DATE -> SortEntity.DATE(sortType.isAsc)
-        is SortType.NAME -> SortEntity.NAME(sortType.isAsc)
-        is SortType.SIZE -> SortEntity.SIZE(sortType.isAsc)
-    }
-}
-
-private fun SearchCondition.Range.toEntity() = when (this) {
-    SearchCondition.Range.BOOKSHELF -> SearchConditionEntity.Range.BOOKSHELF
-    is SearchCondition.Range.SubFolder -> SearchConditionEntity.Range.FolderBelow(parent)
-    is SearchCondition.Range.InFolder -> SearchConditionEntity.Range.InFolder(parent)
-}
-
-private fun SearchCondition.Period.toEntity() = when (this) {
-    SearchCondition.Period.NONE -> SearchConditionEntity.Period.NONE
-    SearchCondition.Period.HOUR_24 -> SearchConditionEntity.Period.HOUR_24
-    SearchCondition.Period.WEEK_1 -> SearchConditionEntity.Period.WEEK_1
-    SearchCondition.Period.MONTH_1 -> SearchConditionEntity.Period.MONTH_1
-}
-
-private fun SearchCondition.Order.toEntity() = when (this) {
-    SearchCondition.Order.NAME -> SearchConditionEntity.Order.NAME
-    SearchCondition.Order.DATE -> SearchConditionEntity.Order.DATE
-    SearchCondition.Order.SIZE -> SearchConditionEntity.Order.SIZE
-}
-
-private fun SearchCondition.Sort.toEntity() = when (this) {
-    SearchCondition.Sort.ASC -> SearchConditionEntity.Sort.ASC
-    SearchCondition.Sort.DESC -> SearchConditionEntity.Sort.DESC
-}
-
-private fun SearchCondition.toEntity() = SearchConditionEntity(
-    query,
-    range.toEntity(),
-    period.toEntity(),
-    order.toEntity(),
-    sort.toEntity()
-)

@@ -2,127 +2,119 @@ package com.sorrowblue.comicviewer.data.infrastructure.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.SimpleFileModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModelId
-import com.sorrowblue.comicviewer.data.model.bookshelf.FolderThumbnailOrderModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.SearchConditionEntity
-import com.sorrowblue.comicviewer.data.model.bookshelf.SortEntity
+import com.sorrowblue.comicviewer.domain.model.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
+import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface FileModelLocalDataSource {
 
     fun pagingSource(
         pagingConfig: PagingConfig,
-        bookshelfModelId: BookshelfModelId,
-        searchConditionEntity: () -> SearchConditionEntity
-    ): Flow<PagingData<FileModel>>
+        bookshelfId: BookshelfId,
+        searchCondition: () -> SearchCondition,
+    ): Flow<PagingData<File>>
 
     /**
      * Add files. If it already exists, update it.
      *
      * @param fileModel
      */
-    suspend fun addUpdate(fileModel: FileModel)
+    suspend fun addUpdate(fileModel: File)
 
     /**
      * Update reading history.
      *
      * @param path
-     * @param bookshelfModelId
+     * @param bookshelfId
      * @param lastReadPage Last page read
      * @param lastReading Last read time
      */
     suspend fun updateHistory(
         path: String,
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         lastReadPage: Int,
-        lastReading: Long
+        lastReading: Long,
     )
 
     /**
      * Update additional information in the file.
      *
      * @param path
-     * @param bookshelfModelId
+     * @param bookshelfId
      * @param cacheKey
      * @param totalPage
      */
     suspend fun updateAdditionalInfo(
         path: String,
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         cacheKey: String,
-        totalPage: Int
+        totalPage: Int,
     )
 
-    suspend fun updateSimpleAll(list: List<SimpleFileModel>)
+    suspend fun updateSimpleAll(list: List<File>)
 
     suspend fun selectByNotPaths(
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         path: String,
-        list: List<String>
-    ): List<FileModel>
+        list: List<String>,
+    ): List<File>
 
     /**
      * Delete all files.
      *
      * @param list
      */
-    suspend fun deleteAll(list: List<FileModel>)
+    suspend fun deleteAll(list: List<File>)
 
     /**
      * Returns true if the file exists.
      *
-     * @param bookshelfModelId
+     * @param bookshelfId
      * @param path
      * @return true if the file exists
      */
-    suspend fun exists(bookshelfModelId: BookshelfModelId, path: String): Boolean
+    suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean
 
     fun pagingSource(
         pagingConfig: PagingConfig,
-        bookshelfModel: BookshelfModel,
-        fileModel: FileModel,
-        searchConditionEntity: () -> SearchConditionEntity
-    ): Flow<PagingData<FileModel>>
+        bookshelf: Bookshelf,
+        file: File,
+        searchCondition: () -> SearchCondition,
+    ): Flow<PagingData<File>>
 
-    fun flow(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?>
-    suspend fun findBy(bookshelfModelId: BookshelfModelId, path: String): FileModel?
-    fun nextFileModel(
-        bookshelfModelId: BookshelfModelId,
-        path: String,
-        sortEntity: SortEntity
-    ): Flow<FileModel?>
+    fun flow(bookshelfId: BookshelfId, path: String): Flow<File?>
+    suspend fun findBy(bookshelfId: BookshelfId, path: String): File?
+    fun nextFileModel(bookshelfId: BookshelfId, path: String, sortType: SortType): Flow<File?>
 
     fun prevFileModel(
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         path: String,
-        sortEntity: SortEntity
-    ): Flow<FileModel?>
+        sortType: SortType,
+    ): Flow<File?>
+
+    suspend fun getCacheKeys(bookshelfId: BookshelfId, parent: String, limit: Int): List<String>
 
     suspend fun getCacheKeys(
-        bookshelfModelId: BookshelfModelId,
-        parent: String,
-        limit: Int
-    ): List<String>
-
-    suspend fun getCacheKeys(
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         parent: String,
         limit: Int,
-        folderThumbnailOrderModel: FolderThumbnailOrderModel
+        folderThumbnailOrderModel: FolderThumbnailOrder,
     ): List<String>
 
     suspend fun removeCacheKey(diskCacheKey: String)
 
-    suspend fun root(id: BookshelfModelId): FileModel.Folder?
+    suspend fun root(id: BookshelfId): Folder?
 
-    fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<FileModel>>
+    fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<File>>
 
     suspend fun deleteThumbnails()
-    suspend fun deleteHistory(bookshelfModelId: BookshelfModelId, list: List<String>)
-    suspend fun updateHistory(fileModel: FileModel, files: List<FileModel>)
-    suspend fun deleteAll2(bookshelfModelId: BookshelfModelId)
-    suspend fun getCacheKeyList(bookshelfModelId: BookshelfModelId): List<String>
+    suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>)
+    suspend fun updateHistory(file: File, files: List<File>)
+    suspend fun deleteAll2(bookshelfModelId: BookshelfId)
+    suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String>
 }

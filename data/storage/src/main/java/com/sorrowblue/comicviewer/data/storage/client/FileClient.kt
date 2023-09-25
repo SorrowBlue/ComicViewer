@@ -1,31 +1,31 @@
 package com.sorrowblue.comicviewer.data.storage.client
 
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.file.File
 import java.io.InputStream
 
 interface FileClient {
 
-    val bookshelfModel: BookshelfModel
+    val bookshelf: Bookshelf
 
     suspend fun listFiles(
-        fileModel: FileModel,
-        resolveImageFolder: Boolean = false
-    ): List<FileModel>
+        file: File,
+        resolveImageFolder: Boolean = false,
+    ): List<File>
 
-    suspend fun exists(fileModel: FileModel): Boolean
+    suspend fun exists(file: File): Boolean
     suspend fun exists(path: String): Boolean
 
-    suspend fun current(path: String): FileModel
+    suspend fun current(path: String): File
 
-    suspend fun current(fileModel: FileModel): FileModel
+    suspend fun current(file: File): File
 
-    suspend fun inputStream(fileModel: FileModel): InputStream
+    suspend fun inputStream(file: File): InputStream
 
-    suspend fun seekableInputStream(fileModel: FileModel): SeekableInputStream
+    suspend fun seekableInputStream(file: File): SeekableInputStream
 
-    interface Factory<T : BookshelfModel> {
+    interface Factory<T : Bookshelf> {
         fun create(bookshelfModel: T): FileClient
     }
 

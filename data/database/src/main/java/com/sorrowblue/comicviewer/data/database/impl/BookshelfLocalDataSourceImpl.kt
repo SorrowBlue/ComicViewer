@@ -5,24 +5,24 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
-import com.sorrowblue.comicviewer.data.database.entity.Bookshelf
+import com.sorrowblue.comicviewer.data.database.entity.BookshelfEntity
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
-import com.sorrowblue.comicviewer.data.model.BookshelfFolderModel
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModelId
+import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import logcat.logcat
 
 internal class BookshelfLocalDataSourceImpl @Inject constructor(
-    private val dao: BookshelfDao
+    private val dao: BookshelfDao,
 ) : BookshelfLocalDataSource {
 
-    override suspend fun create(bookshelfModel: BookshelfModel): BookshelfModel {
-        val entity = Bookshelf.fromModel(bookshelfModel)
-        return dao.upsert(Bookshelf.fromModel(bookshelfModel)).let {
+    override suspend fun create(bookshelf: Bookshelf): Bookshelf {
+        val entity = BookshelfEntity.fromModel(bookshelf)
+        return dao.upsert(BookshelfEntity.fromModel(bookshelf)).let {
             logcat { "dao.upsert(): before=${entity.id}, after=$it" }
             if (it == -1L) {
                 entity
@@ -32,18 +32,18 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
         }.toModel(0)
     }
 
-    override suspend fun delete(bookshelfModel: BookshelfModel): Int {
-        return dao.delete(Bookshelf.fromModel(bookshelfModel))
+    override suspend fun delete(bookshelf: Bookshelf): Int {
+        return dao.delete(BookshelfEntity.fromModel(bookshelf))
     }
 
-    override fun flow(bookshelfModelId: BookshelfModelId): Flow<BookshelfModel?> {
-        return dao.flow(bookshelfModelId.value).map { it?.toModel(0) }
+    override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> {
+        return dao.flow(bookshelfId.value).map { it?.toModel(0) }
     }
 
-    override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolderModel>> {
+    override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>> {
         return Pager(pagingConfig) { dao.pagingSource() }.flow.map { pagingData ->
             pagingData.map {
-                BookshelfFolderModel(it.bookshelf.toModel(it.fileCount) to it.file.toModel() as FileModel.Folder)
+                BookshelfFolder(it.entity.toModel(it.fileCount) to it.fileEntity.toModel() as Folder)
             }
         }
 

@@ -20,8 +20,8 @@ import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.model.FileModel
 import com.sorrowblue.comicviewer.data.reader.FileReader
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStream
 import javax.inject.Inject
@@ -32,13 +32,13 @@ import okio.ByteString.Companion.encodeUtf8
 
 @OptIn(ExperimentalCoilApi::class)
 internal class BookThumbnailFetcher(
-    private val book: FileModel.Book,
+    private val book: Book,
     options: Options,
     diskCache: dagger.Lazy<DiskCache?>,
     private val context: Context,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-    private val fileModelLocalDataSource: FileModelLocalDataSource
+    private val fileModelLocalDataSource: FileModelLocalDataSource,
 ) : FileModelFetcher(options, diskCache) {
 
     override suspend fun fetch(): FetchResult {
@@ -63,7 +63,7 @@ internal class BookThumbnailFetcher(
                     )
                 }
             }
-            val bookshelfModel = bookshelfLocalDataSource.flow(book.bookshelfModelId).first()
+            val bookshelfModel = bookshelfLocalDataSource.flow(book.bookshelfId).first()
                 ?: throw RuntimeException("本棚が取得できない")
             if (!remoteDataSourceFactory.create(bookshelfModel).exists(book.path)) {
                 throw RuntimeException("ファイルがない(${book.path})")
@@ -114,7 +114,7 @@ internal class BookThumbnailFetcher(
     }
 
     private suspend fun writeToDiskCache(
-        snapshot: DiskCache.Snapshot?, fileReader: FileReader, bitmap: Bitmap
+        snapshot: DiskCache.Snapshot?, fileReader: FileReader, bitmap: Bitmap,
     ): DiskCache.Snapshot? {
         // この応答をキャッシュすることが許可されていない場合は短絡します。
         if (!isCacheable()) {
@@ -143,7 +143,7 @@ internal class BookThumbnailFetcher(
             }
             // DISKキャッシュキーとページ数を更新する。
             fileModelLocalDataSource.updateAdditionalInfo(
-                book.path, book.bookshelfModelId, diskCacheKey, fileReader.pageCount()
+                book.path, book.bookshelfId, diskCacheKey, fileReader.pageCount()
             )
             return editor.commitAndOpenSnapshot()
         } catch (e: Exception) {
@@ -157,7 +157,7 @@ internal class BookThumbnailFetcher(
 
     override val diskCacheKey
         get() = options.diskCacheKey
-            ?: "${book.path}:${book.bookshelfModelId.value}:${book.lastModifier}".encodeUtf8()
+            ?: "${book.path}:${book.bookshelfId.value}:${book.lastModifier}".encodeUtf8()
                 .sha256().hex()
 
     private fun DiskCache.Snapshot.toBookThumbnailMetadata(): BookThumbnailMetadata? {
@@ -177,10 +177,10 @@ internal class BookThumbnailFetcher(
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
         private val fileModelLocalDataSource: FileModelLocalDataSource,
-    ) : Fetcher.Factory<FileModel.Book> {
+    ) : Fetcher.Factory<Book> {
 
         override fun create(
-            data: FileModel.Book, options: Options, imageLoader: ImageLoader
+            data: Book, options: Options, imageLoader: ImageLoader,
         ): Fetcher {
             return BookThumbnailFetcher(
                 data,

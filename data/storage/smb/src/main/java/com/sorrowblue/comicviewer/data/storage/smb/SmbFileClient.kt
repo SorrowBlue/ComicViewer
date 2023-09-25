@@ -1,13 +1,16 @@
 package com.sorrowblue.comicviewer.data.storage.smb
 
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.SUPPORTED_IMAGE
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
-import com.sorrowblue.comicviewer.framework.Result
-import com.sorrowblue.comicviewer.framework.extension
+import com.sorrowblue.comicviewer.domain.model.Result
+import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
+import com.sorrowblue.comicviewer.domain.model.extension
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.file.BookFolder
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -33,16 +36,16 @@ import logcat.LogPriority
 import logcat.logcat
 
 internal class SmbFileClient @AssistedInject constructor(
-    @Assisted override val bookshelfModel: BookshelfModel.SmbServer,
+    @Assisted override val bookshelf: SmbServer,
 ) : FileClient {
 
     @AssistedFactory
-    interface Factory : FileClient.Factory<BookshelfModel.SmbServer> {
-        override fun create(bookshelfModel: BookshelfModel.SmbServer): SmbFileClient
+    interface Factory : FileClient.Factory<SmbServer> {
+        override fun create(bookshelfModel: SmbServer): SmbFileClient
     }
 
-    override suspend fun inputStream(fileModel: FileModel): InputStream {
-        return SmbFileInputStream(fileModel.uri, cifsContext())
+    override suspend fun inputStream(file: File): InputStream {
+        return SmbFileInputStream(file.uri, cifsContext())
     }
 
     override suspend fun connect(path: String) {
@@ -85,9 +88,9 @@ internal class SmbFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun exists(fileModel: FileModel): Boolean {
+    override suspend fun exists(file: File): Boolean {
         return kotlin.runCatching {
-            fileModel.smbFile.use { it.exists() }
+            file.smbFile.use { it.exists() }
         }.getOrElse {
             it.printStackTrace()
             when (it) {
@@ -143,7 +146,7 @@ internal class SmbFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun current(path: String): FileModel {
+    override suspend fun current(path: String): File {
         return kotlin.runCatching {
             smbFile(path).use { it.toFileModel() }
         }.getOrElse {
@@ -172,9 +175,9 @@ internal class SmbFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun current(fileModel: FileModel): FileModel {
+    override suspend fun current(file: File): File {
         return kotlin.runCatching {
-            fileModel.smbFile.use { it.toFileModel() }
+            file.smbFile.use { it.toFileModel() }
         }.getOrElse {
             it.printStackTrace()
             when (it) {
@@ -202,11 +205,11 @@ internal class SmbFileClient @AssistedInject constructor(
     }
 
     override suspend fun listFiles(
-        fileModel: FileModel,
-        resolveImageFolder: Boolean
-    ): List<FileModel> {
+        file: File,
+        resolveImageFolder: Boolean,
+    ): List<File> {
         return kotlin.runCatching {
-            fileModel.smbFile.use(SmbFile::listFiles)
+            file.smbFile.use(SmbFile::listFiles)
                 .map { smbFile -> smbFile.use { it.toFileModel(resolveImageFolder) } }
         }.getOrElse {
             it.printStackTrace()
@@ -234,15 +237,15 @@ internal class SmbFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun seekableInputStream(fileModel: FileModel): SeekableInputStream {
-        return SmbSeekableInputStream(fileModel.uri, cifsContext(), false)
+    override suspend fun seekableInputStream(file: File): SeekableInputStream {
+        return SmbSeekableInputStream(file.uri, cifsContext(), false)
     }
 
-    private fun SmbFile.toFileModel(resolveImageFolder: Boolean = false): FileModel {
+    private fun SmbFile.toFileModel(resolveImageFolder: Boolean = false): File {
         if (resolveImageFolder && isDirectory && listFiles().any { it.name.extension() in SUPPORTED_IMAGE }) {
-            return FileModel.ImageFolder(
+            return BookFolder(
                 path = url.path,
-                bookshelfModelId = bookshelfModel.id,
+                bookshelfId = bookshelf.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent.toString() + "/",
                 size = length(),
@@ -250,14 +253,14 @@ internal class SmbFileClient @AssistedInject constructor(
                 sortIndex = 0,
                 cacheKey = "",
                 totalPageCount = 0,
-                lastReadPage = 0,
-                lastReading = 0
+                lastPageRead = 0,
+                lastReadTime = 0
             )
         }
         return if (isDirectory) {
-            FileModel.Folder(
+            Folder(
                 path = url.path,
-                bookshelfModelId = bookshelfModel.id,
+                bookshelfId = bookshelf.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent?.toString().orEmpty().removeSuffix("/") + "/",
                 size = length(),
@@ -265,9 +268,9 @@ internal class SmbFileClient @AssistedInject constructor(
                 sortIndex = 0,
             )
         } else {
-            FileModel.File(
+            BookFile(
                 path = url.path,
-                bookshelfModelId = bookshelfModel.id,
+                bookshelfId = bookshelf.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent?.toString().orEmpty().removeSuffix("/") + "/",
                 size = length(),
@@ -275,26 +278,26 @@ internal class SmbFileClient @AssistedInject constructor(
                 sortIndex = 0,
                 cacheKey = "",
                 totalPageCount = 0,
-                lastReadPage = 0,
-                lastReading = 0
+                lastPageRead = 0,
+                lastReadTime = 0
             )
         }
     }
 
-    private val FileModel.smbFile get() = SmbFile(uri, cifsContext())
+    private val File.smbFile get() = SmbFile(uri, cifsContext())
 
     private fun smbFile(path: String) =
         SmbFile(
-            URI("smb", null, bookshelfModel.host, bookshelfModel.port, path, null, null).decode(),
+            URI("smb", null, bookshelf.host, bookshelf.port, path, null, null).decode(),
             cifsContext()
         )
 
-    private val FileModel.uri
+    private val File.uri
         get() = URI(
             "smb",
             null,
-            bookshelfModel.host,
-            bookshelfModel.port,
+            bookshelf.host,
+            bookshelf.port,
             path,
             null,
             null
@@ -314,9 +317,9 @@ internal class SmbFileClient @AssistedInject constructor(
             setProperty("jcifs.resolveOrder", "DNS")
         }
         val context = BaseContext(PropertyConfiguration(prop))
-        return when (val auth = bookshelfModel.auth) {
-            BookshelfModel.SmbServer.Guest -> context.withGuestCrendentials()
-            is BookshelfModel.SmbServer.UsernamePassword ->
+        return when (val auth = bookshelf.auth) {
+            SmbServer.Auth.Guest -> context.withGuestCrendentials()
+            is SmbServer.Auth.UsernamePassword ->
                 context.withCredentials(NtlmPasswordAuthenticator(auth.username, auth.password))
         }
     }

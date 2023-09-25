@@ -2,18 +2,18 @@ package com.sorrowblue.comicviewer.data.infrastructure.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.data.model.BookshelfFolderModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModelId
+import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlinx.coroutines.flow.Flow
 
 interface BookshelfLocalDataSource {
 
-    suspend fun create(bookshelfModel: BookshelfModel): BookshelfModel
+    suspend fun create(bookshelf: Bookshelf): Bookshelf
 
-    suspend fun delete(bookshelfModel: BookshelfModel): Int
+    suspend fun delete(bookshelf: Bookshelf): Int
 
-    fun flow(bookshelfModelId: BookshelfModelId): Flow<BookshelfModel?>
+    fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?>
 
-    fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolderModel>>
+    fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>>
 }

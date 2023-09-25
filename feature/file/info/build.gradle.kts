@@ -8,7 +8,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.feature.favorite.add)
     implementation(projects.feature.folder)
 

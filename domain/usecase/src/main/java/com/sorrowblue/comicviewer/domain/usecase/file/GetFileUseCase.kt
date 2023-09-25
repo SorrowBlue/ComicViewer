@@ -1,9 +1,9 @@
 package com.sorrowblue.comicviewer.domain.usecase.file
 
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
-import com.sorrowblue.comicviewer.framework.Resource
 
 abstract class GetFileUseCase : UseCase<GetFileUseCase.Request, File, GetFileUseCase.Error>() {
 

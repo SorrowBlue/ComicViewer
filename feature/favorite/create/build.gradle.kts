@@ -6,7 +6,3 @@ android {
     namespace = "com.sorrowblue.comicviewer.feature.favorite.create"
     resourcePrefix("favorite_create")
 }
-
-dependencies {
-    implementation(projects.framework)
-}

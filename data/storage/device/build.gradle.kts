@@ -8,7 +8,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.data.storage)
 
     implementation(libs.androidx.documentfile)

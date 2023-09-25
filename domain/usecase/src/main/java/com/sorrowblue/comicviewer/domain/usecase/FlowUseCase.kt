@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.usecase
 
 import com.sorrowblue.comicviewer.domain.BaseRequest
-import com.sorrowblue.comicviewer.framework.Result
+import com.sorrowblue.comicviewer.domain.model.Result
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

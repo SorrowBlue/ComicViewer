@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.storage.client
 
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 
 interface FileClientFactory {
 
-    fun create(bookshelfModel: BookshelfModel): FileClient
+    fun create(bookshelf: Bookshelf): FileClient
 }

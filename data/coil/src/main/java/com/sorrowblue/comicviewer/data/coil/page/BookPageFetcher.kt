@@ -15,8 +15,8 @@ import com.sorrowblue.comicviewer.data.coil.PageDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.model.BookPageRequestData
 import com.sorrowblue.comicviewer.data.reader.FileReader
+import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
 import java.io.InputStream
@@ -28,22 +28,22 @@ import okio.ByteString.Companion.encodeUtf8
 
 @OptIn(ExperimentalCoilApi::class)
 internal class BookPageFetcher(
-    private val data: BookPageRequestData,
+    private val data: BookPageRequest,
     private val options: Options,
     diskCacheLazy: dagger.Lazy<DiskCache?>,
     private val context: Context,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-) : CoilFetcher<BookPageRequestData>(options, diskCacheLazy) {
+) : CoilFetcher<BookPageRequest>(options, diskCacheLazy) {
 
     class Factory @Inject constructor(
         @PageDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
         @ApplicationContext private val context: Context,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-    ) : Fetcher.Factory<BookPageRequestData> {
+    ) : Fetcher.Factory<BookPageRequest> {
 
-        override fun create(data: BookPageRequestData, options: Options, imageLoader: ImageLoader) =
+        override fun create(data: BookPageRequest, options: Options, imageLoader: ImageLoader) =
             BookPageFetcher(
                 data,
                 options,
@@ -77,8 +77,8 @@ internal class BookPageFetcher(
             try {
                 fileReader =
                     remoteDataSourceFactory.create(
-                        bookshelfLocalDataSource.flow(data.fileModel.bookshelfModelId).first()!!
-                    ).fileReader(data.fileModel)
+                        bookshelfLocalDataSource.flow(data.book.bookshelfId).first()!!
+                    ).fileReader(data.book)
                         ?: throw RuntimeException("この拡張子はサポートされていません。")
                 var inputStream: InputStream = fileReader.pageInputStream(data.pageIndex)
                 var bytes = inputStream.use { it.readBytes() }
@@ -135,7 +135,7 @@ internal class BookPageFetcher(
     private fun writeToDiskCache(
         snapshot: DiskCache.Snapshot?,
         bytes: ByteArray,
-        metaData: BookPageMetaData
+        metaData: BookPageMetaData,
     ): DiskCache.Snapshot? {
 
         // 新しいエディターを開きます。
@@ -165,5 +165,5 @@ internal class BookPageFetcher(
 
     override val diskCacheKey
         get() = options.diskCacheKey
-            ?: "${data.fileModel.path}?index=${data.pageIndex}".encodeUtf8().sha256().hex()
+            ?: "${data.book.path}?index=${data.pageIndex}".encodeUtf8().sha256().hex()
 }

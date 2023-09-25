@@ -17,5 +17,14 @@ internal fun Project.configureKotlinAndroid(
         kotlinOptions {
             jvmTarget = "17"
         }
+
+        buildTypes {
+            create("prerelease") {
+                initWith(getByName("release"))
+            }
+            create("internal") {
+                initWith(getByName("release"))
+            }
+        }
     }
 }

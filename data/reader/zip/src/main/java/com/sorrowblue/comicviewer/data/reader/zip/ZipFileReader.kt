@@ -5,7 +5,6 @@ import android.icu.text.RuleBasedCollator
 import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import com.sorrowblue.comicviewer.data.reader.impl.ImageExtension
-import com.sorrowblue.comicviewer.framework.extension
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -73,3 +72,5 @@ internal class ZipFileReader @AssistedInject constructor(
 private fun ISimpleInArchiveItem.extractSlow2(function: (data: ByteArray) -> Int) {
     extractSlow { function.invoke(it) }
 }
+
+fun String.extension() = substringAfterLast('.', "").lowercase()

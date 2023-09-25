@@ -1,14 +1,14 @@
 package com.sorrowblue.comicviewer.data.infrastructure.repository.impl
 
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.model.ScanModel
+import com.sorrowblue.comicviewer.domain.model.Scan
+import com.sorrowblue.comicviewer.domain.model.file.File
 
 interface FileScanService {
 
     suspend fun enqueue(
-        fileModel: FileModel,
-        scanModel: ScanModel,
+        file: File,
+        scan: Scan,
         resolveImageFolder: Boolean,
-        supportExtensions: List<String>
+        supportExtensions: List<String>,
     ): String
 }

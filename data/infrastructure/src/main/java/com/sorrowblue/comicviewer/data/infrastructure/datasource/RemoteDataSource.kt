@@ -1,14 +1,15 @@
 package com.sorrowblue.comicviewer.data.infrastructure.datasource
 
 import com.sorrowblue.comicviewer.data.infrastructure.exception.RemoteException
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.reader.FileReader
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.File
 
 interface RemoteDataSource {
 
     interface Factory {
-        fun create(bookshelfModel: BookshelfModel): RemoteDataSource
+        fun create(bookshelf: Bookshelf): RemoteDataSource
     }
 
     @Throws(RemoteException::class)
@@ -19,13 +20,13 @@ interface RemoteDataSource {
 
     @Throws(RemoteException::class)
     suspend fun listFiles(
-        fileModel: FileModel,
+        file: File,
         resolveImageFolder: Boolean = false,
-        filter: (FileModel) -> Boolean
-    ): List<FileModel>
+        filter: (File) -> Boolean,
+    ): List<File>
 
     @Throws(RemoteException::class)
-    suspend fun fileModel(path: String): FileModel
+    suspend fun file(path: String): File
 
-    suspend fun fileReader(fileModel: FileModel): FileReader?
+    suspend fun fileReader(book: Book): FileReader?
 }

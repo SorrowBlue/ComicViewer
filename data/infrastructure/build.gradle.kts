@@ -8,9 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework)
-    api(projects.data.model)
-    implementation(projects.domain.model)
+    api(projects.domain.model)
     implementation(projects.domain.service)
     implementation(projects.data.reader)
 

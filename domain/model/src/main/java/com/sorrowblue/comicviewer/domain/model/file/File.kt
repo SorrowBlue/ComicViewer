@@ -13,6 +13,7 @@ sealed interface File {
     val lastModifier: Long
 
     val params: Map<String, String?>
+    val sortIndex: Int
 
     @OptIn(ExperimentalEncodingApi::class)
     fun base64Parent(): String = Base64.UrlSafe.encode(parent.encodeToByteArray())

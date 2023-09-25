@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.coil.book
 
-import com.sorrowblue.comicviewer.data.model.FileModel
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
@@ -18,8 +18,8 @@ internal data class BookThumbnailMetadata(
     val size: Long,
 ) {
 
-    constructor(book: FileModel.Book) : this(
-        book.path, book.bookshelfModelId.value, book.lastModifier, book.size
+    constructor(book: Book) : this(
+        book.path, book.bookshelfId.value, book.lastModifier, book.size
     )
 
     companion object {

@@ -47,7 +47,6 @@ rootProject.name = "comicviewer"
 include(":app")
 
 // framework
-include(":framework")
 include(":framework:common")
 include(":framework:notification")
 include(":framework:resource")
@@ -59,12 +58,9 @@ include(":domain:service")
 include(":domain:usecase")
 
 include(":data:infrastructure")
-include(":data:model")
-
 include(":data:coil")
 include(":data:database")
 include(":data:datastore")
-include(":data:di")
 include(":data:paging")
 include(":data:reader")
 include(":data:reader:zip")
@@ -73,6 +69,7 @@ include(":data:storage")
 include(":data:storage:device")
 include(":data:storage:smb")
 include(":data:service")
+include(":di")
 
 include(":feature:authentication")
 include(":feature:book")

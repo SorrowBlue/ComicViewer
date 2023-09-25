@@ -8,6 +8,7 @@ import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import okio.BufferedSource
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 internal data class BookPageMetaData(
     val pageIndex: Int,
@@ -16,12 +17,10 @@ internal data class BookPageMetaData(
 ) {
 
     companion object {
-        @OptIn(ExperimentalSerializationApi::class)
         fun from(source: BufferedSource) =
             ProtoBuf.decodeFromByteArray<BookPageMetaData>(source.readByteArray())
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     fun write(output: OutputStream) {
         output.write(ProtoBuf.encodeToByteArray(this))
     }

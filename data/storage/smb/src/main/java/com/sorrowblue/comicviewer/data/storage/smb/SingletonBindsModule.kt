@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.storage.smb
 
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClientFactory
+import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ internal abstract class SingletonBindsModule {
 
     @SmbFileClientFactory
     @Binds
-    abstract fun bindSmbFileClientFactory(factory: SmbFileClient.Factory): FileClient.Factory<BookshelfModel.SmbServer>
+    abstract fun bindSmbFileClientFactory(factory: SmbFileClient.Factory): FileClient.Factory<SmbServer>
 }

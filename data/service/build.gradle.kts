@@ -8,7 +8,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.framework.notification)
     implementation(projects.data.infrastructure)
 

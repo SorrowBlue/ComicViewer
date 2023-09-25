@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.usecase
 
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.framework.Resource
 
 abstract class AddReadLaterUseCase :
     UseCase<AddReadLaterUseCase.Request, Unit, AddReadLaterUseCase.Error>() {

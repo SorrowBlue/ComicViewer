@@ -2,7 +2,9 @@ package com.sorrowblue.comicviewer.domain.service.repository
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.Response
+import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.Scan
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
@@ -11,8 +13,6 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
-import com.sorrowblue.comicviewer.framework.Resource
-import com.sorrowblue.comicviewer.framework.Result
 import kotlinx.coroutines.flow.Flow
 
 interface FileRepository {

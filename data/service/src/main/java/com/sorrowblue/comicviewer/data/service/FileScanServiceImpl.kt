@@ -7,8 +7,8 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import com.sorrowblue.comicviewer.data.infrastructure.repository.impl.FileScanService
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.model.ScanModel
+import com.sorrowblue.comicviewer.domain.model.Scan
+import com.sorrowblue.comicviewer.domain.model.file.File
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import logcat.logcat
@@ -17,10 +17,10 @@ internal class FileScanServiceImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : FileScanService {
     override suspend fun enqueue(
-        fileModel: FileModel,
-        scanModel: ScanModel,
+        file: File,
+        scan: Scan,
         resolveImageFolder: Boolean,
-        supportExtensions: List<String>
+        supportExtensions: List<String>,
     ): String {
         val constraints = Constraints.Builder().apply {
             // 有効なネットワーク接続が必要
@@ -35,9 +35,9 @@ internal class FileScanServiceImpl @Inject constructor(
             .addTag("observable")
             .setInputData(
                 FileScanRequest(
-                    fileModel.bookshelfModelId,
-                    fileModel.path,
-                    scanModel,
+                    file.bookshelfId,
+                    file.path,
+                    scan,
                     resolveImageFolder,
                     supportExtensions
                 ).toWorkData()

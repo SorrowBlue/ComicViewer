@@ -2,33 +2,27 @@ package com.sorrowblue.comicviewer.data.infrastructure.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.SortEntity
-import com.sorrowblue.comicviewer.data.model.favorite.FavoriteFileModel
-import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModelId
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface FavoriteFileLocalDataSource {
 
-    suspend fun add(favoriteFileModel: FavoriteFileModel)
+    suspend fun add(favoriteFileModel: FavoriteFile)
 
-    suspend fun delete(favoriteFileModel: FavoriteFileModel)
+    suspend fun delete(favoriteFileModel: FavoriteFile)
 
     fun pagingSource(
         pagingConfig: PagingConfig,
-        favoriteModelId: FavoriteModelId,
-        sortType: () -> SortEntity
-    ): Flow<PagingData<FileModel>>
+        favoriteModelId: FavoriteId,
+        sortType: () -> SortType,
+    ): Flow<PagingData<File>>
 
-    suspend fun getCacheKeyList(favoriteModelId: FavoriteModelId, limit: Int): List<String>
+    suspend fun getCacheKeyList(favoriteModelId: FavoriteId, limit: Int): List<String>
 
-    fun flowNextFavoriteFile(
-        favoriteFileModel: FavoriteFileModel,
-        sortEntity: SortEntity
-    ): Flow<FileModel?>
+    fun flowNextFavoriteFile(favoriteFileModel: FavoriteFile, sortEntity: SortType): Flow<File?>
 
-    fun flowPrevFavoriteFile(
-        favoriteFileModel: FavoriteFileModel,
-        sortEntity: SortEntity
-    ): Flow<FileModel?>
+    fun flowPrevFavoriteFile(favoriteFileModel: FavoriteFile, sortEntity: SortType): Flow<File?>
 }

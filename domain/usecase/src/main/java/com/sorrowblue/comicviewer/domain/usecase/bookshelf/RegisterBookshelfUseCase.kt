@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
-import com.sorrowblue.comicviewer.framework.Resource
 
 abstract class RegisterBookshelfUseCase :
     UseCase<RegisterBookshelfUseCase.Request, Bookshelf, RegisterBookshelfUseCase.Error>() {

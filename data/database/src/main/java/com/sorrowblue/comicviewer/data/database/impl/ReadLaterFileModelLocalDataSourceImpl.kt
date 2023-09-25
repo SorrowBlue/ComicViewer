@@ -5,12 +5,12 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.database.dao.ReadLaterFileDao
-import com.sorrowblue.comicviewer.data.database.entity.File
-import com.sorrowblue.comicviewer.data.database.entity.ReadLaterFile
+import com.sorrowblue.comicviewer.data.database.entity.FileEntity
+import com.sorrowblue.comicviewer.data.database.entity.ReadLaterFileEntity
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.ReadLaterFileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.ReadLaterFileModel
-import com.sorrowblue.comicviewer.framework.Result
+import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
+import com.sorrowblue.comicviewer.domain.model.Result
+import com.sorrowblue.comicviewer.domain.model.file.File
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,9 +19,9 @@ internal class ReadLaterFileModelLocalDataSourceImpl @Inject constructor(
     private val readLaterFileDao: ReadLaterFileDao
 ) : ReadLaterFileModelLocalDataSource {
 
-    override suspend fun add(model: ReadLaterFileModel): Result<ReadLaterFileModel, Unit> {
+    override suspend fun add(model: ReadLaterFile): Result<ReadLaterFile, Unit> {
         return kotlin.runCatching {
-            readLaterFileDao.upsert(ReadLaterFile.fromModel(model))
+            readLaterFileDao.upsert(ReadLaterFileEntity.fromModel(model))
         }.fold({
             Result.Success(model)
         }, {
@@ -29,9 +29,9 @@ internal class ReadLaterFileModelLocalDataSourceImpl @Inject constructor(
         })
     }
 
-    override suspend fun delete(model: ReadLaterFileModel): Result<ReadLaterFileModel, Unit> {
+    override suspend fun delete(model: ReadLaterFile): Result<ReadLaterFile, Unit> {
         return kotlin.runCatching {
-            readLaterFileDao.delete(ReadLaterFile.fromModel(model))
+            readLaterFileDao.delete(ReadLaterFileEntity.fromModel(model))
         }.fold({
             Result.Success(model)
         }, {
@@ -49,8 +49,8 @@ internal class ReadLaterFileModelLocalDataSourceImpl @Inject constructor(
         })
     }
 
-    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<FileModel>> {
+    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<File>> {
         return Pager(pagingConfig) { readLaterFileDao.pagingSource() }.flow
-            .map { it.map(File::toModel) }
+            .map { it.map(FileEntity::toModel) }
     }
 }

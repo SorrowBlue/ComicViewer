@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.storage.device
 
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.DeviceFileClientFactory
+import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ internal abstract class SingletonBindsModule {
 
     @DeviceFileClientFactory
     @Binds
-    abstract fun bindDeviceFileClientFactory(factory: DeviceFileClient.Factory): FileClient.Factory<BookshelfModel.InternalStorage>
+    abstract fun bindDeviceFileClientFactory(factory: DeviceFileClient.Factory): FileClient.Factory<InternalStorage>
 }

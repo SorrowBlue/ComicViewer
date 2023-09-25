@@ -18,7 +18,7 @@ import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import java.io.IOException
 import javax.inject.Inject
 import kotlin.math.floor
@@ -29,7 +29,7 @@ import okio.ByteString.Companion.encodeUtf8
 
 @OptIn(ExperimentalCoilApi::class)
 internal class FavoriteThumbnailFetcher(
-    private val data: FavoriteModel,
+    private val data: Favorite,
     options: Options,
     diskCache: dagger.Lazy<DiskCache?>,
     private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
@@ -113,7 +113,7 @@ internal class FavoriteThumbnailFetcher(
     }
 
     private suspend fun writeToDiskCache(
-        snapshot: DiskCache.Snapshot?, list: List<Pair<String, DiskCache.Snapshot>>
+        snapshot: DiskCache.Snapshot?, list: List<Pair<String, DiskCache.Snapshot>>,
     ): DiskCache.Snapshot? {
         // この応答をキャッシュすることが許可されていない場合は短絡します。
         if (!isCacheable()) {
@@ -193,10 +193,10 @@ internal class FavoriteThumbnailFetcher(
     class Factory @Inject constructor(
         @ThumbnailDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
         private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
-        private val fileModelLocalDataSource: FileModelLocalDataSource
-    ) : Fetcher.Factory<FavoriteModel> {
+        private val fileModelLocalDataSource: FileModelLocalDataSource,
+    ) : Fetcher.Factory<Favorite> {
 
-        override fun create(data: FavoriteModel, options: Options, imageLoader: ImageLoader) =
+        override fun create(data: Favorite, options: Options, imageLoader: ImageLoader) =
             FavoriteThumbnailFetcher(
                 data,
                 options,

@@ -29,14 +29,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
+import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.feature.file.info.R
 import com.sorrowblue.comicviewer.file.info.navigation.FileInfoArgs
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.fold
 import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -150,7 +151,7 @@ private fun FileInfoScreen(
                 }) {
                     AssistChip(
                         onClick = {},
-                        label = { Text(file.name.extension) },
+                        label = { Text(file.name.extension()) },
                         modifier = Modifier.tooltipAnchor()
                     )
                 }

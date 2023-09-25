@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 
+import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
-import com.sorrowblue.comicviewer.framework.Result
 import javax.inject.Inject
 
 internal class RemoveBookshelfInteractor @Inject constructor(

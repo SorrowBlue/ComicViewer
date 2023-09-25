@@ -14,7 +14,6 @@ android {
 }
 
 dependencies {
-    api(projects.framework)
     api(projects.framework.resource)
 
     api(libs.bundles.androidx.compose)

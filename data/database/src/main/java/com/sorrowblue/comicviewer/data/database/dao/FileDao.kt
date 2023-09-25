@@ -11,13 +11,13 @@ import androidx.room.Upsert
 import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
-import com.sorrowblue.comicviewer.data.database.entity.File
-import com.sorrowblue.comicviewer.data.database.entity.FileWithCount
-import com.sorrowblue.comicviewer.data.database.entity.SimpleFile
-import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistory
-import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfo
-import com.sorrowblue.comicviewer.data.model.bookshelf.SearchConditionEntity
-import com.sorrowblue.comicviewer.data.model.bookshelf.SortEntity
+import com.sorrowblue.comicviewer.data.database.entity.FileEntity
+import com.sorrowblue.comicviewer.data.database.entity.FileWithCountEntity
+import com.sorrowblue.comicviewer.data.database.entity.SimpleFileEntity
+import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistoryEntity
+import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfoEntity
+import com.sorrowblue.comicviewer.domain.model.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import kotlinx.coroutines.flow.Flow
 import logcat.logcat
 
@@ -25,44 +25,49 @@ import logcat.logcat
 internal interface FileDao {
 
     @Upsert
-    suspend fun upsert(file: File): Long
+    suspend fun upsert(fileEntity: FileEntity): Long
 
     @Upsert
-    suspend fun upsertAll(file: List<File>): List<Long>
+    suspend fun upsertAll(fileEntity: List<FileEntity>): List<Long>
 
-    @Update(entity = File::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateHistory(updateFileHistory: UpdateFileHistory): Int
+    @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateHistory(updateFileHistoryEntity: UpdateFileHistoryEntity): Int
 
-    @Update(entity = File::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateInfo(updateFileInfo: UpdateFileInfo)
+    @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateInfo(updateFileInfoEntity: UpdateFileInfoEntity)
 
-    @Update(entity = File::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateAllSimple(list: List<SimpleFile>)
+    @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateAllSimple(list: List<SimpleFileEntity>)
 
     @Delete
-    suspend fun deleteAll(list: List<File>)
+    suspend fun deleteAll(list: List<FileEntity>)
 
     @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND path = :path")
-    suspend fun find(bookshelfId: Int, path: String): File?
+    suspend fun find(bookshelfId: Int, path: String): FileEntity?
 
     @Query("SELECT * FROM file WHERE bookshelf_id= :bookshelfId AND path = :path")
-    fun flow(bookshelfId: Int, path: String): Flow<File?>
+    fun flow(bookshelfId: Int, path: String): Flow<FileEntity?>
 
     @Query("SELECT * FROM file WHERE bookshelf_id = :id AND parent = :parent AND path NOT IN (:paths)")
-    suspend fun findByNotPaths(id: Int, parent: String, paths: List<String>): List<File>
+    suspend fun findByNotPaths(id: Int, parent: String, paths: List<String>): List<FileEntity>
 
     @Deprecated("使用禁止")
-    @RawQuery(observedEntities = [File::class])
-    fun flowPrevNextFile(supportSQLiteQuery: SupportSQLiteQuery): Flow<File?>
+    @RawQuery(observedEntities = [FileEntity::class])
+    fun flowPrevNextFile(supportSQLiteQuery: SupportSQLiteQuery): Flow<FileEntity?>
 
-    fun flowPrevNextFile(bookshelfId: Int, path: String, isNext: Boolean, sortEntity: SortEntity): Flow<File?> {
-        val column = when (sortEntity) {
-            is SortEntity.NAME -> "sort_index"
-            is SortEntity.DATE -> "last_modified"
-            is SortEntity.SIZE -> "size"
+    fun flowPrevNextFile(
+        bookshelfId: Int,
+        path: String,
+        isNext: Boolean,
+        sortType: SortType,
+    ): Flow<FileEntity?> {
+        val column = when (sortType) {
+            is SortType.NAME -> "sort_index"
+            is SortType.DATE -> "last_modified"
+            is SortType.SIZE -> "size"
         }
-        val comparison = if (isNext && sortEntity.isAsc) ">=" else "<="
-        val order = if (isNext && sortEntity.isAsc) "ASC" else "DESC"
+        val comparison = if (isNext && sortType.isAsc) ">=" else "<="
+        val order = if (isNext && sortType.isAsc) "ASC" else "DESC"
         val sqLiteQuery = object : SupportSQLiteQuery {
             override val argCount: Int
                 get() = 2
@@ -101,40 +106,40 @@ internal interface FileDao {
     }
 
     @Deprecated("使用禁止")
-    @RawQuery(observedEntities = [File::class])
-    fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileWithCount>
+    @RawQuery(observedEntities = [FileEntity::class])
+    fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileWithCountEntity>
 
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit")
     suspend fun findCacheKeyOrderSortIndex(
         bookshelfId: Int,
         parent: String,
-        limit: Int
+        limit: Int,
     ): List<String>
 
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit")
     suspend fun findCacheKeyOrderLastModified(
         bookshelfId: Int,
         parent: String,
-        limit: Int
+        limit: Int,
     ): List<String>
 
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit")
     suspend fun findCacheKeysOrderLastRead(
         bookshelfId: Int,
         parent: String,
-        limit: Int
+        limit: Int,
     ): List<String>
 
     @Query("UPDATE file SET cache_key = '' WHERE cache_key = :cacheKey")
     suspend fun deleteCacheKeyBy(cacheKey: String)
 
     @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND parent = ''")
-    suspend fun findRootFile(bookshelfId: Int): File?
+    suspend fun findRootFile(bookshelfId: Int): FileEntity?
 
     fun pagingSource(
         bookshelfId: Int,
-        searchConditionEntity: SearchConditionEntity
-    ): PagingSource<Int, FileWithCount> {
+        searchCondition: SearchCondition,
+    ): PagingSource<Int, FileWithCountEntity> {
         val query = SupportSQLiteQueryBuilder.builder("file").apply {
             columns(
                 arrayOf(
@@ -149,41 +154,41 @@ internal interface FileDao {
             var selectionStr = "bookshelf_id = :bookshelfId"
             val bindArgs = mutableListOf<Any>(bookshelfId)
 
-            when (val range = searchConditionEntity.range) {
-                is SearchConditionEntity.Range.InFolder -> {
+            when (val range = searchCondition.range) {
+                is SearchCondition.Range.InFolder -> {
                     selectionStr += " AND parent = :parent"
                     bindArgs += range.parent
                 }
 
-                is SearchConditionEntity.Range.FolderBelow -> {
+                is SearchCondition.Range.SubFolder -> {
                     selectionStr += " AND parent LIKE :parent"
                     bindArgs += "${range.parent}%"
                 }
 
-                SearchConditionEntity.Range.BOOKSHELF -> Unit
+                SearchCondition.Range.BOOKSHELF -> Unit
             }
 
-            if (searchConditionEntity.query.isNotEmpty()) {
+            if (searchCondition.query.isNotEmpty()) {
                 selectionStr += " AND name LIKE :q"
-                bindArgs += "%${searchConditionEntity.query}%"
+                bindArgs += "%${searchCondition.query}%"
             }
 
-            selectionStr += when (searchConditionEntity.period) {
-                SearchConditionEntity.Period.NONE -> ""
-                SearchConditionEntity.Period.HOUR_24 -> " AND last_modified > strftime('%s000', datetime('now', '-24 hours'))"
-                SearchConditionEntity.Period.WEEK_1 -> " AND last_modified > strftime('%s000', datetime('now', '-7 days'))"
-                SearchConditionEntity.Period.MONTH_1 -> " AND last_modified > strftime('%s000', datetime('now', '-1 months'))"
+            selectionStr += when (searchCondition.period) {
+                SearchCondition.Period.NONE -> ""
+                SearchCondition.Period.HOUR_24 -> " AND last_modified > strftime('%s000', datetime('now', '-24 hours'))"
+                SearchCondition.Period.WEEK_1 -> " AND last_modified > strftime('%s000', datetime('now', '-7 days'))"
+                SearchCondition.Period.MONTH_1 -> " AND last_modified > strftime('%s000', datetime('now', '-1 months'))"
             }
 
             selection(selectionStr, bindArgs.toTypedArray())
-            val sortStr = when (searchConditionEntity.sort) {
-                SearchConditionEntity.Sort.ASC -> "ASC"
-                SearchConditionEntity.Sort.DESC -> "DESC"
+            val sortStr = when (searchCondition.sort) {
+                SearchCondition.Sort.ASC -> "ASC"
+                SearchCondition.Sort.DESC -> "DESC"
             }
-            when (searchConditionEntity.order) {
-                SearchConditionEntity.Order.NAME -> "file_type_order $sortStr, sort_index $sortStr"
-                SearchConditionEntity.Order.DATE -> "file_type_order $sortStr, last_modified $sortStr, sort_index $sortStr"
-                SearchConditionEntity.Order.SIZE -> "file_type_order $sortStr, size $sortStr, sort_index $sortStr"
+            when (searchCondition.order) {
+                SearchCondition.Order.NAME -> "file_type_order $sortStr, sort_index $sortStr"
+                SearchCondition.Order.DATE -> "file_type_order $sortStr, last_modified $sortStr, sort_index $sortStr"
+                SearchCondition.Order.SIZE -> "file_type_order $sortStr, size $sortStr, sort_index $sortStr"
             }.let(::orderBy)
         }.create()
         logcat { query.sql.trimIndent().replace(Regex("""\r\n|\n|\r"""), "") }
@@ -191,7 +196,7 @@ internal interface FileDao {
     }
 
     @Query("SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC")
-    fun pagingSourceHistory(): PagingSource<Int, File>
+    fun pagingSourceHistory(): PagingSource<Int, FileEntity>
 
     @Query("UPDATE file SET cache_key = '' WHERE cache_key != ''")
     suspend fun deleteAllCacheKey()

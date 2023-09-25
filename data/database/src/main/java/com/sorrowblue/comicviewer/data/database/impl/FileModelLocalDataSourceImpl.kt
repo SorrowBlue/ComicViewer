@@ -9,19 +9,19 @@ import androidx.room.withTransaction
 import com.sorrowblue.comicviewer.data.database.ComicViewerDatabase
 import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
-import com.sorrowblue.comicviewer.data.database.entity.File
-import com.sorrowblue.comicviewer.data.database.entity.FileWithCount
-import com.sorrowblue.comicviewer.data.database.entity.SimpleFile
-import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistory
-import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfo
+import com.sorrowblue.comicviewer.data.database.entity.FileEntity
+import com.sorrowblue.comicviewer.data.database.entity.FileWithCountEntity
+import com.sorrowblue.comicviewer.data.database.entity.SimpleFileEntity
+import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistoryEntity
+import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfoEntity
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.SimpleFileModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModelId
-import com.sorrowblue.comicviewer.data.model.bookshelf.FolderThumbnailOrderModel
-import com.sorrowblue.comicviewer.data.model.bookshelf.SearchConditionEntity
-import com.sorrowblue.comicviewer.data.model.bookshelf.SortEntity
+import com.sorrowblue.comicviewer.domain.model.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
+import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -29,132 +29,139 @@ import kotlinx.coroutines.flow.map
 internal class FileModelLocalDataSourceImpl @Inject constructor(
     private val dao: FileDao,
     private val database: ComicViewerDatabase,
-    private val factory: FileModelRemoteMediator.Factory
+    private val factory: FileModelRemoteMediator.Factory,
 ) : FileModelLocalDataSource {
 
     override fun pagingSource(
         pagingConfig: PagingConfig,
-        bookshelfModelId: BookshelfModelId,
-        searchConditionEntity: () -> SearchConditionEntity
-    ) = Pager(pagingConfig) {
-        dao.pagingSource(bookshelfModelId.value, searchConditionEntity())
-    }.flow.map { it.map(FileWithCount::toModel) }
+        bookshelfId: BookshelfId,
+        searchCondition: () -> SearchCondition,
+    ): Flow<PagingData<File>> = Pager(pagingConfig) {
+        dao.pagingSource(bookshelfId.value, searchCondition())
+    }.flow.map { it.map(FileWithCountEntity::toModel) }
 
-    override suspend fun addUpdate(fileModel: FileModel) {
-        dao.upsert(File.fromModel(fileModel))
+    override suspend fun addUpdate(fileModel: File) {
+        dao.upsert(FileEntity.fromModel(fileModel))
     }
 
     override suspend fun updateHistory(
         path: String,
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         lastReadPage: Int,
-        lastReading: Long
+        lastReading: Long,
     ) {
-        dao.updateHistory(UpdateFileHistory(path, bookshelfModelId.value, lastReadPage, lastReading))
+        dao.updateHistory(
+            UpdateFileHistoryEntity(
+                path,
+                bookshelfId.value,
+                lastReadPage,
+                lastReading
+            )
+        )
     }
 
     override suspend fun updateAdditionalInfo(
         path: String,
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         cacheKey: String,
-        totalPage: Int
+        totalPage: Int,
     ) {
-        dao.updateInfo(UpdateFileInfo(path, bookshelfModelId.value, cacheKey, totalPage))
+        dao.updateInfo(UpdateFileInfoEntity(path, bookshelfId.value, cacheKey, totalPage))
     }
 
-    override suspend fun updateSimpleAll(list: List<SimpleFileModel>) {
-        dao.updateAllSimple(list.map(SimpleFile::fromModel))
+    override suspend fun updateSimpleAll(list: List<File>) {
+        dao.updateAllSimple(list.map(SimpleFileEntity::fromModel))
     }
 
     override suspend fun selectByNotPaths(
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         path: String,
-        list: List<String>
-    ): List<FileModel> {
-        return dao.findByNotPaths(bookshelfModelId.value, path, list).map(File::toModel)
+        list: List<String>,
+    ): List<File> {
+        return dao.findByNotPaths(bookshelfId.value, path, list).map(FileEntity::toModel)
     }
 
-    override suspend fun deleteAll(list: List<FileModel>) {
-        dao.deleteAll(list.map(File.Companion::fromModel))
+    override suspend fun deleteAll(list: List<File>) {
+        dao.deleteAll(list.map(FileEntity.Companion::fromModel))
     }
 
-    override suspend fun exists(bookshelfModelId: BookshelfModelId, path: String): Boolean {
-        return dao.find(bookshelfModelId.value, path) != null
+    override suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean {
+        return dao.find(bookshelfId.value, path) != null
     }
 
     @OptIn(ExperimentalPagingApi::class)
     override fun pagingSource(
         pagingConfig: PagingConfig,
-        bookshelfModel: BookshelfModel,
-        fileModel: FileModel,
-        searchConditionEntity: () -> SearchConditionEntity
-    ): Flow<PagingData<FileModel>> {
-        val remoteMediator = factory.create(bookshelfModel, fileModel)
+        bookshelf: Bookshelf,
+        file: File,
+        searchCondition: () -> SearchCondition,
+    ): Flow<PagingData<File>> {
+        val remoteMediator = factory.create(bookshelf, file)
         return Pager(pagingConfig, remoteMediator = remoteMediator) {
-            dao.pagingSource(bookshelfModel.id.value, searchConditionEntity())
-        }.flow.map { it.map(FileWithCount::toModel) }
+            dao.pagingSource(bookshelf.id.value, searchCondition())
+        }.flow.map { it.map(FileWithCountEntity::toModel) }
 
     }
 
-    override suspend fun root(id: BookshelfModelId): FileModel.Folder? {
-        return dao.findRootFile(id.value)?.toModel() as? FileModel.Folder
+    override suspend fun root(id: BookshelfId): Folder? {
+        return dao.findRootFile(id.value)?.toModel() as? Folder
     }
 
-    override suspend fun findBy(bookshelfModelId: BookshelfModelId, path: String): FileModel? {
-        return dao.find(bookshelfModelId.value, path)?.toModel()
+    override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? {
+        return dao.find(bookshelfId.value, path)?.toModel()
     }
 
-    override fun flow(bookshelfModelId: BookshelfModelId, path: String): Flow<FileModel?> {
-        return dao.flow(bookshelfModelId.value, path).map { it?.toModel() }
+    override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> {
+        return dao.flow(bookshelfId.value, path).map { it?.toModel() }
     }
 
     override fun nextFileModel(
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         path: String,
-        sortEntity: SortEntity
-    ): Flow<FileModel?> {
-        return dao.flowPrevNextFile(bookshelfModelId.value, path, true, sortEntity)
+        sortType: SortType,
+    ): Flow<File?> {
+        return dao.flowPrevNextFile(bookshelfId.value, path, true, sortType)
             .map { it?.toModel() }
     }
 
     override fun prevFileModel(
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         path: String,
-        sortEntity: SortEntity
-    ): Flow<FileModel?> {
-        return dao.flowPrevNextFile(bookshelfModelId.value, path, false, sortEntity)
+        sortType: SortType,
+    ): Flow<File?> {
+        return dao.flowPrevNextFile(bookshelfId.value, path, false, sortType)
             .map { it?.toModel() }
     }
 
     override suspend fun getCacheKeys(
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         parent: String,
-        limit: Int
+        limit: Int,
     ): List<String> {
-        return dao.findCacheKeyOrderSortIndex(bookshelfModelId.value, "$parent%", limit)
+        return dao.findCacheKeyOrderSortIndex(bookshelfId.value, "$parent%", limit)
     }
 
     override suspend fun getCacheKeys(
-        bookshelfModelId: BookshelfModelId,
+        bookshelfId: BookshelfId,
         parent: String,
         limit: Int,
-        folderThumbnailOrderModel: FolderThumbnailOrderModel
+        folderThumbnailOrderModel: FolderThumbnailOrder,
     ): List<String> {
         return when (folderThumbnailOrderModel) {
-            FolderThumbnailOrderModel.NAME -> dao.findCacheKeyOrderSortIndex(
-                bookshelfModelId.value,
+            FolderThumbnailOrder.NAME -> dao.findCacheKeyOrderSortIndex(
+                bookshelfId.value,
                 "$parent%",
                 limit
             )
 
-            FolderThumbnailOrderModel.MODIFIED -> dao.findCacheKeyOrderLastModified(
-                bookshelfModelId.value,
+            FolderThumbnailOrder.MODIFIED -> dao.findCacheKeyOrderLastModified(
+                bookshelfId.value,
                 "$parent%",
                 limit
             )
 
-            FolderThumbnailOrderModel.LAST_READ -> dao.findCacheKeysOrderLastRead(
-                bookshelfModelId.value,
+            FolderThumbnailOrder.LAST_READ -> dao.findCacheKeysOrderLastRead(
+                bookshelfId.value,
                 "$parent%",
                 limit
             )
@@ -165,7 +172,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         return dao.deleteCacheKeyBy(diskCacheKey)
     }
 
-    override fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<FileModel>> {
+    override fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<File>> {
         return Pager(pagingConfig) {
             dao.pagingSourceHistory()
         }.flow.map { pagingData -> pagingData.map { it.toModel() } }
@@ -175,17 +182,17 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         dao.deleteAllCacheKey()
     }
 
-    override suspend fun deleteHistory(bookshelfModelId: BookshelfModelId, list: List<String>) {
-        dao.deleteHistory(bookshelfModelId.value, list.toTypedArray())
+    override suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>) {
+        dao.deleteHistory(bookshelfId.value, list.toTypedArray())
     }
 
-    override suspend fun updateHistory(fileModel: FileModel, files: List<FileModel>) {
+    override suspend fun updateHistory(file: File, files: List<File>) {
         database.withTransaction {
             // リモートになくてDBにある項目：削除対象
             val deleteFileData = selectByNotPaths(
-                fileModel.bookshelfModelId,
-                fileModel.path,
-                files.map(FileModel::path)
+                file.bookshelfId,
+                file.path,
+                files.map(File::path)
             )
             // DBから削除
             deleteAll(deleteFileData)
@@ -193,23 +200,23 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
             // existsFiles DBにある項目：更新対象
             // noExistsFiles DBにない項目：挿入対象
             val (existsFiles, noExistsFiles) = files.partition {
-                exists(it.bookshelfModelId, it.path)
+                exists(it.bookshelfId, it.path)
             }
 
             // DBにない項目を挿入
-            dao.upsertAll(noExistsFiles.map { File.fromModel(it) })
+            dao.upsertAll(noExistsFiles.map { FileEntity.fromModel(it) })
 
             // DBにファイルを更新
             // ファイルサイズ、更新日時、タイプ ソート、インデックス
-            updateSimpleAll(existsFiles.map(FileModel::toSimpleModel))
+            updateSimpleAll(existsFiles)
         }
     }
 
-    override suspend fun deleteAll2(bookshelfModelId: BookshelfModelId) {
+    override suspend fun deleteAll2(bookshelfModelId: BookshelfId) {
         dao.deleteAll(bookshelfModelId.value)
     }
 
-    override suspend fun getCacheKeyList(bookshelfModelId: BookshelfModelId): List<String> {
-        return dao.cacheKeyList(bookshelfModelId.value)
+    override suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String> {
+        return dao.cacheKeyList(bookshelfId.value)
     }
 }

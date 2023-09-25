@@ -2,15 +2,15 @@ package com.sorrowblue.comicviewer.data.infrastructure.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.ReadLaterFileModel
-import com.sorrowblue.comicviewer.framework.Result
+import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
+import com.sorrowblue.comicviewer.domain.model.Result
+import com.sorrowblue.comicviewer.domain.model.file.File
 import kotlinx.coroutines.flow.Flow
 
 interface ReadLaterFileModelLocalDataSource {
 
-    suspend fun add(model: ReadLaterFileModel): Result<ReadLaterFileModel, Unit>
-    suspend fun delete(model: ReadLaterFileModel): Result<ReadLaterFileModel, Unit>
-    fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<FileModel>>
+    suspend fun add(model: ReadLaterFile): Result<ReadLaterFile, Unit>
+    suspend fun delete(model: ReadLaterFile): Result<ReadLaterFile, Unit>
+    fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<File>>
     suspend fun deleteAll(): Result<Unit, Unit>
 }

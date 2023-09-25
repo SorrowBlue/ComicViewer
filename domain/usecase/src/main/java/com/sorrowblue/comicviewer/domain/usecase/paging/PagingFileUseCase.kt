@@ -2,10 +2,10 @@ package com.sorrowblue.comicviewer.domain.usecase.paging
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
-import com.sorrowblue.comicviewer.framework.Resource
 import kotlinx.coroutines.flow.Flow
 
 abstract class PagingFileUseCase :

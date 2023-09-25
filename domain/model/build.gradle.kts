@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.sorrowblue.comicviewer.domain.common"
+    namespace = "com.sorrowblue.comicviewer.domain.model"
 }
 
 dependencies {

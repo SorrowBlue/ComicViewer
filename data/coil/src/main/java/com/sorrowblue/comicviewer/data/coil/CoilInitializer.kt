@@ -6,14 +6,11 @@ import androidx.startup.Initializer
 import coil.Coil
 import coil.fetch.Fetcher
 import coil.size.Precision
-import com.sorrowblue.comicviewer.data.BookMapper
-import com.sorrowblue.comicviewer.data.BookPageRequestMapper
-import com.sorrowblue.comicviewer.data.FavoriteMapper
-import com.sorrowblue.comicviewer.data.FolderMapper
-import com.sorrowblue.comicviewer.data.model.BookPageRequestData
-import com.sorrowblue.comicviewer.data.model.FileModel
-import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
-import com.sorrowblue.comicviewer.framework.LogcatInitializer
+import com.sorrowblue.comicviewer.domain.model.BookPageRequest
+import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -26,16 +23,12 @@ internal class CoilInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         val imageLoader = Coil.imageLoader(context).newBuilder().components {
 
-            add(BookPageRequestMapper())
             add(MyComponent.bookPageFetcherFactory(context))
 
-            add(FolderMapper())
             add(MyComponent.folderThumbnailFetcher(context))
 
-            add(BookMapper())
             add(MyComponent.bookThumbnailFetcher(context))
 
-            add(FavoriteMapper())
             add(MyComponent.favoriteThumbnailFetcher(context))
         }
             .allowRgb565(true)
@@ -53,11 +46,11 @@ internal class CoilInitializer : Initializer<Unit> {
     @InstallIn(SingletonComponent::class)
     internal interface MyComponent {
 
-        fun folderThumbnailFetcher(): Fetcher.Factory<FileModel.Folder>
-        fun bookThumbnailFetcher(): Fetcher.Factory<FileModel.Book>
+        fun folderThumbnailFetcher(): Fetcher.Factory<Folder>
+        fun bookThumbnailFetcher(): Fetcher.Factory<Book>
 
-        fun bookPageFetcherFactory(): Fetcher.Factory<BookPageRequestData>
-        fun favoriteThumbnailFetcher(): Fetcher.Factory<FavoriteModel>
+        fun bookPageFetcherFactory(): Fetcher.Factory<BookPageRequest>
+        fun favoriteThumbnailFetcher(): Fetcher.Factory<Favorite>
 
         companion object {
             fun folderThumbnailFetcher(context: Context) =

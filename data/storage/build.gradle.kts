@@ -9,9 +9,8 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework)
     implementation(projects.data.infrastructure)
-    api(projects.data.model)
+    api(projects.domain.model)
     api(projects.data.reader)
 
     androidTestImplementation(libs.androidx.test.ext.junit.ktx)

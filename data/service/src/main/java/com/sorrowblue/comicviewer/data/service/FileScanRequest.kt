@@ -2,45 +2,44 @@ package com.sorrowblue.comicviewer.data.service
 
 import androidx.work.Data
 import androidx.work.workDataOf
-import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModelId
-import com.sorrowblue.comicviewer.data.model.model.ScanModel
+import com.sorrowblue.comicviewer.domain.model.Scan
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 
 internal class FileScanRequest(
-    val bookshelfModelId: BookshelfModelId,
+    val bookshelfId: BookshelfId,
     val path: String,
-    internal val scanModel: ScanModel,
+    internal val scan: Scan,
     val resolveImageFolder: Boolean,
-    val supportExtensions: List<String>
+    val supportExtensions: List<String>,
 ) {
     fun toWorkData() = workDataOf(
-        SERVER_MODEL_ID to bookshelfModelId.value,
+        ID to bookshelfId.value,
         PATH to path,
-        SCAN_MODEL to scanModel.name,
+        SCAN to scan.name,
         RESOLVE_IMAGE_FOLDER to resolveImageFolder,
         SUPPORT_TYPE_EXTENSIONS to supportExtensions.toTypedArray()
     )
 
     companion object {
 
-        const val SERVER_MODEL_ID = "serverModelId"
-        const val PATH = "serverModelPath"
+        const val ID = "id"
+        const val PATH = "path"
         const val RESOLVE_IMAGE_FOLDER = "resolveImageFolder"
-        const val SCAN_MODEL = "scanModel"
+        const val SCAN = "scan"
         const val SUPPORT_TYPE_EXTENSIONS = "supportExtensions"
 
         fun fromWorkData(data: Data): FileScanRequest? {
-            val id = data.getInt(SERVER_MODEL_ID, 0)
+            val id = data.getInt(ID, 0)
             val path = data.getString(PATH) ?: return null
-            val scanModel =
-                data.getString(SCAN_MODEL)?.let(ScanModel::valueOf) ?: return null
+            val scan = data.getString(SCAN)?.let(Scan::valueOf) ?: return null
             val resolveImageFolder = data.getBoolean(RESOLVE_IMAGE_FOLDER, false)
             val supportExtensions =
                 data.getStringArray(SUPPORT_TYPE_EXTENSIONS)?.asList() ?: return null
             if (id < 0) return null
             return FileScanRequest(
-                BookshelfModelId(id),
+                BookshelfId(id),
                 path,
-                scanModel,
+                scan,
                 resolveImageFolder,
                 supportExtensions
             )

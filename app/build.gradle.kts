@@ -25,6 +25,7 @@ android {
             isTags = true
         }?.toVersion() ?: "0.0.1-SNAPSHOT"
         logger.lifecycle("versionName=$versionName")
+        proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
     androidResources {
         generateLocaleConfig = true
@@ -65,33 +66,26 @@ android {
         release {
             applicationIdSuffix = ComicBuildType.RELEASE.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.RELEASE.isMinifyEnabled
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("release")
+            isShrinkResources = ComicBuildType.RELEASE.isShrinkResources
+            signingConfig = signingConfigs.getByName(name)
         }
-        create("prerelease") {
-            applicationIdSuffix = ComicBuildType.PRRELEASE.applicationIdSuffix
-            isMinifyEnabled = ComicBuildType.PRRELEASE.isMinifyEnabled
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("prerelease")
+        getByName("prerelease") {
+            applicationIdSuffix = ComicBuildType.PRERELEASE.applicationIdSuffix
+            isMinifyEnabled = ComicBuildType.PRERELEASE.isMinifyEnabled
+            isShrinkResources = ComicBuildType.PRERELEASE.isShrinkResources
+            signingConfig = signingConfigs.getByName(name)
         }
-        create("internal") {
+        getByName("internal") {
             applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.INTERNAL.isMinifyEnabled
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("internal")
+            isShrinkResources = ComicBuildType.INTERNAL.isShrinkResources
+            signingConfig = signingConfigs.getByName(name)
         }
         debug {
             applicationIdSuffix = ComicBuildType.DEBUG.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.DEBUG.isMinifyEnabled
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            )
+            isShrinkResources = ComicBuildType.DEBUG.isShrinkResources
+            signingConfig = signingConfigs.getByName(name)
         }
     }
 
@@ -110,7 +104,7 @@ dependencies {
     implementation(projects.framework.notification)
     implementation(projects.framework.designsystem)
 
-    implementation(projects.data.di)
+    implementation(projects.di)
     implementation(projects.domain.usecase)
     implementation(projects.feature.authentication)
     implementation(projects.feature.book)
@@ -139,7 +133,6 @@ dependencies {
     implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.google.accompanist.navigation.material)
-    implementation(projects.framework)
     implementation(libs.kotlinx.collections.immutable)
 
 //    debugImplementation(libs.squareup.leakcanary.android)
