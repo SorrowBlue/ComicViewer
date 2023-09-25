@@ -8,9 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Book
-import androidx.compose.material.icons.twotone.Folder
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -32,8 +29,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -56,11 +54,11 @@ fun FileGrid(
                 model = file,
                 placeholder = debugPlaceholder()
                     ?: forwardingPainter(
-                        rememberVectorPainter(if (file is Book) Icons.TwoTone.Book else Icons.TwoTone.Folder),
+                        rememberVectorPainter(if (file is Book) ComicIcons.Book else ComicIcons.Folder),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
                     ),
                 error = forwardingPainter(
-                    rememberVectorPainter(if (file is Book) Icons.TwoTone.Book else Icons.TwoTone.Folder),
+                    rememberVectorPainter(if (file is Book) ComicIcons.Book else ComicIcons.Folder),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
                 ),
                 contentScale = ContentScale.Crop,
@@ -95,7 +93,7 @@ fun FileGrid(
 @Preview
 @Composable
 fun PreviewFileGrid() {
-    AppMaterialTheme {
+    ComicTheme {
         FileGrid(
             file = FakeFile,
             onClick = {},

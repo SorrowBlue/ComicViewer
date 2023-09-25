@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,7 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 import java.io.InputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +35,7 @@ internal fun OneDriveTopAppBar(
     profileUri: suspend () -> InputStream?,
     onBackClick: () -> Unit,
     onProfileImageClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior?
+    scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     var inputStream by remember { mutableStateOf<ByteArray?>(null) }
     LaunchedEffect(profileUri) {
@@ -59,7 +58,7 @@ internal fun OneDriveTopAppBar(
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
-                Icon(imageVector = Icons.TwoTone.ArrowBack, contentDescription = "Back")
+                Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
             }
         },
         actions = {

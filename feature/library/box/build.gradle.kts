@@ -1,6 +1,5 @@
 plugins {
-    id("comicviewer.android.dynamic-feature")
-    id("comicviewer.android.dynamic-feature.compose")
+    id("comicviewer.android.feature.dynamic-feature")
     alias(libs.plugins.kotlin.plugin.serialization)
 }
 
@@ -10,10 +9,8 @@ android {
 }
 
 dependencies {
-    implementation(projects.app)
-    implementation(projects.framework.compose)
     implementation(projects.framework.notification)
-    implementation(projects.domain)
+    implementation(projects.domain.common)
     implementation(projects.feature.library)
 
     implementation(libs.androidx.browser)

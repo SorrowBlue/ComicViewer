@@ -7,9 +7,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Dns
-import androidx.compose.material.icons.twotone.SdStorage
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,8 +31,9 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -80,7 +78,7 @@ fun Bookshelf(
             },
             trailingContent = {
                 Icon(
-                    if (bookshelfFolder.bookshelf is SmbServer) Icons.TwoTone.Dns else Icons.TwoTone.SdStorage,
+                    if (bookshelfFolder.bookshelf is SmbServer) ComicIcons.Dns else ComicIcons.SdStorage,
                     contentDescription = null
                 )
             },
@@ -98,7 +96,7 @@ fun Bookshelf(
 @Preview
 @Composable
 private fun PreviewArticleRow() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             Bookshelf(
                 bookshelfFolder = BookshelfFolder(

@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,8 +44,9 @@ import com.sorrowblue.comicviewer.feature.library.onedrive.component.FileListIte
 import com.sorrowblue.comicviewer.feature.library.onedrive.component.OneDriveTopAppBar
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveAccountDialog
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveDialogUiState
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import java.io.InputStream
 import kotlinx.coroutines.flow.flowOf
 
@@ -56,7 +55,7 @@ import kotlinx.coroutines.flow.flowOf
 internal fun OneDriveRoute(
     onBackClick: () -> Unit,
     onFolderClick: (Folder) -> Unit,
-    viewModel: OneDriveViewModel = viewModel(factory = OneDriveViewModel.Factory(LocalContext.current))
+    viewModel: OneDriveViewModel = viewModel(factory = OneDriveViewModel.Factory(LocalContext.current)),
 ) {
     val lazPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsState()
@@ -117,7 +116,7 @@ private fun OneDriveScreen(
     onFileClick: (File) -> Unit = {},
     onDialogDismissRequest: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     when (uiState) {
         OneDriveScreenUiState.Loading -> LoadingOneDriveScreen(onCloseClick = onBackClick)
@@ -149,7 +148,7 @@ private fun LoadingOneDriveScreen(onCloseClick: () -> Unit = {}) {
                 title = { Text(text = "OneDrive") },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
-                        Icon(imageVector = Icons.TwoTone.Close, contentDescription = "Close")
+                        Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
                     }
                 }
             )
@@ -179,7 +178,7 @@ private fun LoginOneDriveScreen(
                 title = { Text(text = "OneDrive") },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
-                        Icon(imageVector = Icons.TwoTone.Close, contentDescription = "Close")
+                        Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
                     }
                 }
             )
@@ -212,7 +211,7 @@ private fun LoadedOneDriveScreen(
     onFileClick: (File) -> Unit = {},
     onDialogDismissRequest: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     Scaffold(
         topBar = {
@@ -247,7 +246,7 @@ private fun LoadedOneDriveScreen(
 @Preview
 @Composable
 private fun PreviewLoadedOneDriveScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         LoadedOneDriveScreen()
     }
 }
@@ -255,7 +254,7 @@ private fun PreviewLoadedOneDriveScreen() {
 @Preview
 @Composable
 private fun PreviewLoginOneDriveScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         LoginOneDriveScreen()
     }
 }
@@ -263,7 +262,7 @@ private fun PreviewLoginOneDriveScreen() {
 @Preview
 @Composable
 private fun PreviewLoadingOneDriveScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         LoadingOneDriveScreen()
     }
 }

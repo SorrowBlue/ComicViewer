@@ -11,11 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.feature.history.R
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
 internal fun EmptyContent(modifier: Modifier = Modifier) {
@@ -25,9 +26,9 @@ internal fun EmptyContent(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = com.sorrowblue.comicviewer.framework.resource.R.drawable.ic_undraw_resume_folder_re_e0bi),
-            contentDescription = null
+            imageVector = ComicIcons.UndrawResumeFolder,
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth()
         )
         Text(
             text = stringResource(id = R.string.history_label_no_history),
@@ -41,7 +42,7 @@ internal fun EmptyContent(modifier: Modifier = Modifier) {
 @Composable
 private fun PreviewEmptyContent() {
 
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             EmptyContent()
         }

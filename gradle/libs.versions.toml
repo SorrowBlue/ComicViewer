@@ -75,7 +75,7 @@ androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-mani
 androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util", version = "1.5.1" }
 androidx-compose-material = { module = "androidx.compose.material:material" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
-androidx-compose-material3-window = { module = "androidx.compose.material3:material3-window-size-class" }
+androidx-compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class" }
 
 androidx-activity-compose = "androidx.activity:activity-compose:1.8.0-rc01"
 androidx-lifecycle-viewmodel-compose = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
@@ -92,11 +92,11 @@ androidx-fragment-ktx = "androidx.fragment:fragment-ktx:1.6.1"
 
 androidx-hilt-compiler = "androidx.hilt:hilt-compiler:1.1.0-alpha01"
 androidx-hilt-navigation-fragment = "androidx.hilt:hilt-navigation-fragment:1.0.0"
-androidx-hilt-navigation-compose = "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"
+androidx-hilt-navigationCompose = "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"
 androidx-hilt-work = "androidx.hilt:hilt-work:1.1.0-alpha01"
 
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
@@ -179,8 +179,8 @@ mikepenz-aboutlibraries = { module = "com.mikepenz:aboutlibraries", version.ref 
 
 [bundles]
 androidx-instrumented-tests = ["androidx-test-core-ktx", "androidx-test-runner", "androidx-test-rules", "androidx-test-ext-junit-ktx", "androidx-test-ext-truth"]
-androidx-lifecycle = ["androidx-lifecycle-livedata-ktx", "androidx-lifecycle-viewmodel-ktx"]
+androidx-lifecycle = ["androidx-lifecycle-livedata-ktx"]
 androidx-navigation = ["androidx-navigation-fragment-ktx", "androidx-navigation-ui-ktx", "androidx-navigation-dynamic-features-fragment"]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx", "androidx-room-paging"]
-androidx-compose = ["androidx-compose-material3", "androidx-compose-ui-tooling-preview", "androidx-compose-material-icons-extended", "androidx-compose-material", "androidx-compose-material3-window", "androidx-compose-ui-util"]
+androidx-compose = ["androidx-compose-material3", "androidx-compose-ui-tooling-preview", "androidx-compose-material-icons-extended", "androidx-compose-material", "androidx-compose-material3-windowSizeClass", "androidx-compose-ui-util"]
 androidx-compose-debug = ["androidx-compose-ui-tooling", "androidx-compose-ui-test-manifest"]

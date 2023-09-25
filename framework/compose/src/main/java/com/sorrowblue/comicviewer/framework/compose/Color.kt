@@ -69,8 +69,4 @@ val md_theme_dark_surfaceTint = Color(0xFF77DB98)
 val md_theme_dark_outlineVariant = Color(0xFF414942)
 val md_theme_dark_scrim = Color(0xFF000000)
 
-
 val seed = Color(0xFF007B43)
-
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-val LocalWindowSize = staticCompositionLocalOf { WindowSizeClass.calculateFromSize(DpSize.Unspecified) }

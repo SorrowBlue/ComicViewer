@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.entity.settings.SortType
 import com.sorrowblue.comicviewer.feature.folder.R
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 enum class Sort(val labelRes: Int) {
     NAME_ASC(R.string.folder_label_name_asc),
@@ -58,7 +57,7 @@ sealed interface SortSheetUiState {
 fun SortSheet(
     uiState: SortSheetUiState = SortSheetUiState.Show(),
     onDismissRequest: () -> Unit = {},
-    onClick: (Sort) -> Unit = {}
+    onClick: (Sort) -> Unit = {},
 ) {
     if (uiState is SortSheetUiState.Show) {
         val sort = uiState.sort
@@ -81,7 +80,7 @@ fun SortSheet(
                                 .weight(1f, true)
                         )
                         if (it == sort) {
-                            Icon(Icons.TwoTone.Check, contentDescription = "Selected")
+                            Icon(ComicIcons.Check, contentDescription = "Selected")
                         }
                     }
                 }
@@ -93,7 +92,7 @@ fun SortSheet(
 @Composable
 @Preview
 fun PreviewSortSheet() {
-    AppMaterialTheme {
+    ComicTheme {
         SortSheet()
     }
 }

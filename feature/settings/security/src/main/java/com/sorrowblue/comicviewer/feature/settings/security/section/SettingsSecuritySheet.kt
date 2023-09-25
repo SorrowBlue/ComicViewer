@@ -12,13 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.settings.security.R
-import com.sorrowblue.comicviewer.framework.compose.material3.ListItem2
-import com.sorrowblue.comicviewer.framework.compose.material3.ListItemSwitch
+import com.sorrowblue.comicviewer.framework.ui.material3.ListItem2
+import com.sorrowblue.comicviewer.framework.ui.material3.ListItemSwitch
 
 internal data class SettingsSecuritySheetUiState(
     val isAuthEnabled: Boolean = false,
     val isBiometricEnabled: Boolean = false,
-    val isBackgroundLockEnabled: Boolean = false
+    val isBackgroundLockEnabled: Boolean = false,
 )
 
 @Composable
@@ -29,7 +29,7 @@ internal fun SettingsSecuritySheet(
     onChangeBiometricEnabled: (Boolean) -> Unit,
     onChangeBackgroundLockEnabled: (Boolean) -> Unit,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier

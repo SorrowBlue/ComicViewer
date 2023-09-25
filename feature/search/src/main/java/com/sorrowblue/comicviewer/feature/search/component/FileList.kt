@@ -2,10 +2,6 @@ package com.sorrowblue.comicviewer.feature.search.component
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Book
-import androidx.compose.material.icons.twotone.BrokenImage
-import androidx.compose.material.icons.twotone.Folder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -19,6 +15,7 @@ import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
 import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
@@ -41,7 +38,7 @@ internal fun FileList(
                     .size(56.dp)
                     .clip(RoundedCornerShape(16.dp)),
                 placeholder = debugPlaceholder(),
-                error = rememberVectorPainter(Icons.TwoTone.BrokenImage),
+                error = rememberVectorPainter(ComicIcons.BrokenImage),
             )
         },
         supportingContent = {
@@ -64,12 +61,12 @@ internal fun FileList(
         trailingContent = {
             when (file) {
                 is Book -> Icon(
-                    painter = rememberVectorPainter(image = Icons.TwoTone.Book),
+                    painter = rememberVectorPainter(image = ComicIcons.Book),
                     contentDescription = null
                 )
 
                 is Folder -> Icon(
-                    painter = rememberVectorPainter(image = Icons.TwoTone.Folder),
+                    painter = rememberVectorPainter(image = ComicIcons.Folder),
                     contentDescription = null
                 )
 

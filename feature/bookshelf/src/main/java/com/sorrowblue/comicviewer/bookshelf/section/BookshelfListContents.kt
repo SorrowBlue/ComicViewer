@@ -15,8 +15,8 @@ import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.bookshelf.component.Bookshelf
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.copy
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.plus
 
 @Composable
 internal fun BookshelfListContents(
@@ -29,11 +29,13 @@ internal fun BookshelfListContents(
     LazyVerticalGrid(
         columns = GridCells.Adaptive(400.dp),
         state = lazyGridState,
-        contentPadding = innerPadding.copy(
-            start = AppMaterialTheme.dimens.margin,
-            end = AppMaterialTheme.dimens.margin,
-            top = AppMaterialTheme.dimens.margin,
-            bottom = AppMaterialTheme.dimens.margin + AppMaterialTheme.dimens.margin + 56.dp
+        contentPadding = innerPadding.plus(
+            PaddingValues(
+                start = ComicTheme.dimension.margin,
+                top = ComicTheme.dimension.margin,
+                end = ComicTheme.dimension.margin,
+                bottom = ComicTheme.dimension.margin + ComicTheme.dimension.margin + 56.dp
+            )
         ),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)

@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Close
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -37,7 +35,8 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
 fun BookshelfInfoSheet(
@@ -71,7 +70,7 @@ fun BookshelfInfoSheet(
                 )
                 Spacer(modifier = Modifier.size(12.dp))
                 IconButton(onClick = onCloseClick) {
-                    Icon(imageVector = Icons.TwoTone.Close, contentDescription = null)
+                    Icon(imageVector = ComicIcons.Close, contentDescription = null)
                 }
             }
 
@@ -160,7 +159,7 @@ private fun PreviewBookshelfInfoSheet() {
             SmbServer.Auth.UsernamePassword("domain", "username", "password")
         ) to Folder(BookshelfId(0), "", "", "", 0, 0, emptyMap(), 0)
     )
-    AppMaterialTheme {
+    ComicTheme {
         PermanentDrawerSheet {
             BookshelfInfoSheet(bookshelfFolder, {}, {}, {}, PaddingValues())
         }

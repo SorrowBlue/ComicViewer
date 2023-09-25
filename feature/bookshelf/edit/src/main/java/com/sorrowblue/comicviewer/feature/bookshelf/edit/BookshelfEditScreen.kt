@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -34,9 +32,9 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.AuthMethod
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditorUiState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.DeviceStorageInfoEditor
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbServerInfoEditor
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.CollectAsEffect
-import com.sorrowblue.comicviewer.framework.compose.copy
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.flow.CollectAsEffect
 
 sealed interface BookshelfEditScreenUiState {
 
@@ -123,7 +121,7 @@ fun BookshelfEditScreen(
                 title = { Text(text = "本棚の編集") },
                 navigationIcon = {
                     IconButton(onBackClick) {
-                        Icon(imageVector = Icons.TwoTone.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -138,7 +136,9 @@ fun BookshelfEditScreen(
                 when (uiState.editorUiState) {
                     is BookshelfEditorUiState.DeviceStorage ->
                         DeviceStorageInfoEditor(
-                            modifier = Modifier.padding(contentPaddings.copy(horizontal = AppMaterialTheme.dimens.margin)),
+                            modifier = Modifier
+                                .padding(contentPaddings)
+                                .padding(horizontal = ComicTheme.dimension.margin),
                             uiState = uiState.editorUiState,
                             onDisplayNameChange = onDisplayNameChange,
                             onSelectFolderClick = onSelectFolderClick,
@@ -182,7 +182,7 @@ fun BookshelfEditScreen(
 @Preview
 @Composable
 fun PreviewBookshelfEditScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             BookshelfEditScreen()
         }
@@ -192,7 +192,7 @@ fun PreviewBookshelfEditScreen() {
 @Preview
 @Composable
 fun PreviewBookshelfEditScreenLoading() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             BookshelfEditScreen(BookshelfEditScreenUiState.Loading)
         }

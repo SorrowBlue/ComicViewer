@@ -24,10 +24,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.autofill.connectNode
-import com.sorrowblue.comicviewer.framework.compose.autofill.defaultFocusChangeAutoFill
-import com.sorrowblue.comicviewer.framework.compose.autofill.rememberAutoFillRequestHandler
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.autofill.connectNode
+import com.sorrowblue.comicviewer.framework.ui.autofill.defaultFocusChangeAutoFill
+import com.sorrowblue.comicviewer.framework.ui.autofill.rememberAutoFillRequestHandler
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -47,7 +47,7 @@ fun SmbServerInfoEditor(
     Column(
         modifier
             .verticalScroll(rememberScrollState())
-            .padding(AppMaterialTheme.dimens.margin)
+            .padding(ComicTheme.dimension.margin)
             .imePadding()
     ) {
         OutlinedTextField(
@@ -229,7 +229,7 @@ fun SmbServerInfoEditor(
 @Preview
 @Composable
 fun PreviewSmbServerInfoEditor() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             SmbServerInfoEditor()
         }

@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,7 +45,8 @@ import com.sorrowblue.comicviewer.feature.library.box.component.FileListItem
 import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxDialogUiState
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import kotlinx.coroutines.flow.flowOf
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,7 +59,7 @@ internal fun BoxRoute(
             LocalContext.current,
             BoxApiRepository.getInstance(LocalContext.current)
         )
-    )
+    ),
 ) {
     val lazPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsState()
@@ -120,7 +119,7 @@ private fun BoxScreen(
     onFileClick: (File) -> Unit = {},
     onDialogDismissRequest: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     when (uiState) {
         BoxScreenUiState.Loading -> LoadingBoxScreen(onCloseClick = onBackClick)
@@ -152,7 +151,7 @@ private fun LoadingBoxScreen(onCloseClick: () -> Unit = {}) {
                 title = { Text(text = "Box") },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
-                        Icon(imageVector = Icons.TwoTone.Close, contentDescription = "Close")
+                        Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
                     }
                 }
             )
@@ -182,7 +181,7 @@ private fun LoginBoxScreen(
                 title = { Text(text = "Box") },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
-                        Icon(imageVector = Icons.TwoTone.Close, contentDescription = "Close")
+                        Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
                     }
                 }
             )
@@ -215,7 +214,7 @@ private fun LoadedBoxScreen(
     onFileClick: (File) -> Unit = {},
     onDialogDismissRequest: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     Scaffold(
         topBar = {
@@ -251,7 +250,7 @@ private fun LoadedBoxScreen(
 @Preview
 @Composable
 private fun PreviewLoadedBoxScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         LoadedBoxScreen()
     }
 }
@@ -260,7 +259,7 @@ private fun PreviewLoadedBoxScreen() {
 @Preview
 @Composable
 private fun PreviewLoginBoxScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         LoginBoxScreen()
     }
 }
@@ -269,7 +268,7 @@ private fun PreviewLoginBoxScreen() {
 @Preview
 @Composable
 private fun PreviewLoadingBoxScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         LoadingBoxScreen()
     }
 }

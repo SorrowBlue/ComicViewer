@@ -35,9 +35,9 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.feature.file.info.R
 import com.sorrowblue.comicviewer.file.info.navigation.FileInfoArgs
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.fold
+import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -118,7 +118,7 @@ private fun FileInfoScreen(
         Column(
             modifier = Modifier
                 .navigationBarsPadding()
-                .padding(AppMaterialTheme.dimens.margin),
+                .padding(ComicTheme.dimension.margin),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
@@ -136,14 +136,14 @@ private fun FileInfoScreen(
             )
             Text(
                 text = file.parent,
-                modifier = Modifier.padding(top = AppMaterialTheme.dimens.spacer),
+                modifier = Modifier.padding(top = ComicTheme.dimension.spacer),
                 style = MaterialTheme.typography.labelSmall
             )
             FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = AppMaterialTheme.dimens.spacer),
-                horizontalArrangement = Arrangement.spacedBy(AppMaterialTheme.dimens.spacer)
+                    .padding(top = ComicTheme.dimension.spacer),
+                horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.spacer)
             ) {
                 PlainTooltipBox(tooltip = {
                     Text("ファイルの拡張子")
@@ -183,8 +183,8 @@ private fun FileInfoScreen(
             FlowRow(
                 Modifier
                     .fillMaxWidth()
-                    .padding(top = AppMaterialTheme.dimens.spacer),
-                horizontalArrangement = Arrangement.spacedBy(AppMaterialTheme.dimens.spacer)
+                    .padding(top = ComicTheme.dimension.spacer),
+                horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.spacer)
             ) {
                 FilledTonalButton(onClick = { onAddReadLaterClick(file) }) {
                     Text(stringResource(id = R.string.file_info_label_add_read_later))

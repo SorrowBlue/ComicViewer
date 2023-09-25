@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PermDeviceInformation
-import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -16,7 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.feature.folder.R
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
 fun FolderScanInfoDialog(
@@ -27,17 +25,17 @@ fun FolderScanInfoDialog(
     if (isShown) {
         AlertDialog(
             onDismissRequest = onDismissRequest,
-            icon = { Icon(Icons.Filled.PermDeviceInformation, contentDescription = null) },
+            icon = { Icon(ComicIcons.PermDeviceInformation, contentDescription = null) },
             title = {
                 Text(text = "Request Notification Permission")
             },
             text = {
                 Column {
                     Text(stringResource(id = R.string.folder_message_scan))
-                    Spacer(modifier = Modifier.size(AppMaterialTheme.dimens.spacer))
+                    Spacer(modifier = Modifier.size(ComicTheme.dimension.spacer))
                     Row {
-                        Icon(Icons.TwoTone.Info, contentDescription = null)
-                        Spacer(modifier = Modifier.size(AppMaterialTheme.dimens.spacer))
+                        Icon(ComicIcons.Info, contentDescription = null)
+                        Spacer(modifier = Modifier.size(ComicTheme.dimension.spacer))
                         Text(stringResource(id = R.string.folder_message_info_scan))
                     }
                 }
@@ -58,7 +56,7 @@ fun FolderScanInfoDialog(
 @Preview(locale = "ja")
 @Composable
 fun PreviewFolderScanInfoDialog() {
-    AppMaterialTheme {
+    ComicTheme {
         FolderScanInfoDialog()
     }
 }

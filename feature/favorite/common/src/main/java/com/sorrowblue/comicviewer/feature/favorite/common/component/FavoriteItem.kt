@@ -4,13 +4,8 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Image
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.Button
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -26,8 +21,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.feature.favorite.common.R
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 
 @Composable
 fun FavoriteItem(favorite: Favorite, onClick: () -> Unit) {
@@ -53,7 +49,10 @@ fun FavoriteItem(favorite: Favorite, onClick: () -> Unit) {
                 model = favorite,
                 contentDescription = null,
                 modifier = Modifier.size(56.dp),
-                error = forwardingPainter(rememberVectorPainter(Icons.TwoTone.Image), colorFilter = ColorFilter.tint(ListItemDefaults.contentColor)),
+                error = forwardingPainter(
+                    rememberVectorPainter(ComicIcons.Image),
+                    colorFilter = ColorFilter.tint(ListItemDefaults.contentColor)
+                ),
                 placeholder = debugPlaceholder()
             )
         }
@@ -63,7 +62,7 @@ fun FavoriteItem(favorite: Favorite, onClick: () -> Unit) {
 @Preview
 @Composable
 private fun PrivateFavoriteItem() {
-    AppMaterialTheme {
+    ComicTheme {
         FavoriteItem(Favorite("Preview name"), {})
     }
 }

@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.search.section
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -26,6 +28,8 @@ import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.entity.file.File
 import com.sorrowblue.comicviewer.feature.search.R
 import com.sorrowblue.comicviewer.feature.search.component.FileList
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileSearching
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 @Composable
@@ -90,11 +94,6 @@ private fun SearchResultContents(
 }
 
 @Composable
-private fun SearchResultContents() {
-
-}
-
-@Composable
 private fun EmptyContents(
     query: String,
     modifier: Modifier = Modifier,
@@ -104,11 +103,11 @@ private fun EmptyContents(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        Image(
-//            painter = painterResource(id = FrameworkDrawable.ic_undraw_file_searching_re_3evy),
-//            contentDescription = null,
-//            modifier = Modifier.size(200.dp)
-//        )
+        Image(
+            imageVector = ComicIcons.UndrawFileSearching,
+            contentDescription = null,
+            modifier = Modifier.size(200.dp)
+        )
         Text(
             text = stringResource(id = R.string.search_label_not_found, query),
             modifier = Modifier.width(200.dp)

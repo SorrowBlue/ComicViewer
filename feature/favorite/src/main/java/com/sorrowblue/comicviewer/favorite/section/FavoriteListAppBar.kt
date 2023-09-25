@@ -1,7 +1,5 @@
 package com.sorrowblue.comicviewer.favorite.section
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -9,10 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenu
-import com.sorrowblue.comicviewer.framework.compose.material3.rememberOverflowMenuState
-import com.sorrowblue.comicviewer.framework.resource.R
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
+import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,12 +23,9 @@ internal fun FavoriteListAppBar(
             val overflowMenuState = rememberOverflowMenuState()
             OverflowMenu(overflowMenuState) {
                 DropdownMenuItem(
-                    text = { Text(stringResource(R.string.framework_title_settings)) },
+                    text = { Text("Open Settings") },
                     trailingIcon = {
-                        Icon(
-                            Icons.TwoTone.Settings,
-                            stringResource(R.string.framework_title_settings)
-                        )
+                        Icon(ComicIcons.Settings, "Open Settings")
                     },
                     onClick = {
                         overflowMenuState.collapse()

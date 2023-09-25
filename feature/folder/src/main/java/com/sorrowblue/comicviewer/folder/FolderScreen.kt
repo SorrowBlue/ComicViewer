@@ -37,12 +37,12 @@ import com.sorrowblue.comicviewer.folder.section.FolderEmptyContent
 import com.sorrowblue.comicviewer.folder.section.Sort
 import com.sorrowblue.comicviewer.folder.section.SortSheet
 import com.sorrowblue.comicviewer.folder.section.SortSheetUiState
-import com.sorrowblue.comicviewer.framework.compose.isEmptyData
-import com.sorrowblue.comicviewer.framework.compose.isLoadedData
-import com.sorrowblue.comicviewer.framework.compose.pullrefresh.PullRefreshIndicator
-import com.sorrowblue.comicviewer.framework.compose.pullrefresh.PullRefreshState
-import com.sorrowblue.comicviewer.framework.compose.pullrefresh.pullRefresh
-import com.sorrowblue.comicviewer.framework.compose.pullrefresh.rememberPullRefreshState
+import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
+import com.sorrowblue.comicviewer.framework.ui.pullrefresh.PullRefreshIndicator
+import com.sorrowblue.comicviewer.framework.ui.pullrefresh.PullRefreshState
+import com.sorrowblue.comicviewer.framework.ui.pullrefresh.pullRefresh
+import com.sorrowblue.comicviewer.framework.ui.pullrefresh.rememberPullRefreshState
 
 data class FolderScreenUiState(
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),

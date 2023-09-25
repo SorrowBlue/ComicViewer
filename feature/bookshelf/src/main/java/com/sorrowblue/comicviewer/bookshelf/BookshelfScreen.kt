@@ -39,11 +39,11 @@ import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialog
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialogUiState
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.framework.compose.LaunchedEffectUiEvent
-import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
-import com.sorrowblue.comicviewer.framework.compose.isEmptyData
-import com.sorrowblue.comicviewer.framework.compose.material3.ReversePermanentNavigationDrawer
-import com.sorrowblue.comicviewer.framework.compose.toWindowInsets
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
+import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
+import com.sorrowblue.comicviewer.framework.ui.material3.ReversePermanentNavigationDrawer
+import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.toWindowInsets
 
 @Composable
 internal fun BookshelfRoute(

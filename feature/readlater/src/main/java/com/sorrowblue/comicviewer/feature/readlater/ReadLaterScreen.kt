@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.readlater
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -22,7 +23,7 @@ import com.sorrowblue.comicviewer.feature.readlater.section.EmptyContent
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
-import com.sorrowblue.comicviewer.framework.compose.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 @Composable
 internal fun ReadLaterRoute(
@@ -90,7 +91,8 @@ private fun ReadLaterScreen(
     ) { innerPadding ->
         if (lazyPagingItems.isEmptyData) {
             EmptyContent(
-                Modifier
+                modifier = Modifier
+                    .fillMaxSize()
                     .padding(innerPadding)
             )
         } else {

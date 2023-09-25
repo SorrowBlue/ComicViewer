@@ -34,8 +34,8 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -135,7 +135,7 @@ private fun PreviewBookshelfInfoDialog() {
             SmbServer.Auth.UsernamePassword("domain", "username", "password")
         ) to Folder(BookshelfId(0), "", "", "/path/sample/", 0, 0, emptyMap(), 0)
     )
-    AppMaterialTheme {
+    ComicTheme {
         BookshelfInfoDialog(bookshelfFolder, {}, {}, {})
     }
 }

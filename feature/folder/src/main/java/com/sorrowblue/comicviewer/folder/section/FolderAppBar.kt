@@ -1,12 +1,5 @@
 package com.sorrowblue.comicviewer.folder.section
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
-import androidx.compose.material.icons.twotone.Grid4x4
-import androidx.compose.material.icons.twotone.Refresh
-import androidx.compose.material.icons.twotone.Search
-import androidx.compose.material.icons.twotone.Settings
-import androidx.compose.material.icons.twotone.SortByAlpha
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,10 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.file.component.FileContentLayout
 import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenu
-import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenuState
-import com.sorrowblue.comicviewer.framework.compose.material3.rememberOverflowMenuState
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuState
+import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
 
 data class FolderAppBarUiState(
     val title: String = "",
@@ -49,13 +43,13 @@ fun FolderAppBar(
         title = { Text(text = uiState.title) },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
-                Icon(Icons.TwoTone.ArrowBack, "Back")
+                Icon(ComicIcons.ArrowBack, "Back")
             }
         },
         actions = {
             PlainTooltipBox(tooltip = { Text("Search") }) {
                 IconButton(onClick = onSearchClick, modifier = Modifier.tooltipAnchor()) {
-                    Icon(Icons.TwoTone.Search, "Search")
+                    Icon(ComicIcons.Search, "Search")
                 }
             }
 
@@ -65,7 +59,7 @@ fun FolderAppBar(
                 if (uiState.fileContentLayout is FileContentLayout.Grid) {
                     DropdownMenuItem(
                         text = { Text(text = "Change Grid size") },
-                        leadingIcon = { Icon(Icons.TwoTone.Grid4x4, "Change grid size") },
+                        leadingIcon = { Icon(ComicIcons.Grid4x4, "Change grid size") },
                         onClick = {
                             overflowMenuState.collapse()
                             onGridSizeChange()
@@ -74,7 +68,7 @@ fun FolderAppBar(
                 }
                 DropdownMenuItem(
                     text = { Text(text = "Sort by") },
-                    leadingIcon = { Icon(Icons.TwoTone.SortByAlpha, "Sort by") },
+                    leadingIcon = { Icon(ComicIcons.SortByAlpha, "Sort by") },
                     onClick = {
                         overflowMenuState.collapse()
                         onSortClick()
@@ -82,7 +76,7 @@ fun FolderAppBar(
                 )
                 DropdownMenuItem(
                     text = { Text(text = "Refresh") },
-                    leadingIcon = { Icon(Icons.TwoTone.Refresh, "Refresh") },
+                    leadingIcon = { Icon(ComicIcons.Refresh, "Refresh") },
                     onClick = {
                         overflowMenuState.collapse()
                         onRefreshClick()
@@ -90,7 +84,7 @@ fun FolderAppBar(
                 )
                 DropdownMenuItem(
                     text = { Text(text = "Settings") },
-                    leadingIcon = { Icon(Icons.TwoTone.Settings, "Settings") },
+                    leadingIcon = { Icon(ComicIcons.Settings, "Settings") },
                     onClick = {
                         overflowMenuState.collapse()
                         onSettingsClick()
@@ -105,7 +99,7 @@ fun FolderAppBar(
 @Preview
 @Composable
 fun PreviewFolderAppBar() {
-    AppMaterialTheme {
+    ComicTheme {
         FolderAppBar()
     }
 }

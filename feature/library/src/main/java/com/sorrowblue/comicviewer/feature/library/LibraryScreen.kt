@@ -28,9 +28,9 @@ import com.sorrowblue.comicviewer.feature.library.section.Feature
 import com.sorrowblue.comicviewer.feature.library.section.FeatureListSheet
 import com.sorrowblue.comicviewer.feature.library.section.LibraryCloudStorageDialog
 import com.sorrowblue.comicviewer.feature.library.section.RequestInstallDialogUiState
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.CollectAsEffect
-import com.sorrowblue.comicviewer.framework.compose.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.ui.flow.CollectAsEffect
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -160,7 +160,7 @@ private fun LibraryScreen(
 @Preview
 @Composable
 private fun PreviewLibraryScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         val addOns = listOf(
             Feature.AddOn.GoogleDrive(AddOnItemState.Still),
             Feature.AddOn.OneDrive(AddOnItemState.Installing),

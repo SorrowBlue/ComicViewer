@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Stable
 data class FileContentUiState(
@@ -63,7 +63,7 @@ private fun FileGridContent(
     state: LazyGridState
 ) {
     LazyVerticalGrid(
-        modifier = Modifier.padding(AppMaterialTheme.dimens.margin),
+        modifier = Modifier.padding(ComicTheme.dimension.margin),
         columns = GridCells.Adaptive(
             when (size) {
                 FileContentLayout.GridSize.Small -> 88.dp
@@ -99,7 +99,7 @@ private fun FileListContent(
     state: LazyGridState
 ) {
     LazyVerticalGrid(
-        modifier = Modifier.padding(AppMaterialTheme.dimens.margin),
+        modifier = Modifier.padding(ComicTheme.dimension.margin),
         columns = GridCells.Fixed(1),
         state = state,
         contentPadding = contentPadding,

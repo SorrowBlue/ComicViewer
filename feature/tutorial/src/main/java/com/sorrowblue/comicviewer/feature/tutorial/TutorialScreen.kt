@@ -8,9 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowRight
-import androidx.compose.material.icons.twotone.Done
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.sorrowblue.comicviewer.domain.entity.settings.BindingDirection
@@ -34,7 +32,8 @@ import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.WelcomeSheet
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import kotlinx.coroutines.launch
 
 internal enum class TutorialSheet {
@@ -54,7 +53,7 @@ internal data class TutorialScreenUiState(
 @Composable
 internal fun TutorialRoute(
     onComplete: () -> Unit,
-    viewModel: TutorialViewModel = hiltViewModel()
+    viewModel: TutorialViewModel = hiltViewModel(),
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     DisposableEffect(lifecycle, viewModel) {
@@ -119,8 +118,8 @@ private fun TutorialScreen(
                 modifier = Modifier
                     .navigationBarsPadding()
                     .padding(
-                        start = AppMaterialTheme.dimens.margin,
-                        bottom = AppMaterialTheme.dimens.margin
+                        start = 16.dp,
+                        bottom = 16.dp
                     )
                     .align(Alignment.BottomStart)
             )
@@ -130,16 +129,16 @@ private fun TutorialScreen(
                 modifier = Modifier
                     .navigationBarsPadding()
                     .padding(
-                        end = AppMaterialTheme.dimens.margin,
-                        bottom = AppMaterialTheme.dimens.margin
+                        end = 16.dp,
+                        bottom = 16.dp
                     )
                     .align(Alignment.BottomEnd),
                 onClick = onNextClick
             ) {
                 if (isLastPage) {
-                    Icon(Icons.TwoTone.Done, contentDescription = "Done")
+                    Icon(ComicIcons.Done, contentDescription = "Done")
                 } else {
-                    Icon(Icons.TwoTone.ArrowRight, contentDescription = "Next")
+                    Icon(ComicIcons.ArrowRight, contentDescription = "Next")
                 }
             }
         }
@@ -150,7 +149,7 @@ private fun TutorialScreen(
 @Preview
 @Composable
 private fun PreviewTutorialScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             TutorialScreen()
         }

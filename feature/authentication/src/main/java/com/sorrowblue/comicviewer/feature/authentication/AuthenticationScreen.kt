@@ -17,12 +17,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
-import androidx.compose.material.icons.twotone.ArrowForward
-import androidx.compose.material.icons.twotone.Backspace
-import androidx.compose.material.icons.twotone.Circle
-import androidx.compose.material.icons.twotone.Key
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,8 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.LaunchedEffectUiEvent
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
 
 internal sealed interface AuthenticationUiEvent {
 
@@ -145,7 +140,7 @@ private fun AuthenticationScreen(
                 navigationIcon = {
                     if (uiState !is AuthenticationScreenUiState.Authentication) {
                         IconButton(onClick = onBackClick) {
-                            Icon(imageVector = Icons.TwoTone.ArrowBack, contentDescription = null)
+                            Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
                         }
                     }
                 }
@@ -161,7 +156,7 @@ private fun AuthenticationScreen(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Icon(
-                imageVector = Icons.TwoTone.Key,
+                imageVector = ComicIcons.Key,
                 contentDescription = null,
                 modifier = Modifier.size(48.dp)
             )
@@ -204,18 +199,18 @@ private fun AuthenticationScreen(
                         label = "test"
                     ) { isVisible ->
                         if (isVisible) {
-                            Icon(imageVector = Icons.TwoTone.Circle, contentDescription = null)
+                            Icon(imageVector = ComicIcons.Circle, contentDescription = null)
                         }
                     }
                 }
             }
             Spacer(modifier = Modifier.size(16.dp))
             IconButton(onClick = onNextClick) {
-                Icon(imageVector = Icons.TwoTone.ArrowForward, contentDescription = null)
+                Icon(imageVector = ComicIcons.ArrowForward, contentDescription = null)
             }
             Spacer(modifier = Modifier.weight(1f))
 
-            Divider(Modifier.padding(AppMaterialTheme.dimens.margin))
+            Divider(Modifier.padding(ComicTheme.dimension.margin))
             listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", null).chunked(3)
                 .forEach { chunk ->
                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -234,7 +229,7 @@ private fun AuthenticationScreen(
                                     Text(text = it)
                                 } else {
                                     Icon(
-                                        imageVector = Icons.TwoTone.Backspace,
+                                        imageVector = ComicIcons.Backspace,
                                         contentDescription = null
                                     )
                                 }
@@ -249,7 +244,7 @@ private fun AuthenticationScreen(
 @Preview(showSystemUi = false, showBackground = false)
 @Composable
 private fun PreviewAuthenticationScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             AuthenticationScreen(
                 uiState = AuthenticationScreenUiState.Authentication(

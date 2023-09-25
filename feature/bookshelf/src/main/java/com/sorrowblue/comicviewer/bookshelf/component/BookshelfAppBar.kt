@@ -1,7 +1,5 @@
 package com.sorrowblue.comicviewer.bookshelf.component
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -13,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.bookshelf.R
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,12 +20,9 @@ fun BookshelfAppBar(onSettingsClick: () -> Unit, scrollBehavior: TopAppBarScroll
     TopAppBar(
         title = { Text(stringResource(id = R.string.bookshelf_list_title)) },
         actions = {
-            PlainTooltipBox(tooltip = { Text(stringResource(id = com.sorrowblue.comicviewer.framework.resource.R.string.framework_label_open_settings)) }) {
+            PlainTooltipBox(tooltip = { Text("Open Settings") }) {
                 IconButton(onSettingsClick, Modifier.tooltipAnchor()) {
-                    Icon(
-                        Icons.TwoTone.Settings,
-                        stringResource(id = com.sorrowblue.comicviewer.framework.resource.R.string.framework_label_open_settings)
-                    )
+                    Icon(ComicIcons.Settings, "Open Settings")
                 }
             }
         },

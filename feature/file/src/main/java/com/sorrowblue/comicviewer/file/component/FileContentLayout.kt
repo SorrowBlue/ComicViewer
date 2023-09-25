@@ -1,9 +1,6 @@
 package com.sorrowblue.comicviewer.file.component
 
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.GridView
-import androidx.compose.material.icons.twotone.ViewList
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.feature.file.R
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 sealed interface FileContentLayout {
 
@@ -62,7 +60,7 @@ fun FileContentLayoutButton(fileContentLayout: FileContentLayout, onClick: () ->
             PlainTooltipBox(tooltip = { Text(stringResource(id = R.string.file_list_label_switch_list_view)) }) {
                 IconButton(onClick, Modifier.tooltipAnchor()) {
                     Icon(
-                        Icons.TwoTone.ViewList,
+                        ComicIcons.ViewList,
                         stringResource(id = R.string.file_list_label_switch_list_view)
                     )
                 }
@@ -73,7 +71,7 @@ fun FileContentLayoutButton(fileContentLayout: FileContentLayout, onClick: () ->
             PlainTooltipBox(tooltip = { Text(stringResource(id = R.string.file_list_label_switch_grid_view)) }) {
                 IconButton(onClick, Modifier.tooltipAnchor()) {
                     Icon(
-                        Icons.TwoTone.GridView,
+                        ComicIcons.GridView,
                         stringResource(id = R.string.file_list_label_switch_grid_view)
                     )
                 }

@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Folder
-import androidx.compose.material.icons.twotone.Save
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,7 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -31,7 +29,7 @@ fun DeviceStorageInfoEditor(
     uiState: BookshelfEditorUiState.DeviceStorage = BookshelfEditorUiState.DeviceStorage(),
     onDisplayNameChange: (String) -> Unit = {},
     onSelectFolderClick: () -> Unit = {},
-    onSaveClick: () -> Unit = {}
+    onSaveClick: () -> Unit = {},
 ) {
     Column(modifier) {
         OutlinedTextField(
@@ -53,7 +51,7 @@ fun DeviceStorageInfoEditor(
             onValueChange = {},
             trailingIcon = {
                 IconButton(onClick = onSelectFolderClick) {
-                    Icon(Icons.TwoTone.Folder, null)
+                    Icon(ComicIcons.Folder, null)
                 }
             },
             enabled = false
@@ -70,7 +68,7 @@ fun DeviceStorageInfoEditor(
         ) {
             Icon(
                 modifier = Modifier.size(ButtonDefaults.IconSize),
-                imageVector = Icons.TwoTone.Save,
+                imageVector = ComicIcons.Save,
                 contentDescription = null
             )
             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
@@ -82,7 +80,7 @@ fun DeviceStorageInfoEditor(
 @Preview
 @Composable
 fun PreivewDeviceStorageInfoEditor() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             DeviceStorageInfoEditor()
         }

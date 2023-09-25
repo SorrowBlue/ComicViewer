@@ -12,10 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.framework.resource.R
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookshelves
 
 @Composable
 internal fun BookshelfEmptyContents(innerPadding: PaddingValues) {
@@ -27,7 +27,7 @@ internal fun BookshelfEmptyContents(innerPadding: PaddingValues) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(R.drawable.ic_undraw_bookshelves_re_lxoy),
+            imageVector = ComicIcons.UndrawBookshelves,
             contentDescription = null,
             modifier = Modifier.size(200.dp)
         )

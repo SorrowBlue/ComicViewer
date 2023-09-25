@@ -19,15 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.DisplaySettings
-import androidx.compose.material.icons.twotone.FolderOpen
-import androidx.compose.material.icons.twotone.Image
-import androidx.compose.material.icons.twotone.Info
-import androidx.compose.material.icons.twotone.Lock
-import androidx.compose.material.icons.twotone.MusicNote
-import androidx.compose.material.icons.twotone.Start
-import androidx.compose.material.icons.twotone.VolumeUp
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -55,7 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsTopAppBar
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,34 +79,34 @@ fun SettingsScreen(
         ) {
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_display)) },
-                leadingContent = { Icon(Icons.TwoTone.DisplaySettings, null) },
+                leadingContent = { Icon(ComicIcons.DisplaySettings, null) },
                 modifier = Modifier.clickable(onClick = onDisplayClick),
             )
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_folder)) },
-                leadingContent = { Icon(Icons.TwoTone.FolderOpen, null) },
+                leadingContent = { Icon(ComicIcons.FolderOpen, null) },
                 modifier = Modifier.clickable(onClick = onFolderClick),
             )
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_viewer)) },
-                leadingContent = { Icon(Icons.TwoTone.Image, null) },
+                leadingContent = { Icon(ComicIcons.Image, null) },
                 modifier = Modifier.clickable(onClick = onViewerClick),
             )
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_security)) },
-                leadingContent = { Icon(Icons.TwoTone.Lock, null) },
+                leadingContent = { Icon(ComicIcons.Lock, null) },
                 modifier = Modifier.clickable(onClick = onSecurityClick),
             )
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_app)) },
-                leadingContent = { Icon(Icons.TwoTone.Info, null) },
+                leadingContent = { Icon(ComicIcons.Info, null) },
                 modifier = Modifier.clickable {
                     onAppInfoClick()
                 },
             )
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_label_tutorial)) },
-                leadingContent = { Icon(Icons.TwoTone.Start, null) },
+                leadingContent = { Icon(ComicIcons.Start, null) },
                 modifier = Modifier.clickable(onClick = onStartTutorialClick),
             )
             val context = LocalContext.current
@@ -141,13 +133,13 @@ fun SettingsScreen(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 fun PreviewSettingsScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             Column {
                 ListItem(
                     headlineContent = { Text("音とバイブレーション") },
                     supportingContent = { Text("音量、ハプティクス、サイレント　モード") },
-                    leadingContent = { Icon(Icons.TwoTone.VolumeUp, null) },
+                    leadingContent = { Icon(ComicIcons.VolumeUp, null) },
                     modifier = Modifier.clickable { },
                 )
                 var media by remember { mutableFloatStateOf(0f) }
@@ -156,7 +148,7 @@ fun PreviewSettingsScreen() {
                     supportingContent = {
                         Slider(value = media, onValueChange = { media = it }, steps = 8)
                     },
-                    leadingContent = { Icon(Icons.TwoTone.MusicNote, null) },
+                    leadingContent = { Icon(ComicIcons.MusicNote, null) },
                     modifier = Modifier.clickable { },
                 )
                 var checked by remember { mutableStateOf(false) }
@@ -190,7 +182,7 @@ fun PreviewSettingsScreen() {
                 )
                 ListItem(
                     headlineContent = { Text(stringResource(R.string.settings_label_tutorial)) },
-                    leadingContent = { Icon(Icons.TwoTone.Start, null) },
+                    leadingContent = { Icon(ComicIcons.Start, null) },
                     modifier = Modifier.clickable { },
                 )
             }

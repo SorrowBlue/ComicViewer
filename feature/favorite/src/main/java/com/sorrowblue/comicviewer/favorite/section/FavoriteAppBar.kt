@@ -1,11 +1,5 @@
 package com.sorrowblue.comicviewer.favorite.section
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
-import androidx.compose.material.icons.twotone.Delete
-import androidx.compose.material.icons.twotone.Edit
-import androidx.compose.material.icons.twotone.Grid4x4
-import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,13 +15,14 @@ import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.component.FileContentLayout
 import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
-import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenu
-import com.sorrowblue.comicviewer.framework.compose.material3.OverflowMenuState
-import com.sorrowblue.comicviewer.framework.compose.material3.rememberOverflowMenuState
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuState
+import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
 
 internal data class FavoriteAppBarUiState(
     val title: String = "",
-    val fileContentLayout: FileContentLayout = FileContentLayout.Grid()
+    val fileContentLayout: FileContentLayout = FileContentLayout.Grid(),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,19 +36,19 @@ internal fun FavoriteAppBar(
     onDeleteClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-    overflowMenuState: OverflowMenuState = rememberOverflowMenuState()
+    overflowMenuState: OverflowMenuState = rememberOverflowMenuState(),
 ) {
     TopAppBar(
         title = { Text(text = uiState.title) },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
-                Icon(Icons.TwoTone.ArrowBack, "Back")
+                Icon(ComicIcons.ArrowBack, "Back")
             }
         },
         actions = {
             PlainTooltipBox(tooltip = { Text(stringResource(R.string.favorite_title_edit)) }) {
                 IconButton(onClick = onEditClick, modifier = Modifier.tooltipAnchor()) {
-                    Icon(Icons.TwoTone.Edit, stringResource(R.string.favorite_title_edit))
+                    Icon(ComicIcons.Edit, stringResource(R.string.favorite_title_edit))
                 }
             }
 
@@ -66,7 +61,7 @@ internal fun FavoriteAppBar(
                 if (uiState.fileContentLayout is FileContentLayout.Grid) {
                     DropdownMenuItem(
                         text = { Text(text = "Change Grid size") },
-                        leadingIcon = { Icon(Icons.TwoTone.Grid4x4, "Change grid size") },
+                        leadingIcon = { Icon(ComicIcons.Grid4x4, "Change grid size") },
                         onClick = {
                             overflowMenuState.collapse()
                             onGridSizeChange()
@@ -75,7 +70,7 @@ internal fun FavoriteAppBar(
                 }
                 DropdownMenuItem(
                     text = { Text(text = "Delete") },
-                    leadingIcon = { Icon(Icons.TwoTone.Delete, "Remove Favorite") },
+                    leadingIcon = { Icon(ComicIcons.Delete, "Remove Favorite") },
                     onClick = {
                         overflowMenuState.collapse()
                         onDeleteClick()
@@ -83,7 +78,7 @@ internal fun FavoriteAppBar(
                 )
                 DropdownMenuItem(
                     text = { Text(text = "Settings") },
-                    leadingIcon = { Icon(Icons.TwoTone.Settings, "Settings") },
+                    leadingIcon = { Icon(ComicIcons.Settings, "Settings") },
                     onClick = {
                         overflowMenuState.collapse()
                         onSettingsClick()

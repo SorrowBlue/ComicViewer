@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.DarkMode
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,8 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.domain.entity.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.display.section.SettingsDisplayTopAppBar
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.material3.ListItemSwitch
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.material3.ListItemSwitch
 
 data class SettingsDisplayScreenUiState(
     val darkMode: DarkMode = DarkMode.DEVICE,
@@ -96,7 +95,7 @@ private fun SettingsDisplayScreen(
                     supportingContent = {
                         Text(text = uiState.darkMode.label())
                     },
-                    leadingContent = { Icon(Icons.TwoTone.DarkMode, null) },
+                    leadingContent = { Icon(ComicIcons.DarkMode, null) },
                     modifier = Modifier.clickable { expanded = !expanded },
                 )
                 DropdownMenu(
@@ -131,7 +130,7 @@ private fun DarkMode.label() = when (this) {
 @MultiThemePreviews
 @Composable
 private fun PreviewSettingsDisplayScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             SettingsDisplayScreen()
         }

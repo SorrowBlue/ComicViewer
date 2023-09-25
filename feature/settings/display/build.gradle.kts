@@ -8,8 +8,8 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.compose)
-    implementation(projects.domain)
+    implementation(projects.framework.common)
 
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.startup.runtime)
 }

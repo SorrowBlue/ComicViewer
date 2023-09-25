@@ -4,9 +4,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
-import androidx.compose.material.icons.twotone.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.LocaleListCompat
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import java.util.Locale
 import kotlinx.collections.immutable.toPersistentList
 
@@ -35,7 +33,7 @@ fun InAppLanguagePickerTopAppBar(
         title = { Text("アプリの言語") },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
-                Icon(imageVector = Icons.TwoTone.ArrowBack, contentDescription = "Back")
+                Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
             }
         },
         scrollBehavior = scrollBehavior
@@ -66,7 +64,7 @@ fun InAppLanguagePickerScreen(onBackClick: () -> Unit = {}) {
                 ListItem(
                     trailingContent = {
                         if (current == language.tag) {
-                            Icon(imageVector = Icons.TwoTone.Check, contentDescription = null)
+                            Icon(imageVector = ComicIcons.Check, contentDescription = null)
                         }
                     },
                     headlineContent = { Text(language.label) },

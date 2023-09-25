@@ -6,10 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
-import androidx.compose.material.icons.twotone.Delete
-import androidx.compose.material.icons.twotone.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -37,9 +33,9 @@ import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.BookFile
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.copyZero
-import com.sorrowblue.comicviewer.framework.compose.isEmptyData
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -85,7 +81,7 @@ private fun FavoriteEditScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.TwoTone.ArrowBack, null)
+                        Icon(ComicIcons.ArrowBack, null)
                     }
                 },
                 scrollBehavior = appBarScrollBehavior
@@ -93,7 +89,7 @@ private fun FavoriteEditScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onSaveClick) {
-                Icon(Icons.TwoTone.Save, null)
+                Icon(ComicIcons.Save, null)
             }
         },
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
@@ -103,12 +99,12 @@ private fun FavoriteEditScreen(
                 value = uiState.name, onValueChange = onNameChange,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(contentPadding.copyZero(bottom = AppMaterialTheme.dimens.spacer))
-                    .padding(horizontal = AppMaterialTheme.dimens.margin)
+                    .padding(contentPadding)
+                    .padding(horizontal = ComicTheme.dimension.margin)
             )
             if (lazyPagingItems.isEmptyData) {
             } else {
-                LazyColumn(contentPadding = contentPadding.copyZero(top = 0.dp)) {
+                LazyColumn(contentPadding = contentPadding) {
                     items(
                         lazyPagingItems.itemCount,
                         key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" }) {
@@ -121,7 +117,7 @@ private fun FavoriteEditScreen(
                                 },
                                 trailingContent = {
                                     IconButton(onClick = { onDeleteClick(item) }) {
-                                        Icon(Icons.TwoTone.Delete, null)
+                                        Icon(ComicIcons.Delete, null)
                                     }
                                 }
                             )
@@ -140,7 +136,7 @@ private fun PreviewFavoriteEditScreen() {
         BookFile(BookshelfId(it), "Name $it", "", "", 0, 0, "", 0, 0, 0)
     }
     val a: Flow<PagingData<File>> = flowOf(PagingData.from(files))
-    AppMaterialTheme {
+    ComicTheme {
         FavoriteEditScreen(
             FavoriteEditScreenUiState(),
             a.collectAsLazyPagingItems(),

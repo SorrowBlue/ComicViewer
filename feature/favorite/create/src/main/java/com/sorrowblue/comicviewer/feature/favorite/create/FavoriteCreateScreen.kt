@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sorrowblue.comicviewer.framework.compose.CollectAsEffect
+import com.sorrowblue.comicviewer.framework.ui.flow.CollectAsEffect
 
 internal data class FavoriteCreateScreenUiState(
     val name: String = "",

@@ -8,8 +8,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.compose)
-    implementation(projects.domain)
     implementation(projects.feature.file)
     implementation(projects.feature.folder)
 }

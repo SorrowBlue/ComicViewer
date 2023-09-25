@@ -8,8 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.compose)
-    implementation(projects.domain)
+    implementation(projects.framework.common)
 
     implementation(libs.androidx.startup.runtime)
     implementation(libs.google.android.play.feature.delivery.ktx)

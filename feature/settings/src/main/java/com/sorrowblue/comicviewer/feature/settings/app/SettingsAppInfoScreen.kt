@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -27,6 +25,7 @@ import com.sorrowblue.comicviewer.feature.settings.BuildConfig
 import com.sorrowblue.comicviewer.feature.settings.R
 import com.sorrowblue.comicviewer.feature.settings.app.component.SettingsAppInfoTopAppBar
 import com.sorrowblue.comicviewer.feature.settings.packageInfo
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.Instant
@@ -114,7 +113,7 @@ private fun SettingsAppInfoScreen(
             )
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_app_label_rate)) },
-                leadingContent = { Icon(Icons.TwoTone.Star, null) },
+                leadingContent = { Icon(ComicIcons.Star, null) },
                 modifier = Modifier.clickable(onClick = onRateAppClick)
             )
         }

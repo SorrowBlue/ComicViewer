@@ -1,9 +1,6 @@
 package com.sorrowblue.comicviewer.feature.favorite.add
 
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Add
-import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,6 +20,7 @@ import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @Composable
 internal fun FavoriteAddRoute(
@@ -54,7 +52,7 @@ private fun FavoriteAddScreen(
                 title = { Text(stringResource(R.string.favorite_add_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.TwoTone.ArrowBack, "Back")
+                        Icon(ComicIcons.ArrowBack, "Back")
                     }
                 },
                 scrollBehavior = appBarScrollBehavior
@@ -62,7 +60,7 @@ private fun FavoriteAddScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddClick) {
-                Icon(Icons.TwoTone.Add, null)
+                Icon(ComicIcons.Add, null)
             }
         },
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)

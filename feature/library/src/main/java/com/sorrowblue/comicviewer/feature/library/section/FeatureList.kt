@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.library.component.AddOnItem
 import com.sorrowblue.comicviewer.feature.library.component.BasicItem
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import kotlinx.collections.immutable.PersistentList
 
 @Composable
@@ -31,7 +31,7 @@ internal fun FeatureListSheet(
         }
 
         Spacer(modifier = Modifier.size(8.dp))
-        Divider(modifier = Modifier.padding(horizontal = AppMaterialTheme.dimens.margin))
+        Divider(modifier = Modifier.padding(horizontal = ComicTheme.dimension.margin))
         Spacer(modifier = Modifier.size(8.dp))
 
         addOnList.forEach {

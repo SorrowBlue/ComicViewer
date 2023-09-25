@@ -12,8 +12,5 @@ dependencies {
     implementation(projects.framework.designsystem)
 
     api(libs.androidx.compose.material3)
-    api(libs.androidx.hilt.navigation.compose)
     api(libs.androidx.paging.compose)
-    api(libs.androidx.compose.material.icons.extended)
-    api(libs.coil.compose)
 }

@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -33,7 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.feature.settings.folder.section.SupportExtensionTopAppBar
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
 internal fun SupportExtensionRoute(
@@ -116,13 +115,13 @@ private fun SupportExtensionScreen(
                         )
                     },
                     leadingContent = {
-                        Icon(Icons.TwoTone.Info, contentDescription = null)
+                        Icon(ComicIcons.Info, contentDescription = null)
                     }
                 )
                 FilledTonalButton(
                     onClick = { /*TODO*/ },
                     modifier = Modifier
-                        .padding(horizontal = AppMaterialTheme.dimens.margin)
+                        .padding(horizontal = ComicTheme.dimension.margin)
                         .align(Alignment.End)
                 ) {
                     Text(text = "拡張機能一覧へ")
@@ -157,7 +156,7 @@ private fun SupportExtensionScreen(
 @MultiThemePreviews
 @Composable
 private fun PreviewSupportExtensionScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             SupportExtensionScreen()
         }

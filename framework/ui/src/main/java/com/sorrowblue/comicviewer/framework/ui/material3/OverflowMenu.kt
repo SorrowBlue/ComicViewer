@@ -1,8 +1,6 @@
-package com.sorrowblue.comicviewer.framework.compose.material3
+package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -11,14 +9,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @Composable
 fun OverflowMenu(
     state: OverflowMenuState = rememberOverflowMenuState(),
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     IconButton(onClick = state::expand) {
-        Icon(Icons.TwoTone.MoreVert, "Open Options")
+        Icon(ComicIcons.MoreVert, "Open Options")
     }
     DropdownMenu(
         expanded = state.expanded,

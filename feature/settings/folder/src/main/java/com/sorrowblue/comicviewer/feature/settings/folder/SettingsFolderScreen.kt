@@ -24,18 +24,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.feature.settings.folder.section.SettingsFolderTopAppBar
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 internal data class SettingsFolderScreenUiState(
     val isOpenImageFolder: Boolean = false,
-    val isThumbnailEnabled: Boolean = false
+    val isThumbnailEnabled: Boolean = false,
 )
 
 @Composable
 internal fun SettingsFolderRoute(
     onBackClick: () -> Unit,
     onExtensionClick: () -> Unit,
-    viewModel: SettingsFolderViewModel = hiltViewModel()
+    viewModel: SettingsFolderViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     SettingsFolderScreen(
@@ -126,14 +126,15 @@ private fun SettingsFolderScreen(
 @MultiThemePreviews
 @Composable
 private fun PreviewSettingsFolderScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             SettingsFolderScreen()
         }
     }
 }
 
-@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO,
+@Preview(
+    name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO,
     device = "spec:width=673dp,height=841dp"
 )
 @Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)

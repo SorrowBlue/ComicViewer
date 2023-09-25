@@ -5,7 +5,7 @@ import androidx.startup.Initializer
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
-import com.sorrowblue.comicviewer.framework.LogcatInitializer
+import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors

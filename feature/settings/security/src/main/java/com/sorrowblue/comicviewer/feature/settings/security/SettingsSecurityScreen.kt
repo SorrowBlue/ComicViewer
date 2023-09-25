@@ -23,7 +23,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.feature.settings.security.component.SettingsFolderTopAppBar
@@ -33,8 +32,8 @@ import com.sorrowblue.comicviewer.feature.settings.security.section.PasswordDial
 import com.sorrowblue.comicviewer.feature.settings.security.section.PasswordDialogUiState
 import com.sorrowblue.comicviewer.feature.settings.security.section.SettingsSecuritySheet
 import com.sorrowblue.comicviewer.feature.settings.security.section.SettingsSecuritySheetUiState
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.CollectAsEffect
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.flow.CollectAsEffect
 
 internal data class SettingsSecurityScreenUiState(
     val settingsSecuritySheetUiState: SettingsSecuritySheetUiState = SettingsSecuritySheetUiState(),
@@ -47,7 +46,7 @@ sealed interface SettingsSecurityUiEvent {
     sealed interface Message : SettingsSecurityUiEvent {
         data class Text(val text: String) : Message
         data class Resource(private val resId: Int) : Message {
-            fun text(context: Context) = ContextCompat.getString(context, resId)
+            fun text(context: Context) = context.getString(resId)
         }
     }
 
@@ -180,7 +179,7 @@ private fun SettingsSecurityScreen(
 @Preview
 @Composable
 private fun PreviewSettingsFolderScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             SettingsSecurityScreen()
         }

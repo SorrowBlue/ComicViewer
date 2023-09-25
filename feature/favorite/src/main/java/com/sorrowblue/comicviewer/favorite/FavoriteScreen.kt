@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
@@ -29,8 +28,9 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBarUiState
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
-import com.sorrowblue.comicviewer.framework.compose.isEmptyData
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 @Composable
 internal fun FavoriteRoute(
@@ -61,7 +61,7 @@ internal fun FavoriteRoute(
 
 internal data class FavoriteScreenUiState(
     val favoriteAppBarUiState: FavoriteAppBarUiState = FavoriteAppBarUiState(),
-    val fileContentUiState: FileContentUiState = FileContentUiState()
+    val fileContentUiState: FileContentUiState = FileContentUiState(),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,8 +104,8 @@ private fun FavoriteScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(FrameworkResourceR.drawable.ic_undraw_resume_folder_re_e0bi),
-                    ""
+                    imageVector = ComicIcons.UndrawResumeFolder,
+                    contentDescription = ""
                 )
                 Text(stringResource(id = R.string.favorite_label_no_favorites))
             }

@@ -1,28 +1,30 @@
 package com.sorrowblue.comicviewer.feature.tutorial.section
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.entity.settings.BindingDirection
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.material3.ListItemRadioButton
-import com.sorrowblue.comicviewer.framework.resource.R
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookLover
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
+import com.sorrowblue.comicviewer.framework.ui.material3.ListItemRadioButton
 
 internal data class DirectionSheetUiState(
-    val direction: BindingDirection = BindingDirection.RTL
+    val direction: BindingDirection = BindingDirection.RTL,
 )
 
 @Composable
@@ -33,15 +35,19 @@ internal fun DirectionSheet(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = AppMaterialTheme.dimens.margin),
-        verticalArrangement = Arrangement.Center,
+            .systemBarsPadding()
+            .padding(ComicTheme.dimension.margin),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.ic_undraw_book_lover_re_rwjy),
-            contentDescription = null
-        )
+            imageVector = ComicIcons.UndrawBookLover,
+            contentDescription = null,
+            modifier = Modifier
+                .widthIn(max = 400.dp)
+                .fillMaxWidth(0.5f),
+
+            )
         Spacer(modifier = Modifier.size(16.dp))
 
         Text(text = "Reading direction", style = MaterialTheme.typography.titleLarge)
@@ -74,10 +80,10 @@ internal fun DirectionSheet(
     }
 }
 
-@Preview
+@ComicPreviews
 @Composable
 private fun PreviewDirectionSheet() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             DirectionSheet()
         }

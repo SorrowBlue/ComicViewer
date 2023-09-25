@@ -41,7 +41,7 @@ import com.sorrowblue.comicviewer.domain.entity.file.Folder
 import com.sorrowblue.comicviewer.feature.library.googledrive.component.GoogleDriveTopAppBar
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialog
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialogUiState
-import com.sorrowblue.comicviewer.framework.compose.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import logcat.logcat
 
 @OptIn(ExperimentalMaterial3Api::class)

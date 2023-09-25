@@ -1,7 +1,5 @@
 package com.sorrowblue.comicviewer.feature.library.section
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.RocketLaunch
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -11,7 +9,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import com.sorrowblue.comicviewer.feature.library.component.AddOnItemState
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 internal sealed interface RequestInstallDialogUiState {
 
@@ -29,7 +28,7 @@ internal fun LibraryCloudStorageDialog(
         AlertDialog(
             onDismissRequest = { },
             icon = {
-                Icon(imageVector = Icons.TwoTone.RocketLaunch, contentDescription = null)
+                Icon(imageVector = ComicIcons.RocketLaunch, contentDescription = null)
             },
             title = {
                 Text(text = "拡張機能")
@@ -58,7 +57,7 @@ internal fun LibraryCloudStorageDialog(
 @Preview
 @Composable
 fun PreviewLibraryCloudStorageDialog() {
-    AppMaterialTheme {
+    ComicTheme {
         LibraryCloudStorageDialog(
             RequestInstallDialogUiState.Show(Feature.AddOn.GoogleDrive(AddOnItemState.Still)),
             {},

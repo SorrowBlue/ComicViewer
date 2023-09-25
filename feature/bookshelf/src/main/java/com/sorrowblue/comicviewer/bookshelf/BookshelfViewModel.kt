@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialogUiState
 import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
-import com.sorrowblue.comicviewer.framework.compose.ComposeViewModel
+import com.sorrowblue.comicviewer.framework.ui.lifecycle.ComposeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

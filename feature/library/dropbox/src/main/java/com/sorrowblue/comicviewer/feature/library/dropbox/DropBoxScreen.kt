@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,7 +45,8 @@ import com.sorrowblue.comicviewer.feature.library.dropbox.component.DropBoxTopAp
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.DropBoxApiRepositoryImpl
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxDialogUiState
-import com.sorrowblue.comicviewer.framework.compose.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -151,7 +150,7 @@ private fun LoadingDropBoxScreen(onCloseClick: () -> Unit) {
                 title = { Text(text = "DropBox") },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
-                        Icon(imageVector = Icons.TwoTone.Close, contentDescription = "Close")
+                        Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
                     }
                 }
             )
@@ -181,7 +180,7 @@ private fun LoginDropBoxScreen(
                 title = { Text(text = "DropBox") },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
-                        Icon(imageVector = Icons.TwoTone.Close, contentDescription = "Close")
+                        Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
                     }
                 }
             )

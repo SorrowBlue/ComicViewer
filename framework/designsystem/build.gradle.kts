@@ -8,10 +8,10 @@ android {
 }
 
 dependencies {
-    api(libs.androidx.compose.material)
-    api(libs.androidx.compose.material.icons.extended)
-    api(libs.androidx.compose.material3)
-    api(libs.androidx.compose.material3.window)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.windowSizeClass)
 
     // Android Studio Preview support
     api(libs.androidx.compose.ui.tooling.preview)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -22,10 +23,14 @@ import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialRoute
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
-import com.sorrowblue.comicviewer.framework.compose.LaunchedEffectUiEvent
-import com.sorrowblue.comicviewer.framework.compose.LifecycleEffect
-import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
+import com.sorrowblue.comicviewer.framework.designsystem.theme.compactDimension
+import com.sorrowblue.comicviewer.framework.designsystem.theme.expandedDimension
+import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
+import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
 import logcat.LogPriority
 import logcat.logcat
 
@@ -53,8 +58,18 @@ internal fun ComicViewerApp(
     val navController = rememberNavController(bottomSheetNavigator)
     val extraNavController = rememberExtraNavController()
     val graphStateHolder = rememberGraphStateHolder()
+
+    val dimension = when (windowsSize.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> compactDimension
+        WindowWidthSizeClass.Medium -> mediumDimension
+        WindowWidthSizeClass.Expanded -> expandedDimension
+        else -> compactDimension
+    }
     ComicTheme {
-        CompositionLocalProvider(LocalWindowSize provides windowsSize) {
+        CompositionLocalProvider(
+            LocalWindowSize provides windowsSize,
+            LocalDimension provides dimension
+        ) {
             Surface(
                 modifier = modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background,

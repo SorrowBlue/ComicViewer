@@ -105,7 +105,8 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.compose)
+    implementation(projects.framework.ui)
+    implementation(projects.framework.resource)
     implementation(projects.framework.notification)
     implementation(projects.framework.designsystem)
 
@@ -132,6 +133,14 @@ dependencies {
     implementation(libs.google.android.play.review.ktx)
     implementation(libs.google.android.play.feature.delivery.ktx)
     implementation(libs.mikepenz.aboutlibraries)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3.windowSizeClass)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.google.accompanist.navigation.material)
+    implementation(projects.framework)
+    implementation(libs.kotlinx.collections.immutable)
 
 //    debugImplementation(libs.squareup.leakcanary.android)
 

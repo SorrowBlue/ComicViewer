@@ -21,7 +21,7 @@ dependencies {
 
     api(libs.androidx.appcompat)
     api(libs.androidx.core.ktx)
-    api(libs.androidx.hilt.navigation.compose)
+    api(libs.androidx.hilt.navigationCompose)
     api(libs.androidx.navigation.compose)
     api(libs.androidx.paging.compose)
     api(libs.androidx.lifecycle.compose)

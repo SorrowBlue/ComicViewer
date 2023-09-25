@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.feature.settings.security.R
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 sealed interface PasswordDialogUiState {
 
@@ -19,7 +19,7 @@ sealed interface PasswordDialogUiState {
     data class Change(
         val oldPassword: String = "",
         val newPassword: String = "",
-        val error: Int? = null
+        val error: Int? = null,
     ) :
         PasswordDialogUiState
 
@@ -118,7 +118,7 @@ fun PasswordDialog(
 @Preview
 @Composable
 private fun PreviewPasswordDialogActivation() {
-    AppMaterialTheme {
+    ComicTheme {
         PasswordDialog(PasswordDialogUiState.Activation())
     }
 }
@@ -126,7 +126,7 @@ private fun PreviewPasswordDialogActivation() {
 @Preview
 @Composable
 private fun PreviewPasswordDialog() {
-    AppMaterialTheme {
+    ComicTheme {
         PasswordDialog(PasswordDialogUiState.Change(error = R.string.settings_security_password_manage_dialog_error_passwords_do_not_match))
     }
 }
@@ -134,7 +134,7 @@ private fun PreviewPasswordDialog() {
 @Preview
 @Composable
 private fun PreviewPasswordDialogInvalidation() {
-    AppMaterialTheme {
+    ComicTheme {
         PasswordDialog(PasswordDialogUiState.Invalidation())
     }
 }

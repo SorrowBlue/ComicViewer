@@ -1,19 +1,17 @@
 package com.sorrowblue.comicviewer.feature.tutorial.section
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Surface
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.InstallMobile
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,14 +20,15 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.play.core.splitinstall.SplitInstallSessionState
 import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.sorrowblue.comicviewer.feature.tutorial.SplitInstallError
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
 
 internal sealed interface DocumentSheetUiState {
 
@@ -124,20 +123,21 @@ private fun unknownSplitInstallSessionState(): SplitInstallSessionState =
 @Composable
 internal fun DocumentSheet(
     uiState: DocumentSheetUiState,
-    onDownloadClick: () -> Unit
+    onDownloadClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding()
-            .padding(horizontal = AppMaterialTheme.dimens.margin),
-        verticalArrangement = Arrangement.Center,
+            .padding(ComicTheme.dimension.margin),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = com.sorrowblue.comicviewer.framework.resource.R.drawable.ic_undraw_resume_folder_re_e0bi),
+            ComicIcons.UndrawResumeFolder,
             contentDescription = null,
-            modifier = Modifier.width(200.dp)
+            modifier = Modifier
+                .widthIn(max = 400.dp)
+                .fillMaxWidth(0.5f),
         )
         Text(
             text = "Document Support",
@@ -161,7 +161,7 @@ internal fun DocumentSheet(
 
         TextButton(onClick = onDownloadClick, enabled = uiState.isButtonEnabled) {
             Row {
-                Icon(Icons.TwoTone.InstallMobile, contentDescription = null)
+                Icon(ComicIcons.InstallMobile, contentDescription = null)
                 Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
 
                 Text(text = uiState.buttonText)
@@ -170,10 +170,10 @@ internal fun DocumentSheet(
     }
 }
 
-@Preview
+@ComicPreviews
 @Composable
 fun PreviewDocumentSheet() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             DocumentSheet(DocumentSheetUiState.INSTALLED, {})
         }

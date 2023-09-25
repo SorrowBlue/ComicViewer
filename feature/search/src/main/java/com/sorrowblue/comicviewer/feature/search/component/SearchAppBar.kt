@@ -1,8 +1,5 @@
 package com.sorrowblue.comicviewer.feature.search.component
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
-import androidx.compose.material.icons.twotone.FilterAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -14,6 +11,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.sorrowblue.comicviewer.feature.search.SearchScreenUiState
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,12 +36,12 @@ internal fun SearchAppBar(
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
-                Icon(Icons.TwoTone.ArrowBack, "")
+                Icon(ComicIcons.ArrowBack, "")
             }
         },
         actions = {
             IconButton(onClick = toggleSearchFilter) {
-                Icon(Icons.TwoTone.FilterAlt, "")
+                Icon(ComicIcons.FilterAlt, "")
             }
         },
         scrollBehavior = scrollBehavior

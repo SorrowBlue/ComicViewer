@@ -5,11 +5,9 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,8 +21,8 @@ import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.entity.file.Book
 import com.sorrowblue.comicviewer.domain.entity.file.BookFile
 import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -32,7 +30,7 @@ fun FileList(
     file: File?,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    onLongClick: () -> Unit
+    onLongClick: () -> Unit,
 ) {
     ElevatedCard {
         ListItem(
@@ -71,7 +69,7 @@ fun FileList(
 @Preview
 @Composable
 private fun PreviewFileList() {
-    AppMaterialTheme {
+    ComicTheme {
         FileList(
             file = FakeFile,
             onClick = {},

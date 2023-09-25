@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.EmptyRequest
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import com.sorrowblue.comicviewer.framework.compose.ComposeViewModel
+import com.sorrowblue.comicviewer.framework.ui.lifecycle.ComposeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.collections.immutable.toPersistentList

@@ -55,6 +55,10 @@ gradlePlugin {
             id = name
             implementationClass = "AndroidFeatureConventionPlugin"
         }
+        register("comicviewer.android.feature.dynamic-feature") {
+            id = name
+            implementationClass = "AndroidFeatureDynamicFeatureConventionPlugin"
+        }
         register("comicviewer.android.hilt") {
             id = name
             implementationClass = "AndroidHiltConventionPlugin"

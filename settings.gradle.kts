@@ -48,7 +48,7 @@ include(":app")
 
 // framework
 include(":framework")
-include(":framework:compose")
+include(":framework:common")
 include(":framework:notification")
 include(":framework:resource")
 include(":framework:designsystem")

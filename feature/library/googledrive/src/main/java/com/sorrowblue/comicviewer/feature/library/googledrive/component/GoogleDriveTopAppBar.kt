@@ -4,8 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +29,7 @@ internal fun GoogleDriveTopAppBar(
         title = { Text(text = "GoogleDrive") },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
-                Icon(imageVector = Icons.TwoTone.ArrowBack, contentDescription = "Back")
+                Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
             }
         },
         actions = {

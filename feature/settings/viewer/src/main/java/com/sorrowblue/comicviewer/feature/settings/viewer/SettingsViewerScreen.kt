@@ -22,10 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.feature.settings.viewer.component.SettingsViewerTopAppBar
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
-import com.sorrowblue.comicviewer.framework.compose.material3.CustomSlider
-import com.sorrowblue.comicviewer.framework.compose.material3.ListItem2
-import com.sorrowblue.comicviewer.framework.compose.material3.ListItemSwitch
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.material3.CustomSlider
+import com.sorrowblue.comicviewer.framework.ui.material3.ListItem2
+import com.sorrowblue.comicviewer.framework.ui.material3.ListItemSwitch
 
 internal data class SettingsViewerScreenUiState(
     val isStatusBarShow: Boolean = false,
@@ -37,13 +37,13 @@ internal data class SettingsViewerScreenUiState(
     val preloadPages: Float = 1f,
     val imageQuality: Float = 75f,
     val isFixScreenBrightness: Boolean = false,
-    val screenBrightness: Float = 0.5f
+    val screenBrightness: Float = 0.5f,
 )
 
 @Composable
 internal fun SettingsViewerRoute(
     onBackClick: () -> Unit,
-    viewModel: SettingsViewerViewModel = hiltViewModel()
+    viewModel: SettingsViewerViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     SettingsViewerScreen(
@@ -214,7 +214,7 @@ private fun SettingsViewerScreen(
 @Preview
 @Composable
 private fun PreviewSettingsViewerScreen() {
-    AppMaterialTheme {
+    ComicTheme {
         Surface {
             SettingsViewerScreen()
         }

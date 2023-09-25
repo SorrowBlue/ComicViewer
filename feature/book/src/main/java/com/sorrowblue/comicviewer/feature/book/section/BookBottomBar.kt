@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import java.lang.Integer.max
 import logcat.logcat
 
@@ -49,7 +49,7 @@ internal fun BookBottomBar(
                     )
                 )
                 .navigationBarsPadding()
-                .padding(horizontal = AppMaterialTheme.dimens.margin),
+                .padding(horizontal = ComicTheme.dimension.margin),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Slider(
@@ -70,7 +70,7 @@ internal fun BookBottomBar(
                     else -> "$currentPageIndex / $totalPage"
                 },
                 style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.padding(AppMaterialTheme.dimens.spacer)
+                modifier = Modifier.padding(ComicTheme.dimension.spacer)
             )
         }
     }

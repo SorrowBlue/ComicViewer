@@ -32,7 +32,7 @@ import com.sorrowblue.comicviewer.bookshelf.navigation.routeInBookshelfGraph
 import com.sorrowblue.comicviewer.favorite.navigation.routeInFavoriteGraph
 import com.sorrowblue.comicviewer.feature.library.navigation.routeInLibraryGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.routeInReadlaterGraph
-import com.sorrowblue.comicviewer.framework.compose.LocalWindowSize
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import kotlinx.collections.immutable.toPersistentList
 
 private enum class NavigationType {

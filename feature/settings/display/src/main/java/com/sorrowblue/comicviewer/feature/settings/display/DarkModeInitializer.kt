@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.startup.Initializer
 import com.sorrowblue.comicviewer.domain.entity.settings.DarkMode
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.framework.LogcatInitializer
+import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors

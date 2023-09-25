@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,7 +22,8 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.sorrowblue.comicviewer.feature.library.box.R
-import com.sorrowblue.comicviewer.framework.compose.placeholder.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 
 @ExperimentalMaterial3Api
 @Composable
@@ -34,7 +33,7 @@ internal fun BoxTopAppBar(
     token: String,
     onBackClick: () -> Unit,
     onProfileImageClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior?
+    scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     TopAppBar(
         title = {
@@ -51,7 +50,7 @@ internal fun BoxTopAppBar(
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
-                Icon(imageVector = Icons.TwoTone.ArrowBack, contentDescription = "Back")
+                Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
             }
         },
         actions = {

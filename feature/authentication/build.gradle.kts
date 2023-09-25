@@ -8,8 +8,5 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.compose)
-    implementation(projects.domain)
-
     implementation(libs.androidx.biometric)
 }

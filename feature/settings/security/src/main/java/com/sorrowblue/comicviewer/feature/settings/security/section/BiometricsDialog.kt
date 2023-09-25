@@ -7,7 +7,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.sorrowblue.comicviewer.framework.compose.AppMaterialTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 internal sealed interface BiometricsRequestDialogUiState {
 
@@ -47,7 +47,7 @@ internal fun BiometricsDialog(
 @Preview
 @Composable
 internal fun PreviewBiometricsRequestDialog() {
-    AppMaterialTheme {
+    ComicTheme {
         BiometricsDialog()
     }
 }

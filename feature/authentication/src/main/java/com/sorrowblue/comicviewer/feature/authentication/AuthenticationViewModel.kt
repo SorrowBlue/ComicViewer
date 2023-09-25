@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationArgs
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
-import com.sorrowblue.comicviewer.framework.compose.ComposeViewModel
+import com.sorrowblue.comicviewer.framework.ui.lifecycle.ComposeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
