@@ -17,9 +17,9 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
-import com.sorrowblue.comicviewer.domain.repository.FavoriteFileRepository
-import com.sorrowblue.comicviewer.domain.repository.FavoriteRepository
-import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
+import com.sorrowblue.comicviewer.domain.service.repository.FavoriteFileRepository
+import com.sorrowblue.comicviewer.domain.service.repository.FavoriteRepository
+import com.sorrowblue.comicviewer.domain.service.repository.SettingsCommonRepository
 import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.Unknown
 import javax.inject.Inject

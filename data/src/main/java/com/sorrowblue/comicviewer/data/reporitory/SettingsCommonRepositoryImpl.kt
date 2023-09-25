@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
-import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
+import com.sorrowblue.comicviewer.domain.service.repository.SettingsCommonRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 

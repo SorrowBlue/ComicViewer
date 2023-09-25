@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.data.mapper.toBookshelfId
 import com.sorrowblue.comicviewer.data.mapper.toFile
 import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.repository.ReadLaterRepository
+import com.sorrowblue.comicviewer.domain.service.repository.ReadLaterRepository
 import com.sorrowblue.comicviewer.framework.Result
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

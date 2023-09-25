@@ -111,7 +111,7 @@ dependencies {
     implementation(projects.framework.designsystem)
 
     implementation(projects.data.di)
-    implementation(projects.domain)
+    implementation(projects.domain.usecase)
     implementation(projects.feature.authentication)
     implementation(projects.feature.book)
     implementation(projects.feature.bookshelf)

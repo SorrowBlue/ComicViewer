@@ -17,8 +17,10 @@ import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.mapper.from
 import com.sorrowblue.comicviewer.data.mapper.toBookshelfModel
 import com.sorrowblue.comicviewer.data.mapper.toFile
+import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.Scan
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -26,11 +28,9 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
-import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.domain.model.SupportExtension
-import com.sorrowblue.comicviewer.domain.repository.FileRepository
-import com.sorrowblue.comicviewer.domain.repository.FileRepositoryError
-import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
+import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
+import com.sorrowblue.comicviewer.domain.service.repository.FileRepositoryError
+import com.sorrowblue.comicviewer.domain.service.repository.SettingsCommonRepository
 import com.sorrowblue.comicviewer.framework.Resource
 import com.sorrowblue.comicviewer.framework.Result
 import com.sorrowblue.comicviewer.framework.Unknown

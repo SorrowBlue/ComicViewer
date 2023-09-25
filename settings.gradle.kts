@@ -54,9 +54,9 @@ include(":framework:resource")
 include(":framework:designsystem")
 include(":framework:ui")
 
-include(":domain")
 include(":domain:model")
-include(":domain:interactor")
+include(":domain:service")
+include(":domain:usecase")
 
 include(":data")
 include(":data:coil")

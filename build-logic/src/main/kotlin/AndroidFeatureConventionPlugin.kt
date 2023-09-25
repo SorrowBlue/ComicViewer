@@ -17,7 +17,7 @@ internal class AndroidFeatureConventionPlugin : Plugin<Project> {
             dependencies {
                 implementation(project(":framework:designsystem"))
                 implementation(project(":framework:ui"))
-                implementation(project(":domain"))
+                implementation(project(":domain:usecase"))
 
                 implementation(libs.findLibrary("androidx-compose-material3-windowSizeClass").get())
                 implementation(libs.findLibrary("androidx-hilt-navigationCompose").get())
