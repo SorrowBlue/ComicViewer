@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.database.entity
 
 import androidx.room.Embedded
-import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
-import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModelId
+import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModelId
 
 internal data class FavoriteFileCount(
     @Embedded val favorite: Favorite,

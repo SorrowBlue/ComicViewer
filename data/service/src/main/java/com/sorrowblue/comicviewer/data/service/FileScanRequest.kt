@@ -2,8 +2,8 @@ package com.sorrowblue.comicviewer.data.service
 
 import androidx.work.Data
 import androidx.work.workDataOf
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
-import com.sorrowblue.comicviewer.data.common.model.ScanModel
+import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModelId
+import com.sorrowblue.comicviewer.data.model.model.ScanModel
 
 internal class FileScanRequest(
     val bookshelfModelId: BookshelfModelId,

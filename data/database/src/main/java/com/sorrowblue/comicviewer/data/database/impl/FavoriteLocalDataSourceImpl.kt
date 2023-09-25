@@ -4,12 +4,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
-import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModelId
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
 import com.sorrowblue.comicviewer.data.database.entity.Favorite
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileCount
-import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteLocalDataSource
+import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModelId
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull

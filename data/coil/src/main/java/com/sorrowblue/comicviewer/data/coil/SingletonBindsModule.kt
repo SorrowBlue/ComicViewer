@@ -5,10 +5,10 @@ import com.sorrowblue.comicviewer.data.coil.book.BookThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.favorite.FavoriteThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.folder.FolderThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.page.BookPageFetcher
-import com.sorrowblue.comicviewer.data.common.BookPageRequestData
-import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
-import com.sorrowblue.comicviewer.data.datasource.ImageCacheDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.ImageCacheDataSource
+import com.sorrowblue.comicviewer.data.model.BookPageRequestData
+import com.sorrowblue.comicviewer.data.model.FileModel
+import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

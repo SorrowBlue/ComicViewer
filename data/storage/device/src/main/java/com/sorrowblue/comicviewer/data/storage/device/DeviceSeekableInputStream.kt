@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import androidx.core.net.toUri
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory

@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.coil.book
 
-import com.sorrowblue.comicviewer.data.common.FileModel
+import com.sorrowblue.comicviewer.data.model.FileModel
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray

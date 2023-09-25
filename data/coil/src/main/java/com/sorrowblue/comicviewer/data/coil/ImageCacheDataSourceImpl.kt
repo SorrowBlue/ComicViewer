@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.data.coil
 
 import coil.annotation.ExperimentalCoilApi
 import coil.disk.DiskCache
-import com.sorrowblue.comicviewer.data.datasource.ImageCacheDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.ImageCacheDataSource
 import javax.inject.Inject
 
 internal class ImageCacheDataSourceImpl @Inject constructor(

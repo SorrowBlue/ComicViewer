@@ -10,9 +10,9 @@ import com.sorrowblue.comicviewer.data.BookMapper
 import com.sorrowblue.comicviewer.data.BookPageRequestMapper
 import com.sorrowblue.comicviewer.data.FavoriteMapper
 import com.sorrowblue.comicviewer.data.FolderMapper
-import com.sorrowblue.comicviewer.data.common.BookPageRequestData
-import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.data.model.BookPageRequestData
+import com.sorrowblue.comicviewer.data.model.FileModel
+import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.framework.LogcatInitializer
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn

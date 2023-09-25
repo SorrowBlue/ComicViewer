@@ -1,9 +1,9 @@
 package com.sorrowblue.comicviewer.data.storage.impl
 
-import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.exception.RemoteException
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.exception.RemoteException
+import com.sorrowblue.comicviewer.data.model.FileModel
+import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.data.reader.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.ImageFolderFileReader

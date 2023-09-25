@@ -10,7 +10,7 @@ android {
 dependencies {
     implementation(projects.framework)
     implementation(projects.domain.model)
-    implementation(projects.data)
+    implementation(projects.data.infrastructure)
 
     implementation(libs.androidx.datastore)
     implementation(libs.kotlinx.serialization.protobuf)

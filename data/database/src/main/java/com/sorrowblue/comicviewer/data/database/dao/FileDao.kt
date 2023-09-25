@@ -11,13 +11,13 @@ import androidx.room.Upsert
 import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
-import com.sorrowblue.comicviewer.data.common.bookshelf.SearchConditionEntity
-import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import com.sorrowblue.comicviewer.data.database.entity.File
 import com.sorrowblue.comicviewer.data.database.entity.FileWithCount
 import com.sorrowblue.comicviewer.data.database.entity.SimpleFile
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistory
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfo
+import com.sorrowblue.comicviewer.data.model.bookshelf.SearchConditionEntity
+import com.sorrowblue.comicviewer.data.model.bookshelf.SortEntity
 import kotlinx.coroutines.flow.Flow
 import logcat.logcat
 

@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.storage.di
 
-import com.sorrowblue.comicviewer.data.common.SUPPORTED_IMAGE
-import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.data.model.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.data.reader.impl.ImageExtension
 import com.sorrowblue.comicviewer.data.storage.impl.RemoteDataSourceImpl
 import dagger.Binds

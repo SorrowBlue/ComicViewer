@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.sorrowblue.comicviewer.data.common.favorite.FavoriteFileModel
+import com.sorrowblue.comicviewer.data.model.favorite.FavoriteFileModel
 
 @Entity(
     tableName = "favorite_file",

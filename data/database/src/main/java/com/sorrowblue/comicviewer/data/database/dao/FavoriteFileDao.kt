@@ -9,9 +9,9 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteFile
 import com.sorrowblue.comicviewer.data.database.entity.File
+import com.sorrowblue.comicviewer.data.model.bookshelf.SortEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

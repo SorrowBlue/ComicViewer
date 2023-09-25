@@ -5,8 +5,8 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
+import com.sorrowblue.comicviewer.data.model.FileModel
+import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModelId
 
 data class FileWithCount(
     @ColumnInfo(File.PATH) val path: String,

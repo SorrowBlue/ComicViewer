@@ -16,9 +16,9 @@ import coil.request.Options
 import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
-import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
-import com.sorrowblue.comicviewer.data.datasource.FavoriteFileLocalDataSource
-import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteFileLocalDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
+import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
 import java.io.IOException
 import javax.inject.Inject
 import kotlin.math.floor

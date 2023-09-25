@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.data.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
+import com.sorrowblue.comicviewer.data.model.favorite.FavoriteModel
 
 @Entity(tableName = "favorite")
 internal data class Favorite(

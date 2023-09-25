@@ -6,9 +6,9 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
-import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.model.ScanModel
-import com.sorrowblue.comicviewer.data.reporitory.FileScanService
+import com.sorrowblue.comicviewer.data.infrastructure.repository.impl.FileScanService
+import com.sorrowblue.comicviewer.data.model.FileModel
+import com.sorrowblue.comicviewer.data.model.model.ScanModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import logcat.logcat

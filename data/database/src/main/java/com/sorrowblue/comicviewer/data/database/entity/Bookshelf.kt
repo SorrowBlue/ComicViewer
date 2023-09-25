@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.data.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
+import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModelId
 
 @Entity(tableName = "bookshelf")
 internal data class Bookshelf(

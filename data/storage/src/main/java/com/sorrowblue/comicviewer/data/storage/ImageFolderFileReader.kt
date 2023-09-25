@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.storage
 
-import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.data.model.FileModel
+import com.sorrowblue.comicviewer.data.model.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import java.io.InputStream

@@ -5,11 +5,11 @@ import com.sorrowblue.comicviewer.data.database.impl.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.data.database.impl.FavoriteLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.FileModelLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.ReadLaterFileModelLocalDataSourceImpl
-import com.sorrowblue.comicviewer.data.datasource.BookshelfLocalDataSource
-import com.sorrowblue.comicviewer.data.datasource.FavoriteFileLocalDataSource
-import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
-import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.datasource.ReadLaterFileModelLocalDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteFileLocalDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteLocalDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.datasource.ReadLaterFileModelLocalDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

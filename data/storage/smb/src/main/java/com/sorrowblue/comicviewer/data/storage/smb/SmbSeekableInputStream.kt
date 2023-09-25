@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.storage.smb
 
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import java.net.URI
 import java.net.URLDecoder

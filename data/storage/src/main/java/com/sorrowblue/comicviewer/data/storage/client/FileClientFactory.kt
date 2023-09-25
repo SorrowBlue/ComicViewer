@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.storage.client
 
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 
 interface FileClientFactory {
 

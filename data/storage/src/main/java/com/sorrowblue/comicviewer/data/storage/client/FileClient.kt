@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.storage.client
 
-import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
+import com.sorrowblue.comicviewer.data.model.FileModel
+import com.sorrowblue.comicviewer.data.model.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import java.io.InputStream
 

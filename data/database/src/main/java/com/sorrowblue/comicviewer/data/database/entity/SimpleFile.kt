@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.database.entity
 
 import androidx.room.ColumnInfo
-import com.sorrowblue.comicviewer.data.common.FileModel
-import com.sorrowblue.comicviewer.data.common.SimpleFileModel
+import com.sorrowblue.comicviewer.data.model.FileModel
+import com.sorrowblue.comicviewer.data.model.SimpleFileModel
 
 internal class SimpleFile(
     val path: String,

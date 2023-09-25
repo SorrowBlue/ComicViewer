@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.sorrowblue.comicviewer.data.common.ReadLaterFileModel
+import com.sorrowblue.comicviewer.data.model.ReadLaterFileModel
 
 @Entity(
     tableName = "read_later_file",

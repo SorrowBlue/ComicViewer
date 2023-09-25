@@ -7,7 +7,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.data)
+    implementation(projects.data.infrastructure)
     implementation(projects.data.coil)
     implementation(projects.data.database)
     implementation(projects.data.datastore)
