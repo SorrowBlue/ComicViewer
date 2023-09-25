@@ -2,10 +2,10 @@ package com.sorrowblue.comicviewer.data.mapper
 
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
-import com.sorrowblue.comicviewer.domain.entity.file.BookFile
-import com.sorrowblue.comicviewer.domain.entity.file.BookFolder
-import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.file.BookFolder
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 
 fun FileModel.toFile(): File {
     return when (this) {

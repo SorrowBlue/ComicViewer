@@ -4,7 +4,7 @@ import coil.map.Mapper
 import coil.request.Options
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModel
 import com.sorrowblue.comicviewer.data.common.favorite.FavoriteModelId
-import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 
 internal class FavoriteMapper : Mapper<Favorite, FavoriteModel> {
 

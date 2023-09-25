@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.domain.interactor.settings
 
-import com.sorrowblue.comicviewer.domain.entity.settings.ViewerOperationSettings
+import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
 import javax.inject.Inject

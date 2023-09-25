@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import com.google.android.play.core.splitinstall.SplitInstallManager
-import com.sorrowblue.comicviewer.domain.AddOn
+import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.domain.model.EmptyRequest
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase

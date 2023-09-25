@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.interactor.paging
 
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
 import javax.inject.Inject

@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.mikepenz.aboutlibraries.LibsBuilder
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraph
-import com.sorrowblue.comicviewer.domain.AddOn
+import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.authentication.navigation.authenticationScreen

@@ -18,7 +18,7 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.dropbox.core.android.Auth
-import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.DropBoxApiRepository
 import com.sorrowblue.comicviewer.feature.library.dropbox.navigation.DropBoxArgs
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxDialogUiState

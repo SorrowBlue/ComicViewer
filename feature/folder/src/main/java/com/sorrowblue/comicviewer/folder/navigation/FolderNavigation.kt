@@ -8,10 +8,10 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
-import com.sorrowblue.comicviewer.domain.Base64.encodeToBase64
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.model.Base64.decodeFromBase64
+import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.folder.FolderRoute
 
 private const val bookshelfIdArg = "bookshelfId"

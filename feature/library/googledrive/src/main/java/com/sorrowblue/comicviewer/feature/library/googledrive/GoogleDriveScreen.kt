@@ -35,9 +35,9 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.tasks.RuntimeExecutionException
 import com.google.api.services.drive.DriveScopes
-import com.sorrowblue.comicviewer.domain.entity.file.Book
-import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.googledrive.component.GoogleDriveTopAppBar
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialog
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialogUiState

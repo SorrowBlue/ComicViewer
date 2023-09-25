@@ -8,8 +8,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
-import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
-import com.sorrowblue.comicviewer.domain.Base64.encodeToBase64
+import com.sorrowblue.comicviewer.domain.model.Base64.decodeFromBase64
+import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.feature.library.box.BoxOauth2Route
 import com.sorrowblue.comicviewer.feature.library.box.BoxRoute
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation

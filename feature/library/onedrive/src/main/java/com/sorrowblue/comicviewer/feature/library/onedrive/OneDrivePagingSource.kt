@@ -3,10 +3,10 @@ package com.sorrowblue.comicviewer.feature.library.onedrive
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.microsoft.graph.requests.DriveItemCollectionPage
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.entity.file.BookFile
-import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.file.Folder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.onedrive.data.OneDriveApiRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

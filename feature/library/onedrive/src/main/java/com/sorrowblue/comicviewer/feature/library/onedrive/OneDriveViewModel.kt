@@ -18,7 +18,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.library.onedrive.data.AuthenticationProvider
 import com.sorrowblue.comicviewer.feature.library.onedrive.data.OneDriveApiRepository
 import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveArgs

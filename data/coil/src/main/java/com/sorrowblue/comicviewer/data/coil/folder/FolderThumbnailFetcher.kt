@@ -25,7 +25,7 @@ import com.sorrowblue.comicviewer.data.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.reader.FileReader
-import com.sorrowblue.comicviewer.domain.entity.settings.FolderThumbnailOrder
+import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import javax.inject.Inject
 import kotlin.math.floor

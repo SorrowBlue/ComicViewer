@@ -8,7 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.domain.common)
+    implementation(projects.domain.model)
     implementation(projects.framework.designsystem)
 
     api(libs.androidx.compose.material3)

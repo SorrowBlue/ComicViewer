@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.usecase
 
-import com.sorrowblue.comicviewer.domain.entity.file.IFolder
-import com.sorrowblue.comicviewer.domain.entity.Scan
+import com.sorrowblue.comicviewer.domain.model.file.IFolder
+import com.sorrowblue.comicviewer.domain.model.Scan
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 
 abstract class ScanBookshelfUseCase :

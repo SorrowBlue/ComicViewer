@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.usecase.favorite
 
-import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
-import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
+import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 import com.sorrowblue.comicviewer.domain.usecase.FlowUseCase2
 

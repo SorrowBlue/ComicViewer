@@ -18,7 +18,7 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.box.sdk.BoxAPIConnection
-import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
 import com.sorrowblue.comicviewer.feature.library.box.navigation.BoxArgs
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxDialogUiState

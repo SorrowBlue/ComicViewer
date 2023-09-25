@@ -13,7 +13,7 @@ import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallSessionState
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
-import com.sorrowblue.comicviewer.domain.entity.settings.BindingDirection
+import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheetUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.interactor.paging
 
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
 import javax.inject.Inject

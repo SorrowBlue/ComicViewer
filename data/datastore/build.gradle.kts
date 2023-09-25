@@ -9,7 +9,7 @@ android {
 
 dependencies {
     implementation(projects.framework)
-    implementation(projects.domain.common)
+    implementation(projects.domain.model)
     implementation(projects.data)
 
     implementation(libs.androidx.datastore)

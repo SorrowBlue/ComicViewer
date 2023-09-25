@@ -37,8 +37,8 @@ import com.sorrowblue.comicviewer.bookshelf.section.BookshelfInfoSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfListContents
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialog
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialogUiState
-import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
 import com.sorrowblue.comicviewer.framework.ui.material3.ReversePermanentNavigationDrawer

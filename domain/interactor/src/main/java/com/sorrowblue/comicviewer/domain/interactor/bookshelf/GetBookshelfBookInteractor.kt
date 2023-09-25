@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.domain.interactor.bookshelf
 
-import com.sorrowblue.comicviewer.domain.entity.BookshelfBook
+import com.sorrowblue.comicviewer.domain.model.BookshelfBook
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryFileResult

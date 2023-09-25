@@ -12,12 +12,11 @@ import com.sorrowblue.comicviewer.data.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.data.mapper.toFavorite
 import com.sorrowblue.comicviewer.data.mapper.toFavoriteBookModel
 import com.sorrowblue.comicviewer.data.mapper.toFile
-import com.sorrowblue.comicviewer.domain.entity.favorite.Favorite
-import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteFile
-import com.sorrowblue.comicviewer.domain.entity.favorite.FavoriteId
-import com.sorrowblue.comicviewer.domain.entity.file.File
-import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.entity.settings.SortType
+import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import com.sorrowblue.comicviewer.domain.repository.FavoriteFileRepository
 import com.sorrowblue.comicviewer.domain.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository

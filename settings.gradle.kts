@@ -55,7 +55,7 @@ include(":framework:designsystem")
 include(":framework:ui")
 
 include(":domain")
-include(":domain:common")
+include(":domain:model")
 include(":domain:interactor")
 
 include(":data")

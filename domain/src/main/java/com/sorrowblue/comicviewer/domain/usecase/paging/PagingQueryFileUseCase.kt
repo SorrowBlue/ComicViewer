@@ -1,9 +1,9 @@
 package com.sorrowblue.comicviewer.domain.usecase.paging
 
 import androidx.paging.PagingConfig
-import com.sorrowblue.comicviewer.domain.entity.SearchCondition
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.model.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 import com.sorrowblue.comicviewer.framework.Resource
 

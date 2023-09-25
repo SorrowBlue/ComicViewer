@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialogUiState
-import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
 import com.sorrowblue.comicviewer.framework.ui.lifecycle.ComposeViewModel

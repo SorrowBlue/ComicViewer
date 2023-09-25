@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.domain.entity.file.File
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.search.component.SearchAppBar
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditionSheet
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditionSheetUiState

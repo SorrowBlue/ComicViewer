@@ -1,14 +1,14 @@
 package com.sorrowblue.comicviewer.data.datasource
 
-import com.sorrowblue.comicviewer.domain.entity.settings.DisplaySettings
-import com.sorrowblue.comicviewer.domain.entity.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.entity.settings.FolderSettings
-import com.sorrowblue.comicviewer.domain.entity.settings.History
-import com.sorrowblue.comicviewer.domain.entity.settings.OneTimeFlag
-import com.sorrowblue.comicviewer.domain.entity.settings.SecuritySettings
-import com.sorrowblue.comicviewer.domain.entity.settings.Settings
-import com.sorrowblue.comicviewer.domain.entity.settings.ViewerOperationSettings
-import com.sorrowblue.comicviewer.domain.entity.settings.ViewerSettings
+import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
+import com.sorrowblue.comicviewer.domain.model.settings.History
+import com.sorrowblue.comicviewer.domain.model.settings.OneTimeFlag
+import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
+import com.sorrowblue.comicviewer.domain.model.settings.Settings
+import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
+import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import kotlinx.coroutines.flow.Flow
 
 interface DatastoreDataSource {

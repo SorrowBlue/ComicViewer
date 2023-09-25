@@ -4,7 +4,7 @@ import coil.map.Mapper
 import coil.request.Options
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.mapper.from
-import com.sorrowblue.comicviewer.domain.entity.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.Book
 
 internal class BookMapper : Mapper<Book, FileModel.Book> {
 

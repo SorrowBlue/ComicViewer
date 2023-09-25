@@ -11,7 +11,7 @@ android {
 
 dependencies {
     implementation(projects.framework)
-    implementation(projects.domain.common)
+    implementation(projects.domain.model)
     implementation(projects.domain.interactor)
     api(projects.data.common)
     implementation(projects.data.reader)

@@ -16,7 +16,7 @@ android {
 
 dependencies {
     implementation(projects.framework.notification)
-    implementation(projects.domain.common)
+    implementation(projects.domain.model)
     implementation(projects.feature.library)
 
     implementation(libs.androidx.work.runtime.ktx)

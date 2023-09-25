@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.brand.BrandBox
 import com.sorrowblue.comicviewer.framework.designsystem.icon.brand.BrandDropbox
 import com.sorrowblue.comicviewer.framework.designsystem.icon.brand.BrandGoogleDrive
 import com.sorrowblue.comicviewer.framework.designsystem.icon.brand.BrandOnedrive
-import com.sorrowblue.comicviewer.domain.AddOn as DomainAddOn
+import com.sorrowblue.comicviewer.domain.model.AddOn as DomainAddOn
 
 sealed interface Feature {
 

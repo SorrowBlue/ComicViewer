@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.interactor.bookshelf
 
-import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.entity.file.IFolder
+import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError

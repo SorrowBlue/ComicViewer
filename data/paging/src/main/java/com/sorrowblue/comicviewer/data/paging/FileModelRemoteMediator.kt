@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.data.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.di.IoDispatcher
 import com.sorrowblue.comicviewer.data.exception.RemoteException
-import com.sorrowblue.comicviewer.domain.PagingException
+import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory

@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
-import com.sorrowblue.comicviewer.domain.entity.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
 import com.sorrowblue.comicviewer.framework.Resource
 

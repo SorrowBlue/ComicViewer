@@ -6,8 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.sorrowblue.comicviewer.domain.Base64.decodeFromBase64
-import com.sorrowblue.comicviewer.domain.Base64.encodeToBase64
+import com.sorrowblue.comicviewer.domain.model.Base64.decodeFromBase64
+import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.feature.library.googledrive.GoogleDriveRoute
 import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavigation
 

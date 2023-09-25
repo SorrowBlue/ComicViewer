@@ -5,7 +5,7 @@ import coil.request.Options
 import com.sorrowblue.comicviewer.data.common.BookPageRequestData
 import com.sorrowblue.comicviewer.data.common.FileModel
 import com.sorrowblue.comicviewer.data.mapper.from
-import com.sorrowblue.comicviewer.domain.request.BookPageRequest
+import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 
 class BookPageRequestMapper : Mapper<BookPageRequest, BookPageRequestData> {
 

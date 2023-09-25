@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.domain.interactor.settings
 
-import com.sorrowblue.comicviewer.domain.entity.settings.OneTimeFlag
-import com.sorrowblue.comicviewer.domain.entity.settings.Settings
+import com.sorrowblue.comicviewer.domain.model.settings.OneTimeFlag
+import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.repository.SettingsCommonRepository
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageOneTimeFlagUseCase

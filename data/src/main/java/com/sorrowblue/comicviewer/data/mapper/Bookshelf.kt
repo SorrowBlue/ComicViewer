@@ -2,9 +2,9 @@ package com.sorrowblue.comicviewer.data.mapper
 
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModel
 import com.sorrowblue.comicviewer.data.common.bookshelf.BookshelfModelId
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.InternalStorage
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.SmbServer
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 
 internal fun BookshelfModel.SmbServer.Auth.Companion.from(auth: SmbServer.Auth) =
     when (auth) {

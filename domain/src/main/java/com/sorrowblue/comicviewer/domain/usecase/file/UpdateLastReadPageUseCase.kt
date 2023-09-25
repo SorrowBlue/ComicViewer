@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.domain.usecase.file
 
-import com.sorrowblue.comicviewer.domain.entity.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.request.BaseRequest
 import com.sorrowblue.comicviewer.domain.usecase.FlowUseCase
 import java.time.LocalDateTime
