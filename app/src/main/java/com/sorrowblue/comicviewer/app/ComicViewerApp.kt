@@ -30,6 +30,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.compactDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.expandedDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.ui.LocalNavController
 import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
 import logcat.LogPriority
 import logcat.logcat
@@ -68,7 +69,8 @@ internal fun ComicViewerApp(
     ComicTheme {
         CompositionLocalProvider(
             LocalWindowSize provides windowsSize,
-            LocalDimension provides dimension
+            LocalDimension provides dimension,
+            LocalNavController provides navController
         ) {
             Surface(
                 modifier = modifier.fillMaxSize(),
@@ -81,7 +83,9 @@ internal fun ComicViewerApp(
                     navController = navController,
                     startDestination = graphStateHolder.startDestination,
                     routeToTab = graphStateHolder::routeToTab,
-                    onTabSelected = graphStateHolder::onTabSelected
+                    routeToFab = graphStateHolder::routeToFab,
+                    onTabSelected = graphStateHolder::onTabSelected,
+                    onFabClick = graphStateHolder::onTabClick,
                 ) { navHostController, contentPadding ->
                     mainGraph(
                         context = context,

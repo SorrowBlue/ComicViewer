@@ -75,7 +75,7 @@ internal fun NavGraphBuilder.mainGraph(
         navigateToBook = navController::navigateToBook,
         navigateToSearch = navController::navigateToSearch,
         onRestoreComplete = restoreComplete,
-        onClickLongFile = { navController.navigateToFileInfo(it.bookshelfId, it.path, false) }
+        onClickLongFile = { navController.navigateToFileInfo(it.bookshelfId, it.path, false) },
     )
     favoriteGroup(
         contentPadding = contentPadding,
@@ -83,7 +83,6 @@ internal fun NavGraphBuilder.mainGraph(
         onBookClick = navController::navigateToBook,
         onClickLongFile = { navController.navigateToFileInfo(it.bookshelfId, it.path) },
         onSettingsClick = navController::navigateToSettings,
-        onAddClick = navController::navigateToFavoriteCreate,
         navigateToSearch = navController::navigateToSearch,
     )
     favoriteCreateScreen(onDismissRequest = navController::popBackStack)

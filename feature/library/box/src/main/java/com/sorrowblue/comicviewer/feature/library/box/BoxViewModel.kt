@@ -46,7 +46,7 @@ internal class BoxViewModel(
     val uiState = _uiState.asStateFlow()
 
     private val args = BoxArgs(savedStateHandle)
-    val path = args.path
+    private val path = args.path
 
     init {
         repository.isAuthenticated().onEach {

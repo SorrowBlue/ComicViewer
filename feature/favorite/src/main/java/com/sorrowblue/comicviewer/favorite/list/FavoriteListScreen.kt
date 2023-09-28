@@ -4,15 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,13 +37,13 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoDat
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.plus
+import com.sorrowblue.comicviewer.framework.ui.toWindowInsets
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
 internal fun FavoriteListRoute(
     contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
-    onAddClick: () -> Unit,
     onFavoriteClick: (FavoriteId) -> Unit,
     viewModel: FavoriteListViewModel = hiltViewModel(),
 ) {
@@ -55,7 +52,6 @@ internal fun FavoriteListRoute(
         contentPadding = contentPadding,
         lazyPagingItems = lazyPagingItems,
         onSettingsClick = onSettingsClick,
-        onAddClick = onAddClick,
         onFavoriteClick = onFavoriteClick
     )
 }
@@ -66,11 +62,9 @@ private fun FavoriteListScreen(
     lazyPagingItems: LazyPagingItems<Favorite>,
     onSettingsClick: () -> Unit = {},
     onFavoriteClick: (FavoriteId) -> Unit = {},
-    onAddClick: () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val localLayoutDirection = LocalLayoutDirection.current
     val lazyListState = rememberLazyListState()
     Scaffold(
         topBar = {
@@ -79,20 +73,7 @@ private fun FavoriteListScreen(
                 onSettingsClick = onSettingsClick
             )
         },
-        contentWindowInsets = WindowInsets(
-            left = contentPadding.calculateLeftPadding(localLayoutDirection),
-            top = contentPadding.calculateTopPadding(),
-            right = contentPadding.calculateRightPadding(localLayoutDirection),
-            bottom = contentPadding.calculateBottomPadding()
-        ),
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = onAddClick,
-                text = { Text("New Favorite") },
-                icon = { Icon(ComicIcons.Add, contentDescription = null) },
-                expanded = !lazyListState.canScrollForward || !lazyListState.canScrollBackward
-            )
-        },
+        contentWindowInsets = contentPadding.toWindowInsets(),
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         if (lazyPagingItems.isEmptyData) {
@@ -105,13 +86,14 @@ private fun FavoriteListScreen(
             ) {
                 Image(
                     imageVector = ComicIcons.UndrawNoData,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .widthIn(min = 200.dp)
+                        .fillMaxWidth(0.5f),
                     contentDescription = null
                 )
                 Text(
                     text = stringResource(id = R.string.favorite_list_label_no_favorites),
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
         } else {

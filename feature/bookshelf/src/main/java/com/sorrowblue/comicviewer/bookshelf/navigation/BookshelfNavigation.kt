@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.bookshelf.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.bookshelf.BookshelfRoute
@@ -19,7 +20,7 @@ import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
 
-private const val bookshelfRoute = "bookshelf"
+const val bookshelfRoute = "bookshelf"
 const val bookshelfGraphRoute = "bookshelf_graph"
 val routeInBookshelfGraph get() = listOf(bookshelfRoute, folderRoute(bookshelfRoute))
 
@@ -32,17 +33,19 @@ private fun NavGraphBuilder.bookshelfScreen(
     onSettingsClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
-    onClickFab: () -> Unit,
 ) {
     composable(bookshelfRoute) {
         BookshelfRoute(
             contentPadding = contentPadding,
-            onClickFab = onClickFab,
             onSettingsClick = onSettingsClick,
             onBookshelfClick = onBookshelfClick,
-            onEditClick = onEditClick
+            onEditClick = onEditClick,
         )
     }
+}
+
+fun NavController.navigateToBookshelfSelection(navOptions: NavOptions? = null) {
+    navigateToBookshelfSelection(navOptions)
 }
 
 fun NavGraphBuilder.bookshelfGraph(
@@ -52,7 +55,7 @@ fun NavGraphBuilder.bookshelfGraph(
     onSettingsClick: () -> Unit,
     navigateToBook: (BookshelfId, String, Int) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
-    onRestoreComplete: () -> Unit
+    onRestoreComplete: () -> Unit,
 ) {
     navigation(route = bookshelfGraphRoute, startDestination = bookshelfRoute) {
         bookshelfScreen(
@@ -60,7 +63,6 @@ fun NavGraphBuilder.bookshelfGraph(
             onSettingsClick = onSettingsClick,
             onBookshelfClick = navController::navigateToBookshelfFolder,
             onEditClick = navController::navigateToBookshelfEdit,
-            onClickFab = navController::navigateToBookshelfSelection,
         )
         bookshelfSelectionScreen(
             onBackClick = navController::popBackStack,

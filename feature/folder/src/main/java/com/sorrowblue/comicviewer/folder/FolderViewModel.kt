@@ -95,7 +95,7 @@ class FolderViewModel @Inject constructor(
     var isSkipFirstRefresh = true
     var isScrollableTop = false
 
-    val displaySettings = displaySettingsUseCase.settings.stateIn(
+    private val displaySettings = displaySettingsUseCase.settings.stateIn(
         viewModelScope,
         SharingStarted.Eagerly,
         runBlocking { displaySettingsUseCase.settings.first() }

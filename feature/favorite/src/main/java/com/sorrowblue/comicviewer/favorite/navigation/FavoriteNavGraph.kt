@@ -24,7 +24,6 @@ fun NavGraphBuilder.favoriteGroup(
     onBookClick: (BookshelfId, String, Int) -> Unit,
     onClickLongFile: (File) -> Unit,
     onSettingsClick: () -> Unit,
-    onAddClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
 ) {
     navigation(route = favoriteGraphRoute, startDestination = FavoriteListRoute) {
@@ -32,7 +31,6 @@ fun NavGraphBuilder.favoriteGroup(
         favoriteListScreen(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
-            onAddClick = onAddClick,
             onFavoriteClick = navController::navigateToFavorite
         )
 

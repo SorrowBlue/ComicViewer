@@ -121,6 +121,7 @@ dependencies {
 
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.biometric)
+    implementation(libs.androidx.hilt.navigationCompose)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.hilt.work)

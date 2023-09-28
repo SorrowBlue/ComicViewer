@@ -25,9 +25,9 @@ const val fileInfoGraph = "file_graph"
 
 private const val fileInfoRoute = "file"
 
-private val bookshelfIdArg = "bookshelfId"
-private val pathArg = "path"
-private val showOpenFolderArg = "showOpenFolder"
+private const val bookshelfIdArg = "bookshelfId"
+private const val pathArg = "path"
+private const val showOpenFolderArg = "showOpenFolder"
 
 internal class FileInfoArgs(
     val bookshelfId: BookshelfId,

@@ -6,11 +6,10 @@ import androidx.navigation.compose.composable
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.favorite.list.FavoriteListRoute
 
-internal const val FavoriteListRoute = "favorite"
+const val FavoriteListRoute = "favorite"
 
 internal fun NavGraphBuilder.favoriteListScreen(
     onSettingsClick: () -> Unit,
-    onAddClick: () -> Unit,
     onFavoriteClick: (FavoriteId) -> Unit,
     contentPadding: PaddingValues,
 ) {
@@ -18,7 +17,6 @@ internal fun NavGraphBuilder.favoriteListScreen(
         FavoriteListRoute(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
-            onAddClick = onAddClick,
             onFavoriteClick = onFavoriteClick,
         )
     }

@@ -42,6 +42,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.box.component.BoxTopAppBar
 import com.sorrowblue.comicviewer.feature.library.box.component.FileListItem
+import com.sorrowblue.comicviewer.feature.library.box.component.FileListItemSh
 import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxDialogUiState
@@ -207,7 +208,7 @@ private fun LoginBoxScreen(
 @ExperimentalMaterial3Api
 @Composable
 private fun LoadedBoxScreen(
-    lazyPagingItems: LazyPagingItems<File> = fakeLazyPagingItems(),
+    lazyPagingItems: LazyPagingItems<File>,
     uiState: BoxScreenUiState.Loaded = BoxScreenUiState.Loaded(),
     onBackClick: () -> Unit = {},
     onProfileImageClick: () -> Unit = {},
@@ -232,9 +233,16 @@ private fun LoadedBoxScreen(
         LazyColumn(contentPadding = innerPadding) {
             items(
                 count = lazyPagingItems.itemCount,
-                key = lazyPagingItems.itemKey { it.path }) {
-                lazyPagingItems[it]?.let {
-                    FileListItem(file = it, onClick = { onFileClick(it) })
+                key = lazyPagingItems.itemKey { it.path }
+            ) {
+                val item = lazyPagingItems[it]
+                if (item != null) {
+                    FileListItem(
+                        file = item,
+                        onClick = { onFileClick(item) }
+                    )
+                } else {
+                    FileListItemSh()
                 }
             }
         }
@@ -246,16 +254,18 @@ private fun LoadedBoxScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun PreviewLoadedBoxScreen() {
     ComicTheme {
-        LoadedBoxScreen()
+        Column {
+            (0..<20).forEach {
+                FileListItemSh()
+            }
+        }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun PreviewLoginBoxScreen() {
@@ -264,7 +274,6 @@ private fun PreviewLoginBoxScreen() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun PreviewLoadingBoxScreen() {
@@ -275,6 +284,10 @@ private fun PreviewLoadingBoxScreen() {
 
 @Composable
 private fun fakeLazyPagingItems() =
+    flowOf(PagingData.from<File>(List(20) { bookFile(it) })).collectAsLazyPagingItems()
+
+@Composable
+private fun nullLazyPagingItems() =
     flowOf(PagingData.from<File>(List(20) { bookFile(it) })).collectAsLazyPagingItems()
 
 internal fun bookFile(index: Int) = BookFile(

@@ -20,7 +20,7 @@ internal class FavoriteArgs(
             this(FavoriteId(checkNotNull(savedStateHandle[favoriteIdArg])))
 }
 
-internal const val favoriteRoute = "$FavoriteListRoute/{$favoriteIdArg}"
+const val favoriteRoute = "$FavoriteListRoute/{$favoriteIdArg}"
 
 internal fun NavController.navigateToFavorite(
     favoriteId: FavoriteId,

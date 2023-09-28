@@ -32,3 +32,21 @@ enum class MainScreenTab(
         R.string.app_label_library
     ),
 }
+
+enum class MainScreenFab(
+    val label: Int,
+    val icon: ImageVector,
+    val contentDescription: Int,
+) {
+    Bookshelf(
+        R.string.app_label_bookshelf,
+        ComicIcons.Add,
+        R.string.app_label_bookshelf
+    ),
+
+    Favorite(
+        R.string.app_label_favorite,
+        ComicIcons.Add,
+        R.string.app_label_favorite
+    ),
+}

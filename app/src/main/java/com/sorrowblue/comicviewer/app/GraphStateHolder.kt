@@ -6,9 +6,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.navOptions
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraphRoute
+import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfRoute
+import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfSelection
 import com.sorrowblue.comicviewer.bookshelf.navigation.routeInBookshelfGraph
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteListRoute
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGraphRoute
 import com.sorrowblue.comicviewer.favorite.navigation.routeInFavoriteGraph
+import com.sorrowblue.comicviewer.feature.favorite.create.navigation.navigateToFavoriteCreate
 import com.sorrowblue.comicviewer.feature.library.navigation.libraryGraphRoute
 import com.sorrowblue.comicviewer.feature.library.navigation.routeInLibraryGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGraphRoute
@@ -18,6 +22,8 @@ internal interface GraphStateHolder {
     val startDestination: String
     fun routeToTab(route: String): MainScreenTab?
     fun onTabSelected(navController: NavController, tab: MainScreenTab)
+    fun routeToFab(route: String): MainScreenFab?
+    fun onTabClick(navController: NavController, fab: MainScreenFab)
 }
 
 @Composable
@@ -28,13 +34,13 @@ internal fun rememberGraphStateHolder(): GraphStateHolder = remember {
 private class ComicViewerAppGraphStateHolder : GraphStateHolder {
     override val startDestination: String = bookshelfGraphRoute
 
-    override fun routeToTab(route: String): MainScreenTab {
+    override fun routeToTab(route: String): MainScreenTab? {
         return when (route) {
             in routeInBookshelfGraph -> MainScreenTab.Bookshelf
             in routeInFavoriteGraph -> MainScreenTab.Favorite
             in routeInReadlaterGraph -> MainScreenTab.Readlater
             in routeInLibraryGraph -> MainScreenTab.Library
-            else -> MainScreenTab.Bookshelf
+            else -> null
         }
     }
 
@@ -55,6 +61,21 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
                     restoreState = true
                 }
             )
+        }
+    }
+
+    override fun routeToFab(route: String): MainScreenFab? {
+        return when (route) {
+            bookshelfRoute -> MainScreenFab.Bookshelf
+            FavoriteListRoute -> MainScreenFab.Favorite
+            else -> null
+        }
+    }
+
+    override fun onTabClick(navController: NavController, fab: MainScreenFab) {
+        when (fab) {
+            MainScreenFab.Bookshelf -> navController.navigateToBookshelfSelection()
+            MainScreenFab.Favorite -> navController.navigateToFavoriteCreate()
         }
     }
 }

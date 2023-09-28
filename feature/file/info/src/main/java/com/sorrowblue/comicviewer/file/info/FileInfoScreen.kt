@@ -14,7 +14,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -39,6 +38,7 @@ import com.sorrowblue.comicviewer.feature.file.info.R
 import com.sorrowblue.comicviewer.file.info.navigation.FileInfoArgs
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -85,7 +85,7 @@ internal fun FileInfoRoute(
     viewModel: FileInfoViewModel = hiltViewModel(),
     onDismissRequest: () -> Unit,
     onAddFavoriteClick: (File) -> Unit,
-    onOpenFolderClick: (File) -> Unit
+    onOpenFolderClick: (File) -> Unit,
 ) {
     val file by viewModel.file.collectAsState()
     FileInfoScreen(
@@ -146,14 +146,8 @@ private fun FileInfoScreen(
                     .padding(top = ComicTheme.dimension.spacer),
                 horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.spacer)
             ) {
-                PlainTooltipBox(tooltip = {
-                    Text("ファイルの拡張子")
-                }) {
-                    AssistChip(
-                        onClick = {},
-                        label = { Text(file.name.extension()) },
-                        modifier = Modifier.tooltipAnchor()
-                    )
+                PlainTooltipBox(tooltipContent = { Text("ファイルの拡張子") }) {
+                    AssistChip(onClick = {}, label = { Text(file.name.extension()) })
                 }
                 AssistChip(
                     onClick = {},

@@ -188,7 +188,7 @@ internal class BookshelfEditViewModel @Inject constructor(
         }
     }
 
-    fun validateAll(): Boolean {
+    private fun validateAll(): Boolean {
         var uiState = this.uiState.value
         if (uiState !is BookshelfEditScreenUiState.Editing) return false
         when (val editorUiState = uiState.editorUiState) {

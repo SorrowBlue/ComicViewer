@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.compose.placeholder
+package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.annotation.FloatRange
 import androidx.compose.animation.core.AnimationSpec
