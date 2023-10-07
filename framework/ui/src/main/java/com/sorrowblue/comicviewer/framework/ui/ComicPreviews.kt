@@ -10,6 +10,9 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import java.time.Clock
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import kotlin.io.path.Path
 import kotlin.io.path.pathString
 import kotlin.random.Random
@@ -22,14 +25,44 @@ import kotlinx.coroutines.flow.flowOf
 @Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
 annotation class ComicPreviews
 
+
+@Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
+@Preview(name = "landscape", device = "spec:shape=Normal,width=640,height=360,unit=dp,dpi=480")
+annotation class MobilePreviews
+
+@Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
+annotation class TabletPreview
+
+fun previewBookFile(index: Int = 0): BookFile {
+    val path = paths[index]
+    val totalPageCount = Random.nextInt(0..999)
+    return BookFile(
+        bookshelfId = BookshelfId(0),
+        name = names[index],
+        parent = Path(path).parent.pathString,
+        path = path + names[index] + ".zip",
+        size = Random.nextLong(),
+        lastModifier = LocalDateTime.now(Clock.systemDefaultZone()).toEpochSecond(ZoneOffset.UTC),
+        cacheKey = "",
+        lastPageRead = Random.nextInt(0..totalPageCount),
+        totalPageCount = totalPageCount,
+        lastReadTime = LocalDateTime.now(Clock.systemDefaultZone()).toEpochSecond(ZoneOffset.UTC),
+    )
+}
+
+@Composable
+fun fakeEmptyLazyPagingItems(): LazyPagingItems<File> {
+    return flowOf(PagingData.empty<File>()).collectAsLazyPagingItems()
+}
+
 @Composable
 fun fakeLazyPagingItems(): LazyPagingItems<File> {
     val files = paths.mapIndexed { index, path ->
-        when (val a = A.entries[Random.nextInt(0..2)]) {
-            A.BookFile -> {
+        when (val previewFile = PreviewFile.entries[Random.nextInt(0..2)]) {
+            PreviewFile.BookFile -> {
                 val totalPageCount = Random.nextInt(Int.MAX_VALUE)
                 BookFile(
-                    bookshelfId = BookshelfId(a.ordinal),
+                    bookshelfId = BookshelfId(previewFile.ordinal),
                     name = names[index],
                     parent = Path(path).parent.pathString,
                     path = path + names[index] + ".zip",
@@ -42,10 +75,10 @@ fun fakeLazyPagingItems(): LazyPagingItems<File> {
                 )
             }
 
-            A.BookFolder -> {
+            PreviewFile.BookFolder -> {
                 val totalPageCount = Random.nextInt(Int.MAX_VALUE)
                 BookFolder(
-                    bookshelfId = BookshelfId(a.ordinal),
+                    bookshelfId = BookshelfId(previewFile.ordinal),
                     name = names[index],
                     parent = Path(path).parent.pathString,
                     path = path + names[index] + ".zip",
@@ -59,9 +92,9 @@ fun fakeLazyPagingItems(): LazyPagingItems<File> {
                 )
             }
 
-            A.Folder -> {
+            PreviewFile.Folder -> {
                 Folder(
-                    bookshelfId = BookshelfId(a.ordinal),
+                    bookshelfId = BookshelfId(previewFile.ordinal),
                     name = names[index],
                     parent = Path(path).parent.pathString,
                     path = path + names[index] + ".zip",
@@ -77,7 +110,7 @@ fun fakeLazyPagingItems(): LazyPagingItems<File> {
     return pagingDataFlow.collectAsLazyPagingItems()
 }
 
-private enum class A {
+private enum class PreviewFile {
     BookFile,
     BookFolder,
     Folder

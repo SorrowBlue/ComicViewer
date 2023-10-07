@@ -5,7 +5,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,6 +16,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuState
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
 import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
+import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveTopAppBar
 
 data class FolderAppBarUiState(
     val title: String = "",
@@ -37,8 +37,7 @@ fun FolderAppBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
     overflowMenuState: OverflowMenuState = rememberOverflowMenuState(),
 ) {
-    TopAppBar(
-        scrollBehavior = scrollBehavior,
+    ResponsiveTopAppBar(
         title = { Text(text = uiState.title) },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
@@ -91,6 +90,7 @@ fun FolderAppBar(
                 )
             }
         },
+        scrollBehavior = scrollBehavior
     )
 }
 

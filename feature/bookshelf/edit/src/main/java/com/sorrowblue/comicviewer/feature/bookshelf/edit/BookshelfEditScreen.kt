@@ -5,8 +5,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,13 +19,15 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -34,7 +39,11 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.DeviceStorageIn
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbServerInfoEditor
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.flow.CollectAsEffect
+import com.sorrowblue.comicviewer.framework.ui.responsive.FullScreenTopAppBar
+import kotlinx.coroutines.launch
 
 sealed interface BookshelfEditScreenUiState {
 
@@ -43,8 +52,15 @@ sealed interface BookshelfEditScreenUiState {
     data object Complete : BookshelfEditScreenUiState
 
     data class Editing(
+        val mode: EditMode = EditMode.Register,
+        val running: Boolean = false,
         val editorUiState: BookshelfEditorUiState = BookshelfEditorUiState.SmbServer(),
     ) : BookshelfEditScreenUiState
+}
+
+enum class EditMode {
+    Register,
+    Change
 }
 
 sealed interface UiEvent {
@@ -58,19 +74,22 @@ internal fun BookshelfEditRoute(
     onComplete: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     val activityResultLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             it.data?.data?.let { uri ->
                 viewModel.updateUri(uri)
             } ?: run {
-                TODO()
+                scope.launch {
+                    snackbarHostState.showSnackbar("フォルダを選択してください")
+                }
             }
         }
     val openDocumentTreeIntent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
         flags =
             Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
     }
-    val snackbarHostState = remember { SnackbarHostState() }
     viewModel.uiEvents.CollectAsEffect {
         when (it) {
             is UiEvent.ShowSnackbar -> snackbarHostState.showSnackbar(it.message)
@@ -113,12 +132,28 @@ fun BookshelfEditScreen(
     onPasswordChange: (String) -> Unit = {},
     onSaveClick: () -> Unit = {},
 ) {
+    val windowSizeClass: WindowSizeClass = LocalWindowSize.current
+    val isCompact = remember(windowSizeClass.widthSizeClass) {
+        windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+    }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                title = { Text(text = "本棚の編集") },
+            FullScreenTopAppBar(
+                title = {
+                    Text(
+                        text = when (uiState) {
+                            BookshelfEditScreenUiState.Complete -> ""
+                            is BookshelfEditScreenUiState.Editing -> when (uiState.mode) {
+                                EditMode.Register -> "本棚の登録"
+                                EditMode.Change -> "本棚の編集"
+                            }
+
+                            BookshelfEditScreenUiState.Loading -> ""
+                        }
+                    )
+                },
                 navigationIcon = {
                     IconButton(onBackClick) {
                         Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
@@ -129,25 +164,55 @@ fun BookshelfEditScreen(
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
-        }
+        },
+        contentWindowInsets = WindowInsets.safeDrawing,
+        containerColor = if (isCompact) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainer,
     ) { contentPaddings ->
+        val padding = if (isCompact) {
+            contentPaddings
+                .add(
+                    PaddingValues(
+                        start = ComicTheme.dimension.margin,
+                        end = ComicTheme.dimension.margin,
+                        bottom = ComicTheme.dimension.margin
+                    )
+                )
+        } else {
+            contentPaddings
+                .add(
+                    paddingValues = PaddingValues(
+                        start = ComicTheme.dimension.margin,
+                        end = ComicTheme.dimension.margin,
+                        top = ComicTheme.dimension.spacer,
+                        bottom = ComicTheme.dimension.margin,
+                    )
+                )
+        }
         when (uiState) {
             is BookshelfEditScreenUiState.Editing ->
                 when (uiState.editorUiState) {
                     is BookshelfEditorUiState.DeviceStorage ->
-                        DeviceStorageInfoEditor(
-                            modifier = Modifier
-                                .padding(contentPaddings)
-                                .padding(horizontal = ComicTheme.dimension.margin),
-                            uiState = uiState.editorUiState,
-                            onDisplayNameChange = onDisplayNameChange,
-                            onSelectFolderClick = onSelectFolderClick,
-                            onSaveClick = onSaveClick
-                        )
+                        Surface(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(padding),
+                            shape = ComicTheme.shapes.large
+                        ) {
+                            DeviceStorageInfoEditor(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(ComicTheme.dimension.padding * 4),
+                                uiState = uiState.editorUiState,
+                                isRunning = uiState.running,
+                                onDisplayNameChange = onDisplayNameChange,
+                                onSelectFolderClick = onSelectFolderClick,
+                                onSaveClick = onSaveClick
+                            )
+                        }
 
                     is BookshelfEditorUiState.SmbServer ->
                         SmbServerInfoEditor(
-                            modifier = Modifier.padding(contentPaddings),
+                            modifier = Modifier.padding(padding),
                             uiState = uiState.editorUiState,
                             onDisplayNameChange = onDisplayNameChange,
                             onHostChange = onHostChange,

@@ -35,9 +35,9 @@ import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.plus
-import com.sorrowblue.comicviewer.framework.ui.toWindowInsets
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -73,7 +73,7 @@ private fun FavoriteListScreen(
                 onSettingsClick = onSettingsClick
             )
         },
-        contentWindowInsets = contentPadding.toWindowInsets(),
+        contentWindowInsets = contentPadding.asWindowInsets(),
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         if (lazyPagingItems.isEmptyData) {

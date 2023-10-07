@@ -2,12 +2,10 @@ package com.sorrowblue.comicviewer.bookshelf.section
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
@@ -16,7 +14,6 @@ import com.sorrowblue.comicviewer.bookshelf.component.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.plus
 
 @Composable
 internal fun BookshelfListContents(
@@ -27,18 +24,11 @@ internal fun BookshelfListContents(
     onBookshelfLongClick: (BookshelfFolder) -> Unit,
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(400.dp),
+        columns = GridCells.Adaptive(300.dp),
         state = lazyGridState,
-        contentPadding = innerPadding.plus(
-            PaddingValues(
-                start = ComicTheme.dimension.margin,
-                top = ComicTheme.dimension.margin,
-                end = ComicTheme.dimension.margin,
-                bottom = ComicTheme.dimension.margin + ComicTheme.dimension.margin + 56.dp
-            )
-        ),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        contentPadding = innerPadding,
+        verticalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding * 2),
+        horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding * 2)
     ) {
         items(
             count = lazyPagingItems.itemCount,
@@ -51,7 +41,6 @@ internal fun BookshelfListContents(
                     bookshelfFolder = item,
                     onClick = { onBookshelfClick(item.bookshelf.id, item.folder.path) },
                     onLongClick = { onBookshelfLongClick(item) },
-                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }

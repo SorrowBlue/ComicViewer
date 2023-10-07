@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,13 +24,13 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveCard
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -41,7 +40,9 @@ fun FileGrid(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ElevatedCard(modifier) {
+    ResponsiveCard(
+        modifier,
+    ) {
         Column(
             Modifier.combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -66,11 +67,8 @@ fun FileGrid(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceVariant,
-                        shape = CardDefaults.elevatedShape
-                    )
-                    .clip(CardDefaults.elevatedShape)
+                    .clip(CardDefaults.shape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             )
             if (file is Book && 0 < file.lastPageRead) {
                 LinearProgressIndicator(
@@ -80,11 +78,14 @@ fun FileGrid(
                 )
             }
             Text(
-                file.name,
+                text = file.name,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(
+                        horizontal = ComicTheme.dimension.padding * 2,
+                        vertical = ComicTheme.dimension.padding
+                    )
             )
         }
     }

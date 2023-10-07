@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.framework.designsystem.theme
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -11,7 +12,8 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalContext
@@ -80,11 +82,11 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun ComicTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     useDynamicColor: Boolean = false,
+    windowSizeClass: WindowSizeClass = LocalWindowSize.current,
     content: @Composable () -> Unit,
 ) {
     val colorScheme = when {
@@ -96,12 +98,17 @@ fun ComicTheme(
         else -> if (darkTheme) DarkColors else LightColors
     }
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colorScheme.copy(background = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) colorScheme.surface else colorScheme.surfaceContainer),
         content = content
     )
 }
 
 object ComicTheme {
+
+    val isCompact: Boolean
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalWindowSize.current.widthSizeClass == WindowWidthSizeClass.Compact
 
     val dimension: Dimension
         @Composable
@@ -123,6 +130,9 @@ object ComicTheme {
         @ReadOnlyComposable
         get() = MaterialTheme.shapes
 }
+
+val Shapes.largeTop get() = large.copy(bottomStart = CornerSize(0), bottomEnd = CornerSize(0))
+val Shapes.largeBottom get() = large.copy(topStart = CornerSize(0), topEnd = CornerSize(0))
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)
 private fun supportsDynamicTheming() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S

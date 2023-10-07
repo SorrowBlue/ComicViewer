@@ -127,6 +127,7 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     implementation(libs.google.android.play.review.ktx)
     implementation(libs.google.android.play.feature.delivery.ktx)
+    implementation(libs.coil.compose)
     implementation(libs.mikepenz.aboutlibraries)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.appcompat)

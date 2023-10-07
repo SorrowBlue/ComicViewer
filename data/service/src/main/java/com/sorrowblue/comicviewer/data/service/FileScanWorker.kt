@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.data.service
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
@@ -113,6 +114,10 @@ internal class FileScanWorker @AssistedInject constructor(
                 .addAction(android.R.drawable.ic_delete, cancel, intent)
                 .build()
 
-        return ForegroundInfo(notificationID, notification)
+        return ForegroundInfo(
+            notificationID,
+            notification,
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+        )
     }
 }

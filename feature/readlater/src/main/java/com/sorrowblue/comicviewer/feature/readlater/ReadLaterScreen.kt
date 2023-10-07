@@ -20,10 +20,13 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.readlater.section.EmptyContent
+import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAction
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun ReadLaterRoute(
@@ -46,12 +49,14 @@ internal fun ReadLaterRoute(
         onSettingsClick = onSettingsClick,
         onClearAllClick = viewModel::clearAll,
         contentPadding = contentPadding,
-        lazyGridState = lazyGridState
+        lazyGridState = lazyGridState,
     )
 }
 
 internal data class ReadLaterScreenUiState(
-    val fileContentUiState: FileContentUiState
+    val fileContentUiState: FileContentUiState,
+    val list: PersistentList<ReadLaterAction> = ReadLaterAction.entries.filterNot { it == ReadLaterAction.FileContetGrid }
+        .toPersistentList(),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,6 +78,7 @@ private fun ReadLaterScreen(
     Scaffold(
         topBar = {
             ReadLaterAppBar(
+                list = uiState.list,
                 fileContentLayout = uiState.fileContentUiState.layout,
                 topAppBarScrollBehavior = appBarScrollBehavior,
                 onFileContentLayoutClick = onFileListTypeClick,

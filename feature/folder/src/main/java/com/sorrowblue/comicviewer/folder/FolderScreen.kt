@@ -1,25 +1,16 @@
 package com.sorrowblue.comicviewer.folder
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -29,19 +20,15 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.file.component.FileContent
+import com.sorrowblue.comicviewer.file.FileListScaffold
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
-import com.sorrowblue.comicviewer.folder.section.FolderEmptyContent
 import com.sorrowblue.comicviewer.folder.section.Sort
-import com.sorrowblue.comicviewer.folder.section.SortSheet
 import com.sorrowblue.comicviewer.folder.section.SortSheetUiState
-import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
-import com.sorrowblue.comicviewer.framework.ui.pullrefresh.PullRefreshIndicator
 import com.sorrowblue.comicviewer.framework.ui.pullrefresh.PullRefreshState
-import com.sorrowblue.comicviewer.framework.ui.pullrefresh.pullRefresh
 import com.sorrowblue.comicviewer.framework.ui.pullrefresh.rememberPullRefreshState
 
 data class FolderScreenUiState(
@@ -130,8 +117,11 @@ internal fun FolderScreen(
     onSortClick: () -> Unit,
 ) {
     val localLayoutDirection = LocalLayoutDirection.current
-    Scaffold(
+    FileListScaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        lazyPagingItems = lazyPagingItems,
+        contentWindowInsets = contentPadding.asWindowInsets(),
+        onClickItem = onClickFile,
         topBar = {
             FolderAppBar(
                 uiState = uiState.folderAppBarUiState,
@@ -145,51 +135,7 @@ internal fun FolderScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-        contentWindowInsets = WindowInsets(
-            left = contentPadding.calculateLeftPadding(localLayoutDirection),
-            top = contentPadding.calculateTopPadding(),
-            right = contentPadding.calculateRightPadding(localLayoutDirection),
-            bottom = contentPadding.calculateBottomPadding()
-        ),
-    ) { innerPadding ->
-        Box(
-            Modifier
-                .fillMaxSize()
-                .pullRefresh(pullRefreshState)) {
-            val isEmptyData by remember {
-                derivedStateOf { lazyPagingItems.isEmptyData }
-            }
-            if (isEmptyData) {
-                FolderEmptyContent(
-                    Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(innerPadding)
-                )
-            } else {
-                FileContent(
-                    uiState = uiState.fileContentUiState,
-                    lazyPagingItems = lazyPagingItems,
-                    contentPadding = innerPadding,
-                    onClickItem = onClickFile,
-                    onLongClickItem = onClickLongFile,
-                    state = lazyGridState
-                )
-            }
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
-                state = pullRefreshState,
-                scale = true,
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .align(Alignment.TopCenter)
-            )
-        }
-    }
-    SortSheet(
-        uiState = uiState.sortSheetUiState,
-        onDismissRequest = onSortSheetDismissRequest,
-        onClick = onSortChange
+        uiState = uiState.fileContentUiState,
     )
 //    FolderScanInfoDialog(state.permissionRequestFolderScanInfoDialogUiState)
 }

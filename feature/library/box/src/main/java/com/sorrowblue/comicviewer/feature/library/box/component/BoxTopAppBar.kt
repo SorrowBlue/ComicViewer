@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.sorrowblue.comicviewer.feature.library.box.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 
@@ -38,7 +37,7 @@ internal fun BoxTopAppBar(
     TopAppBar(
         title = {
             Column {
-                Text(text = stringResource(R.string.box_title))
+                Text(text = stringResource(com.sorrowblue.comicviewer.app.R.string.box_title))
                 if (path.isNotEmpty()) {
                     Text(
                         text = path,

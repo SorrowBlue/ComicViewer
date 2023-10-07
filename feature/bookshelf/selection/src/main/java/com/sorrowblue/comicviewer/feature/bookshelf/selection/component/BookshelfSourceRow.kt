@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,6 +17,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.selection.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookshelves
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawServer
+import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +26,9 @@ fun BookshelfSourceRow(
     type: BookshelfType = BookshelfType.DEVICE,
     onClick: () -> Unit = {},
 ) {
-    OutlinedCard(onClick = onClick, modifier = modifier) {
+    ResponsiveCard(
+        onClick = onClick
+    ) {
         Column(Modifier.padding(16.dp)) {
             Text(
                 text = stringResource(

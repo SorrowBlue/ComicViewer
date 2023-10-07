@@ -63,7 +63,6 @@ private fun FileGridContent(
     state: LazyGridState
 ) {
     LazyVerticalGrid(
-        modifier = Modifier.padding(ComicTheme.dimension.margin),
         columns = GridCells.Adaptive(
             when (size) {
                 FileContentLayout.GridSize.Small -> 88.dp

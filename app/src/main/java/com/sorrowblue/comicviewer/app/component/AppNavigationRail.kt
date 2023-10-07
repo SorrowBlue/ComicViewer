@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -23,19 +22,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.app.MainScreenFab
 import com.sorrowblue.comicviewer.app.MainScreenTab
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import kotlinx.collections.immutable.PersistentList
 
 @Composable
-fun ComicViewerNavigationRail(
+fun AppNavigationRail(
     mainScreenTabs: PersistentList<MainScreenTab>,
-    onTabSelected: (MainScreenTab) -> Unit,
     currentTab: MainScreenTab?,
+    onTabSelected: (MainScreenTab) -> Unit,
     currentFab: MainScreenFab?,
     onFabClick: (MainScreenFab) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     NavigationRail(
         header = {
@@ -49,7 +47,6 @@ fun ComicViewerNavigationRail(
                     FloatingActionButton(
                         onClick = { onFabClick(currentFab!!) },
                         elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-                        modifier = Modifier.padding(top = 44.dp)
                     ) {
                         currentFab?.let { fab ->
                             Icon(
@@ -61,8 +58,8 @@ fun ComicViewerNavigationRail(
                 }
             }
         },
-        modifier = modifier,
-        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.Start)
+        containerColor = ComicTheme.colorScheme.surfaceContainer,
+        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.Start),
     ) {
         Column(Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
             mainScreenTabs.forEach { tab ->

@@ -8,10 +8,13 @@ import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAction
+import com.sorrowblue.comicviewer.file.component.FileContentLayout
 import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -20,6 +23,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import logcat.logcat
 
 @HiltViewModel
 internal class ReadLaterViewModel @Inject constructor(
@@ -32,7 +36,7 @@ internal class ReadLaterViewModel @Inject constructor(
         ReadLaterScreenUiState(
             FileContentUiState(runBlocking {
                 manageFolderDisplaySettingsUseCase.settings.first().toFileContentLayout()
-            })
+            }),
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -41,7 +45,14 @@ internal class ReadLaterViewModel @Inject constructor(
         viewModelScope.launch {
             manageFolderDisplaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
                 .distinctUntilChanged().collectLatest {
+                    val (old, new) = when (it) {
+                        is FileContentLayout.Grid -> ReadLaterAction.FileContetView to ReadLaterAction.FileContetGrid
+                        FileContentLayout.List -> ReadLaterAction.FileContetGrid to ReadLaterAction.FileContetView
+                    }
                     _uiState.value = _uiState.value.copy(
+                        list = uiState.value.list.map {
+                            if (it == old) new else it
+                        }.toPersistentList(),
                         fileContentUiState = _uiState.value.fileContentUiState.copy(layout = it)
                     )
                 }
@@ -54,6 +65,7 @@ internal class ReadLaterViewModel @Inject constructor(
 
     fun toggleDisplay() {
         viewModelScope.launch {
+            logcat { "toggleDisplay" }
             manageFolderDisplaySettingsUseCase.edit {
                 it.copy(
                     display = when (it.display) {

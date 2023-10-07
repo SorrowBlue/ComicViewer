@@ -51,7 +51,9 @@ internal class BookshelfEditViewModel @Inject constructor(
 
     private fun initUiState(type: BookshelfType) {
         _uiState.value = BookshelfEditScreenUiState.Editing(
-            when (type) {
+            mode = EditMode.Register,
+            running = false,
+            editorUiState = when (type) {
                 BookshelfType.SMB -> BookshelfEditorUiState.SmbServer(
                     displayName = "",
                     isDisplayNameError = false,
@@ -71,7 +73,8 @@ internal class BookshelfEditViewModel @Inject constructor(
                 BookshelfType.DEVICE -> BookshelfEditorUiState.DeviceStorage(
                     displayName = "",
                     isDisplayNameError = false,
-                    dir = ""
+                    dir = "",
+                    validate = false
                 )
             }
         )
@@ -82,12 +85,15 @@ internal class BookshelfEditViewModel @Inject constructor(
             getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(bookshelfId))
                 .first().onSuccess {
                     _uiState.value = BookshelfEditScreenUiState.Editing(
-                        when (val bookshelf = it.bookshelf) {
+                        mode = EditMode.Change,
+                        running = false,
+                        editorUiState = when (val bookshelf = it.bookshelf) {
                             is InternalStorage ->
                                 BookshelfEditorUiState.DeviceStorage(
                                     displayName = bookshelf.displayName,
                                     isDisplayNameError = false,
-                                    dir = it.folder.path
+                                    dir = it.folder.path,
+                                    validate = false
                                 )
 
                             is SmbServer ->
@@ -133,12 +139,24 @@ internal class BookshelfEditViewModel @Inject constructor(
     fun onDisplayNameChanged(text: String) {
         if (text.isBlank()) {
             updateEditing(
-                onDevice = { it.copy(displayName = text, isDisplayNameError = true) },
+                onDevice = {
+                    it.copy(
+                        displayName = text,
+                        isDisplayNameError = true,
+                        validate = it.dir.isNotBlank() && text.isNotBlank()
+                    )
+                },
                 onSmb = { it.copy(displayName = text, isDisplayNameError = true) }
             )
         } else {
             updateEditing(
-                onDevice = { it.copy(displayName = text, isDisplayNameError = false) },
+                onDevice = {
+                    it.copy(
+                        displayName = text,
+                        isDisplayNameError = false,
+                        validate = it.dir.isNotBlank() && text.isNotBlank()
+                    )
+                },
                 onSmb = { it.copy(displayName = text, isDisplayNameError = false) }
             )
         }
@@ -233,6 +251,7 @@ internal class BookshelfEditViewModel @Inject constructor(
         }
         val uiState = uiState.value
         if (uiState is BookshelfEditScreenUiState.Editing) {
+            _uiState.value = uiState.copy(running = true)
             val bookshelf = when (val editorUiState = uiState.editorUiState) {
                 is BookshelfEditorUiState.DeviceStorage ->
                     InternalStorage(args.bookshelfId, editorUiState.displayName)
@@ -248,7 +267,11 @@ internal class BookshelfEditViewModel @Inject constructor(
                         editorUiState.port.toInt(),
                         when (editorUiState.authMethod) {
                             AuthMethod.GUEST -> SmbServer.Auth.Guest
-                            AuthMethod.USERPASS -> SmbServer.Auth.UsernamePassword(editorUiState.domain, editorUiState.username, editorUiState.password)
+                            AuthMethod.USERPASS -> SmbServer.Auth.UsernamePassword(
+                                editorUiState.domain,
+                                editorUiState.username,
+                                editorUiState.password
+                            )
                         }
                     )
                 }
@@ -264,6 +287,7 @@ internal class BookshelfEditViewModel @Inject constructor(
                     .first().onSuccess {
                         _uiState.value = BookshelfEditScreenUiState.Complete
                     }.onError {
+                        _uiState.value = uiState.copy(running = false)
                         _uiEvents.emit(
                             UiEvent.ShowSnackbar(
                                 when (it) {
@@ -285,13 +309,16 @@ internal class BookshelfEditViewModel @Inject constructor(
     fun updateUri(uri: Uri) {
         deviceStorageUri = uri
         updateEditing(
-            onDevice = { it.copy(dir = uri.lastPathSegment?.split(":")?.lastOrNull().orEmpty()) }
+            onDevice = {
+                val dir = uri.lastPathSegment?.split(":")?.lastOrNull().orEmpty()
+                it.copy(dir = dir, validate = dir.isNotBlank() && it.displayName.isNotBlank())
+            }
         )
     }
 
     private fun updateEditing(
         onDevice: (BookshelfEditorUiState.DeviceStorage) -> BookshelfEditorUiState = { it },
-        onSmb: (BookshelfEditorUiState.SmbServer) -> BookshelfEditorUiState = { it }
+        onSmb: (BookshelfEditorUiState.SmbServer) -> BookshelfEditorUiState = { it },
     ) {
         val uiState = _uiState.value
         if (uiState is BookshelfEditScreenUiState.Editing) {

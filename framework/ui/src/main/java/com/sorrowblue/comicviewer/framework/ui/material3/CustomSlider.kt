@@ -120,7 +120,7 @@ fun CustomSlider(
                     thumb = {
                         thumb(value)
                     },
-                    track = { track(it) }
+//                    track = { track(it) } TODO
                 )
 
                 if (showIndicator)
@@ -288,7 +288,7 @@ internal enum class ShapeKeyTokens {
     CornerSmall,
 }
 
-internal object ElevationTokens {
+object ElevationTokens {
     val Level0 = 0.0.dp
     val Level1 = 1.0.dp
     val Level2 = 3.0.dp

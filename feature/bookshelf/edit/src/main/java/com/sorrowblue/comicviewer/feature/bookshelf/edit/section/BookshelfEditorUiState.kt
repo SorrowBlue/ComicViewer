@@ -21,7 +21,8 @@ sealed interface BookshelfEditorUiState {
     data class DeviceStorage(
         val displayName: String = "",
         val isDisplayNameError: Boolean = false,
-        val dir: String = ""
+        val dir: String = "",
+        val validate: Boolean = false,
     ) : BookshelfEditorUiState
 }
 

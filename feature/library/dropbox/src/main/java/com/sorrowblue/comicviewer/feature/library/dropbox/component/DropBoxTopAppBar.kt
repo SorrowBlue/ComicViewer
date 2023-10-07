@@ -18,7 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.sorrowblue.comicviewer.feature.library.dropbox.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @ExperimentalMaterial3Api
@@ -33,7 +32,7 @@ internal fun DropBoxTopAppBar(
     TopAppBar(
         title = {
             Column {
-                Text(text = stringResource(R.string.dropbox_title))
+                Text(text = stringResource(com.sorrowblue.comicviewer.app.R.string.dropbox_title))
                 if (path.isNotEmpty()) {
                     Text(
                         text = path,
