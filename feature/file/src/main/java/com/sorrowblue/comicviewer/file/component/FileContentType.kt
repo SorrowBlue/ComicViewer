@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.file.component
 
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -12,18 +12,18 @@ import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
 
-sealed interface FileContentLayout {
+sealed interface FileContentType {
 
-    val columns: StaggeredGridCells
+    val columns: GridCells
 
-    data object List : FileContentLayout {
-        override val columns get() = StaggeredGridCells.Fixed(1)
+    data object List : FileContentType {
+        override val columns get() = GridCells.Fixed(1)
     }
 
-    data class Grid(val size: GridSize = GridSize.Medium) : FileContentLayout {
+    data class Grid(val size: GridSize = GridSize.Medium) : FileContentType {
 
-        override val columns: StaggeredGridCells
-            get() = StaggeredGridCells.Adaptive(
+        override val columns: GridCells
+            get() = GridCells.Adaptive(
                 when (size) {
                     GridSize.Small -> 88.dp
                     GridSize.Medium -> 120.dp
@@ -37,24 +37,24 @@ sealed interface FileContentLayout {
     }
 }
 
-fun FolderDisplaySettings.toFileContentLayout(): FileContentLayout {
+fun FolderDisplaySettings.toFileContentLayout(): FileContentType {
     return when (display) {
-        FolderDisplaySettings.Display.GRID -> FileContentLayout.Grid(
+        FolderDisplaySettings.Display.GRID -> FileContentType.Grid(
             when (columnSize) {
-                FolderDisplaySettings.Size.SMALL -> FileContentLayout.GridSize.Small
-                FolderDisplaySettings.Size.MEDIUM -> FileContentLayout.GridSize.Medium
-                FolderDisplaySettings.Size.LARGE -> FileContentLayout.GridSize.Large
+                FolderDisplaySettings.Size.SMALL -> FileContentType.GridSize.Small
+                FolderDisplaySettings.Size.MEDIUM -> FileContentType.GridSize.Medium
+                FolderDisplaySettings.Size.LARGE -> FileContentType.GridSize.Large
             }
         )
 
-        FolderDisplaySettings.Display.LIST -> FileContentLayout.List
+        FolderDisplaySettings.Display.LIST -> FileContentType.List
     }
 }
 
 @Composable
-fun FileContentLayoutButton(fileContentLayout: FileContentLayout, onClick: () -> Unit) {
-    when (fileContentLayout) {
-        is FileContentLayout.Grid -> {
+fun FileContentLayoutButton(fileContentType: FileContentType, onClick: () -> Unit) {
+    when (fileContentType) {
+        is FileContentType.Grid -> {
             PlainTooltipBox(
                 tooltipContent = {
                     Text(stringResource(id = R.string.file_list_label_switch_list_view))
@@ -69,7 +69,7 @@ fun FileContentLayoutButton(fileContentLayout: FileContentLayout, onClick: () ->
             }
         }
 
-        FileContentLayout.List -> {
+        FileContentType.List -> {
             PlainTooltipBox(
                 tooltipContent = {
                     Text(stringResource(id = R.string.file_list_label_switch_grid_view))

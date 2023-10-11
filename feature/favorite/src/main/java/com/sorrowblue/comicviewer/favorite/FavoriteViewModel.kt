@@ -31,7 +31,7 @@ internal class FavoriteViewModel @Inject constructor(
     pagingFavoriteFileUseCase: PagingFavoriteFileUseCase,
     private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val args = FavoriteArgs(savedStateHandle)
@@ -62,8 +62,10 @@ internal class FavoriteViewModel @Inject constructor(
             displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
                 .distinctUntilChanged().collectLatest {
                     _uiState.value = _uiState.value.copy(
-                        favoriteAppBarUiState = _uiState.value.favoriteAppBarUiState.copy(fileContentLayout = it),
-                        fileContentUiState = _uiState.value.fileContentUiState.copy(layout = it)
+                        favoriteAppBarUiState = _uiState.value.favoriteAppBarUiState.copy(
+                            fileContentType = it
+                        ),
+                        fileContentType = it
                     )
                 }
         }

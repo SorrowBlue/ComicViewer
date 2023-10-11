@@ -11,34 +11,34 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditRoute
 
-private const val bookshelfEditRoute = "bookshelf/edit"
+internal const val BookshelfEditRoute = "bookshelf/edit"
 
 fun NavController.navigateToBookshelfEdit(
     bookshelfId: BookshelfId,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) {
-    this.navigate("$bookshelfEditRoute?bookshelf_id=${bookshelfId.value}", navOptions)
+    this.navigate("$BookshelfEditRoute?bookshelf_id=${bookshelfId.value}", navOptions)
 }
 
 fun NavController.navigateToBookshelfEdit(
     bookshelfType: BookshelfType,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) {
-    this.navigate("$bookshelfEditRoute?type=${bookshelfType.name}", navOptions)
+    this.navigate("$BookshelfEditRoute?type=${bookshelfType.name}", navOptions)
 }
 
 fun NavGraphBuilder.bookshelfEditScreen(
     onBackClick: () -> Unit,
-    onComplete: () -> Unit
+    onComplete: () -> Unit,
 ) {
     composable(
-        route = "$bookshelfEditRoute?bookshelf_id={$bookshelfIdArg}&type={$bookshelfTypeArg}",
+        route = "$BookshelfEditRoute?bookshelf_id={$BookshelfIdArg}&type={$BookshelfTypeArg}",
         arguments = listOf(
-            navArgument(bookshelfIdArg) {
+            navArgument(BookshelfIdArg) {
                 type = NavType.IntType
                 defaultValue = 0
             },
-            navArgument(bookshelfTypeArg) {
+            navArgument(BookshelfTypeArg) {
                 type = NavType.StringType
                 defaultValue = BookshelfType.DEVICE.name
             },
@@ -51,13 +51,13 @@ fun NavGraphBuilder.bookshelfEditScreen(
     }
 }
 
-private const val bookshelfIdArg = "bookshelfId"
-private const val bookshelfTypeArg = "bookshelfType"
+internal const val BookshelfIdArg = "bookshelfId"
+internal const val BookshelfTypeArg = "bookshelfType"
 
 class BookshelfEditArgs(val bookshelfId: BookshelfId, val bookshelfType: BookshelfType) {
     constructor(savedStateHandle: SavedStateHandle) :
             this(
-                BookshelfId(checkNotNull(savedStateHandle.get<Int>(bookshelfIdArg))),
-                BookshelfType.valueOf(checkNotNull(savedStateHandle.get<String>(bookshelfTypeArg)))
+                BookshelfId(checkNotNull(savedStateHandle.get<Int>(BookshelfIdArg))),
+                BookshelfType.valueOf(checkNotNull(savedStateHandle.get<String>(BookshelfTypeArg)))
             )
 }

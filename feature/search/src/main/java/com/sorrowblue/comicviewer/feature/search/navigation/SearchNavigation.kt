@@ -99,7 +99,6 @@ fun NavGraphBuilder.searchGraph(
             },
             onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
-            onClickLongFile = onClickLongFile,
         )
     }
 }

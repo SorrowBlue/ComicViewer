@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -115,7 +114,7 @@ internal fun BookshelfEditRoute(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookshelfEditScreen(
     uiState: BookshelfEditScreenUiState = BookshelfEditScreenUiState.Editing(),
@@ -212,7 +211,8 @@ fun BookshelfEditScreen(
 
                     is BookshelfEditorUiState.SmbServer ->
                         SmbServerInfoEditor(
-                            modifier = Modifier.padding(padding),
+                            padding = padding,
+                            modifier = Modifier,
                             uiState = uiState.editorUiState,
                             onDisplayNameChange = onDisplayNameChange,
                             onHostChange = onHostChange,

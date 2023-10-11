@@ -8,7 +8,10 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
@@ -26,9 +29,9 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 
 @Composable
-fun FavoriteItem(favorite: Favorite, onClick: () -> Unit) {
+fun FavoriteItem(favorite: Favorite, onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
-        modifier = Modifier.clickable(
+        modifier = modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
 //            indication = rememberRipple(color = MaterialTheme.colorScheme.onSurface),
             indication = LocalIndication.current,
@@ -45,14 +48,23 @@ fun FavoriteItem(favorite: Favorite, onClick: () -> Unit) {
             )
         },
         leadingContent = {
+            var isError by remember {
+                mutableStateOf(false)
+            }
             AsyncImage(
                 model = favorite,
                 contentDescription = null,
-                modifier = Modifier.size(56.dp),
+                modifier = Modifier.size(if (isError) 40.dp else 56.dp),
                 error = forwardingPainter(
                     rememberVectorPainter(ComicIcons.Image),
                     colorFilter = ColorFilter.tint(ListItemDefaults.contentColor)
                 ),
+                onSuccess = {
+                    isError = false
+                },
+                onError = {
+                    isError = true
+                },
                 placeholder = debugPlaceholder()
             )
         }

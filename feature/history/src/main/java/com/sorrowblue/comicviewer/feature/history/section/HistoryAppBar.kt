@@ -9,8 +9,8 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.history.R
-import com.sorrowblue.comicviewer.file.component.FileContentLayout
 import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
+import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
@@ -18,7 +18,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuSta
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HistoryAppBar(
-    fileContentLayout: FileContentLayout,
+    fileContentType: FileContentType,
     topAppBarScrollBehavior: TopAppBarScrollBehavior? = null,
     onFileContentLayoutClick: () -> Unit = {},
     onGridSizeClick: () -> Unit = {},
@@ -28,12 +28,12 @@ internal fun HistoryAppBar(
         title = { Text(stringResource(R.string.history_title)) },
         actions = {
             FileContentLayoutButton(
-                fileContentLayout = fileContentLayout,
+                fileContentType = fileContentType,
                 onClick = onFileContentLayoutClick
             )
             val overflowMenuState = rememberOverflowMenuState()
             OverflowMenu(overflowMenuState) {
-                if (fileContentLayout is FileContentLayout.Grid) {
+                if (fileContentType is FileContentType.Grid) {
                     DropdownMenuItem(
                         text = { Text(text = "Change Grid size") },
                         trailingIcon = { Icon(ComicIcons.Grid4x4, "Change grid size") },

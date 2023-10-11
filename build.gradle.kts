@@ -13,7 +13,12 @@ plugins {
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
     alias(libs.plugins.dependency.graph.generator)
+    alias(libs.plugins.arturbosch.detekt)
     id("org.ajoberstar.grgit") version "5.2.0"
+}
+
+detekt {
+    config.setFrom("$projectDir/config/detekt/detekt.yml")
 }
 
 tasks.register("clean", Delete::class) {

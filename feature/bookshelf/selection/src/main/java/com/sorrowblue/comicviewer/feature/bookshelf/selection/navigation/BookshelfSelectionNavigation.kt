@@ -7,17 +7,17 @@ import androidx.navigation.compose.composable
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionScreen
 
-const val bookshelfSelectionRoute = "bookshelf/selection"
+const val BookshelfSelectionRoute = "bookshelf/selection"
 
 fun NavController.navigateToBookshelfSelection(navOptions: NavOptions? = null) {
-    navigate(bookshelfSelectionRoute, navOptions)
+    navigate(BookshelfSelectionRoute, navOptions)
 }
 
 fun NavGraphBuilder.bookshelfSelectionScreen(
     onBackClick: () -> Unit,
     onSourceClick: (BookshelfType) -> Unit
 ) {
-    composable(bookshelfSelectionRoute) {
+    composable(BookshelfSelectionRoute) {
         BookshelfSelectionScreen(onBackClick, onSourceClick)
     }
 }

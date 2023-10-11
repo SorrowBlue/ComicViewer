@@ -28,6 +28,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.responsive.FullScreenTopAppBar
+import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,13 +78,16 @@ fun BookshelfSelectionScreen(
                     )
                 )
         }
+        val list = remember {
+            BookshelfType.entries.toPersistentList()
+        }
         LazyVerticalGrid(
             columns = GridCells.Adaptive(300.dp),
             contentPadding = padding,
             verticalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding * 2),
             horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding * 2)
         ) {
-            items(BookshelfType.values() + BookshelfType.values() + BookshelfType.values() + BookshelfType.values() + BookshelfType.values()) { type ->
+            items(list) { type ->
                 BookshelfSourceRow(
                     type = type,
                     onClick = { onSourceClick(type) }

@@ -4,8 +4,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialogUiState
-import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.Scan
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
@@ -43,34 +43,20 @@ class BookshelfViewModel @Inject constructor(
         pagingBookshelfFolderUseCase.execute(PagingBookshelfFolderUseCase.Request(PagingConfig(20)))
             .cachedIn(viewModelScope)
 
-    fun remove() {
+    fun remove(bookshelf: Bookshelf) {
         val uiState = _uiState.value
-        val bookshelf = uiState.bookshelfInfoSheetUiState.bookshelfFolder?.bookshelf ?: return
         viewModelScope.launch {
             removeBookshelfUseCase.execute(RemoveBookshelfUseCase.Request(bookshelf))
             _uiState.value = uiState.copy(
                 removeDialogUiState = BookshelfRemoveDialogUiState.Hide,
-                bookshelfInfoSheetUiState = uiState.bookshelfInfoSheetUiState.copy(
-                    bookshelfFolder = null
-                )
             )
             updateUiEvent(BookshelfUiEvent.Message("${bookshelf.displayName} を削除しました。"))
         }
     }
 
-    fun onBookshelfLongClick(bookshelfFolder: BookshelfFolder) {
+    fun onRemoveClick(bookshelf: Bookshelf) {
         val uiState = _uiState.value
-        _uiState.value = uiState.copy(
-            bookshelfInfoSheetUiState = uiState.bookshelfInfoSheetUiState.copy(
-                bookshelfFolder = bookshelfFolder
-            )
-        )
-    }
-
-    fun onRemoveClick() {
-        val uiState = _uiState.value
-        val displayName =
-            uiState.bookshelfInfoSheetUiState.bookshelfFolder?.bookshelf?.displayName ?: return
+        val displayName = bookshelf.displayName
         _uiState.value =
             uiState.copy(removeDialogUiState = BookshelfRemoveDialogUiState.Show(displayName))
     }

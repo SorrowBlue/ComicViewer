@@ -21,7 +21,7 @@ internal class GetBookshelfInfoInteractor @Inject constructor(
         return bookshelfRepository.find(request.bookshelfId).flatMapLatestFold({ bookshelf ->
             fileRepository.findByParent(bookshelf.id, "").mapFold({
                 if (it is Folder) {
-                    Resource.Success(BookshelfFolder(bookshelf to it))
+                    Resource.Success(BookshelfFolder(bookshelf, it))
                 } else {
                     Resource.Error(Error.NotFound)
                 }
@@ -42,7 +42,7 @@ internal class GetBookshelfInfoInteractor @Inject constructor(
 
 private fun <D, E : Resource.AppError, DR, ER : Resource.AppError> Flow<Resource<D, E>>.flatMapLatestFold(
     onSuccess: suspend (D) -> Flow<Resource<DR, ER>>,
-    onError: suspend (E) -> Flow<Resource<DR, ER>>
+    onError: suspend (E) -> Flow<Resource<DR, ER>>,
 ): Flow<Resource<DR, ER>> {
     return flatMapLatest {
         when (it) {
@@ -55,7 +55,7 @@ private fun <D, E : Resource.AppError, DR, ER : Resource.AppError> Flow<Resource
 
 private fun <D, E : Resource.AppError, DR, ER : Resource.AppError> Flow<Resource<D, E>>.mapFold(
     onSuccess: suspend (D) -> Resource<DR, ER>,
-    onError: suspend (E) -> Resource<DR, ER>
+    onError: suspend (E) -> Resource<DR, ER>,
 ): Flow<Resource<DR, ER>> {
     return map {
         when (it) {

@@ -7,7 +7,6 @@ import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingHistoryBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -28,9 +27,9 @@ internal class HistoryViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         ReadLaterScreenUiState(
-            FileContentUiState(runBlocking {
+            runBlocking {
                 manageFolderDisplaySettingsUseCase.settings.first().toFileContentLayout()
-            })
+            }
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -40,9 +39,7 @@ internal class HistoryViewModel @Inject constructor(
         viewModelScope.launch {
             manageFolderDisplaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
                 .distinctUntilChanged().collectLatest {
-                    _uiState.value = _uiState.value.copy(
-                        fileContentUiState = _uiState.value.fileContentUiState.copy(layout = it)
-                    )
+                    _uiState.value = _uiState.value.copy(fileContentType = it)
                 }
         }
     }

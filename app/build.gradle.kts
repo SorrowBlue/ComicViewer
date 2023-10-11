@@ -9,7 +9,7 @@ plugins {
     id("comicviewer.android.application")
     id("comicviewer.android.application.compose")
     id("comicviewer.android.hilt")
-    alias(libs.plugins.mikepenz.aboutlibraries.plugin)
+    alias(libs.plugins.arturbosch.detekt)
     alias(libs.plugins.grgit)
 }
 

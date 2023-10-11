@@ -15,7 +15,6 @@ import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.file.component.FileContentUiState
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
@@ -65,9 +64,9 @@ class FolderViewModel @Inject constructor(
                 "",
                 runBlocking { displaySettingsUseCase.settings.first().toFileContentLayout() }),
             sortSheetUiState = SortSheetUiState.Hide,
-            fileContentUiState = FileContentUiState(runBlocking {
+            fileContentType = runBlocking {
                 displaySettingsUseCase.settings.first().toFileContentLayout()
-            })
+            }
         )
     )
 
@@ -77,7 +76,7 @@ class FolderViewModel @Inject constructor(
                 .distinctUntilChanged().collectLatest {
                     _uiState.value = _uiState.value.copy(
 //                        folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(fileContentLayout = it),
-                        fileContentUiState = _uiState.value.fileContentUiState.copy(layout = it)
+                        fileContentType = it
                     )
                 }
         }

@@ -9,8 +9,7 @@ import com.sorrowblue.comicviewer.domain.usecase.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAction
-import com.sorrowblue.comicviewer.file.component.FileContentLayout
-import com.sorrowblue.comicviewer.file.component.FileContentUiState
+import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -34,11 +33,12 @@ internal class ReadLaterViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         ReadLaterScreenUiState(
-            FileContentUiState(runBlocking {
+            fileContentType = runBlocking {
                 manageFolderDisplaySettingsUseCase.settings.first().toFileContentLayout()
-            }),
+            }
         )
     )
+
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -46,14 +46,13 @@ internal class ReadLaterViewModel @Inject constructor(
             manageFolderDisplaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
                 .distinctUntilChanged().collectLatest {
                     val (old, new) = when (it) {
-                        is FileContentLayout.Grid -> ReadLaterAction.FileContetView to ReadLaterAction.FileContetGrid
-                        FileContentLayout.List -> ReadLaterAction.FileContetGrid to ReadLaterAction.FileContetView
+                        is FileContentType.Grid -> ReadLaterAction.FileContetView to ReadLaterAction.FileContetGrid
+                        FileContentType.List -> ReadLaterAction.FileContetGrid to ReadLaterAction.FileContetView
                     }
                     _uiState.value = _uiState.value.copy(
-                        list = uiState.value.list.map {
-                            if (it == old) new else it
-                        }.toPersistentList(),
-                        fileContentUiState = _uiState.value.fileContentUiState.copy(layout = it)
+                        list = uiState.value.list.map { if (it == old) new else it }
+                            .toPersistentList(),
+                        fileContentType = it
                     )
                 }
         }

@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.section.EmptyContent
 import com.sorrowblue.comicviewer.feature.history.section.HistoryAppBar
 import com.sorrowblue.comicviewer.file.component.FileContent
-import com.sorrowblue.comicviewer.file.component.FileContentUiState
+import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 @Composable
@@ -49,7 +49,7 @@ internal fun HistoryRoute(
 }
 
 data class ReadLaterScreenUiState(
-    val fileContentUiState: FileContentUiState
+    val fileContentType: FileContentType,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +70,7 @@ internal fun HistoryScreen(
     Scaffold(
         topBar = {
             HistoryAppBar(
-                fileContentLayout = uiState.fileContentUiState.layout,
+                fileContentType = uiState.fileContentType,
                 topAppBarScrollBehavior = appBarScrollBehavior,
                 onFileContentLayoutClick = onFileListTypeClick,
                 onGridSizeClick = onGridSizeClick,
@@ -89,7 +89,7 @@ internal fun HistoryScreen(
             EmptyContent(Modifier.padding(innerPadding))
         } else {
             FileContent(
-                uiState = uiState.fileContentUiState,
+                type = uiState.fileContentType,
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = innerPadding,
                 onClickItem = onFileClick,

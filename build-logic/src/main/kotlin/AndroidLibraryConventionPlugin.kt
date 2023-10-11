@@ -15,6 +15,7 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
+                apply("io.gitlab.arturbosch.detekt")
             }
 
             kotlin {
@@ -29,6 +30,7 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
+                add("detektPlugins", libs.findLibrary("twitter.compose.rules.detekt").get())
                 implementation(libs.findLibrary("squareup.logcat").get())
             }
         }

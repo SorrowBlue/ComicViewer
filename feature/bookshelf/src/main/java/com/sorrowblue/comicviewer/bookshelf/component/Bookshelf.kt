@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.bookshelf.BookshelfConverter
@@ -61,7 +61,7 @@ fun Bookshelf(
                 placeholder = debugPlaceholder(),
                 contentDescription = "",
                 modifier = Modifier
-                    .size(192.dp)
+                    .size(128.dp)
                     .background(
                         ComicTheme.colorScheme.surfaceContainerHighest,
                         shape = CardDefaults.shape
@@ -80,9 +80,10 @@ fun Bookshelf(
                     style = ComicTheme.typography.bodyLarge
                 )
                 Text(
-                    text = stringResource(
-                        id = R.string.bookshelf_list_label_files,
-                        bookshelfFolder.bookshelf.fileCount
+                    text = pluralStringResource(
+                        id = R.plurals.bookshelf_list_label_files,
+                        bookshelfFolder.bookshelf.fileCount,
+                        bookshelfFolder.bookshelf.fileCount,
                     ),
                     style = ComicTheme.typography.bodyMedium
                 )
@@ -103,7 +104,8 @@ private fun PreviewArticleRow() {
     PreviewTheme {
         Bookshelf(
             bookshelfFolder = BookshelfFolder(
-                InternalStorage(BookshelfId(0), "aaaaaaaaaaaaaaaaa", 0) to Folder(
+                InternalStorage(BookshelfId(0), "display name", 0),
+                Folder(
                     BookshelfId(0),
                     "",
                     "",
@@ -111,10 +113,10 @@ private fun PreviewArticleRow() {
                     0,
                     0
                 )
-                ),
-                {},
-                {},
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+            ),
+            {},
+            {},
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 }

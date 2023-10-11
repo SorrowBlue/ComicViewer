@@ -112,7 +112,7 @@ fun DeviceStorageInfoEditor(
 
 @Preview
 @Composable
-fun PreivewDeviceStorageInfoEditor() {
+fun PreviewDeviceStorageInfoEditor() {
     PreviewTheme {
         Surface {
             DeviceStorageInfoEditor(isRunning = true)

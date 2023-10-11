@@ -16,7 +16,6 @@ import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAu
 import com.sorrowblue.comicviewer.feature.book.navigation.bookGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
 import com.sorrowblue.comicviewer.feature.favorite.create.navigation.favoriteCreateScreen
-import com.sorrowblue.comicviewer.feature.favorite.create.navigation.navigateToFavoriteCreate
 import com.sorrowblue.comicviewer.feature.library.navigation.libraryGroup
 import com.sorrowblue.comicviewer.feature.library.serviceloader.AddOnNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
@@ -30,8 +29,6 @@ import com.sorrowblue.comicviewer.feature.settings.navigation.navigateToSettings
 import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
-import com.sorrowblue.comicviewer.file.info.navigation.fileInfoGraph
-import com.sorrowblue.comicviewer.file.info.navigation.navigateToFileInfo
 import java.util.ServiceLoader
 import kotlinx.collections.immutable.PersistentList
 import logcat.asLog
@@ -75,13 +72,12 @@ internal fun NavGraphBuilder.mainGraph(
         navigateToBook = navController::navigateToBook,
         navigateToSearch = navController::navigateToSearch,
         onRestoreComplete = restoreComplete,
-        onClickLongFile = { navController.navigateToFileInfo(it.bookshelfId, it.path, false) },
     )
     favoriteGroup(
         contentPadding = contentPadding,
         navController = navController,
         onBookClick = navController::navigateToBook,
-        onClickLongFile = { navController.navigateToFileInfo(it.bookshelfId, it.path) },
+        onClickLongFile = { /*TODO*/ },
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
     )
@@ -90,7 +86,7 @@ internal fun NavGraphBuilder.mainGraph(
         contentPadding = contentPadding,
         navController = navController,
         onBookClick = navController::navigateToBook,
-        onFileLongClick = { navController.navigateToFileInfo(it.bookshelfId, it.path) },
+        onFileLongClick = { /*TODO*/ },
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
     )
@@ -101,7 +97,7 @@ internal fun NavGraphBuilder.mainGraph(
             navController.navigateToBook(id, path, position = pos)
         },
         onFileLongClick = {
-            navController.navigateToFileInfo(it.bookshelfId, it.path)
+            /*TODO*/
         },
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
@@ -114,19 +110,10 @@ internal fun NavGraphBuilder.mainGraph(
         },
     )
 
-    fileInfoGraph(
-        navController = navController,
-        contentPadding = contentPadding,
-        onClickBook = navController::navigateToBook,
-        navigateToSearch = navController::navigateToSearch,
-        onSettingsClick = navController::navigateToSettings,
-        onAddClick = navController::navigateToFavoriteCreate
-    )
-
     searchGraph(
         contentPadding = contentPadding,
         navController = navController,
-        onClickLongFile = { navController.navigateToFileInfo(it.bookshelfId, it.path) },
+        onClickLongFile = { /*TODO*/ },
         onBookClick = navController::navigateToBook,
         onSettingsClick = navController::navigateToSettings
     )

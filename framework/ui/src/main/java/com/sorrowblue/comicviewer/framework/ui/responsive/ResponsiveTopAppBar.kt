@@ -22,6 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.ui.material3.AppBarAction
@@ -150,6 +152,103 @@ fun <T : AppBarAction> ResponsiveTopAppBar(
             .clip(CircleShape)
     }
     ResponsiveTopAppBar(title, navigationIcon, actions, onClick, scrollBehavior, modifier)
+}
+
+interface AppBarAction2 {
+    val label: Int
+    val description: Int
+    val icon: ImageVector
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun <T : AppBarAction2> ResponsiveTopAppBar2(
+    title: @Composable () -> Unit = {},
+    navigationIcon: @Composable () -> Unit = {},
+    actions: PersistentList<T>,
+    onClick: (T) -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior? = ResponsiveTopAppBarDefault.scrollBehavior,
+    modifier: Modifier,
+) {
+    TopAppBar(
+        title = title,
+        navigationIcon = navigationIcon,
+        actions = {
+            if (actions.size <= 3) {
+                actions.forEach { action ->
+                    key(action.label) {
+                        PlainTooltipBox(tooltipContent = {
+                            Text(text = stringResource(id = action.label))
+                        }) {
+                            IconButton(onClick = { onClick.invoke(action) }) {
+                                Icon(
+                                    imageVector = action.icon,
+                                    contentDescription = stringResource(id = action.description)
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
+                actions.take(2).forEach { action ->
+                    key(action.label) {
+                        PlainTooltipBox(tooltipContent = { Text(text = stringResource(id = action.label)) }) {
+                            IconButton(onClick = { onClick.invoke(action) }) {
+                                Icon(
+                                    imageVector = action.icon,
+                                    contentDescription = stringResource(id = action.description)
+                                )
+                            }
+                        }
+                    }
+                }
+                val overflowMenuState = rememberOverflowMenuState()
+                OverflowMenu(overflowMenuState) {
+                    actions.drop(2).forEach { action ->
+                        key(action.label) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = action.label)) },
+                                trailingIcon = {
+                                    Icon(
+                                        action.icon,
+                                        stringResource(id = action.description)
+                                    )
+                                },
+                                onClick = {
+                                    overflowMenuState.collapse()
+                                    onClick.invoke(action)
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        scrollBehavior = scrollBehavior,
+        modifier = modifier
+    )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun <T : AppBarAction2> ResponsiveTopAppBar2(
+    title: @Composable () -> Unit = {},
+    navigationIcon: @Composable () -> Unit = {},
+    actions: PersistentList<T>,
+    onClick: (T) -> Unit,
+    windowSizeClass: WindowSizeClass = LocalWindowSize.current,
+    scrollBehavior: TopAppBarScrollBehavior? = ResponsiveTopAppBarDefault.scrollBehavior,
+) {
+    val modifier = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+        Modifier
+    } else {
+        Modifier
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.End))
+            .padding(horizontal = ComicTheme.dimension.margin)
+            .padding(end = ComicTheme.dimension.margin)
+            .clip(CircleShape)
+    }
+    ResponsiveTopAppBar2(title, navigationIcon, actions, onClick, scrollBehavior, modifier)
 }
 
 @Composable

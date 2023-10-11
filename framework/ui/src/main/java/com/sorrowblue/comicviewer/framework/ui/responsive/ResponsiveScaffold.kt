@@ -34,32 +34,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.designsystem.theme.MotionTokens
 import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
-import com.sorrowblue.comicviewer.framework.ui.add
-import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.ReversePermanentNavigationDrawer
 
 @Stable
-data class ResponsiveScaffoldState<T : Any> internal constructor(
-    val isVisibleFab: Boolean,
+open class ResponsiveScaffoldState<T : Any>(
     val sheetState: SideSheetValueState<T>,
     val snackbarHostState: SnackbarHostState,
 )
 
 @Composable
 fun <T : Any> rememberResponsiveScaffoldState(
-    isVisibleFab: Boolean = false,
     sideSheetState: SideSheetValueState<T>,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ): ResponsiveScaffoldState<T> {
     return remember(sideSheetState, snackbarHostState) {
         ResponsiveScaffoldState(
-            isVisibleFab = isVisibleFab,
             sheetState = sideSheetState,
             snackbarHostState = snackbarHostState
         )
@@ -79,7 +73,7 @@ fun <T : Any> ResponsiveScaffold(
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val isCompact = remember(windowSizeClass.widthSizeClass) {
+    val isCompact = remember(windowSizeClass) {
         windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
     }
     if (isCompact && state.sheetState.show) {
@@ -133,10 +127,10 @@ fun <T : Any> ResponsiveScaffold(
                 targetValue = if (state.sheetState.show) {
                     ComicTheme.dimension.spacer
                 } else {
-                    innerPadding.calculateEndPadding(LocalLayoutDirection.current) + ComicTheme.dimension.margin
+                    innerPadding.calculateEndPadding(LocalLayoutDirection.current)
                 }, label = "end"
             )
-            val padding = if (isCompact) {
+            val padding = innerPadding/*if (isCompact) {
                 innerPadding
                     .add(
                         PaddingValues(
@@ -154,7 +148,7 @@ fun <T : Any> ResponsiveScaffold(
                             bottom = ComicTheme.dimension.margin
                         )
                     )
-            }
+            }*/
             content(padding)
         }
     }

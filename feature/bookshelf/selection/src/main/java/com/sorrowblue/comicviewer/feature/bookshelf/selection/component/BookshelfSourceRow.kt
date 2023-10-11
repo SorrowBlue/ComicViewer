@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,7 +18,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBooks
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawServer
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveCard
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookshelfSourceRow(
     modifier: Modifier = Modifier,
@@ -27,14 +25,15 @@ fun BookshelfSourceRow(
     onClick: () -> Unit = {},
 ) {
     ResponsiveCard(
-        onClick = onClick
+        onClick = onClick,
+        modifier = modifier
     ) {
         Column(Modifier.padding(16.dp)) {
             Text(
                 text = stringResource(
                     id = when (type) {
-                        BookshelfType.DEVICE -> R.string.bookshelf_manage_title_device
-                        BookshelfType.SMB -> R.string.bookshelf_manage_title_smb
+                        BookshelfType.DEVICE -> R.string.bookshelf_selection_title_device
+                        BookshelfType.SMB -> R.string.bookshelf_selection_title_smb
                     }
                 )
             )
@@ -42,8 +41,8 @@ fun BookshelfSourceRow(
                 Text(
                     text = stringResource(
                         id = when (type) {
-                            BookshelfType.DEVICE -> R.string.bookshelf_manage_desc_device
-                            BookshelfType.SMB -> R.string.bookshelf_manage_desc_smb
+                            BookshelfType.DEVICE -> R.string.bookshelf_selection_desc_device
+                            BookshelfType.SMB -> R.string.bookshelf_selection_desc_smb
                         }
                     ),
                     modifier = Modifier

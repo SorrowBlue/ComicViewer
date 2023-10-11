@@ -5,8 +5,8 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.navOptions
-import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraphRoute
-import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfRoute
+import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphRoute
+import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfSelection
 import com.sorrowblue.comicviewer.bookshelf.navigation.routeInBookshelfGraph
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteListRoute
@@ -32,7 +32,7 @@ internal fun rememberGraphStateHolder(): GraphStateHolder = remember {
 }
 
 private class ComicViewerAppGraphStateHolder : GraphStateHolder {
-    override val startDestination: String = bookshelfGraphRoute
+    override val startDestination: String = BookshelfGraphRoute
 
     override fun routeToTab(route: String): MainScreenTab? {
         return when (route) {
@@ -46,7 +46,7 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
 
     override fun onTabSelected(navController: NavController, tab: MainScreenTab) {
         when (tab) {
-            MainScreenTab.Bookshelf -> bookshelfGraphRoute
+            MainScreenTab.Bookshelf -> BookshelfGraphRoute
             MainScreenTab.Favorite -> favoriteGraphRoute
             MainScreenTab.Readlater -> readlaterGraphRoute
             MainScreenTab.Library -> libraryGraphRoute
@@ -66,7 +66,7 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
 
     override fun routeToFab(route: String): MainScreenFab? {
         return when (route) {
-            bookshelfRoute -> MainScreenFab.Bookshelf
+            BookshelfRoute -> MainScreenFab.Bookshelf
             FavoriteListRoute -> MainScreenFab.Favorite
             else -> null
         }

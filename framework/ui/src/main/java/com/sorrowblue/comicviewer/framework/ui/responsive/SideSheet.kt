@@ -20,7 +20,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,7 +45,7 @@ fun <T : Any> rememberSideSheetValueState(
 @Stable
 class SideSheetValueState<T : Any>(
     initialValue: T? = null,
-    val save: SaverScope.(SideSheetValueState<T>) -> Any? = { null },
+    initialShow: Boolean = false,
 ) {
     fun show(value: T) {
         currentValue = value
@@ -60,7 +59,7 @@ class SideSheetValueState<T : Any>(
     var currentValue by mutableStateOf(initialValue)
         private set
 
-    var show by mutableStateOf(false)
+    var show by mutableStateOf(initialShow)
         private set
 }
 
@@ -128,14 +127,13 @@ fun SideSheet(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .clip(ComicTheme.shapes.largeBottom)
-                .padding(bottom = innerPadding.calculateBottomPadding())
         ) {
             Column(
                 Modifier
                     .fillMaxWidth()
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
-                    .padding(bottom = ComicTheme.dimension.margin)
+                    .padding(bottom = innerPadding.calculateBottomPadding() + ComicTheme.dimension.margin)
                     .clip(ComicTheme.shapes.largeBottom)
                     .background(ComicTheme.colorScheme.surface)
                     .padding(

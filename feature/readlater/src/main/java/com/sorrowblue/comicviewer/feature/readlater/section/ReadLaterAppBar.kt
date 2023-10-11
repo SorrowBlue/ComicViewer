@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.readlater.R
-import com.sorrowblue.comicviewer.file.component.FileContentLayout
+import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.AppBarAction
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
@@ -27,7 +27,7 @@ enum class ReadLaterAction(override val icon: ImageVector, override val label: S
 @Composable
 internal fun ReadLaterAppBar(
     list: PersistentList<ReadLaterAction>,
-    fileContentLayout: FileContentLayout,
+    fileContentType: FileContentType,
     topAppBarScrollBehavior: TopAppBarScrollBehavior? = null,
     onFileContentLayoutClick: () -> Unit = {},
     onGridSizeClick: () -> Unit = {},

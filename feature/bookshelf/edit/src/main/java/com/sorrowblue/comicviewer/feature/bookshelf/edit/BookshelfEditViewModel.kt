@@ -62,7 +62,7 @@ internal class BookshelfEditViewModel @Inject constructor(
                     port = "",
                     isPortError = false,
                     path = "",
-                    authMethod = AuthMethod.GUEST,
+                    authMethod = AuthMethod.Guest,
                     domain = "",
                     username = "",
                     isUsernameError = false,
@@ -106,7 +106,7 @@ internal class BookshelfEditViewModel @Inject constructor(
                                         port = bookshelf.port.toString(),
                                         isPortError = false,
                                         path = it.folder.path.removeSurrounding("/"),
-                                        authMethod = AuthMethod.GUEST,
+                                        authMethod = AuthMethod.Guest,
                                         domain = "",
                                         username = "",
                                         isUsernameError = false,
@@ -122,7 +122,7 @@ internal class BookshelfEditViewModel @Inject constructor(
                                         port = bookshelf.port.toString(),
                                         isPortError = false,
                                         path = it.folder.path.removeSurrounding("/"),
-                                        authMethod = AuthMethod.USERPASS,
+                                        authMethod = AuthMethod.UserPassword,
                                         domain = auth.domain,
                                         username = auth.username,
                                         isUsernameError = false,
@@ -219,8 +219,8 @@ internal class BookshelfEditViewModel @Inject constructor(
                 onPortChanged(editorUiState.port)
                 onPathChange(editorUiState.path)
                 when (editorUiState.authMethod) {
-                    AuthMethod.GUEST -> Unit
-                    AuthMethod.USERPASS -> {
+                    AuthMethod.Guest -> Unit
+                    AuthMethod.UserPassword -> {
                         onUsernameChange(editorUiState.username)
                         onPasswordChange(editorUiState.password)
                     }
@@ -237,8 +237,8 @@ internal class BookshelfEditViewModel @Inject constructor(
                 !editorUiState.isDisplayNameError && !editorUiState.isHostError
                         && !editorUiState.isPortError
                         && when (editorUiState.authMethod) {
-                    AuthMethod.GUEST -> true
-                    AuthMethod.USERPASS -> !editorUiState.isUsernameError && !editorUiState.isPasswordError
+                    AuthMethod.Guest -> true
+                    AuthMethod.UserPassword -> !editorUiState.isUsernameError && !editorUiState.isPasswordError
                 }
             }
         }
@@ -266,8 +266,8 @@ internal class BookshelfEditViewModel @Inject constructor(
                         editorUiState.host,
                         editorUiState.port.toInt(),
                         when (editorUiState.authMethod) {
-                            AuthMethod.GUEST -> SmbServer.Auth.Guest
-                            AuthMethod.USERPASS -> SmbServer.Auth.UsernamePassword(
+                            AuthMethod.Guest -> SmbServer.Auth.Guest
+                            AuthMethod.UserPassword -> SmbServer.Auth.UsernamePassword(
                                 editorUiState.domain,
                                 editorUiState.username,
                                 editorUiState.password

@@ -43,7 +43,7 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
     override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>> {
         return Pager(pagingConfig) { dao.pagingSource() }.flow.map { pagingData ->
             pagingData.map {
-                BookshelfFolder(it.entity.toModel(it.fileCount) to it.fileEntity.toModel() as Folder)
+                BookshelfFolder(it.entity.toModel(it.fileCount), it.fileEntity.toModel() as Folder)
             }
         }
 

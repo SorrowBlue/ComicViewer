@@ -148,7 +148,7 @@ fun BookshelfSideSheet(
     onCloseClick: () -> Unit,
 ) {
     SideSheet(
-        title = "Side Sheet",
+        title = stringResource(id = R.string.bookshelf_info_title),
         width = SideSheetDefault.MaxWidth,
         innerPadding = innerPadding,
         onCloseClick = onCloseClick
@@ -245,7 +245,8 @@ private fun PreviewBookshelfBottomSheet() {
             "0.0.0.0",
             445,
             SmbServer.Auth.UsernamePassword("domain", "username", "password")
-        ) to Folder(BookshelfId(0), "", "", "/path/sample/", 0, 0, emptyMap(), 0)
+        ),
+        Folder(BookshelfId(0), "", "", "/path/sample/", 0, 0, emptyMap(), 0)
     )
     PreviewTheme {
         Surface(color = ComicTheme.colorScheme.surfaceContainerLow) {
@@ -264,7 +265,8 @@ private fun PreviewBookshelfSideSheet() {
             "0.0.0.0",
             445,
             SmbServer.Auth.UsernamePassword("domain", "username", "password")
-        ) to Folder(BookshelfId(0), "", "", "/path/sample/", 0, 0, emptyMap(), 0)
+        ),
+        Folder(BookshelfId(0), "", "", "/path/sample/", 0, 0, emptyMap(), 0)
     )
     PreviewTheme {
         Surface(color = ComicTheme.colorScheme.surfaceContainerLow) {

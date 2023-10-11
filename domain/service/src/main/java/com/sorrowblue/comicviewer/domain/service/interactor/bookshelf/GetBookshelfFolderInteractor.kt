@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.Result
-import com.sorrowblue.comicviewer.domain.model.file.IFolder
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError
@@ -22,7 +22,7 @@ internal class GetBookshelfFolderInteractor @Inject constructor(
         return bookshelfRepository.get(request.bookshelfId).map { result ->
             result.fold({ server ->
                 fileRepository.get2(server.id, request.path).fold({
-                    Result.Success(BookshelfFolder(server to it as IFolder))
+                    Result.Success(BookshelfFolder(server, it as Folder))
                 }, {
                     Result.Error(GetLibraryInfoError.NOT_FOUND)
                 }, {

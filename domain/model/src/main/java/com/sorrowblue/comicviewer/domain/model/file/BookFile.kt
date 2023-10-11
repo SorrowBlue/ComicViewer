@@ -2,7 +2,9 @@ package com.sorrowblue.comicviewer.domain.model.file
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.extension
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class BookFile(
     override val bookshelfId: BookshelfId,
     override val name: String,

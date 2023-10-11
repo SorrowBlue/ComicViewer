@@ -1,7 +1,9 @@
 package com.sorrowblue.comicviewer.bookshelf
 
 import androidx.activity.ComponentActivity
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -13,11 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -33,13 +37,13 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.ui.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffold
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.responsive.SideSheetValueState
 import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveScaffoldState
-import logcat.logcat
 
 @Composable
 internal fun BookshelfRoute(
@@ -50,11 +54,9 @@ internal fun BookshelfRoute(
     viewModel: BookshelfViewModel = hiltViewModel(),
     commonViewModel: CommonViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
 ) {
-    logcat("BookshelfRoute") { "viewModel=$commonViewModel" }
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val state = rememberResponsiveScaffoldState(
-        isVisibleFab = true,
         sideSheetState = rememberSideSheetBookshelfFolderState()
     )
     BookshelfScreen(
@@ -65,17 +67,19 @@ internal fun BookshelfRoute(
         canScroll = { commonViewModel.canScroll = it },
         onSettingsClick = onSettingsClick,
         onBookshelfClick = onBookshelfClick,
-        onBookshelfLongClick = {
-            viewModel.onBookshelfLongClick(it)
-            state.sheetState.show(it)
+        onBookshelfLongClick = state.sheetState::show,
+        onInfoSheetRemoveClick = {
+            viewModel.onRemoveClick(state.sheetState.currentValue!!.bookshelf)
         },
-        onInfoSheetRemoveClick = viewModel::onRemoveClick,
-        onInfoSheetEditClick = { onEditClick(viewModel.uiState.value.bookshelfInfoSheetUiState.bookshelfFolder!!.bookshelf.id) },
+        onInfoSheetEditClick = { onEditClick(state.sheetState.currentValue!!.bookshelf.id) },
         onInfoSheetCloseClick = state.sheetState::hide,
         onInfoSheetScanClick = {
             viewModel.scan(state.sheetState.currentValue!!.folder)
         },
-        onRemoveDialogConfirmClick = viewModel::remove,
+        onRemoveDialogConfirmClick = {
+            state.sheetState.hide()
+            viewModel.remove(state.sheetState.currentValue!!.bookshelf)
+        },
         onRemoveDialogDismissRequest = viewModel::onRemoveDialogDismissRequest
     )
     LaunchedEffectUiEvent(viewModel) {
@@ -87,13 +91,7 @@ internal fun BookshelfRoute(
     }
 }
 
-data class BookshelfContentUiState(
-    val isVisibleSheet: Boolean = false,
-    val bookshelfFolder: BookshelfFolder? = null,
-)
-
 data class BookshelfScreenUiState(
-    val bookshelfInfoSheetUiState: BookshelfContentUiState = BookshelfContentUiState(),
     val removeDialogUiState: BookshelfRemoveDialogUiState = BookshelfRemoveDialogUiState.Hide,
 )
 
@@ -123,21 +121,20 @@ private fun BookshelfScreen(
     ResponsiveScaffold(
         topBar = {
             BookshelfAppBar(
-                onSettingsClick,
-                scrollBehavior = scrollBehavior,
+                onSettingsClick = onSettingsClick,
+                scrollBehavior = scrollBehavior
             )
         },
-        bottomSheet = {
+        bottomSheet = { bookshelfFolder ->
             BookshelfBottomSheet(
-                bookshelfFolder = it,
+                bookshelfFolder = bookshelfFolder,
                 onRemove = onInfoSheetRemoveClick,
                 onEdit = onInfoSheetEditClick
             )
         },
-        onBottomSheetDismissRequest = { state.sheetState.hide() },
-        sideSheet = { it, innerPadding ->
+        sideSheet = { bookshelfFolder, innerPadding ->
             BookshelfSideSheet(
-                bookshelfFolder = it,
+                bookshelfFolder = bookshelfFolder,
                 innerPadding = innerPadding,
                 onRemoveClick = onInfoSheetRemoveClick,
                 onEditClick = onInfoSheetEditClick,
@@ -149,9 +146,14 @@ private fun BookshelfScreen(
         contentWindowInsets = contentPadding.asWindowInsets(),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
+        val end by animateDpAsState(
+            targetValue = if (state.sheetState.show) 0.dp else innerPadding.calculateEndPadding(
+                LocalLayoutDirection.current
+            ), label = "end"
+        )
         BookshelfMainSheet(
             lazyPagingItems,
-            innerPadding,
+            innerPadding.copy(end = end),
             lazyGridState,
             onBookshelfClick,
             onBookshelfLongClick
@@ -169,10 +171,15 @@ fun rememberSideSheetBookshelfFolderState(
     initialValue: BookshelfFolder? = null,
 ): SideSheetValueState<BookshelfFolder> {
     return rememberSaveable(saver =
-    Saver(
-        save = { null },
+    mapSaver(
+        save = { mapOf("show" to it.show, "currentValue" to it.currentValue) },
         restore = { savedValue ->
-            SideSheetValueState(savedValue)
+            val bookshelf = savedValue["currentValue"] as? BookshelfFolder
+            val show = savedValue["show"] as? Boolean ?: false
+            SideSheetValueState(
+                initialValue = bookshelf,
+                initialShow = show
+            )
         }
     )) {
         SideSheetValueState(initialValue)

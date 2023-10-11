@@ -1,10 +1,11 @@
 package com.sorrowblue.comicviewer.domain.model.file
 
+import android.os.Parcelable
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-sealed interface File {
+sealed interface File : Parcelable {
     val bookshelfId: BookshelfId
     val name: String
     val parent: String

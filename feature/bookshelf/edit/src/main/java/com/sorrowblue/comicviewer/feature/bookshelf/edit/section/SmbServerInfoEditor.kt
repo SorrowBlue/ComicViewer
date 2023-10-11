@@ -1,10 +1,11 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.section
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -28,10 +29,12 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.autofill.connectNode
 import com.sorrowblue.comicviewer.framework.ui.autofill.defaultFocusChangeAutoFill
 import com.sorrowblue.comicviewer.framework.ui.autofill.rememberAutoFillRequestHandler
+import com.sorrowblue.comicviewer.framework.ui.copy
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SmbServerInfoEditor(
+    padding: PaddingValues,
     modifier: Modifier = Modifier,
     uiState: BookshelfEditorUiState.SmbServer = BookshelfEditorUiState.SmbServer(),
     onDisplayNameChange: (String) -> Unit = {},
@@ -44,183 +47,196 @@ fun SmbServerInfoEditor(
     onPasswordChange: (String) -> Unit = {},
     onSaveClick: () -> Unit = {},
 ) {
-    Column(
-        modifier
-            .verticalScroll(rememberScrollState())
-            .padding(ComicTheme.dimension.margin)
-            .imePadding()
-    ) {
-        OutlinedTextField(
-            value = uiState.displayName,
-            onValueChange = onDisplayNameChange,
-            label = { Text(text = stringResource(id = R.string.bookshelf_manage_hint_display_name)) },
-            isError = uiState.isDisplayNameError,
-            supportingText = {
-                if (uiState.isDisplayNameError) {
-                    Text(text = stringResource(id = R.string.bookshelf_manage_hint_display_name))
-                }
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = when (uiState.authMethod) {
-                    AuthMethod.GUEST -> ImeAction.Done
-                    AuthMethod.USERPASS -> ImeAction.Next
-                }
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-        OutlinedTextField(
-            value = uiState.host,
-            onValueChange = onHostChange,
-            label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_host)) },
-            isError = uiState.isHostError,
-            supportingText = {
-                if (uiState.isHostError) {
-                    Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_host))
-                }
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Uri,
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-        OutlinedTextField(
-            value = uiState.port,
-            onValueChange = onPortChange,
-            label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_port)) },
-            isError = uiState.isPortError,
-            supportingText = {
-                if (uiState.isPortError) {
-                    Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_port))
-                }
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.NumberPassword,
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-        OutlinedTextField(
-            value = uiState.path,
-            onValueChange = onPathChange,
-            label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_path)) },
-            prefix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_prefix_path)) },
-            suffix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_suffix_path)) },
-            supportingText = {},
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Uri,
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        MaterialButtons(
-            size = AuthMethod.entries.size,
-            label = {
-                Text(
-                    stringResource(
-                        when (AuthMethod.entries[it]) {
-                            AuthMethod.GUEST -> R.string.bookshelf_manage_label_guest
-                            AuthMethod.USERPASS -> R.string.bookshelf_manage_label_username_password
-                        }
-                    )
-                )
-            },
-            selectedIndex = uiState.authMethod.ordinal,
-            onChange = {
-                onAuthMethodChange(AuthMethod.entries[it])
-            },
-        )
-        when (uiState.authMethod) {
-            AuthMethod.GUEST -> Unit
-            AuthMethod.USERPASS -> {
-                Spacer(modifier = Modifier.size(8.dp))
-                OutlinedTextField(
-                    value = uiState.domain,
-                    onValueChange = onDomainChange,
-                    label = { Text(text = stringResource(id = R.string.bookshelf_manage_hint_domain)) },
-                    singleLine = true,
-                    supportingText = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    )
-                )
-                val usernameAutoFillHandler = rememberAutoFillRequestHandler(
-                    autofillTypes = listOf(AutofillType.Username),
-                    onFill = onUsernameChange
-                )
-                Spacer(modifier = Modifier.size(8.dp))
-                OutlinedTextField(
-                    value = uiState.username,
-                    onValueChange = {
-                        onUsernameChange(it)
-                        if (it.isEmpty()) usernameAutoFillHandler.requestVerifyManual()
-                    },
-                    label = { Text(text = stringResource(id = R.string.bookshelf_manage_hint_username)) },
-                    isError = uiState.isUsernameError,
-                    supportingText = {
-                        if (uiState.isUsernameError) {
-                            Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_username))
-                        }
-                    },
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .connectNode(handler = usernameAutoFillHandler)
-                        .defaultFocusChangeAutoFill(handler = usernameAutoFillHandler),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    )
-                )
-                val passwordAutoFillHandler = rememberAutoFillRequestHandler(
-                    autofillTypes = listOf(AutofillType.Password),
-                    onFill = onPasswordChange
-                )
-                Spacer(modifier = Modifier.size(8.dp))
-                OutlinedTextField(
-                    value = uiState.password,
-                    onValueChange = {
-                        onPasswordChange(it)
-                        if (it.isEmpty()) passwordAutoFillHandler.requestVerifyManual()
-                    },
-                    isError = uiState.isPasswordError,
-                    supportingText = {
-                        if (uiState.isPasswordError) {
-                            Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_password))
-                        }
-                    },
-                    label = { Text(text = stringResource(id = R.string.bookshelf_manage_hint_password)) },
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .connectNode(handler = passwordAutoFillHandler)
-                        .defaultFocusChangeAutoFill(handler = passwordAutoFillHandler),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    )
-                )
-            }
-        }
-        Spacer(modifier = Modifier.size(16.dp))
-        Row {
-            Spacer(modifier = Modifier.weight(1f))
 
-            Button(
-                onClick = onSaveClick,
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(padding.copy(top = 0.dp, bottom = 0.dp))
+            .verticalScroll(rememberScrollState())
+    ) {
+        Surface(
+            Modifier
+                .padding(padding.copy(start = 0.dp, end = 0.dp))
+                .fillMaxSize(),
+            shape = ComicTheme.shapes.large
+        ) {
+            Column(
+                Modifier
+                    .padding(ComicTheme.dimension.margin)
             ) {
-                Text(text = "Save")
+                OutlinedTextField(
+                    value = uiState.displayName,
+                    onValueChange = onDisplayNameChange,
+                    label = { Text(text = stringResource(id = R.string.bookshelf_edit_hint_display_name)) },
+                    isError = uiState.isDisplayNameError,
+                    supportingText = {
+                        if (uiState.isDisplayNameError) {
+                            Text(text = stringResource(id = R.string.bookshelf_edit_hint_display_name))
+                        }
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = when (uiState.authMethod) {
+                            AuthMethod.Guest -> ImeAction.Done
+                            AuthMethod.UserPassword -> ImeAction.Next
+                        }
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlinedTextField(
+                    value = uiState.host,
+                    onValueChange = onHostChange,
+                    label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_host)) },
+                    isError = uiState.isHostError,
+                    supportingText = {
+                        if (uiState.isHostError) {
+                            Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_host))
+                        }
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Uri,
+                        imeAction = ImeAction.Next
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlinedTextField(
+                    value = uiState.port,
+                    onValueChange = onPortChange,
+                    label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_port)) },
+                    isError = uiState.isPortError,
+                    supportingText = {
+                        if (uiState.isPortError) {
+                            Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_port))
+                        }
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.NumberPassword,
+                        imeAction = ImeAction.Next
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlinedTextField(
+                    value = uiState.path,
+                    onValueChange = onPathChange,
+                    label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_path)) },
+                    prefix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_prefix_path)) },
+                    suffix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_suffix_path)) },
+                    supportingText = {},
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Uri,
+                        imeAction = ImeAction.Next
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                MaterialButtons(
+                    size = AuthMethod.entries.size,
+                    label = {
+                        Text(
+                            stringResource(
+                                when (AuthMethod.entries[it]) {
+                                    AuthMethod.Guest -> R.string.bookshelf_edit_label_guest
+                                    AuthMethod.UserPassword -> R.string.bookshelf_edit_label_username_password
+                                }
+                            )
+                        )
+                    },
+                    selectedIndex = uiState.authMethod.ordinal,
+                    onChange = {
+                        onAuthMethodChange(AuthMethod.entries[it])
+                    },
+                )
+                when (uiState.authMethod) {
+                    AuthMethod.Guest -> Unit
+                    AuthMethod.UserPassword -> {
+                        Spacer(modifier = Modifier.size(8.dp))
+                        OutlinedTextField(
+                            value = uiState.domain,
+                            onValueChange = onDomainChange,
+                            label = { Text(text = stringResource(id = R.string.bookshelf_edit_hint_domain)) },
+                            singleLine = true,
+                            supportingText = {},
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Email,
+                                imeAction = ImeAction.Next
+                            )
+                        )
+                        val usernameAutoFillHandler = rememberAutoFillRequestHandler(
+                            autofillTypes = listOf(AutofillType.Username),
+                            onFill = onUsernameChange
+                        )
+                        Spacer(modifier = Modifier.size(8.dp))
+                        OutlinedTextField(
+                            value = uiState.username,
+                            onValueChange = {
+                                onUsernameChange(it)
+                                if (it.isEmpty()) usernameAutoFillHandler.requestVerifyManual()
+                            },
+                            label = { Text(text = stringResource(id = R.string.bookshelf_edit_hint_username)) },
+                            isError = uiState.isUsernameError,
+                            supportingText = {
+                                if (uiState.isUsernameError) {
+                                    Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_username))
+                                }
+                            },
+                            singleLine = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .connectNode(handler = usernameAutoFillHandler)
+                                .defaultFocusChangeAutoFill(handler = usernameAutoFillHandler),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Email,
+                                imeAction = ImeAction.Next
+                            )
+                        )
+                        val passwordAutoFillHandler = rememberAutoFillRequestHandler(
+                            autofillTypes = listOf(AutofillType.Password),
+                            onFill = onPasswordChange
+                        )
+                        Spacer(modifier = Modifier.size(8.dp))
+                        OutlinedTextField(
+                            value = uiState.password,
+                            onValueChange = {
+                                onPasswordChange(it)
+                                if (it.isEmpty()) passwordAutoFillHandler.requestVerifyManual()
+                            },
+                            isError = uiState.isPasswordError,
+                            supportingText = {
+                                if (uiState.isPasswordError) {
+                                    Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_password))
+                                }
+                            },
+                            label = { Text(text = stringResource(id = R.string.bookshelf_edit_hint_password)) },
+                            singleLine = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .connectNode(handler = passwordAutoFillHandler)
+                                .defaultFocusChangeAutoFill(handler = passwordAutoFillHandler),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password,
+                                imeAction = ImeAction.Done
+                            )
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.size(16.dp))
+                Row {
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Button(
+                        onClick = onSaveClick,
+                    ) {
+                        Text(text = "Save")
+                    }
+                }
             }
         }
     }
@@ -231,7 +247,7 @@ fun SmbServerInfoEditor(
 fun PreviewSmbServerInfoEditor() {
     ComicTheme {
         Surface {
-            SmbServerInfoEditor()
+            SmbServerInfoEditor(padding = PaddingValues())
         }
     }
 }

@@ -53,7 +53,6 @@ fun NavGraphBuilder.folderScreen(
     contentPadding: PaddingValues,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onClickFile: (File, Int) -> Unit,
-    onClickLongFile: (File) -> Unit = {},
     onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
     onRestoreComplete: () -> Unit = {},
@@ -73,7 +72,6 @@ fun NavGraphBuilder.folderScreen(
             onBackClick = onBackClick,
             onRestoreComplete = onRestoreComplete,
             onClickFile = onClickFile,
-            onClickLongFile = onClickLongFile,
         )
     }
 }

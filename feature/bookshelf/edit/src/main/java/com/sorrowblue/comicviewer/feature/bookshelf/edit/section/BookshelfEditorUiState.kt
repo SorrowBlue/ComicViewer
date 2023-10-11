@@ -10,12 +10,12 @@ sealed interface BookshelfEditorUiState {
         val port: String = "",
         val isPortError: Boolean = false,
         val path: String = "",
-        val authMethod: AuthMethod = AuthMethod.GUEST,
+        val authMethod: AuthMethod = AuthMethod.Guest,
         val domain: String = "",
         val username: String = "",
         val isUsernameError: Boolean = false,
         val password: String = "",
-        val isPasswordError: Boolean = false
+        val isPasswordError: Boolean = false,
     ) : BookshelfEditorUiState
 
     data class DeviceStorage(
@@ -27,6 +27,6 @@ sealed interface BookshelfEditorUiState {
 }
 
 enum class AuthMethod {
-    GUEST,
-    USERPASS
+    Guest,
+    UserPassword
 }

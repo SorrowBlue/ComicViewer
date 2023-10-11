@@ -27,7 +27,7 @@ fun BookshelfRemoveDialog(
         AlertDialog(
             onDismissRequest = onDismissRequest,
             title = {
-                Text(text = stringResource(id = R.string.bookshelf_remove_title))
+                Text(text = stringResource(id = R.string.bookshelf_edit_title))
             },
             text = {
                 Text(text = stringResource(id = R.string.bookshelf_remove_label, uiState.title))

@@ -1,20 +1,13 @@
 package com.sorrowblue.comicviewer.favorite
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -27,9 +20,10 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBarUiState
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.component.FileContent
-import com.sorrowblue.comicviewer.file.component.FileContentUiState
+import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 @Composable
@@ -61,7 +55,7 @@ internal fun FavoriteRoute(
 
 internal data class FavoriteScreenUiState(
     val favoriteAppBarUiState: FavoriteAppBarUiState = FavoriteAppBarUiState(),
-    val fileContentUiState: FileContentUiState = FileContentUiState(),
+    val fileContentType: FileContentType = FileContentType.List,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,22 +90,14 @@ private fun FavoriteScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         if (lazyPagingItems.isEmptyData) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    imageVector = ComicIcons.UndrawResumeFolder,
-                    contentDescription = ""
-                )
-                Text(stringResource(id = R.string.favorite_label_no_favorites))
-            }
+            EmptyContent(
+                imageVector = ComicIcons.UndrawResumeFolder,
+                text = stringResource(id = R.string.favorite_label_no_favorites),
+                contentPadding = contentPadding
+            )
         } else {
             FileContent(
-                uiState = uiState.fileContentUiState,
+                type = uiState.fileContentType,
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = contentPadding,
                 onClickItem = onClickFile,

@@ -8,8 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.sorrowblue.comicviewer.file.component.FileContentLayout
 import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
+import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
@@ -20,7 +20,7 @@ import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveTopAppBar
 
 data class FolderAppBarUiState(
     val title: String = "",
-    val fileContentLayout: FileContentLayout = FileContentLayout.Grid(FileContentLayout.GridSize.Medium),
+    val fileContentType: FileContentType = FileContentType.Grid(FileContentType.GridSize.Medium),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +32,6 @@ fun FolderAppBar(
     onSearchClick: () -> Unit = {},
     onGridSizeChange: () -> Unit = {},
     onSortClick: () -> Unit = {},
-    onRefreshClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior? = null,
     overflowMenuState: OverflowMenuState = rememberOverflowMenuState(),
@@ -51,10 +50,10 @@ fun FolderAppBar(
                 }
             }
 
-            FileContentLayoutButton(uiState.fileContentLayout, onFileListChange)
+            FileContentLayoutButton(uiState.fileContentType, onFileListChange)
 
             OverflowMenu(overflowMenuState) {
-                if (uiState.fileContentLayout is FileContentLayout.Grid) {
+                if (uiState.fileContentType is FileContentType.Grid) {
                     DropdownMenuItem(
                         text = { Text(text = "Change Grid size") },
                         leadingIcon = { Icon(ComicIcons.Grid4x4, "Change grid size") },
@@ -70,14 +69,6 @@ fun FolderAppBar(
                     onClick = {
                         overflowMenuState.collapse()
                         onSortClick()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "Refresh") },
-                    leadingIcon = { Icon(ComicIcons.Refresh, "Refresh") },
-                    onClick = {
-                        overflowMenuState.collapse()
-                        onRefreshClick()
                     }
                 )
                 DropdownMenuItem(
