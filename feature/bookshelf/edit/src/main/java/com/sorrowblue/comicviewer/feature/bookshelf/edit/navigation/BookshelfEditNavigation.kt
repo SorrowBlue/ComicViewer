@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -9,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditRoute
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.devicestorage.DeviceStorageEditScreen2
 
 internal const val BookshelfEditRoute = "bookshelf/edit"
 
@@ -44,10 +45,15 @@ fun NavGraphBuilder.bookshelfEditScreen(
             },
         )
     ) {
-        BookshelfEditRoute(
-            onBackClick = onBackClick,
-            onComplete = onComplete
+        DeviceStorageEditScreen2(
+            onBackClick = onBackClick
         )
+//        val args = BookshelfEditArgs(it.arguments!!)
+//        BookshelfEditRoute(
+//            args = args,
+//            onBackClick = onBackClick,
+//            onComplete = onComplete
+//        )
     }
 }
 
@@ -59,5 +65,11 @@ class BookshelfEditArgs(val bookshelfId: BookshelfId, val bookshelfType: Bookshe
             this(
                 BookshelfId(checkNotNull(savedStateHandle.get<Int>(BookshelfIdArg))),
                 BookshelfType.valueOf(checkNotNull(savedStateHandle.get<String>(BookshelfTypeArg)))
+            )
+
+    constructor(bundle: Bundle) :
+            this(
+                BookshelfId(checkNotNull(bundle.getInt(BookshelfIdArg))),
+                BookshelfType.valueOf(checkNotNull(bundle.getString(BookshelfTypeArg)))
             )
 }

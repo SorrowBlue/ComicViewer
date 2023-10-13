@@ -14,5 +14,7 @@
     <string name="bookshelf_edit_hint_username">ユーザ名</string>
     <string name="bookshelf_edit_hint_password">パスワード</string>
     <string name="bookshelf_edit_hint_domain">ドメイン</string>
-    <string name="bookshelf_edit_title">本棚を削除</string>
+    <string name="bookshelf_edit_title_remove">本棚を削除</string>
+    <string name="bookshelf_edit_title_edit">本棚の編集</string>
+    <string name="bookshelf_edit_title_register">本棚の登録</string>
 </resources>

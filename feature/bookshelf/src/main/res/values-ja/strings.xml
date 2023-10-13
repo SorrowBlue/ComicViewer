@@ -14,7 +14,7 @@
     <string name="bookshelf_info_label_port">ポート</string>
     <string name="bookshelf_info_btn_edit">編集</string>
     <string name="bookshelf_info_btn_remove">削除</string>
-    <string name="bookshelf_edit_title">本棚の削除</string>
+    <string name="bookshelf_edit_title_remove">本棚の削除</string>
     <string name="bookshelf_remove_label">%1$s を削除しますか?</string>
     <string name="bookshelf_remove_label_delete">削除</string>
 </resources>

@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
@@ -14,14 +13,12 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCa
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditArgs
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.AuthMethod
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditorUiState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditContentUiState
+import com.sorrowblue.comicviewer.framework.ui.lifecycle.ComposeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -31,15 +28,12 @@ internal class BookshelfEditViewModel @Inject constructor(
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val registerBookshelfUseCase: RegisterBookshelfUseCase,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : ComposeViewModel<BookshelfEditUiEvent>() {
 
     private val args = BookshelfEditArgs(savedStateHandle)
     private val _uiState =
         MutableStateFlow<BookshelfEditScreenUiState>(BookshelfEditScreenUiState.Loading)
     val uiState: StateFlow<BookshelfEditScreenUiState> = _uiState.asStateFlow()
-
-    private val _uiEvents = MutableSharedFlow<UiEvent>(0, 2, BufferOverflow.DROP_OLDEST)
-    val uiEvents = _uiEvents.asSharedFlow()
 
     init {
         if (0 < args.bookshelfId.value) {
@@ -54,7 +48,7 @@ internal class BookshelfEditViewModel @Inject constructor(
             mode = EditMode.Register,
             running = false,
             editorUiState = when (type) {
-                BookshelfType.SMB -> BookshelfEditorUiState.SmbServer(
+                BookshelfType.SMB -> BookshelfEditContentUiState.SmbServer(
                     displayName = "",
                     isDisplayNameError = false,
                     host = "",
@@ -70,7 +64,7 @@ internal class BookshelfEditViewModel @Inject constructor(
                     isPasswordError = false
                 )
 
-                BookshelfType.DEVICE -> BookshelfEditorUiState.DeviceStorage(
+                BookshelfType.DEVICE -> BookshelfEditContentUiState.DeviceStorage(
                     displayName = "",
                     isDisplayNameError = false,
                     dir = "",
@@ -89,7 +83,7 @@ internal class BookshelfEditViewModel @Inject constructor(
                         running = false,
                         editorUiState = when (val bookshelf = it.bookshelf) {
                             is InternalStorage ->
-                                BookshelfEditorUiState.DeviceStorage(
+                                BookshelfEditContentUiState.DeviceStorage(
                                     displayName = bookshelf.displayName,
                                     isDisplayNameError = false,
                                     dir = it.folder.path,
@@ -98,7 +92,7 @@ internal class BookshelfEditViewModel @Inject constructor(
 
                             is SmbServer ->
                                 when (val auth = bookshelf.auth) {
-                                    SmbServer.Auth.Guest -> BookshelfEditorUiState.SmbServer(
+                                    SmbServer.Auth.Guest -> BookshelfEditContentUiState.SmbServer(
                                         displayName = bookshelf.displayName,
                                         isDisplayNameError = false,
                                         host = bookshelf.host,
@@ -114,7 +108,7 @@ internal class BookshelfEditViewModel @Inject constructor(
                                         isPasswordError = false
                                     )
 
-                                    is SmbServer.Auth.UsernamePassword -> BookshelfEditorUiState.SmbServer(
+                                    is SmbServer.Auth.UsernamePassword -> BookshelfEditContentUiState.SmbServer(
                                         displayName = bookshelf.displayName,
                                         isDisplayNameError = false,
                                         host = bookshelf.host,
@@ -210,10 +204,10 @@ internal class BookshelfEditViewModel @Inject constructor(
         var uiState = this.uiState.value
         if (uiState !is BookshelfEditScreenUiState.Editing) return false
         when (val editorUiState = uiState.editorUiState) {
-            is BookshelfEditorUiState.DeviceStorage ->
+            is BookshelfEditContentUiState.DeviceStorage ->
                 onDisplayNameChanged(editorUiState.displayName)
 
-            is BookshelfEditorUiState.SmbServer -> {
+            is BookshelfEditContentUiState.SmbServer -> {
                 onDisplayNameChanged(editorUiState.displayName)
                 onHostChanged(editorUiState.host)
                 onPortChanged(editorUiState.port)
@@ -230,10 +224,10 @@ internal class BookshelfEditViewModel @Inject constructor(
         uiState = this.uiState.value
         if (uiState !is BookshelfEditScreenUiState.Editing) return false
         return when (val editorUiState = uiState.editorUiState) {
-            is BookshelfEditorUiState.DeviceStorage ->
+            is BookshelfEditContentUiState.DeviceStorage ->
                 !editorUiState.isDisplayNameError && deviceStorageUri != null
 
-            is BookshelfEditorUiState.SmbServer -> {
+            is BookshelfEditContentUiState.SmbServer -> {
                 !editorUiState.isDisplayNameError && !editorUiState.isHostError
                         && !editorUiState.isPortError
                         && when (editorUiState.authMethod) {
@@ -244,19 +238,19 @@ internal class BookshelfEditViewModel @Inject constructor(
         }
     }
 
-    fun save() {
+    fun save(onComplete: () -> Unit) {
         if (!validateAll()) {
-            _uiEvents.tryEmit(UiEvent.ShowSnackbar("入力内容を確認してください。"))
+            updateUiEvent(BookshelfEditUiEvent.ShowSnackbar("入力内容を確認してください。"))
             return
         }
         val uiState = uiState.value
         if (uiState is BookshelfEditScreenUiState.Editing) {
             _uiState.value = uiState.copy(running = true)
             val bookshelf = when (val editorUiState = uiState.editorUiState) {
-                is BookshelfEditorUiState.DeviceStorage ->
+                is BookshelfEditContentUiState.DeviceStorage ->
                     InternalStorage(args.bookshelfId, editorUiState.displayName)
 
-                is BookshelfEditorUiState.SmbServer -> {
+                is BookshelfEditContentUiState.SmbServer -> {
                     onDisplayNameChanged(editorUiState.displayName)
                     onHostChanged(editorUiState.host)
                     onPortChanged(editorUiState.port)
@@ -277,19 +271,21 @@ internal class BookshelfEditViewModel @Inject constructor(
                 }
             }
             val path = when (val editorUiState = uiState.editorUiState) {
-                is BookshelfEditorUiState.DeviceStorage -> deviceStorageUri?.toString().orEmpty()
-                is BookshelfEditorUiState.SmbServer -> if (editorUiState.path.isEmpty()) "/" else {
+                is BookshelfEditContentUiState.DeviceStorage -> deviceStorageUri?.toString()
+                    .orEmpty()
+
+                is BookshelfEditContentUiState.SmbServer -> if (editorUiState.path.isEmpty()) "/" else {
                     ("/${editorUiState.path}/").replace("(/+)".toRegex(), "/")
                 }
             }
             viewModelScope.launch {
                 registerBookshelfUseCase.execute(RegisterBookshelfUseCase.Request(bookshelf, path))
                     .first().onSuccess {
-                        _uiState.value = BookshelfEditScreenUiState.Complete
+                        onComplete()
                     }.onError {
                         _uiState.value = uiState.copy(running = false)
-                        _uiEvents.emit(
-                            UiEvent.ShowSnackbar(
+                        updateUiEvent(
+                            BookshelfEditUiEvent.ShowSnackbar(
                                 when (it) {
                                     RegisterBookshelfUseCase.Error.Auth -> "認証エラー"
                                     RegisterBookshelfUseCase.Error.Host -> "無効なホスト"
@@ -317,16 +313,16 @@ internal class BookshelfEditViewModel @Inject constructor(
     }
 
     private fun updateEditing(
-        onDevice: (BookshelfEditorUiState.DeviceStorage) -> BookshelfEditorUiState = { it },
-        onSmb: (BookshelfEditorUiState.SmbServer) -> BookshelfEditorUiState = { it },
+        onDevice: (BookshelfEditContentUiState.DeviceStorage) -> BookshelfEditContentUiState = { it },
+        onSmb: (BookshelfEditContentUiState.SmbServer) -> BookshelfEditContentUiState = { it },
     ) {
         val uiState = _uiState.value
         if (uiState is BookshelfEditScreenUiState.Editing) {
             _uiState.value = uiState.copy(
-                editorUiState = when (val editorUiState: BookshelfEditorUiState =
+                editorUiState = when (val editorUiState: BookshelfEditContentUiState =
                     uiState.editorUiState) {
-                    is BookshelfEditorUiState.DeviceStorage -> onDevice(editorUiState)
-                    is BookshelfEditorUiState.SmbServer -> onSmb(editorUiState)
+                    is BookshelfEditContentUiState.DeviceStorage -> onDevice(editorUiState)
+                    is BookshelfEditContentUiState.SmbServer -> onSmb(editorUiState)
                 }
             )
         }

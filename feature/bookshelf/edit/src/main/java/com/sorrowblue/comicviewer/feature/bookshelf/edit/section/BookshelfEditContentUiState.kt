@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.section
 
-sealed interface BookshelfEditorUiState {
+sealed interface BookshelfEditContentUiState {
+    fun copy2(displayName: String): BookshelfEditContentUiState
 
     data class SmbServer(
         val displayName: String = "",
@@ -16,14 +17,23 @@ sealed interface BookshelfEditorUiState {
         val isUsernameError: Boolean = false,
         val password: String = "",
         val isPasswordError: Boolean = false,
-    ) : BookshelfEditorUiState
+    ) : BookshelfEditContentUiState {
+
+        override fun copy2(displayName: String): BookshelfEditContentUiState {
+            return copy(displayName = displayName)
+        }
+    }
 
     data class DeviceStorage(
         val displayName: String = "",
         val isDisplayNameError: Boolean = false,
         val dir: String = "",
         val validate: Boolean = false,
-    ) : BookshelfEditorUiState
+    ) : BookshelfEditContentUiState {
+        override fun copy2(displayName: String): BookshelfEditContentUiState {
+            return copy(displayName = displayName)
+        }
+    }
 }
 
 enum class AuthMethod {

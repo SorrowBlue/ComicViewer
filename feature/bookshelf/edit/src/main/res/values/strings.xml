@@ -16,5 +16,8 @@
     <string name="bookshelf_edit_hint_username">Username</string>
     <string name="bookshelf_edit_hint_password">Password</string>
     <string name="bookshelf_edit_hint_domain">Domain</string>
-    <string name="bookshelf_edit_title">Remove bookshelf</string>
+    <string name="bookshelf_edit_title_remove">Remove bookshelf</string>
+
+    <string name="bookshelf_edit_title_edit">Edit bookshelf</string>
+    <string name="bookshelf_edit_title_register">Registering bookshelf</string>
 </resources>
