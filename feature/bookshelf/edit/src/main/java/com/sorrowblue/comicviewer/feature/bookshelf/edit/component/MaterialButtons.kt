@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.bookshelf.edit.section
+package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
@@ -17,7 +17,7 @@ fun MaterialButtons(
     label: @Composable (Int) -> Unit,
     selectedIndex: Int,
     onChange: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier) {
         for (index in 0..<size) {

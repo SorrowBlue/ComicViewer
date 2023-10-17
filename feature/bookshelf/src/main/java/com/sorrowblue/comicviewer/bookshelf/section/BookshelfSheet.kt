@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -65,6 +64,7 @@ internal fun BookshelfBottomSheet(
     bookshelfFolder: BookshelfFolder,
     onRemove: () -> Unit,
     onEdit: () -> Unit,
+    onScanClick: () -> Unit,
 ) {
     val bookshelf = bookshelfFolder.bookshelf
     val folder = bookshelfFolder.folder
@@ -123,16 +123,31 @@ internal fun BookshelfBottomSheet(
             }
         }
         Spacer(modifier = Modifier.size(ComicTheme.dimension.padding * 2))
+
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier.fillMaxWidth()
         ) {
             TextButton(onClick = onRemove) {
-                Text(text = stringResource(id = R.string.bookshelf_info_btn_remove))
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(imageVector = ComicIcons.Delete, contentDescription = null)
+                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(text = "削除")
+                }
             }
-            FilledTonalButton(onClick = onEdit) {
-                Text(text = stringResource(id = R.string.bookshelf_info_btn_edit))
+            TextButton(onClick = onEdit) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(imageVector = ComicIcons.Edit, contentDescription = null)
+                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(text = "編集")
+                }
+            }
+            TextButton(onClick = onScanClick) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(imageVector = ComicIcons.Refresh, contentDescription = null)
+                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(text = "スキャン")
+                }
             }
         }
     }
@@ -250,7 +265,7 @@ private fun PreviewBookshelfBottomSheet() {
     )
     PreviewTheme {
         Surface(color = ComicTheme.colorScheme.surfaceContainerLow) {
-            BookshelfBottomSheet(bookshelfFolder, {}, {})
+            BookshelfBottomSheet(bookshelfFolder, {}, {}, {})
         }
     }
 }

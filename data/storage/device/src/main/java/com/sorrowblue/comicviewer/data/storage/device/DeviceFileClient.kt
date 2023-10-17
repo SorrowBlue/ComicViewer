@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.data.storage.device
 
 import android.content.Context
-import android.content.Intent
 import android.os.ParcelFileDescriptor
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
@@ -50,9 +49,6 @@ internal class DeviceFileClient @AssistedInject constructor(
 
     override suspend fun connect(path: String) {
         kotlin.runCatching {
-            val takeFlags: Int =
-                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            contentResolver.takePersistableUriPermission(path.toUri(), takeFlags)
             documentFile(path).exists()
         }.fold({
             if (!it) {

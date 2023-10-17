@@ -129,7 +129,8 @@ private fun BookshelfScreen(
             BookshelfBottomSheet(
                 bookshelfFolder = bookshelfFolder,
                 onRemove = onInfoSheetRemoveClick,
-                onEdit = onInfoSheetEditClick
+                onEdit = onInfoSheetEditClick,
+                onScanClick = onInfoSheetScanClick
             )
         },
         sideSheet = { bookshelfFolder, innerPadding ->

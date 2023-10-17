@@ -48,6 +48,7 @@ fun NavController.navigateToBookshelfSelection(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.bookshelfGraph(
+    isMobile: Boolean,
     contentPadding: PaddingValues,
     navController: NavController,
     onSettingsClick: () -> Unit,
@@ -67,8 +68,13 @@ fun NavGraphBuilder.bookshelfGraph(
             onSourceClick = navController::navigateToBookshelfEdit
         )
         bookshelfEditScreen(
+            isMobile = isMobile,
             onBackClick = navController::popBackStack,
-            onComplete = { navController.popBackStack(BookshelfSelectionRoute, true) }
+            onComplete = {
+                if (!navController.popBackStack(BookshelfSelectionRoute, true)) {
+                    navController.popBackStack()
+                }
+            }
         )
         folderScreen(
             prefix = BookshelfRoute,

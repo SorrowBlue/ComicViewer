@@ -96,6 +96,9 @@ android {
         projects.feature.library.googledrive.projectString(),
         projects.feature.library.onedrive.projectString(),
     )
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {

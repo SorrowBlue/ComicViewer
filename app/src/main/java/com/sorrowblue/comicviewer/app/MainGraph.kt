@@ -35,6 +35,7 @@ import logcat.asLog
 import logcat.logcat
 
 internal fun NavGraphBuilder.mainGraph(
+    isMobile: Boolean,
     context: Context,
     navController: NavHostController,
     extraNavController: ExtraNavController,
@@ -66,6 +67,7 @@ internal fun NavGraphBuilder.mainGraph(
         }
     )
     bookshelfGraph(
+        isMobile = isMobile,
         contentPadding = contentPadding,
         navController = navController,
         onSettingsClick = navController::navigateToSettings,

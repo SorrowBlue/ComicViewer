@@ -43,6 +43,48 @@ fun OutlinedTextField2(
     )
 }
 
+data class Input(val value: String = "", val isError: Boolean = false)
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ValidateOutlinedTextField(
+    input: Input,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    label: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    prefix: @Composable (() -> Unit)? = null,
+    suffix: @Composable (() -> Unit)? = null,
+    errorText: @Composable (() -> Unit)? = null,
+    supportingText: @Composable (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    singleLine: Boolean = false,
+) {
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    OutlinedTextField(
+        value = input.value,
+        onValueChange = onValueChange,
+        enabled = enabled,
+        readOnly = readOnly,
+        label = label,
+        placeholder = placeholder,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+        prefix = prefix,
+        suffix = suffix,
+        supportingText = if (input.isError) errorText else supportingText,
+        isError = input.isError,
+        singleLine = singleLine,
+        keyboardOptions = keyboardOptions,
+        modifier = modifier
+            .bringIntoViewRequester2(bringIntoViewRequester)
+    )
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Modifier.bringIntoViewRequester2(bringIntoViewRequester: BringIntoViewRequester): Modifier {

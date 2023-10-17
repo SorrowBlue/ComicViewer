@@ -1,13 +1,35 @@
 package com.sorrowblue.comicviewer.app
 
 import android.app.Activity
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
@@ -28,6 +50,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.LocalNavController
 import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
+import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
+import kotlin.math.sqrt
 import logcat.LogPriority
 import logcat.logcat
 
@@ -42,6 +66,76 @@ internal sealed interface ComicViewerAppUiEvent {
     data class RequireAuthentication(val isRestoredNavHistory: Boolean, val done: () -> Unit) :
         ComicViewerAppUiEvent
 }
+
+fun Modifier.drawDiagonalLabel(
+    text: String,
+    color: Color,
+    style: TextStyle = TextStyle(
+        fontSize = 18.sp,
+        fontWeight = FontWeight.SemiBold,
+        color = Color.White
+    ),
+    labelTextRatio: Float = 7f,
+) = composed(
+    factory = {
+
+        val textMeasurer = rememberTextMeasurer()
+        val textLayoutResult: TextLayoutResult = remember {
+            textMeasurer.measure(text = AnnotatedString(text), style = style)
+        }
+
+
+        Modifier
+            .clipToBounds()
+            .drawWithContent {
+                val canvasWidth = size.width
+
+                val textSize = textLayoutResult.size
+                val textWidth = textSize.width
+                val textHeight = textSize.height
+
+                val rectWidth = textWidth * labelTextRatio
+                val rectHeight = textHeight * 1.1f
+
+                val rect = Rect(
+                    offset = Offset(canvasWidth - rectWidth, 0f),
+                    size = Size(rectWidth, rectHeight)
+                )
+
+                val sqrt = sqrt(rectWidth / 2f)
+                val translatePos = sqrt * sqrt
+
+                drawContent()
+                withTransform(
+                    {
+                        rotate(
+                            degrees = 45f,
+                            pivot = Offset(
+                                canvasWidth - rectWidth / 2,
+                                translatePos
+                            )
+                        )
+                    }
+                ) {
+                    drawRect(
+                        color = color,
+                        topLeft = rect.topLeft,
+                        size = rect.size
+                    )
+                    drawText(
+                        textMeasurer = textMeasurer,
+                        text = text,
+                        style = style,
+                        topLeft = Offset(
+                            rect.left + (rectWidth - textWidth) / 2f,
+                            rect.top + (rect.bottom - textHeight) / 2f
+                        )
+                    )
+                }
+
+            }
+    }
+)
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
@@ -69,6 +163,7 @@ internal fun ComicViewerApp(
         ComicTheme {
             val addOnList by viewModel.addOnList.collectAsState()
             val activity = LocalContext.current as Activity
+            val isMobile = rememberMobile()
             MainScreen(
                 bottomSheetNavigator = bottomSheetNavigator,
                 navController = navController,
@@ -79,6 +174,7 @@ internal fun ComicViewerApp(
                 onFabClick = graphStateHolder::onTabClick,
             ) { navHostController, contentPadding ->
                 mainGraph(
+                    isMobile = isMobile,
                     context = context,
                     navController = navHostController,
                     extraNavController = extraNavController,
@@ -103,6 +199,23 @@ internal fun ComicViewerApp(
                         }
                     },
                     addOnList = addOnList,
+                )
+            }
+            if (BuildConfig.BUILD_TYPE != "release") {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .drawDiagonalLabel(
+                            text = BuildConfig.BUILD_TYPE.uppercase(),
+                            color = ComicTheme.colorScheme.tertiaryContainer.copy(alpha = 0.75f),
+                            style = TextStyle(
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = ComicTheme.colorScheme.onTertiaryContainer
+                            )
+                        )
+                        .statusBarsPadding()
+                        .height(60.dp)
                 )
             }
         }

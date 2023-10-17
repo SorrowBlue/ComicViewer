@@ -33,3 +33,10 @@ inline fun <D, E : Resource.AppError> Resource<D, E>.onSuccess(onSuccess: (D) ->
     }
     return this
 }
+
+fun <D> Resource<D, *>.dataOrNull(): D? {
+    if (this is Resource.Success) {
+        return data
+    }
+    return null
+}

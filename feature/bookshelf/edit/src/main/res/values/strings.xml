@@ -10,14 +10,18 @@
     <string name="bookshelf_edit_smb_input_error_username">Please enter username.</string>
     <string name="bookshelf_edit_smb_input_error_password">Please enter password.</string>
 
-    <string name="bookshelf_edit_hint_display_name">Display name</string>
+    <string name="bookshelf_edit_label_display_name">Display name</string>
+    <string name="bookshelf_edit_error_display_name">Please enter display name.</string>
+    <string name="bookshelf_edit_label_select_folder">Select folder</string>
+    <string name="bookshelf_edit_error_select_folder">Please select a folder.</string>
+
     <string name="bookshelf_edit_label_guest">Guest</string>
     <string name="bookshelf_edit_label_username_password">Username/password</string>
     <string name="bookshelf_edit_hint_username">Username</string>
     <string name="bookshelf_edit_hint_password">Password</string>
     <string name="bookshelf_edit_hint_domain">Domain</string>
-    <string name="bookshelf_edit_title_remove">Remove bookshelf</string>
 
     <string name="bookshelf_edit_title_edit">Edit bookshelf</string>
     <string name="bookshelf_edit_title_register">Registering bookshelf</string>
+    <string name="bookshelf_edit_label_save">Save</string>
 </resources>
