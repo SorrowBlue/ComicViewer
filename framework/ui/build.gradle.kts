@@ -1,46 +1,24 @@
-@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
-
 plugins {
-    id("build-logic.android.library")
-    id("com.sorrowblue.dagger-hilt")
+    id("comicviewer.android.library")
+    id("comicviewer.android.library.compose")
 }
 
 android {
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
+    namespace = "com.sorrowblue.comicviewer.framework.ui"
 }
 
 dependencies {
-    api(projects.framework)
-    api(projects.framework.resource)
+    implementation(projects.domain.model)
+    implementation(projects.framework.designsystem)
 
-    api(libs.androidx.appcompat)
-    api(libs.androidx.constraintlayout)
-    api(libs.androidx.coordinatorlayout)
-    api(libs.androidx.core.ktx)
-    api(libs.androidx.fragment.ktx)
-    api(libs.bundles.androidx.lifecycle)
-    api(libs.bundles.androidx.navigation)
-    api(libs.google.android.play.feature.delivery.ktx)
-    api(libs.androidx.recyclerview)
-    api(libs.androidx.viewpager2)
-    api(libs.google.material)
-    api(libs.coil)
-    api(libs.kotlinx.coroutines.core)
-    api(libs.squareup.logcat)
-    api(libs.chrisbanes.insetter)
-    api(libs.sorrowblue.binding.ktx)
-    api(libs.androidx.paging.runtime.ktx)
+    api(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui.util)
+    implementation(libs.androidx.compose.material3.windowSizeClass)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigationCompose)
+    implementation(libs.androidx.lifecycle.viewmodelKtx)
+    api(libs.kotlinx.collections.immutable)
+    implementation(libs.androidx.core.ktx)
     api(libs.androidx.paging.compose)
-    api(libs.androidx.hilt.navigation.compose)
-
-    api(platform(libs.androidx.compose.bom))
-    api(libs.bundles.androidx.compose)
-    api(libs.coil.compose)
-    api(libs.google.accompanist.themeadapter.material3)
-    debugImplementation(libs.bundles.androidx.compose.debug)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 }

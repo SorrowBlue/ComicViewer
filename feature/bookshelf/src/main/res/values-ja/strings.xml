@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bookshelf_list_title">本棚一覧</string>
+    <string name="bookshelf_list_message_no_bookshelves_added_yet">本棚はまだ追加されていません。</string>
+    <plurals name="bookshelf_list_label_files">
+        <item quantity="other">%1$d files</item>
+    </plurals>
+    <string name="bookshelf_info_title">本棚情報</string>
+    <string name="bookshelf_info_label_display_name">表示名</string>
+    <string name="bookshelf_info_label_host">IP/ホスト名</string>
+    <string name="bookshelf_info_label_path">ファイルパス</string>
+    <string name="bookshelf_info_label_internal_storage">内部ストレージ</string>
+    <string name="bookshelf_info_label_smb">LAN/SMB</string>
+    <string name="bookshelf_info_label_port">ポート</string>
+    <string name="bookshelf_info_btn_edit">編集</string>
+    <string name="bookshelf_info_btn_remove">削除</string>
+    <string name="bookshelf_edit_title_remove">本棚の削除</string>
+    <string name="bookshelf_remove_label">%1$s を削除しますか?</string>
+    <string name="bookshelf_remove_label_delete">削除</string>
+</resources>

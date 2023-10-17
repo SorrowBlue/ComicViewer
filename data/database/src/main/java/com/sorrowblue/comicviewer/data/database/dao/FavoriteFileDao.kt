@@ -9,29 +9,29 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.sorrowblue.comicviewer.data.common.bookshelf.SortEntity
-import com.sorrowblue.comicviewer.data.database.entity.FavoriteFile
-import com.sorrowblue.comicviewer.data.database.entity.File
+import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileEntity
+import com.sorrowblue.comicviewer.data.database.entity.FileEntity
+import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface FavoriteFileDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(favoriteFile: FavoriteFile): Long
+    suspend fun insert(favoriteFileEntity: FavoriteFileEntity): Long
 
     @Delete
-    suspend fun delete(favoriteFile: FavoriteFile): Int
+    suspend fun delete(favoriteFileEntity: FavoriteFileEntity): Int
 
     @Deprecated("", level = DeprecationLevel.WARNING)
-    @RawQuery(observedEntities = [FavoriteFile::class, File::class])
-    fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, File>
+    @RawQuery(observedEntities = [FavoriteFileEntity::class, FileEntity::class])
+    fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileEntity>
 
-    fun pagingSource(favoriteId: Int, sortType: SortEntity): PagingSource<Int, File> {
+    fun pagingSource(favoriteId: Int, sortType: SortType): PagingSource<Int, FileEntity> {
         val orderBy = when (sortType) {
-            is SortEntity.NAME -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
-            is SortEntity.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
-            is SortEntity.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
+            is SortType.NAME -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
+            is SortType.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
+            is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
         }
         @Suppress("DEPRECATION")
         return pagingSource(object : SupportSQLiteQuery {
@@ -62,17 +62,23 @@ internal interface FavoriteFileDao {
     suspend fun findCacheKey(favoriteId: Int, limit: Int): List<String>
 
     @Deprecated("使用禁止")
-    @RawQuery(observedEntities = [File::class])
-    fun flowPrevNext(supportSQLiteQuery: SupportSQLiteQuery): Flow<File?>
+    @RawQuery(observedEntities = [FileEntity::class])
+    fun flowPrevNext(supportSQLiteQuery: SupportSQLiteQuery): Flow<FileEntity?>
 
-    fun flowPrevNext(favoriteId: Int, bookshelfId: Int, path: String, isNext: Boolean, sortEntity: SortEntity): Flow<File?> {
-        val column = when (sortEntity) {
-            is SortEntity.NAME -> "sort_index"
-            is SortEntity.DATE -> "last_modified"
-            is SortEntity.SIZE -> "size"
+    fun flowPrevNext(
+        favoriteId: Int,
+        bookshelfId: Int,
+        path: String,
+        isNext: Boolean,
+        sortType: SortType,
+    ): Flow<FileEntity?> {
+        val column = when (sortType) {
+            is SortType.NAME -> "sort_index"
+            is SortType.DATE -> "last_modified"
+            is SortType.SIZE -> "size"
         }
-        val comparison = if (isNext && sortEntity.isAsc) ">=" else "<="
-        val order = if (isNext && sortEntity.isAsc) "ASC" else "DESC"
+        val comparison = if (isNext && sortType.isAsc) ">=" else "<="
+        val order = if (isNext && sortType.isAsc) "ASC" else "DESC"
         val sqLiteQuery = object : SupportSQLiteQuery {
             override val argCount = 3
             override val sql = """

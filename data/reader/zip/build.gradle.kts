@@ -1,9 +1,10 @@
 plugins {
-    id("build-logic.android.library")
-    id("com.sorrowblue.dagger-hilt")
+    id("comicviewer.android.library")
+    id("comicviewer.android.hilt")
 }
 
 android {
+    namespace = "com.sorrowblue.comicviewer.data.reader.zip"
     packaging {
         jniLibs {
             useLegacyPackaging = false
@@ -12,8 +13,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework)
-    implementation(projects.data.common)
+    implementation(projects.framework.common)
     implementation(projects.data.reader)
 
     implementation(libs.androidx.startup.runtime)

@@ -7,7 +7,7 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class MainApplication : SplitCompatApplication(), Configuration.Provider {
+internal class MainApplication : SplitCompatApplication(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory

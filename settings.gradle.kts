@@ -5,29 +5,21 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         google()
         mavenCentral()
-    }
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.id == "dagger.hilt.android.plugin") {
-                useModule("com.google.dagger:hilt-android-gradle-plugin:${requested.version}")
-            }
-        }
+        gradlePluginPortal()
     }
 }
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version ("0.6.0")
-    id("com.android.settings") version "8.1.0-rc01"
+    id("com.android.settings") version "8.1.2"
 }
 
-@Suppress("UnstableApiUsage")
 extensions.configure<SettingsExtension> {
-    buildToolsVersion = "33.0.2"
-    compileSdk = 33
-    minSdk = 28
+    buildToolsVersion = "34.0.0"
+    compileSdk = 34
+    minSdk = 30
 }
 
 @Suppress("UnstableApiUsage")
@@ -50,55 +42,61 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ComicViewer"
+rootProject.name = "comicviewer"
 
 include(":app")
 
 // framework
-include(":framework")
-include(":framework:compose")
+include(":framework:common")
 include(":framework:notification")
 include(":framework:resource")
-include(":framework:settings")
+include(":framework:designsystem")
 include(":framework:ui")
 
-include(":domain")
-include(":domain:interactor")
+include(":domain:model")
+include(":domain:service")
+include(":domain:usecase")
 
-include(":data")
-include(":data:common")
+include(":data:infrastructure")
+include(":data:coil")
 include(":data:database")
 include(":data:datastore")
-include(":data:di")
 include(":data:paging")
 include(":data:reader")
 include(":data:reader:zip")
 include(":data:reader:document")
-include(":data:remote")
-include(":data:remote:device")
-include(":data:remote:smb")
+include(":data:storage")
+include(":data:storage:device")
+include(":data:storage:smb")
 include(":data:service")
+include(":di")
 
-include(":book")
-include(":bookshelf")
-include(":favorite")
-include(":file")
-include(":folder")
-include(":folder:display")
-include(":library")
-include(":library:box")
-include(":library:dropbox")
-include(":library:googledrive")
-include(":library:onedrive")
-include(":readlater")
-include(":history")
-include(":tutorial")
-
-include(":settings")
-include(":settings:display")
-include(":settings:folder")
-include(":settings:security")
-include(":settings:viewer")
+include(":feature:authentication")
+include(":feature:book")
+include(":feature:bookshelf")
+include(":feature:bookshelf:edit")
+include(":feature:bookshelf:selection")
+include(":feature:favorite")
+include(":feature:favorite:add")
+include(":feature:favorite:common")
+include(":feature:favorite:create")
+include(":feature:favorite:edit")
+include(":feature:file")
+include(":feature:file:info")
+include(":feature:folder")
+include(":feature:history")
+include(":feature:library")
+include(":feature:library:box")
+include(":feature:library:dropbox")
+include(":feature:library:googledrive")
+include(":feature:library:onedrive")
+include(":feature:readlater")
+include(":feature:search")
+include(":feature:settings")
+include(":feature:settings:display")
+include(":feature:settings:folder")
+include(":feature:settings:security")
+include(":feature:settings:viewer")
+include(":feature:tutorial")
 
 includeBuild("build-logic")
-include(":settings:feature")

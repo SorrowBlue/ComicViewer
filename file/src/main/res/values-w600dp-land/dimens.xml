@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <integer name="file_list_span_count_small">6</integer>
-    <integer name="file_list_span_count_medium">5</integer>
-    <integer name="file_list_span_count_large">4</integer>
-
-    <dimen name="file_list_item_space_small">8dp</dimen>
-    <dimen name="file_list_item_space_medium">16dp</dimen>
-</resources>

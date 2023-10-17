@@ -8,10 +8,10 @@ internal object PasswordConverters {
 
     @TypeConverter
     @JvmStatic
-    fun String.decrypt() = DecryptedPassword(CryptUtils.decrypt(ALIAS, this).orEmpty())
+    fun String.decrypt() = DecryptedPasswordEntity(CryptUtils.decrypt(ALIAS, this).orEmpty())
 
     @TypeConverter
     @JvmStatic
-    fun DecryptedPassword.encrypt() = CryptUtils.encrypt(ALIAS, plane)
+    fun DecryptedPasswordEntity.encrypt() = CryptUtils.encrypt(ALIAS, plane)
 
 }

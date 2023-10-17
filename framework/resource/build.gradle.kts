@@ -1,12 +1,11 @@
 plugins {
-    id("build-logic.android.library")
+    id("comicviewer.android.library")
 }
 
 android {
-    viewBinding.enable = true
+    namespace = "com.sorrowblue.comicviewer.framework.resource"
 }
 
 dependencies {
-    implementation(libs.androidx.preference.ktx)
     implementation(libs.google.material)
 }

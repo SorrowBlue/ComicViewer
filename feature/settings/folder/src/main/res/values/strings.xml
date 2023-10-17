@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_folder_title">Folder</string>
+    <string name="settings_folder_title_extension">Extension</string>
+    <string name="settings_folder_label_document">Documents</string>
+    <string name="settings_folder_label_archives">Archives</string>
+</resources>

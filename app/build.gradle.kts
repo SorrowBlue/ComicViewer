@@ -1,135 +1,146 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import com.sorrowblue.buildlogic.debug
-import com.sorrowblue.buildlogic.internal
-import com.sorrowblue.buildlogic.prerelease
-import com.sorrowblue.buildlogic.projectString
-import com.sorrowblue.buildlogic.release
+import com.sorrowblue.comicviewer.ComicBuildType
+import com.sorrowblue.comicviewer.projectString
 import org.jetbrains.kotlin.konan.properties.propertyString
 
 plugins {
-    id("build-logic.android.application")
-    id("com.sorrowblue.dagger-hilt")
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
-    alias(libs.plugins.mikepenz.aboutlibraries.plugin)
+    id("comicviewer.android.application")
+    id("comicviewer.android.application.compose")
+    id("comicviewer.android.hilt")
+    alias(libs.plugins.arturbosch.detekt)
     alias(libs.plugins.grgit)
 }
 
 fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex())) "-SNAPSHOT" else ""
 android {
+    namespace = "com.sorrowblue.comicviewer.app"
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 12
         versionName = grgit.describe {
             longDescr = false
             isTags = true
         }?.toVersion() ?: "0.0.1-SNAPSHOT"
         logger.lifecycle("versionName=$versionName")
+        proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+    }
+    androidResources {
+        generateLocaleConfig = true
     }
 
     signingConfigs {
-        release {
-            storeFile =
-                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
-            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
-            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
-            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
-        }
-        prerelease {
-            storeFile =
-                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
-            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
-            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
-            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
-        }
-        internal {
-            storeFile =
-                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
-            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
-            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
-            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
-        }
-        debug {
+        getByName("debug") {
             storeFile =
                 file(gradleLocalProperties(rootDir).propertyString("debug.storeFile").orEmpty())
             storePassword = gradleLocalProperties(rootDir).propertyString("debug.storePassword")
             keyAlias = gradleLocalProperties(rootDir).propertyString("debug.keyAlias")
             keyPassword = gradleLocalProperties(rootDir).propertyString("debug.keyPassword")
         }
+        create("release") {
+            storeFile =
+                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
+            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
+            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
+            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
+        }
+        create("prerelease") {
+            storeFile =
+                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
+            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
+            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
+            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
+        }
+        create("internal") {
+            storeFile =
+                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
+            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
+            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
+            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
+        }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("release")
+            applicationIdSuffix = ComicBuildType.RELEASE.applicationIdSuffix
+            isMinifyEnabled = ComicBuildType.RELEASE.isMinifyEnabled
+            isShrinkResources = ComicBuildType.RELEASE.isShrinkResources
+            signingConfig = signingConfigs.getByName(name)
         }
-        prerelease {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("prerelease")
+        getByName("prerelease") {
+            applicationIdSuffix = ComicBuildType.PRERELEASE.applicationIdSuffix
+            isMinifyEnabled = ComicBuildType.PRERELEASE.isMinifyEnabled
+            isShrinkResources = ComicBuildType.PRERELEASE.isShrinkResources
+            signingConfig = signingConfigs.getByName(name)
         }
-        internal {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("internal")
+        getByName("internal") {
+            applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix
+            isMinifyEnabled = ComicBuildType.INTERNAL.isMinifyEnabled
+            isShrinkResources = ComicBuildType.INTERNAL.isShrinkResources
+            signingConfig = signingConfigs.getByName(name)
         }
         debug {
-            applicationIdSuffix = ".debug"
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            )
+            applicationIdSuffix = ComicBuildType.DEBUG.applicationIdSuffix
+            isMinifyEnabled = ComicBuildType.DEBUG.isMinifyEnabled
+            isShrinkResources = ComicBuildType.DEBUG.isShrinkResources
+            signingConfig = signingConfigs.getByName(name)
         }
-    }
-
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
     }
 
     dynamicFeatures += setOf(
         projects.data.reader.document.projectString(),
-        projects.library.box.projectString(),
-        projects.library.dropbox.projectString(),
-        projects.library.googledrive.projectString(),
-        projects.library.onedrive.projectString(),
+        projects.feature.library.box.projectString(),
+        projects.feature.library.dropbox.projectString(),
+        projects.feature.library.googledrive.projectString(),
+        projects.feature.library.onedrive.projectString(),
     )
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
-    api(libs.google.code.gson)
-    api(libs.androidx.browser)
-    api("com.fasterxml.jackson.core:jackson-core:2.15.2")
-    api(libs.google.guava)
     implementation(projects.framework.ui)
+    implementation(projects.framework.resource)
     implementation(projects.framework.notification)
+    implementation(projects.framework.designsystem)
 
-    implementation(projects.data.di)
-    implementation(projects.domain)
-    implementation(projects.settings)
-    implementation(projects.folder)
-    implementation(projects.file)
-    implementation(projects.bookshelf)
-    implementation(projects.favorite)
-    implementation(projects.readlater)
-    implementation(projects.library)
-    implementation(projects.tutorial)
-    implementation(projects.settings.security)
-    implementation(projects.settings.feature)
+    implementation(projects.di)
+    implementation(projects.domain.usecase)
+    implementation(projects.feature.authentication)
+    implementation(projects.feature.book)
+    implementation(projects.feature.bookshelf)
+    implementation(projects.feature.favorite)
+    implementation(projects.feature.favorite.create)
+    implementation(projects.feature.file.info)
+    implementation(projects.feature.readlater)
+    implementation(projects.feature.search)
+    implementation(projects.feature.settings)
+    implementation(projects.feature.settings.security)
+    implementation(projects.feature.tutorial)
+    implementation(projects.feature.library)
 
-    implementation(libs.androidx.hilt.work)
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.biometric)
+    implementation(libs.androidx.hilt.navigationCompose)
+    implementation(libs.androidx.browser)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.hilt.work)
+    implementation(libs.google.android.play.review.ktx)
+    implementation(libs.google.android.play.feature.delivery.ktx)
+    implementation(libs.coil.compose)
+    implementation(libs.mikepenz.aboutlibraries)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3.windowSizeClass)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.google.accompanist.navigation.material)
+    implementation(libs.kotlinx.collections.immutable)
 
-    debugImplementation(libs.squareup.leakcanary.android)
+//    debugImplementation(libs.squareup.leakcanary.android)
 
     androidTestImplementation(libs.androidx.test.ext.junit.ktx)
     androidTestImplementation(libs.androidx.test.espresso.core)
@@ -221,7 +232,7 @@ abstract class InstallApksTask : DefaultTask() {
                     "am",
                     "start",
                     "-n",
-                    "com.sorrowblue.comicviewer.debug/com.sorrowblue.comicviewer.app.MainActivity"
+                    "com.sorrowblue.comicviewer.debug/com.sorrowblue.comicviewer.app.MainComposeActivity"
                 )
             }
             logger.lifecycle(stdout.toString().trim())

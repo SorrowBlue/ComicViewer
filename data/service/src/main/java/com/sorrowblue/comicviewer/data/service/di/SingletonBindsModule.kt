@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.service.di
 
-import com.sorrowblue.comicviewer.data.reporitory.FileScanService
+import com.sorrowblue.comicviewer.data.infrastructure.repository.impl.FileScanService
 import com.sorrowblue.comicviewer.data.service.FileScanServiceImpl
 import dagger.Binds
 import dagger.Module

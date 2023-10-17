@@ -1,18 +1,17 @@
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("build-logic.android.library")
-    id("com.sorrowblue.dagger-hilt")
+    id("comicviewer.android.library")
+    id("comicviewer.android.hilt")
+}
+
+android {
+    namespace = "com.sorrowblue.comicviewer.data.service"
 }
 
 dependencies {
-    implementation(projects.framework)
-    implementation(projects.data)
-    implementation(projects.data.common)
     implementation(projects.framework.notification)
-
-    implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.squareup.logcat)
+    implementation(projects.data.infrastructure)
 
     implementation(libs.androidx.hilt.work)
-    kapt(libs.androidx.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.work.runtime.ktx)
 }

@@ -1,13 +1,14 @@
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("build-logic.android.library")
-    id("com.sorrowblue.dagger-hilt")
+    id("comicviewer.android.library")
+    id("comicviewer.android.hilt")
+}
+
+android {
+    namespace = "com.sorrowblue.comicviewer.data.datastore"
 }
 
 dependencies {
-    implementation(projects.framework)
-    implementation(projects.data)
-    implementation(projects.domain)
+    implementation(projects.data.infrastructure)
 
     implementation(libs.androidx.datastore)
     implementation(libs.kotlinx.serialization.protobuf)

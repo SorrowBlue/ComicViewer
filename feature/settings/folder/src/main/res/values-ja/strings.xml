@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_folder_title">フォルダ</string>
+    <string name="settings_folder_title_extension">拡張子</string>
+    <string name="settings_folder_label_document">ドキュメント</string>
+    <string name="settings_folder_label_archives">アーカイブ</string>
+</resources>

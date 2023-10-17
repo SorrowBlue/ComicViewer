@@ -1,15 +1,15 @@
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("build-logic.android.library")
-    id("com.sorrowblue.dagger-hilt")
+    id("comicviewer.android.library")
+    id("comicviewer.android.hilt")
+}
+
+android {
+    namespace = "com.sorrowblue.comicviewer.data.paging"
 }
 
 dependencies {
-    implementation(projects.framework)
-    implementation(projects.domain.interactor)
-    implementation(projects.data)
-    implementation(projects.data.common)
+    implementation(projects.data.infrastructure)
     implementation(projects.data.database)
 
-    implementation(libs.squareup.logcat)
+    implementation(libs.androidx.paging.common)
 }

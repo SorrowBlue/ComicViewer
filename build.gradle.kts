@@ -1,7 +1,5 @@
 import java.util.Locale
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.ben.manes.versions)
     alias(libs.plugins.android.application) apply false
@@ -15,11 +13,16 @@ plugins {
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
     alias(libs.plugins.dependency.graph.generator)
+    alias(libs.plugins.arturbosch.detekt)
     id("org.ajoberstar.grgit") version "5.2.0"
 }
 
+detekt {
+    config.setFrom("$projectDir/config/detekt/detekt.yml")
+}
+
 tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }
 
 fun isNonStable(version: String): Boolean {

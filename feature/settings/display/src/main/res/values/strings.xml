@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_display_title">Display</string>
+    <string name="settings_display_label_design">Design</string>
+    <string name="settings_display_label_system_default">System default</string>
+    <string name="settings_display_label_dark_mode">Dark Mode</string>
+    <string name="settings_display_label_light_mode">Light Mode</string>
+</resources>

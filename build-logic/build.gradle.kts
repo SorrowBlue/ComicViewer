@@ -2,6 +2,21 @@ plugins {
     `kotlin-dsl`
 }
 
+group = "com.sorrowblue.comicviewer.buildlogic"
+
+// Configure the build-logic plugins to target JDK 17
+// This matches the JDK used to build the project, and is not related to what is running on device.
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+}
+
 dependencies {
     implementation(libs.android.tools.build.gradle)
     implementation(libs.kotlin.gradle.plugin)
@@ -9,21 +24,44 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("android.application") {
-            id = "build-logic.android.application"
-            implementationClass = "com.sorrowblue.buildlogic.AndroidApplicationPlugin"
+        register("comicviewer.android.library") {
+            id = name
+            implementationClass = "AndroidLibraryConventionPlugin"
         }
-        register("android.library") {
-            id = "build-logic.android.library"
-            implementationClass = "com.sorrowblue.buildlogic.AndroidLibraryPlugin"
+        register("comicviewer.android.library.compose") {
+            id = name
+            implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
-        register("android.dynamic-feature") {
-            id = "build-logic.android.dynamic-feature"
-            implementationClass = "com.sorrowblue.buildlogic.AndroidDynamicFeaturePlugin"
+
+        register("comicviewer.android.application") {
+            id = name
+            implementationClass = "AndroidApplicationConventionPlugin"
         }
-        register("com.sorrowblue.dagger-hilt") {
-            id = "com.sorrowblue.dagger-hilt"
-            implementationClass = "com.sorrowblue.buildlogic.AndroidDaggerHiltPlugin"
+        register("comicviewer.android.application.compose") {
+            id = name
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+
+        register("comicviewer.android.dynamic-feature") {
+            id = name
+            implementationClass = "AndroidDynamicFeatureConventionPlugin"
+        }
+        register("comicviewer.android.dynamic-feature.compose") {
+            id = name
+            implementationClass = "AndroidDynamicFeatureComposeConventionPlugin"
+        }
+
+        register("comicviewer.android.feature") {
+            id = name
+            implementationClass = "AndroidFeatureConventionPlugin"
+        }
+        register("comicviewer.android.feature.dynamic-feature") {
+            id = name
+            implementationClass = "AndroidFeatureDynamicFeatureConventionPlugin"
+        }
+        register("comicviewer.android.hilt") {
+            id = name
+            implementationClass = "AndroidHiltConventionPlugin"
         }
     }
 }

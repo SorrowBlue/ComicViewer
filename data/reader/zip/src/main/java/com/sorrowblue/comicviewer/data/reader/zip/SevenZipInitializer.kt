@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.data.reader.zip
 
 import android.content.Context
 import androidx.startup.Initializer
-import com.sorrowblue.comicviewer.framework.LogcatInitializer
+import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import logcat.LogPriority
 import logcat.logcat
 import net.sf.sevenzipjbinding.SevenZip
