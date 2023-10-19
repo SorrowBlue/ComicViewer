@@ -69,7 +69,7 @@ androidx-core-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 androidx-compose-bom = "androidx.compose:compose-bom:2023.10.00"
 androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidx-compose-compiler" }
 
-androidx-compose-material3 = { module = "androidx.compose.material3:material3", version = "1.2.0-alpha09" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3", version = "1.2.0-alpha10" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
