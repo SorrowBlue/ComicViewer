@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.sorrowblue.comicviewer.feature.settings.SettingsRoute
+import com.sorrowblue.comicviewer.feature.settings.SettingsScreen
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.navigateToSettingsDisplay
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.settingsDisplayScreen
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.navigateToSettingsFolder
@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.feature.settings.folder.navigation.settingsFol
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.settingsSupportExtensionScreen
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.navigateToSettingsAppInfo
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.settingsAppInfoScreen
-import com.sorrowblue.comicviewer.feature.settings.language.InAppLanguagePickerRoute
+import com.sorrowblue.comicviewer.feature.settings.language.InAppLanguagePickerScreen
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.navigateToSettingsSecurity
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.settingsSecurityScreen
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.navigateToSettingsViewer
@@ -31,18 +31,18 @@ private fun NavGraphBuilder.settingsScreen(
     onViewerClick: () -> Unit,
     onSecurityClick: () -> Unit,
     onAppInfoClick: () -> Unit,
-    onAppLanguageClickFallback: () -> Unit,
-    onStartTutorialClick: () -> Unit,
+    onAppLanguageClick: () -> Unit,
+    onStartTutorialClick: () -> Unit
 ) {
     composable(SettingsRoute) {
-        SettingsRoute(
+        SettingsScreen(
             onBackClick = onBackClick,
             onDisplayClick = onDisplayClick,
             onFolderClick = onFolderClick,
             onViewerClick = onViewerClick,
             onSecurityClick = onSecurityClick,
             onAppInfoClick = onAppInfoClick,
-            onAppLanguageClickFallback = onAppLanguageClickFallback,
+            onAppLanguageClick = onAppLanguageClick,
             onStartTutorialClick = onStartTutorialClick
         )
     }
@@ -50,7 +50,7 @@ private fun NavGraphBuilder.settingsScreen(
 
 private fun NavGraphBuilder.inAppLanguagePickerScreen(onBackClick: () -> Unit) {
     composable(InAppLanguagePickerRoute) {
-        InAppLanguagePickerRoute(
+        InAppLanguagePickerScreen(
             onBackClick = onBackClick
         )
     }
@@ -70,7 +70,7 @@ fun NavGraphBuilder.settingsNavGraph(
             onViewerClick = navController::navigateToSettingsViewer,
             onSecurityClick = navController::navigateToSettingsSecurity,
             onAppInfoClick = navController::navigateToSettingsAppInfo,
-            onAppLanguageClickFallback = navController::navigateToInAppLanguagePickerScreen,
+            onAppLanguageClick = navController::navigateToInAppLanguagePickerScreen,
             onStartTutorialClick = onStartTutorialClick
         )
         settingsDisplayScreen(onBackClick = navController::popBackStack)

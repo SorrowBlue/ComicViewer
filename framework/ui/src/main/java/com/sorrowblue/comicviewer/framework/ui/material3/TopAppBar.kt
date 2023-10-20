@@ -4,13 +4,17 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import androidx.compose.ui.draw.clip
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +31,7 @@ fun TopAppBar(
             title = title,
             navigationIcon = navigationIcon,
             actions = actions,
-            scrollBehavior = scrollBehavior?.value,
+            scrollBehavior = scrollBehavior,
             modifier = modifier
         )
     } else {
@@ -35,43 +39,12 @@ fun TopAppBar(
             title = title,
             navigationIcon = navigationIcon,
             actions = actions,
-            scrollBehavior = scrollBehavior?.value,
-            windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
-            modifier = modifier
+            scrollBehavior = scrollBehavior,
+            modifier = Modifier
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
+                .padding(horizontal = ComicTheme.dimension.margin * 2)
+                .clip(CircleShape)
+                .then(modifier),
         )
     }
-}
-
-@Composable
-fun TopAppBar(
-    title: Int,
-    onBackClick: (() -> Unit)? = null,
-    scrollBehavior: TopAppBarScrollBehavior? = null
-) {
-    TopAppBar(
-        title = { Text(id = title) },
-        navigationIcon = {
-            if (onBackClick != null) {
-                IconButton(onClick = onBackClick) {
-                    Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
-                }
-            }
-        },
-        scrollBehavior = scrollBehavior
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@JvmInline
-value class TopAppBarScrollBehavior(val value: androidx.compose.material3.TopAppBarScrollBehavior) {
-
-    val nestedScrollConnection get() = value.nestedScrollConnection
-}
-
-object TopAppBarDefaults
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopAppBarDefaults.pinnedScrollBehavior(): TopAppBarScrollBehavior {
-    return TopAppBarScrollBehavior(androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior())
 }
