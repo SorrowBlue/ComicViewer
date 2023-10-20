@@ -1,12 +1,9 @@
 package com.sorrowblue.comicviewer.app
 
-import android.app.Activity
 import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import com.google.android.play.core.review.ReviewManagerFactory
-import com.mikepenz.aboutlibraries.LibsBuilder
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraph
 import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
@@ -31,8 +28,6 @@ import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
 import java.util.ServiceLoader
 import kotlinx.collections.immutable.PersistentList
-import logcat.asLog
-import logcat.logcat
 
 internal fun NavGraphBuilder.mainGraph(
     isMobile: Boolean,
@@ -126,29 +121,6 @@ internal fun NavGraphBuilder.mainGraph(
 
     settingsNavGraph(
         navController = navController,
-        onLicenceClick = {
-            LibsBuilder().withActivityTitle("Licence").withSearchEnabled(true)
-                .withEdgeToEdge(true).start(context)
-        },
-        onRateAppClick = {
-            val manager = ReviewManagerFactory.create(context)
-            manager.requestReviewFlow().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    manager.launchReviewFlow(context as Activity, task.result)
-                        .addOnCompleteListener { a ->
-                            if (a.isSuccessful) {
-                                logcat { "成功" }
-                            } else {
-                                logcat { a.exception?.asLog().toString() }
-                                extraNavController.launchUrl("http://play.google.com/store/apps/details?id=${context.packageName}")
-                            }
-                        }
-                } else {
-                    logcat { task.exception?.asLog().toString() }
-                    extraNavController.launchUrl("http://play.google.com/store/apps/details?id=${context.packageName}")
-                }
-            }
-        },
         onStartTutorialClick = navController::navigateToTutorial,
         onPasswordChangeClick = { navController.navigateToAuthentication(Mode.Change) },
         onChangeAuthEnabled = {

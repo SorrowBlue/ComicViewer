@@ -6,14 +6,14 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreen
-import com.sorrowblue.comicviewer.feature.settings.app.navigation.navigateToSettingsAppInfo
-import com.sorrowblue.comicviewer.feature.settings.app.navigation.settingsAppInfoScreen
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.navigateToSettingsDisplay
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.settingsDisplayScreen
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.navigateToSettingsFolder
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.navigateToSettingsSupportExtension
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.settingsFolderScreen
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.settingsSupportExtensionScreen
+import com.sorrowblue.comicviewer.feature.settings.info.navigation.navigateToSettingsAppInfo
+import com.sorrowblue.comicviewer.feature.settings.info.navigation.settingsAppInfoScreen
 import com.sorrowblue.comicviewer.feature.settings.language.InAppLanguagePickerScreen
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.navigateToSettingsSecurity
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.settingsSecurityScreen
@@ -58,8 +58,6 @@ private fun NavGraphBuilder.inAppLanguagePickerScreen(onBackClick: () -> Unit) {
 
 fun NavGraphBuilder.settingsNavGraph(
     navController: NavController,
-    onLicenceClick: () -> Unit,
-    onRateAppClick: () -> Unit,
     onChangeAuthEnabled: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
     onStartTutorialClick: () -> Unit,
@@ -89,8 +87,6 @@ fun NavGraphBuilder.settingsNavGraph(
         settingsSupportExtensionScreen(onBackClick = navController::popBackStack)
         settingsAppInfoScreen(
             onBackClick = navController::popBackStack,
-            onLicenceClick = onLicenceClick,
-            onRateAppClick = onRateAppClick,
         )
         inAppLanguagePickerScreen(onBackClick = navController::popBackStack)
     }

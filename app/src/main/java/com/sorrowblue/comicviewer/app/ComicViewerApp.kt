@@ -2,9 +2,7 @@ package com.sorrowblue.comicviewer.app
 
 import android.app.Activity
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -28,7 +26,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
@@ -204,7 +201,7 @@ internal fun ComicViewerApp(
             if (BuildConfig.BUILD_TYPE != "release") {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .drawDiagonalLabel(
                             text = BuildConfig.BUILD_TYPE.uppercase(),
                             color = ComicTheme.colorScheme.tertiaryContainer.copy(alpha = 0.75f),
@@ -214,8 +211,6 @@ internal fun ComicViewerApp(
                                 color = ComicTheme.colorScheme.onTertiaryContainer
                             )
                         )
-                        .statusBarsPadding()
-                        .height(60.dp)
                 )
             }
         }

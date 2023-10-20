@@ -6,10 +6,7 @@
     <string name="settings_label_viewer">Viewer</string>
     <string name="settings_label_security">Security</string>
     <string name="settings_label_app">App Info</string>
+    <string name="settings_label_language">言語設定</string>
 
-    <string name="settings_app_label_version">Version</string>
-    <string name="settings_app_label_build">Build</string>
-    <string name="settings_app_label_rate">Rate the app</string>
-    <string name="settings_app_label_license">License</string>
     <string name="settings_title">Settings</string>
 </resources>
