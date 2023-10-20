@@ -1,24 +1,25 @@
-package com.sorrowblue.comicviewer.feature.settings.section
+package com.sorrowblue.comicviewer.feature.settings.common
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.sorrowblue.comicviewer.feature.settings.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SettingsTopAppBar(
+fun SettingsTopAppBar(
+    title: Int,
     onBackClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior?
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     TopAppBar(
-        title = { Text(stringResource(R.string.settings_title)) },
+        title = { Text(text = stringResource(id = title)) },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
