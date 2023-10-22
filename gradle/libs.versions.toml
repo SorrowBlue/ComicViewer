@@ -36,7 +36,7 @@ dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "go
 mikepenz-aboutlibraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "mikepenz-aboutlibraries" }
 dependency-graph-generator = "com.vanniktech.dependency.graph.generator:0.8.0"
 arturbosch-detekt = "io.gitlab.arturbosch.detekt:1.23.1"
-grgit = "org.ajoberstar.grgit:5.2.0"
+grgit = "org.ajoberstar.grgit:5.2.1"
 
 [libraries]
 twitter-compose-rules-detekt = "com.twitter.compose.rules:detekt:0.0.26"
