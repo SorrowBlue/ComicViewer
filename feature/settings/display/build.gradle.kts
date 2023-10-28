@@ -1,5 +1,6 @@
 plugins {
     id("comicviewer.android.feature")
+    id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
 android {
@@ -9,6 +10,7 @@ android {
 
 dependencies {
     implementation(projects.framework.common)
+    implementation(projects.feature.settings.common)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.startup.runtime)

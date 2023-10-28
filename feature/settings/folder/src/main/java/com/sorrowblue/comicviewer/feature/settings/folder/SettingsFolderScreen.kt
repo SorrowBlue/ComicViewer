@@ -1,30 +1,26 @@
 package com.sorrowblue.comicviewer.feature.settings.folder
 
-import android.content.res.Configuration
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sorrowblue.comicviewer.feature.settings.folder.section.SettingsFolderTopAppBar
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.feature.settings.common.Setting
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsColumn
+import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
+import com.sorrowblue.comicviewer.framework.ui.material3.Scaffold
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
+import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal data class SettingsFolderScreenUiState(
     val isOpenImageFolder: Boolean = false,
@@ -35,20 +31,57 @@ internal data class SettingsFolderScreenUiState(
 internal fun SettingsFolderRoute(
     onBackClick: () -> Unit,
     onExtensionClick: () -> Unit,
-    viewModel: SettingsFolderViewModel = hiltViewModel(),
+    state: SettingsFolderScreenState = rememberSettingsFolderScreenState(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState = state.uiState
     SettingsFolderScreen(
         uiState = uiState,
         onBackClick = onBackClick,
         onExtensionClick = onExtensionClick,
-        onChangeOpenImageFolder = viewModel::updateResolveImageFolder,
-        onChangeThumbnailEnabled = viewModel::updateShowPreview,
-        onDeleteThumbnailClick = viewModel::deleteThumbnail,
+        onChangeOpenImageFolder = state::onChangeOpenImageFolder,
+        onChangeThumbnailEnabled = state::onChangeThumbnailEnabled,
+        onDeleteThumbnailClick = state::onDeleteThumbnailClick,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Stable
+internal class SettingsFolderScreenState(
+    scope: CoroutineScope,
+    private val viewModel: SettingsFolderViewModel,
+) {
+    var uiState: SettingsFolderScreenUiState by mutableStateOf(SettingsFolderScreenUiState())
+        private set
+
+    init {
+        viewModel.settings.onEach {
+            uiState = uiState.copy(
+                isOpenImageFolder = it.resolveImageFolder,
+                isThumbnailEnabled = it.showPreview
+            )
+        }.launchIn(scope)
+    }
+
+    fun onChangeOpenImageFolder(value: Boolean) {
+        viewModel.updateResolveImageFolder(value)
+    }
+
+    fun onChangeThumbnailEnabled(value: Boolean) {
+        viewModel.updateShowPreview(value)
+    }
+
+    fun onDeleteThumbnailClick() {
+        viewModel.deleteThumbnail()
+    }
+}
+
+@Composable
+internal fun rememberSettingsFolderScreenState(
+    scope: CoroutineScope = rememberCoroutineScope(),
+    viewModel: SettingsFolderViewModel = hiltViewModel(),
+) = remember {
+    SettingsFolderScreenState(scope = scope, viewModel = viewModel)
+}
+
 @Composable
 private fun SettingsFolderScreen(
     uiState: SettingsFolderScreenUiState = SettingsFolderScreenUiState(),
@@ -61,81 +94,33 @@ private fun SettingsFolderScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         topBar = {
-            SettingsFolderTopAppBar(
+            TopAppBar(
+                title = R.string.settings_folder_title,
                 onBackClick = onBackClick,
                 scrollBehavior = scrollBehavior
             )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(contentPadding)
-        ) {
-            ListItem(
-                headlineContent = {
-                    Text(text = "拡張子設定")
-                },
-                modifier = Modifier.clickable(onClick = onExtensionClick),
+        SettingsColumn(contentPadding = contentPadding) {
+            Setting(title = R.string.settings_folder_title_extension, onClick = onExtensionClick)
+            SwitchSetting(
+                title = R.string.settings_folder_label_image_folder,
+                summary = R.string.settings_folder_desc_image_folder,
+                checked = uiState.isOpenImageFolder,
+                onCheckedChange = onChangeOpenImageFolder
             )
-            ListItem(
-                headlineContent = {
-                    Text(text = "画像フォルダを本として扱う")
-                },
-                supportingContent = {
-                    Text(text = "一覧の取得に時間がかかります")
-                },
-                trailingContent = {
-                    Switch(
-                        checked = uiState.isOpenImageFolder,
-                        onCheckedChange = onChangeOpenImageFolder
-                    )
-                },
-                modifier = Modifier.clickable { }
-            )
-            Text(
-                "サムネイル",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-            ListItem(
-                headlineContent = {
-                    Text(text = "サムネイルを表示する")
-                },
-                trailingContent = {
-                    Switch(
-                        checked = uiState.isThumbnailEnabled,
-                        onCheckedChange = onChangeThumbnailEnabled
-                    )
-                },
-                modifier = Modifier.clickable { },
-            )
-            ListItem(
-                headlineContent = {
-                    Text(text = "サムネイルを削除")
-                },
-                modifier = Modifier.clickable(onClick = onDeleteThumbnailClick),
-            )
+            SettingsCategory(title = R.string.settings_folder_label_thumbnail) {
+                SwitchSetting(
+                    title = R.string.settings_folder_label_show_thumbnail,
+                    checked = uiState.isThumbnailEnabled,
+                    onCheckedChange = onChangeThumbnailEnabled
+                )
+                Setting(
+                    title = R.string.settings_folder_label_delete_thumbnail,
+                    onClick = onDeleteThumbnailClick
+                )
+            }
         }
     }
 }
-
-@MultiThemePreviews
-@Composable
-private fun PreviewSettingsFolderScreen() {
-    ComicTheme {
-        Surface {
-            SettingsFolderScreen()
-        }
-    }
-}
-
-@Preview(
-    name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = "spec:width=673dp,height=841dp"
-)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
-annotation class MultiThemePreviews

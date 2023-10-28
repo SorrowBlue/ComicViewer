@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.dependency.graph.generator)
     alias(libs.plugins.arturbosch.detekt)
     id("com.palantir.git-version") version "3.0.0"
+    id("androidx.room") version libs.versions.androidx.room.get() apply false
 }
 
 detekt {
