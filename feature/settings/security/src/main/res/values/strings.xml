@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_security_label_to_settings">To settings</string>
     <string name="settings_security_title">Security</string>
     <string name="settings_security_title_password_lock">Password lock</string>
     <string name="settings_security_summary_password_lock">Require password on app launch</string>

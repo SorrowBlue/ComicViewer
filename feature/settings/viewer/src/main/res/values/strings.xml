@@ -14,4 +14,7 @@
     <string name="settings_viewer_label_right_binding">Right binding</string>
     <string name="settings_viewer_label_left_binding">Left binding</string>
     <string name="settings_viewer_label_preload_pages">Number of pages to preload</string>
+    <string name="settings_viewer_label_cache_images">Cache images</string>
+    <string name="settings_viewer_label_display_first_page">Always display first page</string>
+    <string name="settings_viewer_label_binding_direction_each">Set different closing directions for each book</string>
 </resources>
