@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DisplaySettings(
     val darkMode: DarkMode = DarkMode.DEVICE,
-    val folderThumbnailOrder: FolderThumbnailOrder = FolderThumbnailOrder.NAME
+    val folderThumbnailOrder: FolderThumbnailOrder = FolderThumbnailOrder.NAME,
+    val restoreOnLaunch: Boolean = false
 )
-

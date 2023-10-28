@@ -17,25 +17,23 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 internal class SettingsFolderViewModel @Inject constructor(
     private val manageFolderSettingsUseCase: ManageFolderSettingsUseCase,
-    private val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     private val deleteThumbnailsUseCase: DeleteThumbnailsUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsFolderScreenUiState())
     val uiState = _uiState.asStateFlow()
 
+    val settings = manageFolderSettingsUseCase.settings
+
     init {
-        manageFolderDisplaySettingsUseCase.settings.onEach {
-            _uiState.value = _uiState.value.copy(isThumbnailEnabled = it.isEnabledThumbnail)
-        }.launchIn(viewModelScope)
         manageFolderSettingsUseCase.settings.onEach {
-            _uiState.value = _uiState.value.copy(isOpenImageFolder = it.resolveImageFolder)
+            _uiState.value = _uiState.value.copy(isOpenImageFolder = it.resolveImageFolder, isThumbnailEnabled = it.showPreview)
         }.launchIn(viewModelScope)
     }
     fun updateShowPreview(newValue: Boolean) {
         viewModelScope.launch {
-            manageFolderDisplaySettingsUseCase.edit {
-                it.copy(isEnabledThumbnail = newValue)
+            manageFolderSettingsUseCase.edit {
+                it.copy(showPreview = newValue)
             }
         }
     }

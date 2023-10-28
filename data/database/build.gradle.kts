@@ -1,6 +1,7 @@
 plugins {
     id("comicviewer.android.library")
     id("comicviewer.android.hilt")
+    id("androidx.room")
 }
 
 android {
@@ -20,5 +21,9 @@ dependencies {
 }
 
 ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.generateKotlin", "true")
+}
+room {
+    println("$projectDir/schemas")
+    schemaDirectory("$projectDir/schemas")
 }

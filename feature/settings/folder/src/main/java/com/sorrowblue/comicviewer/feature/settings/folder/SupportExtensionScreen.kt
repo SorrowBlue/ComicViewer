@@ -1,164 +1,155 @@
 package com.sorrowblue.comicviewer.feature.settings.folder
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import android.content.Context
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
-import com.sorrowblue.comicviewer.feature.settings.folder.section.SupportExtensionTopAppBar
+import com.sorrowblue.comicviewer.feature.settings.common.CheckboxSetting
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsColumn
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.material3.FilledTonalButton
+import com.sorrowblue.comicviewer.framework.ui.material3.Scaffold
+import com.sorrowblue.comicviewer.framework.ui.material3.Text
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
+import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @Composable
 internal fun SupportExtensionRoute(
     onBackClick: () -> Unit,
-    viewModel: SupportExtensionViewModel = hiltViewModel()
+    state: SupportExtensionScreenState = rememberScreenState(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState = state.uiState
     SupportExtensionScreen(
         uiState = uiState,
         onBackClick = onBackClick,
-        onExtensionToggle = viewModel::toggleExtension
+        onExtensionToggle = state::toggleExtension,
+        onExtensionClick = {}
     )
 }
 
 internal data class SupportExtensionScreenUiState(
-    val supportExtension: Set<SupportExtension> = emptySet()
+    val supportExtension: Set<SupportExtension> = emptySet(),
+    val isDocumentInstalled: Boolean = false,
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Stable
+internal class SupportExtensionScreenState(
+    scope: CoroutineScope,
+    val splitInstallManager: SplitInstallManager,
+    private val viewModel: SupportExtensionViewModel,
+) {
+
+    var uiState by mutableStateOf(
+        SupportExtensionScreenUiState(
+            isDocumentInstalled = splitInstallManager.installedModules.contains("document")
+        )
+    )
+        private set
+
+    init {
+        viewModel.settingsFlow.onEach {
+            uiState = uiState.copy(supportExtension = it)
+        }.launchIn(scope)
+    }
+
+    fun toggleExtension(supportExtension: SupportExtension) {
+        viewModel.toggleExtension(supportExtension)
+    }
+}
+
+@Composable
+private fun rememberScreenState(
+    context: Context = LocalContext.current,
+    scope: CoroutineScope = rememberCoroutineScope(),
+    viewModel: SupportExtensionViewModel = hiltViewModel(),
+): SupportExtensionScreenState = remember {
+    val splitInstallManager = SplitInstallManagerFactory.create(context)
+    SupportExtensionScreenState(
+        scope = scope,
+        splitInstallManager = splitInstallManager,
+        viewModel = viewModel
+    )
+}
+
 @Composable
 private fun SupportExtensionScreen(
-    uiState: SupportExtensionScreenUiState = SupportExtensionScreenUiState(),
-    onBackClick: () -> Unit = {},
-    onExtensionToggle: (SupportExtension) -> Unit = {},
+    uiState: SupportExtensionScreenUiState,
+    onBackClick: () -> Unit,
+    onExtensionToggle: (SupportExtension) -> Unit,
+    onExtensionClick: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         topBar = {
-            SupportExtensionTopAppBar(
+            TopAppBar(
+                title = R.string.settings_folder_title_extension,
                 onBackClick = onBackClick,
                 scrollBehavior = scrollBehavior
             )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(contentPadding)
-        ) {
-            Text(
-                text = stringResource(R.string.settings_folder_label_archives),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-            SupportExtension.Archive.entries.forEach { extension ->
-                Box {
+        SettingsColumn(contentPadding = contentPadding) {
+            SettingsCategory(title = R.string.settings_folder_label_archives) {
+                SupportExtension.Archive.entries.forEach { extension ->
+                    CheckboxSetting(
+                        title = extension.extension,
+                        checked = uiState.supportExtension.contains(extension),
+                        onCheckedChange = { onExtensionToggle(extension) }
+                    )
+                }
+            }
+            SettingsCategory(title = R.string.settings_folder_label_document) {
+                if (!uiState.isDocumentInstalled) {
                     ListItem(
-                        headlineContent = {
-                            Text(text = extension.extension)
-                        },
-                        trailingContent = {
-                            Checkbox(
-                                checked = uiState.supportExtension.contains(extension),
-                                onCheckedChange = {})
+                        headlineContent = { Text(id = R.string.settings_folder_label_require_document) },
+                        leadingContent = {
+                            Icon(
+                                imageVector = ComicIcons.Info,
+                                contentDescription = null
+                            )
                         }
                     )
-                    Box(
-                        Modifier
-                            .matchParentSize()
-                            .clickable { onExtensionToggle(extension) })
-                }
-            }
-            Text(
-                text = stringResource(R.string.settings_folder_label_document),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-            val context = LocalContext.current
-            val sim = remember { SplitInstallManagerFactory.create(context) }
-            val isDocumentEnabled = sim.installedModules.contains("document")
-            if (!isDocumentEnabled) {
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = "ドキュメントファイルを読むためには、拡張機能をインストールする必要があります。",
-                        )
-                    },
-                    leadingContent = {
-                        Icon(ComicIcons.Info, contentDescription = null)
-                    }
-                )
-                FilledTonalButton(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .padding(horizontal = ComicTheme.dimension.margin)
-                        .align(Alignment.End)
-                ) {
-                    Text(text = "拡張機能一覧へ")
-                }
-            }
-            SupportExtension.Document.entries.forEach { extension ->
-                Box {
-                    ListItem(
-                        headlineContent = {
-                            Text(text = extension.extension)
-                        },
-                        trailingContent = {
-                            Checkbox(
-                                checked = isDocumentEnabled && uiState.supportExtension.contains(
-                                    extension
-                                ),
-                                onCheckedChange = {},
-                                enabled = isDocumentEnabled
-                            )
-                        },
+                    FilledTonalButton(
+                        text = R.string.settings_folder_label_install,
+                        onClick = onExtensionClick,
+                        modifier = Modifier
+                            .padding(end = ComicTheme.dimension.margin)
+                            .align(Alignment.End)
                     )
-                    Box(
-                        Modifier
-                            .matchParentSize()
-                            .clickable { onExtensionToggle(extension) })
+                }
+                SupportExtension.Document.entries.forEach { extension ->
+                    CheckboxSetting(
+                        title = extension.extension,
+                        checked = uiState.isDocumentInstalled && uiState.supportExtension.contains(
+                            extension
+                        ),
+                        onCheckedChange = { onExtensionToggle(extension) },
+                        enabled = uiState.isDocumentInstalled
+                    )
                 }
             }
-        }
-    }
-}
-
-@MultiThemePreviews
-@Composable
-private fun PreviewSupportExtensionScreen() {
-    ComicTheme {
-        Surface {
-            SupportExtensionScreen()
         }
     }
 }

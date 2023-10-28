@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.dependency.graph.generator)
     alias(libs.plugins.arturbosch.detekt)
     id("org.ajoberstar.grgit") version "5.2.1"
+    id("androidx.room") version libs.versions.androidx.room.get() apply false
 }
 
 detekt {
