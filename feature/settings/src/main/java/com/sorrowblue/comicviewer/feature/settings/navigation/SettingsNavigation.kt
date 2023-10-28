@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.sorrowblue.comicviewer.feature.settings.SettingsScreen
+import com.sorrowblue.comicviewer.feature.settings.SettingsRoute
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.navigateToSettingsDisplay
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.settingsDisplayScreen
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.navigateToSettingsFolder
@@ -31,18 +31,18 @@ private fun NavGraphBuilder.settingsScreen(
     onViewerClick: () -> Unit,
     onSecurityClick: () -> Unit,
     onAppInfoClick: () -> Unit,
-    onAppLanguageClick: () -> Unit,
-    onStartTutorialClick: () -> Unit
+    onAppLanguageClickFallback: () -> Unit,
+    onStartTutorialClick: () -> Unit,
 ) {
     composable(SettingsRoute) {
-        SettingsScreen(
+        SettingsRoute(
             onBackClick = onBackClick,
             onDisplayClick = onDisplayClick,
             onFolderClick = onFolderClick,
             onViewerClick = onViewerClick,
             onSecurityClick = onSecurityClick,
             onAppInfoClick = onAppInfoClick,
-            onAppLanguageClick = onAppLanguageClick,
+            onAppLanguageClickFallback = onAppLanguageClickFallback,
             onStartTutorialClick = onStartTutorialClick
         )
     }
@@ -70,7 +70,7 @@ fun NavGraphBuilder.settingsNavGraph(
             onViewerClick = navController::navigateToSettingsViewer,
             onSecurityClick = navController::navigateToSettingsSecurity,
             onAppInfoClick = navController::navigateToSettingsAppInfo,
-            onAppLanguageClick = navController::navigateToInAppLanguagePickerScreen,
+            onAppLanguageClickFallback = navController::navigateToInAppLanguagePickerScreen,
             onStartTutorialClick = onStartTutorialClick
         )
         settingsDisplayScreen(onBackClick = navController::popBackStack)
