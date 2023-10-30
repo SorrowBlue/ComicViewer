@@ -7,6 +7,8 @@
     <string name="settings_label_viewer">ビューワー</string>
     <string name="settings_label_security">セキュリティ</string>
     <string name="settings_label_app">アプリの情報</string>
+    <string name="settings_label_language">アプリの言語</string>
+
     <string name="settings_language_title">アプリ言語</string>
     <string name="settings_language_label_system_default">システムのデフォルト</string>
     <string name="settings_language_label_all_languages">すべての言語</string>
