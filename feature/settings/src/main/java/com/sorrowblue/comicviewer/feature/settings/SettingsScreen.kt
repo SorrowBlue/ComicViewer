@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsColumn
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -40,7 +39,8 @@ internal fun SettingsRoute(
         onSecurityClick = onSecurityClick,
         onAppInfoClick = onAppInfoClick,
         onAppLanguageClick = {
-            state.onAppLanguageClick(fallback = onAppLanguageClickFallback)
+            onAppLanguageClickFallback()
+//            state.onAppLanguageClick(fallback = onAppLanguageClickFallback)
         },
         onStartTutorialClick = onStartTutorialClick
     )
@@ -91,37 +91,37 @@ private fun SettingsScreen(
     ) { contentPadding ->
         SettingsColumn(contentPadding = contentPadding) {
             Setting(
-                title = stringResource(id = R.string.settings_label_display),
+                title = R.string.settings_label_display,
                 icon = ComicIcons.DisplaySettings,
                 onClick = onDisplayClick,
             )
             Setting(
-                title = stringResource(id = R.string.settings_label_folder),
+                title = R.string.settings_label_folder,
                 icon = ComicIcons.FolderOpen,
                 onClick = onFolderClick
             )
             Setting(
-                title = stringResource(id = R.string.settings_label_viewer),
+                title = R.string.settings_label_viewer,
                 icon = ComicIcons.Image,
                 onClick = onViewerClick
             )
             Setting(
-                title = stringResource(id = R.string.settings_label_security),
+                title = R.string.settings_label_security,
                 icon = ComicIcons.Lock,
                 onClick = onSecurityClick
             )
             Setting(
-                title = stringResource(id = R.string.settings_label_app),
+                title = R.string.settings_label_app,
                 icon = ComicIcons.Info,
                 onClick = onAppInfoClick
             )
             Setting(
-                title = stringResource(id = R.string.settings_label_tutorial),
+                title = R.string.settings_label_tutorial,
                 icon = ComicIcons.Start,
                 onClick = onStartTutorialClick
             )
             Setting(
-                title = stringResource(id = R.string.settings_label_language),
+                title = R.string.settings_label_language,
                 icon = ComicIcons.Language,
                 onClick = onAppLanguageClick
             )

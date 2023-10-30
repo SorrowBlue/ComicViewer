@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.feature.settings.folder.navigation.settingsFol
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.settingsSupportExtensionScreen
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.navigateToSettingsAppInfo
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.settingsAppInfoScreen
-import com.sorrowblue.comicviewer.feature.settings.language.InAppLanguagePickerScreen
+import com.sorrowblue.comicviewer.feature.settings.language.InAppLanguagePickerRoute
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.navigateToSettingsSecurity
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.settingsSecurityScreen
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.navigateToSettingsViewer
@@ -50,7 +50,7 @@ private fun NavGraphBuilder.settingsScreen(
 
 private fun NavGraphBuilder.inAppLanguagePickerScreen(onBackClick: () -> Unit) {
     composable(InAppLanguagePickerRoute) {
-        InAppLanguagePickerScreen(
+        InAppLanguagePickerRoute(
             onBackClick = onBackClick
         )
     }

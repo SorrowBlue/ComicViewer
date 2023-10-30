@@ -44,12 +44,6 @@ import com.sorrowblue.comicviewer.framework.ui.material3.CustomSlider
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
-interface SettingsItem {
-    val title: Int
-    val icon: ImageVector? get() = null
-    val text: String? get() = null
-}
-
 @Composable
 fun SettingsColumn(
     modifier: Modifier = Modifier,
@@ -158,6 +152,23 @@ fun CheckedSetting(
         summary = summary?.let { { Text(text = it) } },
         icon = icon?.let { { Icon(imageVector = it, contentDescription = null) } },
         widget = { Icon(imageVector = ComicIcons.Check, contentDescription = null) }
+    )
+}
+
+@Composable
+fun CheckedSetting(
+    title: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    summary: Int? = null,
+    icon: ImageVector? = null,
+) {
+    CheckedSetting(
+        title = stringResource(id = title),
+        onClick = onClick,
+        modifier = modifier,
+        summary = summary?.let { stringResource(id = summary) },
+        icon = icon,
     )
 }
 
@@ -393,6 +404,31 @@ fun SliderSetting(
 
 @Composable
 fun SliderSetting(
+    title: String,
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    modifier: Modifier = Modifier,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    @IntRange(from = 0) steps: Int = 0,
+    widget: @Composable (() -> Unit)? = null,
+    icon: ImageVector? = null,
+    enabled: Boolean = true,
+) {
+    SliderSetting(
+        title = { Text(text = title) },
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        valueRange = valueRange,
+        steps = steps,
+        widget = widget,
+        icon = icon?.let { { Icon(imageVector = icon, contentDescription = null) } },
+        enabled = enabled
+    )
+}
+
+@Composable
+fun SliderSetting(
     title: Int,
     value: Float,
     onValueChange: (Float) -> Unit,
@@ -400,11 +436,11 @@ fun SliderSetting(
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     @IntRange(from = 0) steps: Int = 0,
     widget: @Composable (() -> Unit)? = null,
-    icon: @Composable (() -> Unit)? = null,
+    icon: ImageVector? = null,
     enabled: Boolean = true,
 ) {
     SliderSetting(
-        title = { Text(text = stringResource(id = title)) },
+        title = stringResource(id = title),
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
@@ -479,33 +515,27 @@ fun PreviewSettingsScreen() {
                 )
                 var media by remember { mutableFloatStateOf(0f) }
                 SliderSetting(
-                    title = { Text("メディアの音量") },
+                    title = "メディアの音量",
                     value = media, onValueChange = { media = it },
-                    icon = { Icon(ComicIcons.MusicNote, null) },
+                    icon = ComicIcons.MusicNote,
                     modifier = Modifier.clickable { },
                 )
-                SettingsCategory(title = {
-                    Text("ディスプレイのロック")
-                }) {
+                SettingsCategory(title = "ディスプレイのロック") {
                     var checked by remember { mutableStateOf(false) }
                     SwitchSetting(
-                        title = {
-                            Text("電源ロックの音")
-                        },
+                        title = "電源ロックの音",
                         checked = checked,
                         onCheckedChange = { checked = it },
                     )
 
                     var checked2 by remember { mutableStateOf(false) }
-                    SeparateSwitchSetting(title = {
-                        Text("電源ロックの音")
-                    }, checked = checked2, onCheckedChange = { checked2 = it }, onClick = {})
+                    SeparateSwitchSetting(
+                        title = "電源ロックの音",
+                        checked = checked2,
+                        onCheckedChange = { checked2 = it },
+                        onClick = {})
                 }
-                ListItem(
-                    headlineContent = { Text("settings_label_tutorial") },
-                    leadingContent = { Icon(ComicIcons.Start, null) },
-                    modifier = Modifier.clickable { },
-                )
+                Setting(title = "settings_label_tutorial", onClick = {}, icon = ComicIcons.Start)
             }
         }
     }
