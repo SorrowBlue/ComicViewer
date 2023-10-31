@@ -144,7 +144,7 @@ squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.12"
 dropbox-core-sdk = "com.dropbox.core:dropbox-core-sdk:5.4.6"
 
 coil = "io.coil-kt:coil:2.4.0"
-coil-base = "io.coil-kt:coil-base:2.4.0"
+coil-base = "io.coil-kt:coil-base:2.5.0"
 coil-compose = "io.coil-kt:coil-compose:2.4.0"
 jcifs-ng = "eu.agno3.jcifs:jcifs-ng:2.1.9"
 slf4j-android = "org.slf4j:slf4j-android:1.7.36"
