@@ -58,6 +58,13 @@
       ],
       "groupName": "Coil",
       "groupSlug": "coil"
+    },
+    {
+      "matchPackagePrefixes": [
+        "androidx.hilt:"
+      ],
+      "groupName": "Hilt",
+      "groupSlug": "androidx_hilt"
     }
   ]
 }
