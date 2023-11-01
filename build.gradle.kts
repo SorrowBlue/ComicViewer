@@ -14,7 +14,7 @@ plugins {
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
     alias(libs.plugins.dependency.graph.generator)
     alias(libs.plugins.arturbosch.detekt)
-    id("org.ajoberstar.grgit") version "5.2.0"
+    id("org.ajoberstar.grgit") version "5.2.1"
 }
 
 detekt {
