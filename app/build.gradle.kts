@@ -36,23 +36,23 @@ android {
         fun propertyString(name: String) =
             System.getenv(name) ?: localProperties.propertyString(name)
 
-        val debugStoreFile = propertyString("debug.storeFile")?.let { file(it) }
+        val debugStoreFile = propertyString("debug_storeFile")?.let { file(it) }
         if (debugStoreFile?.exists() == true) {
             getByName("debug") {
                 storeFile = debugStoreFile
-                storePassword = propertyString("debug.storePassword")
-                keyAlias = propertyString("debug.keyAlias")
-                keyPassword = propertyString("debug.keyPassword")
+                storePassword = propertyString("debug_storePassword")
+                keyAlias = propertyString("debug_keyAlias")
+                keyPassword = propertyString("debug_keyPassword")
             }
         }
 
-        val releaseStoreFile = propertyString("release.storeFile")?.let { file(it) }
+        val releaseStoreFile = propertyString("release_storeFile")?.let { file(it) }
         if (releaseStoreFile?.exists() == true) {
             val release = create("release") {
                 storeFile = releaseStoreFile
-                storePassword = propertyString("release.storePassword")
-                keyAlias = propertyString("release.keyAlias")
-                keyPassword = propertyString("release.keyPassword")
+                storePassword = propertyString("release_storePassword")
+                keyAlias = propertyString("release_keyAlias")
+                keyPassword = propertyString("release_keyPassword")
             }
             create("prerelease") {
                 initWith(release)
@@ -68,25 +68,25 @@ android {
             applicationIdSuffix = ComicBuildType.RELEASE.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.RELEASE.isMinifyEnabled
             isShrinkResources = ComicBuildType.RELEASE.isShrinkResources
-            signingConfig = signingConfigs.getByName(name)
+            signingConfig = signingConfigs.findByName(name)
         }
         getByName("prerelease") {
             applicationIdSuffix = ComicBuildType.PRERELEASE.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.PRERELEASE.isMinifyEnabled
             isShrinkResources = ComicBuildType.PRERELEASE.isShrinkResources
-            signingConfig = signingConfigs.getByName(name)
+            signingConfig = signingConfigs.findByName(name)
         }
         getByName("internal") {
             applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.INTERNAL.isMinifyEnabled
             isShrinkResources = ComicBuildType.INTERNAL.isShrinkResources
-            signingConfig = signingConfigs.getByName(name)
+            signingConfig = signingConfigs.findByName(name)
         }
         debug {
             applicationIdSuffix = ComicBuildType.DEBUG.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.DEBUG.isMinifyEnabled
             isShrinkResources = ComicBuildType.DEBUG.isShrinkResources
-            signingConfig = signingConfigs.getByName(name)
+            signingConfig = signingConfigs.findByName(name)
         }
     }
 

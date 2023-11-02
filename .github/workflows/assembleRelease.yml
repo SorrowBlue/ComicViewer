@@ -45,7 +45,7 @@ jobs:
       with:
         arguments: assembleRelease
       env:
-        release.storeFile: ${{ steps.android_keystore.outputs.filePath }}
-        release.storePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
-        release.keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-        release.keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        release_storeFile: ${{ steps.android_keystore.outputs.filePath }}
+        release_storePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
+        release_keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+        release_keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
