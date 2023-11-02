@@ -146,6 +146,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
 }
 
+/*
 abstract class BuildApksTask : DefaultTask() {
 
     @get:InputFile
@@ -254,3 +255,4 @@ tasks.register<InstallApksTask>("installApksDebug") {
     bundletool.set(File(gradleLocalProperties(rootDir).getProperty("bundletool")))
     output.set(projectDir.file("build/outputs/bundle/debug/app-debug.apks"))
 }
+*/
