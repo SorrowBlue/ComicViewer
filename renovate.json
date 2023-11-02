@@ -21,7 +21,8 @@
     {
       "matchPackagePrefixes": [
         "androidx.compose.compiler",
-        "org.jetbrains.kotlin:"
+        "org.jetbrains.kotlin:",
+        "org.jetbrains.kotlin."
       ],
       "groupName": "Compose Compiler and Kotlin",
       "groupSlug": "compose_compiler_and_kotlin"
