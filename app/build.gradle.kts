@@ -34,10 +34,10 @@ android {
     signingConfigs {
         val localProperties = gradleLocalProperties(rootDir)
         fun propertyString(name: String) =
-            System.getenv(name) ?: localProperties.propertyString(name).orEmpty()
+            System.getenv(name) ?: localProperties.propertyString(name)
 
-        val debugStoreFile = file(propertyString("debug.storeFile"))
-        if (debugStoreFile.exists()) {
+        val debugStoreFile = propertyString("debug.storeFile")?.let { file(it) }
+        if (debugStoreFile?.exists() == true) {
             getByName("debug") {
                 storeFile = debugStoreFile
                 storePassword = propertyString("debug.storePassword")
@@ -46,8 +46,8 @@ android {
             }
         }
 
-        val releaseStoreFile = file(propertyString("release.storeFile"))
-        if (releaseStoreFile.exists()) {
+        val releaseStoreFile = propertyString("release.storeFile")?.let { file(it) }
+        if (releaseStoreFile?.exists() == true) {
             val release = create("release") {
                 storeFile = releaseStoreFile
                 storePassword = propertyString("release.storePassword")

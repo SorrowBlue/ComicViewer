@@ -42,9 +42,5 @@ tasks.named(
     }
 }
 
-val versionDetails: groovy.lang.Closure<com.palantir.gradle.gitversion.VersionDetails> by extra
-val details = versionDetails()
 val gitVersion: groovy.lang.Closure<String> by extra
 version = gitVersion().also { logger.lifecycle("version: $it") }
-
-fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex())) "-SNAPSHOT" else ""
