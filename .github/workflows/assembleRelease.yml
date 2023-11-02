@@ -8,10 +8,9 @@
 name: assembleRelease
 
 on:
-  push:
-    branches: [ "dev/**" ]
   pull_request:
-    branches: [ "main", "renovate/**" ]
+    branches:
+    - "main"
 
 permissions:
   contents: read
