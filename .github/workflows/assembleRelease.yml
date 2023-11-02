@@ -30,13 +30,6 @@ jobs:
         fileName: 'android_keystore.jks'
         encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
 
-    - name: Set env
-      env:
-        release.storeFile: ${{ steps.android_keystore.outputs.filePath }}
-        release.storePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
-        release.keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-        release.keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -50,3 +43,8 @@ jobs:
       uses: gradle/gradle-build-action@v2.9.0
       with:
         arguments: assembleRelease
+      env:
+        release.storeFile: ${{ steps.android_keystore.outputs.filePath }}
+        release.storePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
+        release.keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+        release.keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
