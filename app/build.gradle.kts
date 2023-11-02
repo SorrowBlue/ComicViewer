@@ -32,33 +32,34 @@ android {
     }
 
     signingConfigs {
-        getByName("debug") {
-            storeFile =
-                file(gradleLocalProperties(rootDir).propertyString("debug.storeFile").orEmpty())
-            storePassword = gradleLocalProperties(rootDir).propertyString("debug.storePassword")
-            keyAlias = gradleLocalProperties(rootDir).propertyString("debug.keyAlias")
-            keyPassword = gradleLocalProperties(rootDir).propertyString("debug.keyPassword")
+        val localProperties = gradleLocalProperties(rootDir)
+        fun propertyString(name: String) =
+            System.getenv(name) ?: localProperties.propertyString(name).orEmpty()
+
+        val debugStoreFile = file(propertyString("debug.storeFile"))
+        if (debugStoreFile.exists()) {
+            getByName("debug") {
+                storeFile = debugStoreFile
+                storePassword = propertyString("debug.storePassword")
+                keyAlias = propertyString("debug.keyAlias")
+                keyPassword = propertyString("debug.keyPassword")
+            }
         }
-        create("release") {
-            storeFile =
-                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
-            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
-            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
-            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
-        }
-        create("prerelease") {
-            storeFile =
-                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
-            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
-            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
-            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
-        }
-        create("internal") {
-            storeFile =
-                file(gradleLocalProperties(rootDir).propertyString("release.storeFile").orEmpty())
-            storePassword = gradleLocalProperties(rootDir).propertyString("release.storePassword")
-            keyAlias = gradleLocalProperties(rootDir).propertyString("release.keyAlias")
-            keyPassword = gradleLocalProperties(rootDir).propertyString("release.keyPassword")
+
+        val releaseStoreFile = file(propertyString("release.storeFile"))
+        if (releaseStoreFile.exists()) {
+            val release = create("release") {
+                storeFile = releaseStoreFile
+                storePassword = propertyString("release.storePassword")
+                keyAlias = propertyString("release.keyAlias")
+                keyPassword = propertyString("release.keyPassword")
+            }
+            create("prerelease") {
+                initWith(release)
+            }
+            create("internal") {
+                initWith(release)
+            }
         }
     }
 
