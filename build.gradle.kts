@@ -14,7 +14,7 @@ plugins {
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
     alias(libs.plugins.dependency.graph.generator)
     alias(libs.plugins.arturbosch.detekt)
-    id("org.ajoberstar.grgit") version "5.2.1"
+    id("com.palantir.git-version") version "3.0.0"
 }
 
 detekt {
@@ -42,9 +42,9 @@ tasks.named(
     }
 }
 
-version = grgit.describe {
-    longDescr = false
-    tags = true
-}.toVersion().also { logger.lifecycle("version: $it") }
+val versionDetails: groovy.lang.Closure<com.palantir.gradle.gitversion.VersionDetails> by extra
+val details = versionDetails()
+val gitVersion: groovy.lang.Closure<String> by extra
+version = gitVersion().also { logger.lifecycle("version: $it") }
 
 fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex())) "-SNAPSHOT" else ""
