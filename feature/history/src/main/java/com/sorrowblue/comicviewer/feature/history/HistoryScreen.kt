@@ -28,7 +28,6 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 internal fun HistoryRoute(
     onFileClick: (File, Int) -> Unit,
     onSettingsClick: () -> Unit,
-    onFileLongClick: (File) -> Unit,
     contentPadding: PaddingValues,
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
@@ -39,7 +38,7 @@ internal fun HistoryRoute(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onFileClick = { onFileClick(it, lazyGridState.firstVisibleItemIndex) },
-        onFileLongClick = onFileLongClick,
+        onFileLongClick = { TODO(/*onFileLongClick*/) },
         onFileListTypeClick = viewModel::toggleDisplay,
         onGridSizeClick = viewModel::onGridSizeChange,
         onSettingsClick = onSettingsClick,

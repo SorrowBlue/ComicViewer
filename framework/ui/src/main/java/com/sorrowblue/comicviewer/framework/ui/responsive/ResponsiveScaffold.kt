@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -34,12 +35,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.designsystem.theme.MotionTokens
 import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
+import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.ReversePermanentNavigationDrawer
+import com.sorrowblue.comicviewer.framework.ui.material3.rememberSnackbarHostState
+import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
 @Stable
 open class ResponsiveScaffoldState<T : Any>(
@@ -70,7 +76,7 @@ fun <T : Any> ResponsiveScaffold(
     sideSheet: @Composable (T, PaddingValues) -> Unit,
     onBottomSheetDismissRequest: () -> Unit = { state.sheetState.hide() },
     windowSizeClass: WindowSizeClass = LocalWindowSize.current,
-    contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
+    contentWindowInsets: WindowInsets = WindowInsets.safeDrawing,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val isCompact = remember(windowSizeClass) {
@@ -124,37 +130,17 @@ fun <T : Any> ResponsiveScaffold(
             },
         ) {
             val end by animateDpAsState(
-                targetValue = if (state.sheetState.show) {
-                    ComicTheme.dimension.spacer
-                } else {
-                    innerPadding.calculateEndPadding(LocalLayoutDirection.current)
-                }, label = "end"
+                targetValue = if (state.sheetState.show) 0.dp else innerPadding.calculateEndPadding(
+                    LocalLayoutDirection.current
+                ), label = "end"
             )
-            val padding = innerPadding/*if (isCompact) {
-                innerPadding
-                    .add(
-                        PaddingValues(
-                            start = ComicTheme.dimension.margin,
-                            end = ComicTheme.dimension.margin,
-                            bottom = ComicTheme.dimension.margin + if (state.isVisibleFab) 56.dp + 16.dp else 0.dp
-                        )
-                    )
-            } else {
-                innerPadding
-                    .copy(end = end)
-                    .add(
-                        paddingValues = PaddingValues(
-                            top = ComicTheme.dimension.spacer,
-                            bottom = ComicTheme.dimension.margin
-                        )
-                    )
-            }*/
+
+            val padding = innerPadding.copy(end = end)
             content(padding)
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @ComicPreviews
 @Composable
 private fun PreviewResponsiveScaffold() {
@@ -165,11 +151,7 @@ private fun PreviewResponsiveScaffold() {
         ResponsiveScaffold(
             state = state,
             topBar = {
-                ResponsiveTopAppBar(
-                    title = {
-                        Text(text = "PreviewResponsiveScaffold")
-                    },
-                )
+                ResponsiveTopAppBar(title = "PreviewResponsiveScaffold")
             },
             bottomSheet = {
                 Box(Modifier.fillMaxSize())
@@ -193,6 +175,94 @@ private fun PreviewResponsiveScaffold() {
             ) {
 
             }
+        }
+    }
+}
+
+@Stable
+open class ResponsiveScaffoldState2<T : Any>(
+    val sheetState: SideSheetValueState<T>,
+    val snackbarHostState: com.sorrowblue.comicviewer.framework.ui.material3.SnackbarHostState,
+)
+
+@Composable
+fun <T : Any> rememberResponsiveScaffoldState2(
+    sideSheetState: SideSheetValueState<T>,
+    snackbarHostState: com.sorrowblue.comicviewer.framework.ui.material3.SnackbarHostState = rememberSnackbarHostState(),
+): ResponsiveScaffoldState2<T> {
+    return remember(sideSheetState, snackbarHostState) {
+        ResponsiveScaffoldState2(
+            sheetState = sideSheetState,
+            snackbarHostState = snackbarHostState
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun <T : Any> ResponsiveScaffold2(
+    state: ResponsiveScaffoldState2<T>,
+    modifier: Modifier = Modifier,
+    topBar: @Composable () -> Unit = {},
+    bottomSheet: @Composable (ColumnScope.(T) -> Unit),
+    sideSheet: @Composable (T, PaddingValues) -> Unit,
+    onBottomSheetDismissRequest: () -> Unit = { state.sheetState.hide() },
+    content: @Composable (PaddingValues) -> Unit,
+) {
+    val isCompact = rememberMobile()
+    if (isCompact && state.sheetState.show) {
+        ModalBottomSheet(
+            onDismissRequest = onBottomSheetDismissRequest,
+            containerColor = ComicTheme.colorScheme.surfaceContainerLow,
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            windowInsets = WindowInsets(0)
+        ) {
+            bottomSheet(state.sheetState.currentValue!!)
+        }
+    }
+    com.sorrowblue.comicviewer.framework.ui.material3.Scaffold(
+        topBar = topBar,
+        snackbarHostState = state.snackbarHostState,
+        modifier = modifier,
+    ) { innerPadding ->
+        ReversePermanentNavigationDrawer(
+            drawerContent = {
+                AnimatedContent(
+                    targetState = !isCompact && state.sheetState.show,
+                    label = "drawerContent",
+                    contentAlignment = Alignment.CenterStart,
+                    transitionSpec = {
+                        expandHorizontally(
+                            animationSpec = tween(
+                                durationMillis = MotionTokens.DurationMedium4,
+                                delayMillis = 0,
+                                easing = MotionTokens.EasingEmphaizedDecelerateInterpolator
+                            ), expandFrom = Alignment.Start
+                        ) togetherWith shrinkHorizontally(
+                            animationSpec = tween(
+                                durationMillis = MotionTokens.DurationMedium1,
+                                delayMillis = 0,
+                                easing = MotionTokens.EasingEmphasizedAccelerateInterpolator
+                            ), shrinkTowards = Alignment.Start
+                        )
+                    }
+                ) { visible ->
+                    if (visible) {
+                        sideSheet(state.sheetState.currentValue!!, innerPadding)
+                    } else {
+                        Spacer(modifier = Modifier.fillMaxHeight())
+                    }
+                }
+            },
+        ) {
+            val end by animateDpAsState(
+                targetValue = if (state.sheetState.show) 0.dp else innerPadding.calculateEndPadding(
+                    LocalLayoutDirection.current
+                ), label = "end"
+            )
+
+            val padding = innerPadding.copy(end = end)
+            content(padding)
         }
     }
 }

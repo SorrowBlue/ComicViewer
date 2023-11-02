@@ -10,6 +10,7 @@ import androidx.compose.material.icons.automirrored.twotone.Logout
 import androidx.compose.material.icons.automirrored.twotone.ViewList
 import androidx.compose.material.icons.automirrored.twotone.VolumeUp
 import androidx.compose.material.icons.twotone.Add
+import androidx.compose.material.icons.twotone.ArrowDropDown
 import androidx.compose.material.icons.twotone.Book
 import androidx.compose.material.icons.twotone.BrokenImage
 import androidx.compose.material.icons.twotone.Check
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.twotone.Download
 import androidx.compose.material.icons.twotone.Edit
 import androidx.compose.material.icons.twotone.ErrorOutline
 import androidx.compose.material.icons.twotone.Favorite
+import androidx.compose.material.icons.twotone.FavoriteBorder
 import androidx.compose.material.icons.twotone.FilterAlt
 import androidx.compose.material.icons.twotone.Folder
 import androidx.compose.material.icons.twotone.FolderOpen
@@ -76,6 +78,7 @@ object ComicIcons {
     val Close = Icons.TwoTone.Close
     val Save = Icons.TwoTone.Save
     val Backspace = Icons.AutoMirrored.TwoTone.Backspace
+    val ArrowDropDown = Icons.TwoTone.ArrowDropDown
     val Circle = Icons.TwoTone.Circle
     val Key = Icons.TwoTone.Key
     val DarkMode = Icons.TwoTone.DarkMode
@@ -104,4 +107,3 @@ object ComicIcons {
     val FilterAlt = Icons.TwoTone.FilterAlt
     val Folder = Icons.TwoTone.Folder
 }
-

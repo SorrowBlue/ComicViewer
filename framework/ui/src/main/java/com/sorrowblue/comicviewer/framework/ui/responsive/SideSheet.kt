@@ -89,9 +89,8 @@ fun SideSheet(
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .padding(innerPadding.copy(bottom = 0.dp))
+            .padding(innerPadding.copy(bottom = 0.dp, start = 0.dp))
             .padding(
-                top = ComicTheme.dimension.spacer,
                 end = ComicTheme.dimension.margin
             )
             .width(width)

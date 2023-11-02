@@ -24,12 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.ui.material3.AppBarAction
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
 import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
+import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import kotlinx.collections.immutable.PersistentList
 
 object ResponsiveTopAppBarDefault {
@@ -66,6 +68,84 @@ fun ResponsiveTopAppBar(
                 .clip(CircleShape),
         )
     }
+}
+
+@Composable
+fun ResponsiveTopAppBar(
+    title: @Composable () -> Unit = {},
+    onBackClick: (() -> Unit)? = null,
+    actions: @Composable (RowScope.() -> Unit) = {},
+    windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+    scrollBehavior: com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior? = null,
+) {
+    if (rememberMobile()) {
+        com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar(
+            title = title,
+            navigationIcon = {
+                if (onBackClick != null) {
+                    IconButton(onClick = onBackClick) {
+                        Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            },
+            actions = actions,
+            scrollBehavior = scrollBehavior
+        )
+    } else {
+        com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar(
+            title = title,
+            navigationIcon = {
+                if (onBackClick != null) {
+                    IconButton(onClick = onBackClick) {
+                        Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            },
+            actions = actions,
+            scrollBehavior = scrollBehavior,
+            windowInsets = WindowInsets(0),
+            modifier = Modifier
+                .windowInsetsPadding(windowInsets.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top))
+                .padding(horizontal = ComicTheme.dimension.margin)
+                .clip(ComicTheme.shapes.large)
+        )
+    }
+}
+
+@Composable
+fun ResponsiveTopAppBar(
+    title: String,
+    onBackClick: (() -> Unit)? = null,
+    actions: @Composable (RowScope.() -> Unit) = {},
+    windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+    scrollBehavior: com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior? = null,
+) {
+    ResponsiveTopAppBar(
+        title = {
+            Text(text = title)
+        },
+        onBackClick = onBackClick,
+        actions = actions,
+        windowInsets = windowInsets,
+        scrollBehavior = scrollBehavior
+    )
+}
+
+@Composable
+fun ResponsiveTopAppBar(
+    title: Int,
+    onBackClick: (() -> Unit)? = null,
+    actions: @Composable (RowScope.() -> Unit) = {},
+    windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+    scrollBehavior: com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior? = null,
+) {
+    ResponsiveTopAppBar(
+        title = stringResource(id = title),
+        onBackClick = onBackClick,
+        actions = actions,
+        windowInsets = windowInsets,
+        scrollBehavior = scrollBehavior
+    )
 }
 
 @Composable

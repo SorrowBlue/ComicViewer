@@ -1,16 +1,14 @@
 package com.sorrowblue.comicviewer.bookshelf
 
 import androidx.activity.ComponentActivity
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,13 +18,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.bookshelf.component.BookshelfAppBar
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfBottomSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfEmptyContents
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfListContents
@@ -35,13 +31,20 @@ import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialogUiState
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfSideSheet
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.feature.bookshelf.R
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CommonViewModel
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
-import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
+import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffold
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveTopAppBar
 import com.sorrowblue.comicviewer.framework.ui.responsive.SideSheetValueState
 import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveScaffoldState
 
@@ -95,7 +98,6 @@ data class BookshelfScreenUiState(
     val removeDialogUiState: BookshelfRemoveDialogUiState = BookshelfRemoveDialogUiState.Hide,
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BookshelfScreen(
     state: ResponsiveScaffoldState<BookshelfFolder>,
@@ -120,9 +122,15 @@ private fun BookshelfScreen(
     }
     ResponsiveScaffold(
         topBar = {
-            BookshelfAppBar(
-                onSettingsClick = onSettingsClick,
-                scrollBehavior = scrollBehavior
+            ResponsiveTopAppBar(
+                title = R.string.bookshelf_list_title,
+                actions = {
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(imageVector = ComicIcons.Settings, contentDescription = null)
+                    }
+                },
+                windowInsets = contentPadding.asWindowInsets(),
+                scrollBehavior = scrollBehavior,
             )
         },
         bottomSheet = { bookshelfFolder ->
@@ -147,14 +155,16 @@ private fun BookshelfScreen(
         contentWindowInsets = contentPadding.asWindowInsets(),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        val end by animateDpAsState(
-            targetValue = if (state.sheetState.show) 0.dp else innerPadding.calculateEndPadding(
-                LocalLayoutDirection.current
-            ), label = "end"
-        )
         BookshelfMainSheet(
             lazyPagingItems,
-            innerPadding.copy(end = end),
+            innerPadding.add(
+                paddingValues = PaddingValues(
+                    top = if (rememberMobile()) 0.dp else ComicTheme.dimension.margin,
+                    start = ComicTheme.dimension.margin,
+                    end = ComicTheme.dimension.margin,
+                    bottom = ComicTheme.dimension.margin + if (rememberMobile()) 72.dp else 0.dp
+                )
+            ),
             lazyGridState,
             onBookshelfClick,
             onBookshelfLongClick
