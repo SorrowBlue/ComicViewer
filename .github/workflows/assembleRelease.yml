@@ -19,6 +19,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: android
     steps:
     - name: Checkout
       uses: actions/checkout@v4
