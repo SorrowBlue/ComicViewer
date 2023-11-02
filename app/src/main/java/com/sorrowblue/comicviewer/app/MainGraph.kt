@@ -83,7 +83,6 @@ internal fun NavGraphBuilder.mainGraph(
         contentPadding = contentPadding,
         navController = navController,
         onBookClick = navController::navigateToBook,
-        onFileLongClick = { /*TODO*/ },
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
     )
@@ -92,9 +91,6 @@ internal fun NavGraphBuilder.mainGraph(
         navController = navController,
         onBookClick = { id, path, pos ->
             navController.navigateToBook(id, path, position = pos)
-        },
-        onFileLongClick = {
-            /*TODO*/
         },
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
@@ -110,7 +106,6 @@ internal fun NavGraphBuilder.mainGraph(
     searchGraph(
         contentPadding = contentPadding,
         navController = navController,
-        onClickLongFile = { /*TODO*/ },
         onBookClick = navController::navigateToBook,
         onSettingsClick = navController::navigateToSettings
     )

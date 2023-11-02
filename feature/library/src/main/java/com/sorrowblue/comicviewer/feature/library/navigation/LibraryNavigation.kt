@@ -33,7 +33,6 @@ fun NavGraphBuilder.libraryGroup(
     contentPadding: PaddingValues,
     navController: NavController,
     onBookClick: (BookshelfId, String, Int) -> Unit,
-    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onAddOnClick: (Feature.AddOn) -> Unit,
@@ -54,7 +53,6 @@ fun NavGraphBuilder.libraryGroup(
             contentPadding = contentPadding,
             navController = navController,
             onBookClick = onBookClick,
-            onFileLongClick = onFileLongClick,
             onSettingsClick = onSettingsClick,
             navigateToSearch = navigateToSearch
         )

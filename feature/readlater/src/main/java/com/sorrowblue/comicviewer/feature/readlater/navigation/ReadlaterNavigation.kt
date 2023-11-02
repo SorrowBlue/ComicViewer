@@ -22,7 +22,6 @@ fun NavGraphBuilder.readlaterGroup(
     contentPadding: PaddingValues,
     navController: NavController,
     onBookClick: (BookshelfId, String, Int) -> Unit,
-    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit
 ) {
@@ -40,7 +39,6 @@ fun NavGraphBuilder.readlaterGroup(
                         )
                 }
             },
-            onFileLongClick = onFileLongClick,
             onSettingsClick = onSettingsClick,
         )
         folderScreen(
@@ -67,13 +65,11 @@ fun NavGraphBuilder.readlaterGroup(
 private fun NavGraphBuilder.readLaterScreen(
     contentPadding: PaddingValues,
     onFileClick: (File, Int) -> Unit,
-    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit
 ) {
     composable(route = readLaterRoute) {
         ReadLaterRoute(
             onFileClick = onFileClick,
-            onFileLongClick = onFileLongClick,
             onSettingsClick = onSettingsClick,
             contentPadding = contentPadding,
         )

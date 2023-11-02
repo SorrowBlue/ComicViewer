@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Text
@@ -28,16 +31,22 @@ import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.search.R
 import com.sorrowblue.comicviewer.feature.search.component.FileList
+import com.sorrowblue.comicviewer.file.component.FileContent
+import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.component.FileListContent
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileSearching
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
 @Composable
 internal fun SearchResultSheet(
     query: String,
     lazyPagingItems: LazyPagingItems<File>,
     contentPadding: PaddingValues = PaddingValues(),
-    lazyListState: LazyListState = rememberLazyListState(),
+    lazyListState: LazyGridState = rememberLazyGridState(),
     onFileClick: (File) -> Unit = {},
     onFileLongClick: (File) -> Unit = {},
 ) {
@@ -50,12 +59,17 @@ internal fun SearchResultSheet(
                 .imePadding()
         )
     } else {
-        SearchResultContents(
-            lazyListState = lazyListState,
-            contentPadding = contentPadding,
+        FileListContent(
+            state = lazyListState,
+            contentPadding = contentPadding.add(paddingValues = PaddingValues(
+                start = if (rememberMobile()) 0.dp else ComicTheme.dimension.margin,
+                top = 8.dp,
+                end = if (rememberMobile()) 0.dp else ComicTheme.dimension.margin,
+                bottom = if (rememberMobile()) 0.dp else ComicTheme.dimension.margin,
+            )),
             lazyPagingItems = lazyPagingItems,
-            onFileClick = onFileClick,
-            onFileLongClick = onFileLongClick
+            onClickItem = onFileClick,
+            onLongClickItem = onFileLongClick
         )
     }
 }

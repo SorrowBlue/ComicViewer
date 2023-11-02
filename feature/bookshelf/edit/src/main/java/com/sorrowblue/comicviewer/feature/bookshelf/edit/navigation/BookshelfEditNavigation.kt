@@ -25,6 +25,7 @@ fun NavController.navigateToBookshelfEdit(
     bookshelfType: BookshelfType,
     navOptions: NavOptions? = null,
 ) {
+    popBackStack()
     this.navigate("$BookshelfEditRoute?type=${bookshelfType.name}", navOptions)
 }
 

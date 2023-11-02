@@ -3,11 +3,12 @@ package com.sorrowblue.comicviewer.framework.ui.material3
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
 @Composable
 fun Scaffold(
@@ -17,13 +18,14 @@ fun Scaffold(
     contentWindowInsets: WindowInsets = WindowInsets.safeDrawing,
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    Scaffold(
+    androidx.compose.material3.Scaffold(
         topBar = topBar,
         snackbarHost = {
             snackbarHostState?.let {
                 SnackbarHost(snackbarHostState.value)
             }
         },
+        containerColor = if (rememberMobile()) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainer,
         contentWindowInsets = contentWindowInsets,
         modifier = modifier,
         content = content

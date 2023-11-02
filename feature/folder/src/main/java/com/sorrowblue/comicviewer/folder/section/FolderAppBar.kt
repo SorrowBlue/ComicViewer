@@ -1,20 +1,21 @@
 package com.sorrowblue.comicviewer.folder.section
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuState
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior
 import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveTopAppBar
 
@@ -23,7 +24,6 @@ data class FolderAppBarUiState(
     val fileContentType: FileContentType = FileContentType.Grid(FileContentType.GridSize.Medium),
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FolderAppBar(
     uiState: FolderAppBarUiState = FolderAppBarUiState(),
@@ -33,16 +33,13 @@ fun FolderAppBar(
     onGridSizeChange: () -> Unit = {},
     onSortClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
+    paddingValues: PaddingValues = PaddingValues(),
     scrollBehavior: TopAppBarScrollBehavior? = null,
     overflowMenuState: OverflowMenuState = rememberOverflowMenuState(),
 ) {
     ResponsiveTopAppBar(
-        title = { Text(text = uiState.title) },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(ComicIcons.ArrowBack, "Back")
-            }
-        },
+        title = uiState.title,
+        onBackClick = onBackClick,
         actions = {
             PlainTooltipBox(tooltipContent = { Text("Search") }) {
                 IconButton(onClick = onSearchClick) {
@@ -81,11 +78,11 @@ fun FolderAppBar(
                 )
             }
         },
+        windowInsets = paddingValues.asWindowInsets(),
         scrollBehavior = scrollBehavior
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun PreviewFolderAppBar() {

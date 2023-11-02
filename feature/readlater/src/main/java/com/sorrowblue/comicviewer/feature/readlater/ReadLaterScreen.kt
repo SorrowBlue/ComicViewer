@@ -31,7 +31,6 @@ import kotlinx.collections.immutable.toPersistentList
 @Composable
 internal fun ReadLaterRoute(
     onFileClick: (File, Int) -> Unit,
-    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     contentPadding: PaddingValues,
     viewModel: ReadLaterViewModel = hiltViewModel()
@@ -43,7 +42,7 @@ internal fun ReadLaterRoute(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onFileClick = { onFileClick(it, lazyGridState.firstVisibleItemIndex) },
-        onFileLongClick = onFileLongClick,
+        onFileLongClick = { /*TODO*/ },
         onFileListTypeClick = viewModel::toggleDisplay,
         onGridSizeClick = viewModel::toggleSpanCount,
         onSettingsClick = onSettingsClick,

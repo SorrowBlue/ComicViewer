@@ -2,8 +2,8 @@
 <resources>
     <string name="file_info_label_last_read_time">Read on %s$1</string>
     <string name="file_info_label_open_folder">Open folder</string>
-    <string name="file_info_label_add_favourites">Add to Favourites</string>
-    <string name="file_info_label_add_read_later">save to read later</string>
+    <string name="file_info_label_add_favourites">Favorite</string>
+    <string name="file_info_label_add_read_later">Read later</string>
 
     <string name="file_list_label_switch_list_view">Switch to list view</string>
     <string name="file_list_label_switch_grid_view">Switch to grid view</string>
