@@ -141,6 +141,8 @@ private fun rememberSearchScreenState(
     SearchScreenState(args = args, viewModel = viewModel)
 }
 
+private const val WaitLoadPage = 500L
+
 @Composable
 internal fun SearchRoute(
     args: SearchArgs,
@@ -174,7 +176,7 @@ internal fun SearchRoute(
     )
     LaunchedEffect(uiState) {
         if (!state.isSkipFirstRefresh) {
-            delay(500)
+            delay(WaitLoadPage)
             logcat { "Refresh FileList(search)" }
             lazyPagingItems.refresh()
         }

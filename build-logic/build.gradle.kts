@@ -20,6 +20,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 dependencies {
     implementation(libs.android.tools.build.gradle)
     implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.arturbosch.detektGradlePlugin)
 }
 
 gradlePlugin {
