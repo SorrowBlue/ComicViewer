@@ -13,6 +13,7 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindFileModelRemoteMediatorFactory(dataSource: FileModelRemoteMediatorImpl.Factory): FileModelRemoteMediator.Factory
-
+    abstract fun bindFileModelRemoteMediatorFactory(
+        dataSource: FileModelRemoteMediatorImpl.Factory,
+    ): FileModelRemoteMediator.Factory
 }

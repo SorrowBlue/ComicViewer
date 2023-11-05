@@ -29,7 +29,7 @@ internal fun HistoryRoute(
     onFileClick: (File, Int) -> Unit,
     onSettingsClick: () -> Unit,
     contentPadding: PaddingValues,
-    viewModel: HistoryViewModel = hiltViewModel()
+    viewModel: HistoryViewModel = hiltViewModel(),
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState: ReadLaterScreenUiState by viewModel.uiState.collectAsState()

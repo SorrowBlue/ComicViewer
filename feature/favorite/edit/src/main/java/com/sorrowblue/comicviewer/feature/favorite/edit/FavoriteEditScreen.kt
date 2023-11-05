@@ -43,7 +43,7 @@ import kotlinx.coroutines.flow.flowOf
 internal fun FavoriteEditRoute(
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
-    viewModel: FavoriteEditViewModel = hiltViewModel()
+    viewModel: FavoriteEditViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -58,7 +58,7 @@ internal fun FavoriteEditRoute(
 }
 
 data class FavoriteEditScreenUiState(
-    val name: String = ""
+    val name: String = "",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +96,8 @@ private fun FavoriteEditScreen(
     ) { contentPadding ->
         Column {
             OutlinedTextField(
-                value = uiState.name, onValueChange = onNameChange,
+                value = uiState.name,
+                onValueChange = onNameChange,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(contentPadding)
@@ -107,7 +108,8 @@ private fun FavoriteEditScreen(
                 LazyColumn(contentPadding = contentPadding) {
                     items(
                         lazyPagingItems.itemCount,
-                        key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" }) {
+                        key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" }
+                    ) {
                         val item = lazyPagingItems[it]
                         if (item != null) {
                             ListItem(
@@ -143,6 +145,7 @@ private fun PreviewFavoriteEditScreen() {
             {},
             {},
             {},
-            {})
+            {}
+        )
     }
 }

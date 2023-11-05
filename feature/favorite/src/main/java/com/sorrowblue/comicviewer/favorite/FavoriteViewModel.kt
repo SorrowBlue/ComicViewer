@@ -54,7 +54,6 @@ internal class FavoriteViewModel @Inject constructor(
                         uiState.copy(
                             favoriteAppBarUiState = uiState.favoriteAppBarUiState.copy(title = it.dataOrNull!!.name)
                         )
-
                 }
             }
         }

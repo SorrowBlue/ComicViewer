@@ -27,7 +27,6 @@ fun NavGraphBuilder.favoriteGroup(
     navigateToSearch: (BookshelfId, String) -> Unit,
 ) {
     navigation(route = favoriteGraphRoute, startDestination = FavoriteListRoute) {
-
         favoriteListScreen(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,

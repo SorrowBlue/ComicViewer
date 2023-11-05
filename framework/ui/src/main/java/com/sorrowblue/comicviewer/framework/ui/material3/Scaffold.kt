@@ -33,7 +33,9 @@ fun Scaffold(
 }
 
 @JvmInline
-value class SnackbarHostState(val value: androidx.compose.material3.SnackbarHostState = androidx.compose.material3.SnackbarHostState()) {
+value class SnackbarHostState(
+    val value: androidx.compose.material3.SnackbarHostState = androidx.compose.material3.SnackbarHostState(),
+) {
     suspend fun showSnackbar(text: String) {
         value.showSnackbar(text)
     }

@@ -112,7 +112,9 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindDeleteAllReadLaterUseCase(interactor: DeleteAllReadLaterInteractor): DeleteAllReadLaterUseCase
 
     @Binds
-    abstract fun bindGetNavigationHistoryUseCase(interactor: GetNavigationHistoryInteractor): GetNavigationHistoryUseCase
+    abstract fun bindGetNavigationHistoryUseCase(
+        interactor: GetNavigationHistoryInteractor,
+    ): GetNavigationHistoryUseCase
 
     @Binds
     abstract fun bindUpdateLastReadPageUseCase(interactor: UpdateLastReadPageInteractor): UpdateLastReadPageUseCase
@@ -171,7 +173,9 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindPagingQueryFileUseCase(interactor: PagingQueryFileInteractor): PagingQueryFileUseCase
 
     @Binds
-    abstract fun bindPagingBookshelfFolderUseCase(interactor: PagingBookshelfFolderInteractor): PagingBookshelfFolderUseCase
+    abstract fun bindPagingBookshelfFolderUseCase(
+        interactor: PagingBookshelfFolderInteractor,
+    ): PagingBookshelfFolderUseCase
 
     @Binds
     abstract fun bindPagingFavoriteUseCase(interactor: PagingFavoriteInteractor): PagingFavoriteUseCase
@@ -187,8 +191,12 @@ internal abstract class ViewModelBindsModule {
 
     // Settings
     @Binds
-    abstract fun bindManageFolderDisplaySettingsUseCase(interactor: ManageFolderDisplaySettingsInteractor): ManageFolderDisplaySettingsUseCase
+    abstract fun bindManageFolderDisplaySettingsUseCase(
+        interactor: ManageFolderDisplaySettingsInteractor,
+    ): ManageFolderDisplaySettingsUseCase
 
     @Binds
-    abstract fun bindManageSecuritySettingsUseCase(interactor: ManageSecuritySettingsInteractor): ManageSecuritySettingsUseCase
+    abstract fun bindManageSecuritySettingsUseCase(
+        interactor: ManageSecuritySettingsInteractor,
+    ): ManageSecuritySettingsUseCase
 }

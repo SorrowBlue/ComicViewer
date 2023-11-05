@@ -88,7 +88,6 @@ private fun FileGridContent(
     }
 }
 
-
 @Composable
 fun FileListContent(
     state: LazyGridState,

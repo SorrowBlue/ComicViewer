@@ -98,7 +98,9 @@ fun ComicTheme(
         else -> if (darkTheme) DarkColors else LightColors
     }
     MaterialTheme(
-        colorScheme = colorScheme.copy(background = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) colorScheme.surface else colorScheme.surfaceContainer),
+        colorScheme = colorScheme.copy(
+            background = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) colorScheme.surface else colorScheme.surfaceContainer
+        ),
         content = content
     )
 }

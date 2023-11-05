@@ -82,9 +82,8 @@ internal const val BookshelfTypeArg = "bookshelfType"
 
 internal class BookshelfEditArgs(val bookshelfId: BookshelfId, val bookshelfType: BookshelfType) {
 
-    constructor(bundle: Bundle) :
-            this(
-                BookshelfId(checkNotNull(bundle.getInt(BookshelfIdArg))),
-                BookshelfType.valueOf(checkNotNull(bundle.getString(BookshelfTypeArg)))
-            )
+    constructor(bundle: Bundle) : this(
+        BookshelfId(checkNotNull(bundle.getInt(BookshelfIdArg))),
+        BookshelfType.valueOf(checkNotNull(bundle.getString(BookshelfTypeArg)))
+    )
 }

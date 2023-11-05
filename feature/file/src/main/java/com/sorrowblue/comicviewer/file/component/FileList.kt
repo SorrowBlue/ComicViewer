@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -52,7 +52,7 @@ fun FileListContent(
                 model = file,
                 modifier = Modifier.size(56.dp),
                 contentDescription = "",
-                placeholder = debugPlaceholder()
+                placeholder = rememberDebugPlaceholder()
             )
         },
         trailingContent = {
@@ -91,7 +91,7 @@ fun FileListMedium(
                 model = file,
                 modifier = Modifier.size(56.dp),
                 contentDescription = "",
-                placeholder = debugPlaceholder()
+                placeholder = rememberDebugPlaceholder()
             )
         },
         trailingContent = {

@@ -57,7 +57,7 @@ fun createNotification(
     context: Context,
     channelID: ChannelID,
     smallIcon: Int,
-    builder: NotificationCompat.Builder.() -> Unit
+    builder: NotificationCompat.Builder.() -> Unit,
 ): Notification {
     return NotificationCompat.Builder(context, channelID.id)
         .setSmallIcon(smallIcon)

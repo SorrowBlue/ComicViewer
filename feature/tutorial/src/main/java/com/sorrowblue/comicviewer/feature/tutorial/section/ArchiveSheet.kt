@@ -24,7 +24,7 @@ import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileBundle
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
+import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -71,7 +71,7 @@ internal fun ArchiveSheet() {
     }
 }
 
-@ComicPreviews
+@PreviewComic
 @Composable
 private fun PreviewArchiveSheet() {
     ComicTheme {

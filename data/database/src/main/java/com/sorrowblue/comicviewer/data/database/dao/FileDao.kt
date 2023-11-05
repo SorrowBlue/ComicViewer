@@ -53,14 +53,14 @@ internal interface FileDao {
 
     @Deprecated("使用禁止")
     @RawQuery(observedEntities = [FileEntity::class])
-    fun flowPrevNextFile(supportSQLiteQuery: SupportSQLiteQuery): Flow<FileEntity?>
+    fun flowPrevNextFile(supportSQLiteQuery: SupportSQLiteQuery): Flow<List<FileEntity>>
 
     fun flowPrevNextFile(
         bookshelfId: Int,
         path: String,
         isNext: Boolean,
         sortType: SortType,
-    ): Flow<FileEntity?> {
+    ): Flow<List<FileEntity>> {
         val column = when (sortType) {
             is SortType.NAME -> "sort_index"
             is SortType.DATE -> "last_modified"
@@ -109,21 +109,27 @@ internal interface FileDao {
     @RawQuery(observedEntities = [FileEntity::class])
     fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileWithCountEntity>
 
-    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit")
+    @Query(
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit"
+    )
     suspend fun findCacheKeyOrderSortIndex(
         bookshelfId: Int,
         parent: String,
         limit: Int,
     ): List<String>
 
-    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit")
+    @Query(
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit"
+    )
     suspend fun findCacheKeyOrderLastModified(
         bookshelfId: Int,
         parent: String,
         limit: Int,
     ): List<String>
 
-    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit")
+    @Query(
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit"
+    )
     suspend fun findCacheKeysOrderLastRead(
         bookshelfId: Int,
         parent: String,
@@ -143,12 +149,13 @@ internal interface FileDao {
         val query = SupportSQLiteQueryBuilder.builder("file").apply {
             columns(
                 arrayOf(
-                    "*", """
+                    "*",
+                    """
                 CASE
                   WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
                   else 0
                 END count
-            """.trimIndent()
+                    """.trimIndent()
                 )
             )
             var selectionStr = "bookshelf_id = :bookshelfId"
@@ -192,7 +199,8 @@ internal interface FileDao {
             }.let(::orderBy)
         }.create()
         logcat { query.sql.trimIndent().replace(Regex("""\r\n|\n|\r"""), "") }
-        @Suppress("DEPRECATION") return pagingSource(query)
+        @Suppress("DEPRECATION")
+        return pagingSource(query)
     }
 
     @Query("SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC")

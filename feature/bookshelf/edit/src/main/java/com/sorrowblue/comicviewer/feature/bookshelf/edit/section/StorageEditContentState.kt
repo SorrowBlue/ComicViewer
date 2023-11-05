@@ -35,7 +35,6 @@ internal interface DeviceStorageEditScreenState2 : BookshelfEditContentState {
     fun onOpenFolderClick() {
         activityResultLauncher.launch(openDocumentTreeIntent)
     }
-
 }
 
 @Stable

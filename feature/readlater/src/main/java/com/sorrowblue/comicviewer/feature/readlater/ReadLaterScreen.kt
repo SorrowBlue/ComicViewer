@@ -33,7 +33,7 @@ internal fun ReadLaterRoute(
     onFileClick: (File, Int) -> Unit,
     onSettingsClick: () -> Unit,
     contentPadding: PaddingValues,
-    viewModel: ReadLaterViewModel = hiltViewModel()
+    viewModel: ReadLaterViewModel = hiltViewModel(),
 ) {
     val lazyGridState = rememberLazyGridState()
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()

@@ -34,8 +34,10 @@ fun AppNavigationRail(
     onTabSelected: (MainScreenTab) -> Unit,
     currentFab: MainScreenFab?,
     onFabClick: (MainScreenFab) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     NavigationRail(
+        modifier = modifier,
         header = {
             AnimatedContent(
                 targetState = currentFab,

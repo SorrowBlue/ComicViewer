@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class ReadLaterFileModelLocalDataSourceImpl @Inject constructor(
-    private val readLaterFileDao: ReadLaterFileDao
+    private val readLaterFileDao: ReadLaterFileDao,
 ) : ReadLaterFileModelLocalDataSource {
 
     override suspend fun add(model: ReadLaterFile): Result<ReadLaterFile, Unit> {

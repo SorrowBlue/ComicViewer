@@ -21,7 +21,9 @@ internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
 ) : FavoriteFileLocalDataSource {
 
     override fun pagingSource(
-        pagingConfig: PagingConfig, favoriteModelId: FavoriteId, sortType: () -> SortType,
+        pagingConfig: PagingConfig,
+        favoriteModelId: FavoriteId,
+        sortType: () -> SortType,
     ): Flow<PagingData<File>> {
         return Pager(pagingConfig) {
             favoriteFileDao.pagingSource(favoriteModelId.value, sortType.invoke())
@@ -29,7 +31,8 @@ internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getCacheKeyList(
-        favoriteModelId: FavoriteId, limit: Int,
+        favoriteModelId: FavoriteId,
+        limit: Int,
     ): List<String> {
         return favoriteFileDao.findCacheKey(favoriteModelId.value, limit)
     }

@@ -7,7 +7,6 @@ sealed interface SortType {
 
     val isAsc: Boolean
 
-
     fun copy2(isAsc: Boolean): SortType {
         return when (this) {
             is DATE -> copy(isAsc)

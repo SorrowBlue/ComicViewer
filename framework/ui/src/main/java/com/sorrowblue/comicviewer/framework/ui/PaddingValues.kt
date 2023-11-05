@@ -60,4 +60,3 @@ fun PaddingValues.copy(
     end: Dp = calculateEndPadding(layoutDirection),
     bottom: Dp = calculateBottomPadding(),
 ) = PaddingValues(start = start, top = top, end = end, bottom = bottom)
-

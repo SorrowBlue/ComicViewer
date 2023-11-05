@@ -21,13 +21,15 @@ import java.time.format.FormatStyle
 fun rememberSideSheetFileState(
     initialValue: File? = null,
 ): SideSheetValueState<File> {
-    return rememberSaveable(saver =
-    Saver(
-        save = { null },
-        restore = { savedValue ->
-            SideSheetValueState(savedValue)
-        }
-    )) {
+    return rememberSaveable(
+        saver =
+        Saver(
+            save = { null },
+            restore = { savedValue ->
+                SideSheetValueState(savedValue)
+            }
+        )
+    ) {
         SideSheetValueState(initialValue)
     }
 }
@@ -35,7 +37,9 @@ fun rememberSideSheetFileState(
 @Composable
 fun FileListScaffold(
     modifier: Modifier = Modifier,
-    state: ResponsiveScaffoldState<File> = rememberResponsiveScaffoldState(sideSheetState = rememberSideSheetFileState()),
+    state: ResponsiveScaffoldState<File> = rememberResponsiveScaffoldState(
+        sideSheetState = rememberSideSheetFileState()
+    ),
     topBar: @Composable () -> Unit,
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit,
@@ -50,7 +54,7 @@ fun FileListScaffold(
                 onCloseClick = { state.sheetState.hide() },
                 onReadLaterClick = { /*TODO*/ },
                 onFavoriteClick = { /*TODO*/ },
-                onOpenFolderClick = {/*TODO*/ }
+                onOpenFolderClick = { /*TODO*/ }
             )
         },
         bottomSheet = {
@@ -58,7 +62,7 @@ fun FileListScaffold(
                 file = it,
                 onReadLaterClick = { /*TODO*/ },
                 onFavoriteClick = { /*TODO*/ },
-                onOpenFolderClick = {/*TODO*/ },
+                onOpenFolderClick = { /*TODO*/ },
                 onDismissRequest = {}
             )
         },
@@ -89,4 +93,4 @@ val Long.asDateTime: String
         .atZone(ZoneOffset.systemDefault())
         .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
 
-fun lastReadPage(lastReadPage: Int, maxPage: Int) = "${lastReadPage}/${maxPage} pages"
+fun lastReadPage(lastReadPage: Int, maxPage: Int) = "$lastReadPage/$maxPage pages"

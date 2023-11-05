@@ -52,7 +52,6 @@ private fun <D, E : Resource.AppError, DR, ER : Resource.AppError> Flow<Resource
     }
 }
 
-
 private fun <D, E : Resource.AppError, DR, ER : Resource.AppError> Flow<Resource<D, E>>.mapFold(
     onSuccess: suspend (D) -> Resource<DR, ER>,
     onError: suspend (E) -> Resource<DR, ER>,

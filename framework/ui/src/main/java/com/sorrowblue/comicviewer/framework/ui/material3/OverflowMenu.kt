@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -9,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
@@ -22,6 +24,7 @@ fun OverflowMenuScope.OverflowMenuItem(
     text: String,
     icon: ImageVector,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     DropdownMenuItem(
         text = { androidx.compose.material3.Text(text = text) },
@@ -29,25 +32,29 @@ fun OverflowMenuScope.OverflowMenuItem(
         onClick = {
             state.collapse()
             onClick()
-        }
+        },
+        modifier = modifier
     )
 }
 
 @Composable
 fun OverflowMenu(
+    modifier: Modifier = Modifier,
     state: OverflowMenuState = rememberOverflowMenuState(),
     content: @Composable OverflowMenuScope.() -> Unit,
 ) {
-    IconButton(onClick = state::expand) {
-        Icon(ComicIcons.MoreVert, "Open Options")
-    }
-    DropdownMenu(
-        expanded = state.expanded,
-        onDismissRequest = state::collapse
-    ) {
-        content.invoke(object : OverflowMenuScope {
-            override val state = state
-        })
+    Box(modifier = modifier) {
+        IconButton(onClick = state::expand) {
+            Icon(ComicIcons.MoreVert, "Open Options")
+        }
+        DropdownMenu(
+            expanded = state.expanded,
+            onDismissRequest = state::collapse
+        ) {
+            content.invoke(object : OverflowMenuScope {
+                override val state = state
+            })
+        }
     }
 }
 

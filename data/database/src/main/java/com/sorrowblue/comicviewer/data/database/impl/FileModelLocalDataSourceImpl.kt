@@ -100,7 +100,6 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         return Pager(pagingConfig, remoteMediator = remoteMediator) {
             dao.pagingSource(bookshelf.id.value, searchCondition())
         }.flow.map { it.map(FileWithCountEntity::toModel) }
-
     }
 
     override suspend fun root(id: BookshelfId): Folder? {
@@ -121,7 +120,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         sortType: SortType,
     ): Flow<File?> {
         return dao.flowPrevNextFile(bookshelfId.value, path, true, sortType)
-            .map { it?.toModel() }
+            .map { it.firstOrNull()?.toModel() }
     }
 
     override fun prevFileModel(
@@ -130,7 +129,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         sortType: SortType,
     ): Flow<File?> {
         return dao.flowPrevNextFile(bookshelfId.value, path, false, sortType)
-            .map { it?.toModel() }
+            .map { it.firstOrNull()?.toModel() }
     }
 
     override suspend fun getCacheKeys(

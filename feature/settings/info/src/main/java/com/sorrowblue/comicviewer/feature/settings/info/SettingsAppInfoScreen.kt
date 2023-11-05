@@ -100,7 +100,6 @@ internal fun SettingsAppInfoRoute(
     )
 }
 
-
 data class SettingsAppInfoScreenUiState(
     val versionName: String = "",
     val buildAt: String,

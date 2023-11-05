@@ -5,6 +5,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.app.MainScreenTab
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -15,8 +16,10 @@ fun AppNavigationBar(
     mainScreenTabs: PersistentList<MainScreenTab>,
     currentTab: MainScreenTab?,
     onTabSelected: (MainScreenTab) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     NavigationBar(
+        modifier = modifier,
         containerColor = ComicTheme.colorScheme.surfaceContainer,
     ) {
         mainScreenTabs.forEach { tab ->

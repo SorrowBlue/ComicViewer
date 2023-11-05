@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
-
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.animation.core.MutableTransitionState

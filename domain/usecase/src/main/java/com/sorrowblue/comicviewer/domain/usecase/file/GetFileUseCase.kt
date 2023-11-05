@@ -10,6 +10,6 @@ abstract class GetFileUseCase : UseCase<GetFileUseCase.Request, File, GetFileUse
     class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
 
     enum class Error : Resource.AppError {
-        NOT_FOUND
+        NOT_FOUND,
     }
 }

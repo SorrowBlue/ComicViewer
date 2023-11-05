@@ -6,4 +6,3 @@ internal data class DecryptedPasswordEntity(val plane: String) {
         return plane
     }
 }
-

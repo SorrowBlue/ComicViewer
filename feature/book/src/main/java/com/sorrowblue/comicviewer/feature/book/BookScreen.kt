@@ -129,7 +129,8 @@ internal fun BookScreen(
                     AnimatedVisibility(
                         visible = uiState.isVisibleTooltip,
                         enter = slideInVertically { -it },
-                        exit = slideOutVertically { -it }) {
+                        exit = slideOutVertically { -it }
+                    ) {
                         TopAppBar(
                             title = { Text(text = uiState.book.name) },
                             navigationIcon = {
