@@ -65,7 +65,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.TabletStorageEd
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.rememberStorageEditContentState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.MobilePreviews
+import com.sorrowblue.comicviewer.framework.ui.PreviewMobile
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import kotlinx.coroutines.CoroutineScope
@@ -180,7 +180,6 @@ private class BookshelfEditScreenStateImpl(
 
     override var editType: EditType =
         if (0 < args.bookshelfId.value) EditType.Edit else EditType.Register
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -342,7 +341,7 @@ private fun BookshelfEditDialog(
     }
 }
 
-@MobilePreviews
+@PreviewMobile
 @Composable
 private fun PreviewBookshelfEditScreen() {
     PreviewTheme {
@@ -388,7 +387,6 @@ private fun rememberPreviewStorageState() = remember {
                     override val snackbarHostState: SnackbarHostState = snackbarHostState
 
                     override fun onResult(it: ActivityResult) {}
-
                 }
                 override val activityResultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
                     get() = TODO("Not yet implemented")
@@ -396,7 +394,7 @@ private fun rememberPreviewStorageState() = remember {
     }
 }
 
-@MobilePreviews
+@PreviewMobile
 @Composable
 private fun PreviewBookshelfDeviceEditScreen() {
     PreviewTheme {

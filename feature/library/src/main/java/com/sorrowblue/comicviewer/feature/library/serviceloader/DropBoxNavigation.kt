@@ -4,4 +4,3 @@ interface DropBoxNavigation : AddOnNavigation {
 
     interface Provider : AddOnNavigation.Provider
 }
-

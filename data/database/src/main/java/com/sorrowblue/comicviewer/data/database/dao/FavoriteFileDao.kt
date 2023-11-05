@@ -54,11 +54,12 @@ internal interface FavoriteFileDao {
             override fun bindTo(statement: SupportSQLiteProgram) {
                 statement.bindLong(1, favoriteId.toLong())
             }
-
         })
     }
 
-    @Query("SELECT cache_key FROM favorite_file INNER JOIN file ON favorite_file.favorite_id = :favoriteId AND favorite_file.bookshelf_id == file.bookshelf_id AND favorite_file.file_path == file.path WHERE file_type != 'FOLDER' AND cache_key != '' LIMIT :limit")
+    @Query(
+        "SELECT cache_key FROM favorite_file INNER JOIN file ON favorite_file.favorite_id = :favoriteId AND favorite_file.bookshelf_id == file.bookshelf_id AND favorite_file.file_path == file.path WHERE file_type != 'FOLDER' AND cache_key != '' LIMIT :limit"
+    )
     suspend fun findCacheKey(favoriteId: Int, limit: Int): List<String>
 
     @Deprecated("使用禁止")

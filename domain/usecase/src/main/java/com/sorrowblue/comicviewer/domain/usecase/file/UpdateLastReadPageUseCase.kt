@@ -12,6 +12,6 @@ abstract class UpdateLastReadPageUseCase :
         val libraryId: BookshelfId,
         val path: String,
         val lastReadPage: Int,
-        val timestamp: LocalDateTime = LocalDateTime.now()
+        val timestamp: LocalDateTime = LocalDateTime.now(),
     ) : BaseRequest
 }

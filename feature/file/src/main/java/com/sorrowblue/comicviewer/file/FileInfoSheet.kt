@@ -36,12 +36,12 @@ import com.sorrowblue.comicviewer.file.component.OptionButton
 import com.sorrowblue.comicviewer.file.component.forwardingPainter
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.MobilePreviews
-import com.sorrowblue.comicviewer.framework.ui.TabletPreview
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.PreviewMobile
+import com.sorrowblue.comicviewer.framework.ui.PreviewTablet
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox2
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.previewBookFile
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 import com.sorrowblue.comicviewer.framework.ui.responsive.BottomSheet
 import com.sorrowblue.comicviewer.framework.ui.responsive.SideSheet
 import com.sorrowblue.comicviewer.framework.ui.responsive.SideSheetDefault
@@ -66,8 +66,9 @@ fun FileInfoSheet(
     ) {
         Row {
             AsyncImage(
-                model = file, contentDescription = null,
-                placeholder = debugPlaceholder(),
+                model = file,
+                contentDescription = null,
+                placeholder = rememberDebugPlaceholder(),
                 error = forwardingPainter(
                     rememberVectorPainter(if (file is Book) ComicIcons.Book else ComicIcons.Folder),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
@@ -102,7 +103,8 @@ fun FileInfoSheet(
                 PlainTooltipBox2(tooltipContent = { Text("ファイルの拡張子") }) { state ->
                     AssistChip(
                         onClick = { scope.launch { state.show() } },
-                        label = { Text(file.name.extension()) })
+                        label = { Text(file.name.extension()) }
+                    )
                 }
             }
             if (0 < file.size) {
@@ -190,8 +192,9 @@ fun FileInfoBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                model = file, contentDescription = null,
-                placeholder = debugPlaceholder(),
+                model = file,
+                contentDescription = null,
+                placeholder = rememberDebugPlaceholder(),
                 error = forwardingPainter(
                     rememberVectorPainter(if (file is Book) ComicIcons.Book else ComicIcons.Folder),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
@@ -222,7 +225,8 @@ fun FileInfoBottomSheet(
                     PlainTooltipBox2(tooltipContent = { Text("ファイルの拡張子") }) { state ->
                         AssistChip(
                             onClick = { scope.launch { state.show() } },
-                            label = { Text(file.name.extension()) })
+                            label = { Text(file.name.extension()) }
+                        )
                     }
                 }
                 if (0 < file.size) {
@@ -291,7 +295,7 @@ fun FileInfoBottomSheet(
     }
 }
 
-@MobilePreviews
+@PreviewMobile
 @Composable
 private fun FileInfoBottomSheet() {
     PreviewTheme {
@@ -307,7 +311,7 @@ private fun FileInfoBottomSheet() {
     }
 }
 
-@TabletPreview
+@PreviewTablet
 @Composable
 private fun PreviewFileInfoSheet() {
     PreviewTheme {

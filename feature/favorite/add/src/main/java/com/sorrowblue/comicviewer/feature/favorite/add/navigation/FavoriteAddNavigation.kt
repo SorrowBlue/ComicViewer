@@ -57,7 +57,7 @@ fun NavGraphBuilder.favoriteAddScreen(onBackClick: () -> Unit, onAddClick: () ->
 fun NavController.navigateToFavoriteAdd(
     bookshelfId: BookshelfId,
     path: String,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) {
     navigate(
         "$FavoriteAddRoute?bookshelfId=${bookshelfId.value}&path=${path.encodeToBase64()}",

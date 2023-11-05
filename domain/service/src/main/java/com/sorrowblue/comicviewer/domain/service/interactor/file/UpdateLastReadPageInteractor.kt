@@ -7,7 +7,7 @@ import java.time.ZoneOffset
 import javax.inject.Inject
 
 internal class UpdateLastReadPageInteractor @Inject constructor(
-    private val fileRepository: FileRepository
+    private val fileRepository: FileRepository,
 ) : UpdateLastReadPageUseCase() {
 
     override suspend fun run(request: Request): Result<Unit, Unit> {

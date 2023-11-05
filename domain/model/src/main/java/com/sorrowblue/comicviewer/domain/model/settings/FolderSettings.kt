@@ -8,5 +8,5 @@ data class FolderSettings(
     val isAutoRefresh: Boolean = true,
     val supportExtension: Set<SupportExtension> = SupportExtension.Archive.entries.toSet(),
     val showPreview: Boolean = true,
-    val resolveImageFolder: Boolean = false
+    val resolveImageFolder: Boolean = false,
 )

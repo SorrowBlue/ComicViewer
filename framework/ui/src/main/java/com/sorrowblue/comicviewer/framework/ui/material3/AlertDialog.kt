@@ -65,7 +65,9 @@ fun AlertDialog(
             Text(text = title)
         },
         text = text?.let {
-            { Text(text = text) }
+            {
+                Text(text = text)
+            }
         },
         onDismissRequest = onDismissRequest
     )

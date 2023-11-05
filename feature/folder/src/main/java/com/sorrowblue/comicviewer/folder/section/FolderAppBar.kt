@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
+import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
@@ -73,7 +73,7 @@ internal fun FolderAppBar(
     )
 }
 
-@ComicPreviews
+@PreviewComic
 @Composable
 fun PreviewFolderAppBar() {
     PreviewTheme {

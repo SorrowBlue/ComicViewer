@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface BookshelfRepository {
 
-    sealed interface Error: Resource.AppError {
+    sealed interface Error : Resource.AppError {
         data object NotFound : Error
         data object Network : Error
         data object System : Error
@@ -49,12 +49,12 @@ interface BookshelfRepository {
 
     suspend fun exists(
         bookshelf: Bookshelf,
-        path: String
+        path: String,
     ): Result<Boolean, BookshelfRepositoryStatus>
 
     suspend fun registerOrUpdate(
         bookshelf: Bookshelf,
-        path: String
+        path: String,
     ): Result<Bookshelf, BookshelfRepositoryStatus>
 
     fun get(bookshelfId: BookshelfId): Flow<Result<Bookshelf, LibraryStatus>>

@@ -28,7 +28,6 @@ object SortUtil {
     private val sort = compareBy<File> { if (it is BookFile) 1 else 0 }
         .thenBy(collator::compare, File::name)
 
-
     fun sortedIndex(list: List<File>): List<File> {
         return list.sortedWith(sort)
             .mapIndexed { index, fileModel ->
@@ -39,9 +38,15 @@ object SortUtil {
                 }
             }
     }
-
 }
 
 val SUPPORTED_IMAGE = setOf(
-    "bmp", "gif", "jpg", "jpeg", "png", "webp", "heic", "heif"
+    "bmp",
+    "gif",
+    "jpg",
+    "jpeg",
+    "png",
+    "webp",
+    "heic",
+    "heif"
 )

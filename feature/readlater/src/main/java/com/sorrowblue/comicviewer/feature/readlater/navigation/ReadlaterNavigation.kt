@@ -65,7 +65,7 @@ fun NavGraphBuilder.readlaterGroup(
 private fun NavGraphBuilder.readLaterScreen(
     contentPadding: PaddingValues,
     onFileClick: (File, Int) -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
 ) {
     composable(route = ReadLaterRoute) {
         ReadLaterRoute(

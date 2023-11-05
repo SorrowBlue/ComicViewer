@@ -34,7 +34,6 @@ internal class HistoryViewModel @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
 
-
     init {
         viewModelScope.launch {
             manageFolderDisplaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
@@ -47,7 +46,6 @@ internal class HistoryViewModel @Inject constructor(
     val pagingDataFlow = pagingHistoryBookUseCase
         .execute(PagingHistoryBookUseCase.Request(PagingConfig(20)))
         .cachedIn(viewModelScope)
-
 
     fun toggleDisplay() {
         viewModelScope.launch {

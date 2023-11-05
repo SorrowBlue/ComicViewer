@@ -85,7 +85,7 @@ internal fun BookshelfRoute(
         },
         onRemoveDialogDismissRequest = viewModel::onRemoveDialogDismissRequest
     )
-    LaunchedEffectUiEvent(viewModel) {
+    LaunchedEffectUiEvent(viewModel.uiEvents, viewModel::consumeUiEvent) {
         when (it) {
             is BookshelfUiEvent.Message -> {
                 state.snackbarHostState.showSnackbar(it.text)
@@ -181,18 +181,20 @@ private fun BookshelfScreen(
 fun rememberSideSheetBookshelfFolderState(
     initialValue: BookshelfFolder? = null,
 ): SideSheetValueState<BookshelfFolder> {
-    return rememberSaveable(saver =
-    mapSaver(
-        save = { mapOf("show" to it.show, "currentValue" to it.currentValue) },
-        restore = { savedValue ->
-            val bookshelf = savedValue["currentValue"] as? BookshelfFolder
-            val show = savedValue["show"] as? Boolean ?: false
-            SideSheetValueState(
-                initialValue = bookshelf,
-                initialShow = show
-            )
-        }
-    )) {
+    return rememberSaveable(
+        saver =
+        mapSaver(
+            save = { mapOf("show" to it.show, "currentValue" to it.currentValue) },
+            restore = { savedValue ->
+                val bookshelf = savedValue["currentValue"] as? BookshelfFolder
+                val show = savedValue["show"] as? Boolean ?: false
+                SideSheetValueState(
+                    initialValue = bookshelf,
+                    initialShow = show
+                )
+            }
+        )
+    ) {
         SideSheetValueState(initialValue)
     }
 }

@@ -20,16 +20,24 @@ internal abstract class SingletonBindsModule {
 
     @Binds
     @Singleton
-    abstract fun bindManageDisplaySettingsUseCase(interactor: ManageDisplaySettingsInteractor): ManageDisplaySettingsUseCase
+    abstract fun bindManageDisplaySettingsUseCase(
+        interactor: ManageDisplaySettingsInteractor,
+    ): ManageDisplaySettingsUseCase
 
     @Binds
-    abstract fun bindManageFolderSettingsUseCase(interactor: ManageFolderSettingsInteractor): ManageFolderSettingsUseCase
+    abstract fun bindManageFolderSettingsUseCase(
+        interactor: ManageFolderSettingsInteractor,
+    ): ManageFolderSettingsUseCase
 
     @Binds
     @Singleton
-    abstract fun bindManageViewerSettingsUseCase(interactor: ManageViewerSettingsInteractor): ManageViewerSettingsUseCase
+    abstract fun bindManageViewerSettingsUseCase(
+        interactor: ManageViewerSettingsInteractor,
+    ): ManageViewerSettingsUseCase
 
     @Binds
     @Singleton
-    abstract fun bindManageViewerOperationSettingsUseCase(interactor: ManageViewerOperationSettingsInteractor): ManageViewerOperationSettingsUseCase
+    abstract fun bindManageViewerOperationSettingsUseCase(
+        interactor: ManageViewerOperationSettingsInteractor,
+    ): ManageViewerOperationSettingsUseCase
 }

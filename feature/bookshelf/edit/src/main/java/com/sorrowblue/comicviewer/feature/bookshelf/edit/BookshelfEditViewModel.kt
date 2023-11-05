@@ -27,7 +27,6 @@ internal class BookshelfEditViewModel @Inject constructor(
             .first().dataOrNull()
     }
 
-
     fun save(bookshelf: Bookshelf, path: String, complete: () -> Unit) {
         viewModelScope.launch {
             registerBookshelfUseCase.execute(RegisterBookshelfUseCase.Request(bookshelf, path))

@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCas
 import javax.inject.Inject
 
 internal class RemoveBookshelfInteractor @Inject constructor(
-    private val bookshelfRepository: BookshelfRepository
+    private val bookshelfRepository: BookshelfRepository,
 ) : RemoveBookshelfUseCase() {
 
     override suspend fun run(request: Request): Result<Boolean, Unit> {

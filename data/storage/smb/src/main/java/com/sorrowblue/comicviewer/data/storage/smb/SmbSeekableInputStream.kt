@@ -9,8 +9,11 @@ internal class SmbSeekableInputStream(uri: String, tc: CIFSContext, write: Boole
     SeekableInputStream {
 
     private var file = kotlin.runCatching {
-        if (write) SmbRandomAccessFile(uri, "rw", SmbConstants.DEFAULT_SHARING, tc)
-        else SmbRandomAccessFile(uri, "r", SmbConstants.DEFAULT_SHARING, tc)
+        if (write) {
+            SmbRandomAccessFile(uri, "rw", SmbConstants.DEFAULT_SHARING, tc)
+        } else {
+            SmbRandomAccessFile(uri, "r", SmbConstants.DEFAULT_SHARING, tc)
+        }
     }.onFailure {
         it.printStackTrace()
     }.getOrThrow()

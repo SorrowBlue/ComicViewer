@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
@@ -31,7 +29,7 @@ internal class ComicViewerAppViewModel @Inject constructor(
     private val securitySettingsUseCase: ManageSecuritySettingsUseCase,
     private val loadSettingsUseCase: LoadSettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
-) : ComposeViewModel<ComicViewerAppUiEvent>(), DefaultLifecycleObserver {
+) : ComposeViewModel<ComicViewerAppUiEvent>() {
 
     private var isRestart by savedStateHandle.saveable { mutableStateOf(false) }
 
@@ -45,8 +43,7 @@ internal class ComicViewerAppViewModel @Inject constructor(
 
     private var isRestoredNavHistory = false
 
-    override fun onCreate(owner: LifecycleOwner) {
-        super.onCreate(owner)
+    fun onCreate() {
         if (!isRestart) {
             viewModelScope.launch {
                 val settings = loadSettingsUseCase.settings.first()
@@ -72,8 +69,7 @@ internal class ComicViewerAppViewModel @Inject constructor(
         }
     }
 
-    override fun onStart(owner: LifecycleOwner) {
-        super.onStart(owner)
+    fun onStart() {
         addOnList.value =
             splitInstallManager.installedModules
                 .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }

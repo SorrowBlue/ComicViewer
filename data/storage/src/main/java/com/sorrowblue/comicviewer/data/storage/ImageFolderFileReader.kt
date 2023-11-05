@@ -36,5 +36,6 @@ internal class ImageFolderFileReader(
     }
 
     override fun close() {
+        // There is nothing to close because it is a folder.
     }
 }

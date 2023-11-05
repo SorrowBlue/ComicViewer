@@ -19,7 +19,6 @@ internal object SingletonProvidesModule {
     @DefaultDispatcher
     @Provides
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
-
 }
 
 @Qualifier

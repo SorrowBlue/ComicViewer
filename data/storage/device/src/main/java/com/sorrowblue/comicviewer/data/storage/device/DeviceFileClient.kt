@@ -148,7 +148,8 @@ internal class DeviceFileClient @AssistedInject constructor(
     private fun DocumentFile.toFileModel(resolveImageFolder: Boolean = false): File {
         return if (resolveImageFolder && listFiles().any {
                 it.name.orEmpty().extension() in SUPPORTED_IMAGE
-            }) {
+            }
+        ) {
             BookFolder(
                 path = uri.toString(),
                 bookshelfId = bookshelf.id,

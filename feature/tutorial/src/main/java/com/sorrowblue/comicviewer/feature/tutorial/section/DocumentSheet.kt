@@ -28,7 +28,7 @@ import com.sorrowblue.comicviewer.feature.tutorial.SplitInstallError
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
+import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 
 internal sealed interface DocumentSheetUiState {
 
@@ -106,7 +106,6 @@ internal sealed interface DocumentSheetUiState {
         override val isProgressVisible = false
         override val progress = 0f
     }
-
 }
 
 private fun unknownSplitInstallSessionState(): SplitInstallSessionState =
@@ -170,7 +169,7 @@ internal fun DocumentSheet(
     }
 }
 
-@ComicPreviews
+@PreviewComic
 @Composable
 fun PreviewDocumentSheet() {
     ComicTheme {

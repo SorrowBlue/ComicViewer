@@ -74,7 +74,8 @@ internal class BookViewModel @Inject constructor(
                         args.favoriteId,
                         args.bookshelfId,
                         args.path
-                    ), rel
+                    ),
+                    rel
                 )
             ).first().dataOrNull
         } else {

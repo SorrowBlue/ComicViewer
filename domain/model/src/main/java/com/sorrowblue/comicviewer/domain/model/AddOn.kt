@@ -5,5 +5,5 @@ enum class AddOn(val moduleName: String) {
     GoogleDrive("googledrive"),
     OneDrive("onedrive"),
     Dropbox("dropbox"),
-    Box("box")
+    Box("box"),
 }

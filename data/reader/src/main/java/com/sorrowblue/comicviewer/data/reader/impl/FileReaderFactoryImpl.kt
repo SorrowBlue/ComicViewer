@@ -10,12 +10,12 @@ import javax.inject.Qualifier
 
 internal class FileReaderFactoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    @ZipFileReaderFactory private val zipFileReaderFactory: FileReader.Factory
+    @ZipFileReaderFactory private val zipFileReaderFactory: FileReader.Factory,
 ) : FileReaderFactory {
 
     override suspend fun create(
         extension: String,
-        seekableInputStream: SeekableInputStream
+        seekableInputStream: SeekableInputStream,
     ): FileReader? {
         return when (extension) {
             "pdf" -> loadReader("PdfFileReader", context, seekableInputStream)
@@ -29,7 +29,7 @@ internal class FileReaderFactoryImpl @Inject constructor(
     private fun loadReader(
         name: String,
         context: Context,
-        seekableInputStream: SeekableInputStream
+        seekableInputStream: SeekableInputStream,
     ): FileReader? {
         return Class.forName("com.sorrowblue.comicviewer.data.reader.document.$name")
             .getDeclaredConstructor(Context::class.java, SeekableInputStream::class.java)
