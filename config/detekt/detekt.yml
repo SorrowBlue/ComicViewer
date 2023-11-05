@@ -1,0 +1,49 @@
+comments:
+  active: true
+
+complexity:
+  active: false
+
+coroutines:
+  active: true
+
+empty-blocks:
+  active: true
+
+exceptions:
+  active: true
+
+formatting:
+  active: true
+  ImportOrdering:
+    layout: '*'
+
+naming:
+  active: true
+  FunctionNaming:
+    ignoreAnnotated:
+      - 'Composable'
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][A-Za-z0-9]*'
+
+  MatchingDeclarationName:
+    excludes:
+      - '**/section/**.kt'
+
+
+performance:
+  active: true
+
+potential-bugs:
+  active: true
+
+style:
+  active: true
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreNumbers:
+      - '-1'
+      - '0'
+      - '1'
+      - '2'
+      - '0.01'

@@ -38,6 +38,7 @@ internal fun containerColor(colorTransitionFraction: Float): Color {
         FastOutLinearInEasing.transform(colorTransitionFraction)
     )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> DropdownMenuChip(
@@ -52,7 +53,8 @@ fun <T> DropdownMenuChip(
     val fraction = if (colorTransitionFraction > 0.01f) 1f else 0f
     val appBarContainerColor by animateColorAsState(
         targetValue = containerColor(fraction),
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow), label = ""
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "DropdownMenuChipColorAnimation"
     )
     Box(modifier = modifier.wrapContentSize(Alignment.TopStart)) {
         var expanded by remember { mutableStateOf(false) }

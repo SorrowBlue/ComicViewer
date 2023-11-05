@@ -18,10 +18,6 @@ plugins {
     id("androidx.room") version libs.versions.androidx.room.get() apply false
 }
 
-detekt {
-    config.setFrom("$projectDir/config/detekt/detekt.yml")
-}
-
 tasks.register("clean", Delete::class) {
     delete(rootProject.layout.buildDirectory)
 }
