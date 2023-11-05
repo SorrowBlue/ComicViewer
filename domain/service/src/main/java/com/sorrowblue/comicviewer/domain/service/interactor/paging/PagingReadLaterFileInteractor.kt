@@ -8,7 +8,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 internal class PagingReadLaterFileInteractor @Inject constructor(
-    private val readLaterRepository: ReadLaterRepository
+    private val readLaterRepository: ReadLaterRepository,
 ) : PagingReadLaterFileUseCase() {
 
     override fun run(request: Request): Flow<PagingData<File>> {

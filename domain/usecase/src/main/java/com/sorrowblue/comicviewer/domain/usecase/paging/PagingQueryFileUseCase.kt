@@ -13,10 +13,10 @@ abstract class PagingQueryFileUseCase :
     class Request(
         val pagingConfig: PagingConfig,
         val bookshelfId: BookshelfId,
-        val searchCondition: () -> SearchCondition
+        val searchCondition: () -> SearchCondition,
     ) : BaseRequest
 
     enum class Error : Resource.AppError {
-        NOT_FOUND
+        NOT_FOUND,
     }
 }

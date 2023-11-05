@@ -21,7 +21,7 @@ private const val positionArg = "position"
 internal class FolderArgs(
     val bookshelfId: BookshelfId,
     val path: String,
-    val position: Int
+    val position: Int,
 ) {
     constructor(savedStateHandle: SavedStateHandle) : this(
         BookshelfId(checkNotNull(savedStateHandle[bookshelfIdArg])),
@@ -33,14 +33,14 @@ internal class FolderArgs(
 private const val FolderRoute = "folder"
 
 fun folderRoute(prefix: String) =
-    "$prefix/$FolderRoute/{$bookshelfIdArg}/{$pathArg}?position={${positionArg}}"
+    "$prefix/$FolderRoute/{$bookshelfIdArg}/{$pathArg}?position={$positionArg}"
 
 fun NavController.navigateToFolder(
     prefix: String,
     bookshelfId: BookshelfId,
     path: String,
     position: Int = -1,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) {
     navigate(
         "$prefix/$FolderRoute/${bookshelfId.value}/${path.encodeToBase64()}?position=$position",

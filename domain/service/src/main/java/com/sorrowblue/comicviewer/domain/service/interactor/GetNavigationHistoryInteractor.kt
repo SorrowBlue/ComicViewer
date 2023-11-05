@@ -20,9 +20,11 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
 ) : GetNavigationHistoryUseCase() {
     override suspend fun run(request: EmptyRequest): Result<NavigationHistory, Unit> {
         val history = settingsCommonRepository.history.first()
-        if (history.bookshelfId == null || history.path == null) return Result.Error(
-            Unit
-        )
+        if (history.bookshelfId == null || history.path == null) {
+            return Result.Error(
+                Unit
+            )
+        }
         val library = bookshelfRepository.get(history.bookshelfId!!).first()
         return library.fold({ lib ->
             val a = getFolderList(lib, history.path!!).fold({
@@ -34,9 +36,6 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
         }, {
             Result.Error(Unit)
         }, {
-            when (it) {
-
-            }
             Result.Error(Unit)
         })
     }
@@ -68,4 +67,3 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
         return null
     }
 }
-

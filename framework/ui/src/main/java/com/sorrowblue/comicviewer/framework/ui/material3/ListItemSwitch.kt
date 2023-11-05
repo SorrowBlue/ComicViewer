@@ -21,17 +21,23 @@ fun ListItemSwitch(
     overlineContent: @Composable (() -> Unit)? = null,
     supportingContent: @Composable (() -> Unit)? = null,
     leadingContent: @Composable (() -> Unit)? = null,
-    colors: ListItemColors = if (enabled) ListItemDefaults.colors() else ListItemDefaults.colors(
-        headlineColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-        leadingIconColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-        overlineColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-        supportingColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-        trailingIconColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-    ),
+    colors: ListItemColors = if (enabled) {
+        ListItemDefaults.colors()
+    } else {
+        ListItemDefaults.colors(
+            headlineColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            leadingIconColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            overlineColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            supportingColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            trailingIconColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+        )
+    },
     tonalElevation: Dp = ListItemDefaults.Elevation,
     shadowElevation: Dp = ListItemDefaults.Elevation,
 ) {
-    Box {
+    Box(
+        modifier = modifier,
+    ) {
         ListItem(
             headlineContent = headlineContent,
             overlineContent = overlineContent,
@@ -43,7 +49,6 @@ fun ListItemSwitch(
             colors = colors,
             tonalElevation = tonalElevation,
             shadowElevation = shadowElevation,
-            modifier = modifier,
         )
         Box(
             Modifier

@@ -54,12 +54,12 @@ internal class FolderViewModel @Inject constructor(
         PagingFileUseCase.Request(PagingConfig(30), bookshelfId, path)
     ).filterSuccess().flattenConcat().cachedIn(viewModelScope)
 
-
     private val _uiState = MutableStateFlow(
         FolderScreenUiState(
             folderAppBarUiState = FolderAppBarUiState(
                 "",
-                runBlocking { displaySettingsUseCase.settings.first().toFileContentLayout() }),
+                runBlocking { displaySettingsUseCase.settings.first().toFileContentLayout() }
+            ),
             fileContentType = runBlocking {
                 displaySettingsUseCase.settings.first().toFileContentLayout()
             }

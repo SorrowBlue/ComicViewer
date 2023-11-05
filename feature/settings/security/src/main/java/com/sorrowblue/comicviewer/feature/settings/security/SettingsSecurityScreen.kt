@@ -268,7 +268,6 @@ private class RealSecuritySettingsScreenState(
     }
 }
 
-
 internal interface SecuritySettingsScreenState {
     fun activityResult(activityResult: ActivityResult)
     fun onChangeBackgroundLockEnabled(value: Boolean)

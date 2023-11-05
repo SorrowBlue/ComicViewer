@@ -25,5 +25,4 @@ sealed class Response<out T> {
         }
         return this
     }
-
 }

@@ -19,7 +19,7 @@ import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 
 internal class ZipFileReader @AssistedInject constructor(
     @Assisted private val seekableInputStream: SeekableInputStream,
-    @ImageExtension supportedException: Set<String>
+    @ImageExtension supportedException: Set<String>,
 ) : FileReader {
 
     @AssistedFactory
@@ -27,7 +27,6 @@ internal class ZipFileReader @AssistedInject constructor(
 
         override fun create(seekableInputStream: SeekableInputStream): ZipFileReader
     }
-
 
     private val zipFile = SevenZip.openInArchive(null, IInStreamImpl(seekableInputStream))
 

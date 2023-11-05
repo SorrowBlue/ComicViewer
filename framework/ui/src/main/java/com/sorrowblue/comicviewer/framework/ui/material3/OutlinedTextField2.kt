@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,7 @@ fun OutlinedTextField2(
     singleLine: Boolean = false,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val scope = rememberCoroutineScope()
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -39,7 +41,7 @@ fun OutlinedTextField2(
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
         modifier = modifier
-            .bringIntoViewRequester2(bringIntoViewRequester)
+            .bringIntoViewRequester2(bringIntoViewRequester, scope)
     )
 }
 
@@ -65,6 +67,7 @@ fun ValidateOutlinedTextField(
     singleLine: Boolean = false,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val scope = rememberCoroutineScope()
     OutlinedTextField(
         value = input.value,
         onValueChange = onValueChange,
@@ -81,14 +84,15 @@ fun ValidateOutlinedTextField(
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
         modifier = modifier
-            .bringIntoViewRequester2(bringIntoViewRequester)
+            .bringIntoViewRequester2(bringIntoViewRequester, scope)
     )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun Modifier.bringIntoViewRequester2(bringIntoViewRequester: BringIntoViewRequester): Modifier {
-    val scope = rememberCoroutineScope()
+private fun Modifier.bringIntoViewRequester2(
+    bringIntoViewRequester: BringIntoViewRequester,
+    scope: CoroutineScope,
+): Modifier {
     return bringIntoViewRequester(bringIntoViewRequester)
         .onFocusEvent {
             if (it.isFocused) {
@@ -99,4 +103,3 @@ private fun Modifier.bringIntoViewRequester2(bringIntoViewRequester: BringIntoVi
             }
         }
 }
-

@@ -5,7 +5,7 @@ data class SearchCondition(
     val range: Range,
     val period: Period,
     val order: Order,
-    val sort: Sort
+    val sort: Sort,
 ) {
 
     sealed class Range {

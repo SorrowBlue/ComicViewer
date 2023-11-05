@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawZoomIn
 
 @Composable
-fun debugPlaceholder(): Painter? =
+fun rememberDebugPlaceholder(): Painter? =
     if (LocalInspectionMode.current) {
         rememberVectorPainter(image = ComicIcons.UndrawZoomIn)
     } else {

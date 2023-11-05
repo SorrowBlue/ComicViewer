@@ -49,7 +49,9 @@ internal class DatastoreDataSourceImpl @Inject constructor(
         viewerSettingsDataStore.updateData(transform)
 
     override val folderDisplaySettings = folderDisplaySettingsDataStore.data
-    override suspend fun updateFolderDisplaySettings(transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings) =
+    override suspend fun updateFolderDisplaySettings(
+        transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings,
+    ) =
         folderDisplaySettingsDataStore.updateData(transform)
 
     override val folderSettings = folderSettingsDataStore.data
@@ -57,7 +59,9 @@ internal class DatastoreDataSourceImpl @Inject constructor(
         folderSettingsDataStore.updateData(transform)
 
     override val viewerOperationSettings = viewerOperationSettingsDataStore.data
-    override suspend fun updateViewerOperationSettings(transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings) =
+    override suspend fun updateViewerOperationSettings(
+        transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings,
+    ) =
         viewerOperationSettingsDataStore.updateData(transform)
 
     override val securitySettings: Flow<SecuritySettings> = securitySettingsDataStore.data

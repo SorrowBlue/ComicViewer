@@ -32,7 +32,7 @@ internal fun HistoryAppBar(
                 onClick = onFileContentLayoutClick
             )
             val overflowMenuState = rememberOverflowMenuState()
-            OverflowMenu(overflowMenuState) {
+            OverflowMenu(state = overflowMenuState) {
                 if (fileContentType is FileContentType.Grid) {
                     DropdownMenuItem(
                         text = { Text(text = "Change Grid size") },

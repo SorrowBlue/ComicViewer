@@ -18,7 +18,9 @@ internal interface FavoriteDao {
     @Delete
     suspend fun delete(favoriteEntity: FavoriteEntity): Int
 
-    @Query("SELECT *, (SELECT COUNT(*) FROM favorite_file WHERE favorite_id = :favoriteId) AS count FROM favorite WHERE id = :favoriteId")
+    @Query(
+        "SELECT *, (SELECT COUNT(*) FROM favorite_file WHERE favorite_id = :favoriteId) AS count FROM favorite WHERE id = :favoriteId"
+    )
     fun flow(favoriteId: Int): Flow<FavoriteFileCountEntity?>
 
     @Query("SELECT *, (SELECT COUNT(*) FROM favorite_file WHERE favorite_id = id) AS count FROM favorite")

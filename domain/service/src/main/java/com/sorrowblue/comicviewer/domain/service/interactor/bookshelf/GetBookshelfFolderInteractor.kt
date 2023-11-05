@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.map
 
 internal class GetBookshelfFolderInteractor @Inject constructor(
     private val bookshelfRepository: BookshelfRepository,
-    private val fileRepository: FileRepository
+    private val fileRepository: FileRepository,
 ) : GetBookshelfFolderUseCase() {
 
     override fun run(request: Request): Flow<Result<BookshelfFolder, GetLibraryInfoError>> {
@@ -33,13 +33,12 @@ internal class GetBookshelfFolderInteractor @Inject constructor(
             }, {
                 Result.Error(GetLibraryInfoError.SYSTEM_ERROR)
             })
-
         }
     }
 }
 
 internal class DeleteHistoryInteractor @Inject constructor(
-    private val fileRepository: FileRepository
+    private val fileRepository: FileRepository,
 ) : DeleteHistoryUseCase() {
 
     override fun run(request: Request): Flow<Result<Unit, GetLibraryInfoError>> {

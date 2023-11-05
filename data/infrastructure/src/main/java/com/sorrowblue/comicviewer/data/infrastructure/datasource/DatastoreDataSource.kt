@@ -29,13 +29,17 @@ interface DatastoreDataSource {
     suspend fun updateViewerSettings(transform: suspend (ViewerSettings) -> ViewerSettings): ViewerSettings
 
     val folderDisplaySettings: Flow<FolderDisplaySettings>
-    suspend fun updateFolderDisplaySettings(transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings): FolderDisplaySettings
+    suspend fun updateFolderDisplaySettings(
+        transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings,
+    ): FolderDisplaySettings
 
     val folderSettings: Flow<FolderSettings>
     suspend fun updateFolderSettings(transform: suspend (FolderSettings) -> FolderSettings): FolderSettings
 
     val viewerOperationSettings: Flow<ViewerOperationSettings>
-    suspend fun updateViewerOperationSettings(transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings): ViewerOperationSettings
+    suspend fun updateViewerOperationSettings(
+        transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings,
+    ): ViewerOperationSettings
 
     val securitySettings: Flow<SecuritySettings>
     suspend fun updateSecuritySettings(transform: suspend (SecuritySettings) -> SecuritySettings): SecuritySettings

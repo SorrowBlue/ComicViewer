@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
 internal sealed interface BoxDialogUiState {
 
@@ -65,7 +65,7 @@ private fun BoxAccountDialog(
             AsyncImage(
                 model = uiState.photoUrl,
                 contentDescription = null,
-                placeholder = debugPlaceholder(),
+                placeholder = rememberDebugPlaceholder(),
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)

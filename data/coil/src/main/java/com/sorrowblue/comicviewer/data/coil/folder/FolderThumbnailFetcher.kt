@@ -15,6 +15,7 @@ import coil.fetch.SourceResult
 import coil.request.Options
 import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
+import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
 import com.sorrowblue.comicviewer.data.coil.book.thumbnailBitmap
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
@@ -32,6 +33,8 @@ import kotlin.math.floor
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import logcat.asLog
+import logcat.logcat
 import okhttp3.internal.closeQuietly
 import okio.ByteString.Companion.encodeUtf8
 
@@ -97,14 +100,14 @@ internal class FolderThumbnailFetcher(
                             val fileReader =
                                 remoteDataSourceFactory.create(bookshelfModel)
                                     .fileReader(it as BookFile)
-                                    ?: throw RuntimeException("FileReaderが取得できない")
+                                    ?: throw CoilRuntimeException("FileReaderが取得できない")
                             val bitmap = fileReader.thumbnailBitmap(
                                 requestWidth.toInt(), requestHeight.toInt()
-                            ) ?: throw RuntimeException("画像を取得できない")
+                            ) ?: throw CoilRuntimeException("画像を取得できない")
                             writeToDiskCache(
                                 snapshot = snapshot, fileReader = fileReader, bitmap = bitmap
                             )
-                        } ?: throw RuntimeException("フォルダにファイルなし。")
+                        } ?: throw CoilRuntimeException("フォルダにファイルなし。")
                     return SourceResult(
                         source = snapshot.toImageSource(),
                         mimeType = null,
@@ -128,6 +131,7 @@ internal class FolderThumbnailFetcher(
                     }
                 }
             } catch (e: Exception) {
+                logcat { e.asLog() }
                 throw e
             }
         } catch (e: Exception) {
@@ -137,7 +141,8 @@ internal class FolderThumbnailFetcher(
     }
 
     private suspend fun cacheList(
-        size: Int, folderThumbnailOrder: FolderThumbnailOrder,
+        size: Int,
+        folderThumbnailOrder: FolderThumbnailOrder,
     ): List<Pair<String, DiskCache.Snapshot>> {
         val cacheKeyList = fileModelLocalDataSource.getCacheKeys(
             folder.bookshelfId,
@@ -162,7 +167,8 @@ internal class FolderThumbnailFetcher(
     }
 
     private suspend fun writeToDiskCache(
-        snapshot: DiskCache.Snapshot?, list: List<Pair<String, DiskCache.Snapshot>>,
+        snapshot: DiskCache.Snapshot?,
+        list: List<Pair<String, DiskCache.Snapshot>>,
     ): DiskCache.Snapshot? {
         // この応答をキャッシュすることが許可されていない場合は短絡します。
         if (!isCacheable()) {
@@ -181,9 +187,10 @@ internal class FolderThumbnailFetcher(
         if (editor == null) return null
 
         try {
-
             val result = Bitmap.createBitmap(
-                requestWidth.toInt(), requestHeight.toInt(), Bitmap.Config.ARGB_8888
+                requestWidth.toInt(),
+                requestHeight.toInt(),
+                Bitmap.Config.ARGB_8888
             )
             val canvas = Canvas(result)
             canvas.drawColor(Color.TRANSPARENT)
@@ -197,10 +204,12 @@ internal class FolderThumbnailFetcher(
             }
             return withContext(NonCancellable) {
                 fileSystem.write(editor.metadata) {
-                    FolderThumbnailMetadata(folder.path,
+                    FolderThumbnailMetadata(
+                        folder.path,
                         folder.bookshelfId.value,
                         folder.lastModifier,
-                        list.map { it.first }).writeTo(this)
+                        list.map { it.first }
+                    ).writeTo(this)
                 }
                 fileSystem.write(editor.data) {
                     outputStream().use {
@@ -217,7 +226,9 @@ internal class FolderThumbnailFetcher(
     }
 
     private fun writeToDiskCache(
-        snapshot: DiskCache.Snapshot?, fileReader: FileReader, bitmap: Bitmap,
+        snapshot: DiskCache.Snapshot?,
+        fileReader: FileReader,
+        bitmap: Bitmap,
     ): DiskCache.Snapshot? {
         // この応答をキャッシュすることが許可されていない場合は短絡します。
         if (!isCacheable()) {
@@ -240,7 +251,10 @@ internal class FolderThumbnailFetcher(
             // メタデータと画像データを更新します。
             fileSystem.write(editor.metadata) {
                 FolderThumbnailMetadata(
-                    folder.path, folder.bookshelfId.value, folder.lastModifier, emptyList()
+                    folder.path,
+                    folder.bookshelfId.value,
+                    folder.lastModifier,
+                    emptyList()
                 ).writeTo(this)
             }
             fileSystem.write(editor.data) {
@@ -261,7 +275,9 @@ internal class FolderThumbnailFetcher(
         val resizeScale =
             if (bitmap.width >= bitmap.height) requestWidth / bitmap.width else requestHeight / bitmap.height
         val scale = bitmap.scale(
-            (bitmap.width * resizeScale).toInt(), (bitmap.height * resizeScale).toInt(), true
+            (bitmap.width * resizeScale).toInt(),
+            (bitmap.height * resizeScale).toInt(),
+            true
         )
         bitmap.recycle()
         canvas.drawBitmap(scale, requestWidth - scale.width - rightSpace, 0f, null)
@@ -293,7 +309,9 @@ internal class FolderThumbnailFetcher(
     ) : Fetcher.Factory<Folder> {
 
         override fun create(
-            data: Folder, options: Options, imageLoader: ImageLoader,
+            data: Folder,
+            options: Options,
+            imageLoader: ImageLoader,
         ): Fetcher {
             return FolderThumbnailFetcher(
                 data,

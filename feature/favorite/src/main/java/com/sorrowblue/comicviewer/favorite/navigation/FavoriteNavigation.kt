@@ -17,14 +17,14 @@ internal class FavoriteArgs(
     val favoriteId: FavoriteId,
 ) {
     constructor(savedStateHandle: SavedStateHandle) :
-            this(FavoriteId(checkNotNull(savedStateHandle[favoriteIdArg])))
+        this(FavoriteId(checkNotNull(savedStateHandle[favoriteIdArg])))
 }
 
 const val favoriteRoute = "$FavoriteListRoute/{$favoriteIdArg}"
 
 internal fun NavController.navigateToFavorite(
     favoriteId: FavoriteId,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) {
     navigate("$FavoriteListRoute/${favoriteId.value}", navOptions)
 }

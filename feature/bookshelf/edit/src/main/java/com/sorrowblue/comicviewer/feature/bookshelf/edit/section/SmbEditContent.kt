@@ -56,7 +56,7 @@ data class SmbEditScreenUiState(
 
     enum class Auth {
         Guest,
-        UserPass
+        UserPass,
     }
 }
 
@@ -97,7 +97,8 @@ private fun MobileSmbEditContent(
 ) {
     Column(modifier) {
         DisplayNameField(
-            input = uiState.displayName, onValueChange = onDisplayNameChange,
+            input = uiState.displayName,
+            onValueChange = onDisplayNameChange,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -120,7 +121,9 @@ private fun MobileSmbEditContent(
         Spacer(modifier = Modifier.size(8.dp))
 
         PathField(
-            input = uiState.path, auth = uiState.auth, onValueChange = onPathChange,
+            input = uiState.path,
+            auth = uiState.auth,
+            onValueChange = onPathChange,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -132,21 +135,24 @@ private fun MobileSmbEditContent(
             SmbEditScreenUiState.Auth.Guest -> Unit
             SmbEditScreenUiState.Auth.UserPass -> {
                 DomainField(
-                    value = uiState.domain, onValueChange = onDomainChange,
+                    value = uiState.domain,
+                    onValueChange = onDomainChange,
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.size(8.dp))
 
                 UsernameField(
-                    input = uiState.username, onValueChange = onUsernameChange,
+                    input = uiState.username,
+                    onValueChange = onUsernameChange,
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.size(8.dp))
 
                 PasswordField(
-                    input = uiState.password, onValueChange = onPasswordChange,
+                    input = uiState.password,
+                    onValueChange = onPasswordChange,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -198,7 +204,8 @@ private fun TabletSmbEditContent(
 ) {
     Column(modifier) {
         DisplayNameField(
-            input = uiState.displayName, onValueChange = onDisplayNameChange,
+            input = uiState.displayName,
+            onValueChange = onDisplayNameChange,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -221,7 +228,9 @@ private fun TabletSmbEditContent(
         Spacer(modifier = Modifier.size(8.dp))
 
         PathField(
-            input = uiState.path, auth = uiState.auth, onValueChange = onPathChange,
+            input = uiState.path,
+            auth = uiState.auth,
+            onValueChange = onPathChange,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -233,21 +242,24 @@ private fun TabletSmbEditContent(
             SmbEditScreenUiState.Auth.Guest -> Unit
             SmbEditScreenUiState.Auth.UserPass -> {
                 DomainField(
-                    value = uiState.domain, onValueChange = onDomainChange,
+                    value = uiState.domain,
+                    onValueChange = onDomainChange,
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.size(8.dp))
 
                 UsernameField(
-                    input = uiState.username, onValueChange = onUsernameChange,
+                    input = uiState.username,
+                    onValueChange = onUsernameChange,
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.size(8.dp))
 
                 PasswordField(
-                    input = uiState.password, onValueChange = onPasswordChange,
+                    input = uiState.password,
+                    onValueChange = onPasswordChange,
                     modifier = Modifier.fillMaxWidth()
                 )
             }

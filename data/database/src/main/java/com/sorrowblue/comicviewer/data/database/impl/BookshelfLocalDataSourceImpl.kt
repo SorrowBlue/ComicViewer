@@ -46,7 +46,5 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
                 BookshelfFolder(it.entity.toModel(it.fileCount), it.fileEntity.toModel() as Folder)
             }
         }
-
     }
 }
-

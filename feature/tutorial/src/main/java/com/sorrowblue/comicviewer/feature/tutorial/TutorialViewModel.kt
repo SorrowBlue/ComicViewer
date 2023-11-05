@@ -30,7 +30,7 @@ private const val DOCUMENT_MODULE = "document"
 @HiltViewModel
 internal class TutorialViewModel @Inject constructor(
     private val splitInstallManager: SplitInstallManager,
-    private val viewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase
+    private val viewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase,
 ) : ViewModel(), DefaultLifecycleObserver, SplitInstallStateUpdatedListener {
 
     private val _uiState = MutableStateFlow(TutorialScreenUiState())
@@ -71,7 +71,10 @@ internal class TutorialViewModel @Inject constructor(
                 SplitInstallSessionStatus.CANCELED -> DocumentSheetUiState.CANCELED
                 SplitInstallSessionStatus.CANCELING -> DocumentSheetUiState.CANCELING
                 SplitInstallSessionStatus.DOWNLOADED -> DocumentSheetUiState.DOWNLOADED
-                SplitInstallSessionStatus.DOWNLOADING -> DocumentSheetUiState.DOWNLOADING((state.bytesDownloaded.toDouble() / state.totalBytesToDownload).toFloat())
+                SplitInstallSessionStatus.DOWNLOADING -> DocumentSheetUiState.DOWNLOADING(
+                    (state.bytesDownloaded.toDouble() / state.totalBytesToDownload).toFloat()
+                )
+
                 SplitInstallSessionStatus.FAILED -> DocumentSheetUiState.FAILED(state.err)
                 SplitInstallSessionStatus.INSTALLED -> DocumentSheetUiState.INSTALLED
                 SplitInstallSessionStatus.INSTALLING -> DocumentSheetUiState.INSTALLING

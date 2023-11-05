@@ -66,7 +66,9 @@ internal class LibraryViewModel @Inject constructor(
         super.onResume(owner)
         val installedModules = splitInstallManager.installedModules
         val list = _uiState.value.addOnList.map {
-            it.copy2(if (installedModules.contains(it.addOn.moduleName)) AddOnItemState.Installed else AddOnItemState.Still)
+            it.copy2(
+                if (installedModules.contains(it.addOn.moduleName)) AddOnItemState.Installed else AddOnItemState.Still
+            )
         }
         _uiState.value = _uiState.value.copy(addOnList = list.toPersistentList())
     }
@@ -100,7 +102,8 @@ internal class LibraryViewModel @Inject constructor(
                     SplitInstallSessionStatus.INSTALLING,
                     SplitInstallSessionStatus.PENDING,
                     SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION,
-                    SplitInstallSessionStatus.UNKNOWN -> AddOnItemState.Installing
+                    SplitInstallSessionStatus.UNKNOWN,
+                    -> AddOnItemState.Installing
 
                     SplitInstallSessionStatus.INSTALLED -> {
                         _uiEvent.tryEmit(
@@ -151,25 +154,29 @@ internal class LibraryViewModel @Inject constructor(
                                 )
                             )
                             _uiState.value =
-                                _uiState.value.copy(addOnList = _uiState.value.addOnList.map {
-                                    if (it == feature) {
-                                        it.copy2(state = AddOnItemState.Failed)
-                                    } else {
-                                        it
-                                    }
-                                }.toPersistentList())
+                                _uiState.value.copy(
+                                    addOnList = _uiState.value.addOnList.map {
+                                        if (it == feature) {
+                                            it.copy2(state = AddOnItemState.Failed)
+                                        } else {
+                                            it
+                                        }
+                                    }.toPersistentList()
+                                )
                         }
                     }.getOrNull()
                     if (state == 0) {
                         // 既にインストールされている場合
                         _uiState.value =
-                            _uiState.value.copy(addOnList = _uiState.value.addOnList.map {
-                                if (it == feature) {
-                                    it.copy2(state = AddOnItemState.Installed)
-                                } else {
-                                    it
-                                }
-                            }.toPersistentList())
+                            _uiState.value.copy(
+                                addOnList = _uiState.value.addOnList.map {
+                                    if (it == feature) {
+                                        it.copy2(state = AddOnItemState.Installed)
+                                    } else {
+                                        it
+                                    }
+                                }.toPersistentList()
+                            )
                         _uiEvent.emit(
                             LibraryScreenUiEvent.Message2(
                                 text = StringResource(
@@ -188,7 +195,11 @@ internal class LibraryViewModel @Inject constructor(
                         )
                     }
                 } else {
-                    _uiEvent.emit(LibraryScreenUiEvent.Message2(text = StringResource(R.string.library_message_other_addon_installing)))
+                    _uiEvent.emit(
+                        LibraryScreenUiEvent.Message2(
+                            text = StringResource(R.string.library_message_other_addon_installing)
+                        )
+                    )
                 }
             }
         }

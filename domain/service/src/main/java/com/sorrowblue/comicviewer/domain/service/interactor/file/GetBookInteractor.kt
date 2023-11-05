@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class GetBookInteractor @Inject constructor(
-    private val fileRepository: FileRepository
+    private val fileRepository: FileRepository,
 ) : GetBookUseCase() {
 
     override fun run(request: Request): Flow<Result<Book, Unit>> {

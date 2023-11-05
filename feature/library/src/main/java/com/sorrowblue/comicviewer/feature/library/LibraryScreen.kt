@@ -46,7 +46,7 @@ internal sealed interface LibraryScreenUiEvent {
         val actionLabel: String? = null,
         val withDismissAction: Boolean = false,
         val duration: SnackbarDuration = if (actionLabel == null) SnackbarDuration.Short else SnackbarDuration.Indefinite,
-        val action: ((SnackbarResult) -> Unit)? = null
+        val action: ((SnackbarResult) -> Unit)? = null,
     ) : LibraryScreenUiEvent {
         suspend fun showSnackbar(snackbarHostState: SnackbarHostState) {
             val result = snackbarHostState.showSnackbar(
@@ -64,7 +64,7 @@ internal sealed interface LibraryScreenUiEvent {
         val actionLabel: StringResource? = null,
         val withDismissAction: Boolean = false,
         val duration: SnackbarDuration = if (actionLabel == null) SnackbarDuration.Short else SnackbarDuration.Indefinite,
-        val action: ((SnackbarResult) -> Unit)? = null
+        val action: ((SnackbarResult) -> Unit)? = null,
     ) : LibraryScreenUiEvent {
 
         suspend fun showSnackbar(snackbarHostState: SnackbarHostState, context: Context) {
@@ -87,7 +87,7 @@ internal sealed interface LibraryScreenUiEvent {
 internal fun LibraryRoute(
     contentPadding: PaddingValues,
     onFeatureClick: (Feature) -> Unit,
-    viewModel: LibraryViewModel = hiltViewModel()
+    viewModel: LibraryViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
@@ -113,7 +113,7 @@ internal fun LibraryRoute(
 
 internal data class LibraryScreenUiState(
     val addOnList: PersistentList<Feature.AddOn>,
-    val requestInstallDialogUiState: RequestInstallDialogUiState = RequestInstallDialogUiState.Hide
+    val requestInstallDialogUiState: RequestInstallDialogUiState = RequestInstallDialogUiState.Hide,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,7 +124,7 @@ private fun LibraryScreen(
     contentPadding: PaddingValues,
     onFeatureClick: (Feature) -> Unit,
     onInstallClick: () -> Unit,
-    onCancelClick: () -> Unit
+    onCancelClick: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val localLayoutDirection = LocalLayoutDirection.current

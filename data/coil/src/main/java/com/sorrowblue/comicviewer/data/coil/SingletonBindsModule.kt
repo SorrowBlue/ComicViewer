@@ -34,7 +34,9 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteThumbnailFetcherFetcher(factory: FavoriteThumbnailFetcher.Factory): Fetcher.Factory<Favorite>
+    abstract fun bindFavoriteThumbnailFetcherFetcher(
+        factory: FavoriteThumbnailFetcher.Factory,
+    ): Fetcher.Factory<Favorite>
 
     @Singleton
     @Binds
