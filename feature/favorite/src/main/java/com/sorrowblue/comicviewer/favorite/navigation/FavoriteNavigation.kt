@@ -11,15 +11,16 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.favorite.FavoriteRoute
 
-private const val FavoriteIdArg = "favoriteId"
+private const val favoriteIdArg = "favoriteId"
 
 internal class FavoriteArgs(
     val favoriteId: FavoriteId,
 ) {
-    constructor(savedStateHandle: SavedStateHandle) : this(FavoriteId(checkNotNull(savedStateHandle[FavoriteIdArg])))
+    constructor(savedStateHandle: SavedStateHandle) :
+        this(FavoriteId(checkNotNull(savedStateHandle[favoriteIdArg])))
 }
 
-const val FavoriteRoute = "$FavoriteListRoute/{$FavoriteIdArg}"
+const val favoriteRoute = "$FavoriteListRoute/{$favoriteIdArg}"
 
 internal fun NavController.navigateToFavorite(
     favoriteId: FavoriteId,
@@ -36,9 +37,9 @@ internal fun NavGraphBuilder.favoriteScreen(
     onClickLongFile: (File) -> Unit,
 ) {
     composable(
-        route = FavoriteRoute,
+        route = favoriteRoute,
         arguments = listOf(
-            navArgument(FavoriteIdArg) { type = NavType.IntType }
+            navArgument(favoriteIdArg) { type = NavType.IntType }
         )
     ) {
         FavoriteRoute(

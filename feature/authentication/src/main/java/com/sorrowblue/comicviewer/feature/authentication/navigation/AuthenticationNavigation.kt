@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationRoute
 
-private const val HandleBackArg = "handleBack"
-private const val ModeArg = "mode"
+private const val handleBackArg = "handleBack"
+private const val modeArg = "mode"
 
 enum class Mode {
     Register,
@@ -24,20 +24,20 @@ internal class AuthenticationArgs(
     val mode: Mode,
 ) {
     constructor(savedStateHandle: SavedStateHandle) : this(
-        checkNotNull<Boolean>(savedStateHandle[HandleBackArg]),
-        Mode.valueOf(checkNotNull(savedStateHandle[ModeArg])),
+        checkNotNull<Boolean>(savedStateHandle[handleBackArg]),
+        Mode.valueOf(checkNotNull(savedStateHandle[modeArg])),
     )
 }
 
-private const val AuthenticationRouteBase = "authentication"
-const val AuthenticationRoute = "$AuthenticationRouteBase/{$ModeArg}/?handleBack={$HandleBackArg}"
+private const val authenticationRouteBase = "authentication"
+const val authenticationRoute = "$authenticationRouteBase/{$modeArg}/?handleBack={$handleBackArg}"
 
 fun NavController.navigateToAuthentication(
     mode: Mode,
     handleBack: Boolean = false,
     navOptions: NavOptions? = null,
 ) {
-    navigate("$AuthenticationRouteBase/${mode.name}/?handleBack=$handleBack", navOptions)
+    navigate("$authenticationRouteBase/${mode.name}/?handleBack=$handleBack", navOptions)
 }
 
 fun NavGraphBuilder.authenticationScreen(
@@ -45,10 +45,10 @@ fun NavGraphBuilder.authenticationScreen(
     onAuthCompleted: (Boolean, Mode) -> Unit,
 ) {
     composable(
-        route = AuthenticationRoute,
+        route = authenticationRoute,
         arguments = listOf(
-            navArgument(ModeArg) { type = NavType.StringType },
-            navArgument(HandleBackArg) { type = NavType.BoolType },
+            navArgument(modeArg) { type = NavType.StringType },
+            navArgument(handleBackArg) { type = NavType.BoolType },
         )
     ) {
         AuthenticationRoute(onBack = onBack, onAuthCompleted = onAuthCompleted)
