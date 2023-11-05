@@ -19,7 +19,7 @@ formatting:
   active: true
   ImportOrdering:
     active: true
-    layout: '*,^'
+    layout: '*'
   TrailingCommaOnDeclarationSite:
     active: true
   MaximumLineLength:

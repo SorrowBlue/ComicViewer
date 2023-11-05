@@ -14,8 +14,9 @@ import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
 
-const val FavoriteGraphRoute = "favorite_graph"
-val RouteInFavoriteGraph = listOf(FavoriteListRoute, FavoriteRoute, folderRoute(FavoriteListRoute))
+const val favoriteGraphRoute = "favorite_graph"
+val routeInFavoriteGraph
+    get() = listOf(FavoriteListRoute, favoriteRoute, folderRoute(FavoriteListRoute))
 
 fun NavGraphBuilder.favoriteGroup(
     contentPadding: PaddingValues,
@@ -25,7 +26,7 @@ fun NavGraphBuilder.favoriteGroup(
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
 ) {
-    navigation(route = FavoriteGraphRoute, startDestination = FavoriteListRoute) {
+    navigation(route = favoriteGraphRoute, startDestination = FavoriteListRoute) {
         favoriteListScreen(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
