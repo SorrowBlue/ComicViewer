@@ -19,7 +19,7 @@ androidx-compose-compiler = "1.5.3"
 google-dagger = "2.48.1"
 android-gradle = "8.1.2"
 
-mikepenz-aboutlibraries = "10.9.1"
+mikepenz-aboutlibraries = "10.9.2"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
