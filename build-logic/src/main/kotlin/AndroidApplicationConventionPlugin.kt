@@ -27,6 +27,8 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
+                add("detektPlugins", libs.findLibrary("nlopez.compose.rules.detekt").get())
+                add("detektPlugins", libs.findLibrary("arturbosch.detektFormatting").get())
                 implementation(libs.findLibrary("squareup.logcat").get())
             }
         }
