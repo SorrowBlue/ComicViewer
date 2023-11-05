@@ -1,12 +1,9 @@
 package com.sorrowblue.comicviewer.app
 
-import android.app.Activity
 import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import com.google.android.play.core.review.ReviewManagerFactory
-import com.mikepenz.aboutlibraries.LibsBuilder
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraph
 import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
@@ -15,7 +12,10 @@ import com.sorrowblue.comicviewer.feature.authentication.navigation.authenticati
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
 import com.sorrowblue.comicviewer.feature.book.navigation.bookGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
+import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
+import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
 import com.sorrowblue.comicviewer.feature.favorite.create.navigation.favoriteCreateScreen
+import com.sorrowblue.comicviewer.feature.favorite.create.navigation.navigateToFavoriteCreate
 import com.sorrowblue.comicviewer.feature.library.navigation.libraryGroup
 import com.sorrowblue.comicviewer.feature.library.serviceloader.AddOnNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
@@ -31,8 +31,6 @@ import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
 import java.util.ServiceLoader
 import kotlinx.collections.immutable.PersistentList
-import logcat.asLog
-import logcat.logcat
 
 internal fun NavGraphBuilder.mainGraph(
     isMobile: Boolean,
@@ -83,12 +81,15 @@ internal fun NavGraphBuilder.mainGraph(
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
     )
+    favoriteAddScreen(
+        onBackClick = navController::popBackStack,
+        onAddClick = navController::navigateToFavoriteCreate
+    )
     favoriteCreateScreen(onDismissRequest = navController::popBackStack)
     readlaterGroup(
         contentPadding = contentPadding,
         navController = navController,
         onBookClick = navController::navigateToBook,
-        onFileLongClick = { /*TODO*/ },
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
     )
@@ -97,9 +98,6 @@ internal fun NavGraphBuilder.mainGraph(
         navController = navController,
         onBookClick = { id, path, pos ->
             navController.navigateToBook(id, path, position = pos)
-        },
-        onFileLongClick = {
-            /*TODO*/
         },
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
@@ -115,9 +113,9 @@ internal fun NavGraphBuilder.mainGraph(
     searchGraph(
         contentPadding = contentPadding,
         navController = navController,
-        onClickLongFile = { /*TODO*/ },
         onBookClick = navController::navigateToBook,
-        onSettingsClick = navController::navigateToSettings
+        onSettingsClick = navController::navigateToSettings,
+        onFavoriteClick = { navController.navigateToFavoriteAdd(it.bookshelfId, it.path) }
     )
 
     tutorialScreen(onComplete = onTutorialExit)
@@ -126,29 +124,6 @@ internal fun NavGraphBuilder.mainGraph(
 
     settingsNavGraph(
         navController = navController,
-        onLicenceClick = {
-            LibsBuilder().withActivityTitle("Licence").withSearchEnabled(true)
-                .withEdgeToEdge(true).start(context)
-        },
-        onRateAppClick = {
-            val manager = ReviewManagerFactory.create(context)
-            manager.requestReviewFlow().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    manager.launchReviewFlow(context as Activity, task.result)
-                        .addOnCompleteListener { a ->
-                            if (a.isSuccessful) {
-                                logcat { "成功" }
-                            } else {
-                                logcat { a.exception?.asLog().toString() }
-                                extraNavController.launchUrl("http://play.google.com/store/apps/details?id=${context.packageName}")
-                            }
-                        }
-                } else {
-                    logcat { task.exception?.asLog().toString() }
-                    extraNavController.launchUrl("http://play.google.com/store/apps/details?id=${context.packageName}")
-                }
-            }
-        },
         onStartTutorialClick = navController::navigateToTutorial,
         onPasswordChangeClick = { navController.navigateToAuthentication(Mode.Change) },
         onChangeAuthEnabled = {

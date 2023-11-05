@@ -1,16 +1,11 @@
 package com.sorrowblue.comicviewer.folder
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,42 +14,45 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.file.FileListScaffold
+import com.sorrowblue.comicviewer.file.FileInfoBottomSheet
+import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.rememberSideSheetFileState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.Sort
-import com.sorrowblue.comicviewer.folder.section.SortSheetUiState
+import com.sorrowblue.comicviewer.folder.section.SortSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
-import com.sorrowblue.comicviewer.framework.ui.copy
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
+import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import com.sorrowblue.comicviewer.framework.ui.pullrefresh.PullRefreshIndicator
 import com.sorrowblue.comicviewer.framework.ui.pullrefresh.PullRefreshState
 import com.sorrowblue.comicviewer.framework.ui.pullrefresh.pullRefresh
 import com.sorrowblue.comicviewer.framework.ui.pullrefresh.rememberPullRefreshState
+import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffold
 import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveScaffoldState
 
-data class FolderScreenUiState(
+internal data class FolderScreenUiState(
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
-    val sortSheetUiState: SortSheetUiState = SortSheetUiState.Hide,
+    val openSortSheet: Boolean = false,
+    val currentSort: Sort = Sort.NAME_ASC,
     val fileContentType: FileContentType = FileContentType.Grid(),
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FolderRoute(
     contentPadding: PaddingValues,
@@ -63,7 +61,7 @@ internal fun FolderRoute(
     onBackClick: () -> Unit,
     onRestoreComplete: () -> Unit,
     onClickFile: (File, Int) -> Unit,
-    viewModel: FolderViewModel = hiltViewModel()
+    viewModel: FolderViewModel = hiltViewModel(),
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsState()
@@ -90,6 +88,14 @@ internal fun FolderRoute(
         onBackClick = onBackClick,
         onSortClick = viewModel::openSort,
     )
+
+    if (uiState.openSortSheet) {
+        SortSheet(
+            currentSort = uiState.currentSort,
+            onDismissRequest = viewModel::onSortSheetDismissRequest,
+            onClick = viewModel::onSortChange
+        )
+    }
     LaunchedEffect(lazyPagingItems.loadState) {
         if (0 <= viewModel.position && lazyPagingItems.loadState.refresh is LoadState.NotLoading && lazyPagingItems.itemCount > 0) {
             val position = viewModel.position
@@ -110,7 +116,6 @@ internal fun FolderRoute(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FolderScreen(
     contentPadding: PaddingValues,
@@ -123,15 +128,18 @@ internal fun FolderScreen(
     lazyGridState: LazyGridState,
     isRefreshing: Boolean,
     pullRefreshState: PullRefreshState = rememberPullRefreshState(isRefreshing, { }),
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     onFileListChange: () -> Unit,
     onSettingsClick: () -> Unit,
     onGridSizeChange: () -> Unit,
     onBackClick: () -> Unit,
     onSortClick: () -> Unit,
+    onReadLaterClick: (File) -> Unit = {},
+    onFavoriteClick: (File) -> Unit = {},
+    onOpenFolderClick: (File) -> Unit = {},
 ) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val state = rememberResponsiveScaffoldState(sideSheetState = rememberSideSheetFileState())
-    FileListScaffold(
+    ResponsiveScaffold(
         state = state,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -143,7 +151,27 @@ internal fun FolderScreen(
                 onGridSizeChange = onGridSizeChange,
                 onSortClick = onSortClick,
                 onSettingsClick = onSettingsClick,
+                windowInsets = contentPadding.asWindowInsets(),
                 scrollBehavior = scrollBehavior,
+            )
+        },
+        sideSheet = { file, innerPadding ->
+            FileInfoSheet(
+                file = file,
+                contentPadding = innerPadding.add(paddingValues = PaddingValues(top = ComicTheme.dimension.margin)),
+                onCloseClick = { state.sheetState.hide() },
+                onReadLaterClick = { onReadLaterClick(file) },
+                onFavoriteClick = { onFavoriteClick(file) },
+                onOpenFolderClick = { onOpenFolderClick(file) }
+            )
+        },
+        bottomSheet = { file ->
+            FileInfoBottomSheet(
+                file = file,
+                onReadLaterClick = { onReadLaterClick(file) },
+                onFavoriteClick = { onFavoriteClick(file) },
+                onOpenFolderClick = { onOpenFolderClick(file) },
+                onDismissRequest = { state.sheetState.hide() },
             )
         },
         contentWindowInsets = contentPadding.asWindowInsets(),
@@ -160,15 +188,10 @@ internal fun FolderScreen(
                     contentPadding = it
                 )
             } else {
-                val end by animateDpAsState(
-                    targetValue = if (state.sheetState.show) 0.dp else it.calculateEndPadding(
-                        LocalLayoutDirection.current
-                    ), label = "end"
-                )
                 FileContent(
                     type = uiState.fileContentType,
                     lazyPagingItems = lazyPagingItems,
-                    contentPadding = it.copy(end = end),
+                    contentPadding = it,
                     onClickItem = onClickFile,
                     onLongClickItem = { state.sheetState.show(it) },
                     state = lazyGridState

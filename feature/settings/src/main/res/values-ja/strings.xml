@@ -7,8 +7,9 @@
     <string name="settings_label_viewer">ビューワー</string>
     <string name="settings_label_security">セキュリティ</string>
     <string name="settings_label_app">アプリの情報</string>
-    <string name="settings_app_label_version">バージョン</string>
-    <string name="settings_app_label_build">ビルド</string>
-    <string name="settings_app_label_rate">アプリを評価する</string>
-    <string name="settings_app_label_license">ライセンス</string>
+    <string name="settings_language_title">アプリ言語</string>
+    <string name="settings_language_label_system_default">システムのデフォルト</string>
+    <string name="settings_language_label_all_languages">すべての言語</string>
+    <string name="settings_language_label_japanese">日本語</string>
+    <string name="settings_language_label_us">英語（アメリカ）</string>
 </resources>

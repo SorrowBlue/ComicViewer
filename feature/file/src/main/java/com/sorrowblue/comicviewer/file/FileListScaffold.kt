@@ -44,13 +44,23 @@ fun FileListScaffold(
         state = state,
         topBar = topBar,
         sideSheet = { file, contentPadding ->
-            FileInfoSheet(file,
+            FileInfoSheet(
+                file = file,
                 contentPadding = contentPadding,
-                onCloseClick = { state.sheetState.hide() }
+                onCloseClick = { state.sheetState.hide() },
+                onReadLaterClick = { /*TODO*/ },
+                onFavoriteClick = { /*TODO*/ },
+                onOpenFolderClick = {/*TODO*/ }
             )
         },
         bottomSheet = {
-            FileInfoBottomSheet(it)
+            FileInfoBottomSheet(
+                file = it,
+                onReadLaterClick = { /*TODO*/ },
+                onFavoriteClick = { /*TODO*/ },
+                onOpenFolderClick = {/*TODO*/ },
+                onDismissRequest = {}
+            )
         },
         contentWindowInsets = contentWindowInsets,
         modifier = modifier,

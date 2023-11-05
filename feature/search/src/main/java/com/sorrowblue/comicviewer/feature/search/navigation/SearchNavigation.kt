@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.search.navigation
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
@@ -28,6 +29,10 @@ internal class SearchArgs(val bookshelfId: BookshelfId, val path: String) {
         BookshelfId(checkNotNull(savedStateHandle[BookshelfIdArg])),
         (checkNotNull<String>(savedStateHandle[PathArg])).decodeFromBase64(),
     )
+    constructor(bundle: Bundle) : this(
+        BookshelfId(bundle.getInt(BookshelfIdArg)),
+        (checkNotNull(bundle.getString(PathArg))).decodeFromBase64(),
+    )
 }
 
 private const val SearchRouteBase = "search"
@@ -47,7 +52,9 @@ fun NavController.navigateToSearch(
 private fun NavGraphBuilder.searchScreen(
     onBackClick: () -> Unit,
     onFileClick: (File) -> Unit,
-    onFileLongClick: (File) -> Unit,
+    contentPadding: PaddingValues,
+    onOpenFolderClick: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
     composable(
         route = SearchRoute,
@@ -56,10 +63,14 @@ private fun NavGraphBuilder.searchScreen(
             navArgument(PathArg) { type = NavType.StringType },
         )
     ) {
+        val args = SearchArgs(it.arguments!!)
         SearchRoute(
+            args = args,
             onBackClick = onBackClick,
             onFileClick = onFileClick,
-            onFileLongClick = onFileLongClick,
+            contentPadding = contentPadding,
+            onOpenFolderClick = onOpenFolderClick,
+            onFavoriteClick = onFavoriteClick,
         )
     }
 }
@@ -70,8 +81,8 @@ fun NavGraphBuilder.searchGraph(
     contentPadding: PaddingValues,
     navController: NavController,
     onBookClick: (BookshelfId, String, Int) -> Unit,
-    onClickLongFile: (File) -> Unit,
     onSettingsClick: () -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
     navigation(route = SearchGraph, startDestination = SearchRoute) {
         searchScreen(
@@ -83,7 +94,11 @@ fun NavGraphBuilder.searchGraph(
                         navController.navigateToFolder(SearchRoute, file.bookshelfId, file.path)
                 }
             },
-            onFileLongClick = onClickLongFile,
+            contentPadding = contentPadding,
+            onFavoriteClick = onFavoriteClick,
+            onOpenFolderClick = {
+                navController.navigateToFolder(SearchRoute, it.bookshelfId, it.parent)
+            }
         )
 
         folderScreen(

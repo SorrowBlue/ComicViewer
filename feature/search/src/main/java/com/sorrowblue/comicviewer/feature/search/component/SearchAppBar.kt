@@ -1,49 +1,40 @@
 package com.sorrowblue.comicviewer.feature.search.component
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.sorrowblue.comicviewer.feature.search.SearchScreenUiState
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior
+import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveTopAppBar
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 internal fun SearchAppBar(
-    uiState: SearchScreenUiState,
-    onSearchQueryChange: (String) -> Unit,
+    query: String,
+    onQueryChange: (String) -> Unit,
     onBackClick: () -> Unit,
-    toggleSearchFilter: () -> Unit,
+    contentPadding: PaddingValues,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
-    TopAppBar(
+    ResponsiveTopAppBar(
         title = {
             TextField(
-                value = uiState.searchQuery,
-                onValueChange = onSearchQueryChange,
+                value = query,
+                onValueChange = onQueryChange,
                 placeholder = { Text(text = "Search") },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent
-                )
+                ),
+                modifier = Modifier.fillMaxWidth()
             )
         },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(ComicIcons.ArrowBack, "")
-            }
-        },
-        actions = {
-            IconButton(onClick = toggleSearchFilter) {
-                Icon(ComicIcons.FilterAlt, "")
-            }
-        },
+        onBackClick = onBackClick,
+        windowInsets = contentPadding.asWindowInsets(),
         scrollBehavior = scrollBehavior
     )
 }

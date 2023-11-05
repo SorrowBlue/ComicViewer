@@ -7,9 +7,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,15 +16,10 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.designsystem.theme.largeBottom
 import com.sorrowblue.comicviewer.framework.designsystem.theme.largeTop
 import com.sorrowblue.comicviewer.framework.ui.add
-
-@Stable
-data class FileContentUiState(
-    val fileContentType: FileContentType = FileContentType.Grid(),
-)
+import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
 @Composable
 fun FileContent(
@@ -37,20 +30,27 @@ fun FileContent(
     onLongClickItem: (File) -> Unit,
     state: LazyGridState = rememberLazyGridState(),
 ) {
+    val isCompat = rememberMobile()
     when (type) {
         is FileContentType.Grid -> FileGridContent(
             columns = type.columns,
             state = state,
-            contentPadding = contentPadding,
+            contentPadding = contentPadding.add(
+                PaddingValues(
+                    start = ComicTheme.dimension.margin,
+                    top = if (isCompat) 0.dp else ComicTheme.dimension.margin,
+                    end = ComicTheme.dimension.margin,
+                    bottom = ComicTheme.dimension.margin
+                )
+            ),
             lazyPagingItems = lazyPagingItems,
             onClickItem = onClickItem,
             onLongClickItem = onLongClickItem
         )
 
         FileContentType.List -> FileListContent(
-            columns = type.columns,
             lazyPagingItems = lazyPagingItems,
-            contentPadding = contentPadding,
+            contentPadding = contentPadding.add(PaddingValues(if (isCompat) 0.dp else ComicTheme.dimension.margin)),
             onClickItem = onClickItem,
             onLongClickItem = onLongClickItem,
             state = state
@@ -68,18 +68,10 @@ private fun FileGridContent(
     onClickItem: (File) -> Unit,
     onLongClickItem: (File) -> Unit,
 ) {
-    val isCompat = LocalWindowSize.current.widthSizeClass == WindowWidthSizeClass.Compact
     LazyVerticalGrid(
         columns = columns,
         state = state,
-        contentPadding = contentPadding.add(
-            paddingValues = PaddingValues(
-                top = if (isCompat) 0.dp else ComicTheme.dimension.margin,
-                start = if (isCompat) ComicTheme.dimension.margin else 0.dp,
-                end = ComicTheme.dimension.margin,
-                bottom = ComicTheme.dimension.margin
-            )
-        ),
+        contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
     ) {
@@ -98,25 +90,18 @@ private fun FileGridContent(
 
 
 @Composable
-private fun FileListContent(
-    columns: GridCells,
+fun FileListContent(
     state: LazyGridState,
     contentPadding: PaddingValues,
     lazyPagingItems: LazyPagingItems<File>,
     onClickItem: (File) -> Unit,
     onLongClickItem: (File) -> Unit,
 ) {
-    val isCompat = LocalWindowSize.current.widthSizeClass == WindowWidthSizeClass.Compact
+    val isCompat = rememberMobile()
     LazyVerticalGrid(
-        columns = columns,
+        columns = GridCells.Fixed(1),
         state = state,
-        contentPadding = contentPadding.add(
-            paddingValues = PaddingValues(
-                top = if (isCompat) 0.dp else ComicTheme.dimension.margin,
-                end = if (isCompat) 0.dp else ComicTheme.dimension.margin,
-                bottom = if (isCompat) 0.dp else ComicTheme.dimension.margin,
-            )
-        ),
+        contentPadding = contentPadding,
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
             val item = lazyPagingItems[it]

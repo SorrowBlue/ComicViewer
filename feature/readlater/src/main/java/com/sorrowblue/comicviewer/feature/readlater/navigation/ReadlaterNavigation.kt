@@ -14,19 +14,18 @@ import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
 
-private const val readLaterRoute = "readlater"
-val routeInReadlaterGraph get() = listOf(readLaterRoute, folderRoute(readLaterRoute))
-const val readlaterGraphRoute = "readlater_graph"
+private const val ReadLaterRoute = "readlater"
+val RouteInReadlaterGraph = listOf(ReadLaterRoute, folderRoute(ReadLaterRoute))
+const val ReadlaterGraphRoute = "readlater_graph"
 
 fun NavGraphBuilder.readlaterGroup(
     contentPadding: PaddingValues,
     navController: NavController,
     onBookClick: (BookshelfId, String, Int) -> Unit,
-    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
-    navigateToSearch: (BookshelfId, String) -> Unit
+    navigateToSearch: (BookshelfId, String) -> Unit,
 ) {
-    navigation(route = readlaterGraphRoute, startDestination = readLaterRoute) {
+    navigation(route = ReadlaterGraphRoute, startDestination = ReadLaterRoute) {
         readLaterScreen(
             contentPadding = contentPadding,
             onFileClick = { file, position ->
@@ -34,25 +33,24 @@ fun NavGraphBuilder.readlaterGroup(
                     is Book -> onBookClick(file.bookshelfId, file.path, position)
                     is Folder ->
                         navController.navigateToFolder(
-                            prefix = readLaterRoute,
+                            prefix = ReadLaterRoute,
                             file.bookshelfId,
                             file.path
                         )
                 }
             },
-            onFileLongClick = onFileLongClick,
             onSettingsClick = onSettingsClick,
         )
         folderScreen(
             contentPadding = contentPadding,
-            prefix = readLaterRoute,
+            prefix = ReadLaterRoute,
             navigateToSearch = navigateToSearch,
             onClickFile = { file, position ->
                 when (file) {
                     is Book -> onBookClick(file.bookshelfId, file.path, position)
                     is Folder ->
                         navController.navigateToFolder(
-                            prefix = readLaterRoute,
+                            prefix = ReadLaterRoute,
                             file.bookshelfId,
                             file.path
                         )
@@ -67,13 +65,11 @@ fun NavGraphBuilder.readlaterGroup(
 private fun NavGraphBuilder.readLaterScreen(
     contentPadding: PaddingValues,
     onFileClick: (File, Int) -> Unit,
-    onFileLongClick: (File) -> Unit,
     onSettingsClick: () -> Unit
 ) {
-    composable(route = readLaterRoute) {
+    composable(route = ReadLaterRoute) {
         ReadLaterRoute(
             onFileClick = onFileClick,
-            onFileLongClick = onFileLongClick,
             onSettingsClick = onSettingsClick,
             contentPadding = contentPadding,
         )

@@ -12,16 +12,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
+import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import kotlinx.collections.immutable.toPersistentList
 
 enum class Sort(val labelRes: Int) {
     NAME_ASC(R.string.folder_label_name_asc),
@@ -42,46 +43,34 @@ enum class Sort(val labelRes: Int) {
     }
 }
 
-@Stable
-sealed interface SortSheetUiState {
-
-    @Stable
-    data object Hide : SortSheetUiState
-
-    @Stable
-    data class Show(val sort: Sort = Sort.NAME_ASC) : SortSheetUiState
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SortSheet(
-    uiState: SortSheetUiState = SortSheetUiState.Show(),
-    onDismissRequest: () -> Unit = {},
-    onClick: (Sort) -> Unit = {},
+    currentSort: Sort,
+    onDismissRequest: () -> Unit,
+    onClick: (Sort) -> Unit,
 ) {
-    if (uiState is SortSheetUiState.Show) {
-        val sort = uiState.sort
-        ModalBottomSheet(onDismissRequest = onDismissRequest) {
-            LazyColumn {
-                items(Sort.entries) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onClick(it)
-                            }
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(id = it.labelRes),
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier
-                                .weight(1f, true)
-                        )
-                        if (it == sort) {
-                            Icon(ComicIcons.Check, contentDescription = "Selected")
+    val sortList = remember { Sort.entries.toPersistentList() }
+    ModalBottomSheet(onDismissRequest = onDismissRequest) {
+        LazyColumn {
+            items(sortList, key = Sort::labelRes) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onClick(it)
                         }
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = it.labelRes),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier
+                            .weight(1f, true)
+                    )
+                    if (it == currentSort) {
+                        Icon(ComicIcons.Check, contentDescription = "Selected")
                     }
                 }
             }
@@ -89,10 +78,14 @@ fun SortSheet(
     }
 }
 
+@ComicPreviews
 @Composable
-@Preview
 fun PreviewSortSheet() {
-    ComicTheme {
-        SortSheet()
+    PreviewTheme {
+        SortSheet(
+            currentSort = Sort.NAME_ASC,
+            onDismissRequest = {},
+            onClick = {}
+        )
     }
 }

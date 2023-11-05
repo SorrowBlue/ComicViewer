@@ -49,3 +49,24 @@ fun AlertDialog(
         }
     }
 }
+
+@Composable
+fun AlertDialog(
+    title: String,
+    onDismissRequest: () -> Unit,
+    confirmButton: @Composable () -> Unit,
+    text: String? = null,
+    dismissButton: (@Composable () -> Unit)? = null,
+) {
+    androidx.compose.material3.AlertDialog(
+        confirmButton = confirmButton,
+        dismissButton = dismissButton,
+        title = {
+            Text(text = title)
+        },
+        text = text?.let {
+            { Text(text = text) }
+        },
+        onDismissRequest = onDismissRequest
+    )
+}

@@ -7,5 +7,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.feature.settings.common)
+
     implementation(libs.androidx.biometric)
 }

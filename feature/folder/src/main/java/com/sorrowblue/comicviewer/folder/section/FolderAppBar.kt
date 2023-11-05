@@ -1,48 +1,44 @@
 package com.sorrowblue.comicviewer.folder.section
 
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
-import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuState
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
-import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
+import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior
+import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveTopAppBar
 
-data class FolderAppBarUiState(
+internal data class FolderAppBarUiState(
     val title: String = "",
     val fileContentType: FileContentType = FileContentType.Grid(FileContentType.GridSize.Medium),
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FolderAppBar(
-    uiState: FolderAppBarUiState = FolderAppBarUiState(),
-    onFileListChange: () -> Unit = {},
-    onBackClick: () -> Unit = {},
-    onSearchClick: () -> Unit = {},
-    onGridSizeChange: () -> Unit = {},
-    onSortClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {},
-    scrollBehavior: TopAppBarScrollBehavior? = null,
-    overflowMenuState: OverflowMenuState = rememberOverflowMenuState(),
+internal fun FolderAppBar(
+    uiState: FolderAppBarUiState,
+    onBackClick: () -> Unit,
+    onFileListChange: () -> Unit,
+    onSearchClick: () -> Unit,
+    onGridSizeChange: () -> Unit,
+    onSortClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    windowInsets: WindowInsets,
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     ResponsiveTopAppBar(
-        title = { Text(text = uiState.title) },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(ComicIcons.ArrowBack, "Back")
-            }
-        },
+        title = uiState.title,
+        onBackClick = onBackClick,
         actions = {
             PlainTooltipBox(tooltipContent = { Text("Search") }) {
                 IconButton(onClick = onSearchClick) {
@@ -52,44 +48,45 @@ fun FolderAppBar(
 
             FileContentLayoutButton(uiState.fileContentType, onFileListChange)
 
-            OverflowMenu(overflowMenuState) {
+            OverflowMenu {
                 if (uiState.fileContentType is FileContentType.Grid) {
-                    DropdownMenuItem(
-                        text = { Text(text = "Change Grid size") },
-                        leadingIcon = { Icon(ComicIcons.Grid4x4, "Change grid size") },
-                        onClick = {
-                            overflowMenuState.collapse()
-                            onGridSizeChange()
-                        }
+                    OverflowMenuItem(
+                        text = "Change Grid size",
+                        icon = ComicIcons.Grid4x4,
+                        onClick = onGridSizeChange
                     )
                 }
-                DropdownMenuItem(
-                    text = { Text(text = "Sort by") },
-                    leadingIcon = { Icon(ComicIcons.SortByAlpha, "Sort by") },
-                    onClick = {
-                        overflowMenuState.collapse()
-                        onSortClick()
-                    }
+                OverflowMenuItem(
+                    text = "Sort by",
+                    icon = ComicIcons.SortByAlpha,
+                    onClick = onSortClick
                 )
-                DropdownMenuItem(
-                    text = { Text(text = "Settings") },
-                    leadingIcon = { Icon(ComicIcons.Settings, "Settings") },
-                    onClick = {
-                        overflowMenuState.collapse()
-                        onSettingsClick()
-                    }
+                OverflowMenuItem(
+                    text = "Settings",
+                    icon = ComicIcons.Settings,
+                    onClick = onSettingsClick
                 )
             }
         },
+        windowInsets = windowInsets,
         scrollBehavior = scrollBehavior
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@ComicPreviews
 @Composable
 fun PreviewFolderAppBar() {
-    ComicTheme {
-        FolderAppBar()
+    PreviewTheme {
+        FolderAppBar(
+            uiState = FolderAppBarUiState(),
+            onBackClick = { /*TODO*/ },
+            onFileListChange = { /*TODO*/ },
+            onSearchClick = { /*TODO*/ },
+            onGridSizeChange = { /*TODO*/ },
+            onSortClick = { /*TODO*/ },
+            onSettingsClick = { /*TODO*/ },
+            windowInsets = WindowInsets.safeDrawing,
+            scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        )
     }
 }

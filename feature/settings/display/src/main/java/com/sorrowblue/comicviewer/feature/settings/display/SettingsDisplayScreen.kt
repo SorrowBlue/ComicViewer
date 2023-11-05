@@ -1,142 +1,161 @@
 package com.sorrowblue.comicviewer.feature.settings.display
 
-import android.content.res.Configuration
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
+import android.os.Parcelable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
-import com.sorrowblue.comicviewer.feature.settings.display.section.SettingsDisplayTopAppBar
+import com.sorrowblue.comicviewer.feature.settings.common.Setting
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsColumn
+import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
+import com.sorrowblue.comicviewer.feature.settings.display.section.AppearanceDialog
+import com.sorrowblue.comicviewer.feature.settings.display.section.AppearanceDialogController
+import com.sorrowblue.comicviewer.feature.settings.display.section.rememberAppearanceDialogController
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.ListItemSwitch
+import com.sorrowblue.comicviewer.framework.ui.material3.Scaffold
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
+import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
-data class SettingsDisplayScreenUiState(
+@Parcelize
+internal data class SettingsDisplayScreenUiState(
     val darkMode: DarkMode = DarkMode.DEVICE,
     val restoreOnLaunch: Boolean = false,
-)
+) : Parcelable
 
 @Composable
 internal fun SettingsDisplayRoute(
     onBackClick: () -> Unit,
-    viewModel: SettingsDisplayViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val state = rememberDisplaySettingsScreenState()
     SettingsDisplayScreen(
-        uiState = uiState,
+        uiState = state.uiState,
         onBackClick = onBackClick,
-        onDarkModeChange = viewModel::updateDarkMode,
-        onRestoreOnLaunchChange = viewModel::onRestoreOnLaunchChange,
+        onRestoreOnLaunchChange = state::onRestoreOnLaunchChange,
+        onDarkModeClick = state::onDarkModeClick,
+    )
+
+    if (state.appearanceDialogController.isShow) {
+        AppearanceDialog(
+            onDismissRequest = state::onAppearanceDismissRequest,
+            currentDarkMode = state.uiState.darkMode,
+            onDarkModeChange = state::onDarkModeChange
+        )
+    }
+}
+
+@Stable
+internal class DisplaySettingsScreenState(
+    initUiState: SettingsDisplayScreenUiState = SettingsDisplayScreenUiState(),
+    val appearanceDialogController: AppearanceDialogController,
+    scope: CoroutineScope,
+    private val viewModel: SettingsDisplayViewModel,
+) {
+
+    var uiState by mutableStateOf(initUiState)
+
+    init {
+        scope.launch {
+            viewModel.displaySettings.collectLatest {
+                uiState = uiState.copy(darkMode = it.darkMode, restoreOnLaunch = it.restoreOnLaunch)
+            }
+        }
+    }
+
+    fun onDarkModeChange(darkMode: DarkMode) {
+        viewModel.updateDarkMode(darkMode)
+        appearanceDialogController.dismiss()
+    }
+
+    fun onRestoreOnLaunchChange(value: Boolean) {
+        viewModel.onRestoreOnLaunchChange(value)
+    }
+
+    fun onDarkModeClick() {
+        appearanceDialogController.show(uiState.darkMode)
+    }
+
+    fun onAppearanceDismissRequest() {
+        appearanceDialogController.dismiss()
+    }
+}
+
+@Composable
+internal fun rememberDisplaySettingsScreenState(
+    appearanceDialogController: AppearanceDialogController = rememberAppearanceDialogController(),
+    scope: CoroutineScope = rememberCoroutineScope(),
+    viewModel: SettingsDisplayViewModel = hiltViewModel(),
+): DisplaySettingsScreenState = rememberSaveable(
+    saver = Saver(
+        save = { it.uiState },
+        restore = { uiState ->
+            DisplaySettingsScreenState(
+                initUiState = uiState,
+                appearanceDialogController = appearanceDialogController,
+                scope = scope,
+                viewModel = viewModel
+            )
+        }
+    )
+) {
+    DisplaySettingsScreenState(
+        appearanceDialogController = appearanceDialogController,
+        scope = scope,
+        viewModel = viewModel
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsDisplayScreen(
     uiState: SettingsDisplayScreenUiState = SettingsDisplayScreenUiState(),
     onBackClick: () -> Unit = {},
-    onDarkModeChange: (DarkMode) -> Unit = {},
     onRestoreOnLaunchChange: (Boolean) -> Unit = {},
+    onDarkModeClick: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         topBar = {
-            SettingsDisplayTopAppBar(
+            TopAppBar(
+                title = R.string.settings_display_title,
                 onBackClick = onBackClick,
                 scrollBehavior = scrollBehavior
             )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(contentPadding)
-        ) {
-
-            ListItemSwitch(
-                headlineContent = {
-                    Text(text = "最後に表示したフォルダを復元する")
-                }, checked =
-                uiState.restoreOnLaunch, onCheckedChange = onRestoreOnLaunchChange
+        SettingsColumn(contentPadding = contentPadding) {
+            Setting(
+                title = R.string.settings_display_label_appearance,
+                summary = uiState.darkMode.label,
+                icon = ComicIcons.DarkMode,
+                onClick = onDarkModeClick
             )
-            Box {
-                var expanded by remember { mutableStateOf(false) }
-                ListItem(
-                    headlineContent = {
-                        Text(text = stringResource(id = R.string.settings_display_label_design))
-                    },
-                    supportingContent = {
-                        Text(text = uiState.darkMode.label())
-                    },
-                    leadingContent = { Icon(ComicIcons.DarkMode, null) },
-                    modifier = Modifier.clickable { expanded = !expanded },
-                )
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    offset = DpOffset(48.dp, 0.dp)
-                ) {
-                    DarkMode.entries.forEach { darkMode ->
-                        DropdownMenuItem(
-                            onClick = {
-                                expanded = false
-                                onDarkModeChange(darkMode)
-                            },
-                            text = {
-                                Text(text = darkMode.label())
-                            }
-                        )
-                    }
-                }
-            }
+
+            SwitchSetting(
+                title = R.string.settings_display_label_show_last_folder,
+                summary = R.string.settings_display_desc_show_last_folder,
+                checked = uiState.restoreOnLaunch,
+                onCheckedChange = onRestoreOnLaunchChange
+            )
         }
     }
 }
 
-@Composable
-private fun DarkMode.label() = when (this) {
-    DarkMode.DEVICE -> stringResource(id = R.string.settings_display_label_system_default)
-    DarkMode.DARK -> stringResource(id = R.string.settings_display_label_dark_mode)
-    DarkMode.LIGHT -> stringResource(id = R.string.settings_display_label_light_mode)
-}
-
-@MultiThemePreviews
-@Composable
-private fun PreviewSettingsDisplayScreen() {
-    ComicTheme {
-        Surface {
-            SettingsDisplayScreen()
-        }
+internal val DarkMode.label
+    get() = when (this) {
+        DarkMode.DEVICE -> R.string.settings_display_label_system_default
+        DarkMode.DARK -> R.string.settings_display_label_dark_mode
+        DarkMode.LIGHT -> R.string.settings_display_label_light_mode
     }
-}
-
-@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
-annotation class MultiThemePreviews

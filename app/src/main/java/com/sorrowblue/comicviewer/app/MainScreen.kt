@@ -7,6 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,6 +15,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -26,6 +28,7 @@ import com.sorrowblue.comicviewer.framework.ui.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveLayout
 import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveLayoutState
 import kotlinx.collections.immutable.toPersistentList
+import logcat.logcat
 
 internal const val mainGraphRoute = "main"
 
@@ -44,11 +47,13 @@ internal fun MainScreen(
 ) {
     val mainScreenTabs = remember { MainScreenTab.entries.toPersistentList() }
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentTab by remember(backStackEntry) {
-        mutableStateOf(backStackEntry?.destination?.hierarchy?.firstOrNull()?.route?.routeToTab())
-    }
-    val currentFab by remember(backStackEntry) {
-        mutableStateOf(backStackEntry?.destination?.hierarchy?.firstOrNull()?.route?.routeToFab())
+    var currentTab by remember { mutableStateOf<MainScreenTab?>(null) }
+    var currentFab by remember { mutableStateOf<MainScreenFab?>(null) }
+    LaunchedEffect(key1 = backStackEntry?.destination) {
+        if (backStackEntry?.destination is ComposeNavigator.Destination) {
+            currentTab = backStackEntry?.destination?.hierarchy?.firstOrNull()?.route?.routeToTab()
+            currentFab = backStackEntry?.destination?.hierarchy?.firstOrNull()?.route?.routeToFab()
+        }
     }
     val responsiveLayoutState = rememberResponsiveLayoutState()
     ResponsiveLayout(

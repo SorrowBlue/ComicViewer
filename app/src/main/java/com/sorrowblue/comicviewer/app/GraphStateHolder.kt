@@ -15,8 +15,8 @@ import com.sorrowblue.comicviewer.favorite.navigation.routeInFavoriteGraph
 import com.sorrowblue.comicviewer.feature.favorite.create.navigation.navigateToFavoriteCreate
 import com.sorrowblue.comicviewer.feature.library.navigation.libraryGraphRoute
 import com.sorrowblue.comicviewer.feature.library.navigation.routeInLibraryGraph
-import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGraphRoute
-import com.sorrowblue.comicviewer.feature.readlater.navigation.routeInReadlaterGraph
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGraphRoute
+import com.sorrowblue.comicviewer.feature.readlater.navigation.RouteInReadlaterGraph
 
 internal interface GraphStateHolder {
     val startDestination: String
@@ -38,7 +38,7 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
         return when (route) {
             in routeInBookshelfGraph -> MainScreenTab.Bookshelf
             in routeInFavoriteGraph -> MainScreenTab.Favorite
-            in routeInReadlaterGraph -> MainScreenTab.Readlater
+            in RouteInReadlaterGraph -> MainScreenTab.Readlater
             in routeInLibraryGraph -> MainScreenTab.Library
             else -> null
         }
@@ -48,7 +48,7 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
         when (tab) {
             MainScreenTab.Bookshelf -> BookshelfGraphRoute
             MainScreenTab.Favorite -> favoriteGraphRoute
-            MainScreenTab.Readlater -> readlaterGraphRoute
+            MainScreenTab.Readlater -> ReadlaterGraphRoute
             MainScreenTab.Library -> libraryGraphRoute
         }.let { route ->
             navController.navigate(

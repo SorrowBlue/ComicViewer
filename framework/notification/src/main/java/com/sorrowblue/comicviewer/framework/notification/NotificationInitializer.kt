@@ -15,7 +15,7 @@ import logcat.logcat
 internal class NotificationInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
-        val notificationManager = context.getSystemService<NotificationManager>()!!
+        val notificationManager = context.getSystemService<NotificationManager>() ?: return
         logcat(LogPriority.INFO) { "Initialize notification." }
         val channels = listOf(
             createNotificationChannel(
