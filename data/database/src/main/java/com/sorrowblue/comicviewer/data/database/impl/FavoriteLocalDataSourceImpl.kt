@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 
 internal class FavoriteLocalDataSourceImpl @Inject constructor(
-    private val favoriteDao: FavoriteDao
+    private val favoriteDao: FavoriteDao,
 ) : FavoriteLocalDataSource {
 
     override fun flow(favoriteModelId: FavoriteId): Flow<Favorite> {

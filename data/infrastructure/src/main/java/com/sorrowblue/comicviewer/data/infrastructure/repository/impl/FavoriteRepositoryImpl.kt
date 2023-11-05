@@ -68,7 +68,6 @@ internal class FavoriteFileRepositoryImpl @Inject constructor(
             favoriteFileLocalDataSource.delete(favoriteFile)
         }
     }
-
 }
 
 internal class FavoriteRepositoryImpl @Inject constructor(

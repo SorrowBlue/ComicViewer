@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 private const val favoriteIdArg = "favoriteId"
 
 internal class FavoriteEditArgs(
-    val favoriteId: FavoriteId
+    val favoriteId: FavoriteId,
 ) {
     constructor(savedStateHandle: SavedStateHandle) :
             this(FavoriteId(checkNotNull(savedStateHandle[favoriteIdArg])))
@@ -20,14 +20,14 @@ internal class FavoriteEditArgs(
 
 fun NavController.navigateToFavoriteEdit(
     favoriteId: FavoriteId,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) {
     navigate("favorite/${favoriteId.value}/edit", navOptions)
 }
 
 fun NavGraphBuilder.favoriteEditScreen(
     onBackClick: () -> Unit,
-    onComplete: () -> Unit
+    onComplete: () -> Unit,
 ) {
     composable(
         route = "favorite/{$favoriteIdArg}/edit",

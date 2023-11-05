@@ -40,7 +40,9 @@ internal fun BookshelfEmptyContents(innerPadding: PaddingValues) {
                     .fillMaxSize(0.5f)
             )
             Text(
-                text = stringResource(id = com.sorrowblue.comicviewer.feature.bookshelf.R.string.bookshelf_list_message_no_bookshelves_added_yet),
+                text = stringResource(
+                    id = com.sorrowblue.comicviewer.feature.bookshelf.R.string.bookshelf_list_message_no_bookshelves_added_yet
+                ),
                 style = MaterialTheme.typography.titleLarge
             )
         }
@@ -63,7 +65,9 @@ internal fun BookshelfEmptyContents(innerPadding: PaddingValues) {
                         .fillMaxSize(0.5f)
                 )
                 Text(
-                    text = stringResource(id = com.sorrowblue.comicviewer.feature.bookshelf.R.string.bookshelf_list_message_no_bookshelves_added_yet),
+                    text = stringResource(
+                        id = com.sorrowblue.comicviewer.feature.bookshelf.R.string.bookshelf_list_message_no_bookshelves_added_yet
+                    ),
                     style = MaterialTheme.typography.titleLarge
                 )
             }

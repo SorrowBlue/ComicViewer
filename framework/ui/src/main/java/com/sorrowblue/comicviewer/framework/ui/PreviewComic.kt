@@ -23,17 +23,14 @@ import kotlinx.coroutines.flow.flowOf
 @Preview(name = "landscape", device = "spec:shape=Normal,width=640,height=360,unit=dp,dpi=480")
 @Preview(name = "foldable", device = "spec:shape=Normal,width=673,height=841,unit=dp,dpi=480")
 @Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
-annotation class ComicPreviews
+annotation class PreviewComic
 
 @Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
 @Preview(name = "landscape", device = "spec:shape=Normal,width=640,height=360,unit=dp,dpi=480")
-annotation class MobilePreviews
-
-@Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
-annotation class MobilePreview
+annotation class PreviewMobile
 
 @Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
-annotation class TabletPreview
+annotation class PreviewTablet
 
 fun previewBookFile(index: Int = 0): BookFile {
     val path = paths[index]
@@ -115,7 +112,7 @@ fun fakeLazyPagingItems(): LazyPagingItems<File> {
 private enum class PreviewFile {
     BookFile,
     BookFolder,
-    Folder
+    Folder,
 }
 
 private val paths = listOf(

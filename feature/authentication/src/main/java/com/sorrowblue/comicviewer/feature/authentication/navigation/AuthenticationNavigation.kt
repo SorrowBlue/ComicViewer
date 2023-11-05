@@ -16,7 +16,7 @@ enum class Mode {
     Register,
     Change,
     Erase,
-    Authentication
+    Authentication,
 }
 
 internal class AuthenticationArgs(
@@ -32,15 +32,13 @@ internal class AuthenticationArgs(
 private const val authenticationRouteBase = "authentication"
 const val authenticationRoute = "$authenticationRouteBase/{$modeArg}/?handleBack={$handleBackArg}"
 
-
 fun NavController.navigateToAuthentication(
     mode: Mode,
     handleBack: Boolean = false,
     navOptions: NavOptions? = null,
 ) {
-    navigate("$authenticationRouteBase/${mode.name}/?handleBack=${handleBack}", navOptions)
+    navigate("$authenticationRouteBase/${mode.name}/?handleBack=$handleBack", navOptions)
 }
-
 
 fun NavGraphBuilder.authenticationScreen(
     onBack: () -> Unit,

@@ -30,7 +30,6 @@ internal val SplitInstallSessionState.err: SplitInstallError
                 SplitInstallError.App("エラーが発生しました。エラーコード=$errorCode")
             }
 
-
             SplitInstallErrorCode.INVALID_REQUEST -> {
                 // Google Play はリクエストを受信しましたが、リクエストが無効です。
                 // リクエストに含まれている情報が完全で正確であることを確認します。
@@ -80,7 +79,8 @@ internal val SplitInstallSessionState.err: SplitInstallError
 
             SplitInstallErrorCode.SPLITCOMPAT_COPY_ERROR,
             SplitInstallErrorCode.SPLITCOMPAT_EMULATION_ERROR,
-            SplitInstallErrorCode.SPLITCOMPAT_VERIFICATION_ERROR -> {
+            SplitInstallErrorCode.SPLITCOMPAT_VERIFICATION_ERROR,
+            -> {
                 // SplitCompat が機能モジュールを読み込めませんでした。
                 // これらのエラーは、次回のアプリの再起動後に自動的に解決されます。
                 SplitInstallError.Retryable("〇〇機能を読み込めませんでした。アプリを再起動してください。")

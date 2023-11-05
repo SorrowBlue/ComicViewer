@@ -111,7 +111,9 @@ internal object SingletonProvidesModule {
 
     @Singleton
     @Provides
-    fun provideViewerOperationSettingsDataStore(@ApplicationContext context: Context): DataStore<ViewerOperationSettings> =
+    fun provideViewerOperationSettingsDataStore(
+        @ApplicationContext context: Context,
+    ): DataStore<ViewerOperationSettings> =
         context.viewerOperationSettingsDataStore
 
     @Singleton
@@ -124,4 +126,3 @@ internal object SingletonProvidesModule {
     fun provideOneTimeFlagDataStore(@ApplicationContext context: Context): DataStore<OneTimeFlag> =
         context.oneTimeFlagDataStore
 }
-

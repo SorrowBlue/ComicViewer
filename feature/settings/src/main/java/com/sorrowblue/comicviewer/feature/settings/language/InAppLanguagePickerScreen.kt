@@ -73,7 +73,6 @@ fun InAppLanguagePickerScreen(onBackClick: () -> Unit = {}) {
                     }
                 }
             }
-
         }
     }
 }

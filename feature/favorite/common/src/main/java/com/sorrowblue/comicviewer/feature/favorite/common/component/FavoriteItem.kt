@@ -26,7 +26,7 @@ import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.feature.favorite.common.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
 @Composable
 fun FavoriteItem(favorite: Favorite, onClick: () -> Unit, modifier: Modifier = Modifier) {
@@ -65,7 +65,7 @@ fun FavoriteItem(favorite: Favorite, onClick: () -> Unit, modifier: Modifier = M
                 onError = {
                     isError = true
                 },
-                placeholder = debugPlaceholder()
+                placeholder = rememberDebugPlaceholder()
             )
         }
     )

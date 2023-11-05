@@ -33,7 +33,6 @@ internal fun BookBottomBar(
         enter = slideInVertically { it },
         exit = slideOutVertically { it }
     ) {
-
         val range = remember(totalPage) {
             object : ClosedFloatingPointRange<Float> {
                 override fun lessThanOrEquals(a: Float, b: Float): Boolean = a == b

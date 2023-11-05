@@ -1,12 +1,9 @@
 package com.sorrowblue.comicviewer.favorite.section
 
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -18,6 +15,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.AppBarAction
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuState
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior
 import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveTopAppBar
 
@@ -34,7 +32,7 @@ internal enum class FavoriteAction(override val icon: ImageVector, override val 
     Delete(ComicIcons.Delete, "Remove Favorite"),
     Settings(ComicIcons.Settings, "Settings"),
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 internal fun FavoriteAppBar(
     uiState: FavoriteAppBarUiState = FavoriteAppBarUiState(),
@@ -44,16 +42,12 @@ internal fun FavoriteAppBar(
     onGridSizeChange: () -> Unit = {},
     onDeleteClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    scrollBehavior: TopAppBarScrollBehavior,
     overflowMenuState: OverflowMenuState = rememberOverflowMenuState(),
 ) {
     ResponsiveTopAppBar(
-        title = { Text(text = uiState.title) },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(ComicIcons.ArrowBack, "Back")
-            }
-        },
+        title = uiState.title,
+        onBackClick = onBackClick,
         actions = {
             PlainTooltipBox(tooltipContent = { Text(stringResource(R.string.favorite_title_edit)) }) {
                 IconButton(onClick = onEditClick) {
@@ -66,7 +60,7 @@ internal fun FavoriteAppBar(
                 onFileListTypeChange
             )
 
-            OverflowMenu(overflowMenuState) {
+            OverflowMenu(state = overflowMenuState) {
                 if (uiState.fileContentType is FileContentType.Grid) {
                     DropdownMenuItem(
                         text = { Text(text = "Change Grid size") },
@@ -94,7 +88,6 @@ internal fun FavoriteAppBar(
                     }
                 )
             }
-
         },
         scrollBehavior = scrollBehavior
     )

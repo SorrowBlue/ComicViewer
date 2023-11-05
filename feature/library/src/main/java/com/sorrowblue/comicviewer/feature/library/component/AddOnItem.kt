@@ -20,7 +20,7 @@ enum class AddOnItemState {
     Installing,
     Restart,
     Installed,
-    Failed
+    Failed,
 }
 
 @Composable
@@ -62,7 +62,6 @@ internal fun AddOnItem(
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.error
                 )
-
             }
         },
         modifier = Modifier.clickable(onClick = onClick)

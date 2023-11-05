@@ -24,12 +24,13 @@ fun EmptyContent(
     imageVector: ImageVector,
     text: String,
     contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
     val isCompact =
         LocalWindowSize.current.widthSizeClass == WindowWidthSizeClass.Compact
     if (isCompact) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(contentPadding),
             verticalArrangement = Arrangement.Center,
@@ -49,7 +50,7 @@ fun EmptyContent(
         }
     } else {
         Surface(
-            modifier = Modifier
+            modifier = modifier
                 .padding(contentPadding)
                 .padding(top = ComicTheme.dimension.margin)
                 .fillMaxSize(),

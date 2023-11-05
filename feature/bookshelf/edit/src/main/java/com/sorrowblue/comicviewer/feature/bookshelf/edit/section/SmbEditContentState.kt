@@ -102,7 +102,10 @@ internal class SmbEditContentStateImpl(
             port = uiState.port.value.toInt(),
         )
         viewModel.save(
-            smbServer, if (uiState.path.value.isEmpty()) "/" else {
+            smbServer,
+            if (uiState.path.value.isEmpty()) {
+                "/"
+            } else {
                 ("/${uiState.path.value}/").replace("(/+)".toRegex(), "/")
             }
         ) {
@@ -114,7 +117,6 @@ internal class SmbEditContentStateImpl(
 
 private val portRegex =
     "^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{1,5})|([0-9]{1,4}))\$".toRegex()
-
 
 private val hostRegex =
     "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])\$".toRegex()

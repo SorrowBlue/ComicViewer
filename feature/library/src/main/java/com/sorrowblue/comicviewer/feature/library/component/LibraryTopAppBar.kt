@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.feature.library.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LibraryTopAppBar(
-    scrollBehavior: TopAppBarScrollBehavior?
+    scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     TopAppBar(
         title = { Text(text = stringResource(id = R.string.library_title)) },

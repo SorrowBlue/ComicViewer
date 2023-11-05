@@ -51,16 +51,17 @@ internal fun AppearanceDialog(
             }
         }
     }
-
 }
 
 class AppearanceDialogController : DialogController<DarkMode>(DarkMode.DEVICE)
 
 @Composable
-fun rememberAppearanceDialogController() = rememberSaveable(saver = Saver(save = {
-    if (it.isShow) it.value else null
-}, restore = {
-    AppearanceDialogController().apply {
-        show(it)
-    }
-})) { AppearanceDialogController() }
+fun rememberAppearanceDialogController() = rememberSaveable(
+    saver = Saver(save = {
+        if (it.isShow) it.value else null
+    }, restore = {
+        AppearanceDialogController().apply {
+            show(it)
+        }
+    })
+) { AppearanceDialogController() }

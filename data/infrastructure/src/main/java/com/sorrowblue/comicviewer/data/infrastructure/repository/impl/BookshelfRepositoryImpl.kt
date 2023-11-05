@@ -124,5 +124,4 @@ internal class BookshelfRepositoryImpl @Inject constructor(
             flowOf(Result.Exception(Unknown(it)))
         })
     }
-
 }

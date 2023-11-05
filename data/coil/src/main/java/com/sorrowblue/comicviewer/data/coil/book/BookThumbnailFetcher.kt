@@ -64,14 +64,14 @@ internal class BookThumbnailFetcher(
                 }
             }
             val bookshelfModel = bookshelfLocalDataSource.flow(book.bookshelfId).first()
-                ?: throw RuntimeException("本棚が取得できない")
+                ?: throw CoilRuntimeException("本棚が取得できない")
             if (!remoteDataSourceFactory.create(bookshelfModel).exists(book.path)) {
-                throw RuntimeException("ファイルがない(${book.path})")
+                throw CoilRuntimeException("ファイルがない(${book.path})")
             }
             var fileReader = remoteDataSourceFactory.create(bookshelfModel).fileReader(book)
-                ?: throw RuntimeException("FileReaderが取得できない")
+                ?: throw CoilRuntimeException("FileReaderが取得できない")
             val bitmap = fileReader.thumbnailBitmap(requestWidth.toInt(), requestHeight.toInt())
-                ?: throw RuntimeException("画像を取得できない")
+                ?: throw CoilRuntimeException("画像を取得できない")
             try {
                 // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
                 snapshot =
@@ -94,7 +94,7 @@ internal class BookThumbnailFetcher(
                 } else {
                     fileReader.closeQuietly()
                     fileReader = remoteDataSourceFactory.create(bookshelfModel).fileReader(book)
-                        ?: throw RuntimeException("FileReaderが取得できない")
+                        ?: throw CoilRuntimeException("FileReaderが取得できない")
                     bytes = fileReader.pageInputStream(0).use(InputStream::readBytes)
                     return SourceResult(
                         source = ImageSource(Buffer().apply { write(bytes) }, context),
@@ -114,7 +114,9 @@ internal class BookThumbnailFetcher(
     }
 
     private suspend fun writeToDiskCache(
-        snapshot: DiskCache.Snapshot?, fileReader: FileReader, bitmap: Bitmap,
+        snapshot: DiskCache.Snapshot?,
+        fileReader: FileReader,
+        bitmap: Bitmap,
     ): DiskCache.Snapshot? {
         // この応答をキャッシュすることが許可されていない場合は短絡します。
         if (!isCacheable()) {
@@ -143,7 +145,10 @@ internal class BookThumbnailFetcher(
             }
             // DISKキャッシュキーとページ数を更新する。
             fileModelLocalDataSource.updateAdditionalInfo(
-                book.path, book.bookshelfId, diskCacheKey, fileReader.pageCount()
+                book.path,
+                book.bookshelfId,
+                diskCacheKey,
+                fileReader.pageCount()
             )
             return editor.commitAndOpenSnapshot()
         } catch (e: Exception) {
@@ -180,7 +185,9 @@ internal class BookThumbnailFetcher(
     ) : Fetcher.Factory<Book> {
 
         override fun create(
-            data: Book, options: Options, imageLoader: ImageLoader,
+            data: Book,
+            options: Options,
+            imageLoader: ImageLoader,
         ): Fetcher {
             return BookThumbnailFetcher(
                 data,
@@ -207,3 +214,5 @@ internal suspend fun FileReader.thumbnailBitmap(width: Int, height: Int): Bitmap
         pageInputStream(0).use { BitmapFactory.decodeStream(it, null, this) }
     }
 }
+
+class CoilRuntimeException(message: String?) : RuntimeException(message)

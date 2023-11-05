@@ -12,10 +12,8 @@ abstract class GetBookshelfFolderUseCase :
     class Request(val bookshelfId: BookshelfId, val path: String) : BaseRequest
 }
 
-
 abstract class DeleteHistoryUseCase :
     FlowUseCase2<DeleteHistoryUseCase.Request, Unit, GetLibraryInfoError>() {
 
     class Request(val bookshelfId: BookshelfId, val list: List<String>) : BaseRequest
 }
-

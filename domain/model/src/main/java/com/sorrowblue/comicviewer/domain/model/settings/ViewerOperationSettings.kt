@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ViewerOperationSettings(
-    val bindingDirection: BindingDirection = BindingDirection.RTL
+    val bindingDirection: BindingDirection = BindingDirection.RTL,
 )

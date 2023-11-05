@@ -9,7 +9,7 @@ abstract class AddReadLaterUseCase :
     class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
 
     enum class Error : Resource.AppError {
-        System
+        System,
     }
 }
 
@@ -19,10 +19,9 @@ abstract class DeleteReadLaterUseCase :
     class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
 
     enum class Error : Resource.AppError {
-        System
+        System,
     }
 }
-
 
 abstract class DeleteAllReadLaterUseCase :
     UseCase<DeleteAllReadLaterUseCase.Request, Unit, DeleteAllReadLaterUseCase.Error>() {
@@ -30,6 +29,6 @@ abstract class DeleteAllReadLaterUseCase :
     data object Request : UseCase.Request
 
     enum class Error : Resource.AppError {
-        System
+        System,
     }
 }

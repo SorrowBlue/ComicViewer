@@ -12,7 +12,7 @@ sealed interface Resource<out D, out E : Resource.AppError> {
 
 inline fun <D, E : Resource.AppError, R> Resource<D, E>.fold(
     onSuccess: (D) -> R,
-    onError: (E) -> R
+    onError: (E) -> R,
 ): R {
     return when (this) {
         is Resource.Error -> onError(error)

@@ -71,13 +71,15 @@ class SideSheetValueState<T : Any>(
 fun rememberSideSheetBooleanState(
     initialValue: Boolean = false,
 ): SideSheetValueState<Boolean> {
-    return rememberSaveable(saver =
-    androidx.compose.runtime.saveable.Saver(
-        save = { it.currentValue },
-        restore = { savedValue ->
-            SideSheetValueState(savedValue)
-        }
-    )) {
+    return rememberSaveable(
+        saver =
+        androidx.compose.runtime.saveable.Saver(
+            save = { it.currentValue },
+            restore = { savedValue ->
+                SideSheetValueState(savedValue)
+            }
+        )
+    ) {
         SideSheetValueState(initialValue)
     }
 }
@@ -102,13 +104,14 @@ fun BottomSheet(
 @Composable
 fun SideSheet(
     title: String,
+    modifier: Modifier = Modifier,
     innerPadding: PaddingValues = PaddingValues(),
     width: Dp = SideSheetDefault.MinWidth,
     onCloseClick: () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight()
             .padding(innerPadding.copy(bottom = 0.dp, start = 0.dp))
             .padding(

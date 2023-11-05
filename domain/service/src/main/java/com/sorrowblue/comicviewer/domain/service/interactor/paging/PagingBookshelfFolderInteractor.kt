@@ -8,7 +8,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 internal class PagingBookshelfFolderInteractor @Inject constructor(
-    private val repository: BookshelfRepository
+    private val repository: BookshelfRepository,
 ) : PagingBookshelfFolderUseCase() {
 
     override fun run(request: Request): Flow<PagingData<BookshelfFolder>> {

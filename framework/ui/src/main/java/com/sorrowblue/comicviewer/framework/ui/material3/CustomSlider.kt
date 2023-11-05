@@ -8,7 +8,6 @@ import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -21,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SliderPositions
+import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -70,11 +70,11 @@ fun CustomSlider(
             enabled = enabled
         )
     },
-    track: @Composable (sliderPositions: SliderPositions) -> Unit = { sliderPositions ->
+    track: @Composable (sliderState: SliderState) -> Unit = { sliderState ->
         CustomSliderDefaults.Track(
             colors = colors,
             enabled = enabled,
-            sliderPositions = sliderPositions
+            sliderState = sliderState
         )
     },
     indicator: @Composable (indicatorValue: Float) -> Unit = { indicatorValue ->
@@ -95,12 +95,13 @@ fun CustomSlider(
                 startValue = valueRange.start
             ),
             content = {
-                if (showLabel)
+                if (showLabel) {
                     Label(
                         modifier = Modifier.layoutId(CustomSliderComponents.LABEL),
                         value = value,
                         label = label
                     )
+                }
 
                 Box(modifier = Modifier.layoutId(CustomSliderComponents.THUMB)) {
                     thumb(value)
@@ -120,17 +121,19 @@ fun CustomSlider(
                     thumb = {
                         thumb(value)
                     },
-//                    track = { track(it) } TODO
+                    track = { track(it) }
                 )
 
-                if (showIndicator)
+                if (showIndicator) {
                     Indicator(
                         modifier = Modifier.layoutId(CustomSliderComponents.INDICATOR),
                         valueRange = valueRange,
                         gap = steps + 2,
                         indicator = indicator
                     )
-            })
+                }
+            }
+        )
     }
 }
 
@@ -213,9 +216,9 @@ private fun customSliderMeasurePolicy(
 
 @Composable
 private fun Label(
-    modifier: Modifier = Modifier,
     value: Float,
     label: @Composable (labelValue: Float) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier,
@@ -227,10 +230,10 @@ private fun Label(
 
 @Composable
 private fun Indicator(
-    modifier: Modifier = Modifier,
     valueRange: ClosedFloatingPointRange<Float>,
     gap: Int,
     indicator: @Composable (indicatorValue: Float) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     // Iterate over the value range and display indicators at regular intervals.
     for (i in valueRange.start.roundToInt()..valueRange.endInclusive.roundToInt() step gap) {
@@ -443,9 +446,9 @@ object CustomSliderDefaults {
      *
      * @param thumbValue The value to display on the thumb.
      * @param modifier The modifier for styling the thumb.
+     * @param colors The color of the thumb.
+     * @param thumbSize The size of the thumb.
      * @param shape The shape of the thumb.
-     * @param color The color of the thumb.
-     * @param size The size of the thumb.
      */
     @Composable
     fun Thumb(
@@ -505,22 +508,20 @@ object CustomSliderDefaults {
     /**
      * Composable function that represents the track of the slider.
      *
-     * @param sliderPositions The positions of the slider.
+     * @param sliderState The positions of the slider.
      * @param modifier The modifier for styling the track.
-     * @param trackColor The color of the track.
-     * @param progressColor The color of the progress.
-     * @param height The height of the track.
-     * @param shape The shape of the track.
+     * @param colors The color of the track.
      */
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Track(
-        sliderPositions: SliderPositions,
+        sliderState: SliderState,
         modifier: Modifier = Modifier,
         colors: SliderColors = colors(),
         enabled: Boolean = true,
     ) {
         SliderDefaults.Track(
-            sliderPositions = sliderPositions,
+            sliderState = sliderState,
             modifier = modifier,
             colors = colors.toOriginal(),
             enabled = enabled
@@ -588,11 +589,6 @@ fun Modifier.progress(
         .heightIn(min = height)
         .clip(shape)
 
-fun Modifier.thumb(size: Dp = ThumbSize, shape: Shape = CircleShape) =
-    defaultMinSize(minWidth = size, minHeight = size).clip(shape)
-
-private const val Gap = 1
-private val ValueRange = 0f..10f
 private val TrackHeight = 8.dp
 private val ThumbSize = 30.dp
 

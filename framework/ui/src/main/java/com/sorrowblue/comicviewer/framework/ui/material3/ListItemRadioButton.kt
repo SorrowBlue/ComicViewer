@@ -21,17 +21,23 @@ fun ListItemRadioButton(
     overlineContent: @Composable (() -> Unit)? = null,
     supportingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
-    colors: ListItemColors = if (enabled) ListItemDefaults.colors() else ListItemDefaults.colors(
-        headlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-        leadingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-        overlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-        supportingColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-        trailingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-    ),
+    colors: ListItemColors = if (enabled) {
+        ListItemDefaults.colors()
+    } else {
+        ListItemDefaults.colors(
+            headlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            leadingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            overlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            supportingColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            trailingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+        )
+    },
     tonalElevation: Dp = ListItemDefaults.Elevation,
     shadowElevation: Dp = ListItemDefaults.Elevation,
 ) {
-    Box {
+    Box(
+        modifier = modifier,
+    ) {
         ListItem(
             headlineContent = headlineContent,
             overlineContent = overlineContent,
@@ -43,7 +49,6 @@ fun ListItemRadioButton(
             colors = colors,
             tonalElevation = tonalElevation,
             shadowElevation = shadowElevation,
-            modifier = modifier,
         )
         Box(
             Modifier

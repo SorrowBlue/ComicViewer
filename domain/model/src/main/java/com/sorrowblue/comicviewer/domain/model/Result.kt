@@ -14,11 +14,10 @@ sealed class Result<out S, out F> {
         interface Cause
     }
 
-
     inline fun <R> fold(
         onSuccess: (S) -> R,
         onError: (F) -> R,
-        onException: (Exception.Cause) -> R
+        onException: (Exception.Cause) -> R,
     ): R = when (this) {
         is Success -> onSuccess(data)
         is Error -> onError(error)
@@ -29,4 +28,3 @@ sealed class Result<out S, out F> {
 object NoNetwork : Result.Exception.Cause
 object IllegalArguments : Result.Exception.Cause
 class Unknown(val throws: Throwable) : Result.Exception.Cause
-

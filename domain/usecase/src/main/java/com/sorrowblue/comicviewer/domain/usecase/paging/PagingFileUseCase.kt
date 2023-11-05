@@ -15,7 +15,6 @@ abstract class PagingFileUseCase :
         UseCase.Request
 
     enum class Error : Resource.AppError {
-        NOT_FOUND
+        NOT_FOUND,
     }
 }
-

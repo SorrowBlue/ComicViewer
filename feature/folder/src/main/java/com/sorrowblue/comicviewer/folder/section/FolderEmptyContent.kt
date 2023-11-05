@@ -29,7 +29,6 @@ fun FolderEmptyContent(modifier: Modifier = Modifier) {
         )
         Text(stringResource(id = R.string.folder_label_no_file))
     }
-
 }
 
 @Preview

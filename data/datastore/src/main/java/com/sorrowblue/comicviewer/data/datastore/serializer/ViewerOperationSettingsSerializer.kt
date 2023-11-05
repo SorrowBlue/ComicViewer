@@ -11,7 +11,9 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
 
 @ExperimentalSerializationApi
-internal class ViewerOperationSettingsSerializer(private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO) :
+internal class ViewerOperationSettingsSerializer(
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+) :
     Serializer<ViewerOperationSettings> {
     override val defaultValue = ViewerOperationSettings()
     override suspend fun readFrom(input: InputStream): ViewerOperationSettings {

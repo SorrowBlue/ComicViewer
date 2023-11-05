@@ -15,4 +15,3 @@ interface FileReader : Closeable {
     fun fileSize(pageIndex: Int): Long
     fun fileName(pageIndex: Int): String
 }
-

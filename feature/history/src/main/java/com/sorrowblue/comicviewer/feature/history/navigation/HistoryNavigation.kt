@@ -21,7 +21,7 @@ fun NavController.navigateToHistoryGroup() = navigate(historyGraphRoute)
 internal fun NavGraphBuilder.historyScreen(
     contentPadding: PaddingValues,
     onFileClick: (File, Int) -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
 ) {
     composable(route = historyRoute) {
         HistoryRoute(
@@ -37,7 +37,7 @@ fun NavGraphBuilder.historyGroup(
     navController: NavController,
     onBookClick: (BookshelfId, String, Int) -> Unit,
     onSettingsClick: () -> Unit,
-    navigateToSearch: (BookshelfId, String) -> Unit
+    navigateToSearch: (BookshelfId, String) -> Unit,
 ) {
     navigation(route = historyGraphRoute, startDestination = historyRoute) {
         historyScreen(

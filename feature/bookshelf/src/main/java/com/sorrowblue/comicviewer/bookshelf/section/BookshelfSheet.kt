@@ -39,8 +39,8 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 import com.sorrowblue.comicviewer.framework.ui.responsive.SideSheet
 import com.sorrowblue.comicviewer.framework.ui.responsive.SideSheetDefault
 
@@ -78,7 +78,7 @@ internal fun BookshelfBottomSheet(
             AsyncImage(
                 model = folder,
                 contentDescription = null,
-                placeholder = debugPlaceholder(),
+                placeholder = rememberDebugPlaceholder(),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -107,7 +107,6 @@ internal fun BookshelfBottomSheet(
             }
 
             is SmbServer -> {
-
                 ListItem(
                     headline = bookshelf.host,
                     overline = stringResource(id = R.string.bookshelf_info_label_host)
@@ -179,7 +178,7 @@ fun BookshelfSideSheet(
             AsyncImage(
                 model = folder,
                 contentDescription = null,
-                placeholder = debugPlaceholder(),
+                placeholder = rememberDebugPlaceholder(),
                 modifier = Modifier
                     .size(128.dp)
                     .clip(RoundedCornerShape(16.dp))
@@ -205,7 +204,6 @@ fun BookshelfSideSheet(
             }
 
             is SmbServer -> {
-
                 ListItem(
                     headline = bookshelf.host,
                     overline = stringResource(id = R.string.bookshelf_info_label_host)
@@ -291,7 +289,8 @@ private fun PreviewBookshelfSideSheet() {
                 onRemoveClick = { /*TODO*/ },
                 onEditClick = { /*TODO*/ },
                 onScanClick = {},
-                onCloseClick = {})
+                onCloseClick = {}
+            )
         }
     }
 }

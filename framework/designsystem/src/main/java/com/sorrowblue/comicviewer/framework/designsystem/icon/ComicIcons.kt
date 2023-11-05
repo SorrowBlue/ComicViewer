@@ -26,7 +26,6 @@ import androidx.compose.material.icons.twotone.Download
 import androidx.compose.material.icons.twotone.Edit
 import androidx.compose.material.icons.twotone.ErrorOutline
 import androidx.compose.material.icons.twotone.Favorite
-import androidx.compose.material.icons.twotone.FavoriteBorder
 import androidx.compose.material.icons.twotone.FilterAlt
 import androidx.compose.material.icons.twotone.Folder
 import androidx.compose.material.icons.twotone.FolderOpen

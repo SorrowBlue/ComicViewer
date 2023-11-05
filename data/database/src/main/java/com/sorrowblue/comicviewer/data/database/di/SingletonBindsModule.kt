@@ -26,7 +26,9 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindReadLaterFileModelLocalDataSource(dataSource: ReadLaterFileModelLocalDataSourceImpl): ReadLaterFileModelLocalDataSource
+    abstract fun bindReadLaterFileModelLocalDataSource(
+        dataSource: ReadLaterFileModelLocalDataSourceImpl,
+    ): ReadLaterFileModelLocalDataSource
 
     @Singleton
     @Binds
@@ -38,5 +40,7 @@ internal abstract class SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteBookLocalDataSource(dataSource: FavoriteFileLocalDataSourceImpl): FavoriteFileLocalDataSource
+    abstract fun bindFavoriteBookLocalDataSource(
+        dataSource: FavoriteFileLocalDataSourceImpl,
+    ): FavoriteFileLocalDataSource
 }

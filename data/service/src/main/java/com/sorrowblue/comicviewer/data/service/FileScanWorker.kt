@@ -50,7 +50,7 @@ internal class FileScanWorker @AssistedInject constructor(
         val fileModel = fileLocalDataSource.findBy(request.bookshelfId, request.path)
         val resolveImageFolder = request.resolveImageFolder
         supportExtensions = request.supportExtensions
-        //TODO(スキャン種別ごとに変える)
+        // TODO(スキャン種別ごとに変える)
         when (request.scan) {
             Scan.ALL -> factory.create(serverModel)
                 .nestedListFiles(serverModel, rootFileModel, resolveImageFolder, true)
@@ -73,9 +73,11 @@ internal class FileScanWorker @AssistedInject constructor(
         setProgress(workDataOf("path" to file.path))
         setForeground(createForegroundInfo(file.path))
 
-        val fileModelList = SortUtil.sortedIndex(listFiles(file, resolveImageFolder) {
-            SortUtil.filter(it, supportExtensions)
-        })
+        val fileModelList = SortUtil.sortedIndex(
+            listFiles(file, resolveImageFolder) {
+                SortUtil.filter(it, supportExtensions)
+            }
+        )
         fileLocalDataSource.updateHistory(file, fileModelList)
         if (isNested) {
             fileModelList.filterIsInstance<IFolder>()
@@ -97,7 +99,7 @@ internal class FileScanWorker @AssistedInject constructor(
                 0,
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("comicviewer://comicviewer.sorrowblue.com/work?uuid=${id}")
+                    Uri.parse("comicviewer://comicviewer.sorrowblue.com/work?uuid=$id")
                 ),
                 PendingIntent.FLAG_IMMUTABLE
             )
