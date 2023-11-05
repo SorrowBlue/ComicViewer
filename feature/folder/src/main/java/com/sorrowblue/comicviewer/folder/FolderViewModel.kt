@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.onSuccess
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
-import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
@@ -19,7 +18,6 @@ import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.Sort
-import com.sorrowblue.comicviewer.folder.section.SortSheetUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,10 +37,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @HiltViewModel
-class FolderViewModel @Inject constructor(
+internal class FolderViewModel @Inject constructor(
     getFileUseCase: GetFileUseCase,
     pagingFileUseCase: PagingFileUseCase,
-    private val scanBookshelfUseCase: ScanBookshelfUseCase,
     private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -63,7 +60,6 @@ class FolderViewModel @Inject constructor(
             folderAppBarUiState = FolderAppBarUiState(
                 "",
                 runBlocking { displaySettingsUseCase.settings.first().toFileContentLayout() }),
-            sortSheetUiState = SortSheetUiState.Hide,
             fileContentType = runBlocking {
                 displaySettingsUseCase.settings.first().toFileContentLayout()
             }
@@ -75,7 +71,9 @@ class FolderViewModel @Inject constructor(
             displaySettingsUseCase.settings.map(FolderDisplaySettings::toFileContentLayout)
                 .distinctUntilChanged().collectLatest {
                     _uiState.value = _uiState.value.copy(
-//                        folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(fileContentLayout = it),
+                        folderAppBarUiState = _uiState.value.folderAppBarUiState.copy(
+                            fileContentType = it
+                        ),
                         fileContentType = it
                     )
                 }
@@ -94,20 +92,16 @@ class FolderViewModel @Inject constructor(
     var isSkipFirstRefresh = true
     var isScrollableTop = false
 
-    private val displaySettings = displaySettingsUseCase.settings.stateIn(
-        viewModelScope,
-        SharingStarted.Eagerly,
-        runBlocking { displaySettingsUseCase.settings.first() }
-    )
-
+    private val displaySettings = displaySettingsUseCase.settings
 
     fun openSort() {
         val uiState = _uiState.value
-        _uiState.value = uiState.copy(
-            sortSheetUiState = SortSheetUiState.Show(
-                displaySettings.value.sortType.toSort()
+        viewModelScope.launch {
+            _uiState.value = uiState.copy(
+                openSortSheet = true,
+                currentSort = displaySettings.first().sortType.toSort()
             )
-        )
+        }
     }
 
     val sort =
@@ -138,7 +132,7 @@ class FolderViewModel @Inject constructor(
 
     fun onSortSheetDismissRequest() {
         val uiState = _uiState.value
-        _uiState.value = uiState.copy(sortSheetUiState = SortSheetUiState.Hide)
+        _uiState.value = uiState.copy(openSortSheet = false)
     }
 
     fun toggleFileListType() {
@@ -151,17 +145,6 @@ class FolderViewModel @Inject constructor(
                     }
                 )
             }
-        }
-    }
-
-    fun scan() {
-        viewModelScope.launch {
-//            scanBookshelfUseCase.execute(
-//                ScanBookshelfUseCase.Request(
-//                    file.first() as IFolder,
-//                    Scan.ALL
-//                )
-//            ).collect()
         }
     }
 

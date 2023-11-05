@@ -1,36 +1,35 @@
 package com.sorrowblue.comicviewer.feature.search
 
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.feature.search.component.DropdownMenuChip
 import com.sorrowblue.comicviewer.feature.search.component.SearchAppBar
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchArgs
-import com.sorrowblue.comicviewer.feature.search.section.SearchConditionSheetUiState
+import com.sorrowblue.comicviewer.feature.search.section.SearchConditions
+import com.sorrowblue.comicviewer.feature.search.section.SearchConditionsUiState
 import com.sorrowblue.comicviewer.feature.search.section.SearchResultSheet
 import com.sorrowblue.comicviewer.file.FileInfoBottomSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheet
@@ -44,86 +43,81 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffold
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveScaffoldState
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.parcelize.Parcelize
 import logcat.logcat
 
+@Parcelize
 internal data class SearchScreenUiState(
     val query: String = "",
-    val range: SearchConditionSheetUiState.Range = SearchConditionSheetUiState.Range.BOOKSHELF,
-    val period: SearchConditionSheetUiState.Period = SearchConditionSheetUiState.Period.NONE,
-    val order: SearchConditionSheetUiState.Order = SearchConditionSheetUiState.Order.NAME,
-    val sort: SearchConditionSheetUiState.Sort = SearchConditionSheetUiState.Sort.ASC,
-)
+    val searchConditionsUiState: SearchConditionsUiState = SearchConditionsUiState(),
+) : Parcelable
 
 @Stable
 internal class SearchScreenState(
+    initUiState: SearchScreenUiState = SearchScreenUiState(),
     private val args: SearchArgs,
     private val viewModel: SearchViewModel,
 ) {
+
+    val lazyPagingItems: Flow<PagingData<File>> = viewModel.pagingDataFlow
+    var isScrollableTop by mutableStateOf(false)
+    var isSkipFirstRefresh by mutableStateOf(true)
+    var uiState by mutableStateOf(initUiState)
+        private set
 
     init {
         viewModel.searchCondition = {
             SearchCondition(
                 uiState.query,
-                when (uiState.range) {
-                    SearchConditionSheetUiState.Range.BOOKSHELF -> SearchCondition.Range.BOOKSHELF
-                    SearchConditionSheetUiState.Range.IN_FOLDER ->
+                when (uiState.searchConditionsUiState.range) {
+                    SearchConditionsUiState.Range.BOOKSHELF -> SearchCondition.Range.BOOKSHELF
+                    SearchConditionsUiState.Range.IN_FOLDER ->
                         SearchCondition.Range.InFolder(args.path)
 
-                    SearchConditionSheetUiState.Range.FOLDER_BELOW ->
+                    SearchConditionsUiState.Range.FOLDER_BELOW ->
                         SearchCondition.Range.SubFolder(args.path)
                 },
-                when (uiState.period) {
-                    SearchConditionSheetUiState.Period.NONE -> SearchCondition.Period.NONE
-                    SearchConditionSheetUiState.Period.HOUR_24 -> SearchCondition.Period.HOUR_24
-                    SearchConditionSheetUiState.Period.WEEK_1 -> SearchCondition.Period.WEEK_1
-                    SearchConditionSheetUiState.Period.MONTH_1 -> SearchCondition.Period.MONTH_1
+                when (uiState.searchConditionsUiState.period) {
+                    SearchConditionsUiState.Period.NONE -> SearchCondition.Period.NONE
+                    SearchConditionsUiState.Period.HOUR_24 -> SearchCondition.Period.HOUR_24
+                    SearchConditionsUiState.Period.WEEK_1 -> SearchCondition.Period.WEEK_1
+                    SearchConditionsUiState.Period.MONTH_1 -> SearchCondition.Period.MONTH_1
                 },
-                when (uiState.order) {
-                    SearchConditionSheetUiState.Order.NAME -> SearchCondition.Order.NAME
-                    SearchConditionSheetUiState.Order.TIMESTAMP -> SearchCondition.Order.DATE
-                    SearchConditionSheetUiState.Order.SIZE -> SearchCondition.Order.SIZE
+                when (uiState.searchConditionsUiState.order) {
+                    SearchConditionsUiState.Order.NAME -> SearchCondition.Order.NAME
+                    SearchConditionsUiState.Order.TIMESTAMP -> SearchCondition.Order.DATE
+                    SearchConditionsUiState.Order.SIZE -> SearchCondition.Order.SIZE
                 },
-                when (uiState.sort) {
-                    SearchConditionSheetUiState.Sort.ASC -> SearchCondition.Sort.ASC
-                    SearchConditionSheetUiState.Sort.DESC -> SearchCondition.Sort.DESC
+                when (uiState.searchConditionsUiState.sort) {
+                    SearchConditionsUiState.Sort.ASC -> SearchCondition.Sort.ASC
+                    SearchConditionsUiState.Sort.DESC -> SearchCondition.Sort.DESC
                 }
             )
         }
     }
 
-    val lazyPagingItems: LazyPagingItems<File>
-        @Composable
-        get() = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    var isScrollableTop by mutableStateOf(false)
-    var isSkipFirstRefresh by mutableStateOf(true)
-    var uiState by mutableStateOf(SearchScreenUiState())
-        private set
-
-    fun onRangeChange(range: SearchConditionSheetUiState.Range) {
-        uiState = uiState.copy(range = range)
-        update()
-    }
-
-    fun onPeriodChange(period: SearchConditionSheetUiState.Period) {
-        uiState = uiState.copy(period = period)
-        update()
-    }
-
-    fun onSortChange(sort: SearchConditionSheetUiState.Sort) {
-        uiState = uiState.copy(sort = sort)
-        update()
-    }
-
-    fun onOrderChange(order: SearchConditionSheetUiState.Order) {
-        uiState = uiState.copy(order = order)
+    fun onChangeSearchCondition(searchCondition: SearchConditionsUiState.SearchCondition) {
+        val searchConditionsUiState = uiState.searchConditionsUiState
+        uiState = uiState.copy(
+            searchConditionsUiState = when (searchCondition) {
+                is SearchConditionsUiState.Order -> searchConditionsUiState.copy(order = searchCondition)
+                is SearchConditionsUiState.Period -> searchConditionsUiState.copy(period = searchCondition)
+                is SearchConditionsUiState.Range -> searchConditionsUiState.copy(range = searchCondition)
+                is SearchConditionsUiState.Sort -> searchConditionsUiState.copy(sort = searchCondition)
+            }
+        )
         update()
     }
 
     fun onQueryChange(query: String) {
         uiState = uiState.copy(query = query)
         update()
+    }
+
+    fun onReadLaterClick(file: File) {
+        viewModel.addReadLater(file)
     }
 
     private fun update() {
@@ -138,20 +132,27 @@ internal class SearchScreenState(
 private fun rememberSearchScreenState(
     args: SearchArgs,
     viewModel: SearchViewModel = hiltViewModel(),
-) = remember {
+) = rememberSaveable(
+    saver = Saver(
+        save = { it.uiState },
+        restore = { SearchScreenState(args = args, viewModel = viewModel, initUiState = it) }
+    )
+) {
     SearchScreenState(args = args, viewModel = viewModel)
 }
 
 @Composable
 internal fun SearchRoute(
     args: SearchArgs,
-    state: SearchScreenState = rememberSearchScreenState(args),
+    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onFileClick: (File) -> Unit,
-    contentPadding: PaddingValues = PaddingValues(),
+    onFavoriteClick: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
+    state: SearchScreenState = rememberSearchScreenState(args),
 ) {
     val uiState = state.uiState
-    val lazyPagingItems: LazyPagingItems<File> = state.lazyPagingItems
+    val lazyPagingItems = state.lazyPagingItems.collectAsLazyPagingItems()
     val lazyGridState = rememberLazyGridState()
     val scaffoldState: ResponsiveScaffoldState<File> =
         rememberResponsiveScaffoldState(sideSheetState = rememberSideSheetFileState())
@@ -162,13 +163,13 @@ internal fun SearchRoute(
         lazyPagingItems = lazyPagingItems,
         onQueryChange = state::onQueryChange,
         onBackClick = onBackClick,
-        onChangeRange = state::onRangeChange,
-        onChangePeriod = state::onPeriodChange,
-        onChangeSort = state::onSortChange,
-        onChangeOrder = state::onOrderChange,
+        onChangeSearchCondition = state::onChangeSearchCondition,
         onFileClick = onFileClick,
         onFileLongClick = { scaffoldState.sheetState.show(it) },
         onFileInfoCloseClick = { scaffoldState.sheetState.hide() },
+        onReadLaterClick = state::onReadLaterClick,
+        onFavoriteClick = onFavoriteClick,
+        onOpenFolderClick = onOpenFolderClick,
         contentPadding = contentPadding
     )
     LaunchedEffect(uiState) {
@@ -193,42 +194,67 @@ private fun SearchScreen(
     lazyGridState: LazyGridState,
     scaffoldState: ResponsiveScaffoldState<File>,
     lazyPagingItems: LazyPagingItems<File>,
-    onQueryChange: (String) -> Unit = {},
-    onBackClick: () -> Unit = {},
-    onChangeRange: (SearchConditionSheetUiState.Range) -> Unit = {},
-    onChangePeriod: (SearchConditionSheetUiState.Period) -> Unit = {},
-    onChangeSort: (SearchConditionSheetUiState.Sort) -> Unit = {},
-    onChangeOrder: (SearchConditionSheetUiState.Order) -> Unit = {},
-    onFileClick: (File) -> Unit = {},
-    onFileLongClick: (File) -> Unit = {},
-    onFileInfoCloseClick: () -> Unit = {},
-    contentPadding: PaddingValues = PaddingValues(),
+
+    onQueryChange: (String) -> Unit,
+    onBackClick: () -> Unit,
+
+    onChangeSearchCondition: (SearchConditionsUiState.SearchCondition) -> Unit,
+
+    onFileClick: (File) -> Unit,
+    onFileLongClick: (File) -> Unit,
+
+    onFileInfoCloseClick: () -> Unit,
+    onReadLaterClick: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
+
+    contentPadding: PaddingValues,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     ResponsiveScaffold(
         state = scaffoldState,
         topBar = {
-            SearchAppBar(
-                uiState = uiState,
-                onBackClick = onBackClick,
-                onQueryChange = onQueryChange,
-                onChangeRange = onChangeRange,
-                onChangePeriod = onChangePeriod,
-                onChangeSort = onChangeSort,
-                onChangeOrder = onChangeOrder,
-                contentPadding = contentPadding,
-                scrollBehavior = scrollBehavior
-            )
+            Column {
+                SearchAppBar(
+                    query = uiState.query,
+                    onBackClick = onBackClick,
+                    onQueryChange = onQueryChange,
+                    contentPadding = contentPadding,
+                    scrollBehavior = scrollBehavior
+                )
+                SearchConditions(
+                    uiState = uiState.searchConditionsUiState,
+                    onChangeSearchCondition = onChangeSearchCondition,
+                    scrollBehavior = scrollBehavior,
+                    modifier = Modifier
+                        .windowInsetsPadding(
+                            contentPadding
+                                .asWindowInsets()
+                                .only(WindowInsetsSides.Horizontal)
+                        )
+                        .padding(horizontal = ComicTheme.dimension.margin)
+                        .padding(top = ComicTheme.dimension.padding * 2)
+                )
+            }
         },
         sideSheet = { file, innerPadding ->
             FileInfoSheet(
-                file,
+                file = file,
                 contentPadding = innerPadding.add(paddingValues = PaddingValues(top = 8.dp)),
-                onCloseClick = onFileInfoCloseClick
+                onCloseClick = onFileInfoCloseClick,
+                onReadLaterClick = { onReadLaterClick(file) },
+                onFavoriteClick = { onFavoriteClick(file) },
+                onOpenFolderClick = { onOpenFolderClick(file) }
             )
         },
-        bottomSheet = {
-            FileInfoBottomSheet(it)
+        bottomSheet = { file ->
+            FileInfoBottomSheet(
+                file = file,
+                onReadLaterClick = { onReadLaterClick(file) },
+                onFavoriteClick = { onFavoriteClick(file) },
+                onOpenFolderClick = { onOpenFolderClick(file) },
+                onDismissRequest = onFileInfoCloseClick
+            )
         },
         contentWindowInsets = contentPadding.asWindowInsets(),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)

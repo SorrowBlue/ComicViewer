@@ -1,6 +1,5 @@
 plugins {
     id("comicviewer.android.feature")
-    id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
 android {

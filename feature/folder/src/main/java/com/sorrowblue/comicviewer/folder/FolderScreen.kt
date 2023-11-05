@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,7 +28,7 @@ import com.sorrowblue.comicviewer.file.rememberSideSheetFileState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.Sort
-import com.sorrowblue.comicviewer.folder.section.SortSheetUiState
+import com.sorrowblue.comicviewer.folder.section.SortSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -47,13 +46,13 @@ import com.sorrowblue.comicviewer.framework.ui.pullrefresh.rememberPullRefreshSt
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffold
 import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveScaffoldState
 
-data class FolderScreenUiState(
+internal data class FolderScreenUiState(
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
-    val sortSheetUiState: SortSheetUiState = SortSheetUiState.Hide,
+    val openSortSheet: Boolean = false,
+    val currentSort: Sort = Sort.NAME_ASC,
     val fileContentType: FileContentType = FileContentType.Grid(),
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FolderRoute(
     contentPadding: PaddingValues,
@@ -89,6 +88,14 @@ internal fun FolderRoute(
         onBackClick = onBackClick,
         onSortClick = viewModel::openSort,
     )
+
+    if (uiState.openSortSheet) {
+        SortSheet(
+            currentSort = uiState.currentSort,
+            onDismissRequest = viewModel::onSortSheetDismissRequest,
+            onClick = viewModel::onSortChange
+        )
+    }
     LaunchedEffect(lazyPagingItems.loadState) {
         if (0 <= viewModel.position && lazyPagingItems.loadState.refresh is LoadState.NotLoading && lazyPagingItems.itemCount > 0) {
             val position = viewModel.position
@@ -126,6 +133,9 @@ internal fun FolderScreen(
     onGridSizeChange: () -> Unit,
     onBackClick: () -> Unit,
     onSortClick: () -> Unit,
+    onReadLaterClick: (File) -> Unit = {},
+    onFavoriteClick: (File) -> Unit = {},
+    onOpenFolderClick: (File) -> Unit = {},
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val state = rememberResponsiveScaffoldState(sideSheetState = rememberSideSheetFileState())
@@ -141,18 +151,28 @@ internal fun FolderScreen(
                 onGridSizeChange = onGridSizeChange,
                 onSortClick = onSortClick,
                 onSettingsClick = onSettingsClick,
-                paddingValues = contentPadding,
+                windowInsets = contentPadding.asWindowInsets(),
                 scrollBehavior = scrollBehavior,
             )
         },
         sideSheet = { file, innerPadding ->
-            FileInfoSheet(file,
+            FileInfoSheet(
+                file = file,
                 contentPadding = innerPadding.add(paddingValues = PaddingValues(top = ComicTheme.dimension.margin)),
-                onCloseClick = { state.sheetState.hide() }
+                onCloseClick = { state.sheetState.hide() },
+                onReadLaterClick = { onReadLaterClick(file) },
+                onFavoriteClick = { onFavoriteClick(file) },
+                onOpenFolderClick = { onOpenFolderClick(file) }
             )
         },
-        bottomSheet = {
-            FileInfoBottomSheet(it)
+        bottomSheet = { file ->
+            FileInfoBottomSheet(
+                file = file,
+                onReadLaterClick = { onReadLaterClick(file) },
+                onFavoriteClick = { onFavoriteClick(file) },
+                onOpenFolderClick = { onOpenFolderClick(file) },
+                onDismissRequest = { state.sheetState.hide() },
+            )
         },
         contentWindowInsets = contentPadding.asWindowInsets(),
     ) {

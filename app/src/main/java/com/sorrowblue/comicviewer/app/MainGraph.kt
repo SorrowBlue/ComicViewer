@@ -12,7 +12,10 @@ import com.sorrowblue.comicviewer.feature.authentication.navigation.authenticati
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
 import com.sorrowblue.comicviewer.feature.book.navigation.bookGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
+import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
+import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
 import com.sorrowblue.comicviewer.feature.favorite.create.navigation.favoriteCreateScreen
+import com.sorrowblue.comicviewer.feature.favorite.create.navigation.navigateToFavoriteCreate
 import com.sorrowblue.comicviewer.feature.library.navigation.libraryGroup
 import com.sorrowblue.comicviewer.feature.library.serviceloader.AddOnNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
@@ -78,6 +81,10 @@ internal fun NavGraphBuilder.mainGraph(
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
     )
+    favoriteAddScreen(
+        onBackClick = navController::popBackStack,
+        onAddClick = navController::navigateToFavoriteCreate
+    )
     favoriteCreateScreen(onDismissRequest = navController::popBackStack)
     readlaterGroup(
         contentPadding = contentPadding,
@@ -107,7 +114,8 @@ internal fun NavGraphBuilder.mainGraph(
         contentPadding = contentPadding,
         navController = navController,
         onBookClick = navController::navigateToBook,
-        onSettingsClick = navController::navigateToSettings
+        onSettingsClick = navController::navigateToSettings,
+        onFavoriteClick = { navController.navigateToFavoriteAdd(it.bookshelfId, it.path) }
     )
 
     tutorialScreen(onComplete = onTutorialExit)

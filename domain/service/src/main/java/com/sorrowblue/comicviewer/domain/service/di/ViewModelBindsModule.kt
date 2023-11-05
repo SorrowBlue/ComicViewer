@@ -1,5 +1,9 @@
 package com.sorrowblue.comicviewer.domain.service.di
 
+import com.sorrowblue.comicviewer.domain.service.interactor.AddReadLaterInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.DeleteAllReadLaterInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.DeleteReadLaterInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.GetNavigationHistoryInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.ScanBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.UpdateHistoryInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.DeleteHistoryInteractor
@@ -99,16 +103,16 @@ internal abstract class ViewModelBindsModule {
     abstract fun bindGetBookUseCase(interactor: GetBookInteractor): GetBookUseCase
 
     @Binds
-    abstract fun bindAddReadLaterUseCase(interactor: com.sorrowblue.comicviewer.domain.service.interactor.AddReadLaterInteractor): AddReadLaterUseCase
+    abstract fun bindAddReadLaterUseCase(interactor: AddReadLaterInteractor): AddReadLaterUseCase
 
     @Binds
-    abstract fun bindDeleteReadLaterUseCase(interactor: com.sorrowblue.comicviewer.domain.service.interactor.DeleteReadLaterInteractor): DeleteReadLaterUseCase
+    abstract fun bindDeleteReadLaterUseCase(interactor: DeleteReadLaterInteractor): DeleteReadLaterUseCase
 
     @Binds
-    abstract fun bindDeleteAllReadLaterUseCase(interactor: com.sorrowblue.comicviewer.domain.service.interactor.DeleteAllReadLaterInteractor): DeleteAllReadLaterUseCase
+    abstract fun bindDeleteAllReadLaterUseCase(interactor: DeleteAllReadLaterInteractor): DeleteAllReadLaterUseCase
 
     @Binds
-    abstract fun bindGetNavigationHistoryUseCase(interactor: com.sorrowblue.comicviewer.domain.service.interactor.GetNavigationHistoryInteractor): GetNavigationHistoryUseCase
+    abstract fun bindGetNavigationHistoryUseCase(interactor: GetNavigationHistoryInteractor): GetNavigationHistoryUseCase
 
     @Binds
     abstract fun bindUpdateLastReadPageUseCase(interactor: UpdateLastReadPageInteractor): UpdateLastReadPageUseCase

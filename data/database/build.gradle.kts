@@ -24,6 +24,5 @@ ksp {
     arg("room.generateKotlin", "true")
 }
 room {
-    println("$projectDir/schemas")
     schemaDirectory("$projectDir/schemas")
 }

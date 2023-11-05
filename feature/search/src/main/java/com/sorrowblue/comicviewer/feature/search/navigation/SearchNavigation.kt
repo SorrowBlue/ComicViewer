@@ -53,6 +53,8 @@ private fun NavGraphBuilder.searchScreen(
     onBackClick: () -> Unit,
     onFileClick: (File) -> Unit,
     contentPadding: PaddingValues,
+    onOpenFolderClick: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
     composable(
         route = SearchRoute,
@@ -66,7 +68,9 @@ private fun NavGraphBuilder.searchScreen(
             args = args,
             onBackClick = onBackClick,
             onFileClick = onFileClick,
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
+            onOpenFolderClick = onOpenFolderClick,
+            onFavoriteClick = onFavoriteClick,
         )
     }
 }
@@ -78,6 +82,7 @@ fun NavGraphBuilder.searchGraph(
     navController: NavController,
     onBookClick: (BookshelfId, String, Int) -> Unit,
     onSettingsClick: () -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
     navigation(route = SearchGraph, startDestination = SearchRoute) {
         searchScreen(
@@ -89,7 +94,11 @@ fun NavGraphBuilder.searchGraph(
                         navController.navigateToFolder(SearchRoute, file.bookshelfId, file.path)
                 }
             },
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
+            onFavoriteClick = onFavoriteClick,
+            onOpenFolderClick = {
+                navController.navigateToFolder(SearchRoute, it.bookshelfId, it.parent)
+            }
         )
 
         folderScreen(

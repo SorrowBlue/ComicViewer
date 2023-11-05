@@ -45,15 +45,16 @@ fun <T> DropdownMenuChip(
     onChangeSelected: (T) -> Unit,
     menus: PersistentList<T>,
     menu: (T) -> String,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior?,
+    modifier: Modifier = Modifier,
 ) {
-    val colorTransitionFraction = scrollBehavior.value.state.overlappedFraction
+    val colorTransitionFraction = scrollBehavior?.value?.state?.overlappedFraction ?: 0f
     val fraction = if (colorTransitionFraction > 0.01f) 1f else 0f
     val appBarContainerColor by animateColorAsState(
         targetValue = containerColor(fraction),
         animationSpec = spring(stiffness = Spring.StiffnessMediumLow), label = ""
     )
-    Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
+    Box(modifier = modifier.wrapContentSize(Alignment.TopStart)) {
         var expanded by remember { mutableStateOf(false) }
         FilterChip(
             selected = false,

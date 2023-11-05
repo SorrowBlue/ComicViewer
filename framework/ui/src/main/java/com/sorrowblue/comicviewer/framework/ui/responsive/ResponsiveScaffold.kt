@@ -19,14 +19,10 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -37,10 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.designsystem.theme.MotionTokens
 import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
-import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.ReversePermanentNavigationDrawer
@@ -66,31 +60,20 @@ fun <T : Any> rememberResponsiveScaffoldState(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T : Any> ResponsiveScaffold(
     state: ResponsiveScaffoldState<T>,
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
-    bottomSheet: @Composable (ColumnScope.(T) -> Unit),
+    bottomSheet: @Composable ((T) -> Unit),
     sideSheet: @Composable (T, PaddingValues) -> Unit,
-    onBottomSheetDismissRequest: () -> Unit = { state.sheetState.hide() },
-    windowSizeClass: WindowSizeClass = LocalWindowSize.current,
     contentWindowInsets: WindowInsets = WindowInsets.safeDrawing,
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val isCompact = remember(windowSizeClass) {
-        windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
-    }
+    val isCompact = rememberMobile()
+
     if (isCompact && state.sheetState.show) {
-        ModalBottomSheet(
-            onDismissRequest = onBottomSheetDismissRequest,
-            containerColor = ComicTheme.colorScheme.surfaceContainerLow,
-            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-            windowInsets = WindowInsets(0)
-        ) {
-            bottomSheet(state.sheetState.currentValue!!)
-        }
+        bottomSheet(state.sheetState.currentValue!!)
     }
     Scaffold(
         modifier = modifier,

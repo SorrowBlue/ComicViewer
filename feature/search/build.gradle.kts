@@ -10,4 +10,5 @@ android {
 dependencies {
     implementation(projects.feature.file)
     implementation(projects.feature.folder)
+    detektPlugins("io.nlopez.compose.rules:detekt:0.3.3")
 }

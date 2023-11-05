@@ -32,7 +32,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
-import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfFolder
 import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
@@ -49,8 +48,6 @@ import com.sorrowblue.comicviewer.framework.ui.LocalNavController
 import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import kotlin.math.sqrt
-import logcat.LogPriority
-import logcat.logcat
 
 internal sealed interface ComicViewerAppUiEvent {
 
@@ -241,41 +238,41 @@ internal fun ComicViewerApp(
                 }
 
             is ComicViewerAppUiEvent.RestoreHistory -> {
-                val (bookshelf, folderList, position) = uiEvent.history.triple
-                if (folderList.isEmpty()) {
-                    viewModel.completeRestoreHistory()
-                } else if (folderList.size == 1) {
-                    navController.navigateToBookshelfFolder(
-                        bookshelf.id,
-                        folderList.first().path,
-                        position
-                    )
-                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path})"
-                    }
-                } else {
-                    navController.navigateToBookshelfFolder(
-                        bookshelf.id,
-                        folderList.first().path
-                    )
-                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path})"
-                    }
-                    folderList.drop(1).dropLast(1).forEach { folder ->
-                        navController.navigateToBookshelfFolder(bookshelf.id, folder.path)
-                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                            "-> folder(${folder.path})"
-                        }
-                    }
-                    navController.navigateToBookshelfFolder(
-                        bookshelf.id,
-                        folderList.last().path,
-                        position
-                    )
-                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "-> folder${folderList.last().path}, $position"
-                    }
-                }
+//                val (bookshelf, folderList, position) = uiEvent.history.triple
+//                if (folderList.isEmpty()) {
+                viewModel.completeRestoreHistory()
+//                } else if (folderList.size == 1) {
+//                    navController.navigateToBookshelfFolder(
+//                        bookshelf.id,
+//                        folderList.first().path,
+//                        position
+//                    )
+//                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+//                        "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path})"
+//                    }
+//                } else {
+//                    navController.navigateToBookshelfFolder(
+//                        bookshelf.id,
+//                        folderList.first().path
+//                    )
+//                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+//                        "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path})"
+//                    }
+//                    folderList.drop(1).dropLast(1).forEach { folder ->
+//                        navController.navigateToBookshelfFolder(bookshelf.id, folder.path)
+//                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+//                            "-> folder(${folder.path})"
+//                        }
+//                    }
+//                    navController.navigateToBookshelfFolder(
+//                        bookshelf.id,
+//                        folderList.last().path,
+//                        position
+//                    )
+//                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+//                        "-> folder${folderList.last().path}, $position"
+//                    }
+//                }
             }
 
             is ComicViewerAppUiEvent.RequireAuthentication -> {

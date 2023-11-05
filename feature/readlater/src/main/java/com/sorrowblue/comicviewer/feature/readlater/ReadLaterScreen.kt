@@ -41,14 +41,14 @@ internal fun ReadLaterRoute(
     ReadLaterScreen(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
+        contentPadding = contentPadding,
+        lazyGridState = lazyGridState,
         onFileClick = { onFileClick(it, lazyGridState.firstVisibleItemIndex) },
         onFileLongClick = { /*TODO*/ },
         onFileListTypeClick = viewModel::toggleDisplay,
         onGridSizeClick = viewModel::toggleSpanCount,
         onSettingsClick = onSettingsClick,
         onClearAllClick = viewModel::clearAll,
-        contentPadding = contentPadding,
-        lazyGridState = lazyGridState,
     )
 }
 
@@ -63,14 +63,14 @@ internal data class ReadLaterScreenUiState(
 private fun ReadLaterScreen(
     uiState: ReadLaterScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
-    onFileClick: (File) -> Unit = {},
-    onFileLongClick: (File) -> Unit = {},
-    onFileListTypeClick: () -> Unit = {},
-    onGridSizeClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {},
-    onClearAllClick: () -> Unit = {},
     contentPadding: PaddingValues,
     lazyGridState: LazyGridState,
+    onFileClick: (File) -> Unit,
+    onFileLongClick: (File) -> Unit,
+    onFileListTypeClick: () -> Unit,
+    onGridSizeClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onClearAllClick: () -> Unit,
 ) {
     val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val localLayoutDirection = LocalLayoutDirection.current

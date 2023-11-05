@@ -12,6 +12,7 @@ internal class AndroidFeatureConventionPlugin : Plugin<Project> {
                 apply("comicviewer.android.library")
                 apply("comicviewer.android.library.compose")
                 apply("comicviewer.android.hilt")
+                apply("org.jetbrains.kotlin.plugin.parcelize")
             }
 
             dependencies {

@@ -30,7 +30,7 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                add("detektPlugins", libs.findLibrary("twitter.compose.rules.detekt").get())
+                add("detektPlugins", libs.findLibrary("nlopez.compose.rules.detekt").get())
                 implementation(libs.findLibrary("squareup.logcat").get())
             }
         }
