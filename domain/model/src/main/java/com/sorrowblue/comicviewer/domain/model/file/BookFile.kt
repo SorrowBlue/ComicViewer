@@ -24,8 +24,7 @@ data class BookFile(
 
     override fun areContentsTheSame(file: File): Boolean {
         return if (file is BookFile) {
-            bookshelfId == file.bookshelfId && path == file.path &&
-                    lastPageRead == file.lastPageRead && lastReadTime == file.lastReadTime
+            bookshelfId == file.bookshelfId && path == file.path && lastPageRead == file.lastPageRead && lastReadTime == file.lastReadTime
         } else {
             false
         }

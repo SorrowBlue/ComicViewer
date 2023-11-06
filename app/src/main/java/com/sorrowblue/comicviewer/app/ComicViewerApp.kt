@@ -187,7 +187,7 @@ internal fun ComicViewerApp(
                             navController.navigate(
                                 graphStateHolder.startDestination,
                                 navOptions {
-                                    popUpTo(com.sorrowblue.comicviewer.feature.authentication.navigation.authenticationRoute) {
+                                    popUpTo(com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationRoute) {
                                         inclusive = true
                                     }
                                 }

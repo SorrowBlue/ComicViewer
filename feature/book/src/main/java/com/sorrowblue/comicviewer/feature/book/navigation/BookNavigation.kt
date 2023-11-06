@@ -100,11 +100,10 @@ class BookArgs(
     val position: Int,
 ) {
 
-    constructor(savedStateHandle: SavedStateHandle) :
-            this(
-                BookshelfId(checkNotNull(savedStateHandle[BookshelfIdArg])),
-                (checkNotNull(savedStateHandle[PathArg]) as String).decodeFromBase64(),
-                FavoriteId(checkNotNull(savedStateHandle[FavoriteIdArg])),
-                checkNotNull(savedStateHandle[PositionArg]),
-            )
+    constructor(savedStateHandle: SavedStateHandle) : this(
+        BookshelfId(checkNotNull(savedStateHandle[BookshelfIdArg])),
+        (checkNotNull(savedStateHandle[PathArg]) as String).decodeFromBase64(),
+        FavoriteId(checkNotNull(savedStateHandle[FavoriteIdArg])),
+        checkNotNull(savedStateHandle[PositionArg]),
+    )
 }

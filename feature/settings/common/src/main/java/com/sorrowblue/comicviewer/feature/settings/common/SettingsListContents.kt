@@ -177,7 +177,7 @@ fun SwitchSetting(
     icon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
 ) {
-    Box {
+    Box(modifier = modifier) {
         Setting(
             title = title,
             summary = summary,
@@ -190,7 +190,6 @@ fun SwitchSetting(
                 )
             },
             onClick = {},
-            modifier = modifier,
             enabled = enabled,
         )
         Box(
@@ -302,7 +301,7 @@ fun CheckboxSetting(
     icon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
 ) {
-    Box {
+    Box(modifier = modifier) {
         Setting(
             title = title,
             summary = summary,
@@ -315,7 +314,6 @@ fun CheckboxSetting(
                 )
             },
             onClick = {},
-            modifier = modifier,
         )
         Box(
             Modifier
@@ -472,7 +470,7 @@ fun SettingsCategory(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
-fun PreviewSettingsScreen() {
+private fun PreviewSettingsScreen() {
     PreviewTheme {
         Surface {
             Column {

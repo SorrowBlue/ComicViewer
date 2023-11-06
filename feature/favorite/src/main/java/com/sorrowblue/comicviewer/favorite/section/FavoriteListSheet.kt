@@ -23,10 +23,12 @@ fun FavoriteListSheet(
     innerPadding: PaddingValues,
     lazyListState: LazyListState,
     onFavoriteClick: (FavoriteId) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         contentPadding = innerPadding,
-        state = lazyListState
+        state = lazyListState,
+        modifier = modifier
     ) {
         items(lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.id.value }) {
             val item = lazyPagingItems[it]

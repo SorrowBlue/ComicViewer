@@ -23,6 +23,7 @@ import com.sorrowblue.comicviewer.feature.library.onedrive.data.AuthenticationPr
 import com.sorrowblue.comicviewer.feature.library.onedrive.data.OneDriveApiRepository
 import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveArgs
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveDialogUiState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -33,11 +34,12 @@ import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
 import logcat.logcat
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class OneDriveViewModel(
     context: Context,
     private val provider: AuthenticationProvider,
     private val repository: OneDriveApiRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel(), DefaultLifecycleObserver {
 
     lateinit var file: Book
@@ -143,12 +145,12 @@ internal class OneDriveViewModel(
 
     companion object {
 
-        fun Factory(context: Context) =
+        fun factory(context: Context) =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
-                    extras: CreationExtras
+                    extras: CreationExtras,
                 ): T {
                     val savedStateHandle = extras.createSavedStateHandle()
                     return OneDriveViewModel(

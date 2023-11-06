@@ -54,11 +54,11 @@ internal fun DropBoxRoute(
     onBackClick: () -> Unit,
     onFolderClick: (Folder) -> Unit,
     viewModel: DropBoxViewModel = viewModel(
-        factory = DropBoxViewModel.Factory(
+        factory = DropBoxViewModel.factory(
             LocalContext.current,
             DropBoxApiRepositoryImpl(LocalContext.current)
         )
-    )
+    ),
 ) {
     val lazPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsState()

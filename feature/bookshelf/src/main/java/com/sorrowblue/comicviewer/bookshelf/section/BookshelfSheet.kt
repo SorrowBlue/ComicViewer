@@ -154,18 +154,20 @@ internal fun BookshelfBottomSheet(
 
 @Composable
 fun BookshelfSideSheet(
-    innerPadding: PaddingValues,
     bookshelfFolder: BookshelfFolder,
     onRemoveClick: () -> Unit,
     onEditClick: () -> Unit,
     onScanClick: () -> Unit,
     onCloseClick: () -> Unit,
+    innerPadding: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
     SideSheet(
         title = stringResource(id = R.string.bookshelf_info_title),
         width = SideSheetDefault.MaxWidth,
         innerPadding = innerPadding,
-        onCloseClick = onCloseClick
+        onCloseClick = onCloseClick,
+        modifier = modifier
     ) {
         val bookshelf = bookshelfFolder.bookshelf
         val folder = bookshelfFolder.folder

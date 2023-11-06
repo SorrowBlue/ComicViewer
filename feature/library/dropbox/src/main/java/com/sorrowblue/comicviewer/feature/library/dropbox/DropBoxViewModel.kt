@@ -22,6 +22,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.DropBoxApiRepository
 import com.sorrowblue.comicviewer.feature.library.dropbox.navigation.DropBoxArgs
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxDialogUiState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.logcat
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class DropBoxViewModel(
     context: Context,
     savedStateHandle: SavedStateHandle,
@@ -38,12 +40,12 @@ internal class DropBoxViewModel(
 ) : ViewModel(), DefaultLifecycleObserver {
 
     companion object {
-        fun Factory(context: Context, repository: DropBoxApiRepository) =
+        fun factory(context: Context, repository: DropBoxApiRepository) =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
-                    extras: CreationExtras
+                    extras: CreationExtras,
                 ): T {
                     val savedStateHandle = extras.createSavedStateHandle()
                     return DropBoxViewModel(context, savedStateHandle, repository) as T

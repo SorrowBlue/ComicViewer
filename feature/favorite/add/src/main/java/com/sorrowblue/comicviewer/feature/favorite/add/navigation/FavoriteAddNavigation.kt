@@ -14,16 +14,16 @@ import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddRoute
 
-private const val bookshelfIdArg = "bookshelfId"
-private const val pathArg = "path"
+private const val BookshelfIdArg = "bookshelfId"
+private const val PathArg = "path"
 
 internal class FavoriteAddArgs(
     val bookshelfId: BookshelfId,
     val path: String,
 ) {
     constructor(savedStateHandle: SavedStateHandle) : this(
-        BookshelfId(checkNotNull(savedStateHandle[bookshelfIdArg])),
-        (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64(),
+        BookshelfId(checkNotNull(savedStateHandle[BookshelfIdArg])),
+        (checkNotNull(savedStateHandle[PathArg]) as String).decodeFromBase64(),
     )
 }
 
@@ -31,10 +31,10 @@ private const val FavoriteAddRoute = "favorite/add"
 
 fun NavGraphBuilder.favoriteAddScreen(onBackClick: () -> Unit, onAddClick: () -> Unit) {
     composable(
-        route = "$FavoriteAddRoute?bookshelfId={$bookshelfIdArg}&path={$pathArg}",
+        route = "$FavoriteAddRoute?bookshelfId={$BookshelfIdArg}&path={$PathArg}",
         arguments = listOf(
-            navArgument(bookshelfIdArg) { type = NavType.IntType },
-            navArgument(pathArg) { type = NavType.StringType }
+            navArgument(BookshelfIdArg) { type = NavType.IntType },
+            navArgument(PathArg) { type = NavType.StringType }
 
         ),
         enterTransition = {

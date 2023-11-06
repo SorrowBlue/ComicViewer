@@ -5,6 +5,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
@@ -52,13 +53,18 @@ fun FolderDisplaySettings.toFileContentLayout(): FileContentType {
 }
 
 @Composable
-fun FileContentLayoutButton(fileContentType: FileContentType, onClick: () -> Unit) {
+fun FileContentLayoutButton(
+    fileContentType: FileContentType,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     when (fileContentType) {
         is FileContentType.Grid -> {
             PlainTooltipBox(
                 tooltipContent = {
                     Text(stringResource(id = R.string.file_list_label_switch_list_view))
-                }
+                },
+                modifier = modifier
             ) {
                 IconButton(onClick) {
                     Icon(
@@ -73,7 +79,8 @@ fun FileContentLayoutButton(fileContentType: FileContentType, onClick: () -> Uni
             PlainTooltipBox(
                 tooltipContent = {
                     Text(stringResource(id = R.string.file_list_label_switch_grid_view))
-                }
+                },
+                modifier = modifier
             ) {
                 IconButton(onClick) {
                     Icon(

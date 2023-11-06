@@ -28,7 +28,6 @@ import com.sorrowblue.comicviewer.framework.ui.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveLayout
 import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveLayoutState
 import kotlinx.collections.immutable.toPersistentList
-import logcat.logcat
 
 internal const val mainGraphRoute = "main"
 
