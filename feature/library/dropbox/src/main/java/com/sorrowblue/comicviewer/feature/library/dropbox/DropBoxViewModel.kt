@@ -36,7 +36,7 @@ import logcat.logcat
 internal class DropBoxViewModel(
     context: Context,
     savedStateHandle: SavedStateHandle,
-    private val repository: DropBoxApiRepository
+    private val repository: DropBoxApiRepository,
 ) : ViewModel(), DefaultLifecycleObserver {
 
     companion object {

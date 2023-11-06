@@ -29,6 +29,7 @@ internal class SearchArgs(val bookshelfId: BookshelfId, val path: String) {
         BookshelfId(checkNotNull(savedStateHandle[BookshelfIdArg])),
         (checkNotNull<String>(savedStateHandle[PathArg])).decodeFromBase64(),
     )
+
     constructor(bundle: Bundle) : this(
         BookshelfId(bundle.getInt(BookshelfIdArg)),
         (checkNotNull(bundle.getString(PathArg))).decodeFromBase64(),

@@ -25,7 +25,7 @@ internal sealed interface BoxDialogUiState {
     data object Hide : BoxDialogUiState
     data class Show(
         val photoUrl: String = "",
-        val name: String = ""
+        val name: String = "",
     ) : BoxDialogUiState
 }
 
@@ -33,7 +33,7 @@ internal sealed interface BoxDialogUiState {
 internal fun BoxAccountDialog(
     uiState: BoxDialogUiState,
     onDismissRequest: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
 ) {
     when (uiState) {
         BoxDialogUiState.Hide -> Unit
@@ -50,7 +50,7 @@ internal fun BoxAccountDialog(
 private fun BoxAccountDialog(
     uiState: BoxDialogUiState.Show = BoxDialogUiState.Show(),
     onDismissRequest: () -> Unit = {},
-    onLogoutClick: () -> Unit = {}
+    onLogoutClick: () -> Unit = {},
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,

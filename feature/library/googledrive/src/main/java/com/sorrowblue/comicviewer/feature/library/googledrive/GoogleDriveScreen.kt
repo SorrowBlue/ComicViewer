@@ -52,7 +52,7 @@ internal fun GoogleDriveRoute(
         factory = GoogleDriveViewModel.Factory(
             LocalContext.current,
         )
-    )
+    ),
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsState()
@@ -132,7 +132,7 @@ internal fun GoogleDriveRoute(
 internal data class GoogleDriveScreenUiState(
     val isAuthenticated: Boolean = false,
     val profileUri: String = "",
-    val googleAccountDialogUiState: GoogleAccountDialogUiState = GoogleAccountDialogUiState.Hide
+    val googleAccountDialogUiState: GoogleAccountDialogUiState = GoogleAccountDialogUiState.Hide,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -146,7 +146,7 @@ internal fun GoogleDriveScreen(
     onFileClick: (File) -> Unit = {},
     onDialogDismissRequest: () -> Unit = {},
     onLogoutClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     Scaffold(
         topBar = {

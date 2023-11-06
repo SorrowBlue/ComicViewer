@@ -118,7 +118,7 @@ private fun DropBoxScreen(
     onFileClick: (File) -> Unit = {},
     onDialogDismissRequest: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     when (uiState) {
         DropBoxScreenUiState.Loading -> LoadingDropBoxScreen(onCloseClick = onBackClick)
@@ -213,7 +213,7 @@ private fun LoadedDropBoxScreen(
     onFileClick: (File) -> Unit,
     onDialogDismissRequest: () -> Unit,
     onLogoutClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     Scaffold(
         topBar = {

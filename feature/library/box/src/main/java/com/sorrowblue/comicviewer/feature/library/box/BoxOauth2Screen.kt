@@ -27,7 +27,7 @@ internal fun BoxOauth2Route(
         factory = BoxOauth2ViewModel.Factory(
             BoxApiRepository.getInstance(LocalContext.current)
         )
-    )
+    ),
 ) {
     BoxOauth2Screen()
     LaunchedEffect(Unit) {
@@ -46,7 +46,7 @@ private fun BoxOauth2Screen() {
 
 internal class BoxOauth2ViewModel(
     savedStateHandle: SavedStateHandle,
-    private val repository: BoxApiRepository
+    private val repository: BoxApiRepository,
 ) : ViewModel() {
 
     private val args = BoxOauth2Args(savedStateHandle)

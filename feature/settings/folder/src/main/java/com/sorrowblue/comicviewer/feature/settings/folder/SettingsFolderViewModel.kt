@@ -26,9 +26,13 @@ internal class SettingsFolderViewModel @Inject constructor(
 
     init {
         manageFolderSettingsUseCase.settings.onEach {
-            _uiState.value = _uiState.value.copy(isOpenImageFolder = it.resolveImageFolder, isThumbnailEnabled = it.showPreview)
+            _uiState.value = _uiState.value.copy(
+                isOpenImageFolder = it.resolveImageFolder,
+                isThumbnailEnabled = it.showPreview
+            )
         }.launchIn(viewModelScope)
     }
+
     fun updateShowPreview(newValue: Boolean) {
         viewModelScope.launch {
             manageFolderSettingsUseCase.edit {
