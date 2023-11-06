@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import logcat.logcat
 
 @HiltViewModel
 internal class SettingsViewerViewModel @Inject constructor(
@@ -62,15 +63,15 @@ internal class SettingsViewerViewModel @Inject constructor(
     }
 
     fun onCutWhitespaceChange(value: Boolean) {
-        /*TODO("Not yet implemented")*/
+        logcat { "onCutWhitespaceChange $value" }
     }
 
     fun onCacheImageChange(value: Boolean) {
-        /*TODO("Not yet implemented")*/
+        logcat { "onCacheImageChange $value" }
     }
 
     fun onDisplayFirstPageChange(value: Boolean) {
-        /*TODO("Not yet implemented")*/
+        logcat { "onDisplayFirstPageChange $value" }
     }
 
     fun onImageQualityChange(value: Float) {

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,15 +13,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.section.EmptyContent
 import com.sorrowblue.comicviewer.feature.history.section.HistoryAppBar
+import com.sorrowblue.comicviewer.file.FileInfoBottomSheet
+import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.rememberSideSheetFileState
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffold
+import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveScaffoldState
 
 @Composable
 internal fun HistoryRoute(
@@ -34,16 +41,19 @@ internal fun HistoryRoute(
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState: ReadLaterScreenUiState by viewModel.uiState.collectAsState()
     val lazyGridState = rememberLazyGridState()
+    val scaffoldState =
+        rememberResponsiveScaffoldState(sideSheetState = rememberSideSheetFileState())
     HistoryScreen(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
+        scaffoldState = scaffoldState,
         onFileClick = { onFileClick(it, lazyGridState.firstVisibleItemIndex) },
-        onFileLongClick = { TODO(/*onFileLongClick*/) },
+        onFileLongClick = scaffoldState.sheetState::show,
         onFileListTypeClick = viewModel::toggleDisplay,
         onGridSizeClick = viewModel::onGridSizeChange,
         onSettingsClick = onSettingsClick,
         contentPadding = contentPadding,
-        lazyGridState = lazyGridState
+        lazyGridState = lazyGridState,
     )
 }
 
@@ -56,17 +66,19 @@ data class ReadLaterScreenUiState(
 internal fun HistoryScreen(
     uiState: ReadLaterScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
-    onFileClick: (File) -> Unit = {},
-    onFileLongClick: (File) -> Unit = {},
-    onFileListTypeClick: () -> Unit = {},
-    onGridSizeClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {},
+    scaffoldState: ResponsiveScaffoldState<File>,
+    onFileClick: (File) -> Unit,
+    onFileLongClick: (File) -> Unit,
+    onFileListTypeClick: () -> Unit,
+    onGridSizeClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     contentPadding: PaddingValues,
-    lazyGridState: LazyGridState = rememberLazyGridState(),
+    lazyGridState: LazyGridState,
 ) {
     val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val localLayoutDirection = LocalLayoutDirection.current
-    Scaffold(
+    ResponsiveScaffold(
+        state = scaffoldState,
         topBar = {
             HistoryAppBar(
                 fileContentType = uiState.fileContentType,
@@ -82,6 +94,25 @@ internal fun HistoryScreen(
             right = contentPadding.calculateRightPadding(localLayoutDirection),
             bottom = contentPadding.calculateBottomPadding()
         ),
+        sideSheet = { file, innerPadding ->
+            FileInfoSheet(
+                file = file,
+                contentPadding = innerPadding.add(paddingValues = PaddingValues(top = 8.dp)),
+                onCloseClick = { },
+                onReadLaterClick = { },
+                onFavoriteClick = { },
+                onOpenFolderClick = { }
+            )
+        },
+        bottomSheet = { file ->
+            FileInfoBottomSheet(
+                file = file,
+                onDismissRequest = { },
+                onReadLaterClick = { },
+                onFavoriteClick = { },
+                onOpenFolderClick = { }
+            )
+        },
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         if (lazyPagingItems.isEmptyData) {

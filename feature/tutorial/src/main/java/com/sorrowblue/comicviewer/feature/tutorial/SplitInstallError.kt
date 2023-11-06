@@ -53,7 +53,6 @@ internal val SplitInstallSessionState.err: SplitInstallError
                 // ネットワーク エラーのため、リクエストが失敗しました。
                 // ネットワーク接続を確立するか、別のネットワークに変更することをユーザーに求めます。
                 // 再試行
-                "A network error has occurred. Please make sure you are connected to a valid network."
                 SplitInstallError.Retryable("ネットワークエラーが発生しました。有効なネットワークに接続しているか確認してください。")
             }
 
@@ -112,6 +111,8 @@ internal val SplitInstallSessionState.err: SplitInstallError
                 SplitInstallError.NotSupport("サービスなし")
             }
 
-            else -> throw RuntimeException("想定外")
+            else -> {
+                SplitInstallError.NotSupport("想定外")
+            }
         }
     }

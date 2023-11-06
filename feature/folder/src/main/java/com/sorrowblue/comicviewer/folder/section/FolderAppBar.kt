@@ -75,7 +75,7 @@ internal fun FolderAppBar(
 
 @PreviewComic
 @Composable
-fun PreviewFolderAppBar() {
+private fun PreviewFolderAppBar() {
     PreviewTheme {
         FolderAppBar(
             uiState = FolderAppBarUiState(),

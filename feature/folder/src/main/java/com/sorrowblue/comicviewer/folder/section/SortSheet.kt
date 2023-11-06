@@ -50,9 +50,10 @@ fun SortSheet(
     currentSort: Sort,
     onDismissRequest: () -> Unit,
     onClick: (Sort) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val sortList = remember { Sort.entries.toPersistentList() }
-    ModalBottomSheet(onDismissRequest = onDismissRequest) {
+    ModalBottomSheet(onDismissRequest = onDismissRequest, modifier = modifier) {
         LazyColumn {
             items(sortList, key = Sort::labelRes) {
                 Row(
@@ -81,7 +82,7 @@ fun SortSheet(
 
 @PreviewComic
 @Composable
-fun PreviewSortSheet() {
+private fun PreviewSortSheet() {
     PreviewTheme {
         SortSheet(
             currentSort = Sort.NAME_ASC,
