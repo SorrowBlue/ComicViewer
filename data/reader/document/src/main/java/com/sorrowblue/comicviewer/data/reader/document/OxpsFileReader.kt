@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 @Keep
 internal class OxpsFileReader(
     context: Context,
-    seekableInputStream: SeekableInputStream
+    seekableInputStream: SeekableInputStream,
 ) : DocumentFileReader(context, "application/oxps", seekableInputStream) {
 
     @Keep

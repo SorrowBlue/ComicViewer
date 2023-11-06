@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 
 internal class GoogleDrivePagingSource(
     private val driverService: Drive,
-    private val parent: String
+    private val parent: String,
 ) :
     PagingSource<String, File>() {
     override fun getRefreshKey(state: PagingState<String, File>): String? {
