@@ -14,9 +14,9 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.folder.FolderRoute
 
-private const val bookshelfIdArg = "bookshelfId"
-private const val pathArg = "path"
-private const val positionArg = "position"
+private const val BookshelfIdArg = "bookshelfId"
+private const val PathArg = "path"
+private const val PositionArg = "position"
 
 internal class FolderArgs(
     val bookshelfId: BookshelfId,
@@ -24,16 +24,16 @@ internal class FolderArgs(
     val position: Int,
 ) {
     constructor(savedStateHandle: SavedStateHandle) : this(
-        BookshelfId(checkNotNull(savedStateHandle[bookshelfIdArg])),
-        (checkNotNull(savedStateHandle[pathArg]) as String).decodeFromBase64(),
-        checkNotNull(savedStateHandle[positionArg])
+        BookshelfId(checkNotNull(savedStateHandle[BookshelfIdArg])),
+        (checkNotNull(savedStateHandle[PathArg]) as String).decodeFromBase64(),
+        checkNotNull(savedStateHandle[PositionArg])
     )
 }
 
 private const val FolderRoute = "folder"
 
 fun folderRoute(prefix: String) =
-    "$prefix/$FolderRoute/{$bookshelfIdArg}/{$pathArg}?position={$positionArg}"
+    "$prefix/$FolderRoute/{$BookshelfIdArg}/{$PathArg}?position={$PositionArg}"
 
 fun NavController.navigateToFolder(
     prefix: String,
@@ -60,9 +60,9 @@ fun NavGraphBuilder.folderScreen(
     composable(
         route = folderRoute(prefix),
         arguments = listOf(
-            navArgument(bookshelfIdArg) { type = NavType.IntType },
-            navArgument(pathArg) { type = NavType.StringType },
-            navArgument(positionArg) { type = NavType.IntType },
+            navArgument(BookshelfIdArg) { type = NavType.IntType },
+            navArgument(PathArg) { type = NavType.StringType },
+            navArgument(PositionArg) { type = NavType.IntType },
         )
     ) {
         FolderRoute(
@@ -72,6 +72,8 @@ fun NavGraphBuilder.folderScreen(
             onBackClick = onBackClick,
             onRestoreComplete = onRestoreComplete,
             onClickFile = onClickFile,
+            onOpenFolderClick = {},
+            onFavoriteClick = {}
         )
     }
 }
