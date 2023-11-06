@@ -152,7 +152,7 @@ internal class BoxApiRepositoryImpl(
     override suspend fun download(
         path: String,
         outputStream: OutputStream,
-        progress: (Double) -> Unit
+        progress: (Double) -> Unit,
     ) {
         BoxFile(api, path).download(outputStream) { numBytes, totalBytes ->
             progress.invoke(numBytes.toDouble() / totalBytes)

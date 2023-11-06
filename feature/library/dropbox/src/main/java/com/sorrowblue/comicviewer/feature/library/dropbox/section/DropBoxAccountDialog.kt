@@ -25,7 +25,7 @@ internal sealed interface DropBoxDialogUiState {
     data object Hide : DropBoxDialogUiState
     data class Show(
         val photoUrl: String = "",
-        val name: String = ""
+        val name: String = "",
     ) : DropBoxDialogUiState
 }
 
@@ -33,7 +33,7 @@ internal sealed interface DropBoxDialogUiState {
 internal fun DropBoxAccountDialog(
     uiState: DropBoxDialogUiState,
     onDismissRequest: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
 ) {
     when (uiState) {
         DropBoxDialogUiState.Hide -> Unit
@@ -50,7 +50,7 @@ internal fun DropBoxAccountDialog(
 private fun DropBoxAccountDialog(
     uiState: DropBoxDialogUiState.Show = DropBoxDialogUiState.Show(),
     onDismissRequest: () -> Unit = {},
-    onLogoutClick: () -> Unit = {}
+    onLogoutClick: () -> Unit = {},
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,

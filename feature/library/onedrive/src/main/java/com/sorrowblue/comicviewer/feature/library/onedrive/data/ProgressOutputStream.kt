@@ -5,7 +5,7 @@ import java.io.OutputStream
 
 internal class ProgressOutputStream(
     private val underlying: OutputStream,
-    private val onProgress: (Long) -> Unit
+    private val onProgress: (Long) -> Unit,
 ) : OutputStream() {
     private var completed: Long = 0
 

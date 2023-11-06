@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.onEach
 internal class GoogleDriveViewModel(
     context: Context,
     private val repository: GoogleDriveApiRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel(), DefaultLifecycleObserver {
 
     companion object {

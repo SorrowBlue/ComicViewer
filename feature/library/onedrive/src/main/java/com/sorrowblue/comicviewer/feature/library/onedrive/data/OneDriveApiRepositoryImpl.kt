@@ -61,7 +61,7 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
         driveId: String,
         itemId: String,
         outputStream: OutputStream,
-        onProgress: (Double) -> Unit
+        onProgress: (Double) -> Unit,
     ) {
         withContext(Dispatchers.IO) {
             val size =
@@ -81,7 +81,7 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
         driveId: String?,
         itemId: String,
         limit: Int,
-        skipToken: String?
+        skipToken: String?,
     ): DriveItemCollectionPage {
         return if (driveId == null) {
             withContext(Dispatchers.IO) {

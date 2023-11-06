@@ -25,7 +25,7 @@ internal sealed interface OneDriveDialogUiState {
     data object Hide : OneDriveDialogUiState
     data class Show(
         val photoUrl: String = "",
-        val name: String = ""
+        val name: String = "",
     ) : OneDriveDialogUiState
 }
 
@@ -33,7 +33,7 @@ internal sealed interface OneDriveDialogUiState {
 internal fun OneDriveAccountDialog(
     uiState: OneDriveDialogUiState,
     onDismissRequest: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
 ) {
     when (uiState) {
         OneDriveDialogUiState.Hide -> Unit
@@ -50,7 +50,7 @@ internal fun OneDriveAccountDialog(
 private fun OneDriveAccountDialog(
     uiState: OneDriveDialogUiState.Show = OneDriveDialogUiState.Show(),
     onDismissRequest: () -> Unit = {},
-    onLogoutClick: () -> Unit = {}
+    onLogoutClick: () -> Unit = {},
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
