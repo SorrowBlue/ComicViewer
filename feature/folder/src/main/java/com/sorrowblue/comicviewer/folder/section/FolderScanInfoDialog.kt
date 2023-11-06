@@ -56,7 +56,7 @@ fun FolderScanInfoDialog(
 
 @Preview(locale = "ja")
 @Composable
-fun PreviewFolderScanInfoDialog() {
+private fun PreviewFolderScanInfoDialog() {
     ComicTheme {
         FolderScanInfoDialog()
     }

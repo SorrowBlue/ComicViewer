@@ -34,7 +34,9 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -104,6 +106,11 @@ private fun FavoriteEditScreen(
                     .padding(horizontal = ComicTheme.dimension.margin)
             )
             if (lazyPagingItems.isEmptyData) {
+                EmptyContent(
+                    imageVector = ComicIcons.UndrawNoData,
+                    text = "お気に入りはありません",
+                    contentPadding = contentPadding
+                )
             } else {
                 LazyColumn(contentPadding = contentPadding) {
                     items(
