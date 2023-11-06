@@ -16,8 +16,7 @@ private const val FavoriteIdArg = "favoriteId"
 internal class FavoriteArgs(
     val favoriteId: FavoriteId,
 ) {
-    constructor(savedStateHandle: SavedStateHandle) :
-            this(FavoriteId(checkNotNull(savedStateHandle[FavoriteIdArg])))
+    constructor(savedStateHandle: SavedStateHandle) : this(FavoriteId(checkNotNull(savedStateHandle[FavoriteIdArg])))
 }
 
 const val FavoriteRoute = "$FavoriteListRoute/{$FavoriteIdArg}"
