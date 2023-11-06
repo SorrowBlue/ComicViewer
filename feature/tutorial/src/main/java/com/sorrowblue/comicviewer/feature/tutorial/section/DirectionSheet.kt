@@ -45,8 +45,7 @@ internal fun DirectionSheet(
             modifier = Modifier
                 .widthIn(max = 400.dp)
                 .fillMaxWidth(0.5f),
-
-            )
+        )
         Spacer(modifier = Modifier.size(16.dp))
 
         Text(text = "Reading direction", style = MaterialTheme.typography.titleLarge)

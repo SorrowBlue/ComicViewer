@@ -72,9 +72,9 @@ fun FileGrid(
             )
             if (file is Book && 0 < file.lastPageRead) {
                 LinearProgressIndicator(
-                    progress = file.lastPageRead.toFloat() / file.totalPageCount,
+                    progress = { file.lastPageRead.toFloat() / file.totalPageCount },
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 )
             }
             Text(
@@ -93,7 +93,7 @@ fun FileGrid(
 
 @Preview
 @Composable
-fun PreviewFileGrid() {
+private fun PreviewFileGrid() {
     ComicTheme {
         FileGrid(
             file = FakeFile,

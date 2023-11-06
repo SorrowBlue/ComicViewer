@@ -95,12 +95,14 @@ fun FileListContent(
     lazyPagingItems: LazyPagingItems<File>,
     onClickItem: (File) -> Unit,
     onLongClickItem: (File) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val isCompat = rememberMobile()
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         state = state,
         contentPadding = contentPadding,
+        modifier = modifier,
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
             val item = lazyPagingItems[it]
@@ -111,16 +113,15 @@ fun FileListContent(
                     onLongClick = { onLongClickItem(item!!) },
                 )
             } else {
-                val modifier = when (it) {
-                    0 -> Modifier.clip(ComicTheme.shapes.largeTop)
-                    lazyPagingItems.itemCount - 1 -> Modifier.clip(ComicTheme.shapes.largeBottom)
-                    else -> Modifier
-                }
                 FileListMedium(
                     file = item,
                     onClick = { onClickItem(item!!) },
                     onLongClick = { onLongClickItem(item!!) },
-                    modifier = modifier
+                    modifier = when (it) {
+                        0 -> Modifier.clip(ComicTheme.shapes.largeTop)
+                        lazyPagingItems.itemCount - 1 -> Modifier.clip(ComicTheme.shapes.largeBottom)
+                        else -> Modifier
+                    }
                 )
             }
         }

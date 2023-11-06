@@ -55,7 +55,7 @@ import kotlinx.coroutines.flow.flowOf
 internal fun OneDriveRoute(
     onBackClick: () -> Unit,
     onFolderClick: (Folder) -> Unit,
-    viewModel: OneDriveViewModel = viewModel(factory = OneDriveViewModel.Factory(LocalContext.current)),
+    viewModel: OneDriveViewModel = viewModel(factory = OneDriveViewModel.factory(LocalContext.current)),
 ) {
     val lazPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsState()

@@ -13,17 +13,17 @@ import com.sorrowblue.comicviewer.feature.history.HistoryRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
 
-private const val historyRoute = "history"
-private const val historyGraphRoute = "${historyRoute}_graph"
+private const val HistoryRoute = "history"
+private const val HistoryGraphRoute = "${HistoryRoute}_graph"
 
-fun NavController.navigateToHistoryGroup() = navigate(historyGraphRoute)
+fun NavController.navigateToHistoryGroup() = navigate(HistoryGraphRoute)
 
 internal fun NavGraphBuilder.historyScreen(
     contentPadding: PaddingValues,
     onFileClick: (File, Int) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-    composable(route = historyRoute) {
+    composable(route = HistoryRoute) {
         HistoryRoute(
             contentPadding = contentPadding,
             onFileClick = onFileClick,
@@ -39,14 +39,14 @@ fun NavGraphBuilder.historyGroup(
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
 ) {
-    navigation(route = historyGraphRoute, startDestination = historyRoute) {
+    navigation(route = HistoryGraphRoute, startDestination = HistoryRoute) {
         historyScreen(
             contentPadding = contentPadding,
             onFileClick = { file, position ->
                 when (file) {
                     is Book -> onBookClick(file.bookshelfId, file.path, position)
                     is Folder -> navController.navigateToFolder(
-                        prefix = historyRoute,
+                        prefix = HistoryRoute,
                         bookshelfId = file.bookshelfId,
                         path = file.parent
                     )
@@ -56,14 +56,14 @@ fun NavGraphBuilder.historyGroup(
         )
         folderScreen(
             contentPadding = contentPadding,
-            prefix = historyRoute,
+            prefix = HistoryRoute,
             navigateToSearch = navigateToSearch,
             onClickFile = { file, position ->
                 when (file) {
                     is Book -> onBookClick(file.bookshelfId, file.path, position)
                     is Folder ->
                         navController.navigateToFolder(
-                            prefix = historyRoute,
+                            prefix = HistoryRoute,
                             file.bookshelfId,
                             file.path,
                         )

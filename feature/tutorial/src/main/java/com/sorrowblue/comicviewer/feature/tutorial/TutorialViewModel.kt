@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.logcat
 
-private const val DOCUMENT_MODULE = "document"
+private const val DocumentModule = "document"
 
 @HiltViewModel
 internal class TutorialViewModel @Inject constructor(
@@ -38,12 +38,12 @@ internal class TutorialViewModel @Inject constructor(
 
     init {
         val uiState = _uiState.value
-        if (splitInstallManager.installedModules.contains(DOCUMENT_MODULE)) {
-            logcat { "Feature module($DOCUMENT_MODULE) is already installed." }
+        if (splitInstallManager.installedModules.contains(DocumentModule)) {
+            logcat { "Feature module($DocumentModule) is already installed." }
             _uiState.value =
                 uiState.copy(documentSheetUiState = DocumentSheetUiState.INSTALLED)
         } else {
-            logcat { "Feature module($DOCUMENT_MODULE) is not installed." }
+            logcat { "Feature module($DocumentModule) is not installed." }
             _uiState.value = uiState.copy(documentSheetUiState = DocumentSheetUiState.NONE)
         }
         viewerOperationSettingsUseCase.settings.onEach {
@@ -66,7 +66,7 @@ internal class TutorialViewModel @Inject constructor(
     }
 
     override fun onStateUpdate(state: SplitInstallSessionState) {
-        if (state.moduleNames.contains(DOCUMENT_MODULE)) {
+        if (state.moduleNames.contains(DocumentModule)) {
             val uiState = when (state.status) {
                 SplitInstallSessionStatus.CANCELED -> DocumentSheetUiState.CANCELED
                 SplitInstallSessionStatus.CANCELING -> DocumentSheetUiState.CANCELING
@@ -89,7 +89,7 @@ internal class TutorialViewModel @Inject constructor(
 
     fun onDocumentDownloadClick() {
         viewModelScope.launch {
-            splitInstallManager.requestInstall(listOf(DOCUMENT_MODULE))
+            splitInstallManager.requestInstall(listOf(DocumentModule))
         }
     }
 

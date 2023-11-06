@@ -51,18 +51,20 @@ import kotlinx.coroutines.launch
 @Composable
 fun FileInfoSheet(
     file: File,
-    contentPadding: PaddingValues = PaddingValues(),
     onCloseClick: () -> Unit,
     onReadLaterClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     onOpenFolderClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     val scope = rememberCoroutineScope()
     SideSheet(
         title = "File Info",
         innerPadding = contentPadding,
         onCloseClick = onCloseClick,
-        width = SideSheetDefault.MaxWidth
+        width = SideSheetDefault.MaxWidth,
+        modifier = modifier
     ) {
         Row {
             AsyncImage(
@@ -181,8 +183,9 @@ fun FileInfoBottomSheet(
     onFavoriteClick: () -> Unit,
     onOpenFolderClick: () -> Unit,
     onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    BottomSheet(onDismissRequest = onDismissRequest) {
+    BottomSheet(onDismissRequest = onDismissRequest, modifier = modifier) {
         val scope = rememberCoroutineScope()
         Column(
             modifier = Modifier

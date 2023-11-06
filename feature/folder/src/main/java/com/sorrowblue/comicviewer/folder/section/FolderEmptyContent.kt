@@ -33,7 +33,7 @@ fun FolderEmptyContent(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun PreviewFolderEmptyContent() {
+private fun PreviewFolderEmptyContent() {
     ComicTheme {
         Surface(Modifier.fillMaxSize()) {
             FolderEmptyContent()

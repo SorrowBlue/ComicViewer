@@ -61,6 +61,8 @@ internal fun FolderRoute(
     onBackClick: () -> Unit,
     onRestoreComplete: () -> Unit,
     onClickFile: (File, Int) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
     viewModel: FolderViewModel = hiltViewModel(),
 ) {
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -74,8 +76,6 @@ internal fun FolderRoute(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onSearchClick = { onSearchClick(viewModel.bookshelfId, viewModel.path) },
-        onSortSheetDismissRequest = viewModel::onSortSheetDismissRequest,
-        onSortChange = viewModel::onSortChange,
         onClickFile = {
             onClickFile.invoke(it, lazyGridState.firstVisibleItemIndex)
         },
@@ -87,6 +87,9 @@ internal fun FolderRoute(
         onGridSizeChange = viewModel::onGridSizeChange,
         onBackClick = onBackClick,
         onSortClick = viewModel::openSort,
+        onReadLaterClick = viewModel::onReadLaterClick,
+        onFavoriteClick = onFavoriteClick,
+        onOpenFolderClick = onOpenFolderClick
     )
 
     if (uiState.openSortSheet) {
@@ -122,20 +125,18 @@ internal fun FolderScreen(
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onSearchClick: () -> Unit,
-    onSortSheetDismissRequest: () -> Unit,
-    onSortChange: (Sort) -> Unit,
     onClickFile: (File) -> Unit,
     lazyGridState: LazyGridState,
     isRefreshing: Boolean,
-    pullRefreshState: PullRefreshState = rememberPullRefreshState(isRefreshing, { }),
+    pullRefreshState: PullRefreshState,
     onFileListChange: () -> Unit,
     onSettingsClick: () -> Unit,
     onGridSizeChange: () -> Unit,
     onBackClick: () -> Unit,
     onSortClick: () -> Unit,
-    onReadLaterClick: (File) -> Unit = {},
-    onFavoriteClick: (File) -> Unit = {},
-    onOpenFolderClick: (File) -> Unit = {},
+    onReadLaterClick: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val state = rememberResponsiveScaffoldState(sideSheetState = rememberSideSheetFileState())

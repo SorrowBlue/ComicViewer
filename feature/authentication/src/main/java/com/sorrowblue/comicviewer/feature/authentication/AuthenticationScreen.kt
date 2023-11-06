@@ -192,8 +192,7 @@ private fun AuthenticationScreen(
                     AnimatedContent(
                         targetState = it < uiState.pinCount,
                         transitionSpec = {
-                            (fadeIn() + slideInVertically { height -> height }) togetherWith
-                                    (fadeOut() + slideOutVertically { height -> height })
+                            (fadeIn() + slideInVertically { height -> height }) togetherWith (fadeOut() + slideOutVertically { height -> height })
                         },
                         label = "test"
                     ) { isVisible ->

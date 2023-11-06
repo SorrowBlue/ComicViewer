@@ -21,9 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.android.play.core.splitinstall.SplitInstallSessionState
-import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
-import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.sorrowblue.comicviewer.feature.tutorial.SplitInstallError
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
@@ -108,17 +105,6 @@ internal sealed interface DocumentSheetUiState {
     }
 }
 
-private fun unknownSplitInstallSessionState(): SplitInstallSessionState =
-    SplitInstallSessionState.create(
-        0,
-        SplitInstallSessionStatus.UNKNOWN,
-        SplitInstallErrorCode.NO_ERROR,
-        0,
-        0,
-        emptyList(),
-        emptyList()
-    )
-
 @Composable
 internal fun DocumentSheet(
     uiState: DocumentSheetUiState,
@@ -153,7 +139,9 @@ internal fun DocumentSheet(
         Spacer(modifier = Modifier.size(16.dp))
 
         if (uiState.isProgressVisible) {
-            LinearProgressIndicator(progress = uiState.progress)
+            LinearProgressIndicator(
+                progress = uiState::progress,
+            )
         }
 
         Spacer(modifier = Modifier.size(16.dp))
@@ -171,10 +159,10 @@ internal fun DocumentSheet(
 
 @PreviewComic
 @Composable
-fun PreviewDocumentSheet() {
+private fun PreviewDocumentSheet() {
     ComicTheme {
         Surface {
-            DocumentSheet(DocumentSheetUiState.INSTALLED, {})
+            DocumentSheet(uiState = DocumentSheetUiState.INSTALLED, onDownloadClick = {})
         }
     }
 }

@@ -386,7 +386,7 @@ private fun rememberPreviewStorageState() = remember {
                         StorageEditContentUiState()
                     override val snackbarHostState: SnackbarHostState = snackbarHostState
 
-                    override fun onResult(it: ActivityResult) {}
+                    override fun onResult(it: ActivityResult) = Unit
                 }
                 override val activityResultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
                     get() = TODO("Not yet implemented")

@@ -9,12 +9,12 @@ import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfSelection
 import com.sorrowblue.comicviewer.bookshelf.navigation.routeInBookshelfGraph
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphRoute
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteListRoute
-import com.sorrowblue.comicviewer.favorite.navigation.favoriteGraphRoute
-import com.sorrowblue.comicviewer.favorite.navigation.routeInFavoriteGraph
+import com.sorrowblue.comicviewer.favorite.navigation.RouteInFavoriteGraph
 import com.sorrowblue.comicviewer.feature.favorite.create.navigation.navigateToFavoriteCreate
-import com.sorrowblue.comicviewer.feature.library.navigation.libraryGraphRoute
-import com.sorrowblue.comicviewer.feature.library.navigation.routeInLibraryGraph
+import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGraphRoute
+import com.sorrowblue.comicviewer.feature.library.navigation.RouteInLibraryGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGraphRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.RouteInReadlaterGraph
 
@@ -37,9 +37,9 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
     override fun routeToTab(route: String): MainScreenTab? {
         return when (route) {
             in routeInBookshelfGraph -> MainScreenTab.Bookshelf
-            in routeInFavoriteGraph -> MainScreenTab.Favorite
+            in RouteInFavoriteGraph -> MainScreenTab.Favorite
             in RouteInReadlaterGraph -> MainScreenTab.Readlater
-            in routeInLibraryGraph -> MainScreenTab.Library
+            in RouteInLibraryGraph -> MainScreenTab.Library
             else -> null
         }
     }
@@ -47,9 +47,9 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
     override fun onTabSelected(navController: NavController, tab: MainScreenTab) {
         when (tab) {
             MainScreenTab.Bookshelf -> BookshelfGraphRoute
-            MainScreenTab.Favorite -> favoriteGraphRoute
+            MainScreenTab.Favorite -> FavoriteGraphRoute
             MainScreenTab.Readlater -> ReadlaterGraphRoute
-            MainScreenTab.Library -> libraryGraphRoute
+            MainScreenTab.Library -> LibraryGraphRoute
         }.let { route ->
             navController.navigate(
                 route,

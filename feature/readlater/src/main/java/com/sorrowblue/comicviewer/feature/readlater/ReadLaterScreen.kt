@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,13 +19,12 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.readlater.section.EmptyContent
-import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAction
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
+import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun ReadLaterRoute(
@@ -53,8 +51,6 @@ internal fun ReadLaterRoute(
 }
 
 internal data class ReadLaterScreenUiState(
-    val list: PersistentList<ReadLaterAction> = ReadLaterAction.entries.filterNot { it == ReadLaterAction.FileContetGrid }
-        .toPersistentList(),
     val fileContentType: FileContentType = FileContentType.List,
 )
 
@@ -77,7 +73,6 @@ private fun ReadLaterScreen(
     Scaffold(
         topBar = {
             ReadLaterAppBar(
-                list = uiState.list,
                 fileContentType = uiState.fileContentType,
                 topAppBarScrollBehavior = appBarScrollBehavior,
                 onFileContentLayoutClick = onFileListTypeClick,
