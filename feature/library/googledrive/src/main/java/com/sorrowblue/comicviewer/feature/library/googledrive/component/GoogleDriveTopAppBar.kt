@@ -23,7 +23,7 @@ internal fun GoogleDriveTopAppBar(
     profileUri: String,
     onBackClick: () -> Unit,
     onProfileImageClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior?
+    scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     TopAppBar(
         title = { Text(text = "GoogleDrive") },

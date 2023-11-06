@@ -22,7 +22,7 @@ interface OneDriveApiRepository {
         driveId: String?,
         itemId: String,
         limit: Int,
-        skipToken: String?
+        skipToken: String?,
     ): DriveItemCollectionPage
 
     suspend fun getCurrentUser(): User?
@@ -32,7 +32,7 @@ interface OneDriveApiRepository {
         driveId: String,
         itemId: String,
         outputStream: OutputStream,
-        onProgress: (Double) -> Unit
+        onProgress: (Double) -> Unit,
     )
 
     fun loadAccount()

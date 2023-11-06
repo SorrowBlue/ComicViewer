@@ -15,7 +15,7 @@ import logcat.logcat
 internal class OneDrivePagingSource(
     val driveId: String?,
     private val itemId: String,
-    private val repository: OneDriveApiRepository
+    private val repository: OneDriveApiRepository,
 ) : PagingSource<String, File>() {
 
     override fun getRefreshKey(state: PagingState<String, File>): String? {

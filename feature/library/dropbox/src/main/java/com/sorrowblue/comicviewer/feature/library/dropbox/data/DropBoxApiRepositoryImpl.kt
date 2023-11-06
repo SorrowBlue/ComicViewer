@@ -100,7 +100,7 @@ internal class DropBoxApiRepositoryImpl(context: Context) : DropBoxApiRepository
     override suspend fun download(
         path: String,
         outputStream: OutputStream,
-        progress: (Double) -> Unit
+        progress: (Double) -> Unit,
     ) {
         val dbxDownloader = client().files().download(path)
         val size = dbxDownloader.result.size.toDouble()

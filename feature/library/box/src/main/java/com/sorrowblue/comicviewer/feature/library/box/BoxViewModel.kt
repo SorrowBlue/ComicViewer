@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 internal class BoxViewModel(
     context: Context,
     savedStateHandle: SavedStateHandle,
-    private val repository: BoxApiRepository
+    private val repository: BoxApiRepository,
 ) : ViewModel() {
 
     lateinit var file: Book
@@ -135,7 +135,7 @@ internal class BoxViewModel(
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
-                    extras: CreationExtras
+                    extras: CreationExtras,
                 ): T {
                     val savedStateHandle = extras.createSavedStateHandle()
                     return BoxViewModel(context, savedStateHandle, repository) as T
