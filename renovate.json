@@ -20,6 +20,13 @@
   "packageRules": [
     {
       "matchPackagePrefixes": [
+        "com.android."
+      ],
+      "groupName": "Android Gradle Plugin",
+      "groupSlug": "android_gradle_plugin"
+    },
+    {
+      "matchPackagePrefixes": [
         "androidx.compose.compiler",
         "org.jetbrains.kotlin:",
         "org.jetbrains.kotlin.",
