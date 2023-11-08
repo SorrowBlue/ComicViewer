@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -216,7 +217,7 @@ private fun SmbEditScreen(
             )
         },
         snackbarHostState = snackbarHostState,
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         SmbEditContent(
             uiState = uiState,
@@ -229,6 +230,7 @@ private fun SmbEditScreen(
             onUsernameChange = onUsernameChange,
             onPasswordChange = onPasswordChange,
             onSaveClick = onSaveClick,
+            modifier = Modifier.padding(contentPadding)
         )
     }
 }
