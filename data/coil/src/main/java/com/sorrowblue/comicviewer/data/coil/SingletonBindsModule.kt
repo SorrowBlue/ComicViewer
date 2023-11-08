@@ -18,27 +18,27 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class SingletonBindsModule {
+internal interface SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindBookPageFetcherFetcher(factory: BookPageFetcher.Factory): Fetcher.Factory<BookPageRequest>
+    fun bindBookPageFetcherFetcher(factory: BookPageFetcher.Factory): Fetcher.Factory<BookPageRequest>
 
     @Singleton
     @Binds
-    abstract fun bindBookThumbnailFetcherFetcher(factory: BookThumbnailFetcher.Factory): Fetcher.Factory<Book>
+    fun bindBookThumbnailFetcherFetcher(factory: BookThumbnailFetcher.Factory): Fetcher.Factory<Book>
 
     @Singleton
     @Binds
-    abstract fun bindFolderThumbnailFetcherFetcher(factory: FolderThumbnailFetcher.Factory): Fetcher.Factory<Folder>
+    fun bindFolderThumbnailFetcherFetcher(factory: FolderThumbnailFetcher.Factory): Fetcher.Factory<Folder>
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteThumbnailFetcherFetcher(
+    fun bindFavoriteThumbnailFetcherFetcher(
         factory: FavoriteThumbnailFetcher.Factory,
     ): Fetcher.Factory<Favorite>
 
     @Singleton
     @Binds
-    abstract fun bindImageCacheDataSource(factory: ImageCacheDataSourceImpl): ImageCacheDataSource
+    fun bindImageCacheDataSource(factory: ImageCacheDataSourceImpl): ImageCacheDataSource
 }

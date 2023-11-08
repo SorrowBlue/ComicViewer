@@ -14,8 +14,8 @@ internal class GetFileInteractor @Inject constructor(
 ) : GetFileUseCase() {
 
     override fun run(request: Request): Flow<Resource<File, Error>> {
-        return fileRepository.find(request.bookshelfId, request.path).map {
-            it.fold({
+        return fileRepository.find(request.bookshelfId, request.path).map { resource ->
+            resource.fold({
                 Resource.Success(it)
             }, {
                 when (it) {

@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbEditScreenUiState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @Composable

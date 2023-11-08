@@ -20,13 +20,15 @@ internal class SupportExtensionViewModel @Inject constructor(
 
     fun toggleExtension(extension: SupportExtension) {
         viewModelScope.launch {
-            settingsUseCase.edit {
-                val newValue = if (extension in it.supportExtension) {
-                    it.supportExtension.filterNot { it == extension }
+            settingsUseCase.edit { settings ->
+                val newValue = if (extension in settings.supportExtension) {
+                    settings.supportExtension.filterNot { it == extension }
                 } else {
-                    it.supportExtension + extension
+                    settings.supportExtension + extension
                 }
-                it.copy(supportExtension = newValue.sortedBy(SupportExtension::extension).toSet())
+                settings.copy(
+                    supportExtension = newValue.sortedBy(SupportExtension::extension).toSet()
+                )
             }
         }
     }

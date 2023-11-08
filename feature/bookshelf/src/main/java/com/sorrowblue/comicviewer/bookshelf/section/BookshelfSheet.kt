@@ -41,6 +41,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.responsive.BottomSheet
 import com.sorrowblue.comicviewer.framework.ui.responsive.SideSheet
 import com.sorrowblue.comicviewer.framework.ui.responsive.SideSheetDefault
 
@@ -62,90 +63,93 @@ private fun ListItem(
 @Composable
 internal fun BookshelfBottomSheet(
     bookshelfFolder: BookshelfFolder,
+    onDismissRequest: () -> Unit,
     onRemove: () -> Unit,
     onEdit: () -> Unit,
     onScanClick: () -> Unit,
 ) {
     val bookshelf = bookshelfFolder.bookshelf
     val folder = bookshelfFolder.folder
-    Column(
-        Modifier
-            .padding(horizontal = ComicTheme.dimension.margin)
-            .navigationBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(Modifier.fillMaxWidth()) {
-            AsyncImage(
-                model = folder,
-                contentDescription = null,
-                placeholder = rememberDebugPlaceholder(),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(128.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(ComicTheme.colorScheme.surfaceContainerLowest)
-            )
-            AssistChip(
-                onClick = { },
-                label = { Text(text = stringResource(id = bookshelf.source())) },
-                modifier = Modifier.align(Alignment.TopEnd)
-            )
-        }
-        Spacer(modifier = Modifier.size(ComicTheme.dimension.padding * 2))
-        ListItem(
-            headline = bookshelf.displayName,
-            overline = stringResource(id = R.string.bookshelf_info_label_display_name)
-        )
-
-        when (bookshelf) {
-            is InternalStorage -> {
-                ListItem(
-                    headline = folder.path,
-                    overline = stringResource(id = R.string.bookshelf_info_label_path)
-                )
-            }
-
-            is SmbServer -> {
-                ListItem(
-                    headline = bookshelf.host,
-                    overline = stringResource(id = R.string.bookshelf_info_label_host)
-                )
-                ListItem(
-                    headline = bookshelf.port.toString(),
-                    overline = stringResource(id = R.string.bookshelf_info_label_port)
-                )
-                ListItem(
-                    headline = folder.path,
-                    overline = stringResource(id = R.string.bookshelf_info_label_path)
-                )
-            }
-        }
-        Spacer(modifier = Modifier.size(ComicTheme.dimension.padding * 2))
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier.fillMaxWidth()
+    BottomSheet(onDismissRequest = onDismissRequest) {
+        Column(
+            Modifier
+                .padding(horizontal = ComicTheme.dimension.margin)
+                .navigationBarsPadding(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextButton(onClick = onRemove) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(imageVector = ComicIcons.Delete, contentDescription = null)
-                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text = "削除")
+            Box(Modifier.fillMaxWidth()) {
+                AsyncImage(
+                    model = folder,
+                    contentDescription = null,
+                    placeholder = rememberDebugPlaceholder(),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(128.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(ComicTheme.colorScheme.surfaceContainerLowest)
+                )
+                AssistChip(
+                    onClick = { },
+                    label = { Text(text = stringResource(id = bookshelf.source())) },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                )
+            }
+            Spacer(modifier = Modifier.size(ComicTheme.dimension.padding * 2))
+            ListItem(
+                headline = bookshelf.displayName,
+                overline = stringResource(id = R.string.bookshelf_info_label_display_name)
+            )
+
+            when (bookshelf) {
+                is InternalStorage -> {
+                    ListItem(
+                        headline = folder.path,
+                        overline = stringResource(id = R.string.bookshelf_info_label_path)
+                    )
+                }
+
+                is SmbServer -> {
+                    ListItem(
+                        headline = bookshelf.host,
+                        overline = stringResource(id = R.string.bookshelf_info_label_host)
+                    )
+                    ListItem(
+                        headline = bookshelf.port.toString(),
+                        overline = stringResource(id = R.string.bookshelf_info_label_port)
+                    )
+                    ListItem(
+                        headline = folder.path,
+                        overline = stringResource(id = R.string.bookshelf_info_label_path)
+                    )
                 }
             }
-            TextButton(onClick = onEdit) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(imageVector = ComicIcons.Edit, contentDescription = null)
-                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text = "編集")
+            Spacer(modifier = Modifier.size(ComicTheme.dimension.padding * 2))
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(onClick = onRemove) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(imageVector = ComicIcons.Delete, contentDescription = null)
+                        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                        Text(text = "削除")
+                    }
                 }
-            }
-            TextButton(onClick = onScanClick) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(imageVector = ComicIcons.Refresh, contentDescription = null)
-                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text = "スキャン")
+                TextButton(onClick = onEdit) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(imageVector = ComicIcons.Edit, contentDescription = null)
+                        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                        Text(text = "編集")
+                    }
+                }
+                TextButton(onClick = onScanClick) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(imageVector = ComicIcons.Refresh, contentDescription = null)
+                        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                        Text(text = "スキャン")
+                    }
                 }
             }
         }
@@ -265,7 +269,7 @@ private fun PreviewBookshelfBottomSheet() {
     )
     PreviewTheme {
         Surface(color = ComicTheme.colorScheme.surfaceContainerLow) {
-            BookshelfBottomSheet(bookshelfFolder, {}, {}, {})
+            BookshelfBottomSheet(bookshelfFolder, {}, {}, {}, {})
         }
     }
 }

@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbEditScreenUiState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.autofill.connectNode
 import com.sorrowblue.comicviewer.framework.ui.autofill.defaultFocusChangeAutoFill

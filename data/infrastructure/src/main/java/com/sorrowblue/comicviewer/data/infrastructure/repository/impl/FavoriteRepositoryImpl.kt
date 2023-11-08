@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteLocalDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.di.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.Unknown
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
@@ -15,7 +16,7 @@ import com.sorrowblue.comicviewer.domain.service.repository.FavoriteFileReposito
 import com.sorrowblue.comicviewer.domain.service.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.service.repository.SettingsCommonRepository
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -25,6 +26,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 internal class FavoriteFileRepositoryImpl @Inject constructor(
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
     private val settingsCommonRepository: SettingsCommonRepository,
 ) : FavoriteFileRepository {
@@ -58,35 +60,36 @@ internal class FavoriteFileRepositoryImpl @Inject constructor(
     }
 
     override suspend fun add(favoriteFile: FavoriteFile) {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             favoriteFileLocalDataSource.add(favoriteFile)
         }
     }
 
     override suspend fun delete(favoriteFile: FavoriteFile) {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             favoriteFileLocalDataSource.delete(favoriteFile)
         }
     }
 }
 
 internal class FavoriteRepositoryImpl @Inject constructor(
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val favoriteLocalDataSource: FavoriteLocalDataSource,
 ) : FavoriteRepository {
 
     override fun get(favoriteId: FavoriteId): Flow<Favorite> {
         return favoriteLocalDataSource.flow(favoriteId)
-            .flowOn(Dispatchers.IO)
+            .flowOn(dispatcher)
     }
 
     override suspend fun update(favorite: Favorite): Favorite {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             favoriteLocalDataSource.update(favorite)
         }
     }
 
     override suspend fun delete(favoriteId: FavoriteId) {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             favoriteLocalDataSource.delete(favoriteId)
         }
     }
@@ -100,7 +103,7 @@ internal class FavoriteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun create(title: String) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             favoriteLocalDataSource.create(Favorite(title))
         }
     }

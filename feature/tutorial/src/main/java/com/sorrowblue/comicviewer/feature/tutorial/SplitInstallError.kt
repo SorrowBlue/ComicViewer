@@ -107,12 +107,8 @@ internal val SplitInstallSessionState.err: SplitInstallError
                 SplitInstallError.NotSupport("エラーなし")
             }
 
-            SplitInstallErrorCode.SERVICE_DIED -> {
-                SplitInstallError.NotSupport("サービスなし")
-            }
-
             else -> {
-                SplitInstallError.NotSupport("想定外")
+                SplitInstallError.NotSupport("サービスなし")
             }
         }
     }

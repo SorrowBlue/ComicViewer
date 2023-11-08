@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import logcat.logcat
 
-abstract class ComposeViewModel<T> : ViewModel() {
+open class ComposeViewModel<T> : ViewModel() {
 
     private val _uiEvents: MutableStateFlow<List<T>> = MutableStateFlow(emptyList())
     val uiEvents: StateFlow<List<T>> get() = _uiEvents.asStateFlow()

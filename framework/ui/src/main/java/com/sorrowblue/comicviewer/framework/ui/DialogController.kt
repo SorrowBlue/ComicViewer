@@ -4,7 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
-abstract class DialogController<T>(value: T) {
+open class DialogController<T>(value: T) {
 
     var isShow: Boolean by mutableStateOf(false)
         protected set

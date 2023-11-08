@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
+import android.os.Parcelable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
@@ -13,6 +14,7 @@ import androidx.compose.ui.focus.onFocusEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,7 +47,8 @@ fun OutlinedTextField2(
     )
 }
 
-data class Input(val value: String = "", val isError: Boolean = false)
+@Parcelize
+data class Input(val value: String = "", val isError: Boolean = false) : Parcelable
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

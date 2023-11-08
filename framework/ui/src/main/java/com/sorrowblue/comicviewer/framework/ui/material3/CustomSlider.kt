@@ -19,7 +19,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.SliderPositions
 import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -580,12 +579,13 @@ fun Modifier.track(
     .heightIn(min = height)
     .clip(shape)
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun Modifier.progress(
-    sliderPositions: SliderPositions,
+    sliderState: SliderState,
     height: Dp = TrackHeight,
     shape: Shape = CircleShape,
 ) =
-    fillMaxWidth(fraction = sliderPositions.activeRange.endInclusive - sliderPositions.activeRange.start)
+    fillMaxWidth(fraction = sliderState.valueRange.endInclusive - sliderState.valueRange.start)
         .heightIn(min = height)
         .clip(shape)
 

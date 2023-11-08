@@ -6,33 +6,26 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.MotionTokens
-import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 import com.sorrowblue.comicviewer.framework.ui.copy
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.ReversePermanentNavigationDrawer
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
@@ -122,43 +115,6 @@ fun <T : Any> ResponsiveScaffold(
 
             val padding = innerPadding.copy(end = end)
             content(padding)
-        }
-    }
-}
-
-@PreviewComic
-@Composable
-private fun PreviewResponsiveScaffold() {
-    PreviewTheme {
-        val state =
-            rememberResponsiveScaffoldState(sideSheetState = rememberSideSheetBooleanState(true))
-        ResponsiveScaffold(
-            state = state,
-            topBar = {
-                ResponsiveTopAppBar(title = "PreviewResponsiveScaffold")
-            },
-            bottomSheet = {
-                Box(Modifier.fillMaxSize())
-            },
-            sideSheet = { value, contentPadding ->
-                SideSheet(title = "Title", innerPadding = contentPadding) {
-                    Surface(
-                        Modifier
-                            .fillMaxSize(),
-                        shape = ComicTheme.shapes.large
-                    ) {
-                    }
-                }
-            }
-        ) { contentPadding ->
-            Surface(
-                Modifier
-                    .padding(contentPadding)
-                    .fillMaxSize(),
-                shape = ComicTheme.shapes.large,
-                color = Color.Cyan
-            ) {
-            }
         }
     }
 }
