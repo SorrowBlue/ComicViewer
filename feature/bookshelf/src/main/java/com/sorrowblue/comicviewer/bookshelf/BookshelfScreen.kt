@@ -136,6 +136,7 @@ private fun BookshelfScreen(
         bottomSheet = { bookshelfFolder ->
             BookshelfBottomSheet(
                 bookshelfFolder = bookshelfFolder,
+                onDismissRequest = onInfoSheetCloseClick,
                 onRemove = onInfoSheetRemoveClick,
                 onEdit = onInfoSheetEditClick,
                 onScanClick = onInfoSheetScanClick

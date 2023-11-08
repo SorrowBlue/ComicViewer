@@ -10,9 +10,9 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class SingletonBindsModule {
+internal interface SingletonBindsModule {
 
     @SmbFileClientFactory
     @Binds
-    abstract fun bindSmbFileClientFactory(factory: SmbFileClient.Factory): FileClient.Factory<SmbServer>
+    fun bindSmbFileClientFactory(factory: SmbFileClient.Factory): FileClient.Factory<SmbServer>
 }

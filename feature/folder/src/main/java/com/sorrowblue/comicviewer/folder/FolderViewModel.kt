@@ -167,6 +167,7 @@ internal class FolderViewModel @Inject constructor(
     fun onReadLaterClick(file: File) {
         viewModelScope.launch {
             addReadLaterUseCase.execute(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
+                .first()
         }
     }
 }

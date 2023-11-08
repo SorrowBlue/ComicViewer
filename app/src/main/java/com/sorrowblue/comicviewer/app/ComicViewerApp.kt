@@ -140,10 +140,8 @@ internal fun ComicViewerApp(
     windowsSize: WindowSizeClass,
     viewModel: ComicViewerAppViewModel,
 ) {
-    val context = LocalContext.current
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
-    val extraNavController = rememberExtraNavController()
     val graphStateHolder = rememberGraphStateHolder()
 
     val dimension = when (windowsSize.widthSizeClass) {
@@ -171,9 +169,7 @@ internal fun ComicViewerApp(
             ) { navHostController, contentPadding ->
                 mainGraph(
                     isMobile = isMobile,
-                    context = context,
                     navController = navHostController,
-                    extraNavController = extraNavController,
                     contentPadding = contentPadding,
                     restoreComplete = viewModel::completeRestoreHistory,
                     onTutorialExit = viewModel::onCompleteTutorial,

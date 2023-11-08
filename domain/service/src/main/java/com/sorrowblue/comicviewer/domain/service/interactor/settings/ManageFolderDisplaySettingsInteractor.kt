@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 internal class ManageFolderDisplaySettingsInteractor @Inject constructor(
     private val settingsCommonRepository: SettingsCommonRepository,
-) : ManageFolderDisplaySettingsUseCase() {
+) : ManageFolderDisplaySettingsUseCase {
 
     override val settings = settingsCommonRepository.folderDisplaySettings
 

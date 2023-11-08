@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 internal class ManageDisplaySettingsInteractor @Inject constructor(
     private val settingsCommonRepository: SettingsCommonRepository,
-) : ManageDisplaySettingsUseCase() {
+) : ManageDisplaySettingsUseCase {
 
     override val settings = settingsCommonRepository.displaySettings
 

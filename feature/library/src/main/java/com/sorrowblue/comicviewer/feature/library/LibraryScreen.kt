@@ -160,8 +160,8 @@ internal class LibraryScreenState(
     }
 
     override fun onStateUpdate(state: SplitInstallSessionState) {
-        val featureList = uiState.addOnList.map {
-            if (state.moduleNames.contains(it.addOn.moduleName)) {
+        val featureList = uiState.addOnList.map { addOn ->
+            if (state.moduleNames.contains(addOn.addOn.moduleName)) {
                 val addOnItemState = when (state.status) {
                     SplitInstallSessionStatus.CANCELED -> AddOnItemState.Still
 
@@ -188,7 +188,7 @@ internal class LibraryScreenState(
                         uiEvent += LibraryScreenUiEvent.Message(
                             text = context.getString(
                                 R.string.library_message_addon_installed,
-                                it.addOn.moduleName
+                                addOn.addOn.moduleName
                             ),
                             actionLabel = context.getString(R.string.library_label_restart),
                             duration = SnackbarDuration.Long
@@ -202,9 +202,9 @@ internal class LibraryScreenState(
 
                     else -> AddOnItemState.Installing
                 }
-                it.copy2(state = addOnItemState)
+                addOn.copy2(state = addOnItemState)
             } else {
-                it
+                addOn
             }
         }.toPersistentList()
         uiState = uiState.copy(addOnList = featureList)
@@ -251,12 +251,12 @@ internal class LibraryScreenState(
                 if (splitInstallManager.isInstallAllowed()) {
                     val state = kotlin.runCatching {
                         splitInstallManager.requestInstall(listOf(feature.addOn.moduleName))
-                    }.onFailure {
-                        if (it is SplitInstallException) {
+                    }.onFailure { throwable ->
+                        if (throwable is SplitInstallException) {
                             uiEvent += LibraryScreenUiEvent.Message(
                                 text = context.getString(
                                     R.string.library_message_addon_install_failed,
-                                    it.errorCode
+                                    throwable.errorCode
                                 )
                             )
                             uiState = uiState.copy(

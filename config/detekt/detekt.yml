@@ -41,6 +41,8 @@ performance:
 
 potential-bugs:
   active: true
+  UnsafeCallOnNullableType:
+    active: false
 
 style:
   active: true

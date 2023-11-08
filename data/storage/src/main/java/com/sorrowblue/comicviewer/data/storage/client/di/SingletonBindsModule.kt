@@ -9,8 +9,8 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class SingletonBindsModule {
+internal interface SingletonBindsModule {
 
     @Binds
-    abstract fun bindFileClientFactory(factory: FileClientFactoryImpl): FileClientFactory
+    fun bindFileClientFactory(factory: FileClientFactoryImpl): FileClientFactory
 }

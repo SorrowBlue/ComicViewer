@@ -42,7 +42,7 @@ internal class FavoriteEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
+            getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId)).first()
         }
     }
 

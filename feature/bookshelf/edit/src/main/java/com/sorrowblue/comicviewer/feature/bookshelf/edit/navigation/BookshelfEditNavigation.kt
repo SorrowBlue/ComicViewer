@@ -40,7 +40,7 @@ fun NavGraphBuilder.bookshelfEditScreen(
             arguments = listOf(
                 navArgument(BookshelfIdArg) {
                     type = NavType.IntType
-                    defaultValue = 0
+                    defaultValue = BookshelfId.Default
                 },
                 navArgument(BookshelfTypeArg) {
                     type = NavType.StringType
@@ -51,7 +51,7 @@ fun NavGraphBuilder.bookshelfEditScreen(
             BookshelfEditRoute(
                 args = BookshelfEditArgs(it.arguments!!),
                 onBackClick = onBackClick,
-                onComplete = onComplete,
+                onComplete = onComplete
             )
         }
     } else {
@@ -68,11 +68,6 @@ fun NavGraphBuilder.bookshelfEditScreen(
                 },
             )
         ) {
-            BookshelfEditRoute(
-                args = BookshelfEditArgs(it.arguments!!),
-                onBackClick = onBackClick,
-                onComplete = onComplete,
-            )
         }
     }
 }

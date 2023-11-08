@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 internal class ManageViewerOperationSettingsInteractor @Inject constructor(
     private val settingsCommonRepository: SettingsCommonRepository,
-) : ManageViewerOperationSettingsUseCase() {
+) : ManageViewerOperationSettingsUseCase {
 
     override val settings = settingsCommonRepository.viewerOperationSettings
 

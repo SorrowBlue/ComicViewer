@@ -20,29 +20,29 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class SingletonBindsModule {
+internal interface SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindFileRepository(repository: FileRepositoryImpl): FileRepository
+    fun bindFileRepository(repository: FileRepositoryImpl): FileRepository
 
     @Singleton
     @Binds
-    abstract fun bindReadLaterRepository(repository: ReadLaterRepositoryImpl): ReadLaterRepository
+    fun bindReadLaterRepository(repository: ReadLaterRepositoryImpl): ReadLaterRepository
 
     @Singleton
     @Binds
-    abstract fun bindSettingsCommonRepository(repository: SettingsCommonRepositoryImpl): SettingsCommonRepository
+    fun bindSettingsCommonRepository(repository: SettingsCommonRepositoryImpl): SettingsCommonRepository
 
     @Singleton
     @Binds
-    abstract fun bindBookshelfRepository(repository: BookshelfRepositoryImpl): BookshelfRepository
+    fun bindBookshelfRepository(repository: BookshelfRepositoryImpl): BookshelfRepository
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteRepository(factory: FavoriteRepositoryImpl): FavoriteRepository
+    fun bindFavoriteRepository(factory: FavoriteRepositoryImpl): FavoriteRepository
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteBookRepository(factory: FavoriteFileRepositoryImpl): FavoriteFileRepository
+    fun bindFavoriteBookRepository(factory: FavoriteFileRepositoryImpl): FavoriteFileRepository
 }

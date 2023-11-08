@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.app
 
-import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -34,9 +33,7 @@ import kotlinx.collections.immutable.PersistentList
 
 internal fun NavGraphBuilder.mainGraph(
     isMobile: Boolean,
-    context: Context,
     navController: NavHostController,
-    extraNavController: ExtraNavController,
     contentPadding: PaddingValues,
     restoreComplete: () -> Unit,
     onTutorialExit: () -> Unit,

@@ -7,4 +7,9 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 @JvmInline
-value class BookshelfId(val value: Int) : Parcelable
+value class BookshelfId(val value: Int = 0) : Parcelable {
+
+    companion object {
+        const val Default = 0
+    }
+}
