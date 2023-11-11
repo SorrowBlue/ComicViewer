@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 internal fun BoxOauth2Route(
     onComplete: () -> Unit,
     viewModel: BoxOauth2ViewModel = viewModel(
-        factory = BoxOauth2ViewModel.Factory(
+        factory = BoxOauth2ViewModel.factory(
             BoxApiRepository.getInstance(LocalContext.current)
         )
     ),
@@ -58,7 +58,7 @@ internal class BoxOauth2ViewModel(
     }
 
     companion object {
-        fun Factory(repository: BoxApiRepository) = object : ViewModelProvider.Factory {
+        fun factory(repository: BoxApiRepository) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val savedStateHandle = extras.createSavedStateHandle()
@@ -66,5 +66,4 @@ internal class BoxOauth2ViewModel(
             }
         }
     }
-
 }

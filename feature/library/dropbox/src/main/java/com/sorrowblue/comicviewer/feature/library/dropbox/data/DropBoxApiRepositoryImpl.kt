@@ -7,26 +7,41 @@ import android.os.Build
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.dropbox.core.DbxRequestConfig
+import com.dropbox.core.android.Auth
 import com.dropbox.core.oauth.DbxCredential
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.ListFolderResult
 import com.dropbox.core.v2.users.FullAccount
+import com.sorrowblue.comicviewer.app.IoDispatchers
 import java.io.OutputStream
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
+import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
 @OptIn(ExperimentalSerializationApi::class)
 private val Context.dropboxCredentialDataStore: DataStore<DropboxCredential> by dataStore(
-    fileName = "dropbox_credential.pb", serializer = DropboxCredential.Serializer()
+    fileName = "dropbox_credential.pb",
+    serializer = DropboxCredential.Serializer()
 )
 
-internal class DropBoxApiRepositoryImpl(context: Context) : DropBoxApiRepository {
+val dropBoxModule = module {
+    single<DropBoxApiRepository> { DropBoxApiRepositoryImpl(get(), get(named<IoDispatchers>())) }
+}
+
+internal class DropBoxApiRepositoryImpl(
+    private val context: Context,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : DropBoxApiRepository {
+
     private val dropboxCredentialDataStore = context.dropboxCredentialDataStore
 
     private val config = DbxRequestConfig
@@ -42,12 +57,16 @@ internal class DropBoxApiRepositoryImpl(context: Context) : DropBoxApiRepository
             client().check().user("auth_check").result == "auth_check"
         }.onFailure {
             logcat { it.asLog() }
-            dropboxCredentialDataStore.updateData { it.copy(credential = null) }
+            dropboxCredentialDataStore.updateData { dropboxCredential ->
+                dropboxCredential.copy(
+                    credential = null
+                )
+            }
         }.getOrDefault(false)
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override suspend fun storeCredential(dbxCredential: DbxCredential) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             dropboxCredentialDataStore.updateData {
                 it.copy(credential = DbxCredential.Writer.writeToString(dbxCredential))
             }
@@ -62,7 +81,22 @@ internal class DropBoxApiRepositoryImpl(context: Context) : DropBoxApiRepository
         } else {
             null
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
+
+    override fun startSignIn() {
+        Auth.startOAuth2Authentication(context, "uolcvekf83nd74j")
+    }
+
+    override suspend fun dbxCredential(): Boolean {
+        Auth.getDbxCredential()?.let {
+            logcat { "dropbox 認証した" }
+            storeCredential(it)
+            return true
+        } ?: kotlin.run {
+            logcat { "dropbox 認証してない" }
+            return false
+        }
+    }
 
     override suspend fun currentAccount(): FullAccount? {
         return if (isAuthenticated.first()) {
@@ -75,7 +109,7 @@ internal class DropBoxApiRepositoryImpl(context: Context) : DropBoxApiRepository
     }
 
     override suspend fun signOut() {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             client().auth().tokenRevoke()
             dropboxCredentialDataStore.updateData { it.copy(credential = null) }
         }
@@ -113,6 +147,7 @@ internal class DropBoxApiRepositoryImpl(context: Context) : DropBoxApiRepository
         return try {
             DbxCredential.Reader.readFully(dropboxCredentialDataStore.data.first().credential)
         } catch (e: Exception) {
+            logcat(priority = LogPriority.ERROR) { e.asLog() }
             dropboxCredentialDataStore.updateData { it.copy(credential = null) }
             null
         }
@@ -126,5 +161,4 @@ internal class DropBoxApiRepositoryImpl(context: Context) : DropBoxApiRepository
             packageManager.getPackageInfo(packageName, 0)
         }
     }
-
 }

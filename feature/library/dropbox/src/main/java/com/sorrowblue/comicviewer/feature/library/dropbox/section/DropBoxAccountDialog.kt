@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.library.dropbox.section
 
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -19,10 +20,14 @@ import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import kotlinx.parcelize.Parcelize
 
-internal sealed interface DropBoxDialogUiState {
+internal sealed interface DropBoxDialogUiState : Parcelable {
 
+    @Parcelize
     data object Hide : DropBoxDialogUiState
+
+    @Parcelize
     data class Show(
         val photoUrl: String = "",
         val name: String = "",

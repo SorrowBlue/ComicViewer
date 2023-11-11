@@ -29,15 +29,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.box.component.BoxTopAppBar
@@ -47,8 +43,6 @@ import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxDialogUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import kotlinx.coroutines.flow.flowOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +50,7 @@ internal fun BoxRoute(
     onBackClick: () -> Unit,
     onFolderClick: (Folder) -> Unit,
     viewModel: BoxViewModel = viewModel(
-        factory = BoxViewModel.Factory(
+        factory = BoxViewModel.factory(
             LocalContext.current,
             BoxApiRepository.getInstance(LocalContext.current)
         )
@@ -253,52 +247,3 @@ private fun LoadedBoxScreen(
         onLogoutClick = onLogoutClick
     )
 }
-
-@Preview
-@Composable
-private fun PreviewLoadedBoxScreen() {
-    ComicTheme {
-        Column {
-            (0..<20).forEach {
-                FileListItemSh()
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewLoginBoxScreen() {
-    ComicTheme {
-        LoginBoxScreen()
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewLoadingBoxScreen() {
-    ComicTheme {
-        LoadingBoxScreen()
-    }
-}
-
-@Composable
-private fun fakeLazyPagingItems() =
-    flowOf(PagingData.from<File>(List(20) { bookFile(it) })).collectAsLazyPagingItems()
-
-@Composable
-private fun nullLazyPagingItems() =
-    flowOf(PagingData.from<File>(List(20) { bookFile(it) })).collectAsLazyPagingItems()
-
-internal fun bookFile(index: Int) = BookFile(
-    BookshelfId(0),
-    "FakeBookName$index.zip",
-    "/comic/example/",
-    "/comic/example/FakeBookName$index.zip",
-    0,
-    0,
-    "",
-    50,
-    123,
-    0
-)

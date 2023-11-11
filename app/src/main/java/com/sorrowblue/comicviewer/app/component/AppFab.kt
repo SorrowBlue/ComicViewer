@@ -18,24 +18,24 @@ internal fun AppFab(
     canScroll: Boolean,
     onClick: () -> Unit,
 ) {
-    var _currentFab by remember { mutableStateOf<MainScreenFab?>(null) }
+    var mainScreenFab by remember { mutableStateOf<MainScreenFab?>(null) }
     LaunchedEffect(currentFab) {
         if (currentFab != null) {
-            _currentFab = currentFab
+            mainScreenFab = currentFab
         }
     }
     ExtendedFloatingActionButton(
         expanded = !canScroll,
         text = {
-            if (_currentFab != null) {
-                Text(text = stringResource(id = _currentFab!!.label))
+            if (mainScreenFab != null) {
+                Text(text = stringResource(id = mainScreenFab!!.label))
             }
         },
         icon = {
-            if (_currentFab != null) {
+            if (mainScreenFab != null) {
                 Icon(
-                    imageVector = _currentFab!!.icon,
-                    contentDescription = stringResource(id = _currentFab!!.contentDescription)
+                    imageVector = mainScreenFab!!.icon,
+                    contentDescription = stringResource(id = mainScreenFab!!.contentDescription)
                 )
             }
         },

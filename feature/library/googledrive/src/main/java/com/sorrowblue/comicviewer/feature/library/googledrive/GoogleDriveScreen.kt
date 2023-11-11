@@ -48,8 +48,9 @@ import logcat.logcat
 @Composable
 internal fun GoogleDriveRoute(
     onFileClick: (File) -> Unit,
+    onBackClick: () -> Unit,
     viewModel: GoogleDriveViewModel = viewModel(
-        factory = GoogleDriveViewModel.Factory(
+        factory = GoogleDriveViewModel.factory(
             LocalContext.current,
         )
     ),
@@ -84,7 +85,8 @@ internal fun GoogleDriveRoute(
             }
         }
     GoogleDriveScreen(
-        uiState = uiState, lazyPagingItems = lazyPagingItems,
+        uiState = uiState,
+        lazyPagingItems = lazyPagingItems,
         onProfileImageClick = viewModel::onProfileImageClick,
         onSignInClick = {
             val googleSignInOptions =
@@ -124,7 +126,8 @@ internal fun GoogleDriveRoute(
                 viewModel.onDialogDismissRequest()
                 viewModel.refreshAccount()
             }
-        }
+        },
+        onBackClick = onBackClick,
     )
     LifecycleEffect(lifecycleObserver = viewModel)
 }
@@ -140,11 +143,11 @@ internal data class GoogleDriveScreenUiState(
 internal fun GoogleDriveScreen(
     uiState: GoogleDriveScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
-    onBackClick: () -> Unit = {},
-    onProfileImageClick: () -> Unit = {},
-    onSignInClick: () -> Unit = {},
-    onFileClick: (File) -> Unit = {},
-    onDialogDismissRequest: () -> Unit = {},
+    onBackClick: () -> Unit,
+    onProfileImageClick: () -> Unit,
+    onSignInClick: () -> Unit,
+    onFileClick: (File) -> Unit,
+    onDialogDismissRequest: () -> Unit,
     onLogoutClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
@@ -163,8 +166,9 @@ internal fun GoogleDriveScreen(
             LazyColumn(contentPadding = innerPadding) {
                 items(
                     count = lazyPagingItems.itemCount,
-                    key = lazyPagingItems.itemKey { it.path }) {
-                    lazyPagingItems[it]?.let {
+                    key = lazyPagingItems.itemKey { it.path }
+                ) { index ->
+                    lazyPagingItems[index]?.let {
                         FileListItem(file = it, onClick = { onFileClick(it) })
                     }
                 }
@@ -185,7 +189,7 @@ internal fun GoogleDriveScreen(
 }
 
 @Composable
-fun FileListItem(file: File, onClick: () -> Unit) {
+fun FileListItem(file: File, onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = { Text(text = file.name) },
         trailingContent = {
@@ -198,6 +202,6 @@ fun FileListItem(file: File, onClick: () -> Unit) {
                 Modifier.size(24.dp)
             )
         },
-        modifier = Modifier.clickable(onClick = onClick)
+        modifier = modifier.clickable(onClick = onClick)
     )
 }

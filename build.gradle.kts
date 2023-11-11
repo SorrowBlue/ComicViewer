@@ -14,7 +14,6 @@ plugins {
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
     alias(libs.plugins.dependency.graph.generator)
     alias(libs.plugins.arturbosch.detekt)
-    id("com.palantir.git-version") version "3.0.0"
     id("androidx.room") version libs.versions.androidx.room.get() apply false
 }
 
@@ -38,6 +37,3 @@ tasks.named(
         isNonStable(candidate.version) && !isNonStable(currentVersion)
     }
 }
-
-val gitVersion: groovy.lang.Closure<String> by extra
-version = gitVersion().also { logger.lifecycle("version: $it") }

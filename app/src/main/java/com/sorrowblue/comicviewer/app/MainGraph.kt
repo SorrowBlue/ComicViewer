@@ -137,7 +137,6 @@ internal fun NavGraphBuilder.mainGraph(
             addOnScreen(navController)
         }
     }
-
 }
 
 private fun AddOn.loadDynamicFeature(): AddOnNavigation? {

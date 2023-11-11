@@ -11,6 +11,7 @@ internal class AndroidFeatureDynamicFeatureConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("comicviewer.android.dynamic-feature")
                 apply("comicviewer.android.dynamic-feature.compose")
+                apply("org.jetbrains.kotlin.plugin.parcelize")
             }
 
             dependencies {

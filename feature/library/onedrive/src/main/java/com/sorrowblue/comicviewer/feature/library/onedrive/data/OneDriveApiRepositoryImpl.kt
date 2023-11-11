@@ -7,36 +7,45 @@ import com.microsoft.graph.requests.DriveItemCollectionPage
 import com.microsoft.graph.requests.GraphServiceClient
 import java.io.InputStream
 import java.io.OutputStream
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import logcat.LogPriority
+import logcat.asLog
 import logcat.logcat
 
-internal class OneDriveApiRepositoryImpl(private val authenticationProvider: AuthenticationProvider) :
-    OneDriveApiRepository {
+internal class OneDriveApiRepositoryImpl(
+    private val authenticationProvider: AuthenticationProvider,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : OneDriveApiRepository {
 
     private val graphClient = GraphServiceClient.builder()
         .authenticationProvider(authenticationProvider)
         .logger(object : ILogger {
-            override fun setLoggingLevel(level: LoggerLevel) {}
+
+            private var level = LoggerLevel.DEBUG
+
+            override fun setLoggingLevel(level: LoggerLevel) {
+                this.level = level
+            }
 
             override fun getLoggingLevel(): LoggerLevel {
-                return LoggerLevel.DEBUG
+                return level
             }
 
             override fun logDebug(message: String) {
-//                logcat { message }
+                logcat(priority = LogPriority.DEBUG) { message }
             }
 
             override fun logError(message: String, throwable: Throwable?) {
                 throwable?.printStackTrace()
-                logcat { message + ". ${throwable?.localizedMessage}" }
+                logcat(priority = LogPriority.ERROR) { message + ":${throwable?.asLog()}" }
             }
-
         })
         .buildClient()
 
     override suspend fun getCurrentUser(): User? {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             if (!authenticationProvider.isSignIned) {
                 null
             } else {
@@ -46,13 +55,13 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
     }
 
     override suspend fun profileImage(): InputStream {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             graphClient.me().photo().content().buildRequest().get()!!
         }
     }
 
     override suspend fun driveId(): String {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             graphClient.me().drive().buildRequest().get()!!.id!!
         }
     }
@@ -63,13 +72,15 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
         outputStream: OutputStream,
         onProgress: (Double) -> Unit,
     ) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             val size =
                 graphClient.drives(driveId).items(itemId).buildRequest().get()!!.size!!.toDouble()
             graphClient.drives(driveId).items(itemId).content().buildRequest().get()!!
-                .copyTo(ProgressOutputStream(outputStream) {
-                    onProgress.invoke(it / size)
-                })
+                .copyTo(
+                    ProgressOutputStream(outputStream) {
+                        onProgress.invoke(it / size)
+                    }
+                )
         }
     }
 
@@ -84,7 +95,7 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
         skipToken: String?,
     ): DriveItemCollectionPage {
         return if (driveId == null) {
-            withContext(Dispatchers.IO) {
+            withContext(dispatcher) {
                 kotlin.runCatching {
                     graphClient.me().drive().root().children().buildRequest().apply {
                         top(limit)
@@ -97,7 +108,7 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
                 }
             }
         } else {
-            withContext(Dispatchers.IO) {
+            withContext(dispatcher) {
                 graphClient.drives(driveId).items(itemId).children().buildRequest().apply {
                     top(limit)
                     expand("thumbnails")

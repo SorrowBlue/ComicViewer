@@ -68,8 +68,6 @@ internal sealed interface LibraryScreenUiEvent {
         }
     }
 
-    data class ClickFeature(val fetcher: Feature) : LibraryScreenUiEvent
-
     data object Restart : LibraryScreenUiEvent
 }
 
@@ -91,7 +89,6 @@ internal fun LibraryRoute(
                     it.showSnackbar(snackbarHostState)
                 }
 
-                is LibraryScreenUiEvent.ClickFeature -> onFeatureClick(it.fetcher)
                 LibraryScreenUiEvent.Restart -> ActivityCompat.recreate(context as Activity)
             }
         }
@@ -100,7 +97,7 @@ internal fun LibraryRoute(
         uiState = uiState,
         snackbarHostState = snackbarHostState,
         contentPadding = contentPadding,
-        onFeatureClick = state::onFeatureClick,
+        onFeatureClick = { state.onFeatureClick(it, onFeatureClick) },
         onInstallClick = state::onInstallClick,
         onCancelClick = state::onCancelClick,
     )
@@ -210,14 +207,13 @@ internal class LibraryScreenState(
         uiState = uiState.copy(addOnList = featureList)
     }
 
-    fun onFeatureClick(feature: Feature) {
+    fun onFeatureClick(feature: Feature, onClick: (Feature) -> Unit) {
         when (feature) {
             is Feature.AddOn -> {
                 when (feature.state) {
                     AddOnItemState.Still -> requestInstall(feature)
                     AddOnItemState.Installing -> Unit
-                    AddOnItemState.Installed ->
-                        uiEvent += LibraryScreenUiEvent.ClickFeature(feature)
+                    AddOnItemState.Installed -> onClick(feature)
 
                     AddOnItemState.Restart ->
                         uiEvent += LibraryScreenUiEvent.Message(
@@ -233,9 +229,7 @@ internal class LibraryScreenState(
                 }
             }
 
-            is Feature.Basic -> {
-                uiEvent += LibraryScreenUiEvent.ClickFeature(feature)
-            }
+            is Feature.Basic -> onClick(feature)
         }
     }
 

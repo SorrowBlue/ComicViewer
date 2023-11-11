@@ -30,7 +30,8 @@ interface BoxApiRepository {
             BoxApiRepositoryImpl(context.boxConnectionStateDataStore)
 
         private val Context.boxConnectionStateDataStore: DataStore<BoxConnectionState> by dataStore(
-            fileName = "box_connection_state.pb", serializer = BoxConnectionState.Serializer()
+            fileName = "box_connection_state.pb",
+            serializer = BoxConnectionState.Serializer()
         )
     }
 }

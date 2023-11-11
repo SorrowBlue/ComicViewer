@@ -39,7 +39,7 @@ internal class GoogleDriveViewModel(
 
     companion object {
 
-        fun Factory(context: Context) = object : ViewModelProvider.Factory {
+        fun factory(context: Context) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val savedStateHandle = extras.createSavedStateHandle()

@@ -23,7 +23,6 @@ internal class MainActivity : AppCompatActivity() {
     private val viewModel: ComicViewerAppViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         installSplashScreen().apply {
             super.onCreate(savedInstanceState)
             setKeepOnScreenCondition(viewModel::shouldKeepSplash)
@@ -40,11 +39,14 @@ internal class MainActivity : AppCompatActivity() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(false) {
-                override fun handleOnBackPressed() {
-                    logcat { "onback" }
+            onBackPressedDispatcher.addCallback(
+                this,
+                object : OnBackPressedCallback(false) {
+                    override fun handleOnBackPressed() {
+                        logcat { "onback" }
+                    }
                 }
-            })
+            )
         }
     }
 }

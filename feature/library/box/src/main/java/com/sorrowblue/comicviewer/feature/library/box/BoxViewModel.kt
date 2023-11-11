@@ -130,7 +130,7 @@ internal class BoxViewModel(
 
     companion object {
 
-        fun Factory(context: Context, repository: BoxApiRepository) =
+        fun factory(context: Context, repository: BoxApiRepository) =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(

@@ -9,12 +9,12 @@ import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.feature.library.onedrive.OneDriveRoute
 import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavigation
 
-private const val driveIdArg = "drive_id"
-private const val itemIdArg = "item_id"
+private const val DriveIdArg = "drive_id"
+private const val ItemIdArg = "item_id"
 
 internal class OneDriveArgs(val driveId: String?, val itemId: String?) {
     constructor(savedStateHandle: SavedStateHandle) :
-            this(savedStateHandle[driveIdArg], savedStateHandle[itemIdArg])
+        this(savedStateHandle[DriveIdArg], savedStateHandle[ItemIdArg])
 }
 
 private const val OneDriveRoute = "OneDrive"
@@ -23,14 +23,14 @@ object OneDriveNavigationImpl : OneDriveNavigation {
 
     override fun NavGraphBuilder.addOnScreen(navController: NavController) {
         composable(
-            route = "$OneDriveRoute?drive_id={$driveIdArg}&item_id={$itemIdArg}",
+            route = "$OneDriveRoute?drive_id={$DriveIdArg}&item_id={$ItemIdArg}",
             arguments = listOf(
-                navArgument(driveIdArg) {
+                navArgument(DriveIdArg) {
                     type = NavType.StringType
                     nullable = true
                     defaultValue = null
                 },
-                navArgument(itemIdArg) {
+                navArgument(ItemIdArg) {
                     type = NavType.StringType
                     nullable = true
                     defaultValue = null
@@ -39,7 +39,7 @@ object OneDriveNavigationImpl : OneDriveNavigation {
         ) {
             OneDriveRoute(
                 onBackClick = navController::popBackStack,
-                onFolderClick = { navController.navigateToOneDrive(it.path) }
+                onFolderClick = { folder -> navController.navigateToOneDrive(folder.path) }
             )
         }
     }
@@ -52,7 +52,7 @@ object OneDriveNavigationImpl : OneDriveNavigation {
         if (driveId == null) {
             navigate(OneDriveRoute)
         } else {
-            navigate("$OneDriveRoute?drive_id=${driveId}&item_id=${itemId}")
+            navigate("$OneDriveRoute?drive_id=$driveId&item_id=$itemId")
         }
     }
 }

@@ -9,6 +9,7 @@ plugins {
     id("comicviewer.android.application")
     id("comicviewer.android.application.compose")
     id("comicviewer.android.hilt")
+    id("comicviewer.android.koin")
     alias(libs.plugins.mikepenz.aboutlibraries.plugin)
     alias(libs.plugins.arturbosch.detekt)
     alias(libs.plugins.grgit)
@@ -21,7 +22,7 @@ android {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 12
-        versionName = grgit.describe {
+        versionName = grgitService.service.get().grgit.describe {
             longDescr = false
             isTags = true
         }?.toVersion() ?: "0.0.1-SNAPSHOT"

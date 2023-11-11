@@ -10,6 +10,7 @@ import com.box.sdk.BoxFolder
 import com.box.sdk.BoxItem
 import com.box.sdk.BoxUser
 import java.io.OutputStream
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -23,18 +24,19 @@ import kotlinx.coroutines.withContext
 import logcat.asLog
 import logcat.logcat
 
-private const val CLIENT_ID = "nihdm7dthg9lm7m3b41bpw7jp7b0lb9z"
-private const val CLIENT_SECRET = "znx5P0kuwJ5LNqF3UG8Yw8Xs05dw4zNq"
+private const val ClientId = "nihdm7dthg9lm7m3b41bpw7jp7b0lb9z"
+private const val ClientSecret = "znx5P0kuwJ5LNqF3UG8Yw8Xs05dw4zNq"
 
 internal class BoxApiRepositoryImpl(
     private val dropboxCredentialDataStore: DataStore<BoxConnectionState>,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BoxApiRepository {
 
     private val api = runBlocking { dropboxCredentialDataStore.data.first() }.let {
         if (it.state != null) {
-            BoxAPIConnection.restore(CLIENT_ID, CLIENT_SECRET, it.state)
+            BoxAPIConnection.restore(ClientId, ClientSecret, it.state)
         } else {
-            BoxAPIConnection(CLIENT_ID, CLIENT_SECRET)
+            BoxAPIConnection(ClientId, ClientSecret)
         }
     }
 
@@ -62,23 +64,23 @@ internal class BoxApiRepositoryImpl(
 
     override suspend fun authenticate(state: String, code: String, onSuccess: () -> Unit) {
         kotlin.runCatching {
-            withContext(Dispatchers.IO) {
+            withContext(dispatcher) {
                 api.authenticate(code)
             }
         }.onSuccess {
             logcat { "認証成功。${api.accessToken},${api.save()}" }
-            withContext(Dispatchers.IO) {
+            withContext(dispatcher) {
                 dropboxCredentialDataStore.updateData { it.copy(state = api.save()) }
             }
             onSuccess()
         }.onFailure {
             logcat { "認証失敗" }
-            dropboxCredentialDataStore.updateData { it.copy(state = null) }
+            dropboxCredentialDataStore.updateData { connectionState -> connectionState.copy(state = null) }
         }
     }
 
-    override val userInfoFlow = dropboxCredentialDataStore.data.map {
-        if (it.state != null) {
+    override val userInfoFlow = dropboxCredentialDataStore.data.map { state ->
+        if (state.state != null) {
             try {
                 BoxUser.getCurrentUser(api).getInfo("id", "avatar_url", "name")
             } catch (e: BoxAPIResponseException) {
@@ -93,7 +95,7 @@ internal class BoxApiRepositoryImpl(
         } else {
             null
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override suspend fun currentUser(): BoxUser? {
         return kotlin.runCatching { BoxUser.getCurrentUser(api) }.getOrNull()
@@ -104,7 +106,7 @@ internal class BoxApiRepositoryImpl(
     }
 
     override suspend fun signOut() {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             try {
                 api.revokeToken()
                 dropboxCredentialDataStore.updateData { it.copy(state = null) }
@@ -132,11 +134,13 @@ internal class BoxApiRepositoryImpl(
     }
 
     override suspend fun fileThumbnail(id: String): String? {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             BoxFile(
                 api,
                 id
-            ).getInfoWithRepresentations("[jpg?dimensions=32x32]").representations.firstOrNull()?.content?.urlTemplate?.replace(
+            ).getInfoWithRepresentations(
+                "[jpg?dimensions=32x32]"
+            ).representations.firstOrNull()?.content?.urlTemplate?.replace(
                 "{+asset_path}",
                 ""
             )
@@ -144,7 +148,7 @@ internal class BoxApiRepositoryImpl(
     }
 
     override suspend fun accessToken(): String {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             api.accessToken.orEmpty()
         }
     }

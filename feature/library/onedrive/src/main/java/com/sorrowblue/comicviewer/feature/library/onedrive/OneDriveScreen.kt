@@ -228,8 +228,9 @@ private fun LoadedOneDriveScreen(
         LazyColumn(contentPadding = innerPadding) {
             items(
                 count = lazyPagingItems.itemCount,
-                key = lazyPagingItems.itemKey { it.path }) {
-                lazyPagingItems[it]?.let {
+                key = lazyPagingItems.itemKey { it.path }
+            ) { index ->
+                lazyPagingItems[index]?.let {
                     FileListItem(file = it, onClick = { onFileClick(it) })
                 }
             }

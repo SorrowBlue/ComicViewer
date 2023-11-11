@@ -18,6 +18,10 @@ internal fun Project.configureKotlinAndroid(
             jvmTarget = "17"
         }
 
+        lint {
+            baseline = file("lint-baseline.xml")
+        }
+
         buildTypes {
             create("prerelease") {
                 initWith(getByName("release"))

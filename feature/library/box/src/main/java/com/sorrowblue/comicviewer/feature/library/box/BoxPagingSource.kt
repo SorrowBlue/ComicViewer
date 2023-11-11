@@ -7,14 +7,16 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class BoxPagingSource(
     private val parent: String,
     private val repository: BoxApiRepository,
-) :
-    PagingSource<Int, File>() {
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : PagingSource<Int, File>() {
+
     override fun getRefreshKey(state: PagingState<Int, File>): Int? {
         return state.anchorPosition?.let {
             state.closestPageToPosition(it)
@@ -22,7 +24,7 @@ internal class BoxPagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, File> {
-        val result = withContext(Dispatchers.IO) {
+        val result = withContext(dispatcher) {
             repository.list(parent, params.loadSize.toLong(), params.key?.toLong() ?: 0)
         }
         val list = result?.mapNotNull {
@@ -31,7 +33,7 @@ internal class BoxPagingSource(
                     Folder(
                         BookshelfId(0),
                         it.name,
-                        parent.orEmpty(),
+                        parent,
                         it.id,
                         0,
                         0,
@@ -42,7 +44,7 @@ internal class BoxPagingSource(
                     BookFile(
                         BookshelfId(0),
                         it.name,
-                        parent.orEmpty(),
+                        parent,
                         it.id,
                         it.size,
                         0,

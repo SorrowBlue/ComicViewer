@@ -11,11 +11,11 @@ import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.feature.library.googledrive.GoogleDriveRoute
 import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavigation
 
-private const val pathArg = "path"
+private const val PathArg = "path"
 
 internal class GoogleDriveArgs(val path: String) {
     constructor(savedStateHandle: SavedStateHandle) :
-            this(checkNotNull(savedStateHandle.get<String>(pathArg)).decodeFromBase64())
+        this(checkNotNull(savedStateHandle.get<String>(PathArg)).decodeFromBase64())
 }
 
 const val GoogleDriveRoute = "GoogleDrive"
@@ -24,17 +24,20 @@ object GoogleDriveNavigationImpl : GoogleDriveNavigation {
 
     override fun NavGraphBuilder.addOnScreen(navController: NavController) {
         composable(
-            route = "$GoogleDriveRoute?path={$pathArg}",
-            arguments = listOf(navArgument("pathArg") {
-                type = NavType.StringType
-                nullable = true
-                defaultValue = null
-            })
+            route = "$GoogleDriveRoute?path={$PathArg}",
+            arguments = listOf(
+                navArgument("pathArg") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
         ) {
             GoogleDriveRoute(
-                onFileClick = {
-                    navController.navigateToGoogleDrive(it.path)
-                }
+                onFileClick = { file ->
+                    navController.navigateToGoogleDrive(file.path)
+                },
+                onBackClick = navController::popBackStack
             )
         }
     }

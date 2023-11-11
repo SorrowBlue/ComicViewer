@@ -15,6 +15,7 @@ import com.microsoft.identity.client.exception.MsalException
 import com.sorrowblue.comicviewer.feature.library.onedrive.R
 import java.net.URL
 import java.util.concurrent.CompletableFuture
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -23,8 +24,10 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
-class AuthenticationProvider private constructor(private val appContext: Context) :
-    BaseAuthenticationProvider() {
+class AuthenticationProvider private constructor(
+    private val appContext: Context,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseAuthenticationProvider() {
 
     companion object {
         private var instance: AuthenticationProvider? = null
@@ -47,7 +50,7 @@ class AuthenticationProvider private constructor(private val appContext: Context
 
     suspend fun initialize() {
         if (clientApplication != null) return
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             PublicClientApplication.createSingleAccountPublicClientApplication(
                 appContext.applicationContext,
                 R.raw.onedrive_auth_config_single_account,
@@ -61,14 +64,17 @@ class AuthenticationProvider private constructor(private val appContext: Context
                     override fun onError(exception: MsalException) {
                         logcat(LogPriority.ERROR) { "Error creating MSAL application. ${exception.localizedMessage}" }
                     }
-                })
+                }
+            )
         }
     }
 
     override fun getAuthorizationTokenAsync(requestUrl: URL): CompletableFuture<String> {
         return if (shouldAuthenticateRequestWithUrl(requestUrl)) {
             runBlocking { acquireTokenSilently() }.thenApply { obj: IAuthenticationResult -> obj.accessToken }
-        } else CompletableFuture.completedFuture(null)
+        } else {
+            CompletableFuture.completedFuture(null)
+        }
     }
 
     suspend fun signIn(activity: Activity): CompletableFuture<IAuthenticationResult> {
@@ -79,14 +85,14 @@ class AuthenticationProvider private constructor(private val appContext: Context
             .withScopes(scopes)
             .withCallback(getAuthenticationCallback(future))
             .build()
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             clientApplication?.signIn(parameters)
         }
         return future
     }
 
     suspend fun signOut(): Unit? {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             clientApplication?.signOut(object :
                 ISingleAccountPublicClientApplication.SignOutCallback {
                 override fun onSignOut() {
@@ -109,7 +115,7 @@ class AuthenticationProvider private constructor(private val appContext: Context
         // TODO(https://github.com/AzureAD/microsoft-authentication-library-for-android/issues/1742)
         // val silentParameters = AcquireTokenSilentParameters.Builder().fromAuthority(authority).withCallback(getAuthenticationCallback(future)).withScopes(scopes).build()
         // clientApplication.value?.acquireTokenSilentAsync(silentParameters)
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             @Suppress("DEPRECATION")
             clientApplication?.acquireTokenSilentAsync(
                 scopes.toTypedArray(),

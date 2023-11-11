@@ -75,12 +75,10 @@ fun Modifier.drawDiagonalLabel(
     labelTextRatio: Float = 7f,
 ) = composed(
     factory = {
-
         val textMeasurer = rememberTextMeasurer()
         val textLayoutResult: TextLayoutResult = remember {
             textMeasurer.measure(text = AnnotatedString(text), style = style)
         }
-
 
         Modifier
             .clipToBounds()
@@ -129,7 +127,6 @@ fun Modifier.drawDiagonalLabel(
                         )
                     )
                 }
-
             }
     }
 )
@@ -183,7 +180,9 @@ internal fun ComicViewerApp(
                             navController.navigate(
                                 graphStateHolder.startDestination,
                                 navOptions {
-                                    popUpTo(com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationRoute) {
+                                    popUpTo(
+                                        com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationRoute
+                                    ) {
                                         inclusive = true
                                     }
                                 }
@@ -213,11 +212,13 @@ internal fun ComicViewerApp(
     LaunchedEffectUiEvent(viewModel.uiEvents, viewModel::consumeUiEvent) { uiEvent ->
         when (uiEvent) {
             is ComicViewerAppUiEvent.StartTutorial -> {
-                navController.navigateToTutorial(navOptions {
-                    popUpTo(mainGraphRoute) {
-                        inclusive = true
+                navController.navigateToTutorial(
+                    navOptions {
+                        popUpTo(MainGraphRoute) {
+                            inclusive = true
+                        }
                     }
-                })
+                )
                 uiEvent.done()
             }
 
@@ -286,7 +287,7 @@ internal fun ComicViewerApp(
                         false,
                         navOptions {
                             launchSingleTop = true
-                            popUpTo(mainGraphRoute) {
+                            popUpTo(MainGraphRoute) {
                                 inclusive = true
                             }
                         }
@@ -294,7 +295,6 @@ internal fun ComicViewerApp(
                 }
                 uiEvent.done()
             }
-
         }
     }
     LifecycleEffect(Lifecycle.Event.ON_CREATE, action = viewModel::onCreate)

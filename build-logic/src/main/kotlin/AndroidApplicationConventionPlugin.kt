@@ -15,7 +15,7 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
-                apply("io.gitlab.arturbosch.detekt")
+                apply("comicviewer.android.lint")
             }
 
             kotlin {

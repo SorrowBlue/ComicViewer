@@ -29,7 +29,7 @@ import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveLayout
 import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveLayoutState
 import kotlinx.collections.immutable.toPersistentList
 
-internal const val mainGraphRoute = "main"
+internal const val MainGraphRoute = "main"
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
@@ -82,7 +82,7 @@ internal fun MainScreen(
         ModalBottomSheetLayout(bottomSheetNavigator) {
             NavHostWithSharedAxisX(
                 navController = navController,
-                route = mainGraphRoute,
+                route = MainGraphRoute,
                 startDestination = startDestination,
                 modifier = Modifier
             ) {
