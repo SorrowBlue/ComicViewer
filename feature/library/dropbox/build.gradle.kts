@@ -11,7 +11,7 @@ android {
     resourcePrefix("dropbox")
 
     buildTypes {
-        debug {
+        all {
             manifestPlaceholders += mapOf(
                 "dropbox_api_key" to (System.getenv("DROP_BOX_API_KEY") ?: gradleLocalProperties(
                     rootDir
