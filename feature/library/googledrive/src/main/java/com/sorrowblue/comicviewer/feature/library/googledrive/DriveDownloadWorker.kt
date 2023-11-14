@@ -18,7 +18,7 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
-import com.sorrowblue.comicviewer.app.IoDispatchers
+import com.sorrowblue.comicviewer.app.IoDispatcher
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.createNotification
 import kotlin.math.ceil
@@ -40,7 +40,16 @@ internal class DriveDownloadWorker(
         private const val NOTIFICATION_ID: Int = 2
     }
 
-    private val dispatcher by inject<CoroutineDispatcher>(qualifier = named<IoDispatchers>())
+    private val dispatcher by inject<CoroutineDispatcher>(qualifier = named<IoDispatcher>())
+
+    init {
+        logcat {
+            """
+            str=${named("com.sorrowblue.comicviewer.app.IoDispatchers").value}
+            str=${named<IoDispatcher>().value}
+            """.trimIndent()
+        }
+    }
 
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
 

@@ -24,22 +24,10 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
-class AuthenticationProvider private constructor(
+internal class AuthenticationProvider(
     private val appContext: Context,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseAuthenticationProvider() {
-
-    companion object {
-        private var instance: AuthenticationProvider? = null
-
-        @Synchronized
-        fun getInstance(context: Context) = instance?.also {
-            logcat { "Re getInstance" }
-        } ?: AuthenticationProvider(context).also {
-            logcat { "getInstance" }
-            instance = it
-        }
-    }
 
     private var clientApplication: ISingleAccountPublicClientApplication? = null
     val account = MutableStateFlow<IAccount?>(null)
@@ -83,7 +71,11 @@ class AuthenticationProvider private constructor(
             .withActivity(activity)
             .withLoginHint(null)
             .withScopes(scopes)
-            .withCallback(getAuthenticationCallback(future))
+            .withCallback(
+                getAuthenticationCallback(future) {
+                    loadAccount()
+                }
+            )
             .build()
         withContext(dispatcher) {
             clientApplication?.signIn(parameters)
@@ -126,7 +118,7 @@ class AuthenticationProvider private constructor(
         return future
     }
 
-    private fun getAuthenticationCallback(future: CompletableFuture<IAuthenticationResult>) =
+    private fun getAuthenticationCallback(future: CompletableFuture<IAuthenticationResult>, onSuccess: () -> Unit = {}) =
         object : AuthenticationCallback {
             override fun onCancel() {
                 logcat { "onCancel" }
@@ -135,6 +127,7 @@ class AuthenticationProvider private constructor(
 
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
                 logcat { "onSuccess" }
+                onSuccess()
                 future.complete(authenticationResult)
             }
 

@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.feature.library.onedrive
 
 import android.app.Activity
-import android.content.Intent
+import android.os.Parcelable
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -23,83 +23,72 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.onedrive.component.FileListItem
 import com.sorrowblue.comicviewer.feature.library.onedrive.component.OneDriveTopAppBar
+import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveArgs
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveAccountDialog
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveDialogUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
 import java.io.InputStream
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.parcelize.Parcelize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun OneDriveRoute(
+    args: OneDriveArgs,
     onBackClick: () -> Unit,
     onFolderClick: (Folder) -> Unit,
-    viewModel: OneDriveViewModel = viewModel(factory = OneDriveViewModel.factory(LocalContext.current)),
+    state: OneDriveScreenState = rememberOneDriveScreenState(args),
 ) {
-    val lazPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    val uiState by viewModel.uiState.collectAsState()
+    val lazPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
+    val uiState = state.uiState
     val context = LocalContext.current
     val createFileRequest =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK && it.data?.data != null) {
-                viewModel.enqueueDownload(it.data!!.data!!.toString(), viewModel.file)
-            }
+            state.onResult(it)
         }
     OneDriveScreen(
         lazyPagingItems = lazPagingItems,
         uiState = uiState,
         onBackClick = onBackClick,
-        onSignInClick = { viewModel.signIn(context as Activity) },
-        onProfileImageClick = viewModel::onProfileImageClick,
-        onFileClick = {
-            when (it) {
-                is Book -> {
-                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-                    intent.addCategory(Intent.CATEGORY_OPENABLE)
-                    intent.putExtra(Intent.EXTRA_TITLE, it.name)
-                    intent.type = "*/*"
-                    viewModel.file = it
-                    createFileRequest.launch(intent)
-                }
-
-                is Folder -> {
-                    onFolderClick(it)
-                }
-            }
-        },
-        onDialogDismissRequest = viewModel::onDialogDismissRequest,
-        onLogoutClick = viewModel::signOut,
+        onSignInClick = { state.onLoginClick(context as Activity) },
+        onProfileImageClick = state::onProfileImageClick,
+        onFileClick = { state.onFileClick(it, createFileRequest, onFolderClick) },
+        onDialogDismissRequest = state::onDialogDismissRequest,
+        onLogoutClick = state::onLogoutClick,
     )
 
-    LifecycleEffect(lifecycleObserver = viewModel)
+    LifecycleResumeEffect(action = state::onResume)
 }
 
-internal sealed interface OneDriveScreenUiState {
+internal sealed interface OneDriveScreenUiState : Parcelable {
+
+    @Parcelize
     data object Loading : OneDriveScreenUiState
+
+    @Parcelize
     data class Login(val isRunning: Boolean = false) : OneDriveScreenUiState
+
+    @Parcelize
     data class Loaded(
-        val oneDriveDialogUiState: OneDriveDialogUiState = OneDriveDialogUiState.Hide,
+        val showDialog: Boolean = false,
+        val oneDriveDialogUiState: OneDriveDialogUiState = OneDriveDialogUiState(),
         val path: String = "",
         val profileUri: suspend () -> InputStream? = { null },
     ) : OneDriveScreenUiState
@@ -236,11 +225,13 @@ private fun LoadedOneDriveScreen(
             }
         }
     }
-    OneDriveAccountDialog(
-        uiState = uiState.oneDriveDialogUiState,
-        onDismissRequest = onDialogDismissRequest,
-        onLogoutClick = onLogoutClick
-    )
+    if (uiState.showDialog) {
+        OneDriveAccountDialog(
+            uiState = uiState.oneDriveDialogUiState,
+            onDismissRequest = onDialogDismissRequest,
+            onLogoutClick = onLogoutClick
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

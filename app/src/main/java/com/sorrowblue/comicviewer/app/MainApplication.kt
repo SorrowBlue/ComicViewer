@@ -7,6 +7,7 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -21,6 +22,7 @@ internal class MainApplication : SplitCompatApplication(), Configuration.Provide
         super.onCreate()
 
         startKoin {
+            loadKoinModules(appModule)
             androidContext(this@MainApplication)
         }
     }
@@ -30,10 +32,11 @@ internal class MainApplication : SplitCompatApplication(), Configuration.Provide
 }
 
 @Suppress("InjectDispatcher")
-val appModule = module {
-    single(named<IoDispatchers>()) { Dispatchers.IO }
-    single(named<DefaultDispatchers>()) { Dispatchers.Default }
+private val appModule = module {
+    single(named<IoDispatcher>()) { Dispatchers.IO }
+    single(named<DefaultDispatcher>()) { Dispatchers.Default }
 }
 
-annotation class IoDispatchers
-annotation class DefaultDispatchers
+annotation class IoDispatcher
+
+annotation class DefaultDispatcher

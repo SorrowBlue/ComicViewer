@@ -1,5 +1,5 @@
+
 import com.sorrowblue.comicviewer.implementation
-import com.sorrowblue.comicviewer.ksp
 import com.sorrowblue.comicviewer.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -14,14 +14,11 @@ internal class AndroidKoinConventionPlugin : Plugin<Project> {
 
             dependencies {
                 implementation(platform(libs.findLibrary("koin-bom").get()))
-                implementation(libs.findLibrary("koin-core").get())
-                implementation(libs.findLibrary("koin-annotations").get())
-                implementation(libs.findLibrary("koin-compose").get())
-                implementation(libs.findLibrary("koin-workmanager").get())
-                ksp(libs.findLibrary("koin-kspCompiler").get())
+                implementation(libs.findLibrary("koin-androidxCompose").get())
+                implementation(libs.findLibrary("koin-androidxWorkmanager").get())
             }
             extensions.configure<com.google.devtools.ksp.gradle.KspExtension> {
-                arg("KOIN_CONFIG_CHECK","true")
+                arg("KOIN_CONFIG_CHECK","false")
             }
         }
     }

@@ -7,12 +7,13 @@ import android.os.Build
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.dropbox.core.DbxRequestConfig
+import com.dropbox.core.InvalidAccessTokenException
 import com.dropbox.core.android.Auth
 import com.dropbox.core.oauth.DbxCredential
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.ListFolderResult
 import com.dropbox.core.v2.users.FullAccount
-import com.sorrowblue.comicviewer.app.IoDispatchers
+import com.sorrowblue.comicviewer.app.IoDispatcher
 import java.io.OutputStream
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +35,7 @@ private val Context.dropboxCredentialDataStore: DataStore<DropboxCredential> by 
 )
 
 val dropBoxModule = module {
-    single<DropBoxApiRepository> { DropBoxApiRepositoryImpl(get(), get(named<IoDispatchers>())) }
+    single<DropBoxApiRepository> { DropBoxApiRepositoryImpl(get(), get(named<IoDispatcher>())) }
 }
 
 internal class DropBoxApiRepositoryImpl(
@@ -46,6 +47,7 @@ internal class DropBoxApiRepositoryImpl(
 
     private val config = DbxRequestConfig
         .newBuilder("ComicViewerAndroid/${context.getPackageInfo().longVersionCode}")
+        .withAutoRetryEnabled()
         .build()
 
     private suspend fun client(): DbxClientV2 {
@@ -67,6 +69,7 @@ internal class DropBoxApiRepositoryImpl(
 
     override suspend fun storeCredential(dbxCredential: DbxCredential) {
         withContext(dispatcher) {
+            logcat { "storeCredential(dbxCredential=$dbxCredential)" }
             dropboxCredentialDataStore.updateData {
                 it.copy(credential = DbxCredential.Writer.writeToString(dbxCredential))
             }
@@ -84,7 +87,16 @@ internal class DropBoxApiRepositoryImpl(
     }.flowOn(dispatcher)
 
     override fun startSignIn() {
-        Auth.startOAuth2Authentication(context, "uolcvekf83nd74j")
+        val info = context.packageManager.getApplicationInfo(
+            context.packageName,
+            PackageManager.GET_META_DATA
+        )
+        val key = info.metaData.getString("dropboxApiKey")
+        Auth.startOAuth2PKCE(
+            context,
+            key,
+            requestConfig = config
+        )
     }
 
     override suspend fun dbxCredential(): Boolean {
@@ -124,10 +136,25 @@ internal class DropBoxApiRepositoryImpl(
                     client().files().listFolderBuilder(path).withLimit(limit).start()
                 }
             }.onFailure {
+                if (it is InvalidAccessTokenException) {
+                    if (it.authError.isExpiredAccessToken) {
+                        refresh()
+                    }
+                }
                 it.printStackTrace()
             }.getOrNull()
         } else {
             null
+        }
+    }
+
+    override suspend fun refresh() {
+        withContext(dispatcher) {
+            val credential = readCredential()
+            credential?.refresh(config)
+                ?.also {
+                    storeCredential(credential)
+                }
         }
     }
 
@@ -157,7 +184,6 @@ internal class DropBoxApiRepositoryImpl(
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
         } else {
-            @Suppress("DEPRECATION")
             packageManager.getPackageInfo(packageName, 0)
         }
     }

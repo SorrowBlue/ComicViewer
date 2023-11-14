@@ -107,6 +107,10 @@ internal class DropBoxScreenState(
                     uiState = DropBoxScreenUiState.Login(false)
                 }
             }
+        } else {
+            scope.launch {
+                repository.refresh()
+            }
         }
     }
 

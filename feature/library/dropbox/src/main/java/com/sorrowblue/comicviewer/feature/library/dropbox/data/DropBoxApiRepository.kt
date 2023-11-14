@@ -20,4 +20,5 @@ internal interface DropBoxApiRepository {
     suspend fun dbxCredential(): Boolean
 
     val isAuthenticated: Flow<Boolean>
+    suspend fun refresh()
 }

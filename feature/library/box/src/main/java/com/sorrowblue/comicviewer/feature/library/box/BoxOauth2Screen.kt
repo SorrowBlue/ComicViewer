@@ -6,32 +6,26 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
 import com.sorrowblue.comicviewer.feature.library.box.navigation.BoxOauth2Args
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 internal fun BoxOauth2Route(
+    args: BoxOauth2Args,
     onComplete: () -> Unit,
-    viewModel: BoxOauth2ViewModel = viewModel(
-        factory = BoxOauth2ViewModel.factory(
-            BoxApiRepository.getInstance(LocalContext.current)
-        )
-    ),
+    state: BoxOauth2ScreenState = rememberBoxOauth2ScreenState(args),
 ) {
     BoxOauth2Screen()
     LaunchedEffect(Unit) {
-        viewModel.authenticate(onComplete)
+        state.authenticate(onComplete)
     }
 }
 
@@ -44,26 +38,23 @@ private fun BoxOauth2Screen() {
     }
 }
 
-internal class BoxOauth2ViewModel(
-    savedStateHandle: SavedStateHandle,
+@Stable
+internal class BoxOauth2ScreenState(
+    private val args: BoxOauth2Args,
     private val repository: BoxApiRepository,
 ) : ViewModel() {
-
-    private val args = BoxOauth2Args(savedStateHandle)
 
     fun authenticate(onSuccess: () -> Unit) {
         viewModelScope.launch {
             repository.authenticate(args.state, args.code, onSuccess)
         }
     }
+}
 
-    companion object {
-        fun factory(repository: BoxApiRepository) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val savedStateHandle = extras.createSavedStateHandle()
-                return BoxOauth2ViewModel(savedStateHandle, repository) as T
-            }
-        }
-    }
+@Composable
+internal fun rememberBoxOauth2ScreenState(
+    args: BoxOauth2Args,
+    repository: BoxApiRepository = koinInject(),
+) = remember {
+    BoxOauth2ScreenState(args, repository)
 }

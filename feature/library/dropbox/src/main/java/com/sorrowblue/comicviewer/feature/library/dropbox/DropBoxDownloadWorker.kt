@@ -12,7 +12,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.sorrowblue.comicviewer.app.IoDispatchers
+import com.sorrowblue.comicviewer.app.IoDispatcher
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.DropBoxApiRepository
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import kotlin.math.ceil
@@ -34,7 +34,7 @@ internal class DropBoxDownloadWorker(
         private const val NOTIFICATION_ID: Int = 3
     }
 
-    private val dispatcher by inject<CoroutineDispatcher>(qualifier = named<IoDispatchers>())
+    private val dispatcher by inject<CoroutineDispatcher>(qualifier = named<IoDispatcher>())
     private val repository by inject<DropBoxApiRepository>()
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
 

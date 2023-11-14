@@ -12,7 +12,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.sorrowblue.comicviewer.app.IoDispatchers
+import com.sorrowblue.comicviewer.app.IoDispatcher
 import com.sorrowblue.comicviewer.feature.library.onedrive.data.OneDriveApiRepository
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import kotlin.math.ceil
@@ -34,9 +34,9 @@ internal class OneDriveDownloadWorker(
         private const val NOTIFICATION_ID: Int = 4
     }
 
-    private val dispatcher by inject<CoroutineDispatcher>(qualifier = named<IoDispatchers>())
+    private val repository by inject<OneDriveApiRepository>()
 
-    private val repository = OneDriveApiRepository.getInstance(appContext)
+    private val dispatcher by inject<CoroutineDispatcher>(qualifier = named<IoDispatcher>())
 
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
 

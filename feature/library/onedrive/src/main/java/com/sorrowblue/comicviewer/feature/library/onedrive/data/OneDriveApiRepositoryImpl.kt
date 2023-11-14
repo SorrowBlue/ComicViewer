@@ -1,18 +1,26 @@
 package com.sorrowblue.comicviewer.feature.library.onedrive.data
 
-import com.microsoft.graph.logger.ILogger
-import com.microsoft.graph.logger.LoggerLevel
+import android.app.Activity
 import com.microsoft.graph.models.User
 import com.microsoft.graph.requests.DriveItemCollectionPage
 import com.microsoft.graph.requests.GraphServiceClient
+import com.microsoft.identity.client.IAccount
+import com.sorrowblue.comicviewer.app.IoDispatcher
 import java.io.InputStream
 import java.io.OutputStream
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
-import logcat.LogPriority
-import logcat.asLog
 import logcat.logcat
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
+
+internal val oneDriveModule = module {
+    single { AuthenticationProvider(get(), get(named<IoDispatcher>())) }
+    single<OneDriveApiRepository> { OneDriveApiRepositoryImpl(get(), get(named<IoDispatcher>())) }
+}
 
 internal class OneDriveApiRepositoryImpl(
     private val authenticationProvider: AuthenticationProvider,
@@ -21,28 +29,12 @@ internal class OneDriveApiRepositoryImpl(
 
     private val graphClient = GraphServiceClient.builder()
         .authenticationProvider(authenticationProvider)
-        .logger(object : ILogger {
-
-            private var level = LoggerLevel.DEBUG
-
-            override fun setLoggingLevel(level: LoggerLevel) {
-                this.level = level
-            }
-
-            override fun getLoggingLevel(): LoggerLevel {
-                return level
-            }
-
-            override fun logDebug(message: String) {
-                logcat(priority = LogPriority.DEBUG) { message }
-            }
-
-            override fun logError(message: String, throwable: Throwable?) {
-                throwable?.printStackTrace()
-                logcat(priority = LogPriority.ERROR) { message + ":${throwable?.asLog()}" }
-            }
-        })
+        .logger(LogcatLogger)
         .buildClient()
+
+    override suspend fun initialize() = authenticationProvider.initialize()
+
+    override val accountFlow: StateFlow<IAccount?> = authenticationProvider.account
 
     override suspend fun getCurrentUser(): User? {
         return withContext(dispatcher) {
@@ -116,5 +108,20 @@ internal class OneDriveApiRepositoryImpl(
                 }.get()!!
             }
         }
+    }
+
+    override suspend fun login(activity: Activity) {
+        kotlin.runCatching {
+            authenticationProvider.signIn(activity).await()
+        }.onSuccess {
+            logcat { "success account.id=${it.account.id}" }
+            logcat { "success account.idToken=${it.account.idToken}" }
+        }.onFailure {
+            it.printStackTrace()
+        }
+    }
+
+    override suspend fun logout() {
+        authenticationProvider.signOut()
     }
 }

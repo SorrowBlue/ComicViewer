@@ -1,20 +1,22 @@
 package com.sorrowblue.comicviewer.feature.library.onedrive.navigation
 
-import androidx.lifecycle.SavedStateHandle
+import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.feature.library.onedrive.OneDriveRoute
+import com.sorrowblue.comicviewer.feature.library.onedrive.data.oneDriveModule
 import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavigation
+import org.koin.core.context.loadKoinModules
 
 private const val DriveIdArg = "drive_id"
 private const val ItemIdArg = "item_id"
 
 internal class OneDriveArgs(val driveId: String?, val itemId: String?) {
-    constructor(savedStateHandle: SavedStateHandle) :
-        this(savedStateHandle[DriveIdArg], savedStateHandle[ItemIdArg])
+
+    constructor(bundle: Bundle) : this(bundle.getString(DriveIdArg), bundle.getString(ItemIdArg))
 }
 
 private const val OneDriveRoute = "OneDrive"
@@ -37,9 +39,11 @@ object OneDriveNavigationImpl : OneDriveNavigation {
                 },
             )
         ) {
+            loadKoinModules(oneDriveModule)
             OneDriveRoute(
+                args = OneDriveArgs(it.arguments!!),
                 onBackClick = navController::popBackStack,
-                onFolderClick = { folder -> navController.navigateToOneDrive(folder.path) }
+                onFolderClick = { folder -> navController.navigateToOneDrive(folder.path) },
             )
         }
     }

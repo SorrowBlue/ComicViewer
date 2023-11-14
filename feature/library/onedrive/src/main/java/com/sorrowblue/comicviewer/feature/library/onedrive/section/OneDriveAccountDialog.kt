@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.library.onedrive.section
 
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -19,38 +20,19 @@ import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import kotlinx.parcelize.Parcelize
 
-internal sealed interface OneDriveDialogUiState {
-
-    data object Hide : OneDriveDialogUiState
-    data class Show(
-        val photoUrl: String = "",
-        val name: String = "",
-    ) : OneDriveDialogUiState
-}
+@Parcelize
+internal data class OneDriveDialogUiState(
+    val photoUrl: String = "",
+    val name: String = "",
+) : Parcelable
 
 @Composable
 internal fun OneDriveAccountDialog(
     uiState: OneDriveDialogUiState,
     onDismissRequest: () -> Unit,
     onLogoutClick: () -> Unit,
-) {
-    when (uiState) {
-        OneDriveDialogUiState.Hide -> Unit
-        is OneDriveDialogUiState.Show ->
-            OneDriveAccountDialog(
-                uiState = uiState,
-                onDismissRequest = onDismissRequest,
-                onLogoutClick = onLogoutClick,
-            )
-    }
-}
-
-@Composable
-private fun OneDriveAccountDialog(
-    uiState: OneDriveDialogUiState.Show = OneDriveDialogUiState.Show(),
-    onDismissRequest: () -> Unit = {},
-    onLogoutClick: () -> Unit = {},
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -85,7 +67,11 @@ private fun OneDriveAccountDialog(
 private fun PreviewOneDriveAccountDialog() {
     ComicTheme {
         Surface {
-            OneDriveAccountDialog()
+            OneDriveAccountDialog(
+                uiState = OneDriveDialogUiState(),
+                onDismissRequest = {},
+                onLogoutClick = {}
+            )
         }
     }
 }

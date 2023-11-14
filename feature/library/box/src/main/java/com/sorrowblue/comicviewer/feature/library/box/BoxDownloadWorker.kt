@@ -12,7 +12,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.sorrowblue.comicviewer.app.IoDispatchers
+import com.sorrowblue.comicviewer.app.IoDispatcher
 import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import kotlin.math.ceil
@@ -34,8 +34,8 @@ internal class BoxDownloadWorker(
         private const val NOTIFICATION_ID: Int = 3
     }
 
-    private val dispatcher by inject<CoroutineDispatcher>(qualifier = named<IoDispatchers>())
-    private val repository = BoxApiRepository.getInstance(appContext)
+    private val dispatcher by inject<CoroutineDispatcher>(qualifier = named<IoDispatcher>())
+    private val repository by inject<BoxApiRepository>()
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
 
     private val notificationBuilder = NotificationCompat.Builder(appContext, ChannelID.DOWNLOAD.id)

@@ -6,14 +6,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.sorrowblue.comicviewer.app.appModule
 import com.sorrowblue.comicviewer.domain.model.Base64.decodeFromBase64
 import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.feature.library.dropbox.DropBoxRoute
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.dropBoxModule
 import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavigation
-import org.koin.androidx.compose.KoinAndroidContext
-import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.context.loadKoinModules
 
 private const val PathArg = "path"
@@ -27,7 +24,6 @@ private const val DropBoxRoute = "DropBox"
 
 object DropBoxNavigationImpl : DropBoxNavigation {
 
-    @OptIn(KoinExperimentalAPI::class)
     override fun NavGraphBuilder.addOnScreen(navController: NavController) {
         composable(
             route = "$DropBoxRoute?path={$PathArg}",
@@ -38,14 +34,12 @@ object DropBoxNavigationImpl : DropBoxNavigation {
                 }
             )
         ) {
-            KoinAndroidContext {
-                loadKoinModules(listOf(appModule, dropBoxModule))
-                DropBoxRoute(
-                    args = DropBoxArgs(it.arguments!!),
-                    onBackClick = navController::popBackStack,
-                    onFolderClick = { folder -> navController.navigateToDropBox(folder.path) }
-                )
-            }
+            loadKoinModules(dropBoxModule)
+            DropBoxRoute(
+                args = DropBoxArgs(it.arguments!!),
+                onBackClick = navController::popBackStack,
+                onFolderClick = { folder -> navController.navigateToDropBox(folder.path) }
+            )
         }
     }
 
