@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
+import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import kotlinx.collections.immutable.toPersistentList
 
@@ -30,7 +30,8 @@ enum class Sort(val labelRes: Int) {
     SIZE_DESC(R.string.folder_label_size_asc),
     SIZE_ASC(R.string.folder_label_size_desc),
     DATE_ASC(R.string.folder_label_date_asc),
-    DATE_DESC(R.string.folder_label_date_desc);
+    DATE_DESC(R.string.folder_label_date_desc),
+    ;
 
     companion object {
         fun from(sortType: SortType): Sort {
@@ -49,9 +50,10 @@ fun SortSheet(
     currentSort: Sort,
     onDismissRequest: () -> Unit,
     onClick: (Sort) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val sortList = remember { Sort.entries.toPersistentList() }
-    ModalBottomSheet(onDismissRequest = onDismissRequest) {
+    ModalBottomSheet(onDismissRequest = onDismissRequest, modifier = modifier) {
         LazyColumn {
             items(sortList, key = Sort::labelRes) {
                 Row(
@@ -78,9 +80,9 @@ fun SortSheet(
     }
 }
 
-@ComicPreviews
+@PreviewComic
 @Composable
-fun PreviewSortSheet() {
+private fun PreviewSortSheet() {
     PreviewTheme {
         SortSheet(
             currentSort = Sort.NAME_ASC,

@@ -9,14 +9,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationRoute
 
-private const val handleBackArg = "handleBack"
-private const val modeArg = "mode"
+private const val HandleBackArg = "handleBack"
+private const val ModeArg = "mode"
 
 enum class Mode {
     Register,
     Change,
     Erase,
-    Authentication
+    Authentication,
 }
 
 internal class AuthenticationArgs(
@@ -24,33 +24,31 @@ internal class AuthenticationArgs(
     val mode: Mode,
 ) {
     constructor(savedStateHandle: SavedStateHandle) : this(
-        checkNotNull<Boolean>(savedStateHandle[handleBackArg]),
-        Mode.valueOf(checkNotNull(savedStateHandle[modeArg])),
+        checkNotNull<Boolean>(savedStateHandle[HandleBackArg]),
+        Mode.valueOf(checkNotNull(savedStateHandle[ModeArg])),
     )
 }
 
-private const val authenticationRouteBase = "authentication"
-const val authenticationRoute = "$authenticationRouteBase/{$modeArg}/?handleBack={$handleBackArg}"
-
+private const val AuthenticationRouteBase = "authentication"
+const val AuthenticationRoute = "$AuthenticationRouteBase/{$ModeArg}/?handleBack={$HandleBackArg}"
 
 fun NavController.navigateToAuthentication(
     mode: Mode,
     handleBack: Boolean = false,
     navOptions: NavOptions? = null,
 ) {
-    navigate("$authenticationRouteBase/${mode.name}/?handleBack=${handleBack}", navOptions)
+    navigate("$AuthenticationRouteBase/${mode.name}/?handleBack=$handleBack", navOptions)
 }
-
 
 fun NavGraphBuilder.authenticationScreen(
     onBack: () -> Unit,
     onAuthCompleted: (Boolean, Mode) -> Unit,
 ) {
     composable(
-        route = authenticationRoute,
+        route = AuthenticationRoute,
         arguments = listOf(
-            navArgument(modeArg) { type = NavType.StringType },
-            navArgument(handleBackArg) { type = NavType.BoolType },
+            navArgument(ModeArg) { type = NavType.StringType },
+            navArgument(HandleBackArg) { type = NavType.BoolType },
         )
     ) {
         AuthenticationRoute(onBack = onBack, onAuthCompleted = onAuthCompleted)

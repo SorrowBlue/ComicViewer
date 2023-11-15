@@ -22,7 +22,9 @@ import java.util.Locale
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun InAppLanguagePickerScreen(onBackClick: () -> Unit = {}) {
+internal fun InAppLanguagePickerScreen(
+    onBackClick: () -> Unit,
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val languages = remember { Language.entries.toPersistentList() }
     Scaffold(
@@ -73,7 +75,6 @@ fun InAppLanguagePickerScreen(onBackClick: () -> Unit = {}) {
                     }
                 }
             }
-
         }
     }
 }

@@ -8,8 +8,8 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.sorrowblue.comicviewer.app.MainGraphRoute
 import com.sorrowblue.comicviewer.app.component.NavHostWithSharedAxisX
-import com.sorrowblue.comicviewer.app.mainGraphRoute
 
 @Composable
 @OptIn(ExperimentalMaterialNavigationApi::class)
@@ -23,7 +23,7 @@ internal fun MainSheet(
     ModalBottomSheetLayout(bottomSheetNavigator) {
         NavHostWithSharedAxisX(
             navController = navController,
-            route = mainGraphRoute,
+            route = MainGraphRoute,
             startDestination = startDestination,
             modifier = Modifier
         ) {

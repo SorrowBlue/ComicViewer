@@ -18,8 +18,8 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
-import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
+import com.sorrowblue.comicviewer.domain.model.file.Book
 
 internal data class BookPagerUiState(
     val book: Book,
@@ -62,13 +62,16 @@ fun BookSplitPage(
     book: Book,
     bookPage: BookPage.Split,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier.clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null,
-            onClick = onClick
-        ),
+        modifier = Modifier
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
+            .then(modifier),
         contentAlignment = Alignment.Center
     ) {
         when (bookPage.state) {
@@ -147,7 +150,7 @@ fun BookSplitPage(
 }
 
 @Composable
-fun BookImage(book: Book, index: Int, isLeft: Boolean) {
+fun BookImage(book: Book, index: Int, isLeft: Boolean, modifier: Modifier = Modifier) {
     AsyncImage(
         model = BookPageRequest(book to index),
         contentDescription = null,
@@ -165,7 +168,7 @@ fun BookImage(book: Book, index: Int, isLeft: Boolean) {
                 it
             }
         },
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     )
 }
 

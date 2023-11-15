@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.onSuccess
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
+import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
@@ -41,6 +42,7 @@ internal class FolderViewModel @Inject constructor(
     getFileUseCase: GetFileUseCase,
     pagingFileUseCase: PagingFileUseCase,
     private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
+    private val addReadLaterUseCase: AddReadLaterUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -54,12 +56,12 @@ internal class FolderViewModel @Inject constructor(
         PagingFileUseCase.Request(PagingConfig(30), bookshelfId, path)
     ).filterSuccess().flattenConcat().cachedIn(viewModelScope)
 
-
     private val _uiState = MutableStateFlow(
         FolderScreenUiState(
             folderAppBarUiState = FolderAppBarUiState(
                 "",
-                runBlocking { displaySettingsUseCase.settings.first().toFileContentLayout() }),
+                runBlocking { displaySettingsUseCase.settings.first().toFileContentLayout() }
+            ),
             fileContentType = runBlocking {
                 displaySettingsUseCase.settings.first().toFileContentLayout()
             }
@@ -159,6 +161,13 @@ internal class FolderViewModel @Inject constructor(
                     }
                 )
             }
+        }
+    }
+
+    fun onReadLaterClick(file: File) {
+        viewModelScope.launch {
+            addReadLaterUseCase.execute(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
+                .first()
         }
     }
 }

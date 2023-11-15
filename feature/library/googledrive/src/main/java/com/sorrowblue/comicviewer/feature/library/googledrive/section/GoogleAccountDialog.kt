@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.library.googledrive.section
 
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -18,11 +19,15 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import kotlinx.parcelize.Parcelize
 
-internal sealed interface GoogleAccountDialogUiState {
+internal sealed interface GoogleAccountDialogUiState : Parcelable {
 
+    @Parcelize
     data object Hide : GoogleAccountDialogUiState
+
+    @Parcelize
     data class Show(
         val photoUrl: String = "",
         val name: String = "",
@@ -65,7 +70,7 @@ private fun GoogleAccountDialog(
             AsyncImage(
                 model = uiState.photoUrl,
                 contentDescription = null,
-                placeholder = debugPlaceholder(),
+                placeholder = rememberDebugPlaceholder(),
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)

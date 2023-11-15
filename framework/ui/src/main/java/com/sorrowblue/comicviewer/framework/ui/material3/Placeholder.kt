@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
-
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.animation.core.MutableTransitionState
@@ -16,7 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -117,7 +116,7 @@ fun Modifier.placeholder(
     val lastOutline = remember { Ref<Outline>() }
 
     // The current highlight animation progress
-    var highlightProgress: Float by remember { mutableStateOf(0f) }
+    var highlightProgress: Float by remember { mutableFloatStateOf(0f) }
 
     // This is our crossfade transition
     val transitionState = remember { MutableTransitionState(visible) }.apply {

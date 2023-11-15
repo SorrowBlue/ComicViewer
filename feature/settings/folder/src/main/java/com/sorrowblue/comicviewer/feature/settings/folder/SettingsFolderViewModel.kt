@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.settings.folder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteThumbnailsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -17,7 +16,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 internal class SettingsFolderViewModel @Inject constructor(
     private val manageFolderSettingsUseCase: ManageFolderSettingsUseCase,
-    private val deleteThumbnailsUseCase: DeleteThumbnailsUseCase
+    private val deleteThumbnailsUseCase: DeleteThumbnailsUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsFolderScreenUiState())
@@ -27,9 +26,13 @@ internal class SettingsFolderViewModel @Inject constructor(
 
     init {
         manageFolderSettingsUseCase.settings.onEach {
-            _uiState.value = _uiState.value.copy(isOpenImageFolder = it.resolveImageFolder, isThumbnailEnabled = it.showPreview)
+            _uiState.value = _uiState.value.copy(
+                isOpenImageFolder = it.resolveImageFolder,
+                isThumbnailEnabled = it.showPreview
+            )
         }.launchIn(viewModelScope)
     }
+
     fun updateShowPreview(newValue: Boolean) {
         viewModelScope.launch {
             manageFolderSettingsUseCase.edit {

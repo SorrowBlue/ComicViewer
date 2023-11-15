@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 internal class ManageSecuritySettingsInteractor @Inject constructor(
     private val settingsCommonRepository: SettingsCommonRepository,
-) : ManageSecuritySettingsUseCase() {
+) : ManageSecuritySettingsUseCase {
 
     override val settings = settingsCommonRepository.securitySettings
 

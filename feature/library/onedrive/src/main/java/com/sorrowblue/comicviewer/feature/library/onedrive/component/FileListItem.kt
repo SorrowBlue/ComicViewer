@@ -11,7 +11,7 @@ import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.File
 
 @Composable
-fun FileListItem(file: File, onClick: () -> Unit) {
+fun FileListItem(file: File, onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = { Text(text = file.name) },
         trailingContent = {
@@ -24,6 +24,6 @@ fun FileListItem(file: File, onClick: () -> Unit) {
                 Modifier.size(24.dp)
             )
         },
-        modifier = Modifier.clickable(onClick = onClick)
+        modifier = modifier.clickable(onClick = onClick)
     )
 }

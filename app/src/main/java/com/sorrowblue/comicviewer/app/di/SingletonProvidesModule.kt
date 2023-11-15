@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object FrameworkAppBarConfigurationModule {
+internal object SingletonProvidesModule {
 
     @Singleton
     @Provides

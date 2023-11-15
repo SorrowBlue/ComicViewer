@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_label_language">言語設定</string>
     <string name="settings_title">設定</string>
     <string name="settings_label_tutorial">チュートリアルを始める</string>
     <string name="settings_label_display">ディスプレイ</string>

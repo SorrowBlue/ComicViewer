@@ -74,12 +74,14 @@ data class FileWithCountEntity(
 @Entity(
     tableName = "file",
     primaryKeys = [FileEntity.PATH, FileEntity.BOOKSHELF_ID],
-    foreignKeys = [ForeignKey(
-        entity = BookshelfEntity::class,
-        parentColumns = [BookshelfEntity.ID],
-        childColumns = [FileEntity.BOOKSHELF_ID],
-        onDelete = ForeignKey.CASCADE
-    )],
+    foreignKeys = [
+        ForeignKey(
+            entity = BookshelfEntity::class,
+            parentColumns = [BookshelfEntity.ID],
+            childColumns = [FileEntity.BOOKSHELF_ID],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
     indices = [Index(value = [FileEntity.BOOKSHELF_ID, FileEntity.PATH])]
 )
 data class FileEntity(
@@ -188,6 +190,6 @@ data class FileEntity(
     enum class Type(val order: Int) {
         FILE(1),
         FOLDER(0),
-        IMAGE_FOLDER(0)
+        IMAGE_FOLDER(0),
     }
 }

@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.flow
  */
 internal class RegisterBookshelfInteractor @Inject constructor(
     private val fileRepository: FileRepository,
-    private val bookshelfRepository: BookshelfRepository
+    private val bookshelfRepository: BookshelfRepository,
 ) : RegisterBookshelfUseCase() {
 
     override fun run(request: Request): Flow<Resource<Bookshelf, Error>> {

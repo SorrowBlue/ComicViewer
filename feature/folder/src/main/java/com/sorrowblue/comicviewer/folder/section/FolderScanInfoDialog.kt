@@ -20,7 +20,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 fun FolderScanInfoDialog(
     isShown: Boolean = true,
     onConfirmClick: () -> Unit = {},
-    onDismissRequest: () -> Unit = {}
+    onDismissRequest: () -> Unit = {},
 ) {
     if (isShown) {
         AlertDialog(
@@ -49,13 +49,14 @@ fun FolderScanInfoDialog(
                 TextButton(onClick = onDismissRequest) {
                     Text(text = "No")
                 }
-            })
+            }
+        )
     }
 }
 
 @Preview(locale = "ja")
 @Composable
-fun PreviewFolderScanInfoDialog() {
+private fun PreviewFolderScanInfoDialog() {
     ComicTheme {
         FolderScanInfoDialog()
     }

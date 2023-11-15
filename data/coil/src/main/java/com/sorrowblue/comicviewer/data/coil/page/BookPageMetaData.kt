@@ -13,7 +13,7 @@ import okio.BufferedSource
 internal data class BookPageMetaData(
     val pageIndex: Int,
     val fileName: String = "",
-    val fileSize: Long = 0
+    val fileSize: Long = 0,
 ) {
 
     companion object {

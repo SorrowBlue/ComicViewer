@@ -14,7 +14,7 @@ import javax.inject.Inject
 import logcat.logcat
 
 internal class FileScanServiceImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) : FileScanService {
     override suspend fun enqueue(
         file: File,

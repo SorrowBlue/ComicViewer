@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 internal class LoadSettingsInteractor @Inject constructor(
     private val settingsCommonRepository: SettingsCommonRepository,
-) : LoadSettingsUseCase() {
+) : LoadSettingsUseCase {
 
     override val settings: Flow<Settings> = settingsCommonRepository.settings
 
@@ -21,7 +21,7 @@ internal class LoadSettingsInteractor @Inject constructor(
 
 internal class ManageOneTimeFlagInteractor @Inject constructor(
     private val settingsCommonRepository: SettingsCommonRepository,
-) : ManageOneTimeFlagUseCase() {
+) : ManageOneTimeFlagUseCase {
 
     override val settings: Flow<OneTimeFlag> = settingsCommonRepository.oneTimeFlag
 

@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.library.dropbox.navigation
 
-import androidx.lifecycle.SavedStateHandle
+import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -9,13 +9,15 @@ import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.model.Base64.decodeFromBase64
 import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.feature.library.dropbox.DropBoxRoute
+import com.sorrowblue.comicviewer.feature.library.dropbox.data.dropBoxModule
 import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavigation
+import org.koin.core.context.loadKoinModules
 
-private const val pathArg = "path"
+private const val PathArg = "path"
 
 internal class DropBoxArgs(val path: String) {
-    constructor(savedStateHandle: SavedStateHandle) :
-            this(checkNotNull(savedStateHandle.get<String>(pathArg)).decodeFromBase64())
+    constructor(bundle: Bundle) :
+        this(checkNotNull(bundle.getString(PathArg)).decodeFromBase64())
 }
 
 private const val DropBoxRoute = "DropBox"
@@ -24,15 +26,19 @@ object DropBoxNavigationImpl : DropBoxNavigation {
 
     override fun NavGraphBuilder.addOnScreen(navController: NavController) {
         composable(
-            route = "$DropBoxRoute?path={$pathArg}",
-            arguments = listOf(navArgument(pathArg) {
-                type = NavType.StringType
-                defaultValue = ""
-            })
+            route = "$DropBoxRoute?path={$PathArg}",
+            arguments = listOf(
+                navArgument(PathArg) {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )
         ) {
+            loadKoinModules(dropBoxModule)
             DropBoxRoute(
+                args = DropBoxArgs(it.arguments!!),
                 onBackClick = navController::popBackStack,
-                onFolderClick = { navController.navigateToDropBox(it.path) }
+                onFolderClick = { folder -> navController.navigateToDropBox(folder.path) }
             )
         }
     }

@@ -9,14 +9,16 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.DropBoxApiRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class DropBoxPagingSource(
     private val parent: String,
     private val repository: DropBoxApiRepository,
-) :
-    PagingSource<String, File>() {
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : PagingSource<String, File>() {
+
     override fun getRefreshKey(state: PagingState<String, File>): String? {
         return state.anchorPosition?.let {
             state.closestPageToPosition(it)
@@ -24,7 +26,7 @@ internal class DropBoxPagingSource(
     }
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, File> {
-        val result = withContext(Dispatchers.IO) {
+        val result = withContext(dispatcher) {
             repository.list(parent, params.loadSize.toLong(), params.key)
         }
         val list = result?.entries?.mapNotNull {

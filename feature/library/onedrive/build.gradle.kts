@@ -1,5 +1,6 @@
 plugins {
     id("comicviewer.android.feature.dynamic-feature")
+    id("comicviewer.android.koin")
 }
 
 android {
@@ -22,7 +23,7 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
 
     implementation(libs.microsoft.graph) {
-        exclude("com.google.guava","guava")
+        exclude("com.google.guava", "guava")
     }
     implementation(libs.microsoft.identity.client.msal)
 

@@ -30,7 +30,6 @@ internal val SplitInstallSessionState.err: SplitInstallError
                 SplitInstallError.App("エラーが発生しました。エラーコード=$errorCode")
             }
 
-
             SplitInstallErrorCode.INVALID_REQUEST -> {
                 // Google Play はリクエストを受信しましたが、リクエストが無効です。
                 // リクエストに含まれている情報が完全で正確であることを確認します。
@@ -54,7 +53,6 @@ internal val SplitInstallSessionState.err: SplitInstallError
                 // ネットワーク エラーのため、リクエストが失敗しました。
                 // ネットワーク接続を確立するか、別のネットワークに変更することをユーザーに求めます。
                 // 再試行
-                "A network error has occurred. Please make sure you are connected to a valid network."
                 SplitInstallError.Retryable("ネットワークエラーが発生しました。有効なネットワークに接続しているか確認してください。")
             }
 
@@ -80,7 +78,8 @@ internal val SplitInstallSessionState.err: SplitInstallError
 
             SplitInstallErrorCode.SPLITCOMPAT_COPY_ERROR,
             SplitInstallErrorCode.SPLITCOMPAT_EMULATION_ERROR,
-            SplitInstallErrorCode.SPLITCOMPAT_VERIFICATION_ERROR -> {
+            SplitInstallErrorCode.SPLITCOMPAT_VERIFICATION_ERROR,
+            -> {
                 // SplitCompat が機能モジュールを読み込めませんでした。
                 // これらのエラーは、次回のアプリの再起動後に自動的に解決されます。
                 SplitInstallError.Retryable("〇〇機能を読み込めませんでした。アプリを再起動してください。")
@@ -108,10 +107,8 @@ internal val SplitInstallSessionState.err: SplitInstallError
                 SplitInstallError.NotSupport("エラーなし")
             }
 
-            SplitInstallErrorCode.SERVICE_DIED -> {
+            else -> {
                 SplitInstallError.NotSupport("サービスなし")
             }
-
-            else -> throw RuntimeException("想定外")
         }
     }

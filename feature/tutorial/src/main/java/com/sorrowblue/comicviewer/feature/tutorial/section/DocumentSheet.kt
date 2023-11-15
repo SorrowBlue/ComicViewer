@@ -21,14 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.android.play.core.splitinstall.SplitInstallSessionState
-import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
-import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.sorrowblue.comicviewer.feature.tutorial.SplitInstallError
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.ComicPreviews
+import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 
 internal sealed interface DocumentSheetUiState {
 
@@ -106,19 +103,7 @@ internal sealed interface DocumentSheetUiState {
         override val isProgressVisible = false
         override val progress = 0f
     }
-
 }
-
-private fun unknownSplitInstallSessionState(): SplitInstallSessionState =
-    SplitInstallSessionState.create(
-        0,
-        SplitInstallSessionStatus.UNKNOWN,
-        SplitInstallErrorCode.NO_ERROR,
-        0,
-        0,
-        emptyList(),
-        emptyList()
-    )
 
 @Composable
 internal fun DocumentSheet(
@@ -154,7 +139,9 @@ internal fun DocumentSheet(
         Spacer(modifier = Modifier.size(16.dp))
 
         if (uiState.isProgressVisible) {
-            LinearProgressIndicator(progress = uiState.progress)
+            LinearProgressIndicator(
+                progress = uiState::progress,
+            )
         }
 
         Spacer(modifier = Modifier.size(16.dp))
@@ -170,12 +157,12 @@ internal fun DocumentSheet(
     }
 }
 
-@ComicPreviews
+@PreviewComic
 @Composable
-fun PreviewDocumentSheet() {
+private fun PreviewDocumentSheet() {
     ComicTheme {
         Surface {
-            DocumentSheet(DocumentSheetUiState.INSTALLED, {})
+            DocumentSheet(uiState = DocumentSheetUiState.INSTALLED, onDownloadClick = {})
         }
     }
 }

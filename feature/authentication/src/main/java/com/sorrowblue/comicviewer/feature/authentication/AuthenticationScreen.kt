@@ -17,8 +17,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -73,7 +73,6 @@ internal sealed interface AuthenticationScreenUiState {
 
     data class Erase(override val pinCount: Int, override val error: Int) :
         AuthenticationScreenUiState
-
 }
 
 @Composable
@@ -95,7 +94,7 @@ internal fun AuthenticationRoute(
 
     BackHandler(enabled = viewModel.handleBack, onBack = onBack)
 
-    LaunchedEffectUiEvent(viewModel) {
+    LaunchedEffectUiEvent(viewModel.uiEvents, viewModel::consumeUiEvent) {
         when (it) {
             AuthenticationUiEvent.AuthCompleted -> onAuthCompleted(
                 viewModel.handleBack,
@@ -193,8 +192,7 @@ private fun AuthenticationScreen(
                     AnimatedContent(
                         targetState = it < uiState.pinCount,
                         transitionSpec = {
-                            (fadeIn() + slideInVertically { height -> height }) togetherWith
-                                    (fadeOut() + slideOutVertically { height -> height })
+                            (fadeIn() + slideInVertically { height -> height }) togetherWith (fadeOut() + slideOutVertically { height -> height })
                         },
                         label = "test"
                     ) { isVisible ->
@@ -210,7 +208,7 @@ private fun AuthenticationScreen(
             }
             Spacer(modifier = Modifier.weight(1f))
 
-            Divider(Modifier.padding(ComicTheme.dimension.margin))
+            HorizontalDivider(Modifier.padding(ComicTheme.dimension.margin))
             listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", null).chunked(3)
                 .forEach { chunk ->
                     Row(modifier = Modifier.fillMaxWidth()) {

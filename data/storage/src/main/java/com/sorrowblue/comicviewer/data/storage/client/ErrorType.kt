@@ -13,7 +13,6 @@ sealed interface ErrorType {
         data object Server : Client
         data object InvalidPath : Client
         data object ACCESS_DENIED : Client
-
     }
 
     object Unknown : ErrorType
@@ -22,6 +21,6 @@ sealed interface ErrorType {
 }
 
 sealed class Resource<T> {
-    data class Success<T>(val data: T): Resource<T>()
-    data class Error<T>(val error: ErrorType): Resource<T>()
+    data class Success<T>(val data: T) : Resource<T>()
+    data class Error<T>(val error: ErrorType) : Resource<T>()
 }

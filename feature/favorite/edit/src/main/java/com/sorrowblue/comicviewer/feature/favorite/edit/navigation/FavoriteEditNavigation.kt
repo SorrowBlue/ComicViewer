@@ -9,30 +9,29 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 
-private const val favoriteIdArg = "favoriteId"
+private const val FavoriteIdArg = "favoriteId"
 
 internal class FavoriteEditArgs(
-    val favoriteId: FavoriteId
+    val favoriteId: FavoriteId,
 ) {
-    constructor(savedStateHandle: SavedStateHandle) :
-            this(FavoriteId(checkNotNull(savedStateHandle[favoriteIdArg])))
+    constructor(savedStateHandle: SavedStateHandle) : this(FavoriteId(checkNotNull(savedStateHandle[FavoriteIdArg])))
 }
 
 fun NavController.navigateToFavoriteEdit(
     favoriteId: FavoriteId,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) {
     navigate("favorite/${favoriteId.value}/edit", navOptions)
 }
 
 fun NavGraphBuilder.favoriteEditScreen(
     onBackClick: () -> Unit,
-    onComplete: () -> Unit
+    onComplete: () -> Unit,
 ) {
     composable(
-        route = "favorite/{$favoriteIdArg}/edit",
+        route = "favorite/{$FavoriteIdArg}/edit",
         arguments = listOf(
-            navArgument(favoriteIdArg) { type = NavType.IntType },
+            navArgument(FavoriteIdArg) { type = NavType.IntType },
         )
     ) {
         com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEditRoute(

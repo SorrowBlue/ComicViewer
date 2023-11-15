@@ -22,7 +22,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
 @ExperimentalMaterial3Api
 @Composable
@@ -60,7 +60,7 @@ internal fun BoxTopAppBar(
                     .crossfade(true)
                     .diskCachePolicy(CachePolicy.ENABLED)
                     .build(),
-                placeholder = debugPlaceholder(),
+                placeholder = rememberDebugPlaceholder(),
                 contentDescription = null,
                 modifier = Modifier
                     .size(48.dp)

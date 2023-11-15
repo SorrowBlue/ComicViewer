@@ -14,4 +14,7 @@
     <string name="settings_viewer_label_right_binding">右綴じ</string>
     <string name="settings_viewer_label_left_binding">左綴じ</string>
     <string name="settings_viewer_label_preload_pages">事前に読み込むページ数</string>
+    <string name="settings_viewer_label_cache_images">画像をキャッシュする</string>
+    <string name="settings_viewer_label_display_first_page">常に最初のページを表示する</string>
+    <string name="settings_viewer_label_binding_direction_each">本ごとに異なる閉じる方向を設定する</string>
 </resources>

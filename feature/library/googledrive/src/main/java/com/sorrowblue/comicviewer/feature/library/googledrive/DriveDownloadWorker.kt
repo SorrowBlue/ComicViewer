@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.feature.library.googledrive
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
@@ -17,33 +18,54 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
+import com.sorrowblue.comicviewer.app.IoDispatcher
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.createNotification
 import kotlin.math.ceil
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import logcat.logcat
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
-internal class DriveDownloadWorker(appContext: Context, params: WorkerParameters) :
-    CoroutineWorker(appContext, params) {
+internal class DriveDownloadWorker(
+    appContext: Context,
+    params: WorkerParameters,
+) : CoroutineWorker(appContext, params), KoinComponent {
 
     companion object {
         private const val NOTIFICATION_ID: Int = 2
     }
 
+    private val dispatcher by inject<CoroutineDispatcher>(qualifier = named<IoDispatcher>())
+
+    init {
+        logcat {
+            """
+            str=${named("com.sorrowblue.comicviewer.app.IoDispatchers").value}
+            str=${named<IoDispatcher>().value}
+            """.trimIndent()
+        }
+    }
+
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
 
+    @Suppress("SpecifyForegroundServiceType")
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(
-            NOTIFICATION_ID, createNotification(
+            NOTIFICATION_ID,
+            createNotification(
                 applicationContext,
                 ChannelID.DOWNLOAD,
                 FrameworkResourceR.drawable.ic_twotone_downloading_24
             ) {
                 setContentTitle("バックグラウンドで実行")
-            })
+            },
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+        )
     }
 
     override suspend fun doWork(): Result {
@@ -65,7 +87,7 @@ internal class DriveDownloadWorker(appContext: Context, params: WorkerParameters
                 .setApplicationName("ComicViewer")
                 .build()
 
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             val request = driverService.files().get(fileId)
             val name = request.execute().name
             request.mediaHttpDownloader.isDirectDownloadEnabled = false
@@ -103,7 +125,9 @@ internal class DriveDownloadWorker(appContext: Context, params: WorkerParameters
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            notificationManager.notify(tag, NOTIFICATION_ID,
+            notificationManager.notify(
+                tag,
+                NOTIFICATION_ID,
                 createNotification(
                     applicationContext,
                     ChannelID.DOWNLOAD,
@@ -122,7 +146,9 @@ internal class DriveDownloadWorker(appContext: Context, params: WorkerParameters
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            notificationManager.notify(tag, NOTIFICATION_ID,
+            notificationManager.notify(
+                tag,
+                NOTIFICATION_ID,
                 createNotification(
                     applicationContext,
                     ChannelID.DOWNLOAD,
@@ -141,7 +167,9 @@ internal class DriveDownloadWorker(appContext: Context, params: WorkerParameters
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            notificationManager.notify(tag, NOTIFICATION_ID,
+            notificationManager.notify(
+                tag,
+                NOTIFICATION_ID,
                 createNotification(
                     applicationContext,
                     ChannelID.DOWNLOAD,

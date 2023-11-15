@@ -7,6 +7,7 @@ import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -40,6 +41,7 @@ internal class GetBookshelfInfoInteractor @Inject constructor(
     }
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 private fun <D, E : Resource.AppError, DR, ER : Resource.AppError> Flow<Resource<D, E>>.flatMapLatestFold(
     onSuccess: suspend (D) -> Flow<Resource<DR, ER>>,
     onError: suspend (E) -> Flow<Resource<DR, ER>>,
@@ -51,7 +53,6 @@ private fun <D, E : Resource.AppError, DR, ER : Resource.AppError> Flow<Resource
         }
     }
 }
-
 
 private fun <D, E : Resource.AppError, DR, ER : Resource.AppError> Flow<Resource<D, E>>.mapFold(
     onSuccess: suspend (D) -> Resource<DR, ER>,

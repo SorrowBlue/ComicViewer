@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.framework.designsystem.icon.undraw
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable

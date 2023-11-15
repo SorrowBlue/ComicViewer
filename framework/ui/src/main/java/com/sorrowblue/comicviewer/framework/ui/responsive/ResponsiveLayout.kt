@@ -20,9 +20,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,7 +54,7 @@ class NavigationState(
         private set
 
     companion object {
-        fun Saver() = Saver<NavigationState, Boolean>(
+        fun saver() = Saver<NavigationState, Boolean>(
             save = { it.currentValue },
             restore = { savedValue ->
                 NavigationState(savedValue)
@@ -69,7 +67,7 @@ class NavigationState(
 fun rememberNavigationState(
     initialValue: Boolean = true,
 ): NavigationState {
-    return rememberSaveable(saver = NavigationState.Saver()) {
+    return rememberSaveable(saver = NavigationState.saver()) {
         NavigationState(initialValue)
     }
 }
@@ -90,7 +88,7 @@ class FabState(
         private set
 
     companion object {
-        fun Saver() = Saver<FabState, Boolean>(
+        fun saver() = Saver<FabState, Boolean>(
             save = { it.currentValue },
             restore = { savedValue ->
                 FabState(savedValue)
@@ -103,7 +101,7 @@ class FabState(
 fun rememberFabState(
     initialValue: Boolean = true,
 ): FabState {
-    return rememberSaveable(saver = FabState.Saver()) {
+    return rememberSaveable(saver = FabState.saver()) {
         FabState(initialValue)
     }
 }
@@ -128,10 +126,11 @@ fun rememberResponsiveLayoutState(
 
 @Composable
 fun ResponsiveLayout(
-    state: ResponsiveLayoutState = rememberResponsiveLayoutState(),
     navigationRail: @Composable () -> Unit,
     navigationBar: @Composable () -> Unit,
     floatingActionButton: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    state: ResponsiveLayoutState = rememberResponsiveLayoutState(),
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val widthSizeClass = LocalWindowSize.current.widthSizeClass
@@ -140,7 +139,9 @@ fun ResponsiveLayout(
     }
     Surface(
         color = ComicTheme.colorScheme.background,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier),
     ) {
         Row(Modifier.fillMaxSize()) {
             AnimatedContent(
@@ -188,9 +189,13 @@ fun ResponsiveLayout(
                         }
                     }
                 },
-                contentWindowInsets = if (!isCompact && state.navigationState.currentValue) WindowInsets.safeDrawing.only(
-                    WindowInsetsSides.Vertical + WindowInsetsSides.End
-                ) else WindowInsets.safeDrawing,
+                contentWindowInsets = if (!isCompact && state.navigationState.currentValue) {
+                    WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Vertical + WindowInsetsSides.End
+                    )
+                } else {
+                    WindowInsets.safeDrawing
+                },
                 snackbarHost = { SnackbarHost(state.snackbarHostState) },
                 containerColor = if (isCompact) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainer,
                 content = {
@@ -202,13 +207,9 @@ fun ResponsiveLayout(
                         },
                         label = "startPadding"
                     )
-                    CompositionLocalProvider(LocalVisibleNavigationRail provides (!isCompact && state.navigationState.currentValue)) {
-                        content(it.copy(start = startPadding))
-                    }
+                    content(it.copy(start = startPadding))
                 }
             )
         }
     }
 }
-
-val LocalVisibleNavigationRail = compositionLocalOf { false }

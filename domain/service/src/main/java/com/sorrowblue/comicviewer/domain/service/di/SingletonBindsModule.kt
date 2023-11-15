@@ -16,20 +16,28 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class SingletonBindsModule {
+internal interface SingletonBindsModule {
 
     @Binds
     @Singleton
-    abstract fun bindManageDisplaySettingsUseCase(interactor: ManageDisplaySettingsInteractor): ManageDisplaySettingsUseCase
+    fun bindManageDisplaySettingsUseCase(
+        interactor: ManageDisplaySettingsInteractor,
+    ): ManageDisplaySettingsUseCase
 
     @Binds
-    abstract fun bindManageFolderSettingsUseCase(interactor: ManageFolderSettingsInteractor): ManageFolderSettingsUseCase
+    fun bindManageFolderSettingsUseCase(
+        interactor: ManageFolderSettingsInteractor,
+    ): ManageFolderSettingsUseCase
 
     @Binds
     @Singleton
-    abstract fun bindManageViewerSettingsUseCase(interactor: ManageViewerSettingsInteractor): ManageViewerSettingsUseCase
+    fun bindManageViewerSettingsUseCase(
+        interactor: ManageViewerSettingsInteractor,
+    ): ManageViewerSettingsUseCase
 
     @Binds
     @Singleton
-    abstract fun bindManageViewerOperationSettingsUseCase(interactor: ManageViewerOperationSettingsInteractor): ManageViewerOperationSettingsUseCase
+    fun bindManageViewerOperationSettingsUseCase(
+        interactor: ManageViewerOperationSettingsInteractor,
+    ): ManageViewerOperationSettingsUseCase
 }

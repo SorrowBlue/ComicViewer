@@ -31,9 +31,9 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.MobilePreviews
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.PreviewMobile
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveCard
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -58,7 +58,7 @@ fun Bookshelf(
             AsyncImage(
                 model = bookshelfFolder.folder,
                 contentScale = ContentScale.Crop,
-                placeholder = debugPlaceholder(),
+                placeholder = rememberDebugPlaceholder(),
                 contentDescription = "",
                 modifier = Modifier
                     .size(128.dp)
@@ -98,7 +98,7 @@ fun Bookshelf(
     }
 }
 
-@MobilePreviews
+@PreviewMobile
 @Composable
 private fun PreviewArticleRow() {
     PreviewTheme {

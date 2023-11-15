@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class AddReadLaterInteractor @Inject constructor(
-    private val repository: FileRepository
+    private val repository: FileRepository,
 ) : AddReadLaterUseCase() {
 
     override fun run(request: Request): Flow<Resource<Unit, Error>> {
@@ -23,7 +23,7 @@ internal class AddReadLaterInteractor @Inject constructor(
 }
 
 internal class DeleteReadLaterInteractor @Inject constructor(
-    private val repository: FileRepository
+    private val repository: FileRepository,
 ) : DeleteReadLaterUseCase() {
 
     override fun run(request: Request): Flow<Resource<Unit, Error>> {
@@ -36,7 +36,7 @@ internal class DeleteReadLaterInteractor @Inject constructor(
 }
 
 internal class DeleteAllReadLaterInteractor @Inject constructor(
-    private val repository: FileRepository
+    private val repository: FileRepository,
 ) : DeleteAllReadLaterUseCase() {
 
     override fun run(request: Request): Flow<Resource<Unit, Error>> {
@@ -50,7 +50,7 @@ internal class DeleteAllReadLaterInteractor @Inject constructor(
 
 fun <D, E : Resource.AppError, R> Flow<Resource<D, E>>.mapFold(
     onSuccess: (D) -> R,
-    onError: (E) -> R
+    onError: (E) -> R,
 ): Flow<R> {
     return map {
         when (it) {

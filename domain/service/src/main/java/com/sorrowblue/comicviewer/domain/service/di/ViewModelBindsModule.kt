@@ -79,116 +79,124 @@ import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(ViewModelComponent::class)
-internal abstract class ViewModelBindsModule {
+internal interface ViewModelBindsModule {
 
     @Binds
-    abstract fun bindManageOneTimeFlagUseCase(interactor: ManageOneTimeFlagInteractor): ManageOneTimeFlagUseCase
+    fun bindManageOneTimeFlagUseCase(interactor: ManageOneTimeFlagInteractor): ManageOneTimeFlagUseCase
 
     @Binds
-    abstract fun bindRegisterBookshelfUseCase(interactor: RegisterBookshelfInteractor): RegisterBookshelfUseCase
+    fun bindRegisterBookshelfUseCase(interactor: RegisterBookshelfInteractor): RegisterBookshelfUseCase
 
     @Binds
-    abstract fun bindLoadSettingsUseCase(interactor: LoadSettingsInteractor): LoadSettingsUseCase
+    fun bindLoadSettingsUseCase(interactor: LoadSettingsInteractor): LoadSettingsUseCase
 
     @Binds
-    abstract fun bindRemoveBookshelfUseCase(interactor: RemoveBookshelfInteractor): RemoveBookshelfUseCase
+    fun bindRemoveBookshelfUseCase(interactor: RemoveBookshelfInteractor): RemoveBookshelfUseCase
 
     @Binds
-    abstract fun bindScanBookshelfUseCase(interactor: ScanBookshelfInteractor): ScanBookshelfUseCase
+    fun bindScanBookshelfUseCase(interactor: ScanBookshelfInteractor): ScanBookshelfUseCase
 
     @Binds
-    abstract fun bindGetBookshelfBookUseCase(interactor: GetBookshelfBookInteractor): GetBookshelfBookUseCase
+    fun bindGetBookshelfBookUseCase(interactor: GetBookshelfBookInteractor): GetBookshelfBookUseCase
 
     @Binds
-    abstract fun bindGetBookUseCase(interactor: GetBookInteractor): GetBookUseCase
+    fun bindGetBookUseCase(interactor: GetBookInteractor): GetBookUseCase
 
     @Binds
-    abstract fun bindAddReadLaterUseCase(interactor: AddReadLaterInteractor): AddReadLaterUseCase
+    fun bindAddReadLaterUseCase(interactor: AddReadLaterInteractor): AddReadLaterUseCase
 
     @Binds
-    abstract fun bindDeleteReadLaterUseCase(interactor: DeleteReadLaterInteractor): DeleteReadLaterUseCase
+    fun bindDeleteReadLaterUseCase(interactor: DeleteReadLaterInteractor): DeleteReadLaterUseCase
 
     @Binds
-    abstract fun bindDeleteAllReadLaterUseCase(interactor: DeleteAllReadLaterInteractor): DeleteAllReadLaterUseCase
+    fun bindDeleteAllReadLaterUseCase(interactor: DeleteAllReadLaterInteractor): DeleteAllReadLaterUseCase
 
     @Binds
-    abstract fun bindGetNavigationHistoryUseCase(interactor: GetNavigationHistoryInteractor): GetNavigationHistoryUseCase
+    fun bindGetNavigationHistoryUseCase(
+        interactor: GetNavigationHistoryInteractor,
+    ): GetNavigationHistoryUseCase
 
     @Binds
-    abstract fun bindUpdateLastReadPageUseCase(interactor: UpdateLastReadPageInteractor): UpdateLastReadPageUseCase
+    fun bindUpdateLastReadPageUseCase(interactor: UpdateLastReadPageInteractor): UpdateLastReadPageUseCase
 
     @Binds
-    abstract fun bindGetBookshelfFolderUseCase(interactor: GetBookshelfFolderInteractor): GetBookshelfFolderUseCase
+    fun bindGetBookshelfFolderUseCase(interactor: GetBookshelfFolderInteractor): GetBookshelfFolderUseCase
 
     @Binds
-    abstract fun bindDeleteHistoryUseCase(interactor: DeleteHistoryInteractor): DeleteHistoryUseCase
+    fun bindDeleteHistoryUseCase(interactor: DeleteHistoryInteractor): DeleteHistoryUseCase
 
     @Binds
-    abstract fun bindGetBookshelfInfoUseCase(interactor: GetBookshelfInfoInteractor): GetBookshelfInfoUseCase
+    fun bindGetBookshelfInfoUseCase(interactor: GetBookshelfInfoInteractor): GetBookshelfInfoUseCase
 
     @Binds
-    abstract fun bindGetNextBookUseCase(interactor: GetNextBookInteractor): GetNextBookUseCase
+    fun bindGetNextBookUseCase(interactor: GetNextBookInteractor): GetNextBookUseCase
 
     @Binds
-    abstract fun bindGetNextFavoriteBookUseCase(interactor: GetNextFavoriteBookInteractor): GetNextFavoriteBookUseCase
+    fun bindGetNextFavoriteBookUseCase(interactor: GetNextFavoriteBookInteractor): GetNextFavoriteBookUseCase
 
     @Binds
-    abstract fun bindUpdateHistoryUseCase(interactor: UpdateHistoryInteractor): UpdateHistoryUseCase
+    fun bindUpdateHistoryUseCase(interactor: UpdateHistoryInteractor): UpdateHistoryUseCase
 
     @Binds
-    abstract fun bindGetFileUseCase(interactor: GetFileInteractor): GetFileUseCase
+    fun bindGetFileUseCase(interactor: GetFileInteractor): GetFileUseCase
 
     @Binds
-    abstract fun bindDeleteThumbnailsUseCase(interactor: DeleteThumbnailsInteractor): DeleteThumbnailsUseCase
+    fun bindDeleteThumbnailsUseCase(interactor: DeleteThumbnailsInteractor): DeleteThumbnailsUseCase
 
     @Binds
-    abstract fun bindGetBookshelfFileUseCase(interactor: GetBookshelfFileInteractor): GetBookshelfFileUseCase
+    fun bindGetBookshelfFileUseCase(interactor: GetBookshelfFileInteractor): GetBookshelfFileUseCase
 
     @Binds
-    abstract fun bindAddFavoriteFileUseCase(interactor: AddFavoriteFileInteractor): AddFavoriteFileUseCase
+    fun bindAddFavoriteFileUseCase(interactor: AddFavoriteFileInteractor): AddFavoriteFileUseCase
 
     @Binds
-    abstract fun bindRemoveFavoriteFileUseCase(interactor: RemoveFavoriteFileInteractor): RemoveFavoriteFileUseCase
+    fun bindRemoveFavoriteFileUseCase(interactor: RemoveFavoriteFileInteractor): RemoveFavoriteFileUseCase
 
     @Binds
-    abstract fun bindCreateFavoriteUseCase(interactor: CreateFavoriteInteractor): CreateFavoriteUseCase
+    fun bindCreateFavoriteUseCase(interactor: CreateFavoriteInteractor): CreateFavoriteUseCase
 
     @Binds
-    abstract fun bindGetFavoriteUseCase(interactor: GetFavoriteInteractor): GetFavoriteUseCase
+    fun bindGetFavoriteUseCase(interactor: GetFavoriteInteractor): GetFavoriteUseCase
 
     @Binds
-    abstract fun bindDeleteFavoriteUseCase(interactor: DeleteFavoriteInteractor): DeleteFavoriteUseCase
+    fun bindDeleteFavoriteUseCase(interactor: DeleteFavoriteInteractor): DeleteFavoriteUseCase
 
     @Binds
-    abstract fun bindUpdateFavoriteUseCase(interactor: UpdateFavoriteInteractor): UpdateFavoriteUseCase
+    fun bindUpdateFavoriteUseCase(interactor: UpdateFavoriteInteractor): UpdateFavoriteUseCase
 
     // Paging
 
     @Binds
-    abstract fun bindPagingFileUseCase(interactor: PagingFileInteractor): PagingFileUseCase
+    fun bindPagingFileUseCase(interactor: PagingFileInteractor): PagingFileUseCase
 
     @Binds
-    abstract fun bindPagingQueryFileUseCase(interactor: PagingQueryFileInteractor): PagingQueryFileUseCase
+    fun bindPagingQueryFileUseCase(interactor: PagingQueryFileInteractor): PagingQueryFileUseCase
 
     @Binds
-    abstract fun bindPagingBookshelfFolderUseCase(interactor: PagingBookshelfFolderInteractor): PagingBookshelfFolderUseCase
+    fun bindPagingBookshelfFolderUseCase(
+        interactor: PagingBookshelfFolderInteractor,
+    ): PagingBookshelfFolderUseCase
 
     @Binds
-    abstract fun bindPagingFavoriteUseCase(interactor: PagingFavoriteInteractor): PagingFavoriteUseCase
+    fun bindPagingFavoriteUseCase(interactor: PagingFavoriteInteractor): PagingFavoriteUseCase
 
     @Binds
-    abstract fun bindPagingFavoriteFileUseCase(interactor: PagingFavoriteFileInteractor): PagingFavoriteFileUseCase
+    fun bindPagingFavoriteFileUseCase(interactor: PagingFavoriteFileInteractor): PagingFavoriteFileUseCase
 
     @Binds
-    abstract fun bindPagingReadLaterFileUseCase(interactor: PagingReadLaterFileInteractor): PagingReadLaterFileUseCase
+    fun bindPagingReadLaterFileUseCase(interactor: PagingReadLaterFileInteractor): PagingReadLaterFileUseCase
 
     @Binds
-    abstract fun bindPagingHistoryBookUseCase(interactor: PagingHistoryBookInteractor): PagingHistoryBookUseCase
+    fun bindPagingHistoryBookUseCase(interactor: PagingHistoryBookInteractor): PagingHistoryBookUseCase
 
     // Settings
     @Binds
-    abstract fun bindManageFolderDisplaySettingsUseCase(interactor: ManageFolderDisplaySettingsInteractor): ManageFolderDisplaySettingsUseCase
+    fun bindManageFolderDisplaySettingsUseCase(
+        interactor: ManageFolderDisplaySettingsInteractor,
+    ): ManageFolderDisplaySettingsUseCase
 
     @Binds
-    abstract fun bindManageSecuritySettingsUseCase(interactor: ManageSecuritySettingsInteractor): ManageSecuritySettingsUseCase
+    fun bindManageSecuritySettingsUseCase(
+        interactor: ManageSecuritySettingsInteractor,
+    ): ManageSecuritySettingsUseCase
 }

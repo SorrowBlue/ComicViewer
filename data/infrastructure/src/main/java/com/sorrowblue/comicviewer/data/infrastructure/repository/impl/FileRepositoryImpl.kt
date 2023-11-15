@@ -6,6 +6,7 @@ import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalD
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.ReadLaterFileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.di.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.Response
@@ -25,7 +26,7 @@ import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepositoryError
 import com.sorrowblue.comicviewer.domain.service.repository.SettingsCommonRepository
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -36,6 +37,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 internal class FileRepositoryImpl @Inject constructor(
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val imageCacheDataSource: ImageCacheDataSource,
     private val fileScanService: FileScanService,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
@@ -51,7 +53,7 @@ internal class FileRepositoryImpl @Inject constructor(
         return flow {
             readLaterFileModelLocalDataSource.add(ReadLaterFile(bookshelfId, path))
             emit(Resource.Success(Unit))
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 
     override fun deleteReadLater(
@@ -61,14 +63,14 @@ internal class FileRepositoryImpl @Inject constructor(
         return flow {
             readLaterFileModelLocalDataSource.delete(ReadLaterFile(bookshelfId, path))
             emit(Resource.Success(Unit))
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 
     override fun deleteAllReadLater(): Flow<Resource<Unit, FileRepository.Error>> {
         return flow {
             readLaterFileModelLocalDataSource.deleteAll()
             emit(Resource.Success(Unit))
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 
     override fun findByParent(
@@ -81,7 +83,7 @@ internal class FileRepositoryImpl @Inject constructor(
                     fileModelLocalDataSource.root(bookshelfId)!!
                 )
             )
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 
     override fun pagingDataFlow(
@@ -102,7 +104,7 @@ internal class FileRepositoryImpl @Inject constructor(
     ): Flow<Resource<File, FileRepository.Error>> {
         return flow {
             emit(Resource.Success(fileModelLocalDataSource.findBy(bookshelfId, path)!!))
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 
     override suspend fun deleteThumbnails() {
@@ -214,7 +216,7 @@ internal class FileRepositoryImpl @Inject constructor(
         bookshelf: Bookshelf,
         path: String,
     ): Result<Folder, FileRepositoryError> {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             kotlin.runCatching {
                 remoteDataSourceFactory.create(bookshelf).file(path)
             }.fold({ file ->

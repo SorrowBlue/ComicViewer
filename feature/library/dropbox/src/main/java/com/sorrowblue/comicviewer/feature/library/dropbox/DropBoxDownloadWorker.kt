@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.feature.library.dropbox
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -11,32 +12,41 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.sorrowblue.comicviewer.app.IoDispatcher
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.DropBoxApiRepository
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import kotlin.math.ceil
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import logcat.logcat
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
-internal class DropBoxDownloadWorker(appContext: Context, params: WorkerParameters) :
-    CoroutineWorker(appContext, params) {
+internal class DropBoxDownloadWorker(
+    appContext: Context,
+    params: WorkerParameters,
+) : CoroutineWorker(appContext, params), KoinComponent {
 
     companion object {
         private const val NOTIFICATION_ID: Int = 3
     }
 
-    private val repository = DropBoxApiRepository.getInstance(appContext)
+    private val dispatcher by inject<CoroutineDispatcher>(qualifier = named<IoDispatcher>())
+    private val repository by inject<DropBoxApiRepository>()
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
 
     private val notificationBuilder = NotificationCompat.Builder(appContext, ChannelID.DOWNLOAD.id)
         .setSmallIcon(FrameworkResourceR.drawable.ic_twotone_downloading_24)
 
+    @Suppress("SpecifyForegroundServiceType")
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(
             NOTIFICATION_ID,
-            notificationBuilder.setContentTitle("バックグラウンドでダウンロード中").build()
+            notificationBuilder.setContentTitle("バックグラウンドでダウンロード中").build(),
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
         )
     }
 
@@ -48,7 +58,7 @@ internal class DropBoxDownloadWorker(appContext: Context, params: WorkerParamete
         setForeground(getForegroundInfo())
         createNotification(path, path)
         delay(2000)
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             applicationContext.contentResolver.openOutputStream(outputUri)!!.use { stream ->
                 repository.download(path, stream) {
                     updateNotification(path, path, ceil(it * 100).toInt())

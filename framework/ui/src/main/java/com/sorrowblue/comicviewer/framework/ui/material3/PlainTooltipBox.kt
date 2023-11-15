@@ -13,7 +13,11 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlainTooltipBox(tooltipContent: @Composable () -> Unit, content: @Composable () -> Unit) {
+fun PlainTooltipBox(
+    tooltipContent: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
     TooltipBox(
         positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
         tooltip = {
@@ -22,7 +26,8 @@ fun PlainTooltipBox(tooltipContent: @Composable () -> Unit, content: @Composable
                 content = tooltipContent
             )
         },
-        state = rememberTooltipState()
+        state = rememberTooltipState(),
+        modifier = modifier
     ) {
         content()
     }

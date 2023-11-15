@@ -21,15 +21,15 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FileListContent(
     file: File?,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     ListItem(
         modifier = modifier.combinedClickable(
@@ -44,7 +44,9 @@ fun FileListContent(
         },
         supportingContent = {
             if (file is Book && 0 < file.lastPageRead) {
-                LinearProgressIndicator(progress = file.lastPageRead.toFloat() / file.totalPageCount)
+                LinearProgressIndicator(
+                    progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+                )
             }
         },
         leadingContent = {
@@ -52,7 +54,7 @@ fun FileListContent(
                 model = file,
                 modifier = Modifier.size(56.dp),
                 contentDescription = "",
-                placeholder = debugPlaceholder()
+                placeholder = rememberDebugPlaceholder()
             )
         },
         trailingContent = {
@@ -67,9 +69,9 @@ fun FileListContent(
 @Composable
 fun FileListMedium(
     file: File?,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     ListItem(
         modifier = modifier.combinedClickable(
@@ -83,7 +85,9 @@ fun FileListMedium(
         },
         supportingContent = {
             if (file is Book && 0 < file.lastPageRead) {
-                LinearProgressIndicator(progress = file.lastPageRead.toFloat() / file.totalPageCount)
+                LinearProgressIndicator(
+                    progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+                )
             }
         },
         leadingContent = {
@@ -91,7 +95,7 @@ fun FileListMedium(
                 model = file,
                 modifier = Modifier.size(56.dp),
                 contentDescription = "",
-                placeholder = debugPlaceholder()
+                placeholder = rememberDebugPlaceholder()
             )
         },
         trailingContent = {

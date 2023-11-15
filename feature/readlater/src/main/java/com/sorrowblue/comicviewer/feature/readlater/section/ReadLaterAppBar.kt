@@ -1,32 +1,18 @@
 package com.sorrowblue.comicviewer.feature.readlater.section
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.readlater.R
+import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.material3.AppBarAction
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
-import kotlinx.collections.immutable.PersistentList
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior
+import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
 
-enum class ReadLaterAction(override val icon: ImageVector, override val label: String) :
-    AppBarAction {
-
-    FileContetView(ComicIcons.ViewList, "list"),
-    FileContetGrid(ComicIcons.GridView, "grid"),
-    GridSize(ComicIcons.Grid4x4, "Change Grid size"),
-    Clear(ComicIcons.ClearAll, "Clear Read Later"),
-    Settings(ComicIcons.Settings, "Settings"),
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ReadLaterAppBar(
-    list: PersistentList<ReadLaterAction>,
     fileContentType: FileContentType,
     topAppBarScrollBehavior: TopAppBarScrollBehavior? = null,
     onFileContentLayoutClick: () -> Unit = {},
@@ -35,65 +21,32 @@ internal fun ReadLaterAppBar(
     onSettingsClick: () -> Unit = {},
 ) {
     TopAppBar(
-        title = { Text(stringResource(R.string.readlater_title)) },
-        actions = list,
-        onClick = {
-            when (it) {
-                ReadLaterAction.FileContetView -> onFileContentLayoutClick()
-                ReadLaterAction.FileContetGrid -> onFileContentLayoutClick()
-                ReadLaterAction.GridSize -> onGridSizeClick()
-                ReadLaterAction.Clear -> onClearAllClick()
-                ReadLaterAction.Settings -> onSettingsClick()
+        title = R.string.readlater_title,
+        actions = {
+            FileContentLayoutButton(
+                fileContentType = fileContentType,
+                onClick = onFileContentLayoutClick
+            )
+            OverflowMenu(state = rememberOverflowMenuState()) {
+                if (fileContentType is FileContentType.Grid) {
+                    OverflowMenuItem(
+                        text = "Change Grid size",
+                        icon = ComicIcons.Grid4x4,
+                        onClick = onGridSizeClick
+                    )
+                }
+                OverflowMenuItem(
+                    text = "Clear Read Later",
+                    icon = ComicIcons.ClearAll,
+                    onClick = onClearAllClick
+                )
+                OverflowMenuItem(
+                    text = "Settings",
+                    icon = ComicIcons.Settings,
+                    onClick = onSettingsClick
+                )
             }
-        }
+        },
+        scrollBehavior = topAppBarScrollBehavior
     )
-//    TopAppBar(
-//        title = { Text(stringResource(R.string.readlater_title)) },
-//        actions = {
-//            FileContentLayoutButton(
-//                fileContentLayout = fileContentLayout,
-//                onClick = onFileContentLayoutClick
-//            )
-//            val overflowMenuState = rememberOverflowMenuState()
-//            OverflowMenu(overflowMenuState) {
-//                if (fileContentLayout is FileContentLayout.Grid) {
-//                    DropdownMenuItem(
-//                        text = { Text(text = "Change Grid size") },
-//                        trailingIcon = { Icon(ComicIcons.Grid4x4, "Change grid size") },
-//                        onClick = {
-//                            overflowMenuState.collapse()
-//                            onGridSizeClick()
-//                        }
-//                    )
-//                }
-//                DropdownMenuItem(
-//                    text = { Text("Clear Read Later") },
-//                    trailingIcon = {
-//                        Icon(
-//                            ComicIcons.ClearAll,
-//                            "Clear Read Later"
-//                        )
-//                    },
-//                    onClick = {
-//                        overflowMenuState.collapse()
-//                        onClearAllClick()
-//                    }
-//                )
-//                DropdownMenuItem(
-//                    text = { Text(text = "Settings") },
-//                    trailingIcon = {
-//                        Icon(
-//                            ComicIcons.Settings,
-//                            "Settings"
-//                        )
-//                    },
-//                    onClick = {
-//                        overflowMenuState.collapse()
-//                        onSettingsClick()
-//                    }
-//                )
-//            }
-//        },
-//        scrollBehavior = topAppBarScrollBehavior
-//    )
 }

@@ -19,7 +19,10 @@ internal data class BookThumbnailMetadata(
 ) {
 
     constructor(book: Book) : this(
-        book.path, book.bookshelfId.value, book.lastModifier, book.size
+        book.path,
+        book.bookshelfId.value,
+        book.lastModifier,
+        book.size
     )
 
     companion object {

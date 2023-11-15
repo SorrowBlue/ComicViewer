@@ -27,7 +27,7 @@ interface FileRepository {
     fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,
-        searchCondition: () -> SearchCondition
+        searchCondition: () -> SearchCondition,
     ): Flow<PagingData<File>>
 
     fun find(bookshelfId: BookshelfId, path: String): Flow<Resource<File, Error>>
@@ -38,7 +38,7 @@ interface FileRepository {
         bookshelfId: BookshelfId,
         path: String,
         lastReadPage: Int,
-        lastReadTime: Long
+        lastReadTime: Long,
     )
 
     fun pagingDataFlow(
@@ -57,7 +57,7 @@ interface FileRepository {
     fun getNextRelFile(
         bookshelfId: BookshelfId,
         path: String,
-        isNext: Boolean
+        isNext: Boolean,
     ): Flow<Result<File, Unit>>
 
     suspend fun getFolder(bookshelf: Bookshelf, path: String): Result<Folder, FileRepositoryError>

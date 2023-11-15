@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
@@ -31,7 +29,7 @@ internal class ComicViewerAppViewModel @Inject constructor(
     private val securitySettingsUseCase: ManageSecuritySettingsUseCase,
     private val loadSettingsUseCase: LoadSettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
-) : ComposeViewModel<ComicViewerAppUiEvent>(), DefaultLifecycleObserver {
+) : ComposeViewModel<ComicViewerAppUiEvent>() {
 
     private var isRestart by savedStateHandle.saveable { mutableStateOf(false) }
 
@@ -45,16 +43,17 @@ internal class ComicViewerAppViewModel @Inject constructor(
 
     private var isRestoredNavHistory = false
 
-    override fun onCreate(owner: LifecycleOwner) {
-        super.onCreate(owner)
+    fun onCreate() {
         if (!isRestart) {
             viewModelScope.launch {
                 val settings = loadSettingsUseCase.settings.first()
                 if (!settings.doneTutorial) {
-                    updateUiEvent(ComicViewerAppUiEvent.StartTutorial {
-                        shouldKeepSplash = false
-                        isRestart = true
-                    })
+                    updateUiEvent(
+                        ComicViewerAppUiEvent.StartTutorial {
+                            shouldKeepSplash = false
+                            isRestart = true
+                        }
+                    )
                 } else if (settings.restoreOnLaunch) {
                     val history =
                         getNavigationHistoryUseCase.execute(EmptyRequest).map { it.dataOrNull }
@@ -72,8 +71,7 @@ internal class ComicViewerAppViewModel @Inject constructor(
         }
     }
 
-    override fun onStart(owner: LifecycleOwner) {
-        super.onStart(owner)
+    fun onStart() {
         addOnList.value =
             splitInstallManager.installedModules
                 .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }
@@ -83,9 +81,11 @@ internal class ComicViewerAppViewModel @Inject constructor(
                 val securitySettings = securitySettingsUseCase.settings.first()
                 if (securitySettings.lockOnBackground && securitySettings.password != null) {
                     logcat { "認証" }
-                    updateUiEvent(ComicViewerAppUiEvent.RequireAuthentication(true) {
-                        shouldKeepSplash = false
-                    })
+                    updateUiEvent(
+                        ComicViewerAppUiEvent.RequireAuthentication(true) {
+                            shouldKeepSplash = false
+                        }
+                    )
                 } else {
                     shouldKeepSplash = false
                 }
@@ -107,10 +107,12 @@ internal class ComicViewerAppViewModel @Inject constructor(
         viewModelScope.launch {
             if (securitySettingsUseCase.settings.first().password != null) {
                 logcat { "認証 復元完了後" }
-                updateUiEvent(ComicViewerAppUiEvent.RequireAuthentication(isRestoredNavHistory) {
-                    shouldKeepSplash = false
-                    isRestart = true
-                })
+                updateUiEvent(
+                    ComicViewerAppUiEvent.RequireAuthentication(isRestoredNavHistory) {
+                        shouldKeepSplash = false
+                        isRestart = true
+                    }
+                )
             } else {
                 shouldKeepSplash = false
                 isRestart = true

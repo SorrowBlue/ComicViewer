@@ -15,6 +15,7 @@ internal class AndroidDynamicFeatureConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.dynamic-feature")
                 apply("org.jetbrains.kotlin.android")
+                apply("comicviewer.android.lint")
             }
 
             kotlin {

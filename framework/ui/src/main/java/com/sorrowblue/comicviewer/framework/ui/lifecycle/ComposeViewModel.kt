@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import logcat.logcat
 
-abstract class ComposeViewModel<T> : ViewModel() {
+open class ComposeViewModel<T> : ViewModel() {
 
     private val _uiEvents: MutableStateFlow<List<T>> = MutableStateFlow(emptyList())
     val uiEvents: StateFlow<List<T>> get() = _uiEvents.asStateFlow()
@@ -18,22 +18,23 @@ abstract class ComposeViewModel<T> : ViewModel() {
         _uiEvents.update { currentUiEvent -> currentUiEvent + uiEvent }
     }
 
-    internal fun consumeUiEvent(uiEvent: T) {
+    fun consumeUiEvent(uiEvent: T) {
         _uiEvents.update { currentMessages -> currentMessages.filterNot { it == uiEvent } }
     }
 }
 
 @Composable
 fun <T> LaunchedEffectUiEvent(
-    viewModel: ComposeViewModel<T>,
+    uiEvents: StateFlow<List<T>>,
+    consume: (T) -> Unit,
     onEvent: suspend (T) -> Unit,
 ) {
-    LaunchedEffect(viewModel) {
-        viewModel.uiEvents.collect { currentUiEvents ->
+    LaunchedEffect(true) {
+        uiEvents.collect { currentUiEvents ->
             if (currentUiEvents.isNotEmpty()) {
                 val uiEvent = currentUiEvents[0]
-                viewModel.consumeUiEvent(uiEvent)
-                logcat("${viewModel::class.simpleName}") { "uiEvent=$uiEvent" }
+                consume(uiEvent)
+                logcat { "uiEvent=$uiEvent" }
                 onEvent(uiEvent)
             }
         }

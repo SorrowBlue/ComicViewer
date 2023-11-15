@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_security_label_to_settings">設定へ</string>
     <string name="settings_security_title">セキュリティ</string>
     <string name="settings_security_title_password_lock">パスワードロック</string>
     <string name="settings_security_summary_password_lock">アプリ起動時にパスワードを要求します</string>

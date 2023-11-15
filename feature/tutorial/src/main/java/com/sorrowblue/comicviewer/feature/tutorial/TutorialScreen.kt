@@ -40,7 +40,7 @@ internal enum class TutorialSheet {
     WELCOME,
     ARCHIVE,
     DOCUMENT,
-    READING_DIRECTION
+    READING_DIRECTION,
 }
 
 internal data class TutorialScreenUiState(

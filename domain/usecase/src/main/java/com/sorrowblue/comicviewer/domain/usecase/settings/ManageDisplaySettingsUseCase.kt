@@ -2,4 +2,4 @@ package com.sorrowblue.comicviewer.domain.usecase.settings
 
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 
-abstract class ManageDisplaySettingsUseCase : ManageSettingsUseCase<DisplaySettings>()
+interface ManageDisplaySettingsUseCase : ManageSettingsUseCase<DisplaySettings>

@@ -15,6 +15,7 @@ import coil.fetch.SourceResult
 import coil.request.Options
 import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
+import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
@@ -24,6 +25,8 @@ import javax.inject.Inject
 import kotlin.math.floor
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
+import logcat.asLog
+import logcat.logcat
 import okhttp3.internal.closeQuietly
 import okio.ByteString.Companion.encodeUtf8
 
@@ -67,7 +70,7 @@ internal class FavoriteThumbnailFetcher(
                 val thumbnails = cacheList(size)
                 if (thumbnails.isEmpty()) {
                     // キャッシュがない場合、取得しない。
-                    throw RuntimeException("ファイルのサムネイルがないので、サムネイルを生成しない。")
+                    throw CoilRuntimeException("ファイルのサムネイルがないので、サムネイルを生成しない。")
                 } else {
                     // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
                     snapshot = writeToDiskCache(snapshot = snapshot, list = thumbnails)
@@ -86,6 +89,7 @@ internal class FavoriteThumbnailFetcher(
                     }
                 }
             } catch (e: Exception) {
+                logcat { e.asLog() }
                 throw e
             }
         } catch (e: Exception) {
@@ -113,7 +117,8 @@ internal class FavoriteThumbnailFetcher(
     }
 
     private suspend fun writeToDiskCache(
-        snapshot: DiskCache.Snapshot?, list: List<Pair<String, DiskCache.Snapshot>>,
+        snapshot: DiskCache.Snapshot?,
+        list: List<Pair<String, DiskCache.Snapshot>>,
     ): DiskCache.Snapshot? {
         // この応答をキャッシュすることが許可されていない場合は短絡します。
         if (!isCacheable()) {
@@ -132,9 +137,10 @@ internal class FavoriteThumbnailFetcher(
         if (editor == null) return null
 
         try {
-
             val result = Bitmap.createBitmap(
-                requestWidth.toInt(), requestHeight.toInt(), Bitmap.Config.ARGB_8888
+                requestWidth.toInt(),
+                requestHeight.toInt(),
+                Bitmap.Config.ARGB_8888
             )
             val canvas = Canvas(result)
             canvas.drawColor(Color.TRANSPARENT)
@@ -169,7 +175,9 @@ internal class FavoriteThumbnailFetcher(
         val resizeScale =
             if (bitmap.width >= bitmap.height) requestWidth / bitmap.width else requestHeight / bitmap.height
         val scale = bitmap.scale(
-            (bitmap.width * resizeScale).toInt(), (bitmap.height * resizeScale).toInt(), true
+            (bitmap.width * resizeScale).toInt(),
+            (bitmap.height * resizeScale).toInt(),
+            true
         )
         bitmap.recycle()
         canvas.drawBitmap(scale, requestWidth - scale.width - rightSpace, 0f, null)

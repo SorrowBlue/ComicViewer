@@ -22,7 +22,6 @@ internal class CoilInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
         val imageLoader = Coil.imageLoader(context).newBuilder().components {
-
             add(MyComponent.bookPageFetcherFactory(context))
 
             add(MyComponent.folderThumbnailFetcher(context))
@@ -38,7 +37,6 @@ internal class CoilInitializer : Initializer<Unit> {
         Coil.setImageLoader(imageLoader)
         logcat(LogPriority.INFO) { "Initialize coil." }
     }
-
 
     override fun dependencies() = listOf(LogcatInitializer::class.java)
 
@@ -66,6 +64,4 @@ internal class CoilInitializer : Initializer<Unit> {
                 EntryPointAccessors.fromApplication<MyComponent>(context).favoriteThumbnailFetcher()
         }
     }
-
 }
-

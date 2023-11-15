@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.library.box.section
 
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -18,39 +19,20 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import kotlinx.parcelize.Parcelize
 
-internal sealed interface BoxDialogUiState {
-
-    data object Hide : BoxDialogUiState
-    data class Show(
-        val photoUrl: String = "",
-        val name: String = ""
-    ) : BoxDialogUiState
-}
+@Parcelize
+internal data class BoxDialogUiState(
+    val photoUrl: String = "",
+    val name: String = "",
+) : Parcelable
 
 @Composable
 internal fun BoxAccountDialog(
     uiState: BoxDialogUiState,
     onDismissRequest: () -> Unit,
-    onLogoutClick: () -> Unit
-) {
-    when (uiState) {
-        BoxDialogUiState.Hide -> Unit
-        is BoxDialogUiState.Show ->
-            BoxAccountDialog(
-                uiState = uiState,
-                onDismissRequest = onDismissRequest,
-                onLogoutClick = onLogoutClick,
-            )
-    }
-}
-
-@Composable
-private fun BoxAccountDialog(
-    uiState: BoxDialogUiState.Show = BoxDialogUiState.Show(),
-    onDismissRequest: () -> Unit = {},
-    onLogoutClick: () -> Unit = {}
+    onLogoutClick: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -65,7 +47,7 @@ private fun BoxAccountDialog(
             AsyncImage(
                 model = uiState.photoUrl,
                 contentDescription = null,
-                placeholder = debugPlaceholder(),
+                placeholder = rememberDebugPlaceholder(),
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
@@ -85,7 +67,11 @@ private fun BoxAccountDialog(
 private fun PreviewGoogleAccountDialog() {
     ComicTheme {
         Surface {
-            BoxAccountDialog()
+            BoxAccountDialog(
+                uiState = BoxDialogUiState(),
+                onDismissRequest = {},
+                onLogoutClick = {}
+            )
         }
     }
 }

@@ -26,7 +26,7 @@ internal class FavoriteEditViewModel @Inject constructor(
     private val getFavoriteUseCase: GetFavoriteUseCase,
     private val removeFavoriteFileUseCase: RemoveFavoriteFileUseCase,
     private val updateFavoriteUseCase: UpdateFavoriteUseCase,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val args = FavoriteEditArgs(savedStateHandle)
@@ -42,7 +42,7 @@ internal class FavoriteEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
+            getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId)).first()
         }
     }
 

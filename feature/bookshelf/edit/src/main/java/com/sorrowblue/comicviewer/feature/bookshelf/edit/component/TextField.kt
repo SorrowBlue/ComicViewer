@@ -6,6 +6,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
@@ -15,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbEditScreenUiState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.autofill.connectNode
 import com.sorrowblue.comicviewer.framework.ui.autofill.defaultFocusChangeAutoFill
@@ -23,6 +24,7 @@ import com.sorrowblue.comicviewer.framework.ui.autofill.rememberAutoFillRequestH
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
 import com.sorrowblue.comicviewer.framework.ui.material3.OutlinedTextField2
 import com.sorrowblue.comicviewer.framework.ui.material3.ValidateOutlinedTextField
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun DisplayNameField(
@@ -172,7 +174,7 @@ internal fun UsernameField(
     modifier: Modifier = Modifier,
 ) {
     val usernameAutoFillHandler = rememberAutoFillRequestHandler(
-        autofillTypes = listOf(AutofillType.Username),
+        autofillTypes = remember { persistentListOf(AutofillType.Username) },
         onFill = onValueChange
     )
     ValidateOutlinedTextField(
@@ -204,7 +206,7 @@ internal fun PasswordField(
     modifier: Modifier = Modifier,
 ) {
     val passwordAutoFillHandler = rememberAutoFillRequestHandler(
-        autofillTypes = listOf(AutofillType.Password),
+        autofillTypes = remember { persistentListOf(AutofillType.Password) },
         onFill = onValueChange
     )
     ValidateOutlinedTextField(

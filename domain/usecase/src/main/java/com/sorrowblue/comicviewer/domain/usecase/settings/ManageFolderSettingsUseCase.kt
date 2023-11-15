@@ -2,4 +2,4 @@ package com.sorrowblue.comicviewer.domain.usecase.settings
 
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
 
-abstract class ManageFolderSettingsUseCase : ManageSettingsUseCase<FolderSettings>()
+interface ManageFolderSettingsUseCase : ManageSettingsUseCase<FolderSettings>

@@ -2,9 +2,7 @@ package com.sorrowblue.comicviewer.favorite
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,6 +22,8 @@ import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
+import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 @Composable
@@ -58,20 +58,19 @@ internal data class FavoriteScreenUiState(
     val fileContentType: FileContentType = FileContentType.List,
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoriteScreen(
-    uiState: FavoriteScreenUiState = FavoriteScreenUiState(),
+    uiState: FavoriteScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
-    onBackClick: () -> Unit = {},
-    onEditClick: () -> Unit = {},
-    onFileListTypeChange: () -> Unit = {},
-    onGridSizeChange: () -> Unit = {},
-    onDeleteClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {},
-    onClickFile: (File) -> Unit = {},
-    onClickLongFile: (File) -> Unit = {},
-    lazyGridState: LazyGridState = rememberLazyGridState(),
+    onBackClick: () -> Unit,
+    onEditClick: () -> Unit,
+    onFileListTypeChange: () -> Unit,
+    onGridSizeChange: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onClickFile: (File) -> Unit,
+    onClickLongFile: (File) -> Unit,
+    lazyGridState: LazyGridState,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(

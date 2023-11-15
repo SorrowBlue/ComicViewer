@@ -4,13 +4,14 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application>
+        <meta-data android:name="dropboxApiKey" android:value="${dropbox_api_key}"/>
         <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
-                <data android:scheme="db-uolcvekf83nd74j" />
+                <data android:scheme="db-${dropbox_api_key}" />
 
                 <action android:name="android.intent.action.VIEW" />
 

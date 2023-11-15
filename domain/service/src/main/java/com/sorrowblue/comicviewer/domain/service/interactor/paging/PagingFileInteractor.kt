@@ -28,11 +28,11 @@ internal class PagingFileInteractor @Inject constructor(
             }
             val folder: IFolder = when (file) {
                 is Resource.Error -> return@combine Resource.Error(Error.NOT_FOUND)
-                is Resource.Success -> file.data as? IFolder
-                    ?: return@combine Resource.Error(Error.NOT_FOUND)
+                is Resource.Success ->
+                    file.data as? IFolder
+                        ?: return@combine Resource.Error(Error.NOT_FOUND)
             }
             Resource.Success(fileRepository.pagingDataFlow(request.pagingConfig, bookshelf, folder))
         }
     }
 }
-

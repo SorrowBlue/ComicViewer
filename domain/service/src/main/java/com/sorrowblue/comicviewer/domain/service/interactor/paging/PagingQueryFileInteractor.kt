@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 
 internal class PagingQueryFileInteractor @Inject constructor(
     private val bookshelfRepository: BookshelfRepository,
-    private val fileRepository: FileRepository
+    private val fileRepository: FileRepository,
 ) : PagingQueryFileUseCase() {
 
     override fun run(request: Request): Flow<PagingData<File>> {

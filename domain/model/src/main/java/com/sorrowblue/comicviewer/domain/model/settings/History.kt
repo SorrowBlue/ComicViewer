@@ -7,7 +7,5 @@ import kotlinx.serialization.Serializable
 data class History(
     val bookshelfId: BookshelfId? = null,
     val path: String? = null,
-    val position: Int? = null
+    val position: Int? = null,
 )
-
-

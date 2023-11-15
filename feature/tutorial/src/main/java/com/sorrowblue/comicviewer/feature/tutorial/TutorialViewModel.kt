@@ -25,12 +25,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.logcat
 
-private const val DOCUMENT_MODULE = "document"
+private const val DocumentModule = "document"
 
 @HiltViewModel
 internal class TutorialViewModel @Inject constructor(
     private val splitInstallManager: SplitInstallManager,
-    private val viewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase
+    private val viewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase,
 ) : ViewModel(), DefaultLifecycleObserver, SplitInstallStateUpdatedListener {
 
     private val _uiState = MutableStateFlow(TutorialScreenUiState())
@@ -38,12 +38,12 @@ internal class TutorialViewModel @Inject constructor(
 
     init {
         val uiState = _uiState.value
-        if (splitInstallManager.installedModules.contains(DOCUMENT_MODULE)) {
-            logcat { "Feature module($DOCUMENT_MODULE) is already installed." }
+        if (splitInstallManager.installedModules.contains(DocumentModule)) {
+            logcat { "Feature module($DocumentModule) is already installed." }
             _uiState.value =
                 uiState.copy(documentSheetUiState = DocumentSheetUiState.INSTALLED)
         } else {
-            logcat { "Feature module($DOCUMENT_MODULE) is not installed." }
+            logcat { "Feature module($DocumentModule) is not installed." }
             _uiState.value = uiState.copy(documentSheetUiState = DocumentSheetUiState.NONE)
         }
         viewerOperationSettingsUseCase.settings.onEach {
@@ -66,12 +66,15 @@ internal class TutorialViewModel @Inject constructor(
     }
 
     override fun onStateUpdate(state: SplitInstallSessionState) {
-        if (state.moduleNames.contains(DOCUMENT_MODULE)) {
+        if (state.moduleNames.contains(DocumentModule)) {
             val uiState = when (state.status) {
                 SplitInstallSessionStatus.CANCELED -> DocumentSheetUiState.CANCELED
                 SplitInstallSessionStatus.CANCELING -> DocumentSheetUiState.CANCELING
                 SplitInstallSessionStatus.DOWNLOADED -> DocumentSheetUiState.DOWNLOADED
-                SplitInstallSessionStatus.DOWNLOADING -> DocumentSheetUiState.DOWNLOADING((state.bytesDownloaded.toDouble() / state.totalBytesToDownload).toFloat())
+                SplitInstallSessionStatus.DOWNLOADING -> DocumentSheetUiState.DOWNLOADING(
+                    (state.bytesDownloaded.toDouble() / state.totalBytesToDownload).toFloat()
+                )
+
                 SplitInstallSessionStatus.FAILED -> DocumentSheetUiState.FAILED(state.err)
                 SplitInstallSessionStatus.INSTALLED -> DocumentSheetUiState.INSTALLED
                 SplitInstallSessionStatus.INSTALLING -> DocumentSheetUiState.INSTALLING
@@ -86,7 +89,7 @@ internal class TutorialViewModel @Inject constructor(
 
     fun onDocumentDownloadClick() {
         viewModelScope.launch {
-            splitInstallManager.requestInstall(listOf(DOCUMENT_MODULE))
+            splitInstallManager.requestInstall(listOf(DocumentModule))
         }
     }
 

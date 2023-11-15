@@ -7,12 +7,14 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class GoogleDrivePagingSource(
     private val driverService: Drive,
-    private val parent: String
+    private val parent: String,
+    private val dispatchers: CoroutineDispatcher = Dispatchers.IO,
 ) :
     PagingSource<String, File>() {
     override fun getRefreshKey(state: PagingState<String, File>): String? {
@@ -22,9 +24,11 @@ internal class GoogleDrivePagingSource(
     }
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, File> {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatchers) {
             val request = driverService.files().list()
-                .setQ("'$parent' in parents and trashed = false and (mimeType = 'application/vnd.google-apps.folder' or mimeType contains 'zip' or mimeType contains 'pdf')")
+                .setQ(
+                    "'$parent' in parents and trashed = false and (mimeType = 'application/vnd.google-apps.folder' or mimeType contains 'zip' or mimeType contains 'pdf')"
+                )
                 .setSpaces("drive")
                 .setPageSize(params.loadSize)
                 .setPageToken(params.key)

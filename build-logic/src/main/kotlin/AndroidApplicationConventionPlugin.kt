@@ -15,7 +15,7 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
-                apply("io.gitlab.arturbosch.detekt")
+                apply("comicviewer.android.lint")
             }
 
             kotlin {
@@ -27,6 +27,8 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
+                add("detektPlugins", libs.findLibrary("nlopez.compose.rules.detekt").get())
+                add("detektPlugins", libs.findLibrary("arturbosch.detektFormatting").get())
                 implementation(libs.findLibrary("squareup.logcat").get())
             }
         }

@@ -30,7 +30,7 @@ interface PlaceholderHighlight {
      */
     fun brush(
         @FloatRange(from = 0.0, to = 1.0) progress: Float,
-        size: Size
+        size: Size,
     ): Brush
 
     /**

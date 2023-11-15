@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -62,7 +63,8 @@ fun SettingsColumn(
     } else {
         contentPadding.add(
             paddingValues = PaddingValues(
-                horizontal = ComicTheme.dimension.margin, vertical = ComicTheme.dimension.margin
+                horizontal = ComicTheme.dimension.margin,
+                vertical = ComicTheme.dimension.margin
             )
         )
     }
@@ -95,13 +97,17 @@ fun Setting(
         modifier = Modifier
             .then(modifier)
             .clickable(onClick = onClick),
-        colors = if (enabled) ListItemDefaults.colors() else ListItemDefaults.colors(
-            headlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            leadingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            overlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            supportingColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            trailingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-        ),
+        colors = if (enabled) {
+            ListItemDefaults.colors()
+        } else {
+            ListItemDefaults.colors(
+                headlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                leadingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                overlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                supportingColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                trailingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            )
+        },
     )
 }
 
@@ -171,7 +177,7 @@ fun SwitchSetting(
     icon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
 ) {
-    Box {
+    Box(modifier = modifier) {
         Setting(
             title = title,
             summary = summary,
@@ -184,13 +190,13 @@ fun SwitchSetting(
                 )
             },
             onClick = {},
-            modifier = modifier,
             enabled = enabled,
         )
         Box(
             Modifier
                 .matchParentSize()
-                .clickable { onCheckedChange(!checked) })
+                .clickable { onCheckedChange(!checked) }
+        )
     }
 }
 
@@ -295,7 +301,7 @@ fun CheckboxSetting(
     icon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
 ) {
-    Box {
+    Box(modifier = modifier) {
         Setting(
             title = title,
             summary = summary,
@@ -308,12 +314,12 @@ fun CheckboxSetting(
                 )
             },
             onClick = {},
-            modifier = modifier,
         )
         Box(
             Modifier
                 .matchParentSize()
-                .clickable { onCheckedChange(!checked) })
+                .clickable { onCheckedChange(!checked) }
+        )
     }
 }
 
@@ -359,6 +365,7 @@ fun CheckboxSetting(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SliderSetting(
     title: @Composable () -> Unit,
@@ -463,7 +470,7 @@ fun SettingsCategory(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
-fun PreviewSettingsScreen() {
+private fun PreviewSettingsScreen() {
     PreviewTheme {
         Surface {
             Column {
@@ -480,7 +487,8 @@ fun PreviewSettingsScreen() {
                 var media by remember { mutableFloatStateOf(0f) }
                 SliderSetting(
                     title = { Text("メディアの音量") },
-                    value = media, onValueChange = { media = it },
+                    value = media,
+                    onValueChange = { media = it },
                     icon = { Icon(ComicIcons.MusicNote, null) },
                     modifier = Modifier.clickable { },
                 )

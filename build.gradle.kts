@@ -14,12 +14,7 @@ plugins {
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
     alias(libs.plugins.dependency.graph.generator)
     alias(libs.plugins.arturbosch.detekt)
-    id("com.palantir.git-version") version "3.0.0"
     id("androidx.room") version libs.versions.androidx.room.get() apply false
-}
-
-detekt {
-    config.setFrom("$projectDir/config/detekt/detekt.yml")
 }
 
 tasks.register("clean", Delete::class) {
@@ -43,5 +38,22 @@ tasks.named(
     }
 }
 
-val gitVersion: groovy.lang.Closure<String> by extra
-version = gitVersion().also { logger.lifecycle("version: $it") }
+tasks.named("detekt", io.gitlab.arturbosch.detekt.Detekt::class.java).configure {
+    reports {
+        xml.required.set(true)
+    }
+}
+val reportMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+    output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.xml")) // or "reports/detekt/merge.sarif"
+}
+
+subprojects {
+
+    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+        finalizedBy(reportMerge)
+    }
+
+    reportMerge {
+        input.from(tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().map { it.xmlReportFile }) // or .sarifReportFile
+    }
+}

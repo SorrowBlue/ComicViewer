@@ -23,8 +23,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 import java.io.InputStream
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -36,10 +37,11 @@ internal fun OneDriveTopAppBar(
     onBackClick: () -> Unit,
     onProfileImageClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
+    dispatchers: CoroutineDispatcher = Dispatchers.IO,
 ) {
     var inputStream by remember { mutableStateOf<ByteArray?>(null) }
     LaunchedEffect(profileUri) {
-        launch(Dispatchers.IO) {
+        launch(dispatchers) {
             inputStream = profileUri()?.readBytes()
         }
     }
@@ -64,7 +66,7 @@ internal fun OneDriveTopAppBar(
         actions = {
             AsyncImage(
                 model = inputStream,
-                placeholder = debugPlaceholder(),
+                placeholder = rememberDebugPlaceholder(),
                 contentDescription = null,
                 modifier = Modifier
                     .size(48.dp)

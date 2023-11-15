@@ -29,7 +29,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.debugPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveCard
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -53,7 +53,7 @@ fun FileGrid(
         ) {
             AsyncImage(
                 model = file,
-                placeholder = debugPlaceholder()
+                placeholder = rememberDebugPlaceholder()
                     ?: forwardingPainter(
                         rememberVectorPainter(if (file is Book) ComicIcons.Book else ComicIcons.Folder),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
@@ -72,9 +72,9 @@ fun FileGrid(
             )
             if (file is Book && 0 < file.lastPageRead) {
                 LinearProgressIndicator(
-                    progress = file.lastPageRead.toFloat() / file.totalPageCount,
+                    progress = { file.lastPageRead.toFloat() / file.totalPageCount },
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 )
             }
             Text(
@@ -93,7 +93,7 @@ fun FileGrid(
 
 @Preview
 @Composable
-fun PreviewFileGrid() {
+private fun PreviewFileGrid() {
     ComicTheme {
         FileGrid(
             file = FakeFile,

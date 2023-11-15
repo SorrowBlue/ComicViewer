@@ -28,4 +28,3 @@ abstract class FlowUseCase2<R : BaseRequest, S, E> {
 
     protected abstract fun run(request: R): Flow<Result<S, E>>
 }
-

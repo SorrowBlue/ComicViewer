@@ -6,22 +6,21 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.navigation.historyGroup
 import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistoryGroup
 import com.sorrowblue.comicviewer.feature.library.LibraryRoute
 import com.sorrowblue.comicviewer.feature.library.section.Feature
 
-private const val libraryRoute = "library"
-const val libraryGraphRoute = "${libraryRoute}_graph"
+private const val LibraryRoute = "library"
+const val LibraryGraphRoute = "${LibraryRoute}_graph"
 
-val routeInLibraryGraph get() = listOf(libraryRoute)
+val RouteInLibraryGraph get() = listOf(LibraryRoute)
 
 private fun NavGraphBuilder.libraryScreen(
     contentPadding: PaddingValues,
     onFeatureClick: (Feature) -> Unit,
 ) {
-    composable(libraryRoute) {
+    composable(LibraryRoute) {
         LibraryRoute(
             contentPadding = contentPadding,
             onFeatureClick = onFeatureClick,
@@ -37,7 +36,7 @@ fun NavGraphBuilder.libraryGroup(
     navigateToSearch: (BookshelfId, String) -> Unit,
     onAddOnClick: (Feature.AddOn) -> Unit,
 ) {
-    navigation(route = libraryGraphRoute, startDestination = libraryRoute) {
+    navigation(route = LibraryGraphRoute, startDestination = LibraryRoute) {
         libraryScreen(
             contentPadding = contentPadding,
             onFeatureClick = {

@@ -2,8 +2,6 @@ package com.sorrowblue.comicviewer.data.reader.document
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Point
-import android.os.Build
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.Keep
@@ -16,11 +14,10 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import kotlin.math.min
 
-private val COMPRESS_FORMAT =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) Bitmap.CompressFormat.WEBP_LOSSY else Bitmap.CompressFormat.JPEG
+private val COMPRESS_FORMAT = Bitmap.CompressFormat.WEBP_LOSSY
 
 @Keep
-abstract class DocumentFileReader constructor(
+open class DocumentFileReader constructor(
     context: Context,
     mimeType: String,
     private val seekableInputStream: SeekableInputStream,
@@ -28,19 +25,16 @@ abstract class DocumentFileReader constructor(
 
     private val width by lazy {
         val windowManager = ContextCompat.getSystemService(context, WindowManager::class.java)!!
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val windowMetrics = windowManager.currentWindowMetrics
-            windowManager.currentWindowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
-                .run {
-                    min(
-                        windowMetrics.bounds.width() - (right + left),
-                        windowMetrics.bounds.height() - (top + bottom)
-                    )
-                }
-        } else {
-            @Suppress("DEPRECATION")
-            Point().also(windowManager.defaultDisplay::getSize).run { min(x, y) }
-        }
+        val windowMetrics = windowManager.currentWindowMetrics
+        windowManager.currentWindowMetrics.windowInsets.getInsetsIgnoringVisibility(
+            WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout()
+        )
+            .run {
+                min(
+                    windowMetrics.bounds.width() - (right + left),
+                    windowMetrics.bounds.height() - (top + bottom)
+                )
+            }
     }
 
     private val document =
@@ -57,7 +51,6 @@ abstract class DocumentFileReader constructor(
     override fun fileSize(pageIndex: Int): Long {
         return 0
     }
-
 
     override suspend fun pageInputStream(pageIndex: Int): InputStream {
         return ByteArrayOutputStream().also {

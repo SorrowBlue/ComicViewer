@@ -9,10 +9,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class SingletonBindsModule {
+internal interface SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindFileModelRemoteMediatorFactory(dataSource: FileModelRemoteMediatorImpl.Factory): FileModelRemoteMediator.Factory
-
+    fun bindFileModelRemoteMediatorFactory(
+        dataSource: FileModelRemoteMediatorImpl.Factory,
+    ): FileModelRemoteMediator.Factory
 }

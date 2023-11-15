@@ -1,42 +1,43 @@
 package com.sorrowblue.comicviewer.feature.library.onedrive.data
 
-import com.microsoft.graph.logger.ILogger
-import com.microsoft.graph.logger.LoggerLevel
+import android.app.Activity
 import com.microsoft.graph.models.User
 import com.microsoft.graph.requests.DriveItemCollectionPage
 import com.microsoft.graph.requests.GraphServiceClient
+import com.microsoft.identity.client.IAccount
+import com.sorrowblue.comicviewer.app.IoDispatcher
 import java.io.InputStream
 import java.io.OutputStream
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
 import logcat.logcat
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
-internal class OneDriveApiRepositoryImpl(private val authenticationProvider: AuthenticationProvider) :
-    OneDriveApiRepository {
+internal val oneDriveModule = module {
+    single { AuthenticationProvider(get(), get(named<IoDispatcher>())) }
+    single<OneDriveApiRepository> { OneDriveApiRepositoryImpl(get(), get(named<IoDispatcher>())) }
+}
+
+internal class OneDriveApiRepositoryImpl(
+    private val authenticationProvider: AuthenticationProvider,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : OneDriveApiRepository {
 
     private val graphClient = GraphServiceClient.builder()
         .authenticationProvider(authenticationProvider)
-        .logger(object : ILogger {
-            override fun setLoggingLevel(level: LoggerLevel) {}
-
-            override fun getLoggingLevel(): LoggerLevel {
-                return LoggerLevel.DEBUG
-            }
-
-            override fun logDebug(message: String) {
-//                logcat { message }
-            }
-
-            override fun logError(message: String, throwable: Throwable?) {
-                throwable?.printStackTrace()
-                logcat { message + ". ${throwable?.localizedMessage}" }
-            }
-
-        })
+        .logger(LogcatLogger)
         .buildClient()
 
+    override suspend fun initialize() = authenticationProvider.initialize()
+
+    override val accountFlow: StateFlow<IAccount?> = authenticationProvider.account
+
     override suspend fun getCurrentUser(): User? {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             if (!authenticationProvider.isSignIned) {
                 null
             } else {
@@ -46,13 +47,13 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
     }
 
     override suspend fun profileImage(): InputStream {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             graphClient.me().photo().content().buildRequest().get()!!
         }
     }
 
     override suspend fun driveId(): String {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             graphClient.me().drive().buildRequest().get()!!.id!!
         }
     }
@@ -61,15 +62,17 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
         driveId: String,
         itemId: String,
         outputStream: OutputStream,
-        onProgress: (Double) -> Unit
+        onProgress: (Double) -> Unit,
     ) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             val size =
                 graphClient.drives(driveId).items(itemId).buildRequest().get()!!.size!!.toDouble()
             graphClient.drives(driveId).items(itemId).content().buildRequest().get()!!
-                .copyTo(ProgressOutputStream(outputStream) {
-                    onProgress.invoke(it / size)
-                })
+                .copyTo(
+                    ProgressOutputStream(outputStream) {
+                        onProgress.invoke(it / size)
+                    }
+                )
         }
     }
 
@@ -81,10 +84,10 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
         driveId: String?,
         itemId: String,
         limit: Int,
-        skipToken: String?
+        skipToken: String?,
     ): DriveItemCollectionPage {
         return if (driveId == null) {
-            withContext(Dispatchers.IO) {
+            withContext(dispatcher) {
                 kotlin.runCatching {
                     graphClient.me().drive().root().children().buildRequest().apply {
                         top(limit)
@@ -97,7 +100,7 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
                 }
             }
         } else {
-            withContext(Dispatchers.IO) {
+            withContext(dispatcher) {
                 graphClient.drives(driveId).items(itemId).children().buildRequest().apply {
                     top(limit)
                     expand("thumbnails")
@@ -105,5 +108,20 @@ internal class OneDriveApiRepositoryImpl(private val authenticationProvider: Aut
                 }.get()!!
             }
         }
+    }
+
+    override suspend fun login(activity: Activity) {
+        kotlin.runCatching {
+            authenticationProvider.signIn(activity).await()
+        }.onSuccess {
+            logcat { "success account.id=${it.account.id}" }
+            logcat { "success account.idToken=${it.account.idToken}" }
+        }.onFailure {
+            it.printStackTrace()
+        }
+    }
+
+    override suspend fun logout() {
+        authenticationProvider.signOut()
     }
 }

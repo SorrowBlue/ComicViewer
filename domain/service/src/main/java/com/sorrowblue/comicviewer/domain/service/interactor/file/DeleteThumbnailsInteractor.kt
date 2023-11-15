@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.DeleteThumbnailsUseCase
 import javax.inject.Inject
 
 internal class DeleteThumbnailsInteractor @Inject constructor(
-    private val fileRepository: FileRepository
+    private val fileRepository: FileRepository,
 ) : DeleteThumbnailsUseCase() {
 
     override suspend fun run(request: Request): Result<Unit, GetLibraryInfoError> {

@@ -10,8 +10,8 @@ import androidx.lifecycle.LifecycleOwner
 
 @Composable
 fun LifecycleEffect(
-    lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     lifecycleObserver: LifecycleObserver,
+    lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
 ) {
     DisposableEffect(lifecycle, lifecycleObserver) {
         lifecycle.addObserver(lifecycleObserver)
@@ -24,9 +24,18 @@ fun LifecycleResumeEffect(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     action: () -> Unit,
 ) {
+    LifecycleEffect(Lifecycle.Event.ON_RESUME, lifecycleOwner, action)
+}
+
+@Composable
+fun LifecycleEffect(
+    targetEvent: Lifecycle.Event,
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    action: () -> Unit,
+) {
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
+            if (event == targetEvent) {
                 action()
             }
         }

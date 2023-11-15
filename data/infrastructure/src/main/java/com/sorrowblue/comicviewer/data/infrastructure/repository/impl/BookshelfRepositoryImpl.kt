@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.data.infrastructure.di.IoDispatcher
 import com.sorrowblue.comicviewer.data.infrastructure.exception.RemoteException
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.Resource
@@ -21,7 +22,7 @@ import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepositoryStatus
 import com.sorrowblue.comicviewer.domain.service.repository.LibraryStatus
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -30,6 +31,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 internal class BookshelfRepositoryImpl @Inject constructor(
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
@@ -49,7 +51,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
                     RemoteException.Unknown -> Resource.Error(BookshelfRepository.Error.System)
                 }
             )
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
 
     override fun register(
         bookshelf: Bookshelf,
@@ -65,12 +67,13 @@ internal class BookshelfRepositoryImpl @Inject constructor(
             emit(Resource.Success(model))
         }.catch {
             emit(Resource.Error(BookshelfRepository.Error.System))
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 
     override fun find(bookshelfId: BookshelfId): Flow<Resource<Bookshelf, BookshelfRepository.Error>> {
-        return bookshelfLocalDataSource.flow(bookshelfId).map {
-            it?.let { Resource.Success(it) } ?: Resource.Error(BookshelfRepository.Error.NotFound)
+        return bookshelfLocalDataSource.flow(bookshelfId).map { bookshelf ->
+            bookshelf?.let { Resource.Success(it) }
+                ?: Resource.Error(BookshelfRepository.Error.NotFound)
         }
     }
 
@@ -111,7 +114,7 @@ internal class BookshelfRepositoryImpl @Inject constructor(
     override fun get(bookshelfId: BookshelfId): Flow<Result<Bookshelf, LibraryStatus>> {
         return kotlin.runCatching {
             bookshelfLocalDataSource.flow(bookshelfId)
-                .flowOn(Dispatchers.IO)
+                .flowOn(dispatcher)
         }.fold({ modelFlow ->
             modelFlow.map {
                 if (it != null) {
@@ -124,5 +127,4 @@ internal class BookshelfRepositoryImpl @Inject constructor(
             flowOf(Result.Exception(Unknown(it)))
         })
     }
-
 }

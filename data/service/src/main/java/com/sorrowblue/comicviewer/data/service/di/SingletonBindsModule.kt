@@ -10,9 +10,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class SingletonBindsModule {
+internal interface SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindExampleService(repository: FileScanServiceImpl): FileScanService
+    fun bindExampleService(repository: FileScanServiceImpl): FileScanService
 }

@@ -40,39 +40,9 @@ object ResponsiveTopAppBarDefault {
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun ResponsiveTopAppBar(
-    title: @Composable () -> Unit = {},
-    navigationIcon: @Composable () -> Unit = {},
-    actions: @Composable() (RowScope.() -> Unit) = {},
-    windowSizeClass: WindowSizeClass = LocalWindowSize.current,
-    scrollBehavior: TopAppBarScrollBehavior? = ResponsiveTopAppBarDefault.scrollBehavior,
-) {
-    if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
-        TopAppBar(
-            title = title,
-            navigationIcon = navigationIcon,
-            actions = actions,
-            scrollBehavior = scrollBehavior
-        )
-    } else {
-        TopAppBar(
-            title = title,
-            navigationIcon = navigationIcon,
-            actions = actions,
-            scrollBehavior = scrollBehavior,
-            modifier = Modifier
-                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.End))
-                .padding(horizontal = ComicTheme.dimension.margin)
-                .padding(end = ComicTheme.dimension.margin)
-                .clip(CircleShape),
-        )
-    }
-}
-
-@Composable
-fun ResponsiveTopAppBar(
-    title: @Composable () -> Unit = {},
+    title: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     onBackClick: (() -> Unit)? = null,
     actions: @Composable (RowScope.() -> Unit) = {},
     windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
@@ -81,6 +51,7 @@ fun ResponsiveTopAppBar(
     if (rememberMobile()) {
         com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar(
             title = title,
+            modifier = modifier,
             navigationIcon = {
                 if (onBackClick != null) {
                     IconButton(onClick = onBackClick) {
@@ -104,7 +75,7 @@ fun ResponsiveTopAppBar(
             actions = actions,
             scrollBehavior = scrollBehavior,
             windowInsets = WindowInsets(0),
-            modifier = Modifier
+            modifier = modifier
                 .windowInsetsPadding(windowInsets.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top))
                 .padding(horizontal = ComicTheme.dimension.margin)
                 .clip(ComicTheme.shapes.large)
@@ -115,6 +86,7 @@ fun ResponsiveTopAppBar(
 @Composable
 fun ResponsiveTopAppBar(
     title: String,
+    modifier: Modifier = Modifier,
     onBackClick: (() -> Unit)? = null,
     actions: @Composable (RowScope.() -> Unit) = {},
     windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
@@ -124,6 +96,7 @@ fun ResponsiveTopAppBar(
         title = {
             Text(text = title)
         },
+        modifier = modifier,
         onBackClick = onBackClick,
         actions = actions,
         windowInsets = windowInsets,
@@ -134,6 +107,7 @@ fun ResponsiveTopAppBar(
 @Composable
 fun ResponsiveTopAppBar(
     title: Int,
+    modifier: Modifier = Modifier,
     onBackClick: (() -> Unit)? = null,
     actions: @Composable (RowScope.() -> Unit) = {},
     windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
@@ -141,6 +115,7 @@ fun ResponsiveTopAppBar(
 ) {
     ResponsiveTopAppBar(
         title = stringResource(id = title),
+        modifier = modifier,
         onBackClick = onBackClick,
         actions = actions,
         windowInsets = windowInsets,
@@ -151,12 +126,12 @@ fun ResponsiveTopAppBar(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun <T : AppBarAction> ResponsiveTopAppBar(
+    onClick: (T) -> Unit,
+    actions: PersistentList<T>,
+    modifier: Modifier = Modifier,
     title: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {},
-    actions: PersistentList<T>,
-    onClick: (T) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = ResponsiveTopAppBarDefault.scrollBehavior,
-    modifier: Modifier,
 ) {
     TopAppBar(
         title = title,
@@ -191,7 +166,7 @@ private fun <T : AppBarAction> ResponsiveTopAppBar(
                     }
                 }
                 val overflowMenuState = rememberOverflowMenuState()
-                OverflowMenu(overflowMenuState) {
+                OverflowMenu(state = overflowMenuState) {
                     actions.drop(2).forEach { action ->
                         key(action.label) {
                             DropdownMenuItem(
@@ -212,28 +187,6 @@ private fun <T : AppBarAction> ResponsiveTopAppBar(
     )
 }
 
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun <T : AppBarAction> ResponsiveTopAppBar(
-    title: @Composable () -> Unit = {},
-    navigationIcon: @Composable () -> Unit = {},
-    actions: PersistentList<T>,
-    onClick: (T) -> Unit,
-    windowSizeClass: WindowSizeClass = LocalWindowSize.current,
-    scrollBehavior: TopAppBarScrollBehavior? = ResponsiveTopAppBarDefault.scrollBehavior,
-) {
-    val modifier = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
-        Modifier
-    } else {
-        Modifier
-            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.End))
-            .padding(horizontal = ComicTheme.dimension.margin)
-            .padding(end = ComicTheme.dimension.margin)
-            .clip(CircleShape)
-    }
-    ResponsiveTopAppBar(title, navigationIcon, actions, onClick, scrollBehavior, modifier)
-}
-
 interface AppBarAction2 {
     val label: Int
     val description: Int
@@ -243,12 +196,12 @@ interface AppBarAction2 {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun <T : AppBarAction2> ResponsiveTopAppBar2(
-    title: @Composable () -> Unit = {},
-    navigationIcon: @Composable () -> Unit = {},
     actions: PersistentList<T>,
     onClick: (T) -> Unit,
+    modifier: Modifier = Modifier,
+    title: @Composable () -> Unit = {},
+    navigationIcon: @Composable () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior? = ResponsiveTopAppBarDefault.scrollBehavior,
-    modifier: Modifier,
 ) {
     TopAppBar(
         title = title,
@@ -283,7 +236,7 @@ private fun <T : AppBarAction2> ResponsiveTopAppBar2(
                     }
                 }
                 val overflowMenuState = rememberOverflowMenuState()
-                OverflowMenu(overflowMenuState) {
+                OverflowMenu(state = overflowMenuState) {
                     actions.drop(2).forEach { action ->
                         key(action.label) {
                             DropdownMenuItem(
@@ -312,51 +265,28 @@ private fun <T : AppBarAction2> ResponsiveTopAppBar2(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun <T : AppBarAction2> ResponsiveTopAppBar2(
-    title: @Composable () -> Unit = {},
-    navigationIcon: @Composable () -> Unit = {},
     actions: PersistentList<T>,
     onClick: (T) -> Unit,
-    windowSizeClass: WindowSizeClass = LocalWindowSize.current,
-    scrollBehavior: TopAppBarScrollBehavior? = ResponsiveTopAppBarDefault.scrollBehavior,
-) {
-    val modifier = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
-        Modifier
-    } else {
-        Modifier
-            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.End))
-            .padding(horizontal = ComicTheme.dimension.margin)
-            .padding(end = ComicTheme.dimension.margin)
-            .clip(CircleShape)
-    }
-    ResponsiveTopAppBar2(title, navigationIcon, actions, onClick, scrollBehavior, modifier)
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun FullScreenTopAppBar(
+    modifier: Modifier = Modifier,
     title: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {},
-    actions: @Composable() (RowScope.() -> Unit) = {},
     windowSizeClass: WindowSizeClass = LocalWindowSize.current,
     scrollBehavior: TopAppBarScrollBehavior? = ResponsiveTopAppBarDefault.scrollBehavior,
 ) {
-    if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
-        TopAppBar(
-            title = title,
-            navigationIcon = navigationIcon,
-            actions = actions,
-            scrollBehavior = scrollBehavior
-        )
-    } else {
-        TopAppBar(
-            title = title,
-            navigationIcon = navigationIcon,
-            actions = actions,
-            scrollBehavior = scrollBehavior,
-            modifier = Modifier
-                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
-                .padding(horizontal = ComicTheme.dimension.margin * 2)
-                .clip(CircleShape),
-        )
-    }
+    ResponsiveTopAppBar2(
+        actions = actions,
+        onClick = onClick,
+        modifier = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+            modifier
+        } else {
+            modifier
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.End))
+                .padding(horizontal = ComicTheme.dimension.margin)
+                .padding(end = ComicTheme.dimension.margin)
+                .clip(CircleShape)
+        },
+        title = title,
+        navigationIcon = navigationIcon,
+        scrollBehavior = scrollBehavior
+    )
 }

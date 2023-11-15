@@ -8,9 +8,12 @@ import jcifs.smb.SmbRandomAccessFile
 internal class SmbSeekableInputStream(uri: String, tc: CIFSContext, write: Boolean) :
     SeekableInputStream {
 
-    private var file = kotlin.runCatching {
-        if (write) SmbRandomAccessFile(uri, "rw", SmbConstants.DEFAULT_SHARING, tc)
-        else SmbRandomAccessFile(uri, "r", SmbConstants.DEFAULT_SHARING, tc)
+    private val file = kotlin.runCatching {
+        if (write) {
+            SmbRandomAccessFile(uri, "rw", SmbConstants.DEFAULT_SHARING, tc)
+        } else {
+            SmbRandomAccessFile(uri, "r", SmbConstants.DEFAULT_SHARING, tc)
+        }
     }.onFailure {
         it.printStackTrace()
     }.getOrThrow()

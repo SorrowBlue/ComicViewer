@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.library.dropbox.data
 
-import android.content.Context
 import com.dropbox.core.oauth.DbxCredential
 import com.dropbox.core.v2.files.ListFolderResult
 import com.dropbox.core.v2.users.FullAccount
@@ -17,15 +16,9 @@ internal interface DropBoxApiRepository {
     suspend fun signOut()
     suspend fun list(path: String, limit: Long, cursor: String?): ListFolderResult?
     suspend fun download(path: String, outputStream: OutputStream, progress: (Double) -> Unit)
-
-    companion object {
-
-        private var instance: DropBoxApiRepository? = null
-
-        fun getInstance(context: Context) = instance ?: DropBoxApiRepositoryImpl(
-            context,
-        ).also { instance = it }
-    }
+    fun startSignIn()
+    suspend fun dbxCredential(): Boolean
 
     val isAuthenticated: Flow<Boolean>
+    suspend fun refresh()
 }

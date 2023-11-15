@@ -18,25 +18,29 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class SingletonBindsModule {
+internal interface SingletonBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindBookshelfLocalDataSource(dataSource: BookshelfLocalDataSourceImpl): BookshelfLocalDataSource
+    fun bindBookshelfLocalDataSource(dataSource: BookshelfLocalDataSourceImpl): BookshelfLocalDataSource
 
     @Singleton
     @Binds
-    abstract fun bindReadLaterFileModelLocalDataSource(dataSource: ReadLaterFileModelLocalDataSourceImpl): ReadLaterFileModelLocalDataSource
+    fun bindReadLaterFileModelLocalDataSource(
+        dataSource: ReadLaterFileModelLocalDataSourceImpl,
+    ): ReadLaterFileModelLocalDataSource
 
     @Singleton
     @Binds
-    abstract fun bindFileModelLocalDataSource(dataSource: FileModelLocalDataSourceImpl): FileModelLocalDataSource
+    fun bindFileModelLocalDataSource(dataSource: FileModelLocalDataSourceImpl): FileModelLocalDataSource
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteLocalDataSource(dataSource: FavoriteLocalDataSourceImpl): FavoriteLocalDataSource
+    fun bindFavoriteLocalDataSource(dataSource: FavoriteLocalDataSourceImpl): FavoriteLocalDataSource
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteBookLocalDataSource(dataSource: FavoriteFileLocalDataSourceImpl): FavoriteFileLocalDataSource
+    fun bindFavoriteBookLocalDataSource(
+        dataSource: FavoriteFileLocalDataSourceImpl,
+    ): FavoriteFileLocalDataSource
 }

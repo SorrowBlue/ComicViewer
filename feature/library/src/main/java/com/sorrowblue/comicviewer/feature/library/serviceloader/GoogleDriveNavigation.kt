@@ -4,4 +4,3 @@ interface GoogleDriveNavigation : AddOnNavigation {
 
     interface Provider : AddOnNavigation.Provider
 }
-

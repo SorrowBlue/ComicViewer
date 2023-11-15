@@ -12,14 +12,15 @@ import kotlinx.coroutines.Dispatchers
 @InstallIn(SingletonComponent::class)
 internal object SingletonProvidesModule {
 
+    @Suppress("InjectDispatcher")
     @IoDispatcher
     @Provides
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
+    @Suppress("InjectDispatcher")
     @DefaultDispatcher
     @Provides
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
-
 }
 
 @Qualifier

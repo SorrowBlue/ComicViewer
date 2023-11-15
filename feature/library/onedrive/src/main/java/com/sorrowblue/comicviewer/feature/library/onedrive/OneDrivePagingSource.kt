@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.onedrive.data.OneDriveApiRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import logcat.logcat
@@ -15,7 +16,8 @@ import logcat.logcat
 internal class OneDrivePagingSource(
     val driveId: String?,
     private val itemId: String,
-    private val repository: OneDriveApiRepository
+    private val repository: OneDriveApiRepository,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : PagingSource<String, File>() {
 
     override fun getRefreshKey(state: PagingState<String, File>): String? {
@@ -26,7 +28,7 @@ internal class OneDrivePagingSource(
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, File> {
         logcat { "driveId=$driveId, itemId=$itemId" }
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             val collectionPage = repository.list(driveId, itemId, params.loadSize, params.key)
             val driveId = driveId ?: repository.driveId()
             logcat { "driveId=$driveId" }
@@ -73,5 +75,8 @@ internal class OneDrivePagingSource(
         }
     }
 
-    private val DriveItemCollectionPage.skiptoken: String? get() = nextPage?.buildRequest()?.options?.first { it.name == "\$skiptoken" }?.value?.toString()
+    private val DriveItemCollectionPage.skiptoken: String?
+        get() = nextPage?.buildRequest()?.options?.first {
+            it.name == "\$skiptoken"
+        }?.value?.toString()
 }

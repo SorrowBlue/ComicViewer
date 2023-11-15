@@ -41,7 +41,6 @@ internal fun EmptyContent(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun PreviewEmptyContent() {
-
     ComicTheme {
         Surface {
             EmptyContent()

@@ -1,28 +1,22 @@
 package com.sorrowblue.comicviewer.feature.library.onedrive.data
 
-import android.content.Context
+import android.app.Activity
 import com.microsoft.graph.models.User
 import com.microsoft.graph.requests.DriveItemCollectionPage
+import com.microsoft.identity.client.IAccount
 import java.io.InputStream
 import java.io.OutputStream
+import kotlinx.coroutines.flow.StateFlow
 
 interface OneDriveApiRepository {
 
-    companion object {
-        private var instance: OneDriveApiRepository? = null
-
-        @Synchronized
-        fun getInstance(context: Context): OneDriveApiRepository = instance
-            ?: OneDriveApiRepositoryImpl(AuthenticationProvider.getInstance(context)).also {
-                instance = it
-            }
-    }
+    val accountFlow: StateFlow<IAccount?>
 
     suspend fun list(
         driveId: String?,
         itemId: String,
         limit: Int,
-        skipToken: String?
+        skipToken: String?,
     ): DriveItemCollectionPage
 
     suspend fun getCurrentUser(): User?
@@ -32,8 +26,11 @@ interface OneDriveApiRepository {
         driveId: String,
         itemId: String,
         outputStream: OutputStream,
-        onProgress: (Double) -> Unit
+        onProgress: (Double) -> Unit,
     )
 
     fun loadAccount()
+    suspend fun login(activity: Activity)
+    suspend fun logout()
+    suspend fun initialize()
 }

@@ -28,10 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfFolder
 import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
@@ -44,10 +46,11 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.compactDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.expandedDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
-import com.sorrowblue.comicviewer.framework.ui.LocalNavController
 import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import kotlin.math.sqrt
+import logcat.LogPriority
+import logcat.logcat
 
 internal sealed interface ComicViewerAppUiEvent {
 
@@ -72,12 +75,10 @@ fun Modifier.drawDiagonalLabel(
     labelTextRatio: Float = 7f,
 ) = composed(
     factory = {
-
         val textMeasurer = rememberTextMeasurer()
         val textLayoutResult: TextLayoutResult = remember {
             textMeasurer.measure(text = AnnotatedString(text), style = style)
         }
-
 
         Modifier
             .clipToBounds()
@@ -126,7 +127,6 @@ fun Modifier.drawDiagonalLabel(
                         )
                     )
                 }
-
             }
     }
 )
@@ -137,10 +137,8 @@ internal fun ComicViewerApp(
     windowsSize: WindowSizeClass,
     viewModel: ComicViewerAppViewModel,
 ) {
-    val context = LocalContext.current
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
-    val extraNavController = rememberExtraNavController()
     val graphStateHolder = rememberGraphStateHolder()
 
     val dimension = when (windowsSize.widthSizeClass) {
@@ -152,7 +150,6 @@ internal fun ComicViewerApp(
     CompositionLocalProvider(
         LocalWindowSize provides windowsSize,
         LocalDimension provides dimension,
-        LocalNavController provides navController
     ) {
         ComicTheme {
             val addOnList by viewModel.addOnList.collectAsState()
@@ -169,9 +166,7 @@ internal fun ComicViewerApp(
             ) { navHostController, contentPadding ->
                 mainGraph(
                     isMobile = isMobile,
-                    context = context,
                     navController = navHostController,
-                    extraNavController = extraNavController,
                     contentPadding = contentPadding,
                     restoreComplete = viewModel::completeRestoreHistory,
                     onTutorialExit = viewModel::onCompleteTutorial,
@@ -185,7 +180,9 @@ internal fun ComicViewerApp(
                             navController.navigate(
                                 graphStateHolder.startDestination,
                                 navOptions {
-                                    popUpTo(com.sorrowblue.comicviewer.feature.authentication.navigation.authenticationRoute) {
+                                    popUpTo(
+                                        com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationRoute
+                                    ) {
                                         inclusive = true
                                     }
                                 }
@@ -212,14 +209,16 @@ internal fun ComicViewerApp(
             }
         }
     }
-    LaunchedEffectUiEvent(viewModel) { uiEvent ->
+    LaunchedEffectUiEvent(viewModel.uiEvents, viewModel::consumeUiEvent) { uiEvent ->
         when (uiEvent) {
             is ComicViewerAppUiEvent.StartTutorial -> {
-                navController.navigateToTutorial(navOptions {
-                    popUpTo(mainGraphRoute) {
-                        inclusive = true
+                navController.navigateToTutorial(
+                    navOptions {
+                        popUpTo(MainGraphRoute) {
+                            inclusive = true
+                        }
                     }
-                })
+                )
                 uiEvent.done()
             }
 
@@ -238,41 +237,41 @@ internal fun ComicViewerApp(
                 }
 
             is ComicViewerAppUiEvent.RestoreHistory -> {
-//                val (bookshelf, folderList, position) = uiEvent.history.triple
-//                if (folderList.isEmpty()) {
-                viewModel.completeRestoreHistory()
-//                } else if (folderList.size == 1) {
-//                    navController.navigateToBookshelfFolder(
-//                        bookshelf.id,
-//                        folderList.first().path,
-//                        position
-//                    )
-//                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-//                        "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path})"
-//                    }
-//                } else {
-//                    navController.navigateToBookshelfFolder(
-//                        bookshelf.id,
-//                        folderList.first().path
-//                    )
-//                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-//                        "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path})"
-//                    }
-//                    folderList.drop(1).dropLast(1).forEach { folder ->
-//                        navController.navigateToBookshelfFolder(bookshelf.id, folder.path)
-//                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-//                            "-> folder(${folder.path})"
-//                        }
-//                    }
-//                    navController.navigateToBookshelfFolder(
-//                        bookshelf.id,
-//                        folderList.last().path,
-//                        position
-//                    )
-//                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-//                        "-> folder${folderList.last().path}, $position"
-//                    }
-//                }
+                val (bookshelf, folderList, position) = uiEvent.history.triple
+                if (folderList.isEmpty()) {
+                    viewModel.completeRestoreHistory()
+                } else if (folderList.size == 1) {
+                    navController.navigateToBookshelfFolder(
+                        bookshelf.id,
+                        folderList.first().path,
+                        position
+                    )
+                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                        "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path})"
+                    }
+                } else {
+                    navController.navigateToBookshelfFolder(
+                        bookshelf.id,
+                        folderList.first().path
+                    )
+                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                        "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path})"
+                    }
+                    folderList.drop(1).dropLast(1).forEach { folder ->
+                        navController.navigateToBookshelfFolder(bookshelf.id, folder.path)
+                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                            "-> folder(${folder.path})"
+                        }
+                    }
+                    navController.navigateToBookshelfFolder(
+                        bookshelf.id,
+                        folderList.last().path,
+                        position
+                    )
+                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                        "-> folder${folderList.last().path}, $position"
+                    }
+                }
             }
 
             is ComicViewerAppUiEvent.RequireAuthentication -> {
@@ -288,7 +287,7 @@ internal fun ComicViewerApp(
                         false,
                         navOptions {
                             launchSingleTop = true
-                            popUpTo(mainGraphRoute) {
+                            popUpTo(MainGraphRoute) {
                                 inclusive = true
                             }
                         }
@@ -296,8 +295,8 @@ internal fun ComicViewerApp(
                 }
                 uiEvent.done()
             }
-
         }
     }
-    LifecycleEffect(lifecycleObserver = viewModel)
+    LifecycleEffect(Lifecycle.Event.ON_CREATE, action = viewModel::onCreate)
+    LifecycleEffect(Lifecycle.Event.ON_START, action = viewModel::onStart)
 }

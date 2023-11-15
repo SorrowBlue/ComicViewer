@@ -13,6 +13,7 @@ import coil.request.Options
 import com.sorrowblue.comicviewer.data.coil.CoilFetcher
 import com.sorrowblue.comicviewer.data.coil.PageDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
+import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.reader.FileReader
@@ -22,6 +23,8 @@ import java.io.IOException
 import java.io.InputStream
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
+import logcat.asLog
+import logcat.logcat
 import okhttp3.internal.closeQuietly
 import okio.Buffer
 import okio.ByteString.Companion.encodeUtf8
@@ -79,7 +82,7 @@ internal class BookPageFetcher(
                     remoteDataSourceFactory.create(
                         bookshelfLocalDataSource.flow(data.book.bookshelfId).first()!!
                     ).fileReader(data.book)
-                        ?: throw RuntimeException("この拡張子はサポートされていません。")
+                        ?: throw CoilRuntimeException("この拡張子はサポートされていません。")
                 var inputStream: InputStream = fileReader.pageInputStream(data.pageIndex)
                 var bytes = inputStream.use { it.readBytes() }
                 val metaData = BookPageMetaData(
@@ -111,6 +114,7 @@ internal class BookPageFetcher(
                     )
                 }
             } catch (e: Exception) {
+                logcat { e.asLog() }
                 throw e
             } finally {
                 fileReader?.closeQuietly()
@@ -137,7 +141,6 @@ internal class BookPageFetcher(
         bytes: ByteArray,
         metaData: BookPageMetaData,
     ): DiskCache.Snapshot? {
-
         // 新しいエディターを開きます。
         val editor = if (snapshot != null) {
             snapshot.closeAndOpenEditor()

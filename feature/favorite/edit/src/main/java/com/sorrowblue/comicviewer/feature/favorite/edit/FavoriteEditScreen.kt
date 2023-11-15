@@ -34,7 +34,9 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -43,7 +45,7 @@ import kotlinx.coroutines.flow.flowOf
 internal fun FavoriteEditRoute(
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
-    viewModel: FavoriteEditViewModel = hiltViewModel()
+    viewModel: FavoriteEditViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -58,7 +60,7 @@ internal fun FavoriteEditRoute(
 }
 
 data class FavoriteEditScreenUiState(
-    val name: String = ""
+    val name: String = "",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,18 +98,25 @@ private fun FavoriteEditScreen(
     ) { contentPadding ->
         Column {
             OutlinedTextField(
-                value = uiState.name, onValueChange = onNameChange,
+                value = uiState.name,
+                onValueChange = onNameChange,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(contentPadding)
                     .padding(horizontal = ComicTheme.dimension.margin)
             )
             if (lazyPagingItems.isEmptyData) {
+                EmptyContent(
+                    imageVector = ComicIcons.UndrawNoData,
+                    text = "お気に入りはありません",
+                    contentPadding = contentPadding
+                )
             } else {
                 LazyColumn(contentPadding = contentPadding) {
                     items(
                         lazyPagingItems.itemCount,
-                        key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" }) {
+                        key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" }
+                    ) {
                         val item = lazyPagingItems[it]
                         if (item != null) {
                             ListItem(
@@ -143,6 +152,7 @@ private fun PreviewFavoriteEditScreen() {
             {},
             {},
             {},
-            {})
+            {}
+        )
     }
 }
