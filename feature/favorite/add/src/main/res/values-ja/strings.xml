@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="favorite_add_title">お気に入りに追加</string>
-    <string name="favorite_add_btn_new_favorite">新しいお気に入り</string>
 </resources>
