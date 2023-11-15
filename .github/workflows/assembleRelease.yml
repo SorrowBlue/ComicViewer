@@ -23,20 +23,16 @@ permissions:
 jobs:
 
   detekt:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./.github/workflows/detekt.yml
+    uses: ./.github/workflows/detekt.yml
 
   lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./.github/workflows/lint.yml
+    uses: ./.github/workflows/lint.yml
 
   build:
     runs-on: ubuntu-latest
     environment: android
     steps:
-      - uses: ./.github/workflows/setup-java-gradle.yml
+      - uses: ./.github/actions/setup-java-gradle
 
       - name: Decode android keystore file
         id: android_keystore
