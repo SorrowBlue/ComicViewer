@@ -5,6 +5,9 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
+
 jobs:
   qodana:
     runs-on: ubuntu-latest
