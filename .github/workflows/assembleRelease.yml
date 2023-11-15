@@ -45,6 +45,8 @@ jobs:
 
       - name: detektDebug
         run: ./gradlew detektRelease
+        env:
+          DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
 
       - name: reviewdog report
         if: failure()
