@@ -31,7 +31,6 @@ internal class MainApplication : SplitCompatApplication(), Configuration.Provide
         Configuration.Builder().setWorkerFactory(workerFactory).build()
 }
 
-@Suppress("InjectDispatcher")
 private val appModule = module {
     single(named<IoDispatcher>()) { Dispatchers.IO }
     single(named<DefaultDispatcher>()) { Dispatchers.Default }
