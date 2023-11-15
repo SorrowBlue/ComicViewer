@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Setup Common
-        uses: ./.github/workflows/common/setup-java-gradle.yml
+        uses: ./.github/workflows/setup-java-gradle.yml
 
       - name: Setup reviewdog
         uses: reviewdog/action-setup@v1
