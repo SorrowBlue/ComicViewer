@@ -10,7 +10,8 @@ name: assembleRelease
 on:
   workflow_dispatch:
   push:
-  pull_request: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
