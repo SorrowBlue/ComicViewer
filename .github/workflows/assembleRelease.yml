@@ -44,9 +44,8 @@ jobs:
         with:
           fileName: 'android_keystore.jks'
           encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
-        run: ./gradlew lintRelease
 
-      - name: lint
+      - name: assemble
         run: ./gradlew assembleRelease
         env:
           release_storeFile: ${{ steps.android_keystore.outputs.filePath }}
