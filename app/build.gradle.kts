@@ -102,6 +102,16 @@ android {
     buildFeatures {
         buildConfig = true
     }
+
+    lint {
+        checkDependencies = true
+        htmlReport = true
+        htmlOutput = file( "$rootDir/build/reports/lint/lint-result.html")
+        sarifReport = true
+        sarifOutput = file( "$rootDir/build/reports/lint/lint-result.sarif")
+        textReport = false
+        xmlReport = false
+    }
 }
 
 dependencies {

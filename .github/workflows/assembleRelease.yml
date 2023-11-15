@@ -56,6 +56,40 @@ jobs:
         run: cat ./build/reports/detekt/merge.xml |
           reviewdog -f="checkstyle" -name="detekt" -reporter="github-pr-review" -filter-mode="nofilter"
 
+  android-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run chmod to make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2.9.0
+
+      - name: Setup reviewdog
+        uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+
+      - name: lintRelease
+        run: ./gradlew lintRelease
+        env:
+          DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
+
+      - name: reviewdog report
+        if: failure()
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cat ./build/reports/lint/lint-result.sarif |
+          reviewdog -f="sarif" -name="android-lint" -reporter="github-pr-review" -filter-mode="nofilter"
+
   build:
     runs-on: ubuntu-latest
     environment: android
