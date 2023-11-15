@@ -1,0 +1,30 @@
+name: Lint
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Common
+        uses: ./.github/workflows/common/setup-java-gradle.yml
+
+      - name: Setup reviewdog
+        uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+
+      - name: lint
+        run: ./gradlew lintRelease
+        env:
+          DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
+
+      - name: reviewdog report
+        if: failure()
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cat ./build/reports/lint/lint-result.sarif |
+          reviewdog -f="sarif" -name="android-lint" -reporter="github-pr-review" -filter-mode="nofilter"
