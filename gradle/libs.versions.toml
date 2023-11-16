@@ -59,7 +59,7 @@ androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 
 androidx-biometric = "androidx.biometric:biometric:1.2.0-alpha05"
 
-androidx-browser = "androidx.browser:browser:1.6.0"
+androidx-browser = "androidx.browser:browser:1.7.0"
 
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 
