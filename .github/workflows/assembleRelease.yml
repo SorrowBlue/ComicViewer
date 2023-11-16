@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: android
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-java-gradle
 
       - name: Decode android keystore file
