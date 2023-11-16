@@ -18,6 +18,8 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.work.runtime.ktx)
 
-    implementation(libs.box.java.sdk)
+    implementation(libs.box.java.sdk) {
+        exclude("org.bouncycastle")
+    }
     implementation(libs.kotlinx.serialization.protobuf)
 }
