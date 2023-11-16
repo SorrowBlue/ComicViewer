@@ -81,7 +81,7 @@ androidx-compose-material = { module = "androidx.compose.material:material" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class" }
 
-androidx-activity-compose = "androidx.activity:activity-compose:1.8.0"
+androidx-activity-compose = "androidx.activity:activity-compose:1.8.1"
 androidx-lifecycle-viewmodel-compose = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
 
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "androidx.datastore" }
