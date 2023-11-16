@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.SelectableChipBorder
 import androidx.compose.material3.SelectableChipColors
 import androidx.compose.material3.SelectableChipElevation
 import androidx.compose.runtime.Composable
@@ -34,7 +34,7 @@ fun SingleChoiceChipRowScope.FilterChip(
     shape: Shape = FilterChipDefaults.shape,
     colors: SelectableChipColors = FilterChipDefaults.filterChipColors(),
     elevation: SelectableChipElevation? = FilterChipDefaults.filterChipElevation(),
-    border: SelectableChipBorder? = FilterChipDefaults.filterChipBorder(),
+    border: BorderStroke? = FilterChipDefaults.filterChipBorder(enabled, selected),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     MaterialFilterChip(
