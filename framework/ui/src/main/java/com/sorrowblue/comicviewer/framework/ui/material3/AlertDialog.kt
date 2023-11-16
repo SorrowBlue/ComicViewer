@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Surface
@@ -18,11 +19,13 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 @Composable
 fun AlertDialog(
     onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
     title: @Composable (() -> Unit)? = null,
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    androidx.compose.material3.AlertDialog(
-        onDismissRequest = onDismissRequest
+    BasicAlertDialog(
+        onDismissRequest = onDismissRequest,
+        modifier = modifier
     ) {
         Surface(
             shape = AlertDialogDefaults.shape,

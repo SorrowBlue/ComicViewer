@@ -40,11 +40,15 @@ tasks.named(
 
 tasks.named("detekt", io.gitlab.arturbosch.detekt.Detekt::class.java).configure {
     reports {
-        xml.required.set(true)
+        html.required = true
+        md.required = false
+        sarif.required = true
+        txt.required = false
+        xml.required = false
     }
 }
 val reportMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
-    output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.xml")) // or "reports/detekt/merge.sarif"
+    output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
 }
 
 subprojects {
@@ -54,6 +58,6 @@ subprojects {
     }
 
     reportMerge {
-        input.from(tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().map { it.xmlReportFile }) // or .sarifReportFile
+        input.from(tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().map { it.sarifReportFile })
     }
 }

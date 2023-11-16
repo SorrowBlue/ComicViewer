@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.ExperimentalSerializationApi
 import logcat.asLog
 import logcat.logcat
 import org.koin.core.qualifier.named
@@ -32,6 +33,7 @@ import org.koin.dsl.module
 private const val ClientId = "nihdm7dthg9lm7m3b41bpw7jp7b0lb9z"
 private const val ClientSecret = "znx5P0kuwJ5LNqF3UG8Yw8Xs05dw4zNq"
 
+@OptIn(ExperimentalSerializationApi::class)
 private val Context.boxConnectionStateDataStore: DataStore<BoxConnectionState> by dataStore(
     fileName = "box_connection_state.pb",
     serializer = BoxConnectionState.Serializer()
