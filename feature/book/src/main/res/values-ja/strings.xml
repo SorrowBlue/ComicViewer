@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="book_label_open_next_book">次の本を開く</string>
+    <string name="book_label_open_prev_book">前の本を開く</string>
+    <string name="book_label_no_next_book">次の本はありません</string>
+    <string name="book_label_no_prev_book">前の本はありません</string>
+</resources>

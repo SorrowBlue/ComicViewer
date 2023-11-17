@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="book_label_open_next_book">Open next book</string>
+    <string name="book_label_open_prev_book">Open previous book</string>
+    <string name="book_label_no_next_book">There are no next books</string>
+    <string name="book_label_no_prev_book">There is no previous book</string>
+</resources>

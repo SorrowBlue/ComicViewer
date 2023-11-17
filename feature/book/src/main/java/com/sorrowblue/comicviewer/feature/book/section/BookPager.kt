@@ -57,7 +57,7 @@ internal fun BookPager2(
 }
 
 @Composable
-fun BookSplitPage(
+internal fun BookSplitPage(
     currentList: SnapshotStateList<BookPage>,
     book: Book,
     bookPage: BookPage.Split,

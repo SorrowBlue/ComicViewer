@@ -10,29 +10,29 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -49,10 +49,19 @@ import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
 import com.sorrowblue.comicviewer.feature.book.section.BookPage
 import com.sorrowblue.comicviewer.feature.book.section.BookPager2
 import com.sorrowblue.comicviewer.feature.book.section.BookPagerUiState
+import com.sorrowblue.comicviewer.feature.book.section.BookSplitPage
+import com.sorrowblue.comicviewer.feature.book.section.NextBookSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFaq
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.SystemUiController
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
+import com.sorrowblue.comicviewer.framework.ui.material3.Scaffold
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import logcat.logcat
 
@@ -85,8 +94,123 @@ internal fun BookRoute(
     )
 }
 
+@Stable
+internal class BookScreenState(
+    val scope: CoroutineScope,
+    val systemUiController: SystemUiController,
+)
+
+@Composable
+internal fun rememberBookScreenState(
+    scope: CoroutineScope = rememberCoroutineScope(),
+    systemUiController: SystemUiController = rememberSystemUiController(),
+) = rememberSaveable {
+    BookScreenState(scope = scope, systemUiController = systemUiController)
+}
+
+@Composable
+private fun BookScreen(
+    uiState: BookScreenUiState,
+    onBackClick: (() -> Unit)?,
+    contentPadding: PaddingValues,
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = "uiState.book.name",
+                onBackClick = onBackClick,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                        elevation = ElevationTokens.Level2
+                    )
+                )
+            )
+        },
+        contentWindowInsets = contentPadding.asWindowInsets()
+    ) { innerPadding ->
+        when (uiState) {
+
+            is BookScreenUiState.Loaded -> TODO()
+            is BookScreenUiState.Empty ->
+                EmptyContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                )
+
+            BookScreenUiState.Loading ->
+                LoadingContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                )
+        }
+    }
+}
+
+data class MainContentUiState(
+    val book: Book,
+    val nextBook: Book?,
+    val prevBook: Book?,
+)
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun MainContent(
+    uiState: MainContentUiState,
+    pagerState: PagerState,
+    modifier: Modifier = Modifier,
+    onNextBookClick: (Book) -> Unit,
+    onClick: () -> Unit,
+) {
+    HorizontalPager(
+        state = pagerState,
+        beyondBoundsPageCount = 2,
+        reverseLayout = true,
+        modifier = modifier
+    ) { pageIndex ->
+        when (val item = pages[pageIndex]) {
+            is BookPage.Next -> {
+                if (item.isNext) {
+                    NextBookSheet(uiState.nextBook, true, onClick = onNextBookClick)
+                } else {
+                    NextBookSheet(uiState.prevBook, false, onClick = onNextBookClick)
+                }
+            }
+
+            is BookPage.Split -> BookSplitPage(currentList, uiState.book, item, onClick)
+        }
+    }
+}
+
+@Composable
+private fun LoadingContent(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun EmptyContent(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            imageVector = ComicIcons.UndrawFaq,
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(text = "Couldn't open the book", style = MaterialTheme.typography.headlineSmall)
+    }
+}
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun BookScreen(
     uiState: BookScreenUiState,
@@ -96,7 +220,7 @@ internal fun BookScreen(
     onNextBookClick: (Book) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val sys = rememberSystemUiController()
+    val sys: SystemUiController = rememberSystemUiController()
     DisposableEffect(Unit) {
         onDispose {
             sys.isSystemBarsVisible = true
@@ -132,15 +256,11 @@ internal fun BookScreen(
                         exit = slideOutVertically { -it }
                     ) {
                         TopAppBar(
-                            title = { Text(text = uiState.book.name) },
-                            navigationIcon = {
-                                IconButton(onClick = onBackClick) {
-                                    Icon(ComicIcons.ArrowBack, "Back")
-                                }
-                            },
+                            title = uiState.book.name,
+                            onBackClick = onBackClick,
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                    elevation = 3.0.dp
+                                    elevation = ElevationTokens.Level2
                                 )
                             )
                         )
@@ -213,15 +333,11 @@ internal fun BookScreen(
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { Text(text = uiState.book.name) },
-                        navigationIcon = {
-                            IconButton(onClick = onBackClick) {
-                                Icon(ComicIcons.ArrowBack, "Back")
-                            }
-                        },
+                        title = uiState.book.name,
+                        onBackClick = onBackClick,
                         colors = TopAppBarDefaults.topAppBarColors(
                             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                elevation = 3.0.dp
+                                elevation = ElevationTokens.Level2
                             )
                         )
                     )
