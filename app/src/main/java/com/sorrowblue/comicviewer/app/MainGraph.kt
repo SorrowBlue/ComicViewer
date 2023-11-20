@@ -45,18 +45,7 @@ internal fun NavGraphBuilder.mainGraph(
         onBack = onBackClick,
         onAuthCompleted = { back, mode ->
             when (mode) {
-                Mode.Register -> {
-                    navController.popBackStack()
-                }
-
-                Mode.Change -> {
-                    navController.popBackStack()
-                }
-
-                Mode.Erase -> {
-                    navController.popBackStack()
-                }
-
+                Mode.Register, Mode.Change, Mode.Erase -> navController.popBackStack()
                 Mode.Authentication -> onAuthCompleted(back)
             }
         }
@@ -68,15 +57,18 @@ internal fun NavGraphBuilder.mainGraph(
         onSettingsClick = navController::navigateToSettings,
         navigateToBook = navController::navigateToBook,
         navigateToSearch = navController::navigateToSearch,
+        onFavoriteClick = navController::navigateToFavoriteAdd,
         onRestoreComplete = restoreComplete,
     )
     favoriteGroup(
         contentPadding = contentPadding,
         navController = navController,
-        onBookClick = navController::navigateToBook,
+        navigateToBook = navController::navigateToBook,
+        onFavoriteBookClick = navController::navigateToBook,
         onClickLongFile = { /*TODO*/ },
         onSettingsClick = navController::navigateToSettings,
-        navigateToSearch = navController::navigateToSearch,
+        onSearchClick = navController::navigateToSearch,
+        onFavoriteClick = navController::navigateToFavoriteAdd
     )
     favoriteAddScreen(
         onBackClick = navController::popBackStack,
@@ -86,16 +78,15 @@ internal fun NavGraphBuilder.mainGraph(
     readlaterGroup(
         contentPadding = contentPadding,
         navController = navController,
-        onBookClick = navController::navigateToBook,
+        navigateToBook = navController::navigateToBook,
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
+        onFavoriteClick = navController::navigateToFavoriteAdd
     )
     libraryGroup(
         contentPadding = contentPadding,
         navController = navController,
-        onBookClick = { id, path, pos ->
-            navController.navigateToBook(id, path, position = pos)
-        },
+        navigateToBook = navController::navigateToBook,
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
         onAddOnClick = { addOn ->
@@ -105,19 +96,24 @@ internal fun NavGraphBuilder.mainGraph(
                 }
             }
         },
+        onFavoriteClick = navController::navigateToFavoriteAdd
     )
 
     searchGraph(
         contentPadding = contentPadding,
         navController = navController,
-        onBookClick = navController::navigateToBook,
-        onSettingsClick = navController::navigateToSettings,
-        onFavoriteClick = { navController.navigateToFavoriteAdd(it.bookshelfId, it.path) }
+        navigateToBook = navController::navigateToBook,
+        navigateToSettings = navController::navigateToSettings,
+        navigateToFavoriteAdd = navController::navigateToFavoriteAdd
     )
 
     tutorialScreen(onComplete = onTutorialExit)
 
-    bookGraph(navController = navController, onBackClick = navController::popBackStack)
+    bookGraph(
+        navController = navController,
+        onBackClick = navController::popBackStack,
+        contentPadding = contentPadding
+    )
 
     settingsNavGraph(
         navController = navController,

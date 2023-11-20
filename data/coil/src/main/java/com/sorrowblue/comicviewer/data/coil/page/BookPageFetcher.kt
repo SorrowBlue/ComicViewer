@@ -68,7 +68,7 @@ internal class BookPageFetcher(
                         dataSource = DataSource.DISK
                     )
                 }
-                if (snapshot.toBookPageMetaData() == null) {
+                if (snapshot.toBookPageMetaData() != null) {
                     return SourceResult(
                         source = snapshot.toImageSource(),
                         mimeType = null,

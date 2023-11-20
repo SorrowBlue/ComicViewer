@@ -31,7 +31,7 @@ internal fun FavoriteRoute(
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,
-    onClickFile: (File, Int) -> Unit,
+    onClickFile: (File, FavoriteId, Int) -> Unit,
     onClickLongFile: (File) -> Unit,
     viewModel: FavoriteViewModel = hiltViewModel(),
 ) {
@@ -47,7 +47,7 @@ internal fun FavoriteRoute(
         onGridSizeChange = viewModel::toggleGridSize,
         onDeleteClick = { viewModel.delete(onBackClick) },
         onSettingsClick = onSettingsClick,
-        onClickFile = { onClickFile(it, lazyGridState.firstVisibleItemIndex) },
+        onClickFile = { onClickFile(it, viewModel.favoriteId, lazyGridState.firstVisibleItemIndex) },
         onClickLongFile = onClickLongFile,
         lazyGridState = lazyGridState,
     )

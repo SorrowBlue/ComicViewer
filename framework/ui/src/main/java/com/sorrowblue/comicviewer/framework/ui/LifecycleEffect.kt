@@ -47,3 +47,21 @@ fun LifecycleEffect(
         }
     }
 }
+
+@Composable
+fun LifecycleEffect(
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    action: (Lifecycle.Event) -> Unit,
+) {
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            action(event)
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+}

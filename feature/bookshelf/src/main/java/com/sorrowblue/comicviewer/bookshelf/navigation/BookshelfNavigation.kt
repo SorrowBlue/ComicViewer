@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.bookshelf.BookshelfRoute
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.bookshelfEditScreen
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.navigateToBookshelfEdit
@@ -52,9 +53,10 @@ fun NavGraphBuilder.bookshelfGraph(
     contentPadding: PaddingValues,
     navController: NavController,
     onSettingsClick: () -> Unit,
-    navigateToBook: (BookshelfId, String, Int) -> Unit,
+    navigateToBook: (Book, Int) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onRestoreComplete: () -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
     navigation(route = BookshelfGraphRoute, startDestination = BookshelfRoute) {
         bookshelfScreen(
@@ -79,10 +81,12 @@ fun NavGraphBuilder.bookshelfGraph(
         folderScreen(
             prefix = BookshelfRoute,
             contentPadding = contentPadding,
-            navigateToSearch = navigateToSearch,
+            onBackClick = navController::popBackStack,
+            onSearchClick = navigateToSearch,
+            onSettingsClick = onSettingsClick,
             onClickFile = { file, position ->
                 when (file) {
-                    is Book -> navigateToBook(file.bookshelfId, file.path, position)
+                    is Book -> navigateToBook(file, position)
                     is Folder -> navController.navigateToFolder(
                         prefix = BookshelfRoute,
                         bookshelfId = file.bookshelfId,
@@ -90,9 +94,8 @@ fun NavGraphBuilder.bookshelfGraph(
                     )
                 }
             },
-            onSettingsClick = onSettingsClick,
-            onBackClick = navController::popBackStack,
             onRestoreComplete = onRestoreComplete,
+            onFavoriteClick = onFavoriteClick
         )
     }
 }

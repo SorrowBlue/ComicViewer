@@ -21,16 +21,17 @@ const val ReadlaterGraphRoute = "readlater_graph"
 fun NavGraphBuilder.readlaterGroup(
     contentPadding: PaddingValues,
     navController: NavController,
-    onBookClick: (BookshelfId, String, Int) -> Unit,
+    navigateToBook: (Book, Int) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
     navigation(route = ReadlaterGraphRoute, startDestination = ReadLaterRoute) {
         readLaterScreen(
             contentPadding = contentPadding,
             onFileClick = { file, position ->
                 when (file) {
-                    is Book -> onBookClick(file.bookshelfId, file.path, position)
+                    is Book -> navigateToBook(file, position)
                     is Folder ->
                         navController.navigateToFolder(
                             prefix = ReadLaterRoute,
@@ -42,22 +43,22 @@ fun NavGraphBuilder.readlaterGroup(
             onSettingsClick = onSettingsClick,
         )
         folderScreen(
-            contentPadding = contentPadding,
             prefix = ReadLaterRoute,
-            navigateToSearch = navigateToSearch,
+            contentPadding = contentPadding,
+            onSearchClick = navigateToSearch,
+            onSettingsClick = onSettingsClick,
             onClickFile = { file, position ->
                 when (file) {
-                    is Book -> onBookClick(file.bookshelfId, file.path, position)
-                    is Folder ->
-                        navController.navigateToFolder(
-                            prefix = ReadLaterRoute,
-                            file.bookshelfId,
-                            file.path
-                        )
+                    is Book -> navigateToBook(file, position)
+                    is Folder -> navController.navigateToFolder(
+                        ReadLaterRoute,
+                        file.bookshelfId,
+                        file.path
+                    )
                 }
             },
-            onSettingsClick = onSettingsClick,
             onBackClick = navController::popBackStack,
+            onFavoriteClick = onFavoriteClick
         )
     }
 }

@@ -1,20 +1,21 @@
 package com.sorrowblue.comicviewer.feature.book
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -25,51 +26,39 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.feature.book.navigation.BookArgs
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
 import com.sorrowblue.comicviewer.feature.book.section.BookPage
-import com.sorrowblue.comicviewer.feature.book.section.BookPager2
 import com.sorrowblue.comicviewer.feature.book.section.BookPagerUiState
 import com.sorrowblue.comicviewer.feature.book.section.BookSplitPage
 import com.sorrowblue.comicviewer.feature.book.section.NextBookSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFaq
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.SystemUiController
+import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
-import com.sorrowblue.comicviewer.framework.ui.material3.Scaffold
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
-import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import logcat.asLog
 import logcat.logcat
 
 internal sealed interface BookScreenUiState {
 
-    data object Loading : BookScreenUiState
+    data class Loading(val name: String) : BookScreenUiState
 
-    data class Empty(val book: Book) : BookScreenUiState
+    data class Error(val name: String) : BookScreenUiState
 
     data class Loaded(
         val book: Book,
@@ -78,46 +67,90 @@ internal sealed interface BookScreenUiState {
     ) : BookScreenUiState
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun BookRoute(
+    args: BookArgs,
     onBackClick: () -> Unit,
     onNextBookClick: (Book) -> Unit,
-    viewModel: BookViewModel = hiltViewModel(),
+    contentPadding: PaddingValues,
+    state: BookScreenState = rememberBookScreenState(args = args),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    BookScreen(
-        uiState,
-        onBackClick = onBackClick,
-        onContainerClick = viewModel::toggleTooltip,
-        onNextBookClick = onNextBookClick,
-        onPageIndexChange = viewModel::updateLastReadPage
-    )
+    val uiState = state.uiState
+    when (uiState) {
+        is BookScreenUiState.Loading ->
+            LoadingScreen(
+                uiState = uiState,
+                onBackClick = onBackClick,
+                contentPadding = contentPadding
+            )
+
+        is BookScreenUiState.Error ->
+            ErrorScreen(
+                uiState = uiState,
+                onBackClick = onBackClick,
+                contentPadding = contentPadding
+            )
+
+        is BookScreenUiState.Loaded -> {
+            val scope = rememberCoroutineScope()
+            val pagerState = rememberPagerState(
+                initialPage = (uiState.book.lastPageRead) + 1,
+                pageCount = { uiState.book.totalPageCount + 2 }
+            )
+            BookScreen(
+                uiState = uiState,
+                pagerState = pagerState,
+                currentList = state.currentList,
+                onBackClick = onBackClick,
+                onNextBookClick = onNextBookClick,
+                onContainerClick = state::toggleTooltip,
+                onPageChange = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(it)
+                    }
+                },
+                contentPadding = contentPadding,
+            )
+            DisposableEffect(Unit) {
+                onDispose {
+                    state.onScreenDispose()
+                }
+            }
+            LifecycleEffect { e ->
+                logcat("Compose") { "onLifecycle ${e.name}" }
+                if (e == Lifecycle.Event.ON_STOP) {
+                    CoroutineScope(context).launch {
+                        state.save(pagerState.currentPage - 1)
+                    }
+                }
+            }
+            DisposableEffect(Unit) {
+                logcat("Compose") { "onLaunch" }
+                onDispose {
+                    logcat("Compose") { "onDispose" }
+                }
+            }
+        }
+    }
 }
 
-@Stable
-internal class BookScreenState(
-    val scope: CoroutineScope,
-    val systemUiController: SystemUiController,
-)
-
-@Composable
-internal fun rememberBookScreenState(
-    scope: CoroutineScope = rememberCoroutineScope(),
-    systemUiController: SystemUiController = rememberSystemUiController(),
-) = rememberSaveable {
-    BookScreenState(scope = scope, systemUiController = systemUiController)
+private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+    logcat("exceptionHandler") { throwable.asLog() }
 }
 
+private val context = SupervisorJob() + Dispatchers.Main.immediate + exceptionHandler
+
 @Composable
-private fun BookScreen(
-    uiState: BookScreenUiState,
-    onBackClick: (() -> Unit)?,
+private fun LoadingScreen(
+    uiState: BookScreenUiState.Loading,
+    onBackClick: () -> Unit,
     contentPadding: PaddingValues,
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = "uiState.book.name",
+                title = uiState.name,
                 onBackClick = onBackClick,
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
@@ -128,48 +161,136 @@ private fun BookScreen(
         },
         contentWindowInsets = contentPadding.asWindowInsets()
     ) { innerPadding ->
-        when (uiState) {
-
-            is BookScreenUiState.Loaded -> TODO()
-            is BookScreenUiState.Empty ->
-                EmptyContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                )
-
-            BookScreenUiState.Loading ->
-                LoadingContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            CircularProgressIndicator()
         }
     }
 }
 
-data class MainContentUiState(
-    val book: Book,
-    val nextBook: Book?,
-    val prevBook: Book?,
-)
+@Composable
+private fun ErrorScreen(
+    uiState: BookScreenUiState.Error,
+    onBackClick: () -> Unit,
+    contentPadding: PaddingValues,
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = uiState.name,
+                onBackClick = onBackClick,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                        elevation = ElevationTokens.Level2
+                    )
+                )
+            )
+        },
+        contentWindowInsets = contentPadding.asWindowInsets()
+    ) { innerPadding ->
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Image(
+                imageVector = ComicIcons.UndrawFaq,
+                contentDescription = null,
+                modifier = Modifier
+                    .sizeIn(maxWidth = 300.dp)
+                    .fillMaxWidth(0.5f)
+                    .aspectRatio(1f)
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = if (uiState.name.isEmpty()) "Unable to open" else "Unable to open \"${uiState.name}\"",
+                style = MaterialTheme.typography.headlineSmall
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun BookScreen(
+    uiState: BookScreenUiState.Loaded,
+    pagerState: PagerState,
+    currentList: SnapshotStateList<BookPage>,
+    onBackClick: () -> Unit,
+    onNextBookClick: (Book) -> Unit,
+    onContainerClick: () -> Unit,
+    onPageChange: (Int) -> Unit,
+    contentPadding: PaddingValues,
+) {
+    Scaffold(
+        topBar = {
+            AnimatedVisibility(
+                visible = uiState.isVisibleTooltip,
+                enter = slideInVertically { -it },
+                exit = slideOutVertically { -it }
+            ) {
+                TopAppBar(
+                    title = uiState.book.name,
+                    onBackClick = onBackClick,
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                            elevation = ElevationTokens.Level2
+                        )
+                    )
+                )
+            }
+        },
+        bottomBar = {
+            AnimatedVisibility(
+                visible = uiState.isVisibleTooltip,
+                enter = slideInVertically { it },
+                exit = slideOutVertically { it }
+            ) {
+                BookBottomBar(
+                    pageRange = 1f..uiState.book.totalPageCount.toFloat(),
+                    currentPage = pagerState.currentPage,
+                    onPageChange = onPageChange
+                )
+            }
+        },
+        contentWindowInsets = contentPadding.asWindowInsets()
+    ) { innerPadding ->
+        MainContent(
+            uiState = uiState.bookPagerUiState,
+            currentList = currentList,
+            pagerState = pagerState,
+            onNextBookClick = onNextBookClick,
+            onClick = onContainerClick,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        )
+    }
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MainContent(
-    uiState: MainContentUiState,
+    uiState: BookPagerUiState,
+    currentList: SnapshotStateList<BookPage>,
     pagerState: PagerState,
-    modifier: Modifier = Modifier,
     onNextBookClick: (Book) -> Unit,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     HorizontalPager(
         state = pagerState,
         beyondBoundsPageCount = 2,
         reverseLayout = true,
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) { pageIndex ->
-        when (val item = pages[pageIndex]) {
+        when (val item = currentList[pageIndex]) {
             is BookPage.Next -> {
                 if (item.isNext) {
                     NextBookSheet(uiState.nextBook, true, onClick = onNextBookClick)
@@ -183,198 +304,13 @@ private fun MainContent(
     }
 }
 
-@Composable
-private fun LoadingContent(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
-    }
-}
-
-@Composable
-private fun EmptyContent(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            imageVector = ComicIcons.UndrawFaq,
-            contentDescription = null
+internal fun getBookPageList(totalPageCount: Int) =
+    buildList {
+        add(BookPage.Next(false))
+        addAll(
+            (1..totalPageCount).map {
+                BookPage.Split(it - 1, BookPage.Split.State.NOT_LOADED)
+            }
         )
-        Spacer(modifier = Modifier.size(8.dp))
-        Text(text = "Couldn't open the book", style = MaterialTheme.typography.headlineSmall)
+        add(BookPage.Next(true))
     }
-}
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-internal fun BookScreen(
-    uiState: BookScreenUiState,
-    onBackClick: () -> Unit,
-    onPageIndexChange: (Int) -> Unit,
-    onContainerClick: () -> Unit,
-    onNextBookClick: (Book) -> Unit,
-) {
-    val scope = rememberCoroutineScope()
-    val sys: SystemUiController = rememberSystemUiController()
-    DisposableEffect(Unit) {
-        onDispose {
-            sys.isSystemBarsVisible = true
-        }
-    }
-    when (uiState) {
-        is BookScreenUiState.Loaded -> {
-            val currentList = remember(uiState.book.totalPageCount) {
-                mutableStateListOf<BookPage>().apply {
-                    addAll(getBookPageList(uiState.book.totalPageCount))
-                }
-            }
-            val pagerState = rememberPagerState(
-                initialPage = uiState.book.lastPageRead + 1,
-                pageCount = { currentList.size }
-            )
-
-            sys.isSystemBarsVisible = uiState.isVisibleTooltip
-            LaunchedEffect(pagerState.currentPage) {
-                if (0 < pagerState.currentPage && pagerState.currentPage < uiState.book.totalPageCount) {
-                    onPageIndexChange(pagerState.currentPage - 1)
-                }
-            }
-            val focusRequester = remember { FocusRequester() }
-            LaunchedEffect(Unit) {
-                focusRequester.requestFocus()
-            }
-            Scaffold(
-                topBar = {
-                    AnimatedVisibility(
-                        visible = uiState.isVisibleTooltip,
-                        enter = slideInVertically { -it },
-                        exit = slideOutVertically { -it }
-                    ) {
-                        TopAppBar(
-                            title = uiState.book.name,
-                            onBackClick = onBackClick,
-                            colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                    elevation = ElevationTokens.Level2
-                                )
-                            )
-                        )
-                    }
-                },
-                bottomBar = {
-                    BookBottomBar(
-                        uiState.isVisibleTooltip,
-                        when (val a = currentList[pagerState.currentPage]) {
-                            is BookPage.Next -> if (a.isNext) uiState.book.totalPageCount else 0
-                            is BookPage.Split -> a.index
-                        },
-                        uiState.book.totalPageCount
-                    ) {
-                        scope.launch {
-                            pagerState.animateScrollToPage(it.toInt())
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .onKeyEvent {
-                        logcat("APPAPP") { "onKeyEvent" }
-                        if (it.type == KeyEventType.KeyDown) {
-                            when (it.key) {
-                                Key.VolumeUp -> {
-                                    scope.launch {
-                                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
-                                    }
-                                    true
-                                }
-
-                                Key.VolumeDown -> {
-                                    scope.launch {
-                                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                                    }
-                                    true
-                                }
-
-                                else -> false
-                            }
-                        } else {
-                            false
-                        }
-                    }
-                    .focusable(true)
-                    .focusRequester(focusRequester)
-            ) {
-                BookPager2(
-                    uiState = uiState.bookPagerUiState,
-                    pagerState = pagerState,
-                    currentList = currentList,
-                    onClick = onContainerClick,
-                    onNextBookClick = onNextBookClick
-                )
-            }
-        }
-
-        BookScreenUiState.Loading -> {
-            sys.isStatusBarVisible = true
-            sys.isNavigationBarVisible = true
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        }
-
-        is BookScreenUiState.Empty -> {
-            sys.isStatusBarVisible = true
-            sys.isNavigationBarVisible = true
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = uiState.book.name,
-                        onBackClick = onBackClick,
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                elevation = ElevationTokens.Level2
-                            )
-                        )
-                    )
-                }
-            ) {
-                PreviewEmpty(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it)
-                        .padding(ComicTheme.dimension.margin)
-                )
-            }
-        }
-    }
-}
-
-private fun getBookPageList(totalPageCount: Int) =
-    (0..<totalPageCount).map {
-        when (it) {
-            0 -> BookPage.Next(false)
-            totalPageCount - 1 -> BookPage.Next(true)
-            else -> BookPage.Split(it - 1, BookPage.Split.State.NOT_LOADED)
-        }
-    }
-
-@Composable
-fun PreviewEmpty(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            imageVector = ComicIcons.UndrawFaq,
-            contentDescription = null
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-        Text(text = "Couldn't open the book", style = MaterialTheme.typography.headlineSmall)
-    }
-}

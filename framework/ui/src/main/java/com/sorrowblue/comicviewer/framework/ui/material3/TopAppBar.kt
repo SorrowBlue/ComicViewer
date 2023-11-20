@@ -31,7 +31,7 @@ fun TopAppBar(
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior? = TopAppBarDefaults.pinnedScrollBehavior(),
     windowInsets: WindowInsets? = null,
-    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
+//    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
 ) {
     if (rememberMobile()) {
         androidx.compose.material3.TopAppBar(
@@ -41,7 +41,7 @@ fun TopAppBar(
             actions = actions,
             windowInsets = windowInsets
                 ?: androidx.compose.material3.TopAppBarDefaults.windowInsets,
-            colors = colors.value,
+            colors = TopAppBarDefaults.topAppBarColors().value,
             scrollBehavior = scrollBehavior?.value
         )
     } else {
@@ -52,7 +52,7 @@ fun TopAppBar(
             actions = actions,
             windowInsets = windowInsets
                 ?: WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
-            colors = colors.value,
+            colors = TopAppBarDefaults.topAppBarColors().value,
             scrollBehavior = scrollBehavior?.value
         )
     }
@@ -115,7 +115,6 @@ fun TopAppBar(
     actions: @Composable (RowScope.() -> Unit) = {},
     scrollBehavior: TopAppBarScrollBehavior? = null,
     windowInsets: WindowInsets? = null,
-    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
 ) {
     TopAppBar(
         title = stringResource(id = title),
@@ -123,7 +122,7 @@ fun TopAppBar(
         onBackClick = onBackClick,
         actions = actions,
         windowInsets = windowInsets,
-        colors = colors,
+        colors = TopAppBarDefaults.topAppBarColors(),
         scrollBehavior = scrollBehavior
     )
 }

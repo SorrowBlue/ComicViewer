@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.model.Base64.decodeFromBase64
 import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddRoute
 
 private const val BookshelfIdArg = "bookshelfId"
@@ -31,7 +32,7 @@ private const val FavoriteAddRoute = "favorite/add"
 
 fun NavGraphBuilder.favoriteAddScreen(onBackClick: () -> Unit, onAddClick: () -> Unit) {
     composable(
-        route = "$FavoriteAddRoute?bookshelfId={$BookshelfIdArg}&path={$PathArg}",
+        route = "$FavoriteAddRoute?$BookshelfIdArg={$BookshelfIdArg}&$PathArg={$PathArg}",
         arguments = listOf(
             navArgument(BookshelfIdArg) { type = NavType.IntType },
             navArgument(PathArg) { type = NavType.StringType }
@@ -55,12 +56,11 @@ fun NavGraphBuilder.favoriteAddScreen(onBackClick: () -> Unit, onAddClick: () ->
 }
 
 fun NavController.navigateToFavoriteAdd(
-    bookshelfId: BookshelfId,
-    path: String,
+    file: File,
     navOptions: NavOptions? = null,
 ) {
     navigate(
-        "$FavoriteAddRoute?bookshelfId=${bookshelfId.value}&path=${path.encodeToBase64()}",
+        "$FavoriteAddRoute?$BookshelfIdArg=${file.bookshelfId.value}&$PathArg=${file.path.encodeToBase64()}",
         navOptions
     )
 }

@@ -156,8 +156,7 @@ internal fun SearchRoute(
     val uiState = state.uiState
     val lazyPagingItems = state.lazyPagingItems.collectAsLazyPagingItems()
     val lazyGridState = rememberLazyGridState()
-    val scaffoldState: ResponsiveScaffoldState<File> =
-        rememberResponsiveScaffoldState(sideSheetState = rememberSideSheetFileState())
+    val scaffoldState = rememberResponsiveScaffoldState(rememberSideSheetFileState())
     SearchScreen(
         uiState = uiState,
         lazyGridState = lazyGridState,

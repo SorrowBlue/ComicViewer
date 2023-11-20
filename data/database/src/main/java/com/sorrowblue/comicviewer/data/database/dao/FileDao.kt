@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.room.Upsert
-import androidx.sqlite.db.SupportSQLiteProgram
+import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import com.sorrowblue.comicviewer.data.database.entity.FileEntity
@@ -66,43 +66,38 @@ internal interface FileDao {
             is SortType.DATE -> "last_modified"
             is SortType.SIZE -> "size"
         }
-        val comparison = if (isNext && sortType.isAsc) ">=" else "<="
-        val order = if (isNext && sortType.isAsc) "ASC" else "DESC"
-        val sqLiteQuery = object : SupportSQLiteQuery {
-            override val argCount: Int
-                get() = 2
-            override val sql = """
-                SELECT
-                  *
-                FROM
-                  file
-                  , (
-                    SELECT
-                      bookshelf_id c_bookshelf_id, parent c_parent, path c_path, $column c_$column
-                    FROM
-                      file
-                    WHERE
-                      bookshelf_id = :bookshelfId AND path = :path
-                  )
-                WHERE
-                  bookshelf_id = c_bookshelf_id
-                  AND parent = c_parent
-                  AND file_type != 'FOLDER'
-                  AND path != c_path
-                  AND $column $comparison c_$column
-                ORDER BY
-                  $column $order
-                LIMIT 1
-                ;
-            """.trimIndent()
+        val (comparison, order) = if (isNext && sortType.isAsc) ">=" to "ASC" else "<=" to "DESC"
 
-            override fun bindTo(statement: SupportSQLiteProgram) {
-                statement.bindLong(1, bookshelfId.toLong())
-                statement.bindString(2, path)
-            }
-        }
         @Suppress("DEPRECATION")
-        return flowPrevNextFile(sqLiteQuery)
+        return flowPrevNextFile(
+            SimpleSQLiteQuery(
+                """
+                    SELECT
+                    *
+                    FROM
+                    file
+                    , (
+                      SELECT
+                        bookshelf_id c_bookshelf_id, parent c_parent, path c_path, $column c_$column
+                      FROM
+                        file
+                      WHERE
+                        bookshelf_id = :bookshelfId AND path = :path
+                    )
+                  WHERE
+                    bookshelf_id = c_bookshelf_id
+                    AND parent = c_parent
+                    AND file_type != 'FOLDER'
+                    AND path != c_path
+                    AND $column $comparison c_$column
+                  ORDER BY
+                    $column $order
+                  LIMIT 1
+                  ;
+                """.trimIndent(),
+                arrayOf(bookshelfId.toLong(), path)
+            )
+        )
     }
 
     @Deprecated("使用禁止")

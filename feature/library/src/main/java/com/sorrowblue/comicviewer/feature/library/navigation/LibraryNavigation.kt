@@ -6,6 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.navigation.historyGroup
 import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistoryGroup
 import com.sorrowblue.comicviewer.feature.library.LibraryRoute
@@ -31,10 +33,11 @@ private fun NavGraphBuilder.libraryScreen(
 fun NavGraphBuilder.libraryGroup(
     contentPadding: PaddingValues,
     navController: NavController,
-    onBookClick: (BookshelfId, String, Int) -> Unit,
+    navigateToBook: (Book, Int) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onAddOnClick: (Feature.AddOn) -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
     navigation(route = LibraryGraphRoute, startDestination = LibraryRoute) {
         libraryScreen(
@@ -51,9 +54,10 @@ fun NavGraphBuilder.libraryGroup(
         historyGroup(
             contentPadding = contentPadding,
             navController = navController,
-            onBookClick = onBookClick,
+            navigateToBook = navigateToBook,
             onSettingsClick = onSettingsClick,
-            navigateToSearch = navigateToSearch
+            navigateToSearch = navigateToSearch,
+            onFavoriteClick = onFavoriteClick
         )
     }
 }

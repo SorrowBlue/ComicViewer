@@ -35,16 +35,17 @@ internal fun NavGraphBuilder.historyScreen(
 fun NavGraphBuilder.historyGroup(
     contentPadding: PaddingValues,
     navController: NavController,
-    onBookClick: (BookshelfId, String, Int) -> Unit,
+    navigateToBook: (Book, Int) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
     navigation(route = HistoryGraphRoute, startDestination = HistoryRoute) {
         historyScreen(
             contentPadding = contentPadding,
             onFileClick = { file, position ->
                 when (file) {
-                    is Book -> onBookClick(file.bookshelfId, file.path, position)
+                    is Book -> navigateToBook(file, position)
                     is Folder -> navController.navigateToFolder(
                         prefix = HistoryRoute,
                         bookshelfId = file.bookshelfId,
@@ -55,22 +56,22 @@ fun NavGraphBuilder.historyGroup(
             onSettingsClick = onSettingsClick
         )
         folderScreen(
-            contentPadding = contentPadding,
             prefix = HistoryRoute,
-            navigateToSearch = navigateToSearch,
+            contentPadding = contentPadding,
+            onBackClick = navController::popBackStack,
+            onSearchClick = navigateToSearch,
+            onSettingsClick = onSettingsClick,
             onClickFile = { file, position ->
                 when (file) {
-                    is Book -> onBookClick(file.bookshelfId, file.path, position)
-                    is Folder ->
-                        navController.navigateToFolder(
-                            prefix = HistoryRoute,
-                            file.bookshelfId,
-                            file.path,
-                        )
+                    is Book -> navigateToBook(file, position)
+                    is Folder -> navController.navigateToFolder(
+                        HistoryRoute,
+                        file.bookshelfId,
+                        file.path
+                    )
                 }
             },
-            onSettingsClick = onSettingsClick,
-            onBackClick = navController::popBackStack,
+            onFavoriteClick = onFavoriteClick
         )
     }
 }

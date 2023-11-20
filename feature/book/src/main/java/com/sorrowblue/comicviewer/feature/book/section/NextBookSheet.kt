@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book.section
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -45,8 +46,8 @@ internal fun NextBookSheet(
                 onClick = { onClick(book) }
             )
         } else {
-            AsyncImage(
-                model = ComicIcons.UndrawTaken,
+            Image(
+                imageVector = ComicIcons.UndrawTaken,
                 contentDescription = null,
                 modifier = Modifier
                     .sizeIn(maxWidth = 300.dp, maxHeight = 300.dp)

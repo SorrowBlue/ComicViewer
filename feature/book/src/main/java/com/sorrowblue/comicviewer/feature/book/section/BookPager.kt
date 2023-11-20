@@ -1,13 +1,10 @@
 package com.sorrowblue.comicviewer.feature.book.section
 
 import android.graphics.Bitmap
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -26,35 +23,6 @@ internal data class BookPagerUiState(
     val prevBook: Book?,
     val nextBook: Book?,
 )
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-internal fun BookPager2(
-    uiState: BookPagerUiState,
-    pagerState: PagerState,
-    currentList: SnapshotStateList<BookPage>,
-    onClick: () -> Unit,
-    onNextBookClick: (Book) -> Unit,
-) {
-    HorizontalPager(
-        state = pagerState,
-        beyondBoundsPageCount = 2,
-        reverseLayout = true,
-        modifier = Modifier.fillMaxSize()
-    ) { pageIndex ->
-        when (val item = currentList[pageIndex]) {
-            is BookPage.Next -> {
-                if (item.isNext) {
-                    NextBookSheet(uiState.nextBook, true, onClick = onNextBookClick)
-                } else {
-                    NextBookSheet(uiState.prevBook, false, onClick = onNextBookClick)
-                }
-            }
-
-            is BookPage.Split -> BookSplitPage(currentList, uiState.book, item, onClick)
-        }
-    }
-}
 
 @Composable
 internal fun BookSplitPage(
@@ -139,18 +107,16 @@ internal fun BookSplitPage(
                 )
             }
 
-            BookPage.Split.State.LOADED_SPLIT_LEFT -> BookImage(book, bookPage.index, isLeft = true)
-            BookPage.Split.State.LOADED_SPLIT_RIGHT -> BookImage(
-                book,
-                bookPage.index,
-                isLeft = false
-            )
+            BookPage.Split.State.LOADED_SPLIT_LEFT ->
+                SplitBookImage(book, bookPage.index, isLeft = true)
+            BookPage.Split.State.LOADED_SPLIT_RIGHT ->
+                SplitBookImage(book, bookPage.index, isLeft = false)
         }
     }
 }
 
 @Composable
-fun BookImage(book: Book, index: Int, isLeft: Boolean, modifier: Modifier = Modifier) {
+private fun SplitBookImage(book: Book, index: Int, isLeft: Boolean, modifier: Modifier = Modifier) {
     AsyncImage(
         model = BookPageRequest(book to index),
         contentDescription = null,

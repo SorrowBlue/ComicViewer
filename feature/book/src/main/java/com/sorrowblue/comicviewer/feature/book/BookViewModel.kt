@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.feature.book
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.settings.History
@@ -13,18 +13,14 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
 import com.sorrowblue.comicviewer.feature.book.navigation.BookArgs
-import com.sorrowblue.comicviewer.feature.book.section.BookPagerUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class BookViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getBookUseCase: GetBookUseCase,
+    private val getBookUseCase: GetBookUseCase,
     private val getNextBookUseCase: GetNextBookUseCase,
     private val getNextFavoriteBookUseCase: GetNextFavoriteBookUseCase,
     private val updateLastReadPageUseCase: UpdateLastReadPageUseCase,
@@ -33,40 +29,7 @@ internal class BookViewModel @Inject constructor(
 
     private val args = BookArgs(savedStateHandle)
 
-    private val _uiState = MutableStateFlow<BookScreenUiState>(BookScreenUiState.Loading)
-    val uiState = _uiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            val book = getBookUseCase.execute(GetBookUseCase.Request(args.bookshelfId, args.path))
-                .first().dataOrNull ?: return@launch
-            val bookPagerUiState = BookPagerUiState(
-                book,
-                nextBook = nextBook(GetNextComicRel.NEXT),
-                prevBook = nextBook(GetNextComicRel.PREV),
-            )
-            if (book.totalPageCount <= 0) {
-                _uiState.value = BookScreenUiState.Empty(book)
-            } else {
-                _uiState.value = BookScreenUiState.Loaded(
-                    book,
-                    bookPagerUiState,
-                    true
-                )
-            }
-            updateHistoryUseCase.execute(
-                UpdateHistoryUseCase.Request(
-                    History(
-                        book.bookshelfId,
-                        book.parent,
-                        args.position
-                    )
-                )
-            )
-        }
-    }
-
-    private suspend fun nextBook(rel: GetNextComicRel): Book? {
+    internal suspend fun nextBook(rel: GetNextComicRel): Book? {
         return if (0 < args.favoriteId.value) {
             getNextFavoriteBookUseCase.execute(
                 GetNextFavoriteBookUseCase.Request(
@@ -85,19 +48,19 @@ internal class BookViewModel @Inject constructor(
         }
     }
 
-    fun toggleTooltip() {
-        val uiState = _uiState.value
-        _uiState.value = when (uiState) {
-            is BookScreenUiState.Loaded -> uiState.copy(isVisibleTooltip = !uiState.isVisibleTooltip)
-            BookScreenUiState.Loading -> return
-            is BookScreenUiState.Empty -> return
-        }
+    suspend fun updateLastReadPage(index: Int) {
+        val request = UpdateLastReadPageUseCase.Request(args.bookshelfId, args.path, index)
+        updateLastReadPageUseCase.execute(request)
     }
 
-    fun updateLastReadPage(index: Int) {
-        val request = UpdateLastReadPageUseCase.Request(args.bookshelfId, args.path, index)
-        viewModelScope.launch {
-            updateLastReadPageUseCase.execute(request)
-        }
+    suspend fun getBook(id: BookshelfId, path: String): Book? {
+        return getBookUseCase.execute(GetBookUseCase.Request(id, path))
+            .first().dataOrNull
+    }
+
+    suspend fun updateHistory(history: History) {
+        updateHistoryUseCase.execute(
+            UpdateHistoryUseCase.Request(history)
+        )
     }
 }

@@ -4,4 +4,5 @@
     <string name="book_label_open_prev_book">Open previous book</string>
     <string name="book_label_no_next_book">There are no next books</string>
     <string name="book_label_no_prev_book">There is no previous book</string>
+    <string name="book_label_page_count" translatable="false">%1$d / %2$d</string>
 </resources>

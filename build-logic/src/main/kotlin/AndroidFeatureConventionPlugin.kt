@@ -20,6 +20,8 @@ internal class AndroidFeatureConventionPlugin : Plugin<Project> {
                 implementation(project(":framework:ui"))
                 implementation(project(":domain:usecase"))
 
+                implementation(libs.findLibrary("androidx-compose-material3-adaptive").get())
+                implementation(libs.findLibrary("androidx-compose-material3-adaptiveNavigationSuite").get())
                 implementation(libs.findLibrary("androidx-compose-material3-windowSizeClass").get())
                 implementation(libs.findLibrary("androidx-hilt-navigationCompose").get())
                 implementation(libs.findLibrary("androidx-lifecycle-viewmodelKtx").get())
