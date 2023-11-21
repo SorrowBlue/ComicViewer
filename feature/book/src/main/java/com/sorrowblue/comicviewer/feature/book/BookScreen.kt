@@ -62,7 +62,8 @@ internal sealed interface BookScreenUiState {
 
     data class Loaded(
         val book: Book,
-        val bookPagerUiState: BookPagerUiState,
+        val prevBook: Book?,
+        val nextBook: Book?,
         val isVisibleTooltip: Boolean,
     ) : BookScreenUiState
 }
@@ -76,142 +77,37 @@ internal fun BookRoute(
     contentPadding: PaddingValues,
     state: BookScreenState = rememberBookScreenState(args = args),
 ) {
-    val uiState = state.uiState
-    when (uiState) {
+    when (val uiState = state.uiState) {
         is BookScreenUiState.Loading ->
-            LoadingScreen(
+            BookLoadingScreen(
                 uiState = uiState,
                 onBackClick = onBackClick,
                 contentPadding = contentPadding
             )
 
         is BookScreenUiState.Error ->
-            ErrorScreen(
+            BookErrorScreen(
                 uiState = uiState,
                 onBackClick = onBackClick,
                 contentPadding = contentPadding
             )
 
         is BookScreenUiState.Loaded -> {
-            val scope = rememberCoroutineScope()
-            val pagerState = rememberPagerState(
-                initialPage = (uiState.book.lastPageRead) + 1,
-                pageCount = { uiState.book.totalPageCount + 2 }
-            )
+            val state2 = rememberBookScreenState2(args, uiState)
             BookScreen(
-                uiState = uiState,
-                pagerState = pagerState,
-                currentList = state.currentList,
+                uiState = state2.uiState,
+                pagerState = state2.pagerState,
+                currentList = state2.currentList,
                 onBackClick = onBackClick,
                 onNextBookClick = onNextBookClick,
-                onContainerClick = state::toggleTooltip,
-                onPageChange = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(it)
-                    }
-                },
+                onContainerClick = state2::toggleTooltip,
+                onPageChange = state2::onPageChange,
                 contentPadding = contentPadding,
             )
             DisposableEffect(Unit) {
-                onDispose {
-                    state.onScreenDispose()
-                }
+                onDispose(state2::onScreenDispose)
             }
-            LifecycleEffect { e ->
-                logcat("Compose") { "onLifecycle ${e.name}" }
-                if (e == Lifecycle.Event.ON_STOP) {
-                    CoroutineScope(context).launch {
-                        state.save(pagerState.currentPage - 1)
-                    }
-                }
-            }
-            DisposableEffect(Unit) {
-                logcat("Compose") { "onLaunch" }
-                onDispose {
-                    logcat("Compose") { "onDispose" }
-                }
-            }
-        }
-    }
-}
-
-private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-    logcat("exceptionHandler") { throwable.asLog() }
-}
-
-private val context = SupervisorJob() + Dispatchers.Main.immediate + exceptionHandler
-
-@Composable
-private fun LoadingScreen(
-    uiState: BookScreenUiState.Loading,
-    onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = uiState.name,
-                onBackClick = onBackClick,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                        elevation = ElevationTokens.Level2
-                    )
-                )
-            )
-        },
-        contentWindowInsets = contentPadding.asWindowInsets()
-    ) { innerPadding ->
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            CircularProgressIndicator()
-        }
-    }
-}
-
-@Composable
-private fun ErrorScreen(
-    uiState: BookScreenUiState.Error,
-    onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = uiState.name,
-                onBackClick = onBackClick,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                        elevation = ElevationTokens.Level2
-                    )
-                )
-            )
-        },
-        contentWindowInsets = contentPadding.asWindowInsets()
-    ) { innerPadding ->
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            Image(
-                imageVector = ComicIcons.UndrawFaq,
-                contentDescription = null,
-                modifier = Modifier
-                    .sizeIn(maxWidth = 300.dp)
-                    .fillMaxWidth(0.5f)
-                    .aspectRatio(1f)
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            Text(
-                text = if (uiState.name.isEmpty()) "Unable to open" else "Unable to open \"${uiState.name}\"",
-                style = MaterialTheme.typography.headlineSmall
-            )
+            LifecycleEffect(targetEvent = Lifecycle.Event.ON_STOP, action = state2::onStop)
         }
     }
 }
@@ -261,56 +157,25 @@ private fun BookScreen(
         },
         contentWindowInsets = contentPadding.asWindowInsets()
     ) { innerPadding ->
-        MainContent(
-            uiState = uiState.bookPagerUiState,
-            currentList = currentList,
-            pagerState = pagerState,
-            onNextBookClick = onNextBookClick,
-            onClick = onContainerClick,
+        HorizontalPager(
+            state = pagerState,
+            beyondBoundsPageCount = 2,
+            reverseLayout = true,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-        )
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun MainContent(
-    uiState: BookPagerUiState,
-    currentList: SnapshotStateList<BookPage>,
-    pagerState: PagerState,
-    onNextBookClick: (Book) -> Unit,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    HorizontalPager(
-        state = pagerState,
-        beyondBoundsPageCount = 2,
-        reverseLayout = true,
-        modifier = modifier.fillMaxSize()
-    ) { pageIndex ->
-        when (val item = currentList[pageIndex]) {
-            is BookPage.Next -> {
-                if (item.isNext) {
-                    NextBookSheet(uiState.nextBook, true, onClick = onNextBookClick)
-                } else {
-                    NextBookSheet(uiState.prevBook, false, onClick = onNextBookClick)
+//                .waterfallPadding()
+        ) { pageIndex ->
+            when (val item = currentList[pageIndex]) {
+                is BookPage.Next -> {
+                    if (item.isNext) {
+                        NextBookSheet(uiState.nextBook, true, onClick = onNextBookClick)
+                    } else {
+                        NextBookSheet(uiState.prevBook, false, onClick = onNextBookClick)
+                    }
                 }
-            }
 
-            is BookPage.Split -> BookSplitPage(currentList, uiState.book, item, onClick)
+                is BookPage.Split -> BookSplitPage(currentList, uiState.book, item, onContainerClick)
+            }
         }
     }
 }
-
-internal fun getBookPageList(totalPageCount: Int) =
-    buildList {
-        add(BookPage.Next(false))
-        addAll(
-            (1..totalPageCount).map {
-                BookPage.Split(it - 1, BookPage.Split.State.NOT_LOADED)
-            }
-        )
-        add(BookPage.Next(true))
-    }

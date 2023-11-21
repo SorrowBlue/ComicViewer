@@ -97,9 +97,6 @@ internal fun MainScreen(
                     }
                 }
             ) {
-                LaunchedEffect(it) {
-                    logcat { "padding = $it" }
-                }
                 ModalBottomSheetLayout(bottomSheetNavigator) {
                     NavHostWithSharedAxisX(
                         navController = navController,
