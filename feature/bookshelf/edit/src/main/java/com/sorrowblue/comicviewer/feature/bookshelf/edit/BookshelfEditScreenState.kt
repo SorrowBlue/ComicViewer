@@ -24,10 +24,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
-sealed interface BookshelfEditScreenUiState
+sealed interface BookshelfEditScreenUiState : Parcelable
 
 @Parcelize
-data object UnitUiState : BookshelfEditScreenUiState, Parcelable
+data object UnitUiState : BookshelfEditScreenUiState
 
 sealed class BookshelfEditInnerScreenState<T : BookshelfEditScreenUiState> {
     abstract var uiState: T

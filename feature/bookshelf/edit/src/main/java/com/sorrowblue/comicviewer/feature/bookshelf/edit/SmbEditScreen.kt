@@ -34,6 +34,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
 import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 internal class SmbEditScreenState(
     uiState: SmbEditScreenUiState,
@@ -132,6 +133,7 @@ private val portRegex =
 private val hostRegex =
     "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])\$".toRegex()
 
+@Parcelize
 data class SmbEditScreenUiState(
     val editType: EditType = EditType.Register,
     val displayName: Input = Input(),

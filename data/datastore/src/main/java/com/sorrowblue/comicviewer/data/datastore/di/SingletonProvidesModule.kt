@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.data.datastore.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
+import com.sorrowblue.comicviewer.data.datastore.serializer.BookSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.DisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.FolderDisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.FolderSettingsSerializer
@@ -12,6 +13,7 @@ import com.sorrowblue.comicviewer.data.datastore.serializer.SecuritySettingsSeri
 import com.sorrowblue.comicviewer.data.datastore.serializer.SettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerOperationSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerSettingsSerializer
+import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
@@ -64,6 +66,11 @@ internal object SingletonProvidesModule {
         serializer = ViewerSettingsSerializer()
     )
 
+    private val Context.bookSettingsDataStore: DataStore<BookSettings> by dataStore(
+        fileName = "bookSettings.pb",
+        serializer = BookSettingsSerializer()
+    )
+
     private val Context.viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings> by dataStore(
         fileName = "viewerOperationSettings.pb",
         serializer = ViewerOperationSettingsSerializer()
@@ -108,6 +115,11 @@ internal object SingletonProvidesModule {
     @Provides
     fun provideViewerSettingsDataStore(@ApplicationContext context: Context): DataStore<ViewerSettings> =
         context.viewerSettingsDataStore
+
+    @Singleton
+    @Provides
+    fun provideBookSettingsDataStore(@ApplicationContext context: Context): DataStore<BookSettings> =
+        context.bookSettingsDataStore
 
     @Singleton
     @Provides

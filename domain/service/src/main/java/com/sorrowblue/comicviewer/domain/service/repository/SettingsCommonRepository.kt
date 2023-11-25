@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.domain.service.repository
 
+import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
@@ -24,6 +25,9 @@ interface SettingsCommonRepository {
 
     val viewerSettings: Flow<ViewerSettings>
     suspend fun updateViewerSettings(transform: suspend (ViewerSettings) -> ViewerSettings)
+
+    val bookSettings: Flow<BookSettings>
+    suspend fun updateBookSettings(transform: suspend (BookSettings) -> BookSettings)
 
     val viewerOperationSettings: Flow<ViewerOperationSettings>
     suspend fun updateViewerOperationSettings(transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings)

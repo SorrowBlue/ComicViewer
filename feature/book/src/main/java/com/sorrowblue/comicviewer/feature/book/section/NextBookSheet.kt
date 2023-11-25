@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.book.section
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,8 +23,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.Text
 
 @Composable
 internal fun NextBookSheet(
-    book: Book?,
-    isNext: Boolean,
+    nextBook: NextBook,
     onClick: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -34,6 +32,7 @@ internal fun NextBookSheet(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        val book = nextBook.book
         if (book != null) {
             Text(text = book.name)
             AsyncImage(
@@ -42,12 +41,12 @@ internal fun NextBookSheet(
                 modifier = Modifier.height(300.dp)
             )
             Button(
-                id = if (isNext) R.string.book_label_open_next_book else R.string.book_label_open_prev_book,
+                id = if (nextBook is NextBook.Next) R.string.book_label_open_next_book else R.string.book_label_open_prev_book,
                 onClick = { onClick(book) }
             )
         } else {
-            Image(
-                imageVector = ComicIcons.UndrawTaken,
+            AsyncImage(
+                model = ComicIcons.UndrawTaken,
                 contentDescription = null,
                 modifier = Modifier
                     .sizeIn(maxWidth = 300.dp, maxHeight = 300.dp)
@@ -55,7 +54,7 @@ internal fun NextBookSheet(
             )
             Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
             Text(
-                id = if (isNext) R.string.book_label_no_next_book else R.string.book_label_no_prev_book,
+                id = if (nextBook is NextBook.Next) R.string.book_label_no_next_book else R.string.book_label_no_prev_book,
                 style = ComicTheme.typography.titleLarge
             )
         }

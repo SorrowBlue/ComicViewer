@@ -35,7 +35,7 @@ internal fun BookBottomBar(
     currentPage: Int,
     onPageChange: (Int) -> Unit,
 ) {
-    LaunchedEffect(currentPage) {
+    LaunchedEffect(pageRange) {
         logcat { "pageRange = ${pageRange.start} ..< ${pageRange.endInclusive}" }
         logcat { "currentPage = $currentPage" }
     }
@@ -64,7 +64,7 @@ internal fun BookBottomBar(
                 onPageChange(it.toInt())
             },
             valueRange = pageRange,
-            steps = max(pageRange.endInclusive.toInt() - 2, 0)
+            steps = max((pageRange.endInclusive.toInt() / 2) - 2, 0)
         )
         Text(
             text = when {

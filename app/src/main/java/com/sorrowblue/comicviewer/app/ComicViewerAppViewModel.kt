@@ -10,7 +10,6 @@ import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.lifecycle.ComposeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +28,6 @@ internal class ComicViewerAppViewModel @Inject constructor(
     private val splitInstallManager: SplitInstallManager,
     private val securitySettingsUseCase: ManageSecuritySettingsUseCase,
     private val loadSettingsUseCase: LoadSettingsUseCase,
-    private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
 ) : ComposeViewModel<ComicViewerAppUiEvent>() {
 
@@ -56,7 +54,7 @@ internal class ComicViewerAppViewModel @Inject constructor(
                             isRestart = true
                         }
                     )
-                } else if (manageDisplaySettingsUseCase.settings.first().restoreOnLaunch) {
+                } else if (settings.restoreOnLaunch) {
                     val history =
                         getNavigationHistoryUseCase.execute(EmptyRequest).map { it.dataOrNull }
                             .first()

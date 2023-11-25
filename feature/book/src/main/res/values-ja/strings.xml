@@ -4,4 +4,18 @@
     <string name="book_label_open_prev_book">前の本を開く</string>
     <string name="book_label_no_next_book">次の本はありません</string>
     <string name="book_label_no_prev_book">前の本はありません</string>
+
+    <string name="book_label_display_format">ページの表示形式</string>
+    <string name="book_label_display_format_default">デフォルト</string>
+    <string name="book_label_display_format_split">自動 単ページ表示</string>
+    <string name="book_label_display_format_spread">自動 見開き表示</string>
+    <string name="book_label_display_format_splitspread">自動 単ページ／見開き</string>
+
+    <string name="book_label_scale">ページスケール</string>
+    <string name="book_label_scale_fit">最適表示</string>
+    <string name="book_label_scale_fill_height">高さを合わせる</string>
+    <string name="book_label_scale_fill_width">幅を合わせる</string>
+    <string name="book_label_scale_inside">大きい場合だけ画面に合わせる</string>
+    <string name="book_label_scale_none">オリジナルサイズ</string>
+    <string name="book_label_scale_fill_bounds">画面に合わせて伸縮</string>
 </resources>

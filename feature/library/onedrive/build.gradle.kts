@@ -25,7 +25,10 @@ dependencies {
     implementation(libs.microsoft.graph) {
         exclude("com.google.guava", "guava")
     }
-    implementation(libs.microsoft.identity.client.msal)
+    implementation(libs.microsoft.identity.client.msal) {
+        exclude(group = "io.opentelemetry")
+    }
+    implementation("io.opentelemetry:opentelemetry-api:1.18.0")
 
     implementation(libs.kotlinx.coroutines.jdk8)
 }

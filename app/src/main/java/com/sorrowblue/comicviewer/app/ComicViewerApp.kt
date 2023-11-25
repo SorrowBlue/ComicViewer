@@ -244,10 +244,10 @@ internal fun ComicViewerApp(
                     navController.navigateToBookshelfFolder(
                         bookshelf.id,
                         folderList.first().path,
-                        position.coerceAtLeast(0)
+                        position
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path}, ${position.coerceAtLeast(0)}"
+                        "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path})"
                     }
                 } else {
                     navController.navigateToBookshelfFolder(
@@ -266,10 +266,10 @@ internal fun ComicViewerApp(
                     navController.navigateToBookshelfFolder(
                         bookshelf.id,
                         folderList.last().path,
-                        position.coerceAtLeast(0)
+                        position
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "-> folder${folderList.last().path}, ${position.coerceAtLeast(0)}"
+                        "-> folder${folderList.last().path}, $position"
                     }
                 }
             }

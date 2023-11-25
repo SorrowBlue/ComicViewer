@@ -5,4 +5,18 @@
     <string name="book_label_no_next_book">There are no next books</string>
     <string name="book_label_no_prev_book">There is no previous book</string>
     <string name="book_label_page_count" translatable="false">%1$d / %2$d</string>
+
+    <string name="book_label_display_format">Page display format</string>
+    <string name="book_label_display_format_default">Default</string>
+    <string name="book_label_display_format_split">Auto single page</string>
+    <string name="book_label_display_format_spread">Auto spread</string>
+    <string name="book_label_display_format_splitspread">Auto switch single-page/spread</string>
+
+    <string name="book_label_scale">Page scale</string>
+    <string name="book_label_scale_fit">Optimal display</string>
+    <string name="book_label_scale_fill_height">Fit Height</string>
+    <string name="book_label_scale_fill_width">Fit Width</string>
+    <string name="book_label_scale_inside">Fit to screen only</string>
+    <string name="book_label_scale_none">Original size</string>
+    <string name="book_label_scale_fill_bounds">Stretch to fit the screen</string>
 </resources>

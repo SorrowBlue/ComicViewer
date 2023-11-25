@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.data.datastore
 
 import androidx.datastore.core.DataStore
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
@@ -19,6 +20,7 @@ internal class DatastoreDataSourceImpl @Inject constructor(
     private val settingsDataStore: DataStore<Settings>,
     private val displaySettingsDataStore: DataStore<DisplaySettings>,
     private val viewerSettingsDataStore: DataStore<ViewerSettings>,
+    private val bookSettingsDataStore: DataStore<BookSettings>,
     private val folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings>,
     private val folderSettingsDataStore: DataStore<FolderSettings>,
     private val viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings>,
@@ -47,6 +49,10 @@ internal class DatastoreDataSourceImpl @Inject constructor(
     override val viewerSettings = viewerSettingsDataStore.data
     override suspend fun updateViewerSettings(transform: suspend (ViewerSettings) -> ViewerSettings) =
         viewerSettingsDataStore.updateData(transform)
+
+    override val bookSettings: Flow<BookSettings> = bookSettingsDataStore.data
+    override suspend fun updateBookSettings(transform: suspend (BookSettings) -> BookSettings) =
+        bookSettingsDataStore.updateData(transform)
 
     override val folderDisplaySettings = folderDisplaySettingsDataStore.data
     override suspend fun updateFolderDisplaySettings(

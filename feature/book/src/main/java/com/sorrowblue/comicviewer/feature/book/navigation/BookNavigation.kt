@@ -33,11 +33,13 @@ private const val BookRouteBase =
 fun NavGraphBuilder.bookGraph(
     navController: NavController,
     onBackClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     contentPadding: PaddingValues,
 ) {
     navigation(route = BookGraphRoute, startDestination = BookRoute) {
         bookScreen(
             onBackClick = onBackClick,
+            onSettingsClick = onSettingsClick,
             onNextBookClick = {
                 navController.navigateToBook(
                     it,
@@ -52,6 +54,7 @@ fun NavGraphBuilder.bookGraph(
 
 private fun NavGraphBuilder.bookScreen(
     onBackClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     onNextBookClick: (Book) -> Unit,
     contentPadding: PaddingValues,
 ) {
@@ -80,6 +83,7 @@ private fun NavGraphBuilder.bookScreen(
         BookRoute(
             args = BookArgs(it.arguments!!),
             onBackClick = onBackClick,
+            onSettingsClick = onSettingsClick,
             onNextBookClick = onNextBookClick,
             contentPadding = contentPadding,
         )

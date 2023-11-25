@@ -112,6 +112,7 @@ internal fun NavGraphBuilder.mainGraph(
     bookGraph(
         navController = navController,
         onBackClick = navController::popBackStack,
+        onSettingsClick = navController::navigateToSettings,
         contentPadding = contentPadding
     )
 
