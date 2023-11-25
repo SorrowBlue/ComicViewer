@@ -63,7 +63,7 @@
     {
       "matchPackagePrefixes": [
         "io.coil-kt:coil",
-        "io.coil-kt:coil-base",
+        "io.coil-kt:coil-base"
       ],
       "groupName": "Coil",
       "groupSlug": "coil"
