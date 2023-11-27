@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="book_label_open_next_book">Next book</string>
-    <string name="book_label_open_prev_book">Previous book</string>
+    <string name="book_label_next_book">Next book</string>
+    <string name="book_label_prev_book">Previous book</string>
     <string name="book_label_next_favorite_book">Next favorite book</string>
     <string name="book_label_prev_favorite_book">Previous favorite book</string>
     <string name="book_label_no_next_book">There are no next books</string>

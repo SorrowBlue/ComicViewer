@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="book_label_open_next_book">次の本</string>
-    <string name="book_label_open_prev_book">前の本</string>
+    <string name="book_label_next_book">次の本</string>
+    <string name="book_label_prev_book">前の本</string>
+    <string name="book_label_next_favorite_book">次のお気に入りの本</string>
+    <string name="book_label_prev_favorite_book">前のお気に入りの本</string>
     <string name="book_label_no_next_book">次の本はありません</string>
     <string name="book_label_no_prev_book">前の本はありません</string>
 

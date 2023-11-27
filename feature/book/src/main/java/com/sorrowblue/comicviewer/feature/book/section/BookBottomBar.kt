@@ -68,8 +68,8 @@ internal fun BookBottomBar(
         )
         Text(
             text = when {
-                currentPage < 1 -> stringResource(id = R.string.book_label_open_prev_book)
-                pageRange.endInclusive < currentPage -> stringResource(id = R.string.book_label_open_next_book)
+                currentPage < 1 -> stringResource(id = R.string.book_label_prev_book)
+                pageRange.endInclusive < currentPage -> stringResource(id = R.string.book_label_next_book)
                 else -> stringResource(
                     id = R.string.book_label_page_count,
                     currentPage,
