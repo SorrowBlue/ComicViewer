@@ -19,7 +19,7 @@ androidx-compose-compiler = "1.5.4"
 google-dagger = "2.48.1"
 android-gradle = "8.2.0-rc03"
 
-detekt = "1.23.3"
+detekt = "1.23.4"
 mikepenz-aboutlibraries = "10.9.2"
 koin = "3.5.1"
 
