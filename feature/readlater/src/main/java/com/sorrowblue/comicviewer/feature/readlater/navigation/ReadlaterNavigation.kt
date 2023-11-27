@@ -21,7 +21,7 @@ const val ReadlaterGraphRoute = "readlater_graph"
 fun NavGraphBuilder.readlaterGroup(
     contentPadding: PaddingValues,
     navController: NavController,
-    navigateToBook: (Book, Int) -> Unit,
+    navigateToBook: (Book) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onFavoriteClick: (File) -> Unit,
@@ -29,9 +29,9 @@ fun NavGraphBuilder.readlaterGroup(
     navigation(route = ReadlaterGraphRoute, startDestination = ReadLaterRoute) {
         readLaterScreen(
             contentPadding = contentPadding,
-            onFileClick = { file, position ->
+            onFileClick = { file ->
                 when (file) {
-                    is Book -> navigateToBook(file, position)
+                    is Book -> navigateToBook(file)
                     is Folder ->
                         navController.navigateToFolder(
                             prefix = ReadLaterRoute,
@@ -47,9 +47,9 @@ fun NavGraphBuilder.readlaterGroup(
             contentPadding = contentPadding,
             onSearchClick = navigateToSearch,
             onSettingsClick = onSettingsClick,
-            onClickFile = { file, position ->
+            onClickFile = { file ->
                 when (file) {
-                    is Book -> navigateToBook(file, position)
+                    is Book -> navigateToBook(file)
                     is Folder -> navController.navigateToFolder(
                         ReadLaterRoute,
                         file.bookshelfId,
@@ -65,7 +65,7 @@ fun NavGraphBuilder.readlaterGroup(
 
 private fun NavGraphBuilder.readLaterScreen(
     contentPadding: PaddingValues,
-    onFileClick: (File, Int) -> Unit,
+    onFileClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
     composable(route = ReadLaterRoute) {

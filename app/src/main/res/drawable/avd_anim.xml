@@ -28,7 +28,9 @@
     <target android:name="path_3">
         <aapt:attr name="android:animation">
             <objectAnimator
-                android:duration="300"
+                android:duration="600"
+                android:repeatCount="infinite"
+                android:repeatMode="reverse"
                 android:interpolator="@android:interpolator/fast_out_slow_in"
                 android:propertyName="fillAlpha"
                 android:valueFrom="0.25"
@@ -39,7 +41,9 @@
     <target android:name="path_2">
         <aapt:attr name="android:animation">
             <objectAnimator
-                android:duration="300"
+                android:duration="600"
+                android:repeatCount="infinite"
+                android:repeatMode="reverse"
                 android:interpolator="@android:interpolator/fast_out_slow_in"
                 android:propertyName="fillAlpha"
                 android:startOffset="300"
@@ -51,7 +55,9 @@
     <target android:name="path_5">
         <aapt:attr name="android:animation">
             <objectAnimator
-                android:duration="300"
+                android:duration="600"
+                android:repeatCount="infinite"
+                android:repeatMode="reverse"
                 android:interpolator="@android:interpolator/fast_out_slow_in"
                 android:propertyName="fillAlpha"
                 android:startOffset="600"

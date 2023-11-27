@@ -10,6 +10,7 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Density
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -24,11 +25,12 @@ internal data class BookSheetUiState(
 internal fun BookSheet(
     uiState: BookSheetUiState,
     pagerState: PagerState,
-    pages: List<BookItem>,
+    pages: SnapshotStateList<PageItem>,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onNextBookClick: (Book) -> Unit,
     onPageLoaded: (UnratedPage, Bitmap) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     HorizontalPager(
         state = pagerState,
@@ -42,7 +44,7 @@ internal fun BookSheet(
             }
         },
         reverseLayout = true,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -52,13 +54,13 @@ internal fun BookSheet(
             ),
         key = {
             when (val item = pages[it]) {
-                is NextBook -> item.key
+                is NextPage -> item.key
                 is BookPage -> item.key
             }
         }
     ) { pageIndex ->
         when (val item = pages[pageIndex]) {
-            is NextBook -> NextBookSheet(item, onClick = onNextBookClick)
+            is NextPage -> NextBookSheet(item, onClick = onNextBookClick)
             is BookPage -> BookPage(
                 book = uiState.book,
                 page = item,

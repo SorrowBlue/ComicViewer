@@ -1,3 +1,3 @@
 package com.sorrowblue.comicviewer.domain.model
 
-fun String.extension() = substringAfterLast('.', "").lowercase()
+val String.extension get() = substringAfterLast('.', "").lowercase()

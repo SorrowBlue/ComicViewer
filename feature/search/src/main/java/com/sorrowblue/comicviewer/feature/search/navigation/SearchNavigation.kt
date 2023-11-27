@@ -81,7 +81,7 @@ private const val SearchGraph = "search_graph"
 fun NavGraphBuilder.searchGraph(
     contentPadding: PaddingValues,
     navController: NavController,
-    navigateToBook: (Book, Int) -> Unit,
+    navigateToBook: (Book) -> Unit,
     navigateToSettings: () -> Unit,
     navigateToFavoriteAdd: (File) -> Unit,
 ) {
@@ -90,7 +90,7 @@ fun NavGraphBuilder.searchGraph(
             onBackClick = navController::popBackStack,
             onFileClick = { file ->
                 when (file) {
-                    is Book -> navigateToBook(file, -1)
+                    is Book -> navigateToBook(file)
                     is Folder ->
                         navController.navigateToFolder(SearchRoute, file.bookshelfId, file.path)
                 }
@@ -108,9 +108,9 @@ fun NavGraphBuilder.searchGraph(
             onBackClick = navController::popBackStack,
             onSearchClick = navController::navigateToSearch,
             onSettingsClick = navigateToSettings,
-            onClickFile = { file, position ->
+            onClickFile = { file ->
                 when (file) {
-                    is Book -> navigateToBook(file, position)
+                    is Book -> navigateToBook(file)
                     is Folder -> navController.navigateToFolder(
                         SearchRoute,
                         file.bookshelfId,

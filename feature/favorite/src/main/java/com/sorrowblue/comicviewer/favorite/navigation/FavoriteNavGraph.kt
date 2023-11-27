@@ -21,8 +21,8 @@ val RouteInFavoriteGraph = listOf(FavoriteListRoute, FavoriteRoute, folderRoute(
 fun NavGraphBuilder.favoriteGroup(
     contentPadding: PaddingValues,
     navController: NavController,
-    navigateToBook: (Book, Int) -> Unit,
-    onFavoriteBookClick: (BookshelfId, String, FavoriteId, String) -> Unit,
+    navigateToBook: (Book) -> Unit,
+    onFavoriteBookClick: (Book, FavoriteId) -> Unit,
     onClickLongFile: (File) -> Unit,
     onSettingsClick: () -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
@@ -39,15 +39,9 @@ fun NavGraphBuilder.favoriteGroup(
             onBackClick = navController::popBackStack,
             onEditClick = navController::navigateToFavoriteEdit,
             onSettingsClick = onSettingsClick,
-            onClickFile = { file, favoriteId, position ->
+            onClickFile = { file, favoriteId ->
                 when (file) {
-                    is Book ->
-                        onFavoriteBookClick(
-                            file.bookshelfId,
-                            file.path,
-                            favoriteId,
-                            file.name
-                        )
+                    is Book -> onFavoriteBookClick(file, favoriteId)
 
                     is Folder ->
                         navController.navigateToFolder(
@@ -70,9 +64,9 @@ fun NavGraphBuilder.favoriteGroup(
             onBackClick = navController::popBackStack,
             onSearchClick = onSearchClick,
             onSettingsClick = onSettingsClick,
-            onClickFile = { file, position ->
+            onClickFile = { file ->
                 when (file) {
-                    is Book -> navigateToBook(file, position)
+                    is Book -> navigateToBook(file)
                     is Folder -> navController.navigateToFolder(
                         FavoriteListRoute,
                         file.bookshelfId,

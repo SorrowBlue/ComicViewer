@@ -16,19 +16,24 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings.PageFormat
-import com.sorrowblue.comicviewer.domain.model.settings.History
-import com.sorrowblue.comicviewer.domain.usecase.GetNextComicRel
+import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
 import com.sorrowblue.comicviewer.feature.book.navigation.BookArgs
-import com.sorrowblue.comicviewer.feature.book.section.BookItem
 import com.sorrowblue.comicviewer.feature.book.section.BookPage
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.NextBook
+import com.sorrowblue.comicviewer.feature.book.section.NextPage
+import com.sorrowblue.comicviewer.feature.book.section.PageFormat2
+import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -47,7 +52,13 @@ internal class BookScreenState(
 
     init {
         scope.launch {
-            val book = viewModel.getBook(args.bookshelfId, args.path)
+            val book = viewModel.getBookUseCase.execute(
+                GetBookUseCase.Request(
+                    args.bookshelfId,
+                    args.path
+                )
+            )
+                .first().dataOrNull
             if (book == null) {
                 this@BookScreenState.uiState = BookScreenUiState.Error(args.name)
                 return@launch
@@ -57,8 +68,6 @@ internal class BookScreenState(
             } else {
                 this@BookScreenState.uiState = BookScreenUiState.Loaded(
                     book = book,
-                    prevBook = viewModel.nextBook(GetNextComicRel.PREV),
-                    nextBook = viewModel.nextBook(GetNextComicRel.NEXT),
                     bookSheetUiState = BookSheetUiState(book)
                 )
             }
@@ -82,9 +91,9 @@ internal fun rememberBookScreenState(
 @OptIn(ExperimentalFoundationApi::class)
 @Stable
 internal class BookScreenState2(
-    args: BookArgs,
+    private val args: BookArgs,
     uiState: BookScreenUiState.Loaded,
-    val currentList: SnapshotStateList<BookItem>,
+    val currentList: SnapshotStateList<PageItem>,
     val pagerState: PagerState,
     val scope: CoroutineScope,
     val systemUiController: SystemUiController,
@@ -97,48 +106,114 @@ internal class BookScreenState2(
     var uiState by mutableStateOf(uiState)
         private set
 
-    init {
-        scope.launch {
-            viewModel.updateHistory(
-                History(uiState.book.bookshelfId, uiState.book.parent, args.position)
-            )
-        }
-        viewModel.bookSettings.map { it.pageFormat }.distinctUntilChanged().onEach { pageFormat ->
-            currentList.clear()
-            currentList.addAll(
-                buildList {
-                    add(NextBook.Next(uiState.nextBook))
-                    addAll(
-                        when (pageFormat) {
-                            PageFormat.Default -> (1..uiState.book.totalPageCount).map {
-                                BookPage.Default(it - 1)
-                            }
+    private var nextPage: NextPage? = null
+    private var previousPage: NextPage? = null
 
-                            PageFormat.Spread ->
-                                (1..uiState.book.totalPageCount).map {
-                                    BookPage.Spread.Unrated(it - 1)
+    init {
+        viewModel.manageBookSettingsUseCase.settings.map { it.pageFormat }.distinctUntilChanged()
+            .onEach { pageFormat ->
+                if (nextPage == null) {
+                    val favorite = if (args.favoriteId.value != -1) {
+                        viewModel.getNextBookUseCase.execute(
+                            GetNextBookUseCase.Request(
+                                args.bookshelfId,
+                                args.path,
+                                GetNextBookUseCase.Location.Favorite(args.favoriteId),
+                                true
+                            )
+                        ).first().dataOrNull
+                    } else {
+                        null
+                    }
+                    val nextBook = viewModel.getNextBookUseCase.execute(
+                        GetNextBookUseCase.Request(
+                            args.bookshelfId,
+                            args.path,
+                            GetNextBookUseCase.Location.Folder,
+                            true
+                        )
+                    ).first().dataOrNull
+                    nextPage = nextBook?.let {
+                        if (favorite != null) {
+                            NextPage(
+                                listOf(
+                                    NextBook.Folder(it),
+                                    NextBook.Favorite(favorite)
+                                ).toPersistentList()
+                            )
+                        } else {
+                            NextPage(listOf(NextBook.Folder(it)).toPersistentList())
+                        }
+                    } ?: NextPage(emptyList<NextBook>().toPersistentList())
+                }
+                if (previousPage == null) {
+                    val favorite = if (args.favoriteId.value != -1) {
+                        viewModel.getNextBookUseCase.execute(
+                            GetNextBookUseCase.Request(
+                                args.bookshelfId,
+                                args.path,
+                                GetNextBookUseCase.Location.Favorite(args.favoriteId),
+                                false
+                            )
+                        ).first().dataOrNull
+                    } else {
+                        null
+                    }
+                    previousPage = viewModel.getNextBookUseCase.execute(
+                        GetNextBookUseCase.Request(
+                            args.bookshelfId,
+                            args.path,
+                            GetNextBookUseCase.Location.Folder,
+                            false
+                        )
+                    ).first().dataOrNull?.let {
+                        if (favorite != null) {
+                            NextPage(
+                                listOf(
+                                    NextBook.Folder(it),
+                                    NextBook.Favorite(favorite)
+                                ).toPersistentList()
+                            )
+                        } else {
+                            NextPage(listOf(NextBook.Folder(it)).toPersistentList())
+                        }
+                    } ?: NextPage(emptyList<NextBook>().toPersistentList())
+                }
+                currentList.clear()
+                currentList.addAll(
+                    buildList {
+                        add(previousPage!!)
+                        addAll(
+                            when (pageFormat) {
+                                PageFormat.Default -> (1..uiState.book.totalPageCount).map {
+                                    BookPage.Default(it - 1)
                                 }
 
-                            PageFormat.Split -> (1..uiState.book.totalPageCount).map {
-                                BookPage.Split.Unrated(it - 1)
-                            }
+                                PageFormat.Spread ->
+                                    (1..uiState.book.totalPageCount).map {
+                                        BookPage.Spread.Unrated(it - 1)
+                                    }
 
-                            PageFormat.Auto -> (1..uiState.book.totalPageCount).map {
-                                BookPage.Split.Unrated(it - 1)
+                                PageFormat.Split -> (1..uiState.book.totalPageCount).map {
+                                    BookPage.Split.Unrated(it - 1)
+                                }
+
+                                PageFormat.Auto -> (1..uiState.book.totalPageCount).map {
+                                    BookPage.Split.Unrated(it - 1)
+                                }
                             }
-                        }
-                    )
-                    add(NextBook.Prev(uiState.prevBook))
-                }
-            )
-        }.launchIn(scope)
-        viewModel.bookSettings.onEach {
+                        )
+                        add(nextPage!!)
+                    }
+                )
+            }.launchIn(scope)
+        viewModel.manageBookSettingsUseCase.settings.onEach {
             bookMenuSheetUiState = bookMenuSheetUiState.copy(
-                pageDisplayFormat = when (it.pageFormat) {
-                    PageFormat.Default -> PageDisplayFormat.Default
-                    PageFormat.Spread -> PageDisplayFormat.Spread
-                    PageFormat.Split -> PageDisplayFormat.Split
-                    PageFormat.Auto -> PageDisplayFormat.SplitSpread
+                pageFormat2 = when (it.pageFormat) {
+                    PageFormat.Default -> PageFormat2.Default
+                    PageFormat.Spread -> PageFormat2.Spread
+                    PageFormat.Split -> PageFormat2.Split
+                    PageFormat.Auto -> PageFormat2.SplitSpread
                 },
                 pageScale = when (it.pageScale) {
                     BookSettings.PageScale.Fit -> PageScale.Fit
@@ -175,7 +250,12 @@ internal class BookScreenState2(
 
     fun onStop() {
         scope.launch {
-            viewModel.updateLastReadPage(pagerState.currentPage - 1)
+            val request = UpdateLastReadPageUseCase.Request(
+                args.bookshelfId,
+                args.path,
+                pagerState.currentPage - 1
+            )
+            viewModel.updateLastReadPageUseCase.execute(request)
         }
     }
 
@@ -215,7 +295,7 @@ internal class BookScreenState2(
         }
 
         val skipIndex = mutableListOf<Int>()
-        val newList = mutableListOf<BookItem>()
+        val newList = mutableListOf<PageItem>()
         var nextSingle: BookPage.Spread.Single? = null
         currentList.forEachIndexed { index1, bookItem ->
             if (skipIndex.contains(index1)) return@forEachIndexed
@@ -254,15 +334,15 @@ internal class BookScreenState2(
         uiState = uiState.copy(isShowBookMenu = false)
     }
 
-    fun onChangePageDisplayFormat(pageDisplayFormat: PageDisplayFormat) {
+    fun onChangePageDisplayFormat(pageFormat2: PageFormat2) {
         scope.launch {
-            viewModel.updateBookSettings {
+            viewModel.manageBookSettingsUseCase.edit {
                 it.copy(
-                    pageFormat = when (pageDisplayFormat) {
-                        PageDisplayFormat.Default -> PageFormat.Default
-                        PageDisplayFormat.Split -> PageFormat.Split
-                        PageDisplayFormat.Spread -> PageFormat.Spread
-                        PageDisplayFormat.SplitSpread -> PageFormat.Auto
+                    pageFormat = when (pageFormat2) {
+                        PageFormat2.Default -> PageFormat.Default
+                        PageFormat2.Split -> PageFormat.Split
+                        PageFormat2.Spread -> PageFormat.Spread
+                        PageFormat2.SplitSpread -> PageFormat.Auto
                     }
                 )
             }
@@ -271,7 +351,7 @@ internal class BookScreenState2(
 
     fun onChangePageScale(pageScale: PageScale) {
         scope.launch {
-            viewModel.updateBookSettings {
+            viewModel.manageBookSettingsUseCase.edit {
                 it.copy(
                     pageScale = when (pageScale) {
                         PageScale.Fit -> BookSettings.PageScale.Fit
@@ -296,7 +376,7 @@ internal class BookScreenState2(
 internal fun rememberBookScreenState2(
     args: BookArgs,
     uiState: BookScreenUiState.Loaded,
-    currentList: SnapshotStateList<BookItem> = remember { mutableStateListOf() },
+    currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() },
     pagerState: PagerState = rememberPagerState(
         initialPage = uiState.book.lastPageRead + 1,
         pageCount = { currentList.size }

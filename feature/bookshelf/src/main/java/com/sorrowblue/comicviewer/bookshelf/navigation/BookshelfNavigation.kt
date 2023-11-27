@@ -28,6 +28,15 @@ fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String, posit
     navigateToFolder(prefix = BookshelfRoute, bookshelfId = id, path = path, position = position)
 }
 
+fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String, restorePath: String) {
+    navigateToFolder(
+        prefix = BookshelfRoute,
+        bookshelfId = id,
+        path = path,
+        restorePath = restorePath
+    )
+}
+
 private fun NavGraphBuilder.bookshelfScreen(
     contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
@@ -53,7 +62,7 @@ fun NavGraphBuilder.bookshelfGraph(
     contentPadding: PaddingValues,
     navController: NavController,
     onSettingsClick: () -> Unit,
-    navigateToBook: (Book, Int) -> Unit,
+    navigateToBook: (Book) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onRestoreComplete: () -> Unit,
     onFavoriteClick: (File) -> Unit,
@@ -84,9 +93,9 @@ fun NavGraphBuilder.bookshelfGraph(
             onBackClick = navController::popBackStack,
             onSearchClick = navigateToSearch,
             onSettingsClick = onSettingsClick,
-            onClickFile = { file, position ->
+            onClickFile = { file ->
                 when (file) {
-                    is Book -> navigateToBook(file, position)
+                    is Book -> navigateToBook(file)
                     is Folder -> navController.navigateToFolder(
                         prefix = BookshelfRoute,
                         bookshelfId = file.bookshelfId,

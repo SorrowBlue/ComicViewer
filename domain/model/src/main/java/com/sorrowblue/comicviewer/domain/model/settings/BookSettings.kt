@@ -18,7 +18,7 @@ data class BookSettings(
         Default,
         Spread,
         Split,
-        Auto
+        Auto,
     }
 
     enum class PageScale {
@@ -27,6 +27,6 @@ data class BookSettings(
         FillHeight,
         Inside,
         None,
-        FillBounds
+        FillBounds,
     }
 }

@@ -58,11 +58,9 @@ internal fun SettingsSecurityRoute(
         onChangeBackgroundLockEnabled = state::onChangeBackgroundLockEnabled,
     )
 
-    if (state.isBiometricsDialogShow) {
+    if (uiState.isBiometricsDialogShow) {
         BiometricsDialog(
-            onConfirmClick = {
-                state.onBiometricsDialogClick()
-            },
+            onConfirmClick = state::onBiometricsDialogClick,
             onDismissRequest = state::onBiometricsDialogDismissRequest
         )
     }
@@ -78,7 +76,7 @@ internal class ChildSecuritySettingsScreenState(
     private val scope: CoroutineScope,
     private val viewModel: SettingsSecurityViewModel,
     override val snackbarHostState: SnackbarHostState = SnackbarHostState(),
-    val biometricsDialogController: BiometricsDialogController = BiometricsDialogController(),
+    private val biometricsDialogController: BiometricsDialogController = BiometricsDialogController(),
 ) : SecuritySettingsScreenState {
 
     override fun onBiometricsDialogClick() {
@@ -160,6 +158,7 @@ internal class ChildSecuritySettingsScreenState(
 
                 BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                     // 生体認証が設定されていないため、設定を促す
+                    uiState = uiState.copy(isBiometricsDialogShow = true)
                     biometricsDialogController.show(Unit)
                 }
 
@@ -228,12 +227,9 @@ internal class ChildSecuritySettingsScreenState(
     }
 
     override fun onBiometricsDialogDismissRequest() {
+        uiState = uiState.copy(isBiometricsDialogShow = false)
         biometricsDialogController.dismiss()
     }
-
-    override val isBiometricsDialogShow: Boolean
-        @Composable
-        get() = biometricsDialogController.isShow
 
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())
 
@@ -276,8 +272,6 @@ internal interface SecuritySettingsScreenState {
     fun onBiometricsDialogClick()
 
     fun onBiometricsDialogDismissRequest()
-    val isBiometricsDialogShow: Boolean
-        @Composable get
     val snackbarHostState: SnackbarHostState
     var uiState: SecuritySettingsScreenUiState
 }
@@ -310,6 +304,7 @@ internal data class SecuritySettingsScreenUiState(
     val isAuthEnabled: Boolean = false,
     val isBiometricEnabled: Boolean = false,
     val isBackgroundLockEnabled: Boolean = false,
+    val isBiometricsDialogShow: Boolean = false,
 )
 
 @Composable

@@ -1,27 +1,25 @@
 package com.sorrowblue.comicviewer.feature.book.section
 
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import kotlinx.collections.immutable.PersistentList
 
-sealed interface BookItem
+sealed interface PageItem
 
-sealed interface NextBook : BookItem {
+data class NextPage(val nextBooks: PersistentList<NextBook>) : PageItem {
 
-    val key: String
+    val key = nextBooks.joinToString { "next:${it.book.bookshelfId.value}:${it.book.path}" }
+}
 
-    val book: Book?
+sealed interface NextBook {
+    val book: Book
 
-    data class Next(override val book: Book?) : NextBook {
-        override val key = "next:${book?.bookshelfId}:${book?.path}"
-    }
-
-    data class Prev(override val book: Book?) : NextBook {
-        override val key = "next:${book?.bookshelfId}:${book?.path}"
-    }
+    data class Folder(override val book: Book) : NextBook
+    data class Favorite(override val book: Book) : NextBook
 }
 
 sealed interface UnratedPage
 
-sealed interface BookPage : BookItem {
+sealed interface BookPage : PageItem {
     val key: String
 
     /** 読み取ったページをそのまま表示 */

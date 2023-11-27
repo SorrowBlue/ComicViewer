@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
-import com.sorrowblue.comicviewer.domain.model.settings.History
 import com.sorrowblue.comicviewer.domain.model.settings.OneTimeFlag
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
@@ -23,11 +22,6 @@ internal class SettingsCommonRepositoryImpl @Inject constructor(
 
     override suspend fun updateOneTimeFlag(transform: suspend (OneTimeFlag) -> OneTimeFlag) {
         datastoreDataSource.updateOneTimeFlag(transform)
-    }
-
-    override val history: Flow<History> = datastoreDataSource.history
-    override suspend fun updateHistory(transform: suspend (History) -> History) {
-        datastoreDataSource.updateHistory(transform)
     }
 
     override val settings: Flow<Settings> = datastoreDataSource.settings

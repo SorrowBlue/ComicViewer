@@ -84,7 +84,7 @@ private fun SplitBookPage(
         },
         contentScale = pageScale.contentScale,
         modifier = Modifier
-            .fillMaxHeight()
+            .fillMaxSize()
             .then(modifier),
     )
 }
@@ -112,7 +112,8 @@ private fun SpreadBookPage(
                 error = rememberVectorPainter(ComicIcons.BrokenImage),
                 alignment = Alignment.CenterEnd,
                 modifier = Modifier
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .weight(1f),
             )
             AsyncImage(
                 model = BookPageRequest(book to bookPage.index),
@@ -121,7 +122,8 @@ private fun SpreadBookPage(
                 error = rememberVectorPainter(ComicIcons.BrokenImage),
                 alignment = Alignment.CenterStart,
                 modifier = Modifier
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .weight(1f),
             )
         }
     } else {
@@ -136,7 +138,7 @@ private fun SpreadBookPage(
                     onPageLoaded(bookPage, it)
                 }
 
-                else -> throw RuntimeException()
+                else -> SpreadCombineTransformation.Spread2
             },
             modifier = Modifier
                 .fillMaxSize()

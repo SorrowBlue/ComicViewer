@@ -86,7 +86,7 @@ internal fun NavGraphBuilder.mainGraph(
     libraryGroup(
         contentPadding = contentPadding,
         navController = navController,
-        navigateToBook = navController::navigateToBook,
+        navigateToBook = { navController.navigateToBook(it) },
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
         onAddOnClick = { addOn ->

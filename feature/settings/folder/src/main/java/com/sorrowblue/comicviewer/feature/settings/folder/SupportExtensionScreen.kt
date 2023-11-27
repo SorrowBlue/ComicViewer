@@ -123,7 +123,7 @@ private fun SupportExtensionScreen(
             SettingsCategory(title = R.string.settings_folder_label_document) {
                 if (!uiState.isDocumentInstalled) {
                     ListItem(
-                        headlineContent = { Text(id = R.string.settings_folder_label_require_document) },
+                        headlineContent = { Text(text = R.string.settings_folder_label_require_document) },
                         leadingContent = {
                             Icon(
                                 imageVector = ComicIcons.Info,

@@ -201,6 +201,9 @@ internal interface FileDao {
     @Query("SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC")
     fun pagingSourceHistory(): PagingSource<Int, FileEntity>
 
+    @Query("SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC LIMIT 1")
+    fun lastHistory(): Flow<FileEntity>
+
     @Query("UPDATE file SET cache_key = '' WHERE cache_key != ''")
     suspend fun deleteAllCacheKey()
 

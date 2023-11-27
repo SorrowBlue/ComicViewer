@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.feature.book.navigation
 
 import android.os.Bundle
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -24,11 +23,10 @@ const val BookRoute = "book"
 private const val BookshelfIdArg = "bookshelfId"
 private const val FavoriteIdArg = "favoriteId"
 private const val PathArg = "path"
-private const val PositionArg = "position"
 private const val NameArg = "name"
 
 private const val BookRouteBase =
-    "$BookRoute/{$BookshelfIdArg}/{$PathArg}?$FavoriteIdArg={$FavoriteIdArg}&$PositionArg={$PositionArg}&$NameArg={$NameArg}"
+    "$BookRoute/{$BookshelfIdArg}/{$PathArg}?$NameArg={$NameArg}&$FavoriteIdArg={$FavoriteIdArg}"
 
 fun NavGraphBuilder.bookGraph(
     navController: NavController,
@@ -40,10 +38,10 @@ fun NavGraphBuilder.bookGraph(
         bookScreen(
             onBackClick = onBackClick,
             onSettingsClick = onSettingsClick,
-            onNextBookClick = {
+            onNextBookClick = { book, favoriteId ->
                 navController.navigateToBook(
-                    it,
-                    -1,
+                    book = book,
+                    favoriteId = favoriteId,
                     navOptions = navOptions { popUpTo(BookRouteBase) { inclusive = true } }
                 )
             },
@@ -55,7 +53,7 @@ fun NavGraphBuilder.bookGraph(
 private fun NavGraphBuilder.bookScreen(
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onNextBookClick: (Book) -> Unit,
+    onNextBookClick: (Book, FavoriteId) -> Unit,
     contentPadding: PaddingValues,
 ) {
     composable(
@@ -72,12 +70,7 @@ private fun NavGraphBuilder.bookScreen(
                 type = NavType.IntType
                 nullable = false
                 defaultValue = -1
-            },
-            navArgument(PositionArg) {
-                type = NavType.IntType
-                nullable = false
-                defaultValue = -1
-            },
+            }
         )
     ) {
         BookRoute(
@@ -92,24 +85,11 @@ private fun NavGraphBuilder.bookScreen(
 
 fun NavController.navigateToBook(
     book: Book,
-    position: Int = -1,
+    favoriteId: FavoriteId = FavoriteId(-1),
     navOptions: NavOptions? = null,
 ) {
     navigate(
-        "$BookRoute/${book.bookshelfId.value}/${book.path.encodeToBase64()}?$PositionArg=$position&$NameArg=${book.name}",
-        navOptions
-    )
-}
-
-fun NavController.navigateToBook(
-    bookshelfId: BookshelfId,
-    path: String,
-    favoriteId: FavoriteId,
-    name: String,
-    navOptions: NavOptions? = null,
-) {
-    navigate(
-        "$BookRoute/${bookshelfId.value}/${path.encodeToBase64()}?$NameArg=$name&$FavoriteIdArg=${favoriteId.value}",
+        "$BookRoute/${book.bookshelfId.value}/${book.path.encodeToBase64()}?$NameArg=${book.name}&$FavoriteIdArg=${favoriteId.value}",
         navOptions
     )
 }
@@ -117,24 +97,14 @@ fun NavController.navigateToBook(
 class BookArgs(
     val bookshelfId: BookshelfId,
     val path: String,
-    val favoriteId: FavoriteId,
-    val position: Int,
     val name: String,
+    val favoriteId: FavoriteId = FavoriteId(-1),
 ) {
-
-    constructor(savedStateHandle: SavedStateHandle) : this(
-        BookshelfId(checkNotNull(savedStateHandle[BookshelfIdArg])),
-        (checkNotNull(savedStateHandle[PathArg]) as String).decodeFromBase64(),
-        FavoriteId(checkNotNull(savedStateHandle[FavoriteIdArg])),
-        checkNotNull(savedStateHandle[PositionArg]),
-        savedStateHandle.get<String>(NameArg).orEmpty(),
-    )
 
     constructor(bundle: Bundle) : this(
         BookshelfId(bundle.getInt(BookshelfIdArg)),
         checkNotNull(bundle.getString(PathArg)).decodeFromBase64(),
-        FavoriteId(bundle.getInt(FavoriteIdArg)),
-        bundle.getInt(PositionArg),
         bundle.getString(NameArg).orEmpty(),
+        FavoriteId(bundle.getInt(FavoriteIdArg))
     )
 }

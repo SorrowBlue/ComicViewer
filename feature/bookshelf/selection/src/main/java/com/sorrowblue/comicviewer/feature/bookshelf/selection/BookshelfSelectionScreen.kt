@@ -18,7 +18,7 @@ fun BookshelfSelectionScreen(
 ) {
     com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog(
         onDismissRequest = onBackClick,
-        title = { Text(id = R.string.bookshelf_selection_title) }
+        title = { Text(text = R.string.bookshelf_selection_title) }
     ) {
         val list = remember { BookshelfType.entries.toPersistentList() }
 

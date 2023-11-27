@@ -20,7 +20,7 @@ fun NavController.navigateToHistoryGroup() = navigate(HistoryGraphRoute)
 
 internal fun NavGraphBuilder.historyScreen(
     contentPadding: PaddingValues,
-    onFileClick: (File, Int) -> Unit,
+    onFileClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
     composable(route = HistoryRoute) {
@@ -35,7 +35,7 @@ internal fun NavGraphBuilder.historyScreen(
 fun NavGraphBuilder.historyGroup(
     contentPadding: PaddingValues,
     navController: NavController,
-    navigateToBook: (Book, Int) -> Unit,
+    navigateToBook: (Book) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onFavoriteClick: (File) -> Unit,
@@ -43,9 +43,9 @@ fun NavGraphBuilder.historyGroup(
     navigation(route = HistoryGraphRoute, startDestination = HistoryRoute) {
         historyScreen(
             contentPadding = contentPadding,
-            onFileClick = { file, position ->
+            onFileClick = { file ->
                 when (file) {
-                    is Book -> navigateToBook(file, position)
+                    is Book -> navigateToBook(file)
                     is Folder -> navController.navigateToFolder(
                         prefix = HistoryRoute,
                         bookshelfId = file.bookshelfId,
@@ -61,9 +61,9 @@ fun NavGraphBuilder.historyGroup(
             onBackClick = navController::popBackStack,
             onSearchClick = navigateToSearch,
             onSettingsClick = onSettingsClick,
-            onClickFile = { file, position ->
+            onClickFile = { file ->
                 when (file) {
-                    is Book -> navigateToBook(file, position)
+                    is Book -> navigateToBook(file)
                     is Folder -> navController.navigateToFolder(
                         HistoryRoute,
                         file.bookshelfId,

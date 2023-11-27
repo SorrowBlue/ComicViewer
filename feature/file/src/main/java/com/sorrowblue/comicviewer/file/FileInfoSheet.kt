@@ -106,7 +106,7 @@ fun FileInfoSheet(
                 PlainTooltipBox2(tooltipContent = { Text("ファイルの拡張子") }) { state ->
                     AssistChip(
                         onClick = { scope.launch { state.show() } },
-                        label = { Text(file.name.extension()) }
+                        label = { Text(file.name.extension) }
                     )
                 }
             }
@@ -229,7 +229,7 @@ fun FileInfoBottomSheet(
                     PlainTooltipBox2(tooltipContent = { Text("ファイルの拡張子") }) { state ->
                         AssistChip(
                             onClick = { scope.launch { state.show() } },
-                            label = { Text(file.name.extension()) }
+                            label = { Text(file.name.extension) }
                         )
                     }
                 }

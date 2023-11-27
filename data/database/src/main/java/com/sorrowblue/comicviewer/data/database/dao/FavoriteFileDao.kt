@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.FileEntity
@@ -35,8 +36,10 @@ internal interface FavoriteFileDao {
         }
         @Suppress("DEPRECATION")
         return pagingSource(
-            SimpleSQLiteQuery(
-                """
+            object : SupportSQLiteQuery {
+                override val argCount = 1
+
+                override val sql = """
                     SELECT
                       file.*
                     FROM
@@ -49,9 +52,12 @@ internal interface FavoriteFileDao {
                       favorite_id = :favoriteId
                     ORDER BY
                       $orderBy
-                """.trimIndent(),
-                arrayOf(favoriteId.toLong())
-            )
+                """.trimIndent()
+
+                override fun bindTo(statement: SupportSQLiteProgram) {
+                    statement.bindLong(1, favoriteId.toLong())
+                }
+            }
         )
     }
 

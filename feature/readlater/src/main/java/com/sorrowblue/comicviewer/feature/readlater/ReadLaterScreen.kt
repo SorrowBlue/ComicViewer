@@ -28,7 +28,7 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 @Composable
 internal fun ReadLaterRoute(
-    onFileClick: (File, Int) -> Unit,
+    onFileClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     contentPadding: PaddingValues,
     viewModel: ReadLaterViewModel = hiltViewModel(),
@@ -41,7 +41,7 @@ internal fun ReadLaterRoute(
         lazyPagingItems = lazyPagingItems,
         contentPadding = contentPadding,
         lazyGridState = lazyGridState,
-        onFileClick = { onFileClick(it, lazyGridState.firstVisibleItemIndex) },
+        onFileClick = onFileClick,
         onFileLongClick = { /*TODO*/ },
         onFileListTypeClick = viewModel::toggleDisplay,
         onGridSizeClick = viewModel::toggleSpanCount,

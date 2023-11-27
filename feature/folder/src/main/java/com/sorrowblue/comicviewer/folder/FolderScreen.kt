@@ -15,7 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -60,7 +62,7 @@ internal fun FolderRoute(
     onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
     onRestoreComplete: () -> Unit,
-    onClickFile: (File, Int) -> Unit,
+    onClickFile: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
     viewModel: FolderViewModel = hiltViewModel(),
@@ -76,9 +78,7 @@ internal fun FolderRoute(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onSearchClick = { onSearchClick(viewModel.bookshelfId, viewModel.path) },
-        onClickFile = {
-            onClickFile.invoke(it, lazyGridState.firstVisibleItemIndex)
-        },
+        onClickFile = onClickFile,
         lazyGridState = lazyGridState,
         isRefreshing = isRefreshing,
         pullRefreshState = pullRefreshState,
@@ -100,12 +100,17 @@ internal fun FolderRoute(
         )
     }
     LaunchedEffect(lazyPagingItems.loadState) {
-        if (0 <= viewModel.position && lazyPagingItems.loadState.refresh is LoadState.NotLoading && lazyPagingItems.itemCount > 0) {
-            val position = viewModel.position
-            viewModel.position = -1
-            onRestoreComplete()
-            lazyGridState.scrollToItem(position)
-        } else if (lazyPagingItems.isLoadedData && viewModel.isScrollableTop) {
+        if (0 < lazyPagingItems.itemCount && viewModel.restorePath != null) {
+            val index = lazyPagingItems.indexOf { it?.path == viewModel.restorePath }
+            if (0 <= index) {
+                viewModel.restorePath = null
+                lazyGridState.scrollToItem(index)
+                onRestoreComplete()
+            } else if (!lazyPagingItems.loadState.isLoading) {
+                onRestoreComplete()
+            }
+        }
+        if (lazyPagingItems.isLoadedData && viewModel.isScrollableTop) {
             viewModel.isScrollableTop = false
             lazyGridState.scrollToItem(0)
         }
@@ -117,6 +122,27 @@ internal fun FolderRoute(
             lazyPagingItems.refresh()
         }
     }
+}
+
+fun <T : Any> LazyPagingItems<T>.indexOf(op: (T?) -> Boolean): Int {
+    for (i in 0..<itemCount) {
+        if (op(get(i))) {
+            return i
+        }
+    }
+    return -1
+}
+
+val CombinedLoadStates.isLoading
+    get() =
+        source.any { it == LoadState.Loading } || mediator?.any { it == LoadState.Loading } ?: false
+
+fun LoadStates.all(op: (LoadState) -> Boolean): Boolean {
+    return op(refresh) && op(append) && op(prepend)
+}
+
+fun LoadStates.any(op: (LoadState) -> Boolean): Boolean {
+    return op(refresh) || op(append) || op(prepend)
 }
 
 @Composable

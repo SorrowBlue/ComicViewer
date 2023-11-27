@@ -20,7 +20,7 @@ data class BookFile(
     override val sortIndex: Int = -1,
 ) : Book {
 
-    val extension get() = path.extension()
+    val extension get() = path.extension
 
     override fun areContentsTheSame(file: File): Boolean {
         return if (file is BookFile) {

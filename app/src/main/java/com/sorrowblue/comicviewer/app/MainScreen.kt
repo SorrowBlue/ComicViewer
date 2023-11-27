@@ -35,7 +35,6 @@ import com.sorrowblue.comicviewer.app.component.NavHostWithSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.material3.Text
 import kotlinx.collections.immutable.toPersistentList
-import logcat.logcat
 
 internal const val MainGraphRoute = "main"
 
@@ -81,7 +80,7 @@ internal fun MainScreen(
                             )
                         },
                         label = {
-                            Text(id = it.label)
+                            Text(text = it.label)
                         }
                     )
                 }
