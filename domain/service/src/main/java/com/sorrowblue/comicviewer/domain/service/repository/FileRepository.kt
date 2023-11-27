@@ -54,7 +54,8 @@ interface FileRepository {
 
     suspend fun get2(bookshelfId: BookshelfId, path: String): Result<File?, Unit>
     suspend fun getRoot(bookshelfId: BookshelfId): Result<File?, Unit>
-    fun getNextRelFile(
+
+    fun findNextBook(
         bookshelfId: BookshelfId,
         path: String,
         isNext: Boolean,
@@ -69,4 +70,5 @@ interface FileRepository {
     suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>)
     suspend fun deleteAllDB(bookshelfId: BookshelfId)
     suspend fun deleteAllCache(id: BookshelfId)
+    fun lastHistory(): Flow<File>
 }

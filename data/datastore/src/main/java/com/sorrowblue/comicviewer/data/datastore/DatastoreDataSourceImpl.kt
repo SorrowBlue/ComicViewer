@@ -2,10 +2,10 @@ package com.sorrowblue.comicviewer.data.datastore
 
 import androidx.datastore.core.DataStore
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
-import com.sorrowblue.comicviewer.domain.model.settings.History
 import com.sorrowblue.comicviewer.domain.model.settings.OneTimeFlag
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
@@ -15,10 +15,10 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 internal class DatastoreDataSourceImpl @Inject constructor(
-    private val historyDataStore: DataStore<History>,
     private val settingsDataStore: DataStore<Settings>,
     private val displaySettingsDataStore: DataStore<DisplaySettings>,
     private val viewerSettingsDataStore: DataStore<ViewerSettings>,
+    private val bookSettingsDataStore: DataStore<BookSettings>,
     private val folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings>,
     private val folderSettingsDataStore: DataStore<FolderSettings>,
     private val viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings>,
@@ -32,10 +32,6 @@ internal class DatastoreDataSourceImpl @Inject constructor(
         oneTimeFlagDataStore.updateData(transform)
     }
 
-    override val history: Flow<History> = historyDataStore.data
-    override suspend fun updateHistory(transform: suspend (History) -> History) =
-        historyDataStore.updateData(transform)
-
     override val settings = settingsDataStore.data
     override suspend fun updateSettings(transform: suspend (Settings) -> Settings) =
         settingsDataStore.updateData(transform)
@@ -47,6 +43,10 @@ internal class DatastoreDataSourceImpl @Inject constructor(
     override val viewerSettings = viewerSettingsDataStore.data
     override suspend fun updateViewerSettings(transform: suspend (ViewerSettings) -> ViewerSettings) =
         viewerSettingsDataStore.updateData(transform)
+
+    override val bookSettings: Flow<BookSettings> = bookSettingsDataStore.data
+    override suspend fun updateBookSettings(transform: suspend (BookSettings) -> BookSettings) =
+        bookSettingsDataStore.updateData(transform)
 
     override val folderDisplaySettings = folderDisplaySettingsDataStore.data
     override suspend fun updateFolderDisplaySettings(

@@ -177,6 +177,10 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         }.flow.map { pagingData -> pagingData.map { it.toModel() } }
     }
 
+    override fun lastHistory(): Flow<File> {
+        return dao.lastHistory().map(FileEntity::toModel)
+    }
+
     override suspend fun deleteThumbnails() {
         dao.deleteAllCacheKey()
     }

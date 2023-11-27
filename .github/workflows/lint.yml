@@ -18,7 +18,7 @@ jobs:
           reviewdog_version: latest
 
       - name: lint
-        run: ./gradlew lintRelease
+        run: ./gradlew app:lintRelease
         env:
           DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
 

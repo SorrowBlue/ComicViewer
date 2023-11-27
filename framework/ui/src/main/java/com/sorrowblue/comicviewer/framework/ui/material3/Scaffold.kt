@@ -12,9 +12,10 @@ import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
 @Composable
 fun Scaffold(
-    topBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    topBar: @Composable () -> Unit = {},
     snackbarHostState: SnackbarHostState? = null,
+    floatingActionButton: @Composable () -> Unit = {},
     contentWindowInsets: WindowInsets = WindowInsets.safeDrawing,
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -25,6 +26,7 @@ fun Scaffold(
                 SnackbarHost(snackbarHostState.value)
             }
         },
+        floatingActionButton = floatingActionButton,
         containerColor = if (rememberMobile()) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainer,
         contentWindowInsets = contentWindowInsets,
         modifier = modifier,

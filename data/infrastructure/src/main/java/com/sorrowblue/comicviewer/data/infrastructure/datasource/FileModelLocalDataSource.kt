@@ -117,4 +117,5 @@ interface FileModelLocalDataSource {
     suspend fun updateHistory(file: File, files: List<File>)
     suspend fun deleteAll2(bookshelfModelId: BookshelfId)
     suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String>
+    fun lastHistory(): Flow<File>
 }

@@ -1,10 +1,10 @@
 package com.sorrowblue.comicviewer.data.infrastructure.repository.impl
 
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
-import com.sorrowblue.comicviewer.domain.model.settings.History
 import com.sorrowblue.comicviewer.domain.model.settings.OneTimeFlag
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
@@ -24,11 +24,6 @@ internal class SettingsCommonRepositoryImpl @Inject constructor(
         datastoreDataSource.updateOneTimeFlag(transform)
     }
 
-    override val history: Flow<History> = datastoreDataSource.history
-    override suspend fun updateHistory(transform: suspend (History) -> History) {
-        datastoreDataSource.updateHistory(transform)
-    }
-
     override val settings: Flow<Settings> = datastoreDataSource.settings
     override suspend fun updateSettings(transform: suspend (Settings) -> Settings) {
         datastoreDataSource.updateSettings(transform)
@@ -42,6 +37,11 @@ internal class SettingsCommonRepositoryImpl @Inject constructor(
     override val viewerSettings: Flow<ViewerSettings> = datastoreDataSource.viewerSettings
     override suspend fun updateViewerSettings(transform: suspend (ViewerSettings) -> ViewerSettings) {
         datastoreDataSource.updateViewerSettings(transform)
+    }
+
+    override val bookSettings = datastoreDataSource.bookSettings
+    override suspend fun updateBookSettings(transform: suspend (BookSettings) -> BookSettings) {
+        datastoreDataSource.updateBookSettings(transform)
     }
 
     override val folderDisplaySettings: Flow<FolderDisplaySettings> =

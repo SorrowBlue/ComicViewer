@@ -4,31 +4,28 @@ import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
-import com.sorrowblue.comicviewer.domain.service.repository.SettingsCommonRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 
 internal class GetNavigationHistoryInteractor @Inject constructor(
-    private val settingsCommonRepository: SettingsCommonRepository,
     private val bookshelfRepository: BookshelfRepository,
     private val fileRepository: FileRepository,
 ) : GetNavigationHistoryUseCase() {
     override suspend fun run(request: EmptyRequest): Result<NavigationHistory, Unit> {
-        val history = settingsCommonRepository.history.first()
-        if (history.bookshelfId == null || history.path == null) {
-            return Result.Error(
-                Unit
-            )
-        }
-        val library = bookshelfRepository.get(history.bookshelfId!!).first()
+        val history = fileRepository.lastHistory().firstOrNull() ?: return Result.Error(Unit)
+        val library = bookshelfRepository.get(history.bookshelfId).first()
         return library.fold({ lib ->
-            val a = getFolderList(lib, history.path!!).fold({
-                Result.Success(NavigationHistory(lib, it, history.position ?: 0))
+            val book = fileRepository.get(history.bookshelfId, history.path)
+                .fold({ file -> file as? Book }, { null }) ?: return Result.Error(Unit)
+            val a = getFolderList(lib, book.parent).fold({
+                Result.Success(NavigationHistory(lib, it, book))
             }, {
                 Result.Error(Unit)
             })

@@ -28,14 +28,14 @@ internal fun BookshelfSource(
     ) {
         Column(Modifier.padding(16.dp)) {
             Text(
-                id = when (type) {
+                text = when (type) {
                     BookshelfType.DEVICE -> R.string.bookshelf_selection_title_device
                     BookshelfType.SMB -> R.string.bookshelf_selection_title_smb
                 }
             )
             Row {
                 Text(
-                    id = when (type) {
+                    text = when (type) {
                         BookshelfType.DEVICE -> R.string.bookshelf_selection_desc_device
                         BookshelfType.SMB -> R.string.bookshelf_selection_desc_smb
                     },

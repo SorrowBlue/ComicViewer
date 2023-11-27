@@ -1,212 +1,212 @@
 package com.sorrowblue.comicviewer.feature.book.section
 
 import android.graphics.Bitmap
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
-internal data class BookPagerUiState(
-    val book: Book,
-    val prevBook: Book?,
-    val nextBook: Book?,
-)
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun BookPager2(
-    uiState: BookPagerUiState,
-    pagerState: PagerState,
-    currentList: SnapshotStateList<BookPage>,
-    onClick: () -> Unit,
-    onNextBookClick: (Book) -> Unit,
+internal fun BookPage(
+    book: Book,
+    page: BookPage,
+    pageScale: PageScale,
+    onPageLoaded: (UnratedPage, Bitmap) -> Unit,
 ) {
-    HorizontalPager(
-        state = pagerState,
-        beyondBoundsPageCount = 2,
-        reverseLayout = true,
-        modifier = Modifier.fillMaxSize()
-    ) { pageIndex ->
-        when (val item = currentList[pageIndex]) {
-            is BookPage.Next -> {
-                if (item.isNext) {
-                    NextBookSheet(uiState.nextBook, true, onClick = onNextBookClick)
-                } else {
-                    NextBookSheet(uiState.prevBook, false, onClick = onNextBookClick)
-                }
-            }
+    when (page) {
+        is BookPage.Default -> DefaultBookPage(book = book, bookPage = page, pageScale = pageScale)
+        is BookPage.Spread -> SpreadBookPage(
+            book = book,
+            bookPage = page,
+            pageScale = pageScale,
+            onPageLoaded = onPageLoaded
+        )
 
-            is BookPage.Split -> BookSplitPage(currentList, uiState.book, item, onClick)
-        }
+        is BookPage.Split -> SplitBookPage(
+            book = book,
+            bookPage = page,
+            pageScale = pageScale,
+            onPageLoaded = onPageLoaded
+        )
     }
 }
 
 @Composable
-fun BookSplitPage(
-    currentList: SnapshotStateList<BookPage>,
+private fun DefaultBookPage(
     book: Book,
-    bookPage: BookPage.Split,
-    onClick: () -> Unit,
+    bookPage: BookPage.Default,
+    pageScale: PageScale,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = Modifier
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick
-            )
-            .then(modifier),
-        contentAlignment = Alignment.Center
-    ) {
-        when (bookPage.state) {
-            BookPage.Split.State.NOT_LOADED -> {
-                AsyncImage(
-                    model = BookPageRequest(book to bookPage.index),
-                    contentDescription = null,
-                    transform = {
-                        if (it is AsyncImagePainter.State.Success) {
-                            val input = it.result.drawable.toBitmap()
-                            if (input.height <= input.width) {
-                                // 分割表示する必要あり
-                                val index: Int
-                                currentList.apply {
-                                    index = indexOf(bookPage)
-                                    if (0 < index) {
-                                        set(
-                                            index,
-                                            bookPage.copy(state = BookPage.Split.State.LOADED_SPLIT_RIGHT)
-                                        )
-                                        add(
-                                            index + 1,
-                                            bookPage.copy(state = BookPage.Split.State.LOADED_SPLIT_LEFT)
-                                        )
-                                    }
-                                }
-                                it.copy(
-                                    painter = BitmapPainter(
-                                        Bitmap.createBitmap(
-                                            input,
-                                            input.width / 2,
-                                            0,
-                                            input.width / 2,
-                                            input.height
-                                        ).asImageBitmap()
-                                    )
-                                )
-                            } else {
-                                // 分割表示する必要なし
-                                val index: Int
-                                currentList.apply {
-                                    index = indexOf(bookPage)
-                                    if (0 < index) {
-                                        set(
-                                            index,
-                                            bookPage.copy(state = BookPage.Split.State.LOADED_SPLIT_NON)
-                                        )
-                                    }
-                                }
-                                it
-                            }
-                        } else {
-                            it
-                        }
-                    },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            BookPage.Split.State.LOADED_SPLIT_NON -> {
-                AsyncImage(
-                    model = BookPageRequest(book to bookPage.index),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            BookPage.Split.State.LOADED_SPLIT_LEFT -> BookImage(book, bookPage.index, isLeft = true)
-            BookPage.Split.State.LOADED_SPLIT_RIGHT -> BookImage(
-                book,
-                bookPage.index,
-                isLeft = false
-            )
-        }
-    }
-}
-
-@Composable
-fun BookImage(book: Book, index: Int, isLeft: Boolean, modifier: Modifier = Modifier) {
     AsyncImage(
-        model = BookPageRequest(book to index),
+        model = BookPageRequest(book to bookPage.index),
+        contentScale = pageScale.contentScale,
         contentDescription = null,
-        transform = {
-            if (it is AsyncImagePainter.State.Success) {
-                it.copy(
-                    painter = BitmapPainter(
-                        mihirakiSplitTransformation(
-                            it.result.drawable.toBitmap(),
-                            isLeft
-                        ).asImageBitmap()
-                    )
-                )
-            } else {
-                it
-            }
-        },
-        modifier = modifier.fillMaxSize()
+        filterQuality = FilterQuality.None,
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier),
     )
 }
 
-enum class BookViewType {
-    NExT,
-    SPLIT,
+@Composable
+private fun SplitBookPage(
+    book: Book,
+    bookPage: BookPage.Split,
+    pageScale: PageScale,
+    onPageLoaded: (UnratedPage, Bitmap) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    AsyncImage(
+        model = BookPageRequest(book to bookPage.index),
+        contentDescription = null,
+        transform = when (bookPage) {
+            is BookPage.Split.Unrated -> SpreadSplitTransformation.unrated {
+                onPageLoaded(bookPage, it)
+            }
+
+            is BookPage.Split.Single -> SpreadSplitTransformation.Single
+            is BookPage.Split.Left -> SpreadSplitTransformation.Left
+            is BookPage.Split.Right -> SpreadSplitTransformation.Right
+        },
+        contentScale = pageScale.contentScale,
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier),
+    )
 }
 
-sealed interface BookPage {
+@Composable
+private fun SpreadBookPage(
+    book: Book,
+    bookPage: BookPage.Spread,
+    pageScale: PageScale,
+    onPageLoaded: (UnratedPage, Bitmap) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (bookPage is BookPage.Spread.Combine) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxHeight()
+                .then(modifier)
+        ) {
+            AsyncImage(
+                model = BookPageRequest(book to bookPage.nextIndex),
+                contentDescription = null,
+                contentScale = pageScale.contentScale,
+                error = rememberVectorPainter(ComicIcons.BrokenImage),
+                alignment = Alignment.CenterEnd,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f),
+            )
+            AsyncImage(
+                model = BookPageRequest(book to bookPage.index),
+                contentDescription = null,
+                contentScale = pageScale.contentScale,
+                error = rememberVectorPainter(ComicIcons.BrokenImage),
+                alignment = Alignment.CenterStart,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f),
+            )
+        }
+    } else {
+        AsyncImage(
+            model = BookPageRequest(book to bookPage.index),
+            contentDescription = null,
+            contentScale = pageScale.contentScale,
+            transform = when (bookPage) {
+                is BookPage.Spread.Single -> SpreadCombineTransformation.Single
+                is BookPage.Spread.Spread2 -> SpreadCombineTransformation.Spread2
+                is BookPage.Spread.Unrated -> SpreadCombineTransformation.unrated {
+                    onPageLoaded(bookPage, it)
+                }
 
-    val viewType: BookViewType
+                else -> SpreadCombineTransformation.Spread2
+            },
+            modifier = Modifier
+                .fillMaxSize()
+                .then(modifier),
+        )
+    }
+}
 
-    data class Next(val isNext: Boolean) : BookPage {
-
-        override val viewType = BookViewType.NExT
+object SpreadCombineTransformation {
+    fun unrated(change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->
+        if (state is AsyncImagePainter.State.Success) {
+            change(state.result.drawable.toBitmap())
+            state
+        } else {
+            state
+        }
     }
 
-    data class Split(val index: Int, val state: State) : BookPage {
+    val Single = AsyncImagePainter.DefaultTransform
+    val Spread2 = AsyncImagePainter.DefaultTransform
+}
 
-        override val viewType = BookViewType.SPLIT
+object SpreadSplitTransformation {
 
-        enum class State {
-            NOT_LOADED,
-            LOADED_SPLIT_NON,
-            LOADED_SPLIT_LEFT,
-            LOADED_SPLIT_RIGHT,
+    fun unrated(
+        change: (Bitmap) -> Unit,
+    ) = { state: AsyncImagePainter.State ->
+        if (state is AsyncImagePainter.State.Success) {
+            change(state.result.drawable.toBitmap())
+            state
+        } else {
+            state
+        }
+    }
+
+    val Single = AsyncImagePainter.DefaultTransform
+    val Left = { state: AsyncImagePainter.State ->
+        if (state is AsyncImagePainter.State.Success) {
+            state.copy(
+                painter = BitmapPainter(
+                    state.result.drawable.toBitmap().createSplitBitmap(true).asImageBitmap()
+                )
+            )
+        } else {
+            state
+        }
+    }
+    val Right = { state: AsyncImagePainter.State ->
+        if (state is AsyncImagePainter.State.Success) {
+            state.copy(
+                painter = BitmapPainter(
+                    state.result.drawable.toBitmap().createSplitBitmap(false).asImageBitmap()
+                )
+            )
+        } else {
+            state
         }
     }
 }
 
-fun mihirakiSplitTransformation(input: Bitmap, isLeft: Boolean): Bitmap {
+private fun Bitmap.createSplitBitmap(isLeft: Boolean): Bitmap {
     return Bitmap.createBitmap(
-        input,
-        if (isLeft) 0 else input.width / 2,
+        this,
+        if (isLeft) 0 else this.width / 2,
         0,
-        input.width / 2,
-        input.height
+        this.width / 2,
+        this.height
     ).apply {
-        input.recycle()
+        this@createSplitBitmap.recycle()
     }
 }

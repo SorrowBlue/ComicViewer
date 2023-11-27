@@ -56,7 +56,7 @@ internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
             favoriteFileEntity.filePath,
             true,
             sortEntity
-        ).map { it?.toModel() }
+        ).map { it.firstOrNull()?.toModel() }
     }
 
     override fun flowPrevFavoriteFile(
@@ -70,6 +70,6 @@ internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
             favoriteFileEntity.filePath,
             false,
             sortEntity
-        ).map { it?.toModel() }
+        ).map { it.firstOrNull()?.toModel() }
     }
 }

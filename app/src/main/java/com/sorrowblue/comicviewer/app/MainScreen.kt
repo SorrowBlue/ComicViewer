@@ -2,6 +2,15 @@ package com.sorrowblue.comicviewer.app
 
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.adaptive.navigation.suite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
+import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -10,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -21,17 +31,17 @@ import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.sorrowblue.comicviewer.app.component.AppFab
-import com.sorrowblue.comicviewer.app.component.AppNavigationBar
-import com.sorrowblue.comicviewer.app.component.AppNavigationRail
 import com.sorrowblue.comicviewer.app.component.NavHostWithSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.CommonViewModel
-import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveLayout
-import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveLayoutState
+import com.sorrowblue.comicviewer.framework.ui.material3.Text
 import kotlinx.collections.immutable.toPersistentList
 
 internal const val MainGraphRoute = "main"
 
-@OptIn(ExperimentalMaterialNavigationApi::class)
+@OptIn(
+    ExperimentalMaterialNavigationApi::class,
+    ExperimentalMaterial3AdaptiveNavigationSuiteApi::class
+)
 @Composable
 internal fun MainScreen(
     bottomSheetNavigator: BottomSheetNavigator,
@@ -54,54 +64,70 @@ internal fun MainScreen(
             currentFab = backStackEntry?.destination?.hierarchy?.firstOrNull()?.route?.routeToFab()
         }
     }
-    val responsiveLayoutState = rememberResponsiveLayoutState()
-    ResponsiveLayout(
-        state = responsiveLayoutState,
-        navigationRail = {
-            AppNavigationRail(
-                mainScreenTabs = mainScreenTabs,
-                currentTab = currentTab,
-                onTabSelected = { tab -> onTabSelected(navController, tab) },
-                currentFab = currentFab,
-                onFabClick = { fab -> onFabClick(navController, fab) }
-            )
-        },
-        navigationBar = {
-            AppNavigationBar(
-                mainScreenTabs = mainScreenTabs,
-                currentTab = currentTab,
-                onTabSelected = { tab -> onTabSelected(navController, tab) },
-            )
-        },
-        floatingActionButton = {
-            AppFab(currentFab, viewModel.canScroll) {
-                onFabClick(navController, currentFab!!)
-            }
-        }
-    ) { contentPadding ->
-        ModalBottomSheetLayout(bottomSheetNavigator) {
-            NavHostWithSharedAxisX(
-                navController = navController,
-                route = MainGraphRoute,
-                startDestination = startDestination,
-                modifier = Modifier
+    if (currentTab != null) {
+        NavigationSuiteScaffold(
+            navigationSuiteItems = {
+                mainScreenTabs.forEach {
+                    item(
+                        selected = it == currentTab,
+                        onClick = {
+                            onTabSelected(navController, it)
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = it.icon,
+                                contentDescription = stringResource(id = it.label)
+                            )
+                        },
+                        label = {
+                            Text(text = it.label)
+                        }
+                    )
+                }
+            },
+            modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Start))
+        ) {
+            com.sorrowblue.comicviewer.framework.ui.material3.Scaffold(
+                floatingActionButton = {
+                    if (currentFab != null) {
+                        AppFab(currentFab, viewModel.canScroll) {
+                            onFabClick(navController, currentFab!!)
+                        }
+                    }
+                }
             ) {
-                navGraph(navController, contentPadding)
+                ModalBottomSheetLayout(bottomSheetNavigator) {
+                    NavHostWithSharedAxisX(
+                        navController = navController,
+                        route = MainGraphRoute,
+                        startDestination = startDestination,
+                        modifier = Modifier
+                    ) {
+                        navGraph(navController, it)
+                    }
+                }
             }
         }
-    }
-    LaunchedEffect(currentTab) {
-        if (currentTab != null) {
-            responsiveLayoutState.navigationState.show()
-        } else {
-            responsiveLayoutState.navigationState.hide()
-        }
-    }
-    LaunchedEffect(currentFab) {
-        if (currentFab != null) {
-            responsiveLayoutState.fabState.show()
-        } else {
-            responsiveLayoutState.fabState.hide()
+    } else {
+        Scaffold(
+            floatingActionButton = {
+                if (currentFab != null) {
+                    AppFab(currentFab, viewModel.canScroll) {
+                        onFabClick(navController, currentFab!!)
+                    }
+                }
+            }
+        ) {
+            ModalBottomSheetLayout(bottomSheetNavigator) {
+                NavHostWithSharedAxisX(
+                    navController = navController,
+                    route = MainGraphRoute,
+                    startDestination = startDestination,
+                    modifier = Modifier
+                ) {
+                    navGraph(navController, it)
+                }
+            }
         }
     }
 }

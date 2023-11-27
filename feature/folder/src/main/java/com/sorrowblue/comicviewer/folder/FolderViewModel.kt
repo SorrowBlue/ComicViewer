@@ -49,7 +49,7 @@ internal class FolderViewModel @Inject constructor(
     private val args = FolderArgs(savedStateHandle)
     val bookshelfId = args.bookshelfId
     val path = args.path
-    var position = args.position
+    var restorePath = args.restorePath
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagingDataFlow: Flow<PagingData<File>> = pagingFileUseCase.execute(

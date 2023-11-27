@@ -30,7 +30,7 @@ internal fun AppearanceDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(id = R.string.settings_display_label_appearance) }
+        title = { Text(text = R.string.settings_display_label_appearance) }
     ) {
         Column(Modifier.padding(it.copy(start = 0.dp, end = 0.dp))) {
             DarkMode.entries.forEach { darkMode ->
@@ -46,7 +46,7 @@ internal fun AppearanceDialog(
                         selected = darkMode == currentDarkMode,
                     )
                     Spacer(modifier = Modifier.size(24.dp))
-                    Text(id = darkMode.label)
+                    Text(text = darkMode.label)
                 }
             }
         }

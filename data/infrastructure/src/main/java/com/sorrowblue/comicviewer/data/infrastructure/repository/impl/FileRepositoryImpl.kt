@@ -231,7 +231,7 @@ internal class FileRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getNextRelFile(
+    override fun findNextBook(
         bookshelfId: BookshelfId,
         path: String,
         isNext: Boolean,
@@ -253,5 +253,9 @@ internal class FileRepositoryImpl @Inject constructor(
 
     override fun pagingHistoryBookFlow(pagingConfig: PagingConfig): Flow<PagingData<File>> {
         return fileModelLocalDataSource.pagingHistoryBookSource(pagingConfig)
+    }
+
+    override fun lastHistory(): Flow<File> {
+        return fileModelLocalDataSource.lastHistory()
     }
 }

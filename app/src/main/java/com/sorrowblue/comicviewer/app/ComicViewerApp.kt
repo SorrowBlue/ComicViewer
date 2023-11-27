@@ -237,14 +237,14 @@ internal fun ComicViewerApp(
                 }
 
             is ComicViewerAppUiEvent.RestoreHistory -> {
-                val (bookshelf, folderList, position) = uiEvent.history.triple
+                val (bookshelf, folderList, book) = uiEvent.history.triple
                 if (folderList.isEmpty()) {
                     viewModel.completeRestoreHistory()
                 } else if (folderList.size == 1) {
                     navController.navigateToBookshelfFolder(
                         bookshelf.id,
                         folderList.first().path,
-                        position
+                        book.path
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelf.id}) -> folder(${folderList.first().path})"
@@ -266,10 +266,10 @@ internal fun ComicViewerApp(
                     navController.navigateToBookshelfFolder(
                         bookshelf.id,
                         folderList.last().path,
-                        position
+                        book.path
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "-> folder${folderList.last().path}, $position"
+                        "-> folder${folderList.last().path}, ${book.path}"
                     }
                 }
             }

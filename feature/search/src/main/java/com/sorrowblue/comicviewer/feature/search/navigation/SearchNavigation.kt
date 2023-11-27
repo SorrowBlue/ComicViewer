@@ -81,22 +81,22 @@ private const val SearchGraph = "search_graph"
 fun NavGraphBuilder.searchGraph(
     contentPadding: PaddingValues,
     navController: NavController,
-    onBookClick: (BookshelfId, String, Int) -> Unit,
-    onSettingsClick: () -> Unit,
-    onFavoriteClick: (File) -> Unit,
+    navigateToBook: (Book) -> Unit,
+    navigateToSettings: () -> Unit,
+    navigateToFavoriteAdd: (File) -> Unit,
 ) {
     navigation(route = SearchGraph, startDestination = SearchRoute) {
         searchScreen(
             onBackClick = navController::popBackStack,
             onFileClick = { file ->
                 when (file) {
-                    is Book -> onBookClick(file.bookshelfId, file.path, -1)
+                    is Book -> navigateToBook(file)
                     is Folder ->
                         navController.navigateToFolder(SearchRoute, file.bookshelfId, file.path)
                 }
             },
             contentPadding = contentPadding,
-            onFavoriteClick = onFavoriteClick,
+            onFavoriteClick = navigateToFavoriteAdd,
             onOpenFolderClick = {
                 navController.navigateToFolder(SearchRoute, it.bookshelfId, it.parent)
             }
@@ -105,16 +105,20 @@ fun NavGraphBuilder.searchGraph(
         folderScreen(
             prefix = SearchRoute,
             contentPadding = contentPadding,
-            navigateToSearch = navController::navigateToSearch,
-            onClickFile = { file, position ->
+            onBackClick = navController::popBackStack,
+            onSearchClick = navController::navigateToSearch,
+            onSettingsClick = navigateToSettings,
+            onClickFile = { file ->
                 when (file) {
-                    is Book -> onBookClick(file.bookshelfId, file.path, position)
-                    is Folder ->
-                        navController.navigateToFolder(SearchRoute, file.bookshelfId, file.path)
+                    is Book -> navigateToBook(file)
+                    is Folder -> navController.navigateToFolder(
+                        SearchRoute,
+                        file.bookshelfId,
+                        file.path
+                    )
                 }
             },
-            onSettingsClick = onSettingsClick,
-            onBackClick = navController::popBackStack,
+            onFavoriteClick = navigateToFavoriteAdd
         )
     }
 }

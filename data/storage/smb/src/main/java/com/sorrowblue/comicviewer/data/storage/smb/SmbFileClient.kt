@@ -242,7 +242,7 @@ internal class SmbFileClient @AssistedInject constructor(
     }
 
     private fun SmbFile.toFileModel(resolveImageFolder: Boolean = false): File {
-        if (resolveImageFolder && isDirectory && listFiles().any { it.name.extension() in SUPPORTED_IMAGE }) {
+        if (resolveImageFolder && isDirectory && listFiles().any { it.name.extension in SUPPORTED_IMAGE }) {
             return BookFolder(
                 path = url.path,
                 bookshelfId = bookshelf.id,

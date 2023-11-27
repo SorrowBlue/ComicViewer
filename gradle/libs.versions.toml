@@ -17,7 +17,7 @@ androidx-work = "2.8.1"
 androidx-compose-compiler = "1.5.4"
 
 google-dagger = "2.48.1"
-android-gradle = "8.1.4"
+android-gradle = "8.2.0-rc03"
 
 detekt = "1.23.3"
 mikepenz-aboutlibraries = "10.9.2"
@@ -79,6 +79,8 @@ androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-mani
 androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util" }
 androidx-compose-material = { module = "androidx.compose.material:material" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-compose-material3-adaptive = { group = "androidx.compose.material3", name = "material3-adaptive", version = "1.0.0-alpha01" }
+androidx-compose-material3-adaptiveNavigationSuite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version = "1.0.0-alpha01" }
 androidx-compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class" }
 
 androidx-activity-compose = "androidx.activity:activity-compose:1.8.1"
@@ -161,7 +163,7 @@ google-dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", vers
 junit = "junit:junit:4.13.2"
 box-java-sdk = "com.box:box-java-sdk:4.6.1"
 
-microsoft-identity-client-msal = "com.microsoft.identity.client:msal:4.9.2"
+microsoft-identity-client-msal = "com.microsoft.identity.client:msal:4.10.0"
 microsoft-graph = "com.microsoft.graph:microsoft-graph:5.76.0"
 
 androidx-test-core-ktx = "androidx.test:core-ktx:1.5.0"

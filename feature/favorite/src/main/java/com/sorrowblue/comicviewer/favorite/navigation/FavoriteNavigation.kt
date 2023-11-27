@@ -32,7 +32,7 @@ internal fun NavGraphBuilder.favoriteScreen(
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,
-    onClickFile: (File, Int) -> Unit,
+    onClickFile: (File, FavoriteId) -> Unit,
     onClickLongFile: (File) -> Unit,
 ) {
     composable(

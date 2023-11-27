@@ -17,44 +17,56 @@ import com.sorrowblue.comicviewer.folder.FolderRoute
 private const val BookshelfIdArg = "bookshelfId"
 private const val PathArg = "path"
 private const val PositionArg = "position"
+private const val RestorePathArg = "restorePath"
 
 internal class FolderArgs(
     val bookshelfId: BookshelfId,
     val path: String,
     val position: Int,
+    val restorePath: String?,
 ) {
     constructor(savedStateHandle: SavedStateHandle) : this(
         BookshelfId(checkNotNull(savedStateHandle[BookshelfIdArg])),
         (checkNotNull(savedStateHandle[PathArg]) as String).decodeFromBase64(),
-        checkNotNull(savedStateHandle[PositionArg])
+        checkNotNull(savedStateHandle[PositionArg]),
+        savedStateHandle.get<String>(RestorePathArg)?.decodeFromBase64()
     )
 }
 
 private const val FolderRoute = "folder"
 
 fun folderRoute(prefix: String) =
-    "$prefix/$FolderRoute/{$BookshelfIdArg}/{$PathArg}?position={$PositionArg}"
+    "$prefix/$FolderRoute/{$BookshelfIdArg}/{$PathArg}?position={$PositionArg}&$RestorePathArg={$RestorePathArg}"
 
 fun NavController.navigateToFolder(
     prefix: String,
     bookshelfId: BookshelfId,
     path: String,
     position: Int = -1,
+    restorePath: String? = null,
     navOptions: NavOptions? = null,
 ) {
-    navigate(
-        "$prefix/$FolderRoute/${bookshelfId.value}/${path.encodeToBase64()}?position=$position",
-        navOptions
-    )
+    if (restorePath != null) {
+        navigate(
+            "$prefix/$FolderRoute/${bookshelfId.value}/${path.encodeToBase64()}?position=$position&$RestorePathArg=${restorePath.encodeToBase64()}",
+            navOptions
+        )
+    } else {
+        navigate(
+            "$prefix/$FolderRoute/${bookshelfId.value}/${path.encodeToBase64()}?position=$position",
+            navOptions
+        )
+    }
 }
 
 fun NavGraphBuilder.folderScreen(
     prefix: String,
     contentPadding: PaddingValues,
-    navigateToSearch: (BookshelfId, String) -> Unit,
-    onClickFile: (File, Int) -> Unit,
-    onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
+    onSearchClick: (BookshelfId, String) -> Unit,
+    onSettingsClick: () -> Unit,
+    onClickFile: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
     onRestoreComplete: () -> Unit = {},
 ) {
     composable(
@@ -63,17 +75,22 @@ fun NavGraphBuilder.folderScreen(
             navArgument(BookshelfIdArg) { type = NavType.IntType },
             navArgument(PathArg) { type = NavType.StringType },
             navArgument(PositionArg) { type = NavType.IntType },
+            navArgument(RestorePathArg) {
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            },
         )
     ) {
         FolderRoute(
             contentPadding = contentPadding,
-            onSearchClick = navigateToSearch,
+            onSearchClick = onSearchClick,
             onSettingsClick = onSettingsClick,
             onBackClick = onBackClick,
             onRestoreComplete = onRestoreComplete,
             onClickFile = onClickFile,
             onOpenFolderClick = {},
-            onFavoriteClick = {}
+            onFavoriteClick = onFavoriteClick
         )
     }
 }

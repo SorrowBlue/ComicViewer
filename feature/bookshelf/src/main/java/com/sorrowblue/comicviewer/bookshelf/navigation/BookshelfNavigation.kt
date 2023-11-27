@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.bookshelf.BookshelfRoute
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.bookshelfEditScreen
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.navigateToBookshelfEdit
@@ -25,6 +26,15 @@ val routeInBookshelfGraph get() = listOf(BookshelfRoute, folderRoute(BookshelfRo
 
 fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String, position: Int = -1) {
     navigateToFolder(prefix = BookshelfRoute, bookshelfId = id, path = path, position = position)
+}
+
+fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String, restorePath: String) {
+    navigateToFolder(
+        prefix = BookshelfRoute,
+        bookshelfId = id,
+        path = path,
+        restorePath = restorePath
+    )
 }
 
 private fun NavGraphBuilder.bookshelfScreen(
@@ -52,9 +62,10 @@ fun NavGraphBuilder.bookshelfGraph(
     contentPadding: PaddingValues,
     navController: NavController,
     onSettingsClick: () -> Unit,
-    navigateToBook: (BookshelfId, String, Int) -> Unit,
+    navigateToBook: (Book) -> Unit,
     navigateToSearch: (BookshelfId, String) -> Unit,
     onRestoreComplete: () -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
     navigation(route = BookshelfGraphRoute, startDestination = BookshelfRoute) {
         bookshelfScreen(
@@ -79,10 +90,12 @@ fun NavGraphBuilder.bookshelfGraph(
         folderScreen(
             prefix = BookshelfRoute,
             contentPadding = contentPadding,
-            navigateToSearch = navigateToSearch,
-            onClickFile = { file, position ->
+            onBackClick = navController::popBackStack,
+            onSearchClick = navigateToSearch,
+            onSettingsClick = onSettingsClick,
+            onClickFile = { file ->
                 when (file) {
-                    is Book -> navigateToBook(file.bookshelfId, file.path, position)
+                    is Book -> navigateToBook(file)
                     is Folder -> navController.navigateToFolder(
                         prefix = BookshelfRoute,
                         bookshelfId = file.bookshelfId,
@@ -90,9 +103,8 @@ fun NavGraphBuilder.bookshelfGraph(
                     )
                 }
             },
-            onSettingsClick = onSettingsClick,
-            onBackClick = navController::popBackStack,
             onRestoreComplete = onRestoreComplete,
+            onFavoriteClick = onFavoriteClick
         )
     }
 }

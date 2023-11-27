@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RawQuery
+import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileEntity
@@ -34,27 +35,30 @@ internal interface FavoriteFileDao {
             is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
         }
         @Suppress("DEPRECATION")
-        return pagingSource(object : SupportSQLiteQuery {
-            override val argCount = 1
-            override val sql = """
-                SELECT
-                  file.*
-                FROM
-                  favorite_file
-                INNER JOIN
-                  file
-                ON
-                  favorite_file.bookshelf_id = file.bookshelf_id AND favorite_file.file_path = file.path
-                WHERE
-                  favorite_id = :favoriteId
-                ORDER BY
-                  $orderBy
-            """.trimIndent()
+        return pagingSource(
+            object : SupportSQLiteQuery {
+                override val argCount = 1
 
-            override fun bindTo(statement: SupportSQLiteProgram) {
-                statement.bindLong(1, favoriteId.toLong())
+                override val sql = """
+                    SELECT
+                      file.*
+                    FROM
+                      favorite_file
+                    INNER JOIN
+                        file
+                    ON
+                      favorite_file.bookshelf_id = file.bookshelf_id AND favorite_file.file_path = file.path
+                    WHERE
+                      favorite_id = :favoriteId
+                    ORDER BY
+                      $orderBy
+                """.trimIndent()
+
+                override fun bindTo(statement: SupportSQLiteProgram) {
+                    statement.bindLong(1, favoriteId.toLong())
+                }
             }
-        })
+        )
     }
 
     @Query(
@@ -64,7 +68,7 @@ internal interface FavoriteFileDao {
 
     @Deprecated("使用禁止")
     @RawQuery(observedEntities = [FileEntity::class])
-    fun flowPrevNext(supportSQLiteQuery: SupportSQLiteQuery): Flow<FileEntity?>
+    fun flowPrevNext(supportSQLiteQuery: SupportSQLiteQuery): Flow<List<FileEntity>>
 
     fun flowPrevNext(
         favoriteId: Int,
@@ -72,7 +76,7 @@ internal interface FavoriteFileDao {
         path: String,
         isNext: Boolean,
         sortType: SortType,
-    ): Flow<FileEntity?> {
+    ): Flow<List<FileEntity>> {
         val column = when (sortType) {
             is SortType.NAME -> "sort_index"
             is SortType.DATE -> "last_modified"
@@ -80,51 +84,32 @@ internal interface FavoriteFileDao {
         }
         val comparison = if (isNext && sortType.isAsc) ">=" else "<="
         val order = if (isNext && sortType.isAsc) "ASC" else "DESC"
-        val sqLiteQuery = object : SupportSQLiteQuery {
-            override val argCount = 3
-            override val sql = """
-                WITH
-                  tmp as (
-                    SELECT
-                      file.*
-                    FROM
-                      favorite_file
-                    INNER JOIN
-                      file
-                    ON
-                      favorite_file.favorite_id = :favoriteId
-                      AND favorite_file.bookshelf_id = file.bookshelf_id
-                      AND favorite_file.file_path = file.path
-                  )
-                SELECT
-                  *
-                FROM
-                  tmp
-                  , (
-                    SELECT
-                      path c_path, $column c_$column
-                    FROM
-                      tmp
-                    WHERE
-                      bookshelf_id = :bookshelfId AND path = :path
-                  )
-                WHERE
-                  file_type != 'FOLDER'
-                  AND path != c_path
-                  AND $column $comparison c_$column
-                ORDER BY
-                  $column $order
-                LIMIT 1
-                ;
-            """.trimIndent()
-
-            override fun bindTo(statement: SupportSQLiteProgram) {
-                statement.bindLong(1, favoriteId.toLong())
-                statement.bindLong(2, bookshelfId.toLong())
-                statement.bindString(3, path)
-            }
-        }
         @Suppress("DEPRECATION")
-        return flowPrevNext(sqLiteQuery)
+        return flowPrevNext(
+            SimpleSQLiteQuery(
+                """
+                    WITH
+                      tmp as (
+                        SELECT file.*
+                        FROM favorite_file
+                        INNER JOIN file ON
+                          favorite_file.favorite_id = :favoriteId
+                          AND favorite_file.bookshelf_id = file.bookshelf_id
+                          AND favorite_file.file_path = file.path
+                      )
+                    SELECT *
+                    FROM tmp, (
+                      SELECT path c_path, $column c_$column
+                      FROM tmp
+                      WHERE bookshelf_id = :bookshelfId AND path = :path
+                    )
+                    WHERE file_type != 'FOLDER' AND path != c_path AND $column $comparison c_$column
+                    ORDER BY $column $order 
+                    LIMIT 1
+                    ;
+                """.trimIndent(),
+                arrayOf(favoriteId.toLong(), bookshelfId.toLong(), path)
+            )
+        )
     }
 }

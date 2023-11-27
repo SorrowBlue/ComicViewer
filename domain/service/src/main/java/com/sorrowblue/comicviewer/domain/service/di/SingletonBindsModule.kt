@@ -1,9 +1,11 @@
 package com.sorrowblue.comicviewer.domain.service.di
 
+import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageBookSettingsInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageDisplaySettingsInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageFolderSettingsInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageViewerOperationSettingsInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageViewerSettingsInteractor
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
@@ -34,6 +36,12 @@ internal interface SingletonBindsModule {
     fun bindManageViewerSettingsUseCase(
         interactor: ManageViewerSettingsInteractor,
     ): ManageViewerSettingsUseCase
+
+    @Binds
+    @Singleton
+    fun bindManageBookSettingsUseCase(
+        interactor: ManageBookSettingsInteractor,
+    ): ManageBookSettingsUseCase
 
     @Binds
     @Singleton

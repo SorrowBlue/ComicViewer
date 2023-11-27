@@ -33,7 +33,7 @@ import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveScaf
 
 @Composable
 internal fun HistoryRoute(
-    onFileClick: (File, Int) -> Unit,
+    onFileClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     contentPadding: PaddingValues,
     viewModel: HistoryViewModel = hiltViewModel(),
@@ -47,7 +47,7 @@ internal fun HistoryRoute(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         scaffoldState = scaffoldState,
-        onFileClick = { onFileClick(it, lazyGridState.firstVisibleItemIndex) },
+        onFileClick = onFileClick,
         onFileLongClick = scaffoldState.sheetState::show,
         onFileListTypeClick = viewModel::toggleDisplay,
         onGridSizeClick = viewModel::onGridSizeChange,
