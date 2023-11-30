@@ -1,0 +1,24 @@
+# ComicViewer
+
+[![Detekt & Lint & Build](https://github.com/SorrowBlue/ComicViewer/actions/workflows/detekt-lint-build.yml/badge.svg?branch=main)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/detekt-lint-build.yml)
+[![Qodana](https://github.com/SorrowBlue/ComicViewer/actions/workflows/qodana.yml/badge.svg?branch=main)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/qodana.yml)
+
+
+[Privacy Policy](./privacy_policy.md)  
+[Terms & Conditions ](./teams_conditions.md)
+
+<a href='https://play.google.com/store/apps/details?id=com.sorrowblue.comicviewer&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+    <img alt='Get it on Google Play' src='https://play.google.com/intl/ja/badges/static/images/badges/en_badge_web_generic.png' width="280" />
+</a>
+
+
+## Testing
+> [!WARNING]
+> Play Internal App Sharing is a link for test apps. Please note that this is not for product use.
+
+You can install a test app using Play Internal App Sharing from the following link.
+[Play Internal App Sharing](https://play.google.com/apps/test/RQqr1za23JM/ahAO29uNQBwjGemlc-_QWQ1vLdx6aGDDbFxT-BaKkbDZtROVsy6hgjZ8ijOFkIMF5EGiCz8iDQqZLsFDoGIzBL03zi)
+
+
+---
+Google Play and the Google Play logo are trademarks of Google LLC.
