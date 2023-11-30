@@ -151,7 +151,7 @@ slf4j-android = "org.slf4j:slf4j-android:1.7.36"
 sorrowblue-binding-ktx = "com.sorrowblue.jetpack:binding-ktx:3.0.5"
 github-omicronapps-SevenZipJBinding4Android = "com.github.omicronapps:7-Zip-JBinding-4Android:Release-16.02-2.02"
 
-artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.23.5"
+artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.23.7"
 squareup-logcat = "com.squareup.logcat:logcat:0.1"
 chrisbanes-insetter = "dev.chrisbanes.insetter:insetter-dbx:0.6.1"
 fasterxml-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.16.0"
