@@ -27,8 +27,8 @@ internal class MainApplication : SplitCompatApplication(), Configuration.Provide
         }
     }
 
-    override fun getWorkManagerConfiguration() =
-        Configuration.Builder().setWorkerFactory(workerFactory).build()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder().setWorkerFactory(workerFactory).build()
 }
 
 @Suppress("InjectDispatcher")
