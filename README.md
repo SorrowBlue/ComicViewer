@@ -16,7 +16,9 @@
 > [!WARNING]
 > Play Internal App Sharing is a link for test apps. Please note that this is not for product use.
 
-This app is under development and you can receive PlayStore promo codes. Please [email](<mailto:sorrowblue.dev@gmail.com>) There is no problem with Japanese.
+This app is under development and you can receive PlayStore promo codes. Please
+ [email](<mailto:sorrowblue.dev@gmail.com?subject=[ComicViewer Tester]&body=I would like a promo code.>)
+. There is no problem with Japanese.
 
 
 Alternatively, you can install the test app using Play internal app sharing from the following link:
