@@ -16,7 +16,8 @@
 > [!WARNING]
 > Play Internal App Sharing is a link for test apps. Please note that this is not for product use.
 
-This app is under development and you can receive PlayStore promo codes. Please email sorrowblue.dev@gmail.com. There is no problem with Japanese.
+This app is under development and you can receive PlayStore promo codes. Please [email](<mailto:sorrowblue.dev@gmail.com>) There is no problem with Japanese.
+
 
 Alternatively, you can install the test app using Play internal app sharing from the following link:
 [Play Internal App Sharing](https://play.google.com/apps/test/RQqr1za23JM/ahAO29uNQBwjGemlc-_QWQ1vLdx6aGDDbFxT-BaKkbDZtROVsy6hgjZ8ijOFkIMF5EGiCz8iDQqZLsFDoGIzBL03zi)
