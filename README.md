@@ -11,6 +11,8 @@
     <img alt='Get it on Google Play' src='https://play.google.com/intl/ja/badges/static/images/badges/en_badge_web_generic.png' width="280" />
 </a>
 
+ [Open Test Link](https://play.google.com/apps/testing/com.sorrowblue.comicviewer)
+
 
 ## Testing
 > [!WARNING]
