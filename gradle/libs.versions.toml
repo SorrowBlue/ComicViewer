@@ -16,7 +16,7 @@ androidx-work = "2.9.0"
 
 androidx-compose-compiler = "1.5.4"
 
-google-dagger = "2.48.1"
+google-dagger = "2.49"
 android-gradle = "8.2.0"
 
 detekt = "1.23.4"
