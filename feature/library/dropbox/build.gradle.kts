@@ -30,6 +30,6 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.work.runtime.ktx)
 
-    implementation(libs.dropbox.core.sdk)
+    implementation(libs.dropbox.androidSdk)
     implementation(libs.kotlinx.serialization.protobuf)
 }
