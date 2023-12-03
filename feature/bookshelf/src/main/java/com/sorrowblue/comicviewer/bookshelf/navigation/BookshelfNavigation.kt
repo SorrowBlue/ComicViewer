@@ -24,8 +24,8 @@ const val BookshelfRoute = "bookshelf"
 const val BookshelfGraphRoute = "bookshelf_graph"
 val routeInBookshelfGraph get() = listOf(BookshelfRoute, folderRoute(BookshelfRoute))
 
-fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String, position: Int = -1) {
-    navigateToFolder(prefix = BookshelfRoute, bookshelfId = id, path = path, position = position)
+fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String) {
+    navigateToFolder(prefix = BookshelfRoute, bookshelfId = id, path = path)
 }
 
 fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String, restorePath: String) {

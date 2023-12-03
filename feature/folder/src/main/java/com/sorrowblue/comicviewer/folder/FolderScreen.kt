@@ -1,11 +1,16 @@
 package com.sorrowblue.comicviewer.folder
 
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -13,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.CombinedLoadStates
@@ -41,10 +47,6 @@ import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
 import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
-import com.sorrowblue.comicviewer.framework.ui.pullrefresh.PullRefreshIndicator
-import com.sorrowblue.comicviewer.framework.ui.pullrefresh.PullRefreshState
-import com.sorrowblue.comicviewer.framework.ui.pullrefresh.pullRefresh
-import com.sorrowblue.comicviewer.framework.ui.pullrefresh.rememberPullRefreshState
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffold
 import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveScaffoldState
 
@@ -55,6 +57,7 @@ internal data class FolderScreenUiState(
     val fileContentType: FileContentType = FileContentType.Grid(),
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FolderRoute(
     contentPadding: PaddingValues,
@@ -72,7 +75,13 @@ internal fun FolderRoute(
     val lazyGridState = rememberLazyGridState()
     val isRefreshing =
         remember(lazyPagingItems.loadState.refresh) { lazyPagingItems.loadState.refresh is LoadState.Loading }
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, lazyPagingItems::refresh)
+    val pullRefreshState = rememberPullToRefreshState()
+    if (pullRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            // fetch something
+            lazyPagingItems.refresh()
+        }
+    }
     FolderScreen(
         contentPadding = contentPadding,
         uiState = uiState,
@@ -110,6 +119,9 @@ internal fun FolderRoute(
                 onRestoreComplete()
             }
         }
+        if (lazyPagingItems.isLoadedData) {
+            pullRefreshState.endRefresh()
+        }
         if (lazyPagingItems.isLoadedData && viewModel.isScrollableTop) {
             viewModel.isScrollableTop = false
             lazyGridState.scrollToItem(0)
@@ -145,6 +157,7 @@ fun LoadStates.any(op: (LoadState) -> Boolean): Boolean {
     return op(refresh) || op(append) || op(prepend)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FolderScreen(
     contentPadding: PaddingValues,
@@ -154,7 +167,7 @@ internal fun FolderScreen(
     onClickFile: (File) -> Unit,
     lazyGridState: LazyGridState,
     isRefreshing: Boolean,
-    pullRefreshState: PullRefreshState,
+    pullRefreshState: PullToRefreshState,
     onFileListChange: () -> Unit,
     onSettingsClick: () -> Unit,
     onGridSizeChange: () -> Unit,
@@ -203,10 +216,12 @@ internal fun FolderScreen(
         },
         contentWindowInsets = contentPadding.asWindowInsets(),
     ) {
+        val scaleFraction = if (pullRefreshState.isRefreshing) 1f else
+            LinearOutSlowInEasing.transform(pullRefreshState.progress).coerceIn(0f, 1f)
         Box(
             Modifier
                 .fillMaxSize()
-                .pullRefresh(pullRefreshState)
+                .nestedScroll(pullRefreshState.nestedScrollConnection)
         ) {
             if (lazyPagingItems.isEmptyData) {
                 EmptyContent(
@@ -224,13 +239,12 @@ internal fun FolderScreen(
                     state = lazyGridState
                 )
             }
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
+            PullToRefreshContainer(
                 state = pullRefreshState,
-                scale = true,
                 modifier = Modifier
                     .padding(it)
                     .align(Alignment.TopCenter)
+                    .graphicsLayer(scaleX = scaleFraction, scaleY = scaleFraction),
             )
         }
     }

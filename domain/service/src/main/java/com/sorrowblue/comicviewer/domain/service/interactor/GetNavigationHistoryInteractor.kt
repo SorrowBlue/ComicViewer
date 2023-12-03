@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.domain.service.interactor
 
 import com.sorrowblue.comicviewer.domain.EmptyRequest
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.Response
-import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
@@ -11,30 +11,33 @@ import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 
 internal class GetNavigationHistoryInteractor @Inject constructor(
     private val bookshelfRepository: BookshelfRepository,
     private val fileRepository: FileRepository,
 ) : GetNavigationHistoryUseCase() {
-    override suspend fun run(request: EmptyRequest): Result<NavigationHistory, Unit> {
-        val history = fileRepository.lastHistory().firstOrNull() ?: return Result.Error(Unit)
-        val library = bookshelfRepository.get(history.bookshelfId).first()
-        return library.fold({ lib ->
-            val book = fileRepository.get(history.bookshelfId, history.path)
-                .fold({ file -> file as? Book }, { null }) ?: return Result.Error(Unit)
-            val a = getFolderList(lib, book.parent).fold({
-                Result.Success(NavigationHistory(lib, it, book))
+    override fun run(request: EmptyRequest): Flow<Resource<NavigationHistory, Error>> {
+        return fileRepository.lastHistory().map { history ->
+            val library = bookshelfRepository.get(history.bookshelfId).first()
+            library.fold({ lib ->
+                val book = fileRepository.get(history.bookshelfId, history.path)
+                    .fold({ file -> file as? Book }, { null })
+                    ?: return@fold Resource.Error(Error.System)
+                val a = getFolderList(lib, book.parent).fold({
+                    Resource.Success(NavigationHistory(it, book))
+                }, {
+                    Resource.Error(Error.System)
+                })
+                return@fold a
             }, {
-                Result.Error(Unit)
+                Resource.Error(Error.System)
+            }, {
+                Resource.Error(Error.System)
             })
-            return a
-        }, {
-            Result.Error(Unit)
-        }, {
-            Result.Error(Unit)
-        })
+        }
     }
 
     private suspend fun getFolderList(

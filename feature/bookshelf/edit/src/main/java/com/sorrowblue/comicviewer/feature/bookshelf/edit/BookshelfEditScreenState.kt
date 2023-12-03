@@ -104,11 +104,11 @@ internal class BookshelfEditScreenState(
                 scope.launch {
                     delay(1000)
                     viewModel.fetch(args.bookshelfId)?.let {
-                        innerScreenState = when (it.bookshelf) {
+                        innerScreenState = when (val bookshelf = it.bookshelf) {
                             is InternalStorage -> {
                                 val uiState = StorageEditScreenUiState(
                                     editType = EditType.Edit,
-                                    displayName = Input(it.bookshelf.displayName),
+                                    displayName = Input(bookshelf.displayName),
                                     dir = Input(
                                         it.folder.path.toUri().lastPathSegment?.split(":")
                                             ?.lastOrNull()
@@ -128,7 +128,16 @@ internal class BookshelfEditScreenState(
                                 )
                             }
 
-                            is SmbServer -> TODO()
+                            is SmbServer -> {
+                                val uiState = SmbEditScreenUiState(bookshelf, it.folder)
+                                SmbEditScreenState(
+                                    uiState = uiState,
+                                    snackbarHostState = snackbarHostState,
+                                    args = args,
+                                    viewModel = viewModel,
+                                    scope = scope,
+                                )
+                            }
                         }
                     } ?: kotlin.run {
                         snackbarHostState.showSnackbar("本棚データが読み込めませんでした。")

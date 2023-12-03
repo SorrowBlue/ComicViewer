@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.mikepenz.aboutlibraries.plugin)
     alias(libs.plugins.arturbosch.detekt)
     alias(libs.plugins.grgit)
+    alias(libs.plugins.kotlin.plugin.parcelize)
 }
 
 fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex())) "-SNAPSHOT" else ""
@@ -21,11 +22,11 @@ android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 12
+        versionCode = 13
         versionName = grgitService.service.get().grgit.describe {
             longDescr = false
             isTags = true
-        }?.toVersion() ?: "0.0.1-SNAPSHOT"
+        }?.toVersion() ?: "0.1.3-SNAPSHOT"
         logger.lifecycle("versionName=$versionName")
         proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
@@ -150,6 +151,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.windowSizeClass)
+    implementation(libs.androidx.compose.material3.adaptive)
     implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.google.accompanist.navigation.material)

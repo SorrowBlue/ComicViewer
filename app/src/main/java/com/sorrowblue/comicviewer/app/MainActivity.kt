@@ -13,6 +13,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import dagger.hilt.android.AndroidEntryPoint
 import logcat.logcat
 
@@ -22,6 +23,7 @@ internal class MainActivity : AppCompatActivity() {
 
     private val viewModel: ComicViewerAppViewModel by viewModels()
 
+    @OptIn(ExperimentalMaterialNavigationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
             super.onCreate(savedInstanceState)
@@ -35,7 +37,10 @@ internal class MainActivity : AppCompatActivity() {
 
         setContent {
             val windowSize = calculateWindowSizeClass(this)
-            ComicViewerApp(windowsSize = windowSize, viewModel = viewModel)
+            ComicViewerApp(
+                windowsSize = windowSize,
+                state = rememberComicViewerAppState(viewModel = viewModel)
+            )
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

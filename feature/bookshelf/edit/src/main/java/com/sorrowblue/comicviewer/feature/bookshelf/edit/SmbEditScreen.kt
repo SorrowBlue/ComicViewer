@@ -2,9 +2,12 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -232,7 +235,9 @@ private fun SmbEditScreen(
             onUsernameChange = onUsernameChange,
             onPasswordChange = onPasswordChange,
             onSaveClick = onSaveClick,
-            modifier = Modifier.padding(contentPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
         )
     }
 }
@@ -251,7 +256,15 @@ private fun SmbEditContent(
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier) {
+    Column(
+        modifier
+            .verticalScroll(rememberScrollState())
+            .padding(
+                start = ComicTheme.dimension.margin,
+                end = ComicTheme.dimension.margin,
+                bottom = ComicTheme.dimension.margin
+            )
+    ) {
         DisplayNameField(
             input = uiState.displayName,
             onValueChange = onDisplayNameChange,
