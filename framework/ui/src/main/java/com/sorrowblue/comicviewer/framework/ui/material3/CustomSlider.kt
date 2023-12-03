@@ -77,7 +77,10 @@ fun CustomSlider(
         )
     },
     indicator: @Composable (indicatorValue: Float) -> Unit = { indicatorValue ->
-        CustomSliderDefaults.Indicator(indicatorValue = indicatorValue.toString())
+        CustomSliderDefaults.Indicator(
+            indicatorValue = indicatorValue.toString(),
+            modifier = Modifier.layoutId(CustomSliderComponents.INDICATOR)
+        )
     },
     label: @Composable (labelValue: Float) -> Unit = { labelValue ->
         CustomSliderDefaults.Label(labelValue = labelValue.toString())
@@ -125,7 +128,6 @@ fun CustomSlider(
 
                 if (showIndicator) {
                     Indicator(
-                        modifier = Modifier.layoutId(CustomSliderComponents.INDICATOR),
                         valueRange = valueRange,
                         gap = steps + 2,
                         indicator = indicator
@@ -232,15 +234,10 @@ private fun Indicator(
     valueRange: ClosedFloatingPointRange<Float>,
     gap: Int,
     indicator: @Composable (indicatorValue: Float) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     // Iterate over the value range and display indicators at regular intervals.
     for (i in valueRange.start.roundToInt()..valueRange.endInclusive.roundToInt() step gap) {
-        Box(
-            modifier = modifier
-        ) {
-            indicator(i.toFloat())
-        }
+        indicator(i.toFloat())
     }
 }
 
@@ -663,9 +660,7 @@ class SliderColors internal constructor(
         if (disabledActiveTrackColor != other.disabledActiveTrackColor) return false
         if (disabledActiveTickColor != other.disabledActiveTickColor) return false
         if (disabledInactiveTrackColor != other.disabledInactiveTrackColor) return false
-        if (disabledInactiveTickColor != other.disabledInactiveTickColor) return false
-
-        return true
+        return disabledInactiveTickColor == other.disabledInactiveTickColor
     }
 
     override fun hashCode(): Int {
