@@ -37,7 +37,7 @@
     },
     {
       "matchPackagePrefixes": [
-        "com.dropbox.core:dropbox-core-sdk",
+        "com.dropbox.core:dropbox-android-sdk",
         "com.fasterxml.jackson.core:jackson-core"
       ],
       "groupName": "dropbox",
