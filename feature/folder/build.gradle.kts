@@ -9,7 +9,4 @@ android {
 
 dependencies {
     implementation(projects.feature.file)
-    implementation(projects.feature.favorite.add)
-
-    implementation(libs.androidx.work.runtime.ktx)
 }

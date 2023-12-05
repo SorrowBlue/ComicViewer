@@ -18,6 +18,7 @@ import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalD
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
@@ -171,10 +172,10 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         return dao.deleteCacheKeyBy(diskCacheKey)
     }
 
-    override fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<File>> {
+    override fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<Book>> {
         return Pager(pagingConfig) {
             dao.pagingSourceHistory()
-        }.flow.map { pagingData -> pagingData.map { it.toModel() } }
+        }.flow.map { pagingData -> pagingData.map { it.toModel() as Book } }
     }
 
     override fun lastHistory(): Flow<File> {

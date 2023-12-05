@@ -88,15 +88,13 @@ internal fun NavGraphBuilder.mainGraph(
         navController = navController,
         navigateToBook = { navController.navigateToBook(it) },
         onSettingsClick = navController::navigateToSettings,
-        navigateToSearch = navController::navigateToSearch,
         onAddOnClick = { addOn ->
             addOn.addOn.loadDynamicFeature()?.let {
                 with(it) {
                     navController.navigateToAddOnScreen()
                 }
             }
-        },
-        onFavoriteClick = navController::navigateToFavoriteAdd
+        }
     )
 
     searchGraph(

@@ -251,7 +251,7 @@ internal class FileRepositoryImpl @Inject constructor(
         })
     }
 
-    override fun pagingHistoryBookFlow(pagingConfig: PagingConfig): Flow<PagingData<File>> {
+    override fun pagingHistoryBookFlow(pagingConfig: PagingConfig): Flow<PagingData<Book>> {
         return fileModelLocalDataSource.pagingHistoryBookSource(pagingConfig)
     }
 

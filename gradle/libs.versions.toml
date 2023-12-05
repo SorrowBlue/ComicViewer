@@ -130,6 +130,7 @@ androidx-window = "androidx.window:window:1.2.0"
 
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 google-accompanist-navigation-material = { module = "com.google.accompanist:accompanist-navigation-material", version = "0.32.0" }
+google-accompanist-pagerIndicators = { module = "com.google.accompanist:accompanist-pager-indicators", version = "0.32.0" }
 google-android-play-feature-delivery-ktx = "com.google.android.play:feature-delivery-ktx:2.1.0"
 google-android-play-review-ktx = "com.google.android.play:review-ktx:2.0.1"
 google-code-gson = "com.google.code.gson:gson:2.10.1"
