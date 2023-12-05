@@ -129,7 +129,6 @@ dependencies {
     implementation(projects.feature.favorite)
     implementation(projects.feature.favorite.add)
     implementation(projects.feature.favorite.create)
-    implementation(projects.feature.file.info)
     implementation(projects.feature.readlater)
     implementation(projects.feature.search)
     implementation(projects.feature.settings)
