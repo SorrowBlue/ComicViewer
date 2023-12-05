@@ -14,6 +14,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.app.IoDispatcher
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.DropBoxApiRepository
+import com.sorrowblue.comicviewer.framework.designsystem.icon.FrameworkDrawable
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import kotlin.math.ceil
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,7 +24,6 @@ import logcat.logcat
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class DropBoxDownloadWorker(
     appContext: Context,
@@ -39,7 +39,7 @@ internal class DropBoxDownloadWorker(
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
 
     private val notificationBuilder = NotificationCompat.Builder(appContext, ChannelID.DOWNLOAD.id)
-        .setSmallIcon(FrameworkResourceR.drawable.ic_twotone_downloading_24)
+        .setSmallIcon(FrameworkDrawable.ic_twotone_downloading_24)
 
     @Suppress("SpecifyForegroundServiceType")
     override suspend fun getForegroundInfo(): ForegroundInfo {

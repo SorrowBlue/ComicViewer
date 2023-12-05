@@ -117,7 +117,6 @@ android {
 
 dependencies {
     implementation(projects.framework.ui)
-    implementation(projects.framework.resource)
     implementation(projects.framework.notification)
     implementation(projects.framework.designsystem)
 

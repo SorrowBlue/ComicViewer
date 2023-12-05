@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.resource.R
 import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.Text
@@ -47,7 +46,7 @@ internal fun WelcomeSheet(contentPadding: PaddingValues) {
         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.TopCenter) {
             Spacer(modifier = Modifier.size(16.dp))
             Text(
-                text = R.string.app_name,
+                text = com.sorrowblue.comicviewer.framework.ui.R.string.app_name,
                 style = MaterialTheme.typography.displayMedium
             )
         }
