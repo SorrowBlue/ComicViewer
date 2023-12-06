@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.section.EmptyContent
 import com.sorrowblue.comicviewer.feature.history.section.HistoryAppBar
@@ -33,7 +34,7 @@ import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveScaf
 
 @Composable
 internal fun HistoryRoute(
-    onFileClick: (File) -> Unit,
+    onFileClick: (Book) -> Unit,
     onSettingsClick: () -> Unit,
     contentPadding: PaddingValues,
     viewModel: HistoryViewModel = hiltViewModel(),
@@ -65,9 +66,9 @@ data class ReadLaterScreenUiState(
 @Composable
 internal fun HistoryScreen(
     uiState: ReadLaterScreenUiState,
-    lazyPagingItems: LazyPagingItems<File>,
+    lazyPagingItems: LazyPagingItems<Book>,
     scaffoldState: ResponsiveScaffoldState<File>,
-    onFileClick: (File) -> Unit,
+    onFileClick: (Book) -> Unit,
     onFileLongClick: (File) -> Unit,
     onFileListTypeClick: () -> Unit,
     onGridSizeClick: () -> Unit,

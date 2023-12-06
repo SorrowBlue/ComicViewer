@@ -22,12 +22,12 @@ import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
 @Composable
-fun FileContent(
+fun <T : File> FileContent(
     type: FileContentType,
-    lazyPagingItems: LazyPagingItems<File>,
+    lazyPagingItems: LazyPagingItems<T>,
     contentPadding: PaddingValues,
-    onClickItem: (File) -> Unit,
-    onLongClickItem: (File) -> Unit,
+    onClickItem: (T) -> Unit,
+    onLongClickItem: (T) -> Unit,
     state: LazyGridState = rememberLazyGridState(),
 ) {
     val isCompat = rememberMobile()
@@ -60,13 +60,13 @@ fun FileContent(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun FileGridContent(
+private fun <T : File> FileGridContent(
     columns: GridCells,
     state: LazyGridState,
     contentPadding: PaddingValues,
-    lazyPagingItems: LazyPagingItems<File>,
-    onClickItem: (File) -> Unit,
-    onLongClickItem: (File) -> Unit,
+    lazyPagingItems: LazyPagingItems<T>,
+    onClickItem: (T) -> Unit,
+    onLongClickItem: (T) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = columns,
@@ -89,12 +89,12 @@ private fun FileGridContent(
 }
 
 @Composable
-fun FileListContent(
+fun <T : File> FileListContent(
     state: LazyGridState,
     contentPadding: PaddingValues,
-    lazyPagingItems: LazyPagingItems<File>,
-    onClickItem: (File) -> Unit,
-    onLongClickItem: (File) -> Unit,
+    lazyPagingItems: LazyPagingItems<T>,
+    onClickItem: (T) -> Unit,
+    onLongClickItem: (T) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val isCompat = rememberMobile()

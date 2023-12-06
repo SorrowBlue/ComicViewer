@@ -1,3 +1,5 @@
 package com.sorrowblue.comicviewer.domain
 
-object EmptyRequest : BaseRequest
+import com.sorrowblue.comicviewer.domain.usecase.UseCase
+
+object EmptyRequest : BaseRequest, UseCase.Request

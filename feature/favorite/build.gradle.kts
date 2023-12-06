@@ -8,8 +8,8 @@ android {
 }
 
 dependencies {
-    implementation(projects.feature.favorite.common)
     implementation(projects.feature.file)
-    implementation(projects.feature.favorite.edit)
     implementation(projects.feature.folder)
+    implementation(projects.feature.favorite.edit)
+    implementation(projects.feature.favorite.common)
 }

@@ -9,5 +9,5 @@ android {
 
 dependencies {
     implementation(libs.google.android.play.feature.delivery.ktx)
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.32.0")
+    implementation(libs.google.accompanist.pagerIndicators)
 }

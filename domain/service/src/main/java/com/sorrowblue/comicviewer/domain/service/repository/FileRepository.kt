@@ -63,7 +63,7 @@ interface FileRepository {
 
     suspend fun getFolder(bookshelf: Bookshelf, path: String): Result<Folder, FileRepositoryError>
 
-    fun pagingHistoryBookFlow(pagingConfig: PagingConfig): Flow<PagingData<File>>
+    fun pagingHistoryBookFlow(pagingConfig: PagingConfig): Flow<PagingData<Book>>
 
     suspend fun deleteThumbnails()
 

@@ -127,5 +127,6 @@ google-services.json
 !.idea/dictionaries/
 !.idea/inspectionProfiles/
 *.aab
+/docs/*.bkp
 
 *.dtmp

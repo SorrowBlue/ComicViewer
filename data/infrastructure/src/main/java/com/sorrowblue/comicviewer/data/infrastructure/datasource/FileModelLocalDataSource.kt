@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
@@ -110,7 +111,7 @@ interface FileModelLocalDataSource {
 
     suspend fun root(id: BookshelfId): Folder?
 
-    fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<File>>
+    fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<Book>>
 
     suspend fun deleteThumbnails()
     suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>)

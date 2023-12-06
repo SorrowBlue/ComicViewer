@@ -19,6 +19,7 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.sorrowblue.comicviewer.app.IoDispatcher
+import com.sorrowblue.comicviewer.framework.designsystem.icon.FrameworkDrawable
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.createNotification
 import kotlin.math.ceil
@@ -29,7 +30,6 @@ import logcat.logcat
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import com.sorrowblue.comicviewer.framework.resource.R as FrameworkResourceR
 
 internal class DriveDownloadWorker(
     appContext: Context,
@@ -60,7 +60,7 @@ internal class DriveDownloadWorker(
             createNotification(
                 applicationContext,
                 ChannelID.DOWNLOAD,
-                FrameworkResourceR.drawable.ic_twotone_downloading_24
+                FrameworkDrawable.ic_twotone_downloading_24
             ) {
                 setContentTitle("バックグラウンドで実行")
             },
@@ -131,7 +131,7 @@ internal class DriveDownloadWorker(
                 createNotification(
                     applicationContext,
                     ChannelID.DOWNLOAD,
-                    FrameworkResourceR.drawable.ic_twotone_downloading_24
+                    FrameworkDrawable.ic_twotone_downloading_24
                 ) {
                     setContentTitle(name)
                     setProgress(0, 0, true)
@@ -152,7 +152,7 @@ internal class DriveDownloadWorker(
                 createNotification(
                     applicationContext,
                     ChannelID.DOWNLOAD,
-                    FrameworkResourceR.drawable.ic_twotone_downloading_24
+                    FrameworkDrawable.ic_twotone_downloading_24
                 ) {
                     setContentTitle(name)
                     setProgress(100, progress, false)
@@ -173,7 +173,7 @@ internal class DriveDownloadWorker(
                 createNotification(
                     applicationContext,
                     ChannelID.DOWNLOAD,
-                    FrameworkResourceR.drawable.ic_twotone_downloading_24
+                    FrameworkDrawable.ic_twotone_downloading_24
                 ) {
                     setContentTitle("1個のファイルをダウンロードしました。")
                     setContentText(name)

@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -35,16 +36,16 @@ internal fun DisplayNameField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
+        modifier = modifier,
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_label_display_name)) },
         errorText = {
             Text(text = stringResource(id = R.string.bookshelf_edit_error_display_name))
         },
-        singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next
         ),
-        modifier = modifier
+        singleLine = true,
     )
 }
 
@@ -54,18 +55,6 @@ internal fun FolderSelectField(input: Input, onClick: () -> Unit) {
     ValidateOutlinedTextField(
         input = input,
         onValueChange = {},
-        label = { Text(text = stringResource(id = R.string.bookshelf_edit_label_select_folder)) },
-        placeholder = { Text(text = stringResource(id = R.string.bookshelf_edit_label_select_folder)) },
-        errorText = { Text(text = stringResource(id = R.string.bookshelf_edit_error_select_folder)) },
-        readOnly = true,
-        trailingIcon = {
-            IconButton(onClick = onClick) {
-                Icon(
-                    imageVector = ComicIcons.Folder,
-                    contentDescription = stringResource(id = R.string.bookshelf_edit_label_select_folder)
-                )
-            }
-        },
         modifier = Modifier
             .fillMaxWidth()
             .onFocusChanged {
@@ -74,6 +63,18 @@ internal fun FolderSelectField(input: Input, onClick: () -> Unit) {
                     focusManager.clearFocus()
                 }
             },
+        readOnly = true,
+        label = { Text(text = stringResource(id = R.string.bookshelf_edit_label_select_folder)) },
+        placeholder = { Text(text = stringResource(id = R.string.bookshelf_edit_label_select_folder)) },
+        trailingIcon = {
+            IconButton(onClick = onClick) {
+                Icon(
+                    imageVector = ComicIcons.Folder,
+                    contentDescription = stringResource(id = R.string.bookshelf_edit_label_select_folder)
+                )
+            }
+        },
+        errorText = { Text(text = stringResource(id = R.string.bookshelf_edit_error_select_folder)) },
     )
 }
 
@@ -86,16 +87,16 @@ internal fun HostField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
+        modifier = modifier,
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_host)) },
         errorText = {
             Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_host))
         },
-        singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next
         ),
-        modifier = modifier
+        singleLine = true,
     )
 }
 
@@ -108,16 +109,16 @@ internal fun PortField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
+        modifier = modifier,
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_port)) },
         errorText = {
             Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_port))
         },
-        singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.NumberPassword,
             imeAction = ImeAction.Next
         ),
-        modifier = modifier
+        singleLine = true,
     )
 }
 
@@ -131,10 +132,10 @@ internal fun PathField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
+        modifier = modifier,
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_path)) },
         prefix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_prefix_path)) },
         suffix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_suffix_path)) },
-        singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Uri,
             imeAction = if (auth == SmbEditScreenUiState.Auth.Guest) {
@@ -143,7 +144,7 @@ internal fun PathField(
                 ImeAction.Next
             }
         ),
-        modifier = modifier
+        singleLine = true,
     )
 }
 
@@ -183,18 +184,18 @@ internal fun UsernameField(
             onValueChange(it)
             if (it.isEmpty()) usernameAutoFillHandler.requestVerifyManual()
         },
+        modifier = modifier
+            .connectNode(handler = usernameAutoFillHandler)
+            .defaultFocusChangeAutoFill(handler = usernameAutoFillHandler),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_hint_username)) },
         errorText = {
             Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_username))
         },
-        singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next
         ),
-        modifier = modifier
-            .connectNode(handler = usernameAutoFillHandler)
-            .defaultFocusChangeAutoFill(handler = usernameAutoFillHandler)
+        singleLine = true,
     )
 }
 
@@ -215,15 +216,16 @@ internal fun PasswordField(
             onValueChange(it)
             if (it.isEmpty()) passwordAutoFillHandler.requestVerifyManual()
         },
-        errorText = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_password)) },
+        modifier = modifier
+            .connectNode(handler = passwordAutoFillHandler)
+            .defaultFocusChangeAutoFill(handler = passwordAutoFillHandler),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_hint_password)) },
-        singleLine = true,
+        errorText = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_password)) },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),
-        modifier = modifier
-            .connectNode(handler = passwordAutoFillHandler)
-            .defaultFocusChangeAutoFill(handler = passwordAutoFillHandler)
+        visualTransformation = PasswordVisualTransformation(),
+        singleLine = true,
     )
 }

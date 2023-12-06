@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.app
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraph
@@ -29,7 +30,6 @@ import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
 import java.util.ServiceLoader
-import kotlinx.collections.immutable.PersistentList
 
 internal fun NavGraphBuilder.mainGraph(
     isMobile: Boolean,
@@ -39,7 +39,7 @@ internal fun NavGraphBuilder.mainGraph(
     onTutorialExit: () -> Unit,
     onBackClick: () -> Unit,
     onAuthCompleted: (Boolean) -> Unit,
-    addOnList: PersistentList<AddOn>,
+    addOnList: SnapshotStateList<AddOn>,
 ) {
     authenticationScreen(
         onBack = onBackClick,
@@ -88,15 +88,13 @@ internal fun NavGraphBuilder.mainGraph(
         navController = navController,
         navigateToBook = { navController.navigateToBook(it) },
         onSettingsClick = navController::navigateToSettings,
-        navigateToSearch = navController::navigateToSearch,
         onAddOnClick = { addOn ->
             addOn.addOn.loadDynamicFeature()?.let {
                 with(it) {
                     navController.navigateToAddOnScreen()
                 }
             }
-        },
-        onFavoriteClick = navController::navigateToFavoriteAdd
+        }
     )
 
     searchGraph(

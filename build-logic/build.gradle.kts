@@ -67,7 +67,7 @@ gradlePlugin {
         }
         register("comicviewer.android.lint") {
             id = name
-            implementationClass = "AndroidLintPlugin"
+            implementationClass = "AndroidLintConventionPlugin"
         }
         register("comicviewer.android.koin") {
             id = name

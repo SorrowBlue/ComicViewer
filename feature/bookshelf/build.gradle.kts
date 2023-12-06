@@ -8,7 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.feature.folder)
-    implementation(projects.feature.bookshelf.selection)
     implementation(projects.feature.bookshelf.edit)
+    implementation(projects.feature.bookshelf.selection)
+    implementation(projects.feature.folder)
 }
