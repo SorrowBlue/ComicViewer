@@ -43,10 +43,12 @@ import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
+import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
 internal sealed interface AuthenticationUiEvent {
 
-    data class Message(val errString: String) : AuthenticationUiEvent
+    data class Message(val errString: String? = null, val errorRes: Int = View.NO_ID) :
+        AuthenticationUiEvent
 
     data object AuthCompleted : AuthenticationUiEvent
     data object ChangeCompleted : AuthenticationUiEvent
@@ -109,14 +111,16 @@ internal fun AuthenticationRoute(
             AuthenticationUiEvent.Bio -> {
                 val info = BiometricPrompt.PromptInfo.Builder()
                     .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-                    .setTitle("指紋で認証")
+                    .setTitle(activity.getString(R.string.authentication_title_fingerprint_auth))
                     .setNegativeButtonText(activity.getString(android.R.string.cancel))
                     .build()
                 BiometricPrompt(activity, viewModel.authenticationCallback).authenticate(info)
             }
 
             is AuthenticationUiEvent.Message -> {
-                snackbarHostState.showSnackbar(message = it.errString)
+                snackbarHostState.showSnackbar(
+                    message = it.errString ?: activity.getString(it.errorRes)
+                )
             }
         }
     }
@@ -162,16 +166,16 @@ private fun AuthenticationScreen(
             Text(
                 text = stringResource(
                     id = when (uiState) {
-                        is AuthenticationScreenUiState.Authentication -> R.string.authentication_label_enter_pin
+                        is AuthenticationScreenUiState.Authentication -> R.string.authentication_text_enter_pin
 
-                        is AuthenticationScreenUiState.Register.Input -> R.string.authentication_label_enter_new_pin
-                        is AuthenticationScreenUiState.Register.Confirm -> R.string.authentication_label_reenter_pin
+                        is AuthenticationScreenUiState.Register.Input -> R.string.authentication_text_enter_new_pin
+                        is AuthenticationScreenUiState.Register.Confirm -> R.string.authentication_text_reenter_pin
 
-                        is AuthenticationScreenUiState.Change.ConfirmOld -> R.string.authentication_label_enter_pin
-                        is AuthenticationScreenUiState.Change.Input -> R.string.authentication_label_enter_new_pin
-                        is AuthenticationScreenUiState.Change.Confirm -> R.string.authentication_label_reenter_pin
+                        is AuthenticationScreenUiState.Change.ConfirmOld -> R.string.authentication_text_enter_pin
+                        is AuthenticationScreenUiState.Change.Input -> R.string.authentication_text_enter_new_pin
+                        is AuthenticationScreenUiState.Change.Confirm -> R.string.authentication_text_reenter_pin
 
-                        is AuthenticationScreenUiState.Erase -> R.string.authentication_label_enter_pin
+                        is AuthenticationScreenUiState.Erase -> R.string.authentication_text_enter_pin
                     }
                 ),
                 style = MaterialTheme.typography.titleSmall
@@ -242,7 +246,7 @@ private fun AuthenticationScreen(
 @Preview(showSystemUi = false, showBackground = false)
 @Composable
 private fun PreviewAuthenticationScreen() {
-    ComicTheme {
+    PreviewTheme {
         Surface {
             AuthenticationScreen(
                 uiState = AuthenticationScreenUiState.Authentication(
