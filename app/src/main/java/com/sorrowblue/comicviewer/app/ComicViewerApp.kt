@@ -31,7 +31,6 @@ internal fun ComicViewerApp(
     state: ComicViewerAppState,
     windowsSize: WindowSizeClass,
 ) {
-
     val dimension = when (windowsSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> compactDimension
         WindowWidthSizeClass.Medium -> mediumDimension

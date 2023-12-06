@@ -103,9 +103,10 @@ internal class ComicViewerAppStateImpl(
         stateSaver = mapSaver(
             save = {
                 mapOf("currentTab" to it.currentTab?.name, "showNavigation" to it.showNavigation)
-            }, restore = {
+            },
+            restore = {
                 MainScreenUiState(
-                    currentTab = (it["currentTab"] as? String)?.let { MainScreenTab.valueOf(it) },
+                    currentTab = (it["currentTab"] as? String)?.let(MainScreenTab::valueOf),
                     showNavigation = it["showNavigation"] as Boolean
                 )
             }
@@ -141,11 +142,13 @@ internal class ComicViewerAppStateImpl(
         if (this.isInitialized) return
         scope.launch {
             if (viewModel.isTutorial()) {
-                navController.navigateToTutorial(navOptions {
-                    popUpTo(MainGraphRoute) {
-                        inclusive = true
+                navController.navigateToTutorial(
+                    navOptions {
+                        popUpTo(MainGraphRoute) {
+                            inclusive = true
+                        }
                     }
-                })
+                )
                 viewModel.shouldKeepSplash = false
                 this@ComicViewerAppStateImpl.isInitialized = true
             } else if (viewModel.isRestore()) {
@@ -200,9 +203,10 @@ internal class ComicViewerAppStateImpl(
 
         addOnList.removeAll { !installedModules.contains(it.moduleName) }
 
-        addOnList.addAll(installedModules
-            .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }
-            .filter { module -> !addOnList.any { it == module } }
+        addOnList.addAll(
+            installedModules
+                .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }
+                .filter { module -> !addOnList.any { it == module } }
         )
 
         if (this.isInitialized) {

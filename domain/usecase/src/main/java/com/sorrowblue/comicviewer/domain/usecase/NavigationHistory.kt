@@ -13,6 +13,4 @@ value class NavigationHistory(val value: Pair<List<Folder>, Book>) {
             book
         )
     )
-
-
 }

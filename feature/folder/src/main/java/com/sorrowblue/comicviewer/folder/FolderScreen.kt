@@ -216,8 +216,11 @@ internal fun FolderScreen(
         },
         contentWindowInsets = contentPadding.asWindowInsets(),
     ) {
-        val scaleFraction = if (pullRefreshState.isRefreshing) 1f else
+        val scaleFraction = if (pullRefreshState.isRefreshing) {
+            1f
+        } else {
             LinearOutSlowInEasing.transform(pullRefreshState.progress).coerceIn(0f, 1f)
+        }
         Box(
             Modifier
                 .fillMaxSize()

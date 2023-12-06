@@ -79,7 +79,6 @@ internal class TutorialScreenState(
         }
     }
 
-
     fun onStart() {
         viewModel.splitInstallManager.registerListener(this)
     }
@@ -108,7 +107,6 @@ internal class TutorialScreenState(
                 pageState.animateScrollToPage(pageState.currentPage + 1)
             }
         }
-
     }
 
     fun onBack() {

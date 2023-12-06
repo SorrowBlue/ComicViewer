@@ -112,16 +112,21 @@ fun NavigationSuiteScaffold2(
     showNavigation: Boolean,
     navigationSuiteItems: NavigationSuiteScope.() -> Unit,
     floatingActionButton: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     if (showNavigation) {
         NavigationSuiteScaffold(
             navigationSuiteItems = navigationSuiteItems,
-            modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Start))
+            modifier = modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Start))
         ) {
             Scaffold(floatingActionButton = floatingActionButton, content = content)
         }
     } else {
-        Scaffold(floatingActionButton = floatingActionButton, content = content)
+        Scaffold(
+            floatingActionButton = floatingActionButton,
+            modifier = modifier,
+            content = content
+        )
     }
 }

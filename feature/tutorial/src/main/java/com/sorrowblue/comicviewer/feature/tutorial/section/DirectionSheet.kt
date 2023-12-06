@@ -35,8 +35,8 @@ internal data class DirectionSheetUiState(
 
 @Composable
 internal fun DirectionSheet(
-    uiState: DirectionSheetUiState = DirectionSheetUiState(),
-    onBindingDirectionChange: (BindingDirection) -> Unit = {},
+    uiState: DirectionSheetUiState,
+    onBindingDirectionChange: (BindingDirection) -> Unit,
     contentPadding: PaddingValues,
 ) {
     Column(
@@ -96,7 +96,11 @@ internal fun DirectionSheet(
 private fun PreviewDirectionSheet() {
     PreviewTheme {
         Surface {
-            DirectionSheet(contentPadding = PaddingValues())
+            DirectionSheet(
+                uiState = DirectionSheetUiState(),
+                onBindingDirectionChange = {},
+                contentPadding = PaddingValues()
+            )
         }
     }
 }
