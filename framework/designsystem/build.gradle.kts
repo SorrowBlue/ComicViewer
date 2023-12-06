@@ -8,6 +8,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.google.material)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material3)
