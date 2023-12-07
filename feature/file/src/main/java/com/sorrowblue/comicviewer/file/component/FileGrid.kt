@@ -63,7 +63,7 @@ fun FileGrid(
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
                 ),
                 contentScale = ContentScale.Crop,
-                contentDescription = "",
+                contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
