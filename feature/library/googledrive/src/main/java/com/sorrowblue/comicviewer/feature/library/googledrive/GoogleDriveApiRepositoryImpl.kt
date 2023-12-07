@@ -52,7 +52,8 @@ internal class GoogleDriveApiRepositoryImpl(private val context: Context) :
     override val driverServiceFlow = googleSignInAccount.filterNotNull().map {
         credential.selectedAccount = it.account
         Drive.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance(), credential)
-            .setApplicationName("ComicViewer").build()
+            .setApplicationName(context.getString(com.sorrowblue.comicviewer.framework.ui.R.string.app_name))
+            .build()
     }
 
     override fun updateAccount() {

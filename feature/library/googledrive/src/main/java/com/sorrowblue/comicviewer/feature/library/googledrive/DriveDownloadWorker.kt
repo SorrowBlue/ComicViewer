@@ -62,7 +62,7 @@ internal class DriveDownloadWorker(
                 ChannelID.DOWNLOAD,
                 FrameworkDrawable.ic_twotone_downloading_24
             ) {
-                setContentTitle("バックグラウンドで実行")
+                setContentTitle(applicationContext.getString(R.string.googledrive_msg_downloading_background))
             },
             ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
         )
@@ -84,7 +84,7 @@ internal class DriveDownloadWorker(
         credential.selectedAccount = signInAccount.account
         val driverService =
             Drive.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance(), credential)
-                .setApplicationName("ComicViewer")
+                .setApplicationName(applicationContext.getString(com.sorrowblue.comicviewer.framework.ui.R.string.app_name))
                 .build()
 
         return withContext(dispatcher) {
@@ -175,7 +175,7 @@ internal class DriveDownloadWorker(
                     ChannelID.DOWNLOAD,
                     FrameworkDrawable.ic_twotone_downloading_24
                 ) {
-                    setContentTitle("1個のファイルをダウンロードしました。")
+                    setContentTitle(applicationContext.getString(R.string.googledrive_msg_one_file_downloaded))
                     setContentText(name)
                     setProgress(0, 0, false)
                 }
