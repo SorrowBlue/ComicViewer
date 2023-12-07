@@ -1,18 +1,12 @@
 package com.sorrowblue.comicviewer.feature.favorite.add
 
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -21,6 +15,9 @@ import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
+import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
 
 @Composable
 internal fun FavoriteAddRoute(
@@ -37,7 +34,6 @@ internal fun FavoriteAddRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoriteAddScreen(
     lazyPagingItems: LazyPagingItems<Favorite>,
@@ -45,16 +41,13 @@ private fun FavoriteAddScreen(
     onFavoriteClick: (FavoriteId) -> Unit,
     onAddClick: () -> Unit,
 ) {
-    val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val appBarScrollBehavior =
+        TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.favorite_add_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(ComicIcons.ArrowBack, "Back")
-                    }
-                },
+                title = R.string.favorite_add_title,
+                onBackClick = onBackClick,
                 scrollBehavior = appBarScrollBehavior
             )
         },
