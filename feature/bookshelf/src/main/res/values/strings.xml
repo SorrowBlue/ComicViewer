@@ -13,9 +13,11 @@
     <string name="bookshelf_info_label_internal_storage">Internal storage</string>
     <string name="bookshelf_info_label_smb">LAN/SMB</string>
     <string name="bookshelf_info_label_port">Port</string>
-    <string name="bookshelf_info_btn_edit">Edit</string>
-    <string name="bookshelf_info_btn_remove">Remove</string>
+    <string name="bookshelf_action_edit">Edit</string>
+    <string name="bookshelf_action_delete">Remove</string>
+    <string name="bookshelf_action_scan">Scan</string>
     <string name="bookshelf_edit_title_remove">Delete bookshelf</string>
     <string name="bookshelf_remove_label">Do you want to remove %1$s?</string>
     <string name="bookshelf_remove_label_delete">Delete</string>
+    <string name="bookshelf_msg_delete">\"%1$s\" has been deleted.</string>
 </resources>

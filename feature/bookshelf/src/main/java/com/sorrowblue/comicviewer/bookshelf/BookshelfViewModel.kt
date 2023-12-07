@@ -50,7 +50,7 @@ class BookshelfViewModel @Inject constructor(
             _uiState.value = uiState.copy(
                 removeDialogUiState = BookshelfRemoveDialogUiState.Hide,
             )
-            updateUiEvent(BookshelfUiEvent.Message("${bookshelf.displayName} を削除しました。"))
+            updateUiEvent(BookshelfUiEvent.Message(bookshelf.displayName))
         }
     }
 
