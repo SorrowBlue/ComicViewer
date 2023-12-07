@@ -14,7 +14,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -41,7 +40,6 @@ import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 import com.sorrowblue.comicviewer.framework.ui.material3.ExposedDropdownMenu
-import com.sorrowblue.comicviewer.framework.ui.material3.ListItemSwitch
 import com.sorrowblue.comicviewer.framework.ui.material3.Text
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
@@ -209,12 +207,6 @@ internal fun BookMenuSheet(
             value = stringResource(id = uiState.pageScale.label),
             onChangeValue = onChangeValue2,
             menus = remember(PageScale.entries::toPersistentList),
-        )
-        ListItem(headlineContent = { Text(text = "表示レイアウト") })
-        ListItemSwitch(
-            headlineContent = { Text(text = "余白を切り取る") },
-            checked = true,
-            onCheckedChange = {}
         )
         Spacer(modifier = Modifier.navigationBarsPadding())
     }

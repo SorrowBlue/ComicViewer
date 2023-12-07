@@ -18,6 +18,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -81,8 +82,8 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
     ) {
         Text(
             text = when (nextBook) {
-                is NextBook.Favorite -> "お気に入りの本"
-                is NextBook.Folder -> "フォルダの本"
+                is NextBook.Favorite -> stringResource(id = R.string.book_text_favorite_book)
+                is NextBook.Folder -> stringResource(id = R.string.book_text_folder_book)
             },
             style = ComicTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier
@@ -111,7 +112,7 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
         )
         FilledTonalButton(
             onClick = onClick,
-            text = "Read",
+            text = stringResource(id = R.string.book_action_read),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 8.dp, bottom = 16.dp)

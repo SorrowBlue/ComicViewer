@@ -18,6 +18,7 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFaq
@@ -63,7 +64,11 @@ internal fun BookErrorScreen(
             )
             Spacer(modifier = Modifier.size(8.dp))
             Text(
-                text = if (uiState.name.isEmpty()) "Unable to open" else "Unable to open \"${uiState.name}\"",
+                text = if (uiState.name.isEmpty()) {
+                    stringResource(id = R.string.book_text_could_not_open)
+                } else {
+                    stringResource(id = R.string.book_text_could_not_open_name, uiState.name)
+                },
                 style = MaterialTheme.typography.headlineSmall
             )
         }

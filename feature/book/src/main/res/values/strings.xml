@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="book_label_next_book">Next book</string>
-    <string name="book_label_prev_book">Previous book</string>
-    <string name="book_label_next_favorite_book">Next favorite book</string>
-    <string name="book_label_prev_favorite_book">Previous favorite book</string>
-    <string name="book_label_no_next_book">There are no next books</string>
-    <string name="book_label_no_prev_book">There is no previous book</string>
-    <string name="book_label_page_count" translatable="false">%1$d / %2$d</string>
-
+    <string name="book_action_read">Read</string>
     <string name="book_label_display_format">Page display format</string>
     <string name="book_label_display_format_default">Default</string>
     <string name="book_label_display_format_split">Auto single page</string>
-    <string name="book_label_display_format_spread">Auto spread</string>
     <string name="book_label_display_format_splitspread">Auto switch single-page/spread</string>
-
+    <string name="book_label_display_format_spread">Auto spread</string>
+    <string name="book_label_next_favorite_book">Next favorite book</string>
+    <string name="book_label_no_next_book">There are no next books</string>
+    <string name="book_label_no_prev_book">There is no previous book</string>
+    <string name="book_label_page_count" translatable="false">%1$d / %2$d</string>
+    <string name="book_label_prev_favorite_book">Previous favorite book</string>
     <string name="book_label_scale">Page scale</string>
-    <string name="book_label_scale_fit">Optimal display</string>
+    <string name="book_label_scale_fill_bounds">Stretch to fit the screen</string>
     <string name="book_label_scale_fill_height">Fit Height</string>
     <string name="book_label_scale_fill_width">Fit Width</string>
+    <string name="book_label_scale_fit">Optimal display</string>
     <string name="book_label_scale_inside">Fit to screen only</string>
     <string name="book_label_scale_none">Original size</string>
-    <string name="book_label_scale_fill_bounds">Stretch to fit the screen</string>
+    <string name="book_text_could_not_open">Could not open</string>
+    <string name="book_text_could_not_open_name">Could not open \'%1$s\'</string>
+    <string name="book_text_favorite_book">Favorite book</string>
+    <string name="book_text_folder_book">Folder books</string>
+    <string name="book_label_next_book">Next book</string>
+    <string name="book_label_prev_book">Previous book</string>
 </resources>
