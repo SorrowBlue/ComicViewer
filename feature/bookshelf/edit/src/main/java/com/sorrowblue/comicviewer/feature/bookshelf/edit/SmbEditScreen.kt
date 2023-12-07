@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,6 +45,7 @@ internal class SmbEditScreenState(
     val snackbarHostState: SnackbarHostState,
     private val args: BookshelfEditArgs,
     private val viewModel: BookshelfEditViewModel,
+    private val context: Context,
     private val scope: CoroutineScope,
 ) : BookshelfEditInnerScreenState<SmbEditScreenUiState>() {
 
@@ -97,7 +99,7 @@ internal class SmbEditScreenState(
         uiState = uiState.copy(isError = isError)
         if (uiState.isError) {
             scope.launch {
-                snackbarHostState.showSnackbar("Please check your entries.")
+                snackbarHostState.showSnackbar(context.getString(R.string.bookshelf_edit_msg_input_error))
             }
             return
         }

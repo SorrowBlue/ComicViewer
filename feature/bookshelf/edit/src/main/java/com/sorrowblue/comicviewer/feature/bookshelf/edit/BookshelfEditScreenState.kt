@@ -71,6 +71,7 @@ internal class BookshelfEditScreenState(
                         snackbarHostState,
                         args,
                         viewModel,
+                        context,
                         scope,
                     )
                 }
@@ -86,6 +87,7 @@ internal class BookshelfEditScreenState(
                         snackbarHostState,
                         args,
                         viewModel,
+                        context,
                         scope,
                     )
 
@@ -135,12 +137,13 @@ internal class BookshelfEditScreenState(
                                     snackbarHostState = snackbarHostState,
                                     args = args,
                                     viewModel = viewModel,
+                                    context = context,
                                     scope = scope,
                                 )
                             }
                         }
                     } ?: kotlin.run {
-                        snackbarHostState.showSnackbar("本棚データが読み込めませんでした。")
+                        snackbarHostState.showSnackbar(context.getString(R.string.bookshelf_edit_msg_could_not_load_bookshelf))
                     }
                 }
             }

@@ -77,7 +77,7 @@ internal class StorageEditScreenState(
         } ?: run {
             uiState = uiState.copy(dir = uiState.dir.copy(isError = uiState.dir.value.isBlank()))
             scope.launch {
-                snackbarHostState.showSnackbar("フォルダの選択がキャンセルされました。")
+                snackbarHostState.showSnackbar(context.getString(R.string.bookshelf_edit_msg_cancelled_folder_selection))
             }
         }
     }
@@ -89,7 +89,7 @@ internal class StorageEditScreenState(
         uiState = uiState.copy(isError = isError)
         if (uiState.isError) {
             scope.launch {
-                snackbarHostState.showSnackbar("Please check your entries.")
+                snackbarHostState.showSnackbar(context.getString(R.string.bookshelf_edit_msg_input_error))
             }
             return
         }
