@@ -24,7 +24,7 @@ This app is under development and you can receive PlayStore promo codes. Please
 
 
 Alternatively, you can install the test app using Play internal app sharing from the following link:
-[Play Internal App Sharing](https://play.google.com/apps/test/RQqr1za23JM/ahAO29uNQBwjGemlc-_QWQ1vLdx6aGDDbFxT-BaKkbDZtROVsy6hgjZ8ijOFkIMF5EGiCz8iDQqZLsFDoGIzBL03zi)
+[Play Internal App Sharing](https://play.google.com/apps/test/RQqr1za23JM/ahAO29uNSNBpV2ZPlOYuM18TpnctCICVIs7z_xsyvwEOCp0Aj9NcnnXEhL-7t3gaYtYECpFVUcB2QCETJZduSstPMp)
 
 
 ---
