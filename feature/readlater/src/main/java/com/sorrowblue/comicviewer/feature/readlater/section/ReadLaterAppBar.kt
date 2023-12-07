@@ -31,7 +31,9 @@ internal fun ReadLaterAppBar(
             OverflowMenu(state = rememberOverflowMenuState()) {
                 if (fileContentType is FileContentType.Grid) {
                     OverflowMenuItem(
-                        text = stringResource(id = com.sorrowblue.comicviewer.feature.folder.R.string.folder_action_change_grid_size),
+                        text = stringResource(
+                            id = com.sorrowblue.comicviewer.feature.folder.R.string.folder_action_change_grid_size
+                        ),
                         icon = ComicIcons.Grid4x4,
                         onClick = onGridSizeClick
                     )
@@ -42,7 +44,9 @@ internal fun ReadLaterAppBar(
                     onClick = onClearAllClick
                 )
                 OverflowMenuItem(
-                    text = stringResource(id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_label_settings),
+                    text = stringResource(
+                        id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_label_settings
+                    ),
                     icon = ComicIcons.Settings,
                     onClick = onSettingsClick
                 )

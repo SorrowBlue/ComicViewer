@@ -50,7 +50,9 @@ internal fun FavoriteAppBar(
             OverflowMenu(state = rememberOverflowMenuState()) {
                 if (uiState.fileContentType is FileContentType.Grid) {
                     OverflowMenuItem(
-                        text = stringResource(id = com.sorrowblue.comicviewer.feature.folder.R.string.folder_action_change_grid_size),
+                        text = stringResource(
+                            id = com.sorrowblue.comicviewer.feature.folder.R.string.folder_action_change_grid_size
+                        ),
                         icon = ComicIcons.Grid4x4,
                         onClick = onGridSizeChange
                     )
@@ -61,7 +63,9 @@ internal fun FavoriteAppBar(
                     onClick = onDeleteClick
                 )
                 OverflowMenuItem(
-                    text = stringResource(id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_label_settings),
+                    text = stringResource(
+                        id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_label_settings
+                    ),
                     icon = ComicIcons.Settings,
                     onClick = onSettingsClick
                 )

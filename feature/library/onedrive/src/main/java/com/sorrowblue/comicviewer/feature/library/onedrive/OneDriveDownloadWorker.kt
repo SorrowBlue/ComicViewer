@@ -47,7 +47,9 @@ internal class OneDriveDownloadWorker(
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(
             NOTIFICATION_ID,
-            notificationBuilder.setContentTitle(applicationContext.getString(R.string.onedrive_msg_downloading_background))
+            notificationBuilder.setContentTitle(
+                applicationContext.getString(R.string.onedrive_msg_downloading_background)
+            )
                 .build(),
             ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
         )

@@ -84,7 +84,9 @@ internal class DriveDownloadWorker(
         credential.selectedAccount = signInAccount.account
         val driverService =
             Drive.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance(), credential)
-                .setApplicationName(applicationContext.getString(com.sorrowblue.comicviewer.framework.ui.R.string.app_name))
+                .setApplicationName(
+                    applicationContext.getString(com.sorrowblue.comicviewer.framework.ui.R.string.app_name)
+                )
                 .build()
 
         return withContext(dispatcher) {

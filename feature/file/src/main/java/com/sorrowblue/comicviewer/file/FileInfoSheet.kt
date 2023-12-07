@@ -103,7 +103,9 @@ fun FileInfoSheet(
             horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding)
         ) {
             if (file is Book) {
-                PlainTooltipBox2(tooltipContent = { Text(stringResource(id = R.string.file_label_file_extension)) }) { state ->
+                PlainTooltipBox2(
+                    tooltipContent = { Text(stringResource(id = R.string.file_label_file_extension)) }
+                ) { state ->
                     AssistChip(
                         onClick = { scope.launch { state.show() } },
                         label = { Text(file.name.extension) }
@@ -227,7 +229,9 @@ fun FileInfoBottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding)
             ) {
                 if (file is Book) {
-                    PlainTooltipBox2(tooltipContent = { Text(stringResource(id = R.string.file_label_file_extension)) }) { state ->
+                    PlainTooltipBox2(
+                        tooltipContent = { Text(stringResource(id = R.string.file_label_file_extension)) }
+                    ) { state ->
                         AssistChip(
                             onClick = { scope.launch { state.show() } },
                             label = { Text(file.name.extension) }

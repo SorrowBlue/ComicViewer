@@ -49,11 +49,19 @@ internal fun HistoryAppBar(
                     )
                 }
                 DropdownMenuItem(
-                    text = { Text(stringResource(id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_label_settings)) },
+                    text = {
+                        Text(
+                            stringResource(
+                                id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_label_settings
+                            )
+                        )
+                    },
                     trailingIcon = {
                         Icon(
                             ComicIcons.Settings,
-                            stringResource(id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_desc_open_settings)
+                            stringResource(
+                                id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_desc_open_settings
+                            )
                         )
                     },
                     onClick = {

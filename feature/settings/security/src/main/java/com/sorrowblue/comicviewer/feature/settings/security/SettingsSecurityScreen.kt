@@ -130,7 +130,9 @@ internal class ChildSecuritySettingsScreenState(
                     logcat { "整体認証を有効にする" }
                     viewModel.updateUseBiometrics(true)
                     scope.launch {
-                        snackbarHostState.showSnackbar(context.getString(R.string.settings_security_msg_enabled_bio_auth))
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.settings_security_msg_enabled_bio_auth)
+                        )
                     }
                 }
             }
@@ -165,7 +167,9 @@ internal class ChildSecuritySettingsScreenState(
                 BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE, BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
                     // 生体認証が一時的に利用不可のため、エラーメッセージ表示
                     scope.launch {
-                        snackbarHostState.showSnackbar(context.getString(R.string.settings_security_msg_temporarily_unavailable_bio_auth))
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.settings_security_msg_temporarily_unavailable_bio_auth)
+                        )
                     }
                 }
 
@@ -174,7 +178,9 @@ internal class ChildSecuritySettingsScreenState(
                 -> {
                     // 生体認証が利用不可のため、エラーメッセージ表示
                     scope.launch {
-                        snackbarHostState.showSnackbar(context.getString(R.string.settings_security_not_available_bio_auth))
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.settings_security_not_available_bio_auth)
+                        )
                     }
                 }
             }
@@ -194,7 +200,9 @@ internal class ChildSecuritySettingsScreenState(
                         logcat { "整体認証を無効にする" }
                         viewModel.updateUseBiometrics(false)
                         scope.launch {
-                            snackbarHostState.showSnackbar(context.getString(R.string.settings_security_msg_disabled_bio_auth))
+                            snackbarHostState.showSnackbar(
+                                context.getString(R.string.settings_security_msg_disabled_bio_auth)
+                            )
                         }
                     }
                 }
