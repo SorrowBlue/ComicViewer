@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="history_title">履歴</string>
+    <string name="history_action_grid_size">グリッドサイズ</string>
     <string name="history_label_no_history">履歴に本はありません。</string>
+    <string name="history_title">履歴</string>
 </resources>
