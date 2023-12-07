@@ -108,7 +108,7 @@ private fun FavoriteEditScreen(
             if (lazyPagingItems.isEmptyData) {
                 EmptyContent(
                     imageVector = ComicIcons.UndrawNoData,
-                    text = "お気に入りはありません",
+                    text = stringResource(R.string.favorite_edit_text_no_favorites),
                     contentPadding = contentPadding
                 )
             } else {
