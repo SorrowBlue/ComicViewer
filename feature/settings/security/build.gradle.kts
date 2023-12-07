@@ -4,6 +4,7 @@ plugins {
 
 android {
     namespace = "com.sorrowblue.comicviewer.feature.settings.security"
+    resourcePrefix("settings_security")
 }
 
 dependencies {

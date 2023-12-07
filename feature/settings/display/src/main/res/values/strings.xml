@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_display_title">Display</string>
+    <string name="settings_display_desc_show_last_folder">Displays folder that was last opened</string>
     <string name="settings_display_label_appearance">Appearance</string>
-    <string name="settings_display_label_system_default">Use device theme</string>
     <string name="settings_display_label_dark_mode">Dark theme</string>
     <string name="settings_display_label_light_mode">Light theme</string>
     <string name="settings_display_label_show_last_folder">Show last folder</string>
-    <string name="settings_display_desc_show_last_folder">Displays folder that was last opened</string>
+    <string name="settings_display_label_system_default">Use device theme</string>
+    <string name="settings_display_title">Display</string>
 </resources>

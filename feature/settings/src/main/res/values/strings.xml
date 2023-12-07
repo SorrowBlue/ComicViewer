@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_label_tutorial">Start Tutorial</string>
+    <string name="settings_label_app">App Info</string>
     <string name="settings_label_display">Display</string>
     <string name="settings_label_folder">Folder</string>
-    <string name="settings_label_viewer">Viewer</string>
-    <string name="settings_label_security">Security</string>
-    <string name="settings_label_app">App Info</string>
     <string name="settings_label_language">Language settings</string>
-
-    <string name="settings_title">Settings</string>
-
-    <string name="settings_language_title">App language</string>
-    <string name="settings_language_label_system_default">System default</string>
+    <string name="settings_label_security">Security</string>
+    <string name="settings_label_tutorial">Start Tutorial</string>
+    <string name="settings_label_viewer">Viewer</string>
     <string name="settings_language_label_all_languages">all languages</string>
     <string name="settings_language_label_japanese">Japanese</string>
+    <string name="settings_language_label_system_default">System default</string>
     <string name="settings_language_label_us">English(United States)</string>
+    <string name="settings_language_title">App language</string>
+    <string name="settings_title">Settings</string>
 </resources>

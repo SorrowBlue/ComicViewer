@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_info_title">App Info</string>
-    <string name="settings_info_label_version">Version</string>
     <string name="settings_info_label_build">Build</string>
-    <string name="settings_info_label_rate">Rate the app</string>
     <string name="settings_info_label_license">License</string>
+    <string name="settings_info_label_rate">Rate the app</string>
+    <string name="settings_info_label_version">Version</string>
+    <string name="settings_info_title">App Info</string>
+    <string name="settings_info_title_licence">Licence</string>
 </resources>

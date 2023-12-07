@@ -67,7 +67,8 @@ class AppInfoSettingsScreenStateImpl(private val context: Context) : AppInfoSett
     }
 
     override fun launchLicence() {
-        LibsBuilder().withActivityTitle("Licence").withSearchEnabled(true)
+        LibsBuilder().withActivityTitle(context.getString(R.string.settings_info_title_licence))
+            .withSearchEnabled(true)
             .withEdgeToEdge(true).start(context)
     }
 }
