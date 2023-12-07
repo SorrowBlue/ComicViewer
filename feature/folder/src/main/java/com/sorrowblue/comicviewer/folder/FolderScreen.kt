@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -28,6 +29,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.file.FileInfoBottomSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.component.FileContent
@@ -229,7 +231,10 @@ internal fun FolderScreen(
             if (lazyPagingItems.isEmptyData) {
                 EmptyContent(
                     imageVector = ComicIcons.UndrawResumeFolder,
-                    text = "「○○○○○」には何もありません。",
+                    text = stringResource(
+                        R.string.folder_text_nothing_in_folder,
+                        uiState.folderAppBarUiState.title
+                    ),
                     contentPadding = it
                 )
             } else {

@@ -6,6 +6,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -40,9 +42,9 @@ internal fun FolderAppBar(
         title = uiState.title,
         onBackClick = onBackClick,
         actions = {
-            PlainTooltipBox(tooltipContent = { Text("Search") }) {
+            PlainTooltipBox(tooltipContent = { Text(stringResource(R.string.folder_action_search)) }) {
                 IconButton(onClick = onSearchClick) {
-                    Icon(ComicIcons.Search, "Search")
+                    Icon(ComicIcons.Search, stringResource(R.string.folder_action_search))
                 }
             }
 
@@ -51,18 +53,18 @@ internal fun FolderAppBar(
             OverflowMenu {
                 if (uiState.fileContentType is FileContentType.Grid) {
                     OverflowMenuItem(
-                        text = "Change Grid size",
+                        text = stringResource(R.string.folder_action_change_grid_size),
                         icon = ComicIcons.Grid4x4,
                         onClick = onGridSizeChange
                     )
                 }
                 OverflowMenuItem(
-                    text = "Sort by",
+                    text = stringResource(R.string.folder_action_sort),
                     icon = ComicIcons.SortByAlpha,
                     onClick = onSortClick
                 )
                 OverflowMenuItem(
-                    text = "Settings",
+                    text = stringResource(R.string.folder_action_settings),
                     icon = ComicIcons.Settings,
                     onClick = onSettingsClick
                 )
