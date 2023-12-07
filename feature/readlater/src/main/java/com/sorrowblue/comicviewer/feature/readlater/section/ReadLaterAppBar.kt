@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.readlater.section
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.readlater.R
 import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
 import com.sorrowblue.comicviewer.file.component.FileContentType
@@ -30,18 +31,18 @@ internal fun ReadLaterAppBar(
             OverflowMenu(state = rememberOverflowMenuState()) {
                 if (fileContentType is FileContentType.Grid) {
                     OverflowMenuItem(
-                        text = "Change Grid size",
+                        text = stringResource(id = com.sorrowblue.comicviewer.feature.folder.R.string.folder_action_change_grid_size),
                         icon = ComicIcons.Grid4x4,
                         onClick = onGridSizeClick
                     )
                 }
                 OverflowMenuItem(
-                    text = "Clear Read Later",
+                    text = stringResource(R.string.readlater_action_clear_read_later),
                     icon = ComicIcons.ClearAll,
                     onClick = onClearAllClick
                 )
                 OverflowMenuItem(
-                    text = "Settings",
+                    text = stringResource(id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_label_settings),
                     icon = ComicIcons.Settings,
                     onClick = onSettingsClick
                 )

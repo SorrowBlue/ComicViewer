@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="readlater_title">後で読む</string>
+    <string name="readlater_action_clear_read_later">後で読むをクリア</string>
     <string name="readlater_label_nothing_to_read_later">後で読むには何もありません。</string>
+    <string name="readlater_title">後で読む</string>
 </resources>
