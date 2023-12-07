@@ -35,14 +35,14 @@ internal class AuthenticationViewModel @Inject constructor(
         override fun onAuthenticationFailed() {
             super.onAuthenticationFailed()
             viewModelScope.launch {
-                updateUiEvent(AuthenticationUiEvent.Message("認証失敗"))
+                updateUiEvent(AuthenticationUiEvent.Message(errorRes = R.string.authentication_msg_auth_failed))
             }
         }
 
         override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
             super.onAuthenticationError(errorCode, errString)
             viewModelScope.launch {
-                updateUiEvent(AuthenticationUiEvent.Message(errString.toString()))
+                updateUiEvent(AuthenticationUiEvent.Message(errString = errString.toString()))
             }
         }
     }

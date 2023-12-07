@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
@@ -100,8 +101,8 @@ internal class GoogleDriveScreenState(
         }.launchIn(scope)
 
         val notificationManager = NotificationManagerCompat.from(context)
-        val name = "ダウンロード状況"
-        val descriptionText = "ダウンロード状況を表示します"
+        val name = context.getString(R.string.googledrive_name_download_status)
+        val descriptionText = context.getString(R.string.googledrive_desc_notify_download_status)
         val channel = NotificationChannelCompat.Builder(
             ChannelID.DOWNLOAD.id,
             NotificationManagerCompat.IMPORTANCE_LOW
@@ -287,7 +288,7 @@ internal fun GoogleDriveScreen(
         } else {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Button(onClick = onSignInClick) {
-                    Text(text = "SignIn")
+                    Text(text = stringResource(R.string.googledrive_action_login))
                 }
             }
         }

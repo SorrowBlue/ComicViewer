@@ -94,7 +94,7 @@ internal class ChildSecuritySettingsScreenState(
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                 logcat { "認証 Not 有効化 リトライ" }
                 scope.launch {
-                    snackbarHostState.showSnackbar("生体認証が有効になっていません。")
+                    snackbarHostState.showSnackbar(context.getString(R.string.settings_security_msg_desabled_bio_auth))
                 }
             }
 
@@ -106,7 +106,7 @@ internal class ChildSecuritySettingsScreenState(
             -> {
                 logcat { "生体認証 利用不可" }
                 scope.launch {
-                    snackbarHostState.showSnackbar("このデバイスは生体認証が利用できません。")
+                    snackbarHostState.showSnackbar(context.getString(R.string.settings_security_not_available_bio_auth))
                 }
             }
         }
@@ -130,16 +130,18 @@ internal class ChildSecuritySettingsScreenState(
                     logcat { "整体認証を有効にする" }
                     viewModel.updateUseBiometrics(true)
                     scope.launch {
-                        snackbarHostState.showSnackbar("生体認証を有効にしました。")
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.settings_security_msg_enabled_bio_auth)
+                        )
                     }
                 }
             }
         )
         val info = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("アプリ内の生体認証")
+            .setTitle(context.getString(R.string.settings_security_title_bio_auth))
             .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-            .setSubtitle("アプリ内で生体認証を有効化するために、認証してください。")
-            .setNegativeButtonText("Cancel")
+            .setSubtitle(context.getString(R.string.settings_security_text_bio_auth))
+            .setNegativeButtonText(context.getString(android.R.string.cancel))
             .build()
         biometricPrompt.authenticate(info)
     }
@@ -165,7 +167,9 @@ internal class ChildSecuritySettingsScreenState(
                 BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE, BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
                     // 生体認証が一時的に利用不可のため、エラーメッセージ表示
                     scope.launch {
-                        snackbarHostState.showSnackbar("生体認証が一時的に利用できません。あとでもう一度試してみてください。")
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.settings_security_msg_temporarily_unavailable_bio_auth)
+                        )
                     }
                 }
 
@@ -174,7 +178,9 @@ internal class ChildSecuritySettingsScreenState(
                 -> {
                     // 生体認証が利用不可のため、エラーメッセージ表示
                     scope.launch {
-                        snackbarHostState.showSnackbar("このデバイスは生体認証が利用できません。")
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.settings_security_not_available_bio_auth)
+                        )
                     }
                 }
             }
@@ -194,16 +200,18 @@ internal class ChildSecuritySettingsScreenState(
                         logcat { "整体認証を無効にする" }
                         viewModel.updateUseBiometrics(false)
                         scope.launch {
-                            snackbarHostState.showSnackbar("生体認証を無効にしました。")
+                            snackbarHostState.showSnackbar(
+                                context.getString(R.string.settings_security_msg_disabled_bio_auth)
+                            )
                         }
                     }
                 }
             )
             val info = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("アプリ内の生体認証")
+                .setTitle(context.getString(R.string.settings_security_title_bio_auth))
                 .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-                .setSubtitle("アプリ内で生体認証を無効化するために、認証してください。")
-                .setNegativeButtonText("Cancel")
+                .setSubtitle(context.getString(R.string.settings_security_text_disable_bio_auth))
+                .setNegativeButtonText(context.getString(android.R.string.cancel))
                 .build()
             biometricPrompt.authenticate(info)
         }

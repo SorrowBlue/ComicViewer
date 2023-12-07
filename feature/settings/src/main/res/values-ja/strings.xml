@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_label_language">言語設定</string>
-    <string name="settings_title">設定</string>
-    <string name="settings_label_tutorial">チュートリアルを始める</string>
+    <string name="settings_label_app">アプリの情報</string>
     <string name="settings_label_display">ディスプレイ</string>
     <string name="settings_label_folder">フォルダ</string>
-    <string name="settings_label_viewer">ビューワー</string>
+    <string name="settings_label_language">言語設定</string>
     <string name="settings_label_security">セキュリティ</string>
-    <string name="settings_label_app">アプリの情報</string>
-    <string name="settings_language_title">アプリ言語</string>
-    <string name="settings_language_label_system_default">システムのデフォルト</string>
+    <string name="settings_label_tutorial">チュートリアルを始める</string>
+    <string name="settings_label_viewer">ビューワー</string>
     <string name="settings_language_label_all_languages">すべての言語</string>
     <string name="settings_language_label_japanese">日本語</string>
+    <string name="settings_language_label_system_default">システムのデフォルト</string>
     <string name="settings_language_label_us">英語（アメリカ）</string>
+    <string name="settings_language_title">アプリ言語</string>
+    <string name="settings_title">設定</string>
 </resources>

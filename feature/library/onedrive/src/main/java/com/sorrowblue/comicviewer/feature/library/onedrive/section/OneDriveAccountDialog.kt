@@ -14,9 +14,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.sorrowblue.comicviewer.feature.library.onedrive.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
@@ -40,7 +42,7 @@ internal fun OneDriveAccountDialog(
             TextButton(onClick = onLogoutClick) {
                 Icon(imageVector = ComicIcons.Logout, contentDescription = null)
                 Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text = "Logout")
+                Text(text = stringResource(R.string.onedrive_action_logout))
             }
         },
         icon = {

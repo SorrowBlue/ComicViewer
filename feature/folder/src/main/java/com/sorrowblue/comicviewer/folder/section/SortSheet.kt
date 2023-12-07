@@ -72,7 +72,7 @@ fun SortSheet(
                             .weight(1f, true)
                     )
                     if (it == currentSort) {
-                        Icon(ComicIcons.Check, contentDescription = "Selected")
+                        Icon(ComicIcons.Check, contentDescription = null)
                     }
                 }
             }

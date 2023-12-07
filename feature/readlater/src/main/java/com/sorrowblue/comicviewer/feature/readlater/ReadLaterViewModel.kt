@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import logcat.logcat
 
 @HiltViewModel
 internal class ReadLaterViewModel @Inject constructor(
@@ -53,7 +52,6 @@ internal class ReadLaterViewModel @Inject constructor(
 
     fun toggleDisplay() {
         viewModelScope.launch {
-            logcat { "toggleDisplay" }
             manageFolderDisplaySettingsUseCase.edit {
                 it.copy(
                     display = when (it.display) {

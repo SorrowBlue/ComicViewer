@@ -8,6 +8,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.sorrowblue.comicviewer.feature.search.R
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveTopAppBar
@@ -25,7 +27,7 @@ internal fun SearchAppBar(
             TextField(
                 value = query,
                 onValueChange = onQueryChange,
-                placeholder = { Text(text = "Search") },
+                placeholder = { Text(text = stringResource(R.string.search_label_search)) },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent

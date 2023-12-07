@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
@@ -107,7 +108,7 @@ internal fun rememberBoxScreenState(
 }
 
 @Stable
-internal class BoxScreenState constructor(
+internal class BoxScreenState(
     args: BoxArgs,
     uiState: BoxScreenUiState,
     private val context: Context,
@@ -306,10 +307,13 @@ private fun LoadingBoxScreen(onCloseClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Box") },
+                title = { Text(text = stringResource(R.string.box_title2)) },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
-                        Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
+                        Icon(
+                            imageVector = ComicIcons.Close,
+                            contentDescription = stringResource(R.string.box_action_close)
+                        )
                     }
                 }
             )
@@ -336,10 +340,13 @@ private fun LoginBoxScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Box") },
+                title = { Text(text = stringResource(R.string.box_title2)) },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
-                        Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
+                        Icon(
+                            imageVector = ComicIcons.Close,
+                            contentDescription = stringResource(R.string.box_action_close)
+                        )
                     }
                 }
             )
@@ -356,7 +363,7 @@ private fun LoginBoxScreen(
                 LinearProgressIndicator()
             }
             Button(enabled = !uiState.isRunning, onClick = onLoginClick) {
-                Text(text = "Login")
+                Text(text = stringResource(R.string.box_action_login))
             }
         }
     }

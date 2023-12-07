@@ -61,7 +61,7 @@ fun FileInfoSheet(
 ) {
     val scope = rememberCoroutineScope()
     SideSheet(
-        title = "File Info",
+        title = stringResource(id = R.string.file_title),
         innerPadding = contentPadding,
         onCloseClick = onCloseClick,
         width = SideSheetDefault.MaxWidth,
@@ -103,7 +103,9 @@ fun FileInfoSheet(
             horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding)
         ) {
             if (file is Book) {
-                PlainTooltipBox2(tooltipContent = { Text("ファイルの拡張子") }) { state ->
+                PlainTooltipBox2(
+                    tooltipContent = { Text(stringResource(id = R.string.file_label_file_extension)) }
+                ) { state ->
                     AssistChip(
                         onClick = { scope.launch { state.show() } },
                         label = { Text(file.name.extension) }
@@ -118,7 +120,7 @@ fun FileInfoSheet(
             }
             PlainTooltipBox2(
                 tooltipContent = {
-                    Text(text = "変更日時")
+                    Text(text = stringResource(R.string.file_label_modified_date))
                 }
             ) { state ->
                 AssistChip(
@@ -131,7 +133,8 @@ fun FileInfoSheet(
                     onClick = {},
                     label = {
                         Text(
-                            text = lastReadPage(
+                            text = stringResource(
+                                id = R.string.file_text_page_count,
                                 file.lastPageRead,
                                 file.totalPageCount
                             )
@@ -226,7 +229,9 @@ fun FileInfoBottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding)
             ) {
                 if (file is Book) {
-                    PlainTooltipBox2(tooltipContent = { Text("ファイルの拡張子") }) { state ->
+                    PlainTooltipBox2(
+                        tooltipContent = { Text(stringResource(id = R.string.file_label_file_extension)) }
+                    ) { state ->
                         AssistChip(
                             onClick = { scope.launch { state.show() } },
                             label = { Text(file.name.extension) }
@@ -241,7 +246,7 @@ fun FileInfoBottomSheet(
                 }
                 PlainTooltipBox2(
                     tooltipContent = {
-                        Text(text = "変更日時")
+                        Text(text = stringResource(R.string.file_label_modified_date))
                     }
                 ) { state ->
                     AssistChip(
@@ -254,7 +259,8 @@ fun FileInfoBottomSheet(
                         onClick = {},
                         label = {
                             Text(
-                                text = lastReadPage(
+                                text = stringResource(
+                                    id = R.string.file_text_page_count,
                                     file.lastPageRead,
                                     file.totalPageCount
                                 )

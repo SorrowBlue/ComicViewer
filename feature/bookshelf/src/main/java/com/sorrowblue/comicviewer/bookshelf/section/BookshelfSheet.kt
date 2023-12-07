@@ -134,21 +134,21 @@ internal fun BookshelfBottomSheet(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(imageVector = ComicIcons.Delete, contentDescription = null)
                         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                        Text(text = "削除")
+                        Text(text = stringResource(id = R.string.bookshelf_action_delete))
                     }
                 }
                 TextButton(onClick = onEdit) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(imageVector = ComicIcons.Edit, contentDescription = null)
                         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                        Text(text = "編集")
+                        Text(text = stringResource(id = R.string.bookshelf_action_edit))
                     }
                 }
                 TextButton(onClick = onScanClick) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(imageVector = ComicIcons.Refresh, contentDescription = null)
                         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                        Text(text = "スキャン")
+                        Text(text = stringResource(id = R.string.bookshelf_action_scan))
                     }
                 }
             }
@@ -233,21 +233,21 @@ fun BookshelfSideSheet(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(imageVector = ComicIcons.Delete, contentDescription = null)
                     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text = "削除")
+                    Text(text = stringResource(id = R.string.bookshelf_action_delete))
                 }
             }
             TextButton(onClick = onEditClick) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(imageVector = ComicIcons.Edit, contentDescription = null)
                     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text = "編集")
+                    Text(text = stringResource(id = R.string.bookshelf_action_edit))
                 }
             }
             TextButton(onClick = onScanClick) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(imageVector = ComicIcons.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text = "スキャン")
+                    Text(text = stringResource(id = R.string.bookshelf_action_scan))
                 }
             }
         }

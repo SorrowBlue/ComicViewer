@@ -27,7 +27,7 @@ fun FolderScanInfoDialog(
             onDismissRequest = onDismissRequest,
             icon = { Icon(ComicIcons.PermDeviceInformation, contentDescription = null) },
             title = {
-                Text(text = "Request Notification Permission")
+                Text(text = stringResource(R.string.folder_title_request_notification_permission))
             },
             text = {
                 Column {
@@ -42,12 +42,12 @@ fun FolderScanInfoDialog(
             },
             confirmButton = {
                 TextButton(onClick = onConfirmClick) {
-                    Text(text = "Continue")
+                    Text(text = stringResource(R.string.folder_action_continue))
                 }
             },
             dismissButton = {
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = "No")
+                    Text(text = stringResource(id = android.R.string.cancel))
                 }
             }
         )

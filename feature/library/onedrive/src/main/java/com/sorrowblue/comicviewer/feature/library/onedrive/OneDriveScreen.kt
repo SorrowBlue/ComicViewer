@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -134,7 +135,7 @@ private fun LoadingOneDriveScreen(onCloseClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "OneDrive") },
+                title = { Text(text = stringResource(id = com.sorrowblue.comicviewer.app.R.string.onedrive_title)) },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
                         Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
@@ -164,7 +165,7 @@ private fun LoginOneDriveScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "OneDrive") },
+                title = { Text(text = stringResource(id = com.sorrowblue.comicviewer.app.R.string.onedrive_title)) },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
                         Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
@@ -184,7 +185,7 @@ private fun LoginOneDriveScreen(
                 LinearProgressIndicator()
             }
             Button(enabled = !uiState.isRunning, onClick = onLoginClick) {
-                Text(text = "Login")
+                Text(text = stringResource(id = R.string.onedrive_action_login))
             }
         }
     }

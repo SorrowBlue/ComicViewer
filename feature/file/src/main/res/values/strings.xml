@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="file_info_label_last_read_time">Read on %s$1</string>
-    <string name="file_info_label_open_folder">Open folder</string>
     <string name="file_info_label_add_favourites">Favorite</string>
     <string name="file_info_label_add_read_later">Read later</string>
-
-    <string name="file_list_label_switch_list_view">Switch to list view</string>
+    <string name="file_info_label_last_read_time">Read on %s$1</string>
+    <string name="file_info_label_open_folder">Open folder</string>
+    <string name="file_label_file_extension">File extension</string>
+    <string name="file_label_modified_date">modified date</string>
     <string name="file_list_label_switch_grid_view">Switch to grid view</string>
+    <string name="file_list_label_switch_list_view">Switch to list view</string>
+    <string name="file_text_page_count">%1$d/%2$d pages</string>
+    <string name="file_title">File info</string>
 </resources>

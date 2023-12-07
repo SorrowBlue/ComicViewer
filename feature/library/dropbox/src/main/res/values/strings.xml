@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dropbox_action_login">Login</string>
+    <string name="dropbox_action_logout">Logout</string>
+    <string name="dropbox_msg_downloading_background">Downloading in the background</string>
+    <string name="dropbox_msg_one_file_downloaded">1 file downloaded.</string>
+</resources>

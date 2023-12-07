@@ -20,7 +20,7 @@ internal fun GoogleDriveTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     TopAppBar(
-        title = "GoogleDrive",
+        title = com.sorrowblue.comicviewer.app.R.string.googledrive_title,
         onBackClick = onBackClick,
         actions = {
             AsyncImage(

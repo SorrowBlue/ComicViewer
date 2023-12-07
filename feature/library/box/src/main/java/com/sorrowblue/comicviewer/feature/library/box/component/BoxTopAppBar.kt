@@ -37,7 +37,7 @@ internal fun BoxTopAppBar(
     TopAppBar(
         title = {
             Column {
-                Text(text = stringResource(com.sorrowblue.comicviewer.app.R.string.box_title))
+                Text(text = stringResource(com.sorrowblue.comicviewer.feature.library.box.R.string.box_title2))
                 if (path.isNotEmpty()) {
                     Text(
                         text = path,

@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="folder_message_scan">スキャンの進行状況を通知で表示できるようにしてください。</string>
-    <string name="folder_message_info_scan">本棚のスキャンは、通知権限がない場合でも実行されます。</string>
-    <string name="folder_label_no_file">フォルダは空です</string>
-
-    <string name="folder_label_name_asc">名前（昇順）</string>
-    <string name="folder_label_name_desc">名前（降順）</string>
-    <string name="folder_label_size_asc">サイズ（小さい順）</string>
-    <string name="folder_label_size_desc">サイズ（大きい順）</string>
+    <string name="folder_action_change_grid_size">グリッドサイズ</string>
+    <string name="folder_action_continue">続ける</string>
+    <string name="folder_action_search">Search</string>
+    <string name="folder_action_settings">設定</string>
+    <string name="folder_action_sort">ソート順</string>
     <string name="folder_label_date_asc">日付（古い順）</string>
     <string name="folder_label_date_desc">日付（新しい順）</string>
+    <string name="folder_label_name_asc">名前（昇順）</string>
+    <string name="folder_label_name_desc">名前（降順）</string>
+    <string name="folder_label_no_file">フォルダは空です</string>
+    <string name="folder_label_size_asc">サイズ（小さい順）</string>
+    <string name="folder_label_size_desc">サイズ（大きい順）</string>
+    <string name="folder_message_info_scan">本棚のスキャンは、通知権限がない場合でも実行されます。</string>
+    <string name="folder_message_scan">スキャンの進行状況を通知で表示できるようにしてください。</string>
+    <string name="folder_text_nothing_in_folder">There is nothing in \\\"%1$s\\\"</string>
+    <string name="folder_title_request_notification_permission">通知許可のリクエスト</string>
 </resources>

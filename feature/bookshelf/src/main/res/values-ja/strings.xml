@@ -12,9 +12,11 @@
     <string name="bookshelf_info_label_internal_storage">内部ストレージ</string>
     <string name="bookshelf_info_label_smb">LAN/SMB</string>
     <string name="bookshelf_info_label_port">ポート</string>
-    <string name="bookshelf_info_btn_edit">編集</string>
-    <string name="bookshelf_info_btn_remove">削除</string>
+    <string name="bookshelf_action_edit">編集</string>
+    <string name="bookshelf_action_delete">削除</string>
+    <string name="bookshelf_action_scan">スキャン</string>
     <string name="bookshelf_edit_title_remove">本棚の削除</string>
     <string name="bookshelf_remove_label">%1$s を削除しますか?</string>
     <string name="bookshelf_remove_label_delete">削除</string>
+    <string name="bookshelf_msg_delete">「%1$s」は削除されました。</string>
 </resources>

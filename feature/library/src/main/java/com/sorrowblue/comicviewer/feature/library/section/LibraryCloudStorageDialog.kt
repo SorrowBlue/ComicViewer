@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
+import com.sorrowblue.comicviewer.feature.library.R
 import com.sorrowblue.comicviewer.feature.library.component.AddOnItemState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
@@ -30,14 +31,19 @@ internal fun LibraryCloudStorageDialog(
             Icon(imageVector = ComicIcons.RocketLaunch, contentDescription = null)
         },
         title = {
-            Text(text = "拡張機能")
+            Text(text = stringResource(R.string.library_title_extensions))
         },
         text = {
-            Text(text = stringResource(id = addOn.label) + "を利用するには、拡張機能をインストール必要があります。")
+            Text(
+                text = stringResource(
+                    R.string.library_need_install_extension,
+                    stringResource(id = addOn.label)
+                )
+            )
         },
         confirmButton = {
             TextButton(onClick = onInstallClick) {
-                Text(text = "インストール")
+                Text(text = stringResource(R.string.library_action_Install))
             }
         },
         dismissButton = {

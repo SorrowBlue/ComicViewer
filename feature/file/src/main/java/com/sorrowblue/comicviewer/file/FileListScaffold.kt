@@ -42,5 +42,3 @@ val Long.asDateTime: String
     get() = Instant.ofEpochMilli(this)
         .atZone(ZoneOffset.systemDefault())
         .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-
-fun lastReadPage(lastReadPage: Int, maxPage: Int) = "$lastReadPage/$maxPage pages"

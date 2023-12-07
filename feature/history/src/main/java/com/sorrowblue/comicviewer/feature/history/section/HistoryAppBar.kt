@@ -35,8 +35,13 @@ internal fun HistoryAppBar(
             OverflowMenu(state = overflowMenuState) {
                 if (fileContentType is FileContentType.Grid) {
                     DropdownMenuItem(
-                        text = { Text(text = "Change Grid size") },
-                        trailingIcon = { Icon(ComicIcons.Grid4x4, "Change grid size") },
+                        text = { Text(text = stringResource(R.string.history_action_grid_size)) },
+                        trailingIcon = {
+                            Icon(
+                                ComicIcons.Grid4x4,
+                                stringResource(R.string.history_action_grid_size)
+                            )
+                        },
                         onClick = {
                             overflowMenuState.collapse()
                             onGridSizeClick()
@@ -44,9 +49,20 @@ internal fun HistoryAppBar(
                     )
                 }
                 DropdownMenuItem(
-                    text = { Text("Open Settings") },
+                    text = {
+                        Text(
+                            stringResource(
+                                id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_label_settings
+                            )
+                        )
+                    },
                     trailingIcon = {
-                        Icon(ComicIcons.Settings, "Open Settings")
+                        Icon(
+                            ComicIcons.Settings,
+                            stringResource(
+                                id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_desc_open_settings
+                            )
+                        )
                     },
                     onClick = {
                         overflowMenuState.collapse()

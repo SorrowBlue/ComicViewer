@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.settings.security.section
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.feature.settings.security.R
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
@@ -14,8 +15,8 @@ internal fun BiometricsDialog(
     onDismissRequest: () -> Unit,
 ) {
     AlertDialog(
-        title = "Device settings required",
-        text = "Please set ScreenLock or BiometricAuthentication in device settings.",
+        title = stringResource(R.string.settings_security_title_device_settings_required),
+        text = stringResource(R.string.settings_security_text_dialog_desc),
         confirmButton = {
             FilledTonalButton(
                 onClick = onConfirmClick,

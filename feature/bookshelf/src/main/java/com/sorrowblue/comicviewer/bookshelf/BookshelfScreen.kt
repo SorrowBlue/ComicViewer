@@ -85,10 +85,16 @@ internal fun BookshelfRoute(
         },
         onRemoveDialogDismissRequest = viewModel::onRemoveDialogDismissRequest
     )
+    val context = LocalContext.current
     LaunchedEffectUiEvent(viewModel.uiEvents, viewModel::consumeUiEvent) {
         when (it) {
             is BookshelfUiEvent.Message -> {
-                state.snackbarHostState.showSnackbar(it.text)
+                state.snackbarHostState.showSnackbar(
+                    context.getString(
+                        R.string.bookshelf_msg_delete,
+                        it.text
+                    )
+                )
             }
         }
     }

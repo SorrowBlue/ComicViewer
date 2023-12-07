@@ -53,7 +53,7 @@ fun FileListContent(
             AsyncImage(
                 model = file,
                 modifier = Modifier.size(56.dp),
-                contentDescription = "",
+                contentDescription = null,
                 placeholder = rememberDebugPlaceholder()
             )
         },
@@ -94,7 +94,7 @@ fun FileListMedium(
             AsyncImage(
                 model = file,
                 modifier = Modifier.size(56.dp),
-                contentDescription = "",
+                contentDescription = null,
                 placeholder = rememberDebugPlaceholder()
             )
         },

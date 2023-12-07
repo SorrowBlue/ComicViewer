@@ -20,8 +20,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
+import com.sorrowblue.comicviewer.feature.tutorial.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookLover
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -58,12 +60,15 @@ internal fun DirectionSheet(
 
         Spacer(modifier = Modifier.size(16.dp))
 
-        Text(text = "Reading direction", style = MaterialTheme.typography.titleLarge)
+        Text(
+            text = stringResource(R.string.tutorial_text_direction),
+            style = MaterialTheme.typography.titleLarge
+        )
 
         Spacer(modifier = Modifier.size(16.dp))
 
         ListItemRadioButton(
-            headlineContent = { Text(text = "Right to left") },
+            headlineContent = { Text(text = stringResource(R.string.tutorial_label_direction_rtl)) },
             selected = uiState.direction == BindingDirection.RTL,
             onCheckedChange = {
                 if (it) {
@@ -76,7 +81,7 @@ internal fun DirectionSheet(
                 .fillMaxWidth()
         )
         ListItemRadioButton(
-            headlineContent = { Text(text = "Left to Right") },
+            headlineContent = { Text(text = stringResource(R.string.tutorial_label_direction_ltr)) },
             selected = uiState.direction == BindingDirection.LTR,
             onCheckedChange = {
                 if (it) {
