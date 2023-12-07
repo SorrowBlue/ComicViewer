@@ -23,8 +23,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
+import com.sorrowblue.comicviewer.feature.tutorial.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileBundle
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -55,7 +57,7 @@ internal fun ArchiveSheet(
         Spacer(modifier = Modifier.size(16.dp))
 
         Text(
-            text = "Support Archive Compress File",
+            text = stringResource(R.string.tutorial_text_archive),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
                 .widthIn(max = 400.dp)
@@ -65,7 +67,7 @@ internal fun ArchiveSheet(
         Spacer(modifier = Modifier.size(16.dp))
 
         Text(
-            text = "Supports viewing of archived and compressed files. Supported extensions are zip, rar, 7z, etc. Files with passwords are also supported.",
+            text = stringResource(R.string.tutorial_text_archive_description),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .widthIn(max = 400.dp)

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorial_label_direction_ltr">Left to Right</string>
+    <string name="tutorial_label_direction_rtl">Right to left</string>
+    <string name="tutorial_text_archive">Support Archive Compress File</string>
+    <string name="tutorial_text_archive_description">Supports viewing of archived and compressed files. Supported extensions are zip, rar, 7z, etc. Files with passwords are also supported.</string>
+    <string name="tutorial_text_direction">Reading direction</string>
+    <string name="tutorial_text_document">Document Support</string>
+    <string name="tutorial_text_document_description">You can read documents (.pdf, .epub, .xps, .oxps) by downloading additional functions.</string>
+</resources>

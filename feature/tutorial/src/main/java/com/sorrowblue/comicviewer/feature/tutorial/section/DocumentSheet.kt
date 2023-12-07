@@ -24,8 +24,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.sorrowblue.comicviewer.feature.tutorial.R
 import com.sorrowblue.comicviewer.feature.tutorial.SplitInstallError
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
@@ -137,7 +139,7 @@ internal fun DocumentSheet(
         Spacer(modifier = Modifier.size(16.dp))
 
         Text(
-            text = "Document Support",
+            text = stringResource(R.string.tutorial_text_document),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
@@ -148,7 +150,7 @@ internal fun DocumentSheet(
         Spacer(modifier = Modifier.size(16.dp))
 
         Text(
-            text = "追加の機能をダウンロードすることでドキュメント(.pdf, .epub, .xps, .oxps)の読み込むことができます。",
+            text = stringResource(R.string.tutorial_text_document_description),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .widthIn(max = 400.dp)
