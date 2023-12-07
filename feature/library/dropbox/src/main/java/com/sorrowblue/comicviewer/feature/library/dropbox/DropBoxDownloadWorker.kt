@@ -45,7 +45,8 @@ internal class DropBoxDownloadWorker(
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(
             NOTIFICATION_ID,
-            notificationBuilder.setContentTitle("バックグラウンドでダウンロード中").build(),
+            notificationBuilder.setContentTitle(applicationContext.getString(R.string.dropbox_msg_downloading_background))
+                .build(),
             ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
         )
     }
@@ -114,7 +115,7 @@ internal class DropBoxDownloadWorker(
                 tag,
                 NOTIFICATION_ID,
                 notificationBuilder
-                    .setContentTitle("1個のファイルをダウンロードしました。")
+                    .setContentTitle(applicationContext.getString(R.string.dropbox_msg_one_file_downloaded))
                     .setContentText(name)
                     .setProgress(0, 0, false).build()
             )

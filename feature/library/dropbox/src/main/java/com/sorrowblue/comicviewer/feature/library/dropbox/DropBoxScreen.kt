@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.paging.compose.LazyPagingItems
@@ -126,7 +127,7 @@ private fun LoadingDropBoxScreen(onCloseClick: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "DropBox") },
+                title = { Text(text = stringResource(com.sorrowblue.comicviewer.app.R.string.dropbox_title)) },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
                         Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
@@ -156,7 +157,7 @@ private fun LoginDropBoxScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "DropBox") },
+                title = { Text(text = stringResource(com.sorrowblue.comicviewer.app.R.string.dropbox_title)) },
                 navigationIcon = {
                     IconButton(onClick = onCloseClick) {
                         Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
@@ -176,7 +177,7 @@ private fun LoginDropBoxScreen(
                 LinearProgressIndicator()
             }
             Button(enabled = !uiState.isRunning, onClick = onLoginClick) {
-                Text(text = "Login")
+                Text(text = stringResource(R.string.dropbox_action_login))
             }
         }
     }
