@@ -46,7 +46,6 @@ import com.sorrowblue.comicviewer.framework.ui.responsive.rememberResponsiveScaf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.parcelize.Parcelize
-import logcat.logcat
 
 @Parcelize
 internal data class SearchScreenUiState(
@@ -176,13 +175,11 @@ internal fun SearchRoute(
     LaunchedEffect(uiState) {
         if (!state.isSkipFirstRefresh) {
             delay(WaitLoadPage)
-            logcat { "Refresh FileList(search)" }
             lazyPagingItems.refresh()
         }
     }
     LaunchedEffect(lazyPagingItems.loadState) {
         if (lazyPagingItems.isLoadedData && state.isScrollableTop) {
-            logcat { "Scroll to top.(search)" }
             state.isScrollableTop = false
             lazyGridState.scrollToItem(0)
         }
