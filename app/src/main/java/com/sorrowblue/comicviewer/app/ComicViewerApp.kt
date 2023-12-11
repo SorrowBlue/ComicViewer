@@ -48,12 +48,10 @@ internal fun ComicViewerApp(
             val uiState = state.uiState
             MainScreen(
                 uiState = uiState,
-                appFabState = state.appFabState,
                 bottomSheetNavigator = state.bottomSheetNavigator,
                 navController = state.navController,
                 startDestination = state.graphStateHolder.startDestination,
                 onTabSelected = state.graphStateHolder::onTabSelected,
-                onFabClick = state.graphStateHolder::onTabClick,
             ) { navHostController, contentPadding ->
                 mainGraph(
                     isMobile = isMobile,

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.app
+package com.sorrowblue.comicviewer.framework.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable

@@ -98,9 +98,7 @@ fun ComicTheme(
         else -> if (darkTheme) DarkColors else LightColors
     }
     MaterialTheme(
-        colorScheme = colorScheme.copy(
-            background = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) colorScheme.surface else colorScheme.surfaceContainer
-        ),
+        colorScheme = colorScheme,
         content = content
     )
 }
@@ -135,6 +133,11 @@ object ComicTheme {
 
 val Shapes.largeTop get() = large.copy(bottomStart = CornerSize(0), bottomEnd = CornerSize(0))
 val Shapes.largeBottom get() = large.copy(topStart = CornerSize(0), topEnd = CornerSize(0))
+val Shapes.extralargeStart
+    get() = extraLarge.copy(
+        topEnd = CornerSize(0),
+        bottomEnd = CornerSize(0)
+    )
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)
 private fun supportsDynamicTheming() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S

@@ -13,8 +13,10 @@ dependencies {
     implementation(projects.framework.designsystem)
 
     api(libs.androidx.compose.material3)
+    api(libs.androidx.compose.material3.adaptive)
+    api(libs.androidx.compose.material3.adaptiveNavigationSuite)
+    api(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.compose.ui.util)
-    implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.coil.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigationCompose)

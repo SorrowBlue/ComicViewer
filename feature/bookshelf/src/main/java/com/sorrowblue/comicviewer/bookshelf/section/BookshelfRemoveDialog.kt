@@ -18,30 +18,28 @@ sealed interface BookshelfRemoveDialogUiState {
 }
 
 @Composable
-fun BookshelfRemoveDialog(
-    uiState: BookshelfRemoveDialogUiState,
+internal fun BookshelfRemoveDialog(
+    title: String,
     onDismissRequest: () -> Unit,
     onConfirmClick: () -> Unit,
 ) {
-    if (uiState is BookshelfRemoveDialogUiState.Show) {
-        AlertDialog(
-            onDismissRequest = onDismissRequest,
-            title = {
-                Text(text = stringResource(id = R.string.bookshelf_edit_title_remove))
-            },
-            text = {
-                Text(text = stringResource(id = R.string.bookshelf_remove_label, uiState.title))
-            },
-            confirmButton = {
-                TextButton(onClick = onConfirmClick) {
-                    Text(stringResource(id = R.string.bookshelf_remove_label_delete))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = onDismissRequest) {
-                    Text(stringResource(id = android.R.string.cancel))
-                }
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(text = stringResource(id = R.string.bookshelf_edit_title_remove))
+        },
+        text = {
+            Text(text = stringResource(id = R.string.bookshelf_remove_label, title))
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirmClick) {
+                Text(stringResource(id = R.string.bookshelf_remove_label_delete))
             }
-        )
-    }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(stringResource(id = android.R.string.cancel))
+            }
+        }
+    )
 }

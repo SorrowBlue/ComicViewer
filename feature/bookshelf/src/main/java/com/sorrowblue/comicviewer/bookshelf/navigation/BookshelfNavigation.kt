@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.bookshelf.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -37,9 +38,11 @@ fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String, resto
     )
 }
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private fun NavGraphBuilder.bookshelfScreen(
     contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
+    onFabClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
 ) {
@@ -47,6 +50,7 @@ private fun NavGraphBuilder.bookshelfScreen(
         BookshelfRoute(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
+            onFabClick = onFabClick,
             onBookshelfClick = onBookshelfClick,
             onEditClick = onEditClick,
         )
@@ -71,6 +75,7 @@ fun NavGraphBuilder.bookshelfGraph(
         bookshelfScreen(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
+            onFabClick = navController::navigateToBookshelfSelection,
             onBookshelfClick = navController::navigateToBookshelfFolder,
             onEditClick = navController::navigateToBookshelfEdit,
         )

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.app
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
@@ -20,21 +19,20 @@ import androidx.navigation.navOptions
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
-import com.sorrowblue.comicviewer.app.component.AppFabState
-import com.sorrowblue.comicviewer.app.component.rememberAppFabState
 import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialRoute
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
+import com.sorrowblue.comicviewer.framework.ui.SavableState
+import com.sorrowblue.comicviewer.framework.ui.rememberSavableState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
 
-@SuppressLint("RestrictedApi")
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 internal fun rememberComicViewerAppState(
@@ -43,11 +41,9 @@ internal fun rememberComicViewerAppState(
     graphStateHolder: GraphStateHolder = rememberGraphStateHolder(),
     viewModel: ComicViewerAppViewModel = hiltViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
-    appFabState: AppFabState = rememberAppFabState(),
 ): ComicViewerAppState = rememberSavableState(
     restore = {
         ComicViewerAppStateImpl(
-            appFabState,
             bottomSheetNavigator,
             navController,
             graphStateHolder,
@@ -58,7 +54,6 @@ internal fun rememberComicViewerAppState(
     }
 ) {
     ComicViewerAppStateImpl(
-        appFabState,
         bottomSheetNavigator,
         navController,
         graphStateHolder,
@@ -70,8 +65,6 @@ internal fun rememberComicViewerAppState(
 
 internal interface ComicViewerAppState : SavableState {
     var uiState: MainScreenUiState
-
-    val appFabState: AppFabState
 
     @OptIn(ExperimentalMaterialNavigationApi::class)
     val bottomSheetNavigator: BottomSheetNavigator
@@ -87,7 +80,6 @@ internal interface ComicViewerAppState : SavableState {
 @OptIn(ExperimentalMaterialNavigationApi::class, SavedStateHandleSaveableApi::class)
 @Stable
 internal class ComicViewerAppStateImpl(
-    override val appFabState: AppFabState,
     override val bottomSheetNavigator: BottomSheetNavigator,
     override val navController: NavHostController,
     override val graphStateHolder: GraphStateHolder,
@@ -131,9 +123,6 @@ internal class ComicViewerAppStateImpl(
                         showNavigation = currentTab != null
                     )
                 }
-                it.destination.hierarchy.firstOrNull()?.route?.let(graphStateHolder::routeToFab)
-                    ?.let(appFabState::show)
-                    ?: appFabState.hide()
             }
         }
     }

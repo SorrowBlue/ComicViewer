@@ -68,6 +68,11 @@ fun NavGraphBuilder.bookshelfEditScreen(
                 },
             )
         ) {
+            BookshelfEditRoute(
+                args = BookshelfEditArgs(it.arguments!!),
+                onBackClick = onBackClick,
+                onComplete = onComplete
+            )
         }
     }
 }
