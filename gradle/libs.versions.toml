@@ -83,7 +83,7 @@ androidx-compose-material3-adaptive = { group = "androidx.compose.material3", na
 androidx-compose-material3-adaptiveNavigationSuite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version = "1.0.0-alpha01" }
 androidx-compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class" }
 
-androidx-activity-compose = "androidx.activity:activity-compose:1.8.1"
+androidx-activity-compose = "androidx.activity:activity-compose:1.8.2"
 androidx-lifecycle-viewmodel-compose = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
 
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "androidx-datastore" }
