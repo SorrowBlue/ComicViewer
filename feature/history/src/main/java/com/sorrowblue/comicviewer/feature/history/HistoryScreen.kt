@@ -13,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -21,12 +20,9 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.section.EmptyContent
 import com.sorrowblue.comicviewer.feature.history.section.HistoryAppBar
-import com.sorrowblue.comicviewer.file.FileInfoBottomSheet
-import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.rememberSideSheetFileState
-import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffold
 import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveScaffoldState
@@ -96,23 +92,8 @@ internal fun HistoryScreen(
             bottom = contentPadding.calculateBottomPadding()
         ),
         sideSheet = { file, innerPadding ->
-            FileInfoSheet(
-                file = file,
-                contentPadding = innerPadding.add(paddingValues = PaddingValues(top = 8.dp)),
-                onCloseClick = { },
-                onReadLaterClick = { },
-                onFavoriteClick = { },
-                onOpenFolderClick = { }
-            )
         },
         bottomSheet = { file ->
-            FileInfoBottomSheet(
-                file = file,
-                onDismissRequest = { },
-                onReadLaterClick = { },
-                onFavoriteClick = { },
-                onOpenFolderClick = { }
-            )
         },
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
@@ -123,8 +104,8 @@ internal fun HistoryScreen(
                 type = uiState.fileContentType,
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = innerPadding,
-                onClickItem = onFileClick,
-                onLongClickItem = onFileLongClick,
+                onFileClick = onFileClick,
+                onInfoClick = onFileLongClick,
                 state = lazyGridState
             )
         }

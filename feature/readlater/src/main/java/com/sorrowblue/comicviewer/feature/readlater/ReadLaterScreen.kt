@@ -98,8 +98,8 @@ private fun ReadLaterScreen(
                 type = uiState.fileContentType,
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = innerPadding,
-                onClickItem = onFileClick,
-                onLongClickItem = onFileLongClick,
+                onFileClick = onFileClick,
+                onInfoClick = onFileLongClick,
                 state = lazyGridState
             )
         }

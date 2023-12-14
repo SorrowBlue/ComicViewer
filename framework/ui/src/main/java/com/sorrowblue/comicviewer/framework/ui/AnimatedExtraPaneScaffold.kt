@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.bookshelf
+package com.sorrowblue.comicviewer.framework.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.adaptive.AnimatedPane
@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun ExtraPaneScaffold(
+fun AnimatedExtraPaneScaffold(
     modifier: Modifier = Modifier,
     extraPane: @Composable () -> Unit,
     navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
@@ -65,7 +65,7 @@ fun calculateStandardPaneScaffoldDirective(
         else -> {
             maxHorizontalPartitions = 2
             contentPadding = PaddingValues()
-            verticalSpacerSize = 24.dp
+            verticalSpacerSize = 0.dp
         }
     }
     val maxVerticalPartitions: Int

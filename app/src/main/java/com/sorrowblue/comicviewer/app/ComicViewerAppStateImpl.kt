@@ -28,6 +28,8 @@ import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import com.sorrowblue.comicviewer.framework.ui.SavableState
 import com.sorrowblue.comicviewer.framework.ui.rememberSavableState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import logcat.LogPriority
@@ -141,48 +143,59 @@ internal class ComicViewerAppStateImpl(
                 viewModel.shouldKeepSplash = false
                 this@ComicViewerAppStateImpl.isInitialized = true
             } else if (viewModel.isRestore()) {
-                val history = viewModel.history()
-                if (history?.folderList.isNullOrEmpty()) {
+                val job = restoreNavigation()
+                scope.launch {
+                    delay(3000)
                     completeRestoreHistory()
-                } else {
-                    isRestoredNavHistory = true
-                    val (folderList, book) = history!!.value
-                    val bookshelfId = folderList.first().bookshelfId
-                    if (folderList.size == 1) {
-                        navController.navigateToBookshelfFolder(
-                            bookshelfId,
-                            folderList.first().path,
-                            book.path
-                        )
-                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                            "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
-                        }
-                    } else {
-                        navController.navigateToBookshelfFolder(
-                            bookshelfId,
-                            folderList.first().path
-                        )
-                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                            "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
-                        }
-                        folderList.drop(1).dropLast(1).forEach { folder ->
-                            navController.navigateToBookshelfFolder(bookshelfId, folder.path)
-                            logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                                "-> folder(${folder.path})"
-                            }
-                        }
-                        navController.navigateToBookshelfFolder(
-                            bookshelfId,
-                            folderList.last().path,
-                            book.path
-                        )
-                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                            "-> folder${folderList.last().path}, ${book.path}"
-                        }
-                    }
+                    job.cancel()
                 }
             } else {
                 completeRestoreHistory()
+            }
+        }
+    }
+
+    private fun restoreNavigation(): Job {
+        return scope.launch {
+            val history = viewModel.history()
+            if (history?.folderList.isNullOrEmpty()) {
+                completeRestoreHistory()
+            } else {
+                isRestoredNavHistory = true
+                val (folderList, book) = history!!.value
+                val bookshelfId = folderList.first().bookshelfId
+                if (folderList.size == 1) {
+                    navController.navigateToBookshelfFolder(
+                        bookshelfId,
+                        folderList.first().path,
+                        book.path
+                    )
+                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                        "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
+                    }
+                } else {
+                    navController.navigateToBookshelfFolder(
+                        bookshelfId,
+                        folderList.first().path
+                    )
+                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                        "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
+                    }
+                    folderList.drop(1).dropLast(1).forEach { folder ->
+                        navController.navigateToBookshelfFolder(bookshelfId, folder.path)
+                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                            "-> folder(${folder.path})"
+                        }
+                    }
+                    navController.navigateToBookshelfFolder(
+                        bookshelfId,
+                        folderList.last().path,
+                        book.path
+                    )
+                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                        "-> folder${folderList.last().path}, ${book.path}"
+                    }
+                }
             }
         }
     }

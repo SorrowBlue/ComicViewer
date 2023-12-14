@@ -61,7 +61,7 @@ fun PreviewTheme(content: @Composable () -> Unit) {
             )
         )
     ) {
-        ComicTheme {
+        ComicTheme(useDynamicColor = true) {
             content()
         }
     }

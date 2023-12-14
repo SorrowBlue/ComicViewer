@@ -5,6 +5,11 @@
     <string name="folder_action_search">Search</string>
     <string name="folder_action_settings">Settings</string>
     <string name="folder_action_sort">Sort by</string>
+    <string name="folder_label_name">Name</string>
+    <string name="folder_label_date">Date</string>
+    <string name="folder_label_size">Size</string>
+    <string name="folder_label_asc">Ascending</string>
+    <string name="folder_label_desc">Descending</string>
     <string name="folder_label_date_asc">Date (oldest first)</string>
     <string name="folder_label_date_desc">Date (newest first)</string>
     <string name="folder_label_name_asc">Name (ascending)</string>

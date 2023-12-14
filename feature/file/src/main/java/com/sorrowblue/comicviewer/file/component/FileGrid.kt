@@ -1,20 +1,19 @@
 package com.sorrowblue.comicviewer.file.component
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
@@ -23,44 +22,38 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
-import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveCard
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FileGrid(
     file: File,
     onClick: () -> Unit,
-    onLongClick: () -> Unit,
+    onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ResponsiveCard(
-        modifier,
-    ) {
-        Column(
-            Modifier.combinedClickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(),
-                onLongClick = onLongClick,
-                onClick = onClick
-            )
-        ) {
+    ElevatedCard(onClick = onClick, modifier = modifier) {
+        Box {
             AsyncImage(
                 model = file,
                 placeholder = rememberDebugPlaceholder()
                     ?: forwardingPainter(
-                        rememberVectorPainter(if (file is Book) ComicIcons.Book else ComicIcons.Folder),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
+                        rememberVectorPainter(ComicIcons.DocumentUnknown),
+                        colorFilter = ColorFilter.tint(ComicTheme.colorScheme.surface)
                     ),
                 error = forwardingPainter(
-                    rememberVectorPainter(if (file is Book) ComicIcons.Book else ComicIcons.Folder),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
+                    rememberVectorPainter(ComicIcons.DocumentUnknown),
+                    colorFilter = ColorFilter.tint(ComicTheme.colorScheme.surface)
                 ),
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
@@ -68,7 +61,34 @@ fun FileGrid(
                     .fillMaxWidth()
                     .aspectRatio(1f)
                     .clip(CardDefaults.shape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(ComicTheme.colorScheme.surfaceVariant)
+            )
+            IconButton(
+                onClick = onInfoClick,
+                modifier = Modifier.align(Alignment.BottomEnd),
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = ComicTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
+                    contentColor = ComicTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Icon(
+                    imageVector = ComicIcons.MoreVert,
+                    contentDescription = "ファイルの情報を開く",
+                )
+            }
+        }
+        Box {
+            Text(
+                text = file.name,
+                style = ComicTheme.typography.bodyMedium.copy(
+                    letterSpacing = 0.sp
+                ),
+                textAlign = TextAlign.Start,
+                maxLines = 2,
+                minLines = 2,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
             )
             if (file is Book && 0 < file.lastPageRead) {
                 LinearProgressIndicator(
@@ -77,28 +97,20 @@ fun FileGrid(
                         .fillMaxWidth(),
                 )
             }
-            Text(
-                text = file.name,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = ComicTheme.dimension.padding * 2,
-                        vertical = ComicTheme.dimension.padding
-                    )
-            )
         }
     }
 }
 
-@Preview
+@Preview(widthDp = 88)
+@Preview(widthDp = 120)
+@Preview(widthDp = 180)
 @Composable
 private fun PreviewFileGrid() {
-    ComicTheme {
+    PreviewTheme {
         FileGrid(
-            file = FakeFile,
+            file = FakeFile2,
             onClick = {},
-            onLongClick = {}
+            onInfoClick = {}
         )
     }
 }

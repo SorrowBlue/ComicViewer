@@ -130,3 +130,16 @@ internal val FakeFile = BookFile(
     123,
     0
 )
+
+internal val FakeFile2 = BookFile(
+    BookshelfId(0),
+    "1234567890123456789012345678901234567890",
+    "/comic/example/",
+    "/comic/example/FakeBookName.zip",
+    0,
+    0,
+    "",
+    50,
+    123,
+    0
+)

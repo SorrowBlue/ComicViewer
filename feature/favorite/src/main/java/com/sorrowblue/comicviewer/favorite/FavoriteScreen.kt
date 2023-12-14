@@ -99,8 +99,8 @@ private fun FavoriteScreen(
                 type = uiState.fileContentType,
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = contentPadding,
-                onClickItem = onClickFile,
-                onLongClickItem = onClickLongFile,
+                onFileClick = onClickFile,
+                onInfoClick = onClickLongFile,
                 state = lazyGridState
             )
         }

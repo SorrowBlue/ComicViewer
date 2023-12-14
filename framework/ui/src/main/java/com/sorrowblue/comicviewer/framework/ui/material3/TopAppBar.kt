@@ -129,14 +129,14 @@ fun TopAppBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @JvmInline
-value class TopAppBarScrollBehavior(val value: androidx.compose.material3.TopAppBarScrollBehavior) {
+value class TopAppBarScrollBehavior internal constructor(val value: androidx.compose.material3.TopAppBarScrollBehavior) {
 
     val nestedScrollConnection get() = value.nestedScrollConnection
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @JvmInline
-value class TopAppBarColors(val value: androidx.compose.material3.TopAppBarColors)
+value class TopAppBarColors internal constructor(val value: androidx.compose.material3.TopAppBarColors)
 
 object TopAppBarDefaults {
 

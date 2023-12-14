@@ -65,8 +65,7 @@ internal class HistoryViewModel @Inject constructor(
             manageFolderDisplaySettingsUseCase.edit {
                 it.copy(
                     columnSize = when (it.columnSize) {
-                        FolderDisplaySettings.Size.SMALL -> FolderDisplaySettings.Size.LARGE
-                        FolderDisplaySettings.Size.MEDIUM -> FolderDisplaySettings.Size.SMALL
+                        FolderDisplaySettings.Size.MEDIUM -> FolderDisplaySettings.Size.LARGE
                         FolderDisplaySettings.Size.LARGE -> FolderDisplaySettings.Size.MEDIUM
                     }
                 )

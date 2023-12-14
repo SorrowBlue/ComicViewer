@@ -5,7 +5,6 @@
 
 package com.sorrowblue.comicviewer.bookshelf
 
-import androidx.activity.ComponentActivity
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
@@ -20,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
@@ -29,9 +27,9 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.framework.ui.CommonViewModel
 import com.sorrowblue.comicviewer.framework.ui.DialogController
 import com.sorrowblue.comicviewer.framework.ui.SavableState
+import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.rememberSavableState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -41,7 +39,6 @@ import kotlinx.coroutines.launch
 @Stable
 internal class BookshelfScreenState(
     private val viewModel: BookshelfViewModel,
-    private val commonViewModel: CommonViewModel,
     private val scope: CoroutineScope,
     val snackbarHostState: SnackbarHostState,
     val navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
@@ -50,10 +47,6 @@ internal class BookshelfScreenState(
 ) : SavableState {
 
     val pagingDataFlow: Flow<PagingData<BookshelfFolder>> = viewModel.pagingDataFlow
-
-    fun canScroll(canScroll: Boolean) {
-        commonViewModel.canScroll = canScroll
-    }
 
     var bookshelfFolder: BookshelfFolder? by savedStateHandle.saveable(
         "bookshelfFolder",
@@ -110,7 +103,6 @@ internal class BookshelfScreenState(
 @Composable
 internal fun rememberBookshelfScreenState(
     viewModel: BookshelfViewModel = hiltViewModel(),
-    commonViewModel: CommonViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
     navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
@@ -121,7 +113,6 @@ internal fun rememberBookshelfScreenState(
     return rememberSavableState(restore = {
         BookshelfScreenState(
             viewModel = viewModel,
-            commonViewModel = commonViewModel,
             scope = scope,
             navigator = navigator,
             removeDialogController = removeDialogController,
@@ -131,7 +122,6 @@ internal fun rememberBookshelfScreenState(
     }) {
         BookshelfScreenState(
             viewModel = viewModel,
-            commonViewModel = commonViewModel,
             scope = scope,
             navigator = navigator,
             removeDialogController = removeDialogController,

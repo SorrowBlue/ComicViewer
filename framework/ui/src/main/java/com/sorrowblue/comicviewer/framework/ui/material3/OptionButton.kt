@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.file.component
+package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

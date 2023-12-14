@@ -5,6 +5,11 @@
     <string name="folder_action_search">Search</string>
     <string name="folder_action_settings">設定</string>
     <string name="folder_action_sort">ソート順</string>
+    <string name="folder_label_name">名前</string>
+    <string name="folder_label_date">最終更新</string>
+    <string name="folder_label_size">サイズ</string>
+    <string name="folder_label_asc">昇順</string>
+    <string name="folder_label_desc">降順</string>
     <string name="folder_label_date_asc">日付（古い順）</string>
     <string name="folder_label_date_desc">日付（新しい順）</string>
     <string name="folder_label_name_asc">名前（昇順）</string>

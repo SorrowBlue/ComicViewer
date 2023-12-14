@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.bookshelf.section
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,20 +16,20 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 @Composable
 internal fun BookshelfMainSheet(
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
-    innerPadding: PaddingValues,
-    lazyGridState: LazyStaggeredGridState,
+    lazyGridState: LazyGridState,
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
+    innerPadding: PaddingValues,
 ) {
     if (lazyPagingItems.isEmptyData) {
         BookshelfEmptyContents(innerPadding = innerPadding)
     } else {
         BookshelfListContents(
             lazyGridState = lazyGridState,
-            innerPadding = innerPadding,
             lazyPagingItems = lazyPagingItems,
             onBookshelfClick = onBookshelfClick,
-            onBookshelfInfoClick = onBookshelfInfoClick
+            onBookshelfInfoClick = onBookshelfInfoClick,
+            contentPadding = innerPadding
         )
     }
     if (lazyPagingItems.loadState.refresh is LoadState.Loading) {

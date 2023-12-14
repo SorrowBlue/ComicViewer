@@ -19,7 +19,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -31,11 +30,8 @@ import com.sorrowblue.comicviewer.feature.search.navigation.SearchArgs
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditions
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditionsUiState
 import com.sorrowblue.comicviewer.feature.search.section.SearchResultSheet
-import com.sorrowblue.comicviewer.file.FileInfoBottomSheet
-import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.rememberSideSheetFileState
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
 import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
@@ -236,23 +232,8 @@ private fun SearchScreen(
             }
         },
         sideSheet = { file, innerPadding ->
-            FileInfoSheet(
-                file = file,
-                contentPadding = innerPadding.add(paddingValues = PaddingValues(top = 8.dp)),
-                onCloseClick = onFileInfoCloseClick,
-                onReadLaterClick = { onReadLaterClick(file) },
-                onFavoriteClick = { onFavoriteClick(file) },
-                onOpenFolderClick = { onOpenFolderClick(file) }
-            )
         },
         bottomSheet = { file ->
-            FileInfoBottomSheet(
-                file = file,
-                onReadLaterClick = { onReadLaterClick(file) },
-                onFavoriteClick = { onFavoriteClick(file) },
-                onOpenFolderClick = { onOpenFolderClick(file) },
-                onDismissRequest = onFileInfoCloseClick
-            )
         },
         contentWindowInsets = contentPadding.asWindowInsets(),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)

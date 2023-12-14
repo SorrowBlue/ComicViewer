@@ -12,7 +12,7 @@ data class FolderDisplaySettings(
 ) {
 
     enum class Size {
-        SMALL, MEDIUM, LARGE
+        MEDIUM, LARGE
     }
 
     enum class Display {
