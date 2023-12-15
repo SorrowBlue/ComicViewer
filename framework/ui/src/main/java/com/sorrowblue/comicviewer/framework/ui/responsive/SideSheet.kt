@@ -114,8 +114,7 @@ fun SideSheet(
         modifier = modifier
             .fillMaxHeight()
             .padding(innerPadding.copy(bottom = 0.dp, start = 0.dp))
-            .padding(
-            )
+            .padding()
             .width(width)
             .clip(ComicTheme.shapes.largeTop)
     ) {

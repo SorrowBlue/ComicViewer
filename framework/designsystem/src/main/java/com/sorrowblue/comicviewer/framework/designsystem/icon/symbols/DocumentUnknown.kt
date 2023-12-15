@@ -18,8 +18,11 @@ val ComicIcons.DocumentUnknown: ImageVector
         }
         _documentUnknown = Builder(
             name =
-            "_documentUnknown", defaultWidth = 24.0.dp, defaultHeight =
-            24.0.dp, viewportWidth = 960.0f, viewportHeight = 960.0f
+            "_documentUnknown",
+            defaultWidth = 24.0.dp,
+            defaultHeight =
+            24.0.dp,
+            viewportWidth = 960.0f, viewportHeight = 960.0f
         ).apply {
             path(
                 fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,

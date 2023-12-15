@@ -1,5 +1,6 @@
 @file:OptIn(
-    ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class,
+    ExperimentalMaterial3AdaptiveApi::class,
+    SavedStateHandleSaveableApi::class,
     ExperimentalMaterial3AdaptiveApi::class
 )
 
@@ -55,10 +56,14 @@ internal class BookshelfScreenState(
             restore = {
                 val bookshelf = it["bookshelf"] as? Bookshelf
                 val folder = it["folder"] as? Folder
-                if (bookshelf != null && folder != null) BookshelfFolder(
-                    bookshelf,
-                    folder
-                ) else null
+                if (bookshelf != null && folder != null) {
+                    BookshelfFolder(
+                        bookshelf,
+                        folder
+                    )
+                } else {
+                    null
+                }
             }
         ),
     ) { mutableStateOf(null) }
@@ -102,31 +107,22 @@ internal class BookshelfScreenState(
 
 @Composable
 internal fun rememberBookshelfScreenState(
-    viewModel: BookshelfViewModel = hiltViewModel(),
     navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
+    viewModel: BookshelfViewModel = hiltViewModel(),
     removeDialogController: DialogController<BookshelfFolder?> = remember { DialogController(null) },
 ): BookshelfScreenState {
-    return rememberSavableState(restore = {
+    return rememberSavableState {
         BookshelfScreenState(
-            viewModel = viewModel,
             scope = scope,
             navigator = navigator,
             removeDialogController = removeDialogController,
             snackbarHostState = snackbarHostState,
+            viewModel = viewModel,
             savedStateHandle = it
-        )
-    }) {
-        BookshelfScreenState(
-            viewModel = viewModel,
-            scope = scope,
-            navigator = navigator,
-            removeDialogController = removeDialogController,
-            snackbarHostState = snackbarHostState,
-            savedStateHandle = SavedStateHandle()
         )
     }
 }

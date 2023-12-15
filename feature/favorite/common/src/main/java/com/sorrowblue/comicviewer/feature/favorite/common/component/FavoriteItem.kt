@@ -1,9 +1,9 @@
 package com.sorrowblue.comicviewer.feature.favorite.common.component
 
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
@@ -33,8 +33,7 @@ fun FavoriteItem(favorite: Favorite, onClick: () -> Unit, modifier: Modifier = M
     ListItem(
         modifier = modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
-//            indication = rememberRipple(color = MaterialTheme.colorScheme.onSurface),
-            indication = LocalIndication.current,
+            indication = rememberRipple(),
             onClick = onClick
         ),
         headlineContent = { Text(favorite.name) },

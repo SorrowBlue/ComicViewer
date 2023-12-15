@@ -48,7 +48,6 @@ internal class FolderViewModel @Inject constructor(
         PagingFileUseCase.Request(PagingConfig(30), bookshelfId, path)
     ).filterSuccess().flattenConcat().cachedIn(viewModelScope)
 
-
     val displaySettings = displaySettingsUseCase.settings
 
     fun updateDisplaySettings(folderDisplaySettings: (FolderDisplaySettings) -> FolderDisplaySettings) {

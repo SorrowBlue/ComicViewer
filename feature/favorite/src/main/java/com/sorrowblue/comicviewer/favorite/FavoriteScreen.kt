@@ -1,79 +1,222 @@
 package com.sorrowblue.comicviewer.favorite
 
+import android.os.Parcelable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
+import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteArgs
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBarUiState
 import com.sorrowblue.comicviewer.feature.favorite.R
+import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
-import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
+import com.sorrowblue.comicviewer.framework.ui.SavableState
+import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.rememberSavableState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-internal fun FavoriteRoute(
+internal fun NavBackStackEntry.FavoriteRoute(
+    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,
     onClickFile: (File, FavoriteId) -> Unit,
-    onClickLongFile: (File) -> Unit,
-    viewModel: FavoriteViewModel = hiltViewModel(),
+    onFavoriteClick: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
+    state: FavoriteScreenState = rememberFavoriteScreenState(FavoriteArgs(arguments!!)),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+    val uiState = state.uiState
+    val navigator = state.navigator
+    val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     val lazyGridState = rememberLazyGridState()
     FavoriteScreen(
+        navigator = navigator,
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onBackClick = onBackClick,
-        onEditClick = { onEditClick(viewModel.favoriteId) },
-        onFileListTypeChange = viewModel::toggleFileListType,
-        onGridSizeChange = viewModel::toggleGridSize,
-        onDeleteClick = { viewModel.delete(onBackClick) },
+        onEditClick = { onEditClick(state.favoriteId) },
+        onFileListTypeChange = state::toggleFileListType,
+        onGridSizeChange = state::toggleGridSize,
+        onDeleteClick = { state.delete(onBackClick) },
         onSettingsClick = onSettingsClick,
-        onClickFile = { onClickFile(it, viewModel.favoriteId) },
-        onClickLongFile = onClickLongFile,
+        onFileClick = { onClickFile(it, state.favoriteId) },
+        onFileInfoClick = state::onFileInfoClick,
         lazyGridState = lazyGridState,
+        contentPadding = contentPadding,
+        onFavoriteClick = onFavoriteClick,
+        onExtraPaneCloseClick = state::onExtraPaneCloseClick,
+        onOpenFolderClick = onOpenFolderClick,
+        onReadLaterClick = state::onReadLaterClick,
     )
 }
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
+@Stable
+internal class FavoriteScreenState(
+    private val args: FavoriteArgs,
+    val navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    override val savedStateHandle: SavedStateHandle,
+    private val scope: CoroutineScope,
+    private val viewModel: FavoriteViewModel,
+) : SavableState {
+
+    init {
+        viewModel.displaySettings.map(FolderDisplaySettings::toFileContentLayout)
+            .distinctUntilChanged().onEach {
+                uiState = uiState.copy(
+                    favoriteAppBarUiState = uiState.favoriteAppBarUiState.copy(fileContentType = it),
+                    fileContentType = it
+                )
+            }.launchIn(scope)
+        scope.launch {
+            viewModel.getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
+                .collectLatest {
+                    if (it.dataOrNull != null) {
+                        uiState =
+                            uiState.copy(
+                                favoriteAppBarUiState = uiState.favoriteAppBarUiState.copy(title = it.dataOrNull!!.name)
+                            )
+                    }
+                }
+        }
+    }
+
+    fun delete(onBackClick: () -> Unit) {
+        viewModel.delete(favoriteId, onBackClick)
+    }
+
+    fun toggleGridSize() {
+        if (uiState.fileContentType is FileContentType.Grid) {
+            viewModel.updateGridSize()
+        }
+    }
+
+    fun onFileInfoClick(file: File) {
+        uiState = uiState.copy(file = file)
+        navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
+    }
+
+    fun toggleFileListType() {
+        viewModel.updateDisplay(
+            when (uiState.fileContentType) {
+                is FileContentType.Grid -> FolderDisplaySettings.Display.LIST
+                FileContentType.List -> FolderDisplaySettings.Display.GRID
+            }
+        )
+    }
+
+    fun onExtraPaneCloseClick() {
+        navigator.navigateBack()
+    }
+
+    fun onReadLaterClick(file: File) {
+        viewModel.addToReadLater(file)
+    }
+
+    val favoriteId: FavoriteId get() = args.favoriteId
+    val pagingDataFlow = viewModel.pagingDataFlow(args.favoriteId)
+    var uiState: FavoriteScreenUiState by savedStateHandle.saveable {
+        mutableStateOf(
+            FavoriteScreenUiState()
+        )
+    }
+        private set
+}
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Composable
+internal fun rememberFavoriteScreenState(
+    args: FavoriteArgs,
+    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole> = rememberSupportingPaneScaffoldNavigator(
+        calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
+    ),
+    scope: CoroutineScope = rememberCoroutineScope(),
+    viewModel: FavoriteViewModel = hiltViewModel(),
+): FavoriteScreenState {
+    return rememberSavableState { savedStateHandle ->
+        FavoriteScreenState(
+            args = args,
+            navigator = navigator,
+            savedStateHandle = savedStateHandle,
+            scope = scope,
+            viewModel = viewModel,
+        )
+    }
+}
+
+@Parcelize
 internal data class FavoriteScreenUiState(
+    val file: File? = null,
     val favoriteAppBarUiState: FavoriteAppBarUiState = FavoriteAppBarUiState(),
     val fileContentType: FileContentType = FileContentType.List,
-)
+) : Parcelable
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun FavoriteScreen(
     uiState: FavoriteScreenUiState,
+    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
     lazyPagingItems: LazyPagingItems<File>,
+    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onEditClick: () -> Unit,
     onFileListTypeChange: () -> Unit,
+    onExtraPaneCloseClick: () -> Unit,
+    onReadLaterClick: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
     onGridSizeChange: () -> Unit,
     onDeleteClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onClickFile: (File) -> Unit,
-    onClickLongFile: (File) -> Unit,
+    onFileClick: (File) -> Unit,
+    onFileInfoClick: (File) -> Unit,
     lazyGridState: LazyGridState,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    Scaffold(
+    CanonicalScaffold(
         topBar = {
             FavoriteAppBar(
                 uiState = uiState.favoriteAppBarUiState,
@@ -86,21 +229,46 @@ private fun FavoriteScreen(
                 scrollBehavior = scrollBehavior
             )
         },
+        extraPane = { innerPadding ->
+            val file = uiState.file
+            if (file != null) {
+                FileInfoSheet(
+                    file = file,
+                    scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
+                    onCloseClick = onExtraPaneCloseClick,
+                    onReadLaterClick = { onReadLaterClick(file) },
+                    onFavoriteClick = { onFavoriteClick(file) },
+                    onOpenFolderClick = { onOpenFolderClick(file) },
+                    contentPadding = innerPadding
+                )
+            }
+        },
+        navigator = navigator,
+        contentPadding = contentPadding,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) { contentPadding ->
+    ) { innerPadding ->
+        val dimension = LocalDimension.current
+        val inInnerPadding = innerPadding.add(
+            PaddingValues(
+                start = dimension.margin,
+                top = dimension.margin,
+                end = dimension.margin,
+                bottom = dimension.margin
+            )
+        )
         if (lazyPagingItems.isEmptyData) {
             EmptyContent(
                 imageVector = ComicIcons.UndrawResumeFolder,
                 text = stringResource(id = R.string.favorite_label_no_favorites),
-                contentPadding = contentPadding
+                contentPadding = inInnerPadding
             )
         } else {
             FileContent(
                 type = uiState.fileContentType,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = contentPadding,
-                onFileClick = onClickFile,
-                onInfoClick = onClickLongFile,
+                contentPadding = inInnerPadding,
+                onFileClick = onFileClick,
+                onInfoClick = onFileInfoClick,
                 state = lazyGridState
             )
         }

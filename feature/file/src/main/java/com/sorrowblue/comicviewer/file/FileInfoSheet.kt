@@ -44,7 +44,8 @@ import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 import kotlinx.coroutines.launch
 
 @OptIn(
-    ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalLayoutApi::class,
+    ExperimentalMaterial3Api::class,
     ExperimentalMaterial3AdaptiveApi::class
 )
 @Composable

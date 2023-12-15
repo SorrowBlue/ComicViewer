@@ -43,25 +43,14 @@ internal fun rememberComicViewerAppState(
     graphStateHolder: GraphStateHolder = rememberGraphStateHolder(),
     viewModel: ComicViewerAppViewModel = hiltViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
-): ComicViewerAppState = rememberSavableState(
-    restore = {
-        ComicViewerAppStateImpl(
-            bottomSheetNavigator,
-            navController,
-            graphStateHolder,
-            viewModel,
-            scope,
-            it
-        )
-    }
-) {
+): ComicViewerAppState = rememberSavableState { savedStateHandle ->
     ComicViewerAppStateImpl(
         bottomSheetNavigator,
         navController,
         graphStateHolder,
         viewModel,
         scope,
-        SavedStateHandle()
+        savedStateHandle
     )
 }
 

@@ -23,8 +23,8 @@ fun NavGraphBuilder.favoriteGroup(
     navController: NavController,
     navigateToBook: (Book) -> Unit,
     onFavoriteBookClick: (Book, FavoriteId) -> Unit,
-    onClickLongFile: (File) -> Unit,
     onSettingsClick: () -> Unit,
+    onCreateFavoriteClick: () -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
     onFavoriteClick: (File) -> Unit,
 ) {
@@ -32,10 +32,12 @@ fun NavGraphBuilder.favoriteGroup(
         favoriteListScreen(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
+            onCreateFavoriteClick = onCreateFavoriteClick,
             onFavoriteClick = navController::navigateToFavorite
         )
 
         favoriteScreen(
+            contentPadding = contentPadding,
             onBackClick = navController::popBackStack,
             onEditClick = navController::navigateToFavoriteEdit,
             onSettingsClick = onSettingsClick,
@@ -51,7 +53,22 @@ fun NavGraphBuilder.favoriteGroup(
                         )
                 }
             },
-            onClickLongFile = onClickLongFile
+            onFavoriteClick = onFavoriteClick,
+            onOpenFolderClick = { file ->
+                when (file) {
+                    is Book -> navController.navigateToFolder(
+                        FavoriteListRoute,
+                        file.bookshelfId,
+                        file.parent
+                    )
+
+                    is Folder -> navController.navigateToFolder(
+                        FavoriteListRoute,
+                        file.bookshelfId,
+                        file.path
+                    )
+                }
+            }
         )
 
         favoriteEditScreen(

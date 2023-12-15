@@ -2,16 +2,14 @@ package com.sorrowblue.comicviewer.favorite.section
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.responsive.AppBarAction2
-import com.sorrowblue.comicviewer.framework.ui.responsive.ResponsiveTopAppBar2
-import kotlinx.collections.immutable.toPersistentList
 
 internal enum class FavoriteListAction(
     override val icon: ImageVector,
@@ -30,17 +28,14 @@ internal enum class FavoriteListAction(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FavoriteListAppBar(
-    topAppBarScrollBehavior: TopAppBarScrollBehavior? = null,
-    onSettingsClick: () -> Unit = {},
+    onSettingsClick: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    ResponsiveTopAppBar2(
+    TopAppBar(
         title = { Text(text = stringResource(id = R.string.favorite_title_list)) },
-        actions = remember { FavoriteListAction.entries.toPersistentList() },
-        onClick = {
-            when (it) {
-                FavoriteListAction.Settings -> onSettingsClick()
-            }
+        actions = {
+
         },
-        scrollBehavior = topAppBarScrollBehavior
+        scrollBehavior = scrollBehavior
     )
 }

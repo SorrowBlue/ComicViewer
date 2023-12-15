@@ -138,13 +138,17 @@ internal fun FolderAppBar(
             OverflowMenu {
                 if (uiState.fileContentType is FileContentType.Grid) {
                     OverflowMenuItem(
-                        text = stringResource(id = com.sorrowblue.comicviewer.feature.file.R.string.file_list_label_switch_list_view),
+                        text = stringResource(
+                            id = com.sorrowblue.comicviewer.feature.file.R.string.file_list_label_switch_list_view
+                        ),
                         icon = ComicIcons.ViewList,
                         onClick = onFileListChange
                     )
                 } else {
                     OverflowMenuItem(
-                        text = stringResource(id = com.sorrowblue.comicviewer.feature.file.R.string.file_list_label_switch_grid_view),
+                        text = stringResource(
+                            id = com.sorrowblue.comicviewer.feature.file.R.string.file_list_label_switch_grid_view
+                        ),
                         icon = ComicIcons.GridView,
                         onClick = onFileListChange
                     )

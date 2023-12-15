@@ -24,12 +24,12 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 @Composable
 fun CanonicalScaffold(
     navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    extraPane: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
-    extraPane: @Composable (PaddingValues) -> Unit,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(

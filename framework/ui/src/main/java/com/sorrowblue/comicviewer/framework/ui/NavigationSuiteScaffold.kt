@@ -24,9 +24,10 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
     ExperimentalMaterial3AdaptiveNavigationSuiteApi::class
 )
 @Composable
-fun NavigationSuiteScaffold2(
+fun NavigationSuiteScaffold(
     showNavigation: Boolean,
     navigationSuiteItems: NavigationSuiteScope.() -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     if (showNavigation) {
@@ -37,9 +38,9 @@ fun NavigationSuiteScaffold2(
             layoutType = navSuiteType,
             navigationSuiteItems = navigationSuiteItems,
             modifier = if (navSuiteType == NavigationSuiteType.NavigationBar) {
-                Modifier
+                modifier
             } else {
-                Modifier
+                modifier
                     .background(ComicTheme.colorScheme.surface)
                     .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Start))
             }

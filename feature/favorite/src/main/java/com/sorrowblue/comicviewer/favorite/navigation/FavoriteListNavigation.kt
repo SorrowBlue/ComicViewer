@@ -10,14 +10,16 @@ const val FavoriteListRoute = "favorite"
 
 internal fun NavGraphBuilder.favoriteListScreen(
     onSettingsClick: () -> Unit,
+    onCreateFavoriteClick: () -> Unit,
     onFavoriteClick: (FavoriteId) -> Unit,
     contentPadding: PaddingValues,
 ) {
     composable(FavoriteListRoute) {
-        FavoriteListRoute(
+        it.FavoriteListRoute(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
             onFavoriteClick = onFavoriteClick,
+            onCreateFavoriteClick = onCreateFavoriteClick,
         )
     }
 }

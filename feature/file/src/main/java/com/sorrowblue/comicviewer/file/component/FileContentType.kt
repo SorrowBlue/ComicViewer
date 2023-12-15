@@ -31,7 +31,6 @@ sealed interface FileContentType : Parcelable {
         override val columns2 get() = StaggeredGridCells.Fixed(1)
         override val columns3: GridCells
             @Composable get() = GridCells.Fixed(1)
-
     }
 
     @Parcelize

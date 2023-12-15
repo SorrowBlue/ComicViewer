@@ -13,7 +13,7 @@ import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.sorrowblue.comicviewer.app.component.NavHostWithSharedAxisX
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2
+import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.material3.Text
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -39,7 +39,7 @@ internal fun MainScreen(
     onTabSelected: (NavController, MainScreenTab) -> Unit,
     navGraph: NavGraphBuilder.(NavHostController, PaddingValues) -> Unit,
 ) {
-    NavigationSuiteScaffold2(
+    NavigationSuiteScaffold(
         showNavigation = uiState.showNavigation,
         navigationSuiteItems = {
             uiState.tabs.forEach {

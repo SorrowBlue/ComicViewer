@@ -14,9 +14,8 @@ interface SavableState {
 @Composable
 fun <R : SavableState> rememberSavableState(
     vararg inputs: Any?,
-    restore: (value: SavedStateHandle) -> R?,
     key: String? = null,
-    init: () -> R,
+    action: (SavedStateHandle) -> R,
 ): R = rememberSaveable(
     inputs = inputs,
     saver = Saver(
@@ -24,9 +23,9 @@ fun <R : SavableState> rememberSavableState(
             it.savedStateHandle.savedStateProvider().saveState()
         },
         restore = {
-            restore(SavedStateHandle.createHandle(it, it))
+            action(SavedStateHandle.createHandle(it, it))
         }
     ),
     key = key,
-    init = init
+    init = { action(SavedStateHandle()) }
 )

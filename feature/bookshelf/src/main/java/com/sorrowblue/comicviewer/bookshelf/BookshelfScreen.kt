@@ -159,7 +159,7 @@ private fun BookshelfScreen(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         val dimension = LocalDimension.current
-        val innerPadding = innerPadding.add(
+        val inInnerPadding = innerPadding.add(
             PaddingValues(
                 start = dimension.margin,
                 top = dimension.margin,
@@ -172,7 +172,7 @@ private fun BookshelfScreen(
             lazyGridState = lazyGridState,
             onBookshelfClick = onBookshelfClick,
             onBookshelfInfoClick = onBookshelfInfoClick,
-            innerPadding = innerPadding
+            innerPadding = inInnerPadding
         )
     }
 }

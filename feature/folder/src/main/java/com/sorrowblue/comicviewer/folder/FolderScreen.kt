@@ -120,7 +120,6 @@ internal class FolderScreenState(
     var isSkipFirstRefresh by savedStateHandle.saveable { mutableStateOf(true) }
     var isScrollableTop by savedStateHandle.saveable { mutableStateOf(false) }
 
-
     var uiState: FolderScreenUiState by savedStateHandle.saveable {
         mutableStateOf(
             FolderScreenUiState()
@@ -245,7 +244,7 @@ internal fun rememberFolderScreenState(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
 ): FolderScreenState {
-    return rememberSavableState(restore = {
+    return rememberSavableState {
         FolderScreenState(
             args = args,
             viewModel = viewModel,
@@ -253,15 +252,6 @@ internal fun rememberFolderScreenState(
             navigator = navigator,
             snackbarHostState = snackbarHostState,
             savedStateHandle = it
-        )
-    }) {
-        FolderScreenState(
-            args = args,
-            viewModel = viewModel,
-            scope = scope,
-            navigator = navigator,
-            snackbarHostState = snackbarHostState,
-            savedStateHandle = SavedStateHandle()
         )
     }
 }
@@ -438,7 +428,7 @@ internal fun FolderScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         val dimension = LocalDimension.current
-        val innerPadding = innerPadding.add(
+        val inInnerPadding = innerPadding.add(
             PaddingValues(
                 start = dimension.margin,
                 top = dimension.margin,
@@ -460,13 +450,13 @@ internal fun FolderScreen(
                         R.string.folder_text_nothing_in_folder,
                         uiState.folderAppBarUiState.title
                     ),
-                    contentPadding = innerPadding
+                    contentPadding = inInnerPadding
                 )
             } else {
                 FileContent(
                     type = uiState.fileContentType,
                     lazyPagingItems = lazyPagingItems,
-                    contentPadding = innerPadding,
+                    contentPadding = inInnerPadding,
                     onFileClick = onFileClick,
                     onInfoClick = onFileInfoClick,
                     state = lazyGridState
@@ -475,7 +465,7 @@ internal fun FolderScreen(
             PullToRefreshContainer(
                 state = pullRefreshState,
                 modifier = Modifier
-                    .padding(innerPadding)
+                    .padding(inInnerPadding)
                     .align(Alignment.TopCenter)
                     .graphicsLayer(scaleX = scaleFraction, scaleY = scaleFraction),
             )

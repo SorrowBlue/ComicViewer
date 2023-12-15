@@ -70,6 +70,7 @@ fun PreviewTheme(content: @Composable () -> Unit) {
 @OptIn(ExperimentalMaterial3AdaptiveNavigationSuiteApi::class)
 @Composable
 fun PreviewScreen(
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     val items = remember {
@@ -98,6 +99,7 @@ fun PreviewScreen(
         } else {
             NavigationSuiteType.NavigationRail
         },
+        modifier = modifier,
     ) {
         content()
     }
@@ -113,7 +115,6 @@ private fun PreviewPreviewScreen() {
         }
     }
 }
-
 
 private fun LayoutDirection.reverse() = when (this) {
     LayoutDirection.Ltr -> LayoutDirection.Rtl

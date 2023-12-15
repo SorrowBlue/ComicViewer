@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.favorite.navigation
 
-import androidx.lifecycle.SavedStateHandle
+import android.os.Bundle
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -16,7 +17,7 @@ private const val FavoriteIdArg = "favoriteId"
 internal class FavoriteArgs(
     val favoriteId: FavoriteId,
 ) {
-    constructor(savedStateHandle: SavedStateHandle) : this(FavoriteId(checkNotNull(savedStateHandle[FavoriteIdArg])))
+    constructor(bundle: Bundle) : this(FavoriteId(checkNotNull(bundle.getInt(FavoriteIdArg))))
 }
 
 const val FavoriteRoute = "$FavoriteListRoute/{$FavoriteIdArg}"
@@ -29,24 +30,26 @@ internal fun NavController.navigateToFavorite(
 }
 
 internal fun NavGraphBuilder.favoriteScreen(
+    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,
     onClickFile: (File, FavoriteId) -> Unit,
-    onClickLongFile: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
     composable(
         route = FavoriteRoute,
-        arguments = listOf(
-            navArgument(FavoriteIdArg) { type = NavType.IntType }
-        )
+        arguments = listOf(navArgument(FavoriteIdArg) { type = NavType.IntType })
     ) {
-        FavoriteRoute(
+        it.FavoriteRoute(
+            contentPadding = contentPadding,
             onBackClick = onBackClick,
             onEditClick = onEditClick,
             onSettingsClick = onSettingsClick,
             onClickFile = onClickFile,
-            onClickLongFile = onClickLongFile,
+            onOpenFolderClick = onOpenFolderClick,
+            onFavoriteClick = onFavoriteClick
         )
     }
 }

@@ -74,12 +74,12 @@ fun ExtraPaneScaffold(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 object ExtraPaneScaffoldDefault {
 
-
     @Composable
     fun TopAppBar(
         title: @Composable () -> Unit,
         onCloseClick: () -> Unit,
         scaffoldDirective: PaneScaffoldDirective,
+        modifier: Modifier = Modifier,
     ) {
         androidx.compose.material3.TopAppBar(
             title = title,
@@ -97,7 +97,8 @@ object ExtraPaneScaffoldDefault {
                 TopAppBarDefaults.topAppBarColors()
             } else {
                 TopAppBarDefaults.topAppBarColors(containerColor = ComicTheme.colorScheme.surfaceContainer)
-            }
+            },
+            modifier = modifier
         )
     }
 }

@@ -65,10 +65,10 @@ internal fun NavGraphBuilder.mainGraph(
         navController = navController,
         navigateToBook = navController::navigateToBook,
         onFavoriteBookClick = navController::navigateToBook,
-        onClickLongFile = { /*TODO*/ },
         onSettingsClick = navController::navigateToSettings,
+        onCreateFavoriteClick = navController::navigateToFavoriteCreate,
         onSearchClick = navController::navigateToSearch,
-        onFavoriteClick = navController::navigateToFavoriteAdd
+        onFavoriteClick = navController::navigateToFavoriteAdd,
     )
     favoriteAddScreen(
         onBackClick = navController::popBackStack,

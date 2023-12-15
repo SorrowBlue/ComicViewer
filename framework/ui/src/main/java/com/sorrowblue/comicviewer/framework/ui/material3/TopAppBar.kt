@@ -129,7 +129,9 @@ fun TopAppBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @JvmInline
-value class TopAppBarScrollBehavior internal constructor(val value: androidx.compose.material3.TopAppBarScrollBehavior) {
+value class TopAppBarScrollBehavior internal constructor(
+    val value: androidx.compose.material3.TopAppBarScrollBehavior,
+) {
 
     val nestedScrollConnection get() = value.nestedScrollConnection
 }
