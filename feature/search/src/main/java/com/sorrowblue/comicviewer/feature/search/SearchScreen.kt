@@ -58,7 +58,7 @@ internal class SearchScreenState(
     initUiState: SearchScreenUiState = SearchScreenUiState(),
     private val args: SearchArgs,
     private val viewModel: SearchViewModel,
-    val navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    val navigator: ThreePaneScaffoldNavigator,
 ) {
 
     val lazyPagingItems: Flow<PagingData<File>> = viewModel.pagingDataFlow
@@ -142,7 +142,7 @@ internal class SearchScreenState(
 private fun rememberSearchScreenState(
     args: SearchArgs,
     viewModel: SearchViewModel = hiltViewModel(),
-    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole> = rememberSupportingPaneScaffoldNavigator(),
+    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(),
 ) = rememberSaveable(
     saver = Saver(
         save = { it.uiState },
@@ -213,7 +213,7 @@ internal fun SearchRoute(
 @Composable
 private fun SearchScreen(
     uiState: SearchScreenUiState,
-    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    navigator: ThreePaneScaffoldNavigator,
     lazyGridState: LazyGridState,
     lazyPagingItems: LazyPagingItems<File>,
     onQueryChange: (String) -> Unit,

@@ -1,13 +1,11 @@
 package com.sorrowblue.comicviewer.framework.ui
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.adaptive.AnimatedPane
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.HingePolicy
 import androidx.compose.material3.adaptive.PaneScaffoldDirective
 import androidx.compose.material3.adaptive.Posture
 import androidx.compose.material3.adaptive.SupportingPaneScaffold
-import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -21,7 +19,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun AnimatedExtraPaneScaffold(
     extraPane: @Composable () -> Unit,
-    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    navigator: ThreePaneScaffoldNavigator,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -29,15 +27,19 @@ fun AnimatedExtraPaneScaffold(
         scaffoldState = navigator.scaffoldState,
         supportingPane = {},
         extraPane = {
-            AnimatedPane(modifier = Modifier) {
-                extraPane()
-            }
+            // TODO AnimatedPaneを一時的に無効化します。(https://issuetracker.google.com/issues/316376112)
+            //      この問題が解決したら、この行を削除してください。
+//            AnimatedPane(modifier = Modifier) {
+            extraPane()
+//            }
         },
         modifier = modifier
     ) {
-        AnimatedPane(modifier = Modifier) {
-            content()
-        }
+        // TODO AnimatedPaneを一時的に無効化します。(https://issuetracker.google.com/issues/316376112)
+        //      この問題が解決したら、この行を削除してください。
+//        AnimatedPane(modifier = Modifier) {
+        content()
+//        }
     }
 }
 

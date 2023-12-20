@@ -18,7 +18,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.PaneAdaptedValue
-import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
@@ -93,7 +92,7 @@ internal fun BookshelfRoute(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun BookshelfScreen(
-    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    navigator: ThreePaneScaffoldNavigator,
     bookshelfFolder: BookshelfFolder?,
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
     snackbarHostState: SnackbarHostState,

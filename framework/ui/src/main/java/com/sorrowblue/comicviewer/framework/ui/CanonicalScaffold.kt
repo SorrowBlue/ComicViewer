@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.PaneAdaptedValue
-import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,7 +22,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun CanonicalScaffold(
-    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    navigator: ThreePaneScaffoldNavigator,
     extraPane: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},

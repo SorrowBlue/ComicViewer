@@ -42,7 +42,7 @@ internal class BookshelfScreenState(
     private val viewModel: BookshelfViewModel,
     private val scope: CoroutineScope,
     val snackbarHostState: SnackbarHostState,
-    val navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    val navigator: ThreePaneScaffoldNavigator,
     val removeDialogController: DialogController<BookshelfFolder?>,
     override val savedStateHandle: SavedStateHandle,
 ) : SavableState {
@@ -107,7 +107,7 @@ internal class BookshelfScreenState(
 
 @Composable
 internal fun rememberBookshelfScreenState(
-    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole> = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },

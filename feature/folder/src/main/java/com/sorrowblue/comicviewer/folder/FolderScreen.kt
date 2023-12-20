@@ -100,7 +100,7 @@ internal class FolderScreenState(
     private val viewModel: FolderViewModel,
     private val scope: CoroutineScope,
     val snackbarHostState: SnackbarHostState,
-    val navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    val navigator: ThreePaneScaffoldNavigator,
     override val savedStateHandle: SavedStateHandle,
 ) : SavableState {
 
@@ -238,7 +238,7 @@ internal class FolderScreenState(
 internal fun rememberFolderScreenState(
     args: FolderArgs,
     viewModel: FolderViewModel = hiltViewModel(),
-    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole> = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
@@ -373,7 +373,7 @@ fun LoadStates.any(op: (LoadState) -> Boolean): Boolean {
 @Composable
 internal fun FolderScreen(
     contentPadding: PaddingValues,
-    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    navigator: ThreePaneScaffoldNavigator,
     file: File?,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,

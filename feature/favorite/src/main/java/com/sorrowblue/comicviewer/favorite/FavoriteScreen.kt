@@ -97,7 +97,7 @@ internal fun NavBackStackEntry.FavoriteRoute(
 @Stable
 internal class FavoriteScreenState(
     private val args: FavoriteArgs,
-    val navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    val navigator: ThreePaneScaffoldNavigator,
     override val savedStateHandle: SavedStateHandle,
     private val scope: CoroutineScope,
     private val viewModel: FavoriteViewModel,
@@ -170,7 +170,7 @@ internal class FavoriteScreenState(
 @Composable
 internal fun rememberFavoriteScreenState(
     args: FavoriteArgs,
-    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole> = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     scope: CoroutineScope = rememberCoroutineScope(),
@@ -198,7 +198,7 @@ internal data class FavoriteScreenUiState(
 @Composable
 private fun FavoriteScreen(
     uiState: FavoriteScreenUiState,
-    navigator: ThreePaneScaffoldNavigator<SupportingPaneScaffoldRole>,
+    navigator: ThreePaneScaffoldNavigator,
     lazyPagingItems: LazyPagingItems<File>,
     contentPadding: PaddingValues,
     onBackClick: () -> Unit,
