@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteLocalDa
 import com.sorrowblue.comicviewer.data.infrastructure.di.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.Unknown
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
@@ -94,12 +95,17 @@ internal class FavoriteRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<Favorite>> {
-        return favoriteLocalDataSource.pagingDataFlow(pagingConfig).map { pagingData ->
-            pagingData.map {
-                Favorite(FavoriteId(it.id.value), it.name, it.count)
+    override fun pagingDataFlow(
+        pagingConfig: PagingConfig,
+        bookshelfId: BookshelfId,
+        path: String,
+    ): Flow<PagingData<Favorite>> {
+        return favoriteLocalDataSource.pagingDataFlow(pagingConfig, bookshelfId, path)
+            .map { pagingData ->
+                pagingData.map {
+                    Favorite(FavoriteId(it.id.value), it.name, it.count, it.exist)
+                }
             }
-        }
     }
 
     override suspend fun create(title: String) {

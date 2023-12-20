@@ -35,7 +35,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.bookshelf.BookshelfConverter
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -43,9 +42,10 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
@@ -65,11 +65,19 @@ fun Bookshelf(
         BoxWithConstraints {
             if (300.dp < maxWidth) {
                 Row(modifier = Modifier.height(160.dp)) {
-                    AsyncImage(
+                    AsyncImage2(
                         model = bookshelfFolder.folder,
+                        contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        placeholder = rememberDebugPlaceholder(),
-                        contentDescription = "",
+                        loading = {
+                            Icon(
+                                imageVector = ComicIcons.DocumentUnknown,
+                                contentDescription = null
+                            )
+                        },
+                        error = {
+                            Icon(imageVector = ComicIcons.Image, contentDescription = null)
+                        },
                         modifier = Modifier
                             .fillMaxHeight()
                             .aspectRatio(1f)
@@ -147,11 +155,19 @@ fun Bookshelf(
             } else {
                 Column {
                     Box {
-                        AsyncImage(
+                        AsyncImage2(
                             model = bookshelfFolder.folder,
-                            contentScale = ContentScale.Crop,
-                            placeholder = rememberDebugPlaceholder(),
                             contentDescription = "",
+                            contentScale = ContentScale.Crop,
+                            loading = {
+                                Icon(
+                                    imageVector = ComicIcons.DocumentUnknown,
+                                    contentDescription = null
+                                )
+                            },
+                            error = {
+                                Icon(imageVector = ComicIcons.Image, contentDescription = null)
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(1f)

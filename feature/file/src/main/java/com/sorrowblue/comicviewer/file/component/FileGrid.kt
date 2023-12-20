@@ -20,20 +20,18 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
 @Composable
 fun FileGrid(
@@ -44,19 +42,16 @@ fun FileGrid(
 ) {
     ElevatedCard(onClick = onClick, modifier = modifier) {
         Box {
-            AsyncImage(
+            AsyncImage2(
                 model = file,
-                placeholder = rememberDebugPlaceholder()
-                    ?: forwardingPainter(
-                        rememberVectorPainter(ComicIcons.DocumentUnknown),
-                        colorFilter = ColorFilter.tint(ComicTheme.colorScheme.surface)
-                    ),
-                error = forwardingPainter(
-                    rememberVectorPainter(ComicIcons.DocumentUnknown),
-                    colorFilter = ColorFilter.tint(ComicTheme.colorScheme.surface)
-                ),
-                contentScale = ContentScale.Crop,
                 contentDescription = null,
+                contentScale = ContentScale.Crop,
+                loading = {
+                    Icon(imageVector = ComicIcons.DocumentUnknown, contentDescription = null)
+                },
+                error = {
+                    Icon(imageVector = ComicIcons.Image, contentDescription = null)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)

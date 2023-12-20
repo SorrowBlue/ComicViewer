@@ -2,12 +2,14 @@ package com.sorrowblue.comicviewer.feature.favorite.add.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.model.Base64.decodeFromBase64
 import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
@@ -30,28 +32,54 @@ internal class FavoriteAddArgs(
 
 private const val FavoriteAddRoute = "favorite/add"
 
-fun NavGraphBuilder.favoriteAddScreen(onBackClick: () -> Unit, onAddClick: () -> Unit) {
-    composable(
-        route = "$FavoriteAddRoute?$BookshelfIdArg={$BookshelfIdArg}&$PathArg={$PathArg}",
-        arguments = listOf(
-            navArgument(BookshelfIdArg) { type = NavType.IntType },
-            navArgument(PathArg) { type = NavType.StringType }
+fun NavGraphBuilder.favoriteAddScreen(
+    isMobile: Boolean,
+    onBackClick: () -> Unit,
+    contentPadding: PaddingValues,
+) {
+    if (isMobile) {
+        composable(
+            route = "$FavoriteAddRoute?$BookshelfIdArg={$BookshelfIdArg}&$PathArg={$PathArg}",
+            arguments = listOf(
+                navArgument(BookshelfIdArg) { type = NavType.IntType },
+                navArgument(PathArg) { type = NavType.StringType }
 
-        ),
-        enterTransition = {
-            slideIntoContainer(
-                AnimatedContentTransitionScope.SlideDirection.Up,
-                animationSpec = tween(700)
-            )
-        },
-        exitTransition = {
-            slideOutOfContainer(
-                AnimatedContentTransitionScope.SlideDirection.Down,
-                animationSpec = tween(700)
-            )
+            ),
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Up,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Down,
+                    animationSpec = tween(700)
+                )
+            }
+        ) { navBackStackEntry ->
+            with(navBackStackEntry) {
+                FavoriteAddRoute(
+                    onBackClick = onBackClick,
+                    contentPadding = contentPadding
+                )
+            }
         }
-    ) {
-        FavoriteAddRoute(onBackClick = onBackClick, onAddClick = onAddClick)
+    } else {
+        dialog(
+            route = "$FavoriteAddRoute?$BookshelfIdArg={$BookshelfIdArg}&$PathArg={$PathArg}",
+            arguments = listOf(
+                navArgument(BookshelfIdArg) { type = NavType.IntType },
+                navArgument(PathArg) { type = NavType.StringType }
+            )
+        ) { navBackStackEntry ->
+            with(navBackStackEntry) {
+                FavoriteAddRoute(
+                    onBackClick = onBackClick,
+                    contentPadding = contentPadding
+                )
+            }
+        }
     }
 }
 

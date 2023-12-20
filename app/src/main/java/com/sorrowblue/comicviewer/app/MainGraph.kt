@@ -14,8 +14,6 @@ import com.sorrowblue.comicviewer.feature.book.navigation.bookGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
-import com.sorrowblue.comicviewer.feature.favorite.create.navigation.favoriteCreateScreen
-import com.sorrowblue.comicviewer.feature.favorite.create.navigation.navigateToFavoriteCreate
 import com.sorrowblue.comicviewer.feature.library.navigation.libraryGroup
 import com.sorrowblue.comicviewer.feature.library.serviceloader.AddOnNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
@@ -61,20 +59,20 @@ internal fun NavGraphBuilder.mainGraph(
         onRestoreComplete = restoreComplete,
     )
     favoriteGroup(
+        isMobile = isMobile,
         contentPadding = contentPadding,
         navController = navController,
         navigateToBook = navController::navigateToBook,
         onFavoriteBookClick = navController::navigateToBook,
         onSettingsClick = navController::navigateToSettings,
-        onCreateFavoriteClick = navController::navigateToFavoriteCreate,
         onSearchClick = navController::navigateToSearch,
         onFavoriteClick = navController::navigateToFavoriteAdd,
     )
     favoriteAddScreen(
+        isMobile = isMobile,
         onBackClick = navController::popBackStack,
-        onAddClick = navController::navigateToFavoriteCreate
+        contentPadding = contentPadding
     )
-    favoriteCreateScreen(onDismissRequest = navController::popBackStack)
     readlaterGroup(
         contentPadding = contentPadding,
         navController = navController,

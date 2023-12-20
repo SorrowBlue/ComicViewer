@@ -7,13 +7,15 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 internal data class FavoriteFileCountEntity(
     @Embedded val favoriteEntity: FavoriteEntity,
     val count: Int,
+    val exist: Boolean,
 ) {
 
     fun toModel(): Favorite {
         return Favorite(
             id = FavoriteId(favoriteEntity.id),
             name = favoriteEntity.name,
-            count = count
+            count = count,
+            exist = exist
         )
     }
 }

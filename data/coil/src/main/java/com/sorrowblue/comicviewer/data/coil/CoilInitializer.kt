@@ -31,6 +31,7 @@ internal class CoilInitializer : Initializer<Unit> {
             add(MyComponent.favoriteThumbnailFetcher(context))
         }
             .allowRgb565(true)
+            .crossfade(true)
             .bitmapConfig(Bitmap.Config.RGB_565)
             .precision(Precision.INEXACT)
             .build()

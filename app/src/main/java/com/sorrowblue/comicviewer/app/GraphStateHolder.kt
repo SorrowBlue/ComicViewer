@@ -6,13 +6,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.navOptions
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphRoute
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfRoute
-import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfSelection
 import com.sorrowblue.comicviewer.bookshelf.navigation.routeInBookshelfGraph
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphRoute
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteListRoute
 import com.sorrowblue.comicviewer.favorite.navigation.RouteInFavoriteGraph
-import com.sorrowblue.comicviewer.feature.favorite.create.navigation.navigateToFavoriteCreate
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGraphRoute
 import com.sorrowblue.comicviewer.feature.library.navigation.RouteInLibraryGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGraphRoute
@@ -22,8 +18,6 @@ internal interface GraphStateHolder {
     val startDestination: String
     fun routeToTab(route: String): MainScreenTab?
     fun onTabSelected(navController: NavController, tab: MainScreenTab)
-    fun routeToFab(route: String): MainScreenFab?
-    fun onTabClick(navController: NavController, fab: MainScreenFab)
 }
 
 @Composable
@@ -61,21 +55,6 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
                     restoreState = true
                 }
             )
-        }
-    }
-
-    override fun routeToFab(route: String): MainScreenFab? {
-        return when (route) {
-            BookshelfRoute -> MainScreenFab.Bookshelf
-            FavoriteListRoute -> MainScreenFab.Favorite
-            else -> null
-        }
-    }
-
-    override fun onTabClick(navController: NavController, fab: MainScreenFab) {
-        when (fab) {
-            MainScreenFab.Bookshelf -> navController.navigateToBookshelfSelection()
-            MainScreenFab.Favorite -> navController.navigateToFavoriteCreate()
         }
     }
 }

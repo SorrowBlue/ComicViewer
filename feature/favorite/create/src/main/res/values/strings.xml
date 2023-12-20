@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="favorite_create_title">New Favorite</string>
-    <string name="favorite_create_label_create">Create</string>
-    <string name="favorite_create_message_error">Name must not be empty.</string>
-    <string name="favorite_create_label_favorite_name">favorite name</string>
-</resources>

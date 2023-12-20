@@ -19,12 +19,12 @@ const val FavoriteGraphRoute = "favorite_graph"
 val RouteInFavoriteGraph = listOf(FavoriteListRoute, FavoriteRoute, folderRoute(FavoriteListRoute))
 
 fun NavGraphBuilder.favoriteGroup(
+    isMobile: Boolean,
     contentPadding: PaddingValues,
     navController: NavController,
     navigateToBook: (Book) -> Unit,
     onFavoriteBookClick: (Book, FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,
-    onCreateFavoriteClick: () -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
     onFavoriteClick: (File) -> Unit,
 ) {
@@ -32,7 +32,6 @@ fun NavGraphBuilder.favoriteGroup(
         favoriteListScreen(
             contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
-            onCreateFavoriteClick = onCreateFavoriteClick,
             onFavoriteClick = navController::navigateToFavorite
         )
 
@@ -72,6 +71,7 @@ fun NavGraphBuilder.favoriteGroup(
         )
 
         favoriteEditScreen(
+            isMobile = isMobile,
             onBackClick = navController::popBackStack,
             onComplete = navController::popBackStack
         )
