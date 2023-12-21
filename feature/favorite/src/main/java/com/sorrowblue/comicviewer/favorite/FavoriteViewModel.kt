@@ -70,5 +70,4 @@ internal class FavoriteViewModel @Inject constructor(
             }
         }
     }
-
 }

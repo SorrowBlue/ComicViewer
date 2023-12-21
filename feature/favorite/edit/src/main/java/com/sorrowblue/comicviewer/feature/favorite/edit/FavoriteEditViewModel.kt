@@ -19,8 +19,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class FavoriteEditViewModel @Inject constructor(
-    private val pagingFavoriteFileUseCase: PagingFavoriteFileUseCase,
     val getFavoriteUseCase: GetFavoriteUseCase,
+    private val pagingFavoriteFileUseCase: PagingFavoriteFileUseCase,
     private val removeFavoriteFileUseCase: RemoveFavoriteFileUseCase,
     private val updateFavoriteUseCase: UpdateFavoriteUseCase,
 ) : ViewModel() {

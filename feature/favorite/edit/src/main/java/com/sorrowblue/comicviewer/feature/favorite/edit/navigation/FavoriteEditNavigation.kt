@@ -37,12 +37,13 @@ fun NavGraphBuilder.favoriteEditScreen(
             arguments = listOf(
                 navArgument(FavoriteIdArg) { type = NavType.IntType },
             )
-        ) {
-            FavoriteEditRoute(
-                args = FavoriteEditArgs(it.arguments!!),
-                onBackClick = onBackClick,
-                onComplete = onComplete
-            )
+        ) { navBackStackEntry ->
+            with(navBackStackEntry) {
+                FavoriteEditRoute(
+                    onBackClick = onBackClick,
+                    onComplete = onComplete
+                )
+            }
         }
     } else {
         dialog(
@@ -50,12 +51,13 @@ fun NavGraphBuilder.favoriteEditScreen(
             arguments = listOf(
                 navArgument(FavoriteIdArg) { type = NavType.IntType },
             )
-        ) {
-            FavoriteEditRoute(
-                args = FavoriteEditArgs(it.arguments!!),
-                onBackClick = onBackClick,
-                onComplete = onComplete
-            )
+        ) { navBackStackEntry ->
+            with(navBackStackEntry) {
+                FavoriteEditRoute(
+                    onBackClick = onBackClick,
+                    onComplete = onComplete
+                )
+            }
         }
     }
 }

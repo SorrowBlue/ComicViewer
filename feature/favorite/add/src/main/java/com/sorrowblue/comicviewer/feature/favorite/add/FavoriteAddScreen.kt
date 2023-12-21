@@ -112,7 +112,6 @@ private fun FavoriteAddScreen(
             onFavoriteClick = onFavoriteClick
         )
     }
-
 }
 
 @Composable
@@ -189,7 +188,6 @@ private fun NewFavoriteListItem(onClick: () -> Unit) {
         }
     )
 }
-
 
 @Composable
 private fun InputListItem(
