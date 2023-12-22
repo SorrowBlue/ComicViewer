@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.PaneAdaptedValue
@@ -40,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.navigation.NavBackStackEntry
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
@@ -67,12 +67,10 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResum
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.SavableState
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
-import com.sorrowblue.comicviewer.framework.ui.rememberSavableState
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -97,13 +95,12 @@ internal data class FolderScreenUiState(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 @Stable
 internal class FolderScreenState(
+    savedStateHandle: SavedStateHandle,
     val args: FolderArgs,
     private val viewModel: FolderViewModel,
-    private val scope: CoroutineScope,
-    val snackbarHostState: SnackbarHostState,
+    scope: CoroutineScope,
     val navigator: ThreePaneScaffoldNavigator,
-    override val savedStateHandle: SavedStateHandle,
-) : SavableState {
+) {
 
     val pagingDataFlow = viewModel.pagingDataFlow
     var file: File? by savedStateHandle.saveable(
@@ -234,6 +231,7 @@ internal class FolderScreenState(
     }
 }
 
+context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberFolderScreenState(
@@ -242,17 +240,15 @@ internal fun rememberFolderScreenState(
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
 ): FolderScreenState {
-    return rememberSavableState {
+    return remember {
         FolderScreenState(
             args = args,
             viewModel = viewModel,
             scope = scope,
             navigator = navigator,
-            snackbarHostState = snackbarHostState,
-            savedStateHandle = it
+            savedStateHandle = savedStateHandle
         )
     }
 }

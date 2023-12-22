@@ -13,11 +13,13 @@ internal fun NavGraphBuilder.favoriteListScreen(
     onFavoriteClick: (FavoriteId) -> Unit,
     contentPadding: PaddingValues,
 ) {
-    composable(FavoriteListRoute) {
-        it.FavoriteListRoute(
-            contentPadding = contentPadding,
-            onSettingsClick = onSettingsClick,
-            onFavoriteClick = onFavoriteClick
-        )
+    composable(FavoriteListRoute) { navBackStackEntry ->
+        with(navBackStackEntry) {
+            FavoriteListRoute(
+                contentPadding = contentPadding,
+                onSettingsClick = onSettingsClick,
+                onFavoriteClick = onFavoriteClick
+            )
+        }
     }
 }

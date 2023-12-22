@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -11,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
@@ -25,8 +27,6 @@ import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialRoute
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
-import com.sorrowblue.comicviewer.framework.ui.SavableState
-import com.sorrowblue.comicviewer.framework.ui.rememberSavableState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
 
+context(NavBackStackEntry)
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 internal fun rememberComicViewerAppState(
@@ -43,18 +44,18 @@ internal fun rememberComicViewerAppState(
     graphStateHolder: GraphStateHolder = rememberGraphStateHolder(),
     viewModel: ComicViewerAppViewModel = hiltViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
-): ComicViewerAppState = rememberSavableState { savedStateHandle ->
+): ComicViewerAppState = remember {
     ComicViewerAppStateImpl(
+        savedStateHandle,
         bottomSheetNavigator,
         navController,
         graphStateHolder,
         viewModel,
-        scope,
-        savedStateHandle
+        scope
     )
 }
 
-internal interface ComicViewerAppState : SavableState {
+internal interface ComicViewerAppState {
     var uiState: MainScreenUiState
 
     @OptIn(ExperimentalMaterialNavigationApi::class)
@@ -71,12 +72,12 @@ internal interface ComicViewerAppState : SavableState {
 @OptIn(ExperimentalMaterialNavigationApi::class, SavedStateHandleSaveableApi::class)
 @Stable
 internal class ComicViewerAppStateImpl(
+    savedStateHandle: SavedStateHandle,
     override val bottomSheetNavigator: BottomSheetNavigator,
     override val navController: NavHostController,
     override val graphStateHolder: GraphStateHolder,
     private val viewModel: ComicViewerAppViewModel,
     private val scope: CoroutineScope,
-    override val savedStateHandle: SavedStateHandle,
 ) : ComicViewerAppState {
 
     var isInitialized: Boolean by savedStateHandle.saveable { mutableStateOf(false) }

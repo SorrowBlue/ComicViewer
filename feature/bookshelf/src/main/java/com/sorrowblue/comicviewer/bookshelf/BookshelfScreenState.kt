@@ -1,9 +1,3 @@
-@file:OptIn(
-    ExperimentalMaterial3AdaptiveApi::class,
-    SavedStateHandleSaveableApi::class,
-    ExperimentalMaterial3AdaptiveApi::class
-)
-
 package com.sorrowblue.comicviewer.bookshelf
 
 import androidx.compose.material3.SnackbarHostState
@@ -24,28 +18,27 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.ui.DialogController
-import com.sorrowblue.comicviewer.framework.ui.SavableState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
-import com.sorrowblue.comicviewer.framework.ui.rememberSavableState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-@ExperimentalMaterial3AdaptiveApi
+@OptIn(SavedStateHandleSaveableApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Stable
 internal class BookshelfScreenState(
+    savedStateHandle: SavedStateHandle,
     private val viewModel: BookshelfViewModel,
     private val scope: CoroutineScope,
     val snackbarHostState: SnackbarHostState,
     val navigator: ThreePaneScaffoldNavigator,
     val removeDialogController: DialogController<BookshelfFolder?>,
-    override val savedStateHandle: SavedStateHandle,
-) : SavableState {
+) {
 
     val pagingDataFlow: Flow<PagingData<BookshelfFolder>> = viewModel.pagingDataFlow
 
@@ -105,6 +98,8 @@ internal class BookshelfScreenState(
     val bookshelfId get() = bookshelfFolder!!.bookshelf.id
 }
 
+context(NavBackStackEntry)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberBookshelfScreenState(
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
@@ -115,14 +110,14 @@ internal fun rememberBookshelfScreenState(
     viewModel: BookshelfViewModel = hiltViewModel(),
     removeDialogController: DialogController<BookshelfFolder?> = remember { DialogController(null) },
 ): BookshelfScreenState {
-    return rememberSavableState {
+    return remember {
         BookshelfScreenState(
+            savedStateHandle = savedStateHandle,
             scope = scope,
             navigator = navigator,
             removeDialogController = removeDialogController,
             snackbarHostState = snackbarHostState,
-            viewModel = viewModel,
-            savedStateHandle = it
+            viewModel = viewModel
         )
     }
 }

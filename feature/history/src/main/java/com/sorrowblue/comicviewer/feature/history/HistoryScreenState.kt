@@ -29,7 +29,7 @@ interface HistoryScreenState {
     fun onReadLaterClick(file: File)
 }
 
-context (NavBackStackEntry)
+context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberHistoryScreenState(

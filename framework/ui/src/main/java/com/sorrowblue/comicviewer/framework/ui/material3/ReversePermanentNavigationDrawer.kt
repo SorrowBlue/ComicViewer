@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.framework.ui.material3
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Icon
-import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.adaptive.navigation.suite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
 import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteScaffold
@@ -16,38 +15,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 import kotlinx.collections.immutable.toPersistentList
-
-@Composable
-fun ReversePermanentNavigationDrawer(
-    drawerContent: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
-) {
-    val layoutDirection = LocalLayoutDirection.current
-    CompositionLocalProvider(LocalLayoutDirection provides layoutDirection.reverse()) {
-        PermanentNavigationDrawer(
-            drawerContent = {
-                CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
-                    drawerContent()
-                }
-            },
-            modifier
-        ) {
-            CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
-                content()
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -114,9 +88,4 @@ private fun PreviewPreviewScreen() {
             }
         }
     }
-}
-
-private fun LayoutDirection.reverse() = when (this) {
-    LayoutDirection.Ltr -> LayoutDirection.Rtl
-    LayoutDirection.Rtl -> LayoutDirection.Ltr
 }

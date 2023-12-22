@@ -86,17 +86,19 @@ fun NavGraphBuilder.folderScreen(
                 defaultValue = null
             },
         )
-    ) {
-        FolderRoute(
-            contentPadding = contentPadding,
-            onSearchClick = onSearchClick,
-            onSettingsClick = onSettingsClick,
-            onBackClick = onBackClick,
-            onRestoreComplete = onRestoreComplete,
-            onFileClick = onClickFile,
-            onOpenFolderClick = {},
-            onFavoriteClick = onFavoriteClick,
-            state = rememberFolderScreenState(args = FolderArgs(it.arguments!!))
-        )
+    ) { navBackStackEntry ->
+        with(navBackStackEntry) {
+            FolderRoute(
+                contentPadding = contentPadding,
+                onSearchClick = onSearchClick,
+                onSettingsClick = onSettingsClick,
+                onBackClick = onBackClick,
+                onRestoreComplete = onRestoreComplete,
+                onFileClick = onClickFile,
+                onOpenFolderClick = {},
+                onFavoriteClick = onFavoriteClick,
+                state = rememberFolderScreenState(args = FolderArgs(navBackStackEntry.arguments!!))
+            )
+        }
     }
 }

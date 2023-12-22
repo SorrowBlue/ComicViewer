@@ -41,15 +41,17 @@ internal fun NavGraphBuilder.favoriteScreen(
     composable(
         route = FavoriteRoute,
         arguments = listOf(navArgument(FavoriteIdArg) { type = NavType.IntType })
-    ) {
-        it.FavoriteRoute(
-            contentPadding = contentPadding,
-            onBackClick = onBackClick,
-            onEditClick = onEditClick,
-            onSettingsClick = onSettingsClick,
-            onClickFile = onClickFile,
-            onOpenFolderClick = onOpenFolderClick,
-            onFavoriteClick = onFavoriteClick
-        )
+    ) { navBackStackEntry ->
+        with(navBackStackEntry) {
+            FavoriteRoute(
+                contentPadding = contentPadding,
+                onBackClick = onBackClick,
+                onEditClick = onEditClick,
+                onSettingsClick = onSettingsClick,
+                onClickFile = onClickFile,
+                onOpenFolderClick = onOpenFolderClick,
+                onFavoriteClick = onFavoriteClick
+            )
+        }
     }
 }

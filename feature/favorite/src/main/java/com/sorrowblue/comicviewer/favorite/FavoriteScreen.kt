@@ -16,6 +16,7 @@ import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -44,11 +45,9 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResum
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.SavableState
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import com.sorrowblue.comicviewer.framework.ui.rememberSavableState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -58,9 +57,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
+context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-internal fun NavBackStackEntry.FavoriteRoute(
+internal fun FavoriteRoute(
     contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
@@ -68,7 +68,7 @@ internal fun NavBackStackEntry.FavoriteRoute(
     onClickFile: (File, FavoriteId) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    state: FavoriteScreenState = rememberFavoriteScreenState(FavoriteArgs(arguments!!)),
+    state: FavoriteScreenState = rememberFavoriteScreenState(),
 ) {
     val uiState = state.uiState
     val navigator = state.navigator
@@ -95,15 +95,16 @@ internal fun NavBackStackEntry.FavoriteRoute(
     )
 }
 
+context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 @Stable
 internal class FavoriteScreenState(
+    savedStateHandle: SavedStateHandle,
     private val args: FavoriteArgs,
     val navigator: ThreePaneScaffoldNavigator,
-    override val savedStateHandle: SavedStateHandle,
     private val scope: CoroutineScope,
     private val viewModel: FavoriteViewModel,
-) : SavableState {
+) {
 
     init {
         viewModel.displaySettings.map(FolderDisplaySettings::toFileContentLayout)
@@ -168,21 +169,21 @@ internal class FavoriteScreenState(
         private set
 }
 
+context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberFavoriteScreenState(
-    args: FavoriteArgs,
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: FavoriteViewModel = hiltViewModel(),
 ): FavoriteScreenState {
-    return rememberSavableState { savedStateHandle ->
+    return remember {
         FavoriteScreenState(
-            args = args,
-            navigator = navigator,
             savedStateHandle = savedStateHandle,
+            args = FavoriteArgs(arguments!!),
+            navigator = navigator,
             scope = scope,
             viewModel = viewModel,
         )

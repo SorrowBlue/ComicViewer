@@ -10,14 +10,14 @@ android {
 dependencies {
     implementation(libs.google.material)
     implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.windowSizeClass)
 
     // Android Studio Preview support
-    api(libs.androidx.compose.ui.tooling.preview)
+    api(libs.androidx.compose.ui.toolingPreview)
     debugApi(libs.androidx.compose.ui.tooling)
 
     // UI Tests
-    debugApi(libs.androidx.compose.ui.test.manifest)
+    debugApi(libs.androidx.compose.ui.testManifest)
 }

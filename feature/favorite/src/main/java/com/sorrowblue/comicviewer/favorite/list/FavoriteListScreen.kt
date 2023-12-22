@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -31,18 +32,16 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteListSheet
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialog
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialogUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.SavableState
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import com.sorrowblue.comicviewer.framework.ui.rememberSavableState
 
 @OptIn(SavedStateHandleSaveableApi::class)
 @Stable
 internal class FavoriteListScreenState(
-    override val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val viewModel: FavoriteListViewModel,
-) : SavableState {
+) {
     var dialogUiState by savedStateHandle.saveable { mutableStateOf(FavoriteCreateDialogUiState()) }
         private set
 
@@ -69,11 +68,12 @@ internal class FavoriteListScreenState(
     }
 }
 
+context(NavBackStackEntry)
 @Composable
 internal fun rememberFavoriteListScreenState(
     viewModel: FavoriteListViewModel = hiltViewModel(),
 ): FavoriteListScreenState {
-    return rememberSavableState(viewModel) { savedStateHandle ->
+    return remember {
         FavoriteListScreenState(
             savedStateHandle = savedStateHandle,
             viewModel = viewModel
@@ -81,8 +81,9 @@ internal fun rememberFavoriteListScreenState(
     }
 }
 
+context(NavBackStackEntry)
 @Composable
-internal fun NavBackStackEntry.FavoriteListRoute(
+internal fun FavoriteListRoute(
     contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
     onFavoriteClick: (FavoriteId) -> Unit,

@@ -1,10 +1,13 @@
 package com.sorrowblue.comicviewer.app
 
 import android.app.Activity
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -25,11 +28,11 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
-@OptIn(ExperimentalMaterialNavigationApi::class)
+@OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 internal fun ComicViewerApp(
     state: ComicViewerAppState,
-    windowsSize: WindowSizeClass,
+    windowsSize: WindowSizeClass = calculateWindowSizeClass(LocalContext.current as ComponentActivity),
 ) {
     val dimension = when (windowsSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> compactDimension

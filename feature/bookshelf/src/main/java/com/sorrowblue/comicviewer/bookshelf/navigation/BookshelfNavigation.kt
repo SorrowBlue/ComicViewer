@@ -1,10 +1,8 @@
 package com.sorrowblue.comicviewer.bookshelf.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.bookshelf.BookshelfRoute
@@ -38,7 +36,6 @@ fun NavController.navigateToBookshelfFolder(id: BookshelfId, path: String, resto
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private fun NavGraphBuilder.bookshelfScreen(
     contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
@@ -46,19 +43,17 @@ private fun NavGraphBuilder.bookshelfScreen(
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
 ) {
-    composable(BookshelfRoute) {
-        BookshelfRoute(
-            contentPadding = contentPadding,
-            onSettingsClick = onSettingsClick,
-            onFabClick = onFabClick,
-            onBookshelfClick = onBookshelfClick,
-            onEditClick = onEditClick,
-        )
+    composable(BookshelfRoute) { navBackStackEntry ->
+        with(navBackStackEntry) {
+            BookshelfRoute(
+                contentPadding = contentPadding,
+                onSettingsClick = onSettingsClick,
+                onFabClick = onFabClick,
+                onBookshelfClick = onBookshelfClick,
+                onEditClick = onEditClick,
+            )
+        }
     }
-}
-
-fun NavController.navigateToBookshelfSelection(navOptions: NavOptions? = null) {
-    navigateToBookshelfSelection(navOptions)
 }
 
 fun NavGraphBuilder.bookshelfGraph(

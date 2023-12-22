@@ -34,13 +34,6 @@ fun Text(
 }
 
 @Composable
-fun Button(id: Int, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    androidx.compose.material3.Button(modifier = modifier, onClick = onClick) {
-        Text(text = id)
-    }
-}
-
-@Composable
 fun RadioButton(
     selected: Boolean,
     modifier: Modifier = Modifier,
