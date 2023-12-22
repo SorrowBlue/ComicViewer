@@ -54,10 +54,10 @@ fun FileInfoSheet(
     onCloseClick: () -> Unit,
     onReadLaterClick: () -> Unit,
     onFavoriteClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    onOpenFolderClick: (() -> Unit)? = null,
     contentPadding: PaddingValues,
     scaffoldDirective: PaneScaffoldDirective,
+    modifier: Modifier = Modifier,
+    onOpenFolderClick: (() -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
     ExtraPaneScaffold(

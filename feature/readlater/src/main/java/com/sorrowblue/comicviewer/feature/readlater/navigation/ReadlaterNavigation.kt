@@ -40,6 +40,10 @@ fun NavGraphBuilder.readlaterGroup(
                         )
                 }
             },
+            onFavoriteClick = onFavoriteClick,
+            onOpenFolderClick = {
+                navController.navigateToFolder(ReadLaterRoute, it.bookshelfId, it.parent)
+            },
             onSettingsClick = onSettingsClick,
         )
         folderScreen(
@@ -64,15 +68,21 @@ fun NavGraphBuilder.readlaterGroup(
 }
 
 private fun NavGraphBuilder.readLaterScreen(
-    contentPadding: PaddingValues,
     onFileClick: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
+    contentPadding: PaddingValues,
 ) {
-    composable(route = ReadLaterRoute) {
-        ReadLaterRoute(
-            onFileClick = onFileClick,
-            onSettingsClick = onSettingsClick,
-            contentPadding = contentPadding,
-        )
+    composable(route = ReadLaterRoute) { navBackStackEntry ->
+        with(navBackStackEntry) {
+            ReadLaterRoute(
+                onFileClick = onFileClick,
+                onSettingsClick = onSettingsClick,
+                contentPadding = contentPadding,
+                onFavoriteClick = onFavoriteClick,
+                onOpenFolderClick = onOpenFolderClick,
+            )
+        }
     }
 }

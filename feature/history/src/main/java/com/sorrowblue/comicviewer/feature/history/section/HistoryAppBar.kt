@@ -29,7 +29,9 @@ internal fun HistoryAppBar(
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     imageVector = ComicIcons.Settings,
-                    contentDescription = stringResource(id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_desc_open_settings)
+                    contentDescription = stringResource(
+                        id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_desc_open_settings
+                    )
                 )
             }
         },

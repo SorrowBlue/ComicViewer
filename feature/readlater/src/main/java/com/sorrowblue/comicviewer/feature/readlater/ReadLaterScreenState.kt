@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.history
+package com.sorrowblue.comicviewer.feature.readlater
 
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
@@ -14,31 +14,31 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-interface HistoryScreenState {
+internal interface ReadLaterScreenState {
     val navigator: ThreePaneScaffoldNavigator
-    val pagingDataFlow: Flow<PagingData<Book>>
-    val uiState: HistoryScreenUiState
+    val pagingDataFlow: Flow<PagingData<File>>
+    val uiState: ReadLaterScreenUiState
     fun onFileInfoClick(file: File)
     fun onExtraPaneCloseClick()
     fun onReadLaterClick(file: File)
+    fun onClearAllClick()
 }
 
-context (NavBackStackEntry)
+context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-internal fun rememberHistoryScreenState(
+internal fun rememberReadLaterScreenState(
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
-    viewModel: HistoryViewModel = hiltViewModel(),
-): HistoryScreenState = remember {
-    HistoryScreenStateImpl(
+    viewModel: ReadLaterViewModel = hiltViewModel(),
+): ReadLaterScreenState = remember {
+    ReadLaterScreenStateImpl(
         savedStateHandle = savedStateHandle,
         navigator = navigator,
         viewModel = viewModel
@@ -46,16 +46,16 @@ internal fun rememberHistoryScreenState(
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
-private class HistoryScreenStateImpl(
+private class ReadLaterScreenStateImpl(
     savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator,
-    private val viewModel: HistoryViewModel,
-) : HistoryScreenState {
+    private val viewModel: ReadLaterViewModel,
+) : ReadLaterScreenState {
     override val pagingDataFlow = viewModel.pagingDataFlow
 
-    override var uiState: HistoryScreenUiState by savedStateHandle.saveable {
+    override var uiState: ReadLaterScreenUiState by savedStateHandle.saveable {
         mutableStateOf(
-            HistoryScreenUiState()
+            ReadLaterScreenUiState()
         )
     }
         private set
@@ -71,5 +71,9 @@ private class HistoryScreenStateImpl(
 
     override fun onReadLaterClick(file: File) {
         viewModel.addToReadLater(file = file)
+    }
+
+    override fun onClearAllClick() {
+        viewModel.clearAll()
     }
 }

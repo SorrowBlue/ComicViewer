@@ -10,15 +10,10 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.largeBottom
-import com.sorrowblue.comicviewer.framework.designsystem.theme.largeTop
-import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
 @Composable
@@ -30,7 +25,6 @@ fun <T : File> FileContent(
     onInfoClick: (T) -> Unit,
     state: LazyGridState = rememberLazyGridState(),
 ) {
-    val isCompat = rememberMobile()
     when (type) {
         is FileContentType.Grid -> FileGridContent(
             columns = type.columns3,
@@ -43,7 +37,7 @@ fun <T : File> FileContent(
 
         FileContentType.List -> FileListContent(
             lazyPagingItems = lazyPagingItems,
-            contentPadding = contentPadding.add(PaddingValues(if (isCompat) 0.dp else ComicTheme.dimension.margin)),
+            contentPadding = contentPadding,
             onClickItem = onFileClick,
             onLongClickItem = onInfoClick,
             state = state
@@ -94,7 +88,8 @@ fun <T : File> FileListContent(
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         state = state,
-        contentPadding = contentPadding,
+        verticalArrangement = if (isCompat) Arrangement.Top else Arrangement.spacedBy(8.dp),
+        contentPadding = if (isCompat) PaddingValues() else contentPadding,
         modifier = modifier,
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
@@ -109,12 +104,7 @@ fun <T : File> FileListContent(
                 FileListMedium(
                     file = item,
                     onClick = { onClickItem(item!!) },
-                    onLongClick = { onLongClickItem(item!!) },
-                    modifier = when (it) {
-                        0 -> Modifier.clip(ComicTheme.shapes.largeTop)
-                        lazyPagingItems.itemCount - 1 -> Modifier.clip(ComicTheme.shapes.largeBottom)
-                        else -> Modifier
-                    }
+                    onLongClick = { onLongClickItem(item!!) }
                 )
             }
         }

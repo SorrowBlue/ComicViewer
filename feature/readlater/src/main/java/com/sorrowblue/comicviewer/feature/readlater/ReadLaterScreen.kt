@@ -1,105 +1,126 @@
 package com.sorrowblue.comicviewer.feature.readlater
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.feature.readlater.section.EmptyContent
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
+import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
-import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
+context(NavBackStackEntry)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun ReadLaterRoute(
-    onFileClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
+    onFileClick: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
     contentPadding: PaddingValues,
-    viewModel: ReadLaterViewModel = hiltViewModel(),
+    state: ReadLaterScreenState = rememberReadLaterScreenState(),
 ) {
-    val lazyGridState = rememberLazyGridState()
-    val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState = state.uiState
+    val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     ReadLaterScreen(
         uiState = uiState,
+        navigator = state.navigator,
         lazyPagingItems = lazyPagingItems,
         contentPadding = contentPadding,
-        lazyGridState = lazyGridState,
         onFileClick = onFileClick,
-        onFileLongClick = { /*TODO*/ },
-        onFileListTypeClick = viewModel::toggleDisplay,
-        onGridSizeClick = viewModel::toggleSpanCount,
+        onFileInfoClick = state::onFileInfoClick,
         onSettingsClick = onSettingsClick,
-        onClearAllClick = viewModel::clearAll,
+        onExtraPaneCloseClick = state::onExtraPaneCloseClick,
+        onReadLaterClick = state::onReadLaterClick,
+        onFavoriteClick = onFavoriteClick,
+        onOpenFolderClick = onOpenFolderClick,
+        onClearAllClick = state::onClearAllClick,
     )
 }
 
 internal data class ReadLaterScreenUiState(
-    val fileContentType: FileContentType = FileContentType.List,
+    val file: File? = null,
 )
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun ReadLaterScreen(
     uiState: ReadLaterScreenUiState,
+    navigator: ThreePaneScaffoldNavigator,
     lazyPagingItems: LazyPagingItems<File>,
     contentPadding: PaddingValues,
-    lazyGridState: LazyGridState,
     onFileClick: (File) -> Unit,
-    onFileLongClick: (File) -> Unit,
-    onFileListTypeClick: () -> Unit,
-    onGridSizeClick: () -> Unit,
+    onFileInfoClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     onClearAllClick: () -> Unit,
+    onExtraPaneCloseClick: () -> Unit,
+    onReadLaterClick: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+    onOpenFolderClick: (File) -> Unit,
+    lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
-    val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val localLayoutDirection = LocalLayoutDirection.current
-    Scaffold(
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    CanonicalScaffold(
+        navigator = navigator,
         topBar = {
             ReadLaterAppBar(
-                fileContentType = uiState.fileContentType,
-                topAppBarScrollBehavior = appBarScrollBehavior,
-                onFileContentLayoutClick = onFileListTypeClick,
-                onGridSizeClick = onGridSizeClick,
+                onClearAllClick = onClearAllClick,
                 onSettingsClick = onSettingsClick,
-                onClearAllClick = onClearAllClick
+                scrollBehavior = scrollBehavior
             )
         },
-        contentWindowInsets = WindowInsets(
-            left = contentPadding.calculateLeftPadding(localLayoutDirection),
-            top = contentPadding.calculateTopPadding(),
-            right = contentPadding.calculateRightPadding(localLayoutDirection),
-            bottom = contentPadding.calculateBottomPadding()
-        ),
-        modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
+        extraPane = { innerPadding ->
+            if (uiState.file != null) {
+                FileInfoSheet(
+                    file = uiState.file,
+                    scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
+                    onCloseClick = onExtraPaneCloseClick,
+                    onReadLaterClick = { onReadLaterClick(uiState.file) },
+                    onFavoriteClick = { onFavoriteClick(uiState.file) },
+                    onOpenFolderClick = { onOpenFolderClick(uiState.file) },
+                    contentPadding = innerPadding
+                )
+            }
+        },
+        contentPadding = contentPadding,
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
+        val inInnerPadding = innerPadding.add(PaddingValues(LocalDimension.current.margin))
         if (lazyPagingItems.isEmptyData) {
             EmptyContent(
+                imageVector = ComicIcons.UndrawSaveBookmarks,
+                text = stringResource(id = R.string.readlater_label_nothing_to_read_later),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(inInnerPadding)
             )
         } else {
             FileContent(
-                type = uiState.fileContentType,
+                type = FileContentType.List,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = innerPadding,
+                contentPadding = inInnerPadding,
                 onFileClick = onFileClick,
-                onInfoClick = onFileLongClick,
+                onInfoClick = onFileInfoClick,
                 state = lazyGridState
             )
         }
