@@ -54,10 +54,10 @@ fun FileInfoSheet(
     onCloseClick: () -> Unit,
     onReadLaterClick: () -> Unit,
     onFavoriteClick: () -> Unit,
-    onOpenFolderClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onOpenFolderClick: (() -> Unit)? = null,
     contentPadding: PaddingValues,
     scaffoldDirective: PaneScaffoldDirective,
-    modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
     ExtraPaneScaffold(
@@ -176,11 +176,13 @@ fun FileInfoSheet(
                 icon = ComicIcons.Favorite,
                 onClick = onFavoriteClick
             )
-            OptionButton(
-                text = R.string.file_info_label_open_folder,
-                icon = ComicIcons.FolderOpen,
-                onClick = onOpenFolderClick
-            )
+            if (onOpenFolderClick != null) {
+                OptionButton(
+                    text = R.string.file_info_label_open_folder,
+                    icon = ComicIcons.FolderOpen,
+                    onClick = onOpenFolderClick
+                )
+            }
         }
     }
 }

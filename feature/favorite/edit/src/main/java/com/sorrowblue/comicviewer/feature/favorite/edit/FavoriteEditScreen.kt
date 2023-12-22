@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -142,7 +143,13 @@ private fun FavoriteEditScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         if (lazyPagingItems.isEmptyData) {
-            FavoriteEditEmptyContent(contentPadding)
+            EmptyContent(
+                imageVector = ComicIcons.UndrawNoData,
+                text = stringResource(R.string.favorite_edit_text_no_favorites),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding)
+            )
         } else {
             LazyColumn(contentPadding = contentPadding) {
                 items(
@@ -210,7 +217,11 @@ private fun FavoriteEditDialog(
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
             ) {
                 if (lazyPagingItems.isEmptyData) {
-                    FavoriteEditEmptyContent()
+                    EmptyContent(
+                        imageVector = ComicIcons.UndrawNoData,
+                        text = stringResource(R.string.favorite_edit_text_no_favorites),
+                        modifier = Modifier.fillMaxSize()
+                    )
                 } else {
                     val lazyListState = rememberLazyListState()
                     HorizontalDivider(Modifier.alpha(if (lazyListState.canScrollBackward) 1f else 0f))
@@ -253,15 +264,6 @@ private fun containerColor(colorTransitionFraction: Float): Color {
         ComicTheme.colorScheme.surface,
         MaterialTheme.colorScheme.surfaceColorAtElevation(ElevationTokens.Level2),
         FastOutLinearInEasing.transform(colorTransitionFraction)
-    )
-}
-
-@Composable
-private fun FavoriteEditEmptyContent(contentPadding: PaddingValues = PaddingValues()) {
-    EmptyContent(
-        imageVector = ComicIcons.UndrawNoData,
-        text = stringResource(R.string.favorite_edit_text_no_favorites),
-        contentPadding = contentPadding
     )
 }
 

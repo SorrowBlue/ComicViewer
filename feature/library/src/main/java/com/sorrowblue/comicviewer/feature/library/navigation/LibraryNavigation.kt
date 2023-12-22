@@ -6,8 +6,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.feature.history.navigation.historyGroup
-import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistoryGroup
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.feature.history.navigation.historyScreen
+import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistory
 import com.sorrowblue.comicviewer.feature.library.LibraryRoute
 import com.sorrowblue.comicviewer.feature.library.section.Feature
 
@@ -32,6 +33,7 @@ fun NavGraphBuilder.libraryGroup(
     contentPadding: PaddingValues,
     navController: NavController,
     navigateToBook: (Book) -> Unit,
+    onFavoriteClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     onAddOnClick: (Feature.AddOn) -> Unit,
 ) {
@@ -41,16 +43,18 @@ fun NavGraphBuilder.libraryGroup(
             onFeatureClick = {
                 when (it) {
                     is Feature.AddOn -> onAddOnClick(it)
-                    Feature.Basic.History -> navController.navigateToHistoryGroup()
+                    Feature.Basic.History -> navController.navigateToHistory()
                     Feature.Basic.Download -> TODO()
                 }
             }
         )
 
-        historyGroup(
-            contentPadding = contentPadding,
-            navigateToBook = navigateToBook,
-            onSettingsClick = onSettingsClick
+        historyScreen(
+            onBackClick = navController::popBackStack,
+            onSettingsClick = onSettingsClick,
+            onFileClick = navigateToBook,
+            onFavoriteClick = onFavoriteClick,
+            contentPadding = contentPadding
         )
     }
 }

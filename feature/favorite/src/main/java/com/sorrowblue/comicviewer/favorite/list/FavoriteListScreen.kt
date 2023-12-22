@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.favorite.list
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -132,7 +134,11 @@ private fun FavoriteListScreen(
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         if (lazyPagingItems.isEmptyData) {
-            FavoriteListEmptySheet(contentPadding = innerPadding)
+            FavoriteListEmptySheet(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding)
+            )
         } else {
             FavoriteListSheet(
                 lazyPagingItems = lazyPagingItems,

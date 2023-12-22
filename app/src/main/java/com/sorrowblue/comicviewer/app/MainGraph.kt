@@ -86,6 +86,7 @@ internal fun NavGraphBuilder.mainGraph(
         navController = navController,
         navigateToBook = { navController.navigateToBook(it) },
         onSettingsClick = navController::navigateToSettings,
+        onFavoriteClick = navController::navigateToFavoriteAdd,
         onAddOnClick = { addOn ->
             addOn.addOn.loadDynamicFeature()?.let {
                 with(it) {

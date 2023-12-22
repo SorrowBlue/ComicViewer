@@ -4,39 +4,30 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.HistoryRoute
 
 private const val HistoryRoute = "history"
-private const val HistoryGraphRoute = "${HistoryRoute}_graph"
 
-fun NavController.navigateToHistoryGroup() = navigate(HistoryGraphRoute)
+fun NavController.navigateToHistory() = navigate(HistoryRoute)
 
-internal fun NavGraphBuilder.historyScreen(
-    contentPadding: PaddingValues,
+fun NavGraphBuilder.historyScreen(
+    onBackClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     onFileClick: (Book) -> Unit,
-    onSettingsClick: () -> Unit,
-) {
-    composable(route = HistoryRoute) {
-        HistoryRoute(
-            contentPadding = contentPadding,
-            onFileClick = onFileClick,
-            onSettingsClick = onSettingsClick
-        )
-    }
-}
-
-fun NavGraphBuilder.historyGroup(
+    onFavoriteClick: (File) -> Unit,
     contentPadding: PaddingValues,
-    navigateToBook: (Book) -> Unit,
-    onSettingsClick: () -> Unit,
 ) {
-    navigation(route = HistoryGraphRoute, startDestination = HistoryRoute) {
-        historyScreen(
-            contentPadding = contentPadding,
-            onFileClick = navigateToBook,
-            onSettingsClick = onSettingsClick
-        )
+    composable(route = HistoryRoute) { navBackStackEntry ->
+        with(navBackStackEntry) {
+            HistoryRoute(
+                onBackClick = onBackClick,
+                onSettingsClick = onSettingsClick,
+                onFileClick = onFileClick,
+                onFavoriteClick = onFavoriteClick,
+                contentPadding = contentPadding
+            )
+        }
     }
 }
