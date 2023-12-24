@@ -24,7 +24,7 @@ import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGroup
 import com.sorrowblue.comicviewer.feature.search.navigation.navigateToSearch
 import com.sorrowblue.comicviewer.feature.search.navigation.searchGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.navigateToSettings
-import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavGraph
+import com.sorrowblue.comicviewer.feature.settings.navigation.settingsScreen
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
 import java.util.ServiceLoader
@@ -41,6 +41,7 @@ internal fun NavGraphBuilder.mainGraph(
 ) {
     authenticationScreen(
         onBack = onBackClick,
+        onBackClick = navController::navigateUp,
         onAuthCompleted = { back, mode ->
             when (mode) {
                 Mode.Register, Mode.Change, Mode.Erase -> navController.popBackStack()
@@ -113,17 +114,18 @@ internal fun NavGraphBuilder.mainGraph(
         contentPadding = contentPadding
     )
 
-    settingsNavGraph(
-        navController = navController,
-        onStartTutorialClick = navController::navigateToTutorial,
-        onPasswordChangeClick = { navController.navigateToAuthentication(Mode.Change) },
+    settingsScreen(
+        onBackClick = navController::navigateUp,
         onChangeAuthEnabled = {
             if (it) {
                 navController.navigateToAuthentication(Mode.Register)
             } else {
                 navController.navigateToAuthentication(Mode.Erase)
             }
-        }
+        },
+        onPasswordChangeClick = { navController.navigateToAuthentication(Mode.Change) },
+        onStartTutorialClick = navController::navigateToTutorial,
+        contentPadding = contentPadding
     )
 
     addOnList.forEach {

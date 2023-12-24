@@ -1,27 +1,24 @@
 package com.sorrowblue.comicviewer.feature.settings.security.navigation
 
-import androidx.navigation.NavController
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.sorrowblue.comicviewer.feature.settings.security.SettingsSecurityRoute
 
-private const val SettingsSecurityRoute = "settings/security"
+const val SettingsSecurityRoute = "settings/security"
 
 fun NavGraphBuilder.settingsSecurityScreen(
     onBackClick: () -> Unit,
     onChangeAuthEnabled: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
+    contentPadding: PaddingValues,
 ) {
     composable(SettingsSecurityRoute) {
         SettingsSecurityRoute(
             onBackClick = onBackClick,
             onChangeAuthEnabled = onChangeAuthEnabled,
-            onPasswordChangeClick = onPasswordChangeClick
+            onPasswordChangeClick = onPasswordChangeClick,
+            contentPadding = contentPadding
         )
     }
-}
-
-fun NavController.navigateToSettingsSecurity(navOptions: NavOptions? = null) {
-    navigate(SettingsSecurityRoute, navOptions)
 }

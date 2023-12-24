@@ -3,12 +3,13 @@ package com.sorrowblue.comicviewer.feature.bookshelf.selection
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.component.BookshelfSource
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.Text
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -18,7 +19,7 @@ fun BookshelfSelectionScreen(
 ) {
     com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog(
         onDismissRequest = onBackClick,
-        title = { Text(text = R.string.bookshelf_selection_title) }
+        title = { Text(text = stringResource(id = R.string.bookshelf_selection_title)) }
     ) {
         val list = remember { BookshelfType.entries.toPersistentList() }
 

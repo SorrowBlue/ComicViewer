@@ -35,7 +35,7 @@ fun CanonicalScaffold(
         topBar = {
             AnimatedContent(
                 targetState = navigator.scaffoldState.scaffoldDirective.maxHorizontalPartitions != 1 ||
-                        navigator.scaffoldState.scaffoldValue.tertiary == PaneAdaptedValue.Hidden,
+                    navigator.scaffoldState.scaffoldValue.tertiary == PaneAdaptedValue.Hidden,
                 transitionSpec = { topAppBarAnimation() },
                 contentAlignment = Alignment.TopCenter,
                 label = "top_app_bar"

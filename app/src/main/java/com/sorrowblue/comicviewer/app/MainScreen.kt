@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.app
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigation.suite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,7 +15,6 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.sorrowblue.comicviewer.app.component.NavHostWithSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.material3.Text
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -53,7 +53,7 @@ internal fun MainScreen(
                         )
                     },
                     label = {
-                        Text(text = it.label)
+                        Text(text = stringResource(id = it.label))
                     }
                 )
             }

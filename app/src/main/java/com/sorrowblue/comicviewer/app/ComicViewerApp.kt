@@ -2,23 +2,34 @@ package com.sorrowblue.comicviewer.app
 
 import android.app.Activity
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.navOptions
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationRoute
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
@@ -72,9 +83,7 @@ internal fun ComicViewerApp(
                             state.navController.navigate(
                                 state.graphStateHolder.startDestination,
                                 navOptions {
-                                    popUpTo(
-                                        com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationRoute
-                                    ) {
+                                    popUpTo(AuthenticationRoute) {
                                         inclusive = true
                                     }
                                 }
@@ -87,17 +96,20 @@ internal fun ComicViewerApp(
             if (BuildConfig.BUILD_TYPE != "release") {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .drawDiagonalLabel(
-                            text = BuildConfig.BUILD_TYPE.uppercase(),
-                            color = ComicTheme.colorScheme.tertiaryContainer.copy(alpha = 0.75f),
-                            style = TextStyle(
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = ComicTheme.colorScheme.onTertiaryContainer
-                            )
+                        .fillMaxWidth()
+                        .height(
+                            (WindowInsets.statusBars.getTop(LocalDensity.current) / LocalDensity.current.density).dp
                         )
-                )
+                        .background(ComicTheme.colorScheme.tertiaryContainer.copy(alpha = 0.75f))
+                        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
+                        .padding(end = 80.dp)
+                ) {
+                    Text(
+                        text = BuildConfig.BUILD_TYPE,
+                        style = ComicTheme.typography.titleMedium,
+                        modifier = Modifier.align(Alignment.CenterEnd)
+                    )
+                }
             }
         }
     }

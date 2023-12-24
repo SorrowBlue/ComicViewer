@@ -17,6 +17,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -40,9 +43,6 @@ import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 import com.sorrowblue.comicviewer.framework.ui.material3.ExposedDropdownMenu
-import com.sorrowblue.comicviewer.framework.ui.material3.Text
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
 import kotlinx.collections.immutable.toPersistentList
 
 internal sealed interface BookScreenUiState {
@@ -116,7 +116,7 @@ internal fun BookRoute(
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun BookScreen(
     uiState: BookScreenUiState.Loaded,
@@ -138,18 +138,27 @@ private fun BookScreen(
                 exit = slideOutVertically { -it }
             ) {
                 TopAppBar(
-                    title = { Text(text = uiState.book.name, modifier = Modifier.basicMarquee()) },
-                    onBackClick = onBackClick,
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                            elevation = ElevationTokens.Level2
+                    title = {
+                        Text(
+                            text = uiState.book.name,
+                            modifier = Modifier.basicMarquee()
                         )
-                    ),
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
+                        }
+                    },
                     actions = {
                         IconButton(onClick = onSettingsClick) {
                             Icon(imageVector = ComicIcons.Settings, contentDescription = null)
                         }
-                    }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                            elevation = ElevationTokens.Level2
+                        )
+                    )
                 )
             }
         },

@@ -1,50 +1,31 @@
 package com.sorrowblue.comicviewer.feature.settings.display
 
 import android.os.Parcelable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsColumn
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 import com.sorrowblue.comicviewer.feature.settings.display.section.AppearanceDialog
-import com.sorrowblue.comicviewer.feature.settings.display.section.AppearanceDialogController
-import com.sorrowblue.comicviewer.feature.settings.display.section.rememberAppearanceDialogController
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.material3.Scaffold
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
-import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
-
-@Parcelize
-internal data class SettingsDisplayScreenUiState(
-    val darkMode: DarkMode = DarkMode.DEVICE,
-    val restoreOnLaunch: Boolean = false,
-) : Parcelable
 
 @Composable
 internal fun SettingsDisplayRoute(
     onBackClick: () -> Unit,
+    contentPadding: PaddingValues,
+    state: DisplaySettingsScreenState = rememberDisplaySettingsScreenState(),
 ) {
-    val state = rememberDisplaySettingsScreenState()
     SettingsDisplayScreen(
         uiState = state.uiState,
         onBackClick = onBackClick,
         onRestoreOnLaunchChange = state::onRestoreOnLaunchChange,
         onDarkModeClick = state::onDarkModeClick,
+        contentPadding = contentPadding
     )
 
     if (state.appearanceDialogController.isShow) {
@@ -56,100 +37,40 @@ internal fun SettingsDisplayRoute(
     }
 }
 
-@Stable
-internal class DisplaySettingsScreenState(
-    initUiState: SettingsDisplayScreenUiState = SettingsDisplayScreenUiState(),
-    val appearanceDialogController: AppearanceDialogController,
-    scope: CoroutineScope,
-    private val viewModel: SettingsDisplayViewModel,
-) {
+@Parcelize
+internal data class SettingsDisplayScreenUiState(
+    val darkMode: DarkMode = DarkMode.DEVICE,
+    val restoreOnLaunch: Boolean = false,
+) : Parcelable
 
-    var uiState by mutableStateOf(initUiState)
-
-    init {
-        scope.launch {
-            viewModel.displaySettings.collectLatest {
-                uiState = uiState.copy(darkMode = it.darkMode, restoreOnLaunch = it.restoreOnLaunch)
-            }
-        }
-    }
-
-    fun onDarkModeChange(darkMode: DarkMode) {
-        viewModel.updateDarkMode(darkMode)
-        appearanceDialogController.dismiss()
-    }
-
-    fun onRestoreOnLaunchChange(value: Boolean) {
-        viewModel.onRestoreOnLaunchChange(value)
-    }
-
-    fun onDarkModeClick() {
-        appearanceDialogController.show(uiState.darkMode)
-    }
-
-    fun onAppearanceDismissRequest() {
-        appearanceDialogController.dismiss()
-    }
-}
-
-@Composable
-internal fun rememberDisplaySettingsScreenState(
-    appearanceDialogController: AppearanceDialogController = rememberAppearanceDialogController(),
-    scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: SettingsDisplayViewModel = hiltViewModel(),
-): DisplaySettingsScreenState = rememberSaveable(
-    saver = Saver(
-        save = { it.uiState },
-        restore = { uiState ->
-            DisplaySettingsScreenState(
-                initUiState = uiState,
-                appearanceDialogController = appearanceDialogController,
-                scope = scope,
-                viewModel = viewModel
-            )
-        }
-    )
-) {
-    DisplaySettingsScreenState(
-        appearanceDialogController = appearanceDialogController,
-        scope = scope,
-        viewModel = viewModel
-    )
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsDisplayScreen(
-    uiState: SettingsDisplayScreenUiState = SettingsDisplayScreenUiState(),
-    onBackClick: () -> Unit = {},
-    onRestoreOnLaunchChange: (Boolean) -> Unit = {},
+    uiState: SettingsDisplayScreenUiState,
+    onBackClick: () -> Unit,
+    onRestoreOnLaunchChange: (Boolean) -> Unit,
     onDarkModeClick: () -> Unit,
+    contentPadding: PaddingValues,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = R.string.settings_display_title,
-                onBackClick = onBackClick,
-                scrollBehavior = scrollBehavior
-            )
+    SettingsDetailPane(
+        title = {
+            Text(text = stringResource(id = R.string.settings_display_title))
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) { contentPadding ->
-        SettingsColumn(contentPadding = contentPadding) {
-            Setting(
-                title = R.string.settings_display_label_appearance,
-                summary = uiState.darkMode.label,
-                icon = ComicIcons.DarkMode,
-                onClick = onDarkModeClick
-            )
-
-            SwitchSetting(
-                title = R.string.settings_display_label_show_last_folder,
-                summary = R.string.settings_display_desc_show_last_folder,
-                checked = uiState.restoreOnLaunch,
-                onCheckedChange = onRestoreOnLaunchChange
-            )
-        }
+        onBackClick = onBackClick,
+        contentPadding = contentPadding
+    ) {
+        Setting(
+            title = R.string.settings_display_label_appearance,
+            summary = uiState.darkMode.label,
+            icon = ComicIcons.DarkMode,
+            onClick = onDarkModeClick
+        )
+        SwitchSetting(
+            title = R.string.settings_display_label_show_last_folder,
+            summary = R.string.settings_display_desc_show_last_folder,
+            checked = uiState.restoreOnLaunch,
+            onCheckedChange = onRestoreOnLaunchChange
+        )
     }
 }
 

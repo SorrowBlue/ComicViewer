@@ -69,6 +69,7 @@ import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
+import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import kotlin.math.min
@@ -343,15 +344,6 @@ internal fun FolderRoute(
     BackHandler(enabled = state.navigator.scaffoldState.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
         state.navigator.navigateBack()
     }
-}
-
-fun <T : Any> LazyPagingItems<T>.indexOf(op: (T?) -> Boolean): Int {
-    for (i in 0..<itemCount) {
-        if (op(get(i))) {
-            return i
-        }
-    }
-    return -1
 }
 
 val CombinedLoadStates.isLoading

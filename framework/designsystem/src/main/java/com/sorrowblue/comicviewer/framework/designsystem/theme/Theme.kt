@@ -84,7 +84,7 @@ private val DarkColors = darkColorScheme(
 @Composable
 fun ComicTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    useDynamicColor: Boolean = false,
+    useDynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val colorScheme = when {

@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.bookshelf
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -11,24 +12,18 @@ import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
-import com.sorrowblue.comicviewer.framework.ui.lifecycle.ComposeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-sealed interface BookshelfUiEvent {
-
-    data class Message(val text: String) : BookshelfUiEvent
-}
-
 @HiltViewModel
-class BookshelfViewModel @Inject constructor(
+internal class BookshelfViewModel @Inject constructor(
     pagingBookshelfFolderUseCase: PagingBookshelfFolderUseCase,
     private val removeBookshelfUseCase: RemoveBookshelfUseCase,
     private val scanBookshelfUseCase: ScanBookshelfUseCase,
-) : ComposeViewModel<BookshelfUiEvent>() {
+) : ViewModel() {
 
     fun scan(folder: IFolder) {
         viewModelScope.launch {
@@ -43,7 +38,6 @@ class BookshelfViewModel @Inject constructor(
     fun remove(bookshelf: Bookshelf) {
         viewModelScope.launch {
             removeBookshelfUseCase.execute(RemoveBookshelfUseCase.Request(bookshelf))
-            updateUiEvent(BookshelfUiEvent.Message(bookshelf.displayName))
         }
     }
 }

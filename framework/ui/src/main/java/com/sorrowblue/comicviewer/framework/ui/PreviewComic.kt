@@ -28,9 +28,6 @@ annotation class PreviewComic
 @Preview(name = "landscape", device = "spec:shape=Normal,width=640,height=360,unit=dp,dpi=480")
 annotation class PreviewMobile
 
-@Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
-annotation class PreviewTablet
-
 fun previewBookFile(index: Int = 0): BookFile {
     val path = paths[index]
     val totalPageCount = Random.nextInt(0..999)

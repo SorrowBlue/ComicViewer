@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -45,9 +46,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 import com.sorrowblue.comicviewer.framework.ui.add
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewScreen
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.Text
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -122,6 +122,8 @@ private fun BookshelfScreen(
                         Icon(imageVector = ComicIcons.Settings, contentDescription = null)
                     }
                 },
+                windowInsets = contentPadding.asWindowInsets()
+                    .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -206,32 +208,30 @@ private fun PreviewBookshelfScreen() {
             }
         }
         val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
-        PreviewScreen {
-            BookshelfScreen(
-                snackbarHostState = remember { SnackbarHostState() },
-                navigator = rememberSupportingPaneScaffoldNavigator(),
-                bookshelfFolder = BookshelfFolder(
-                    InternalStorage(BookshelfId(0), "display name", 0),
-                    Folder(
-                        BookshelfId(0),
-                        "",
-                        "",
-                        "",
-                        0,
-                        0
-                    )
-                ),
-                lazyPagingItems = lazyPagingItems,
-                contentPadding = PaddingValues(),
-                onFabClick = {},
-                onSettingsClick = {},
-                onBookshelfClick = { _, _ -> },
-                onBookshelfInfoClick = {},
-                onInfoSheetRemoveClick = {},
-                onInfoSheetEditClick = {},
-                onInfoSheetScanClick = {},
-                onInfoSheetCloseClick = {},
-            )
-        }
+        BookshelfScreen(
+            snackbarHostState = remember { SnackbarHostState() },
+            navigator = rememberSupportingPaneScaffoldNavigator(),
+            bookshelfFolder = BookshelfFolder(
+                InternalStorage(BookshelfId(0), "display name", 0),
+                Folder(
+                    BookshelfId(0),
+                    "",
+                    "",
+                    "",
+                    0,
+                    0
+                )
+            ),
+            lazyPagingItems = lazyPagingItems,
+            contentPadding = PaddingValues(),
+            onFabClick = {},
+            onSettingsClick = {},
+            onBookshelfClick = { _, _ -> },
+            onBookshelfInfoClick = {},
+            onInfoSheetRemoveClick = {},
+            onInfoSheetEditClick = {},
+            onInfoSheetScanClick = {},
+            onInfoSheetCloseClick = {},
+        )
     }
 }

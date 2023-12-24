@@ -35,6 +35,20 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
 
+@OptIn(ExperimentalMaterialNavigationApi::class)
+internal interface ComicViewerAppState {
+    var uiState: MainScreenUiState
+
+    val bottomSheetNavigator: BottomSheetNavigator
+    val navController: NavHostController
+    val graphStateHolder: GraphStateHolder
+    val addOnList: SnapshotStateList<AddOn>
+    fun onCreate()
+    fun onStart()
+    fun onCompleteTutorial()
+    fun completeRestoreHistory()
+}
+
 context(NavBackStackEntry)
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
@@ -55,23 +69,9 @@ internal fun rememberComicViewerAppState(
     )
 }
 
-internal interface ComicViewerAppState {
-    var uiState: MainScreenUiState
-
-    @OptIn(ExperimentalMaterialNavigationApi::class)
-    val bottomSheetNavigator: BottomSheetNavigator
-    val navController: NavHostController
-    val graphStateHolder: GraphStateHolder
-    val addOnList: SnapshotStateList<AddOn>
-    fun onCreate()
-    fun onStart()
-    fun onCompleteTutorial()
-    fun completeRestoreHistory()
-}
-
 @OptIn(ExperimentalMaterialNavigationApi::class, SavedStateHandleSaveableApi::class)
 @Stable
-internal class ComicViewerAppStateImpl(
+private class ComicViewerAppStateImpl(
     savedStateHandle: SavedStateHandle,
     override val bottomSheetNavigator: BottomSheetNavigator,
     override val navController: NavHostController,
@@ -261,10 +261,10 @@ internal class ComicViewerAppStateImpl(
                     )
                 }
                 viewModel.shouldKeepSplash = false
-                this@ComicViewerAppStateImpl.isInitialized = true
+                isInitialized = true
             } else {
                 viewModel.shouldKeepSplash = false
-                this@ComicViewerAppStateImpl.isInitialized = true
+                isInitialized = true
             }
         }
     }
