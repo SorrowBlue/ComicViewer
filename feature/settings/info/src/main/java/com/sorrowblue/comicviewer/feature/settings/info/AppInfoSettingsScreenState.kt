@@ -5,19 +5,18 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import com.google.android.play.core.review.testing.FakeReviewManager
+import androidx.core.net.toUri
 import com.mikepenz.aboutlibraries.LibsBuilder
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import logcat.asLog
-import logcat.logcat
 
 internal interface AppInfoSettingsScreenState {
     fun launchReview()
@@ -27,13 +26,16 @@ internal interface AppInfoSettingsScreenState {
 }
 
 @Composable
-internal fun rememberAppInfoSettingsScreenState(context: Context = LocalContext.current): AppInfoSettingsScreenState =
-    remember {
-        AppInfoSettingsScreenStateImpl(context)
-    }
+internal fun rememberAppInfoSettingsScreenState(
+    context: Context = LocalContext.current,
+): AppInfoSettingsScreenState = remember {
+    AppInfoSettingsScreenStateImpl(context = context)
+}
 
-private class AppInfoSettingsScreenStateImpl(private val context: Context) :
-    AppInfoSettingsScreenState {
+private class AppInfoSettingsScreenStateImpl(
+    private val context: Context,
+) : AppInfoSettingsScreenState {
+
     override var uiState: SettingsAppInfoScreenUiState by mutableStateOf(
         SettingsAppInfoScreenUiState(
             versionName = context.packageInfo.versionName,
@@ -44,23 +46,11 @@ private class AppInfoSettingsScreenStateImpl(private val context: Context) :
     )
 
     override fun launchReview() {
-        val manager = FakeReviewManager(context)
-        manager.requestReviewFlow().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                manager.launchReviewFlow(context as Activity, task.result)
-                    .addOnCompleteListener { a ->
-                        if (a.isSuccessful) {
-                            logcat { "成功" }
-                        } else {
-                            logcat { a.exception?.asLog().toString() }
-                            // TODO(ストアページにフォールバックする) "http://play.google.com/store/apps/details?id=${context.packageName}"
-                        }
-                    }
-            } else {
-                logcat { task.exception?.asLog().toString() }
-                // TODO(ストアページにフォールバックする) "http://play.google.com/store/apps/details?id=${context.packageName}"
-            }
-        }
+        val applicationId = context.packageName.replace(".${BuildConfig.BUILD_TYPE}", "")
+        CustomTabsIntent.Builder().build().launchUrl(
+            context as Activity,
+            "http://play.google.com/store/apps/details?id=$applicationId".toUri()
+        )
     }
 
     override fun launchLicence() {

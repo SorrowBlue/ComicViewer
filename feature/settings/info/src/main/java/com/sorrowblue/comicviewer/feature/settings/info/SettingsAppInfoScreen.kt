@@ -61,6 +61,7 @@ private fun SettingsAppInfoScreen(
         )
         Setting(
             title = R.string.settings_info_label_rate,
+            summary = R.string.settings_info_rate_app_summary,
             onClick = onRateAppClick,
             icon = ComicIcons.Star
         )

@@ -16,6 +16,6 @@ android {
 dependencies {
     implementation(projects.feature.settings.common)
 
-    implementation(libs.google.android.play.review.ktx)
+    implementation(libs.androidx.browser)
     implementation(libs.mikepenz.aboutlibraries)
 }
