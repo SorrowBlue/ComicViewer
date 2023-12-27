@@ -10,6 +10,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEditRoute
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 private const val FavoriteIdArg = "favoriteId"
 
@@ -26,12 +27,12 @@ fun NavController.navigateToFavoriteEdit(
     navigate("favorite/${favoriteId.value}/edit", navOptions)
 }
 
+context(ComposeValue)
 fun NavGraphBuilder.favoriteEditScreen(
-    isMobile: Boolean,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
-    if (isMobile) {
+    if (isCompact) {
         composable(
             route = "favorite/{$FavoriteIdArg}/edit",
             arguments = listOf(

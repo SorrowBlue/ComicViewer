@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.favorite.FavoriteRoute
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 private const val FavoriteIdArg = "favoriteId"
 
@@ -29,8 +30,8 @@ internal fun NavController.navigateToFavorite(
     navigate("$FavoriteListRoute/${favoriteId.value}", navOptions)
 }
 
+context(ComposeValue)
 internal fun NavGraphBuilder.favoriteScreen(
-    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,

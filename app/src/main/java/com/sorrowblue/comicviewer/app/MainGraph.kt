@@ -1,16 +1,14 @@
 package com.sorrowblue.comicviewer.app
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraph
 import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.authentication.navigation.authenticationScreen
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
-import com.sorrowblue.comicviewer.feature.book.navigation.bookGraph
+import com.sorrowblue.comicviewer.feature.book.navigation.bookScreen
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
@@ -27,12 +25,11 @@ import com.sorrowblue.comicviewer.feature.settings.navigation.navigateToSettings
 import com.sorrowblue.comicviewer.feature.settings.navigation.settingsScreen
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 import java.util.ServiceLoader
 
+context(ComposeValue)
 internal fun NavGraphBuilder.mainGraph(
-    isMobile: Boolean,
-    navController: NavHostController,
-    contentPadding: PaddingValues,
     restoreComplete: () -> Unit,
     onTutorialExit: () -> Unit,
     onBackClick: () -> Unit,
@@ -50,9 +47,6 @@ internal fun NavGraphBuilder.mainGraph(
         }
     )
     bookshelfGraph(
-        isMobile = isMobile,
-        contentPadding = contentPadding,
-        navController = navController,
         onSettingsClick = navController::navigateToSettings,
         navigateToBook = navController::navigateToBook,
         navigateToSearch = navController::navigateToSearch,
@@ -60,31 +54,19 @@ internal fun NavGraphBuilder.mainGraph(
         onRestoreComplete = restoreComplete,
     )
     favoriteGroup(
-        isMobile = isMobile,
-        contentPadding = contentPadding,
-        navController = navController,
         navigateToBook = navController::navigateToBook,
         onFavoriteBookClick = navController::navigateToBook,
         onSettingsClick = navController::navigateToSettings,
         onSearchClick = navController::navigateToSearch,
         onFavoriteClick = navController::navigateToFavoriteAdd,
     )
-    favoriteAddScreen(
-        isMobile = isMobile,
-        onBackClick = navController::popBackStack,
-        contentPadding = contentPadding
-    )
     readlaterGroup(
-        contentPadding = contentPadding,
-        navController = navController,
         navigateToBook = navController::navigateToBook,
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
         onFavoriteClick = navController::navigateToFavoriteAdd
     )
     libraryGroup(
-        contentPadding = contentPadding,
-        navController = navController,
         navigateToBook = { navController.navigateToBook(it) },
         onSettingsClick = navController::navigateToSettings,
         onFavoriteClick = navController::navigateToFavoriteAdd,
@@ -96,10 +78,11 @@ internal fun NavGraphBuilder.mainGraph(
             }
         }
     )
+    favoriteAddScreen(
+        onBackClick = navController::popBackStack,
+    )
 
     searchGraph(
-        contentPadding = contentPadding,
-        navController = navController,
         navigateToBook = navController::navigateToBook,
         navigateToSettings = navController::navigateToSettings,
         navigateToFavoriteAdd = navController::navigateToFavoriteAdd
@@ -107,11 +90,9 @@ internal fun NavGraphBuilder.mainGraph(
 
     tutorialScreen(onComplete = onTutorialExit)
 
-    bookGraph(
-        navController = navController,
+    bookScreen(
         onBackClick = navController::popBackStack,
         onSettingsClick = navController::navigateToSettings,
-        contentPadding = contentPadding
     )
 
     settingsScreen(
@@ -125,7 +106,6 @@ internal fun NavGraphBuilder.mainGraph(
         },
         onPasswordChangeClick = { navController.navigateToAuthentication(Mode.Change) },
         onStartTutorialClick = navController::navigateToTutorial,
-        contentPadding = contentPadding
     )
 
     addOnList.forEach {

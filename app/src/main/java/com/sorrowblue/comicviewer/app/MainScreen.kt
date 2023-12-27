@@ -1,8 +1,11 @@
 package com.sorrowblue.comicviewer.app
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.suite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,10 +13,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
-import com.sorrowblue.comicviewer.app.component.NavHostWithSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -28,7 +31,7 @@ internal data class MainScreenUiState(
 
 @OptIn(
     ExperimentalMaterialNavigationApi::class,
-    ExperimentalMaterial3AdaptiveNavigationSuiteApi::class
+    ExperimentalMaterial3AdaptiveNavigationSuiteApi::class, ExperimentalMaterial3AdaptiveApi::class
 )
 @Composable
 internal fun MainScreen(
@@ -37,7 +40,7 @@ internal fun MainScreen(
     navController: NavHostController,
     startDestination: String,
     onTabSelected: (NavController, MainScreenTab) -> Unit,
-    navGraph: NavGraphBuilder.(NavHostController, PaddingValues) -> Unit,
+    navGraph: NavGraphBuilder.(PaddingValues) -> Unit,
 ) {
     NavigationSuiteScaffold(
         showNavigation = uiState.showNavigation,
@@ -60,13 +63,15 @@ internal fun MainScreen(
         }
     ) {
         ModalBottomSheetLayout(bottomSheetNavigator) {
-            NavHostWithSharedAxisX(
+            NavHost(
                 navController = navController,
                 route = MainGraphRoute,
                 startDestination = startDestination,
-                modifier = Modifier
+                modifier = Modifier,
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
-                navGraph(navController, it)
+                navGraph(it)
             }
         }
     }

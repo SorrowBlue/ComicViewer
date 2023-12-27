@@ -19,6 +19,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.search.SearchRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 private const val BookshelfIdArg = "bookshelfId"
 private const val PathArg = "path"
@@ -78,9 +79,8 @@ private fun NavGraphBuilder.searchScreen(
 
 private const val SearchGraph = "search_graph"
 
+context(ComposeValue)
 fun NavGraphBuilder.searchGraph(
-    contentPadding: PaddingValues,
-    navController: NavController,
     navigateToBook: (Book) -> Unit,
     navigateToSettings: () -> Unit,
     navigateToFavoriteAdd: (File) -> Unit,
@@ -104,7 +104,6 @@ fun NavGraphBuilder.searchGraph(
 
         folderScreen(
             prefix = SearchRoute,
-            contentPadding = contentPadding,
             onBackClick = navController::popBackStack,
             onSearchClick = navController::navigateToSearch,
             onSettingsClick = navigateToSettings,

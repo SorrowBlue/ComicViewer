@@ -254,6 +254,7 @@ internal fun rememberFolderScreenState(
     }
 }
 
+context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun FolderRoute(
@@ -265,7 +266,7 @@ internal fun FolderRoute(
     onFileClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    state: FolderScreenState,
+    state: FolderScreenState = rememberFolderScreenState(args = FolderArgs(arguments!!)),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     val uiState = state.uiState

@@ -1,17 +1,17 @@
 package com.sorrowblue.comicviewer.favorite.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.favorite.list.FavoriteListRoute
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 const val FavoriteListRoute = "favorite"
 
+context(ComposeValue)
 internal fun NavGraphBuilder.favoriteListScreen(
     onSettingsClick: () -> Unit,
     onFavoriteClick: (FavoriteId) -> Unit,
-    contentPadding: PaddingValues,
 ) {
     composable(FavoriteListRoute) { navBackStackEntry ->
         with(navBackStackEntry) {

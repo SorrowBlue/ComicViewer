@@ -6,6 +6,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -154,7 +155,7 @@ internal class BookshelfEditScreenState(
 @Composable
 internal fun rememberNeoBookshelfEditScreenState(
     args: BookshelfEditArgs,
-    snackbarHostState: SnackbarHostState,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: BookshelfEditViewModel = hiltViewModel(),

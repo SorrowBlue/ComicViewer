@@ -7,16 +7,17 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.sorrowblue.comicviewer.feature.settings.SettingsRoute
 import com.sorrowblue.comicviewer.feature.settings.language.InAppLanguagePickerScreen
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 private const val SettingsRoute = "settings"
 internal const val InAppLanguagePickerRoute = "settings/inapplanguagepicker"
 
+context(ComposeValue)
 fun NavGraphBuilder.settingsScreen(
     onBackClick: () -> Unit,
     onChangeAuthEnabled: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
     onStartTutorialClick: () -> Unit,
-    contentPadding: PaddingValues,
 ) {
     composable(SettingsRoute) { navBackStackEntry ->
         with(navBackStackEntry) {

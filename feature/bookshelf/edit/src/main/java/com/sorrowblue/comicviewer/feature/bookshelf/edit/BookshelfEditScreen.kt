@@ -1,11 +1,10 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditArgs
@@ -15,10 +14,8 @@ internal fun BookshelfEditRoute(
     args: BookshelfEditArgs,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
-    state: BookshelfEditScreenState = rememberNeoBookshelfEditScreenState(
-        args,
-        remember { SnackbarHostState() }
-    ),
+    contentPadding: PaddingValues,
+    state: BookshelfEditScreenState = rememberNeoBookshelfEditScreenState(args),
 ) {
     when (val screenState = state.innerScreenState) {
         BookshelfEditLoading -> Box(
@@ -32,12 +29,18 @@ internal fun BookshelfEditRoute(
             StorageEditRoute(
                 state = screenState,
                 onBackClick = onBackClick,
-                onComplete = onComplete
+                onComplete = onComplete,
+                contentPadding = contentPadding
             )
         }
 
         is SmbEditScreenState -> {
-            SmbEditRoute(state = screenState, onBackClick = onBackClick, onComplete = onComplete)
+            SmbEditRoute(
+                state = screenState,
+                onBackClick = onBackClick,
+                onComplete = onComplete,
+                contentPadding = contentPadding
+            )
         }
     }
 }

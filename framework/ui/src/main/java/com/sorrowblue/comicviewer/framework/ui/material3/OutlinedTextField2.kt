@@ -103,7 +103,7 @@ private fun Modifier.bringIntoViewRequester2(
         .onFocusEvent {
             if (it.isFocused) {
                 scope.launch {
-                    delay(300)
+                    delay(500)
                     bringIntoViewRequester.bringIntoView()
                 }
             }

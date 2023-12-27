@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book.navigation
 
 import android.os.Bundle
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -9,16 +8,15 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
-import androidx.navigation.navigation
 import com.sorrowblue.comicviewer.domain.model.Base64.decodeFromBase64
 import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.book.BookRoute
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
-private const val BookGraphRoute = "book_graph"
-const val BookRoute = "book"
+private const val BookRoute = "book"
 
 private const val BookshelfIdArg = "bookshelfId"
 private const val FavoriteIdArg = "favoriteId"
@@ -28,33 +26,10 @@ private const val NameArg = "name"
 private const val BookRouteBase =
     "$BookRoute/{$BookshelfIdArg}/{$PathArg}?$NameArg={$NameArg}&$FavoriteIdArg={$FavoriteIdArg}"
 
-fun NavGraphBuilder.bookGraph(
-    navController: NavController,
+context(ComposeValue)
+fun NavGraphBuilder.bookScreen(
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    contentPadding: PaddingValues,
-) {
-    navigation(route = BookGraphRoute, startDestination = BookRoute) {
-        bookScreen(
-            onBackClick = onBackClick,
-            onSettingsClick = onSettingsClick,
-            onNextBookClick = { book, favoriteId ->
-                navController.navigateToBook(
-                    book = book,
-                    favoriteId = favoriteId,
-                    navOptions = navOptions { popUpTo(BookRouteBase) { inclusive = true } }
-                )
-            },
-            contentPadding = contentPadding
-        )
-    }
-}
-
-private fun NavGraphBuilder.bookScreen(
-    onBackClick: () -> Unit,
-    onSettingsClick: () -> Unit,
-    onNextBookClick: (Book, FavoriteId) -> Unit,
-    contentPadding: PaddingValues,
 ) {
     composable(
         BookRouteBase,
@@ -77,7 +52,13 @@ private fun NavGraphBuilder.bookScreen(
             args = BookArgs(it.arguments!!),
             onBackClick = onBackClick,
             onSettingsClick = onSettingsClick,
-            onNextBookClick = onNextBookClick,
+            onNextBookClick = { book, favoriteId ->
+                navController.navigateToBook(
+                    book = book,
+                    favoriteId = favoriteId,
+                    navOptions = navOptions { popUpTo(BookRouteBase) { inclusive = true } }
+                )
+            },
             contentPadding = contentPadding,
         )
     }

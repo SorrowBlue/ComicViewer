@@ -1,37 +1,35 @@
 package com.sorrowblue.comicviewer.feature.library.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import androidx.navigation.navigation
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.navigation.historyScreen
 import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistory
 import com.sorrowblue.comicviewer.feature.library.LibraryRoute
 import com.sorrowblue.comicviewer.feature.library.section.Feature
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 private const val LibraryRoute = "library"
 const val LibraryGraphRoute = "${LibraryRoute}_graph"
 
 val RouteInLibraryGraph get() = listOf(LibraryRoute)
 
+context(ComposeValue)
 private fun NavGraphBuilder.libraryScreen(
-    contentPadding: PaddingValues,
     onFeatureClick: (Feature) -> Unit,
 ) {
     composable(LibraryRoute) {
         LibraryRoute(
             contentPadding = contentPadding,
-            onFeatureClick = onFeatureClick,
+            onFeatureClick = onFeatureClick
         )
     }
 }
 
+context(ComposeValue)
 fun NavGraphBuilder.libraryGroup(
-    contentPadding: PaddingValues,
-    navController: NavController,
     navigateToBook: (Book) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
@@ -39,7 +37,6 @@ fun NavGraphBuilder.libraryGroup(
 ) {
     navigation(route = LibraryGraphRoute, startDestination = LibraryRoute) {
         libraryScreen(
-            contentPadding = contentPadding,
             onFeatureClick = {
                 when (it) {
                     is Feature.AddOn -> onAddOnClick(it)
@@ -53,8 +50,7 @@ fun NavGraphBuilder.libraryGroup(
             onBackClick = navController::popBackStack,
             onSettingsClick = onSettingsClick,
             onFileClick = navigateToBook,
-            onFavoriteClick = onFavoriteClick,
-            contentPadding = contentPadding
+            onFavoriteClick = onFavoriteClick
         )
     }
 }

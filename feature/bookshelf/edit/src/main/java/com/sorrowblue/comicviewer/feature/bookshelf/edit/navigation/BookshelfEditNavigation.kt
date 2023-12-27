@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditRoute
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 internal const val BookshelfEditRoute = "bookshelf/edit"
 
@@ -18,23 +19,22 @@ fun NavController.navigateToBookshelfEdit(
     bookshelfId: BookshelfId,
     navOptions: NavOptions? = null,
 ) {
-    this.navigate("$BookshelfEditRoute?bookshelf_id=${bookshelfId.value}", navOptions)
+    navigate("$BookshelfEditRoute?bookshelf_id=${bookshelfId.value}", navOptions)
 }
 
 fun NavController.navigateToBookshelfEdit(
     bookshelfType: BookshelfType,
     navOptions: NavOptions? = null,
 ) {
-    popBackStack()
-    this.navigate("$BookshelfEditRoute?type=${bookshelfType.name}", navOptions)
+    navigate("$BookshelfEditRoute?type=${bookshelfType.name}", navOptions)
 }
 
+context(ComposeValue)
 fun NavGraphBuilder.bookshelfEditScreen(
-    isMobile: Boolean,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
-    if (isMobile) {
+    if (isCompact) {
         composable(
             route = "$BookshelfEditRoute?bookshelf_id={$BookshelfIdArg}&type={$BookshelfTypeArg}",
             arguments = listOf(
@@ -51,7 +51,8 @@ fun NavGraphBuilder.bookshelfEditScreen(
             BookshelfEditRoute(
                 args = BookshelfEditArgs(it.arguments!!),
                 onBackClick = onBackClick,
-                onComplete = onComplete
+                onComplete = onComplete,
+                contentPadding = contentPadding
             )
         }
     } else {
@@ -71,7 +72,8 @@ fun NavGraphBuilder.bookshelfEditScreen(
             BookshelfEditRoute(
                 args = BookshelfEditArgs(it.arguments!!),
                 onBackClick = onBackClick,
-                onComplete = onComplete
+                onComplete = onComplete,
+                contentPadding = contentPadding
             )
         }
     }

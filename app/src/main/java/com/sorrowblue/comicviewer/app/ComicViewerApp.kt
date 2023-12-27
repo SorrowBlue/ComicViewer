@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -36,10 +38,14 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.designsystem.theme.compactDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.expandedDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
-import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
+import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
 
-@OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
+@OptIn(
+    ExperimentalMaterialNavigationApi::class, ExperimentalMaterial3WindowSizeClassApi::class,
+    ExperimentalMaterial3AdaptiveApi::class
+)
 @Composable
 internal fun ComicViewerApp(
     state: ComicViewerAppState,
@@ -58,7 +64,8 @@ internal fun ComicViewerApp(
         ComicTheme {
             val addOnList = state.addOnList
             val activity = LocalContext.current as Activity
-            val isMobile = rememberMobile()
+            val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+            val slideDistance = rememberSlideDistance()
             val uiState = state.uiState
             MainScreen(
                 uiState = uiState,
@@ -66,33 +73,40 @@ internal fun ComicViewerApp(
                 navController = state.navController,
                 startDestination = state.graphStateHolder.startDestination,
                 onTabSelected = state.graphStateHolder::onTabSelected,
-            ) { navHostController, contentPadding ->
-                mainGraph(
-                    isMobile = isMobile,
-                    navController = navHostController,
-                    contentPadding = contentPadding,
-                    restoreComplete = state::completeRestoreHistory,
-                    onTutorialExit = state::onCompleteTutorial,
-                    onBackClick = {
-                        ActivityCompat.finishAffinity(activity)
-                    },
-                    onAuthCompleted = { handleBack ->
-                        if (handleBack) {
-                            state.navController.popBackStack()
-                        } else {
-                            state.navController.navigate(
-                                state.graphStateHolder.startDestination,
-                                navOptions {
-                                    popUpTo(AuthenticationRoute) {
-                                        inclusive = true
+            ) { contentPadding ->
+                with(
+                    ComposeValue(
+                        navController = state.navController,
+                        windowSizeClass = windowSizeClass,
+                        contentPadding = contentPadding,
+                        slideDistance = slideDistance
+                    )
+                ) {
+                    mainGraph(
+                        restoreComplete = state::completeRestoreHistory,
+                        onTutorialExit = state::onCompleteTutorial,
+                        onBackClick = {
+                            ActivityCompat.finishAffinity(activity)
+                        },
+                        onAuthCompleted = { handleBack ->
+                            if (handleBack) {
+                                state.navController.popBackStack()
+                            } else {
+                                state.navController.navigate(
+                                    state.graphStateHolder.startDestination,
+                                    navOptions {
+                                        popUpTo(AuthenticationRoute) {
+                                            inclusive = true
+                                        }
                                     }
-                                }
-                            )
-                        }
-                    },
-                    addOnList = addOnList,
-                )
+                                )
+                            }
+                        },
+                        addOnList = addOnList,
+                    )
+                }
             }
+            @Suppress("KotlinConstantConditions")
             if (BuildConfig.BUILD_TYPE != "release") {
                 Box(
                     modifier = Modifier
@@ -100,12 +114,13 @@ internal fun ComicViewerApp(
                         .height(
                             (WindowInsets.statusBars.getTop(LocalDensity.current) / LocalDensity.current.density).dp
                         )
-                        .background(ComicTheme.colorScheme.tertiaryContainer.copy(alpha = 0.75f))
+                        .background(ComicTheme.colorScheme.tertiaryContainer.copy(alpha = 0.25f))
                         .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
                         .padding(end = 80.dp)
                 ) {
                     Text(
                         text = BuildConfig.BUILD_TYPE,
+                        color = ComicTheme.colorScheme.onTertiaryContainer,
                         style = ComicTheme.typography.titleMedium,
                         modifier = Modifier.align(Alignment.CenterEnd)
                     )

@@ -1,9 +1,7 @@
 package com.sorrowblue.comicviewer.favorite.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.navigation
+import androidx.navigation.navigation
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -14,14 +12,13 @@ import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.navigateToFav
 import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 const val FavoriteGraphRoute = "favorite_graph"
 val RouteInFavoriteGraph = listOf(FavoriteListRoute, FavoriteRoute, folderRoute(FavoriteListRoute))
 
+context(ComposeValue)
 fun NavGraphBuilder.favoriteGroup(
-    isMobile: Boolean,
-    contentPadding: PaddingValues,
-    navController: NavController,
     navigateToBook: (Book) -> Unit,
     onFavoriteBookClick: (Book, FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,
@@ -30,13 +27,10 @@ fun NavGraphBuilder.favoriteGroup(
 ) {
     navigation(route = FavoriteGraphRoute, startDestination = FavoriteListRoute) {
         favoriteListScreen(
-            contentPadding = contentPadding,
             onSettingsClick = onSettingsClick,
             onFavoriteClick = navController::navigateToFavorite
         )
-
         favoriteScreen(
-            contentPadding = contentPadding,
             onBackClick = navController::popBackStack,
             onEditClick = navController::navigateToFavoriteEdit,
             onSettingsClick = onSettingsClick,
@@ -69,15 +63,12 @@ fun NavGraphBuilder.favoriteGroup(
                 }
             }
         )
-
         favoriteEditScreen(
-            isMobile = isMobile,
             onBackClick = navController::popBackStack,
             onComplete = navController::popBackStack
         )
         folderScreen(
             prefix = FavoriteListRoute,
-            contentPadding = contentPadding,
             onBackClick = navController::popBackStack,
             onSearchClick = onSearchClick,
             onSettingsClick = onSettingsClick,

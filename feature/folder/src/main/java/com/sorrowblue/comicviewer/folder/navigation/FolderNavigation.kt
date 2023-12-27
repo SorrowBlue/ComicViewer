@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.folder.navigation
 
 import android.os.Bundle
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -15,7 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.folder.FolderRoute
-import com.sorrowblue.comicviewer.folder.rememberFolderScreenState
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 private const val BookshelfIdArg = "bookshelfId"
 private const val PathArg = "path"
@@ -64,10 +62,9 @@ fun NavController.navigateToFolder(
     }
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+context(ComposeValue)
 fun NavGraphBuilder.folderScreen(
     prefix: String,
-    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
@@ -97,7 +94,6 @@ fun NavGraphBuilder.folderScreen(
                 onFileClick = onClickFile,
                 onOpenFolderClick = {},
                 onFavoriteClick = onFavoriteClick,
-                state = rememberFolderScreenState(args = FolderArgs(navBackStackEntry.arguments!!))
             )
         }
     }
