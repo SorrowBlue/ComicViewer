@@ -13,20 +13,33 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditRoute
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
-internal const val BookshelfEditRoute = "bookshelf/edit"
+internal const val BookshelfIdArg = "bookshelfId"
+internal const val BookshelfTypeArg = "bookshelfType"
+
+private const val BookshelfEditRouteBase = "bookshelf/edit"
+const val BookshelfEditRoute =
+    "$BookshelfEditRouteBase?bookshelf_id={$BookshelfIdArg}&type={$BookshelfTypeArg}"
+
+internal class BookshelfEditArgs(val bookshelfId: BookshelfId, val bookshelfType: BookshelfType) {
+
+    constructor(bundle: Bundle) : this(
+        BookshelfId(checkNotNull(bundle.getInt(BookshelfIdArg))),
+        BookshelfType.valueOf(checkNotNull(bundle.getString(BookshelfTypeArg)))
+    )
+}
 
 fun NavController.navigateToBookshelfEdit(
     bookshelfId: BookshelfId,
     navOptions: NavOptions? = null,
 ) {
-    navigate("$BookshelfEditRoute?bookshelf_id=${bookshelfId.value}", navOptions)
+    navigate("$BookshelfEditRouteBase?bookshelf_id=${bookshelfId.value}", navOptions)
 }
 
 fun NavController.navigateToBookshelfEdit(
     bookshelfType: BookshelfType,
     navOptions: NavOptions? = null,
 ) {
-    navigate("$BookshelfEditRoute?type=${bookshelfType.name}", navOptions)
+    navigate("$BookshelfEditRouteBase?type=${bookshelfType.name}", navOptions)
 }
 
 context(ComposeValue)
@@ -36,7 +49,7 @@ fun NavGraphBuilder.bookshelfEditScreen(
 ) {
     if (isCompact) {
         composable(
-            route = "$BookshelfEditRoute?bookshelf_id={$BookshelfIdArg}&type={$BookshelfTypeArg}",
+            route = BookshelfEditRoute,
             arguments = listOf(
                 navArgument(BookshelfIdArg) {
                     type = NavType.IntType
@@ -77,15 +90,4 @@ fun NavGraphBuilder.bookshelfEditScreen(
             )
         }
     }
-}
-
-internal const val BookshelfIdArg = "bookshelfId"
-internal const val BookshelfTypeArg = "bookshelfType"
-
-internal class BookshelfEditArgs(val bookshelfId: BookshelfId, val bookshelfType: BookshelfType) {
-
-    constructor(bundle: Bundle) : this(
-        BookshelfId(checkNotNull(bundle.getInt(BookshelfIdArg))),
-        BookshelfType.valueOf(checkNotNull(bundle.getString(BookshelfTypeArg)))
-    )
 }

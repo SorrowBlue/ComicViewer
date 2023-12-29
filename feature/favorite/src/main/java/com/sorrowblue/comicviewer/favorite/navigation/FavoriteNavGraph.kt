@@ -1,18 +1,20 @@
 package com.sorrowblue.comicviewer.favorite.navigation
 
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.navigation
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.FavoriteEditRoute
 import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.favoriteEditScreen
 import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.navigateToFavoriteEdit
 import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
+import com.sorrowblue.comicviewer.framework.ui.ComposeTransition
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
+import com.sorrowblue.comicviewer.framework.ui.animatedNavigation
 
 const val FavoriteGraphRoute = "favorite_graph"
 val RouteInFavoriteGraph = listOf(FavoriteListRoute, FavoriteRoute, folderRoute(FavoriteListRoute))
@@ -25,7 +27,32 @@ fun NavGraphBuilder.favoriteGroup(
     onSearchClick: (BookshelfId, String) -> Unit,
     onFavoriteClick: (File) -> Unit,
 ) {
-    navigation(route = FavoriteGraphRoute, startDestination = FavoriteListRoute) {
+    animatedNavigation(
+        startDestination = FavoriteListRoute,
+        route = FavoriteGraphRoute,
+        transitions = listOf(
+            ComposeTransition(
+                FavoriteListRoute,
+                FavoriteRoute,
+                ComposeTransition.Type.SharedAxisX
+            ),
+            ComposeTransition(
+                FavoriteRoute,
+                folderRoute(FavoriteListRoute),
+                ComposeTransition.Type.SharedAxisX
+            ),
+            ComposeTransition(
+                FavoriteRoute,
+                FavoriteEditRoute,
+                ComposeTransition.Type.SharedAxisY
+            ),
+            ComposeTransition(
+                FavoriteGraphRoute,
+                null,
+                ComposeTransition.Type.ContainerTransform
+            )
+        )
+    ) {
         favoriteListScreen(
             onSettingsClick = onSettingsClick,
             onFavoriteClick = navController::navigateToFavorite

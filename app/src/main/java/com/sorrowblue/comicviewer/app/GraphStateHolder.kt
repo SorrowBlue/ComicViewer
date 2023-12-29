@@ -9,8 +9,8 @@ import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphRoute
 import com.sorrowblue.comicviewer.bookshelf.navigation.routeInBookshelfGraph
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphRoute
 import com.sorrowblue.comicviewer.favorite.navigation.RouteInFavoriteGraph
-import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGraphRoute
-import com.sorrowblue.comicviewer.feature.library.navigation.RouteInLibraryGraph
+import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavigationRoute
+import com.sorrowblue.comicviewer.feature.library.navigation.RouteInLibraryNavigation
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGraphRoute
 import com.sorrowblue.comicviewer.feature.readlater.navigation.RouteInReadlaterGraph
 
@@ -33,7 +33,7 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
             in routeInBookshelfGraph -> MainScreenTab.Bookshelf
             in RouteInFavoriteGraph -> MainScreenTab.Favorite
             in RouteInReadlaterGraph -> MainScreenTab.Readlater
-            in RouteInLibraryGraph -> MainScreenTab.Library
+            in RouteInLibraryNavigation -> MainScreenTab.Library
             else -> null
         }
     }
@@ -43,7 +43,7 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
             MainScreenTab.Bookshelf -> BookshelfGraphRoute
             MainScreenTab.Favorite -> FavoriteGraphRoute
             MainScreenTab.Readlater -> ReadlaterGraphRoute
-            MainScreenTab.Library -> LibraryGraphRoute
+            MainScreenTab.Library -> LibraryNavigationRoute
         }.let { route ->
             navController.navigate(
                 route,

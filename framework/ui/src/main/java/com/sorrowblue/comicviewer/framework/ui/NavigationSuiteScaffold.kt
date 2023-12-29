@@ -30,35 +30,30 @@ fun NavigationSuiteScaffold(
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    if (showNavigation) {
-        val navSuiteType =
-            NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
-        NavigationSuiteScaffold(
-            containerColor = ComicTheme.colorScheme.surface,
-            layoutType = navSuiteType,
-            navigationSuiteItems = navigationSuiteItems,
-            modifier = if (navSuiteType == NavigationSuiteType.NavigationBar) {
-                modifier
-            } else {
-                modifier
-                    .background(ComicTheme.colorScheme.surface)
-                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Start))
-            }
-        ) {
-            Scaffold(
-                containerColor = ComicTheme.colorScheme.surface,
-                contentWindowInsets = if (navSuiteType == NavigationSuiteType.NavigationBar) {
-                    WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
-                } else {
-                    WindowInsets.safeDrawing
-                },
-                content = content
-            )
-        }
+    val navSuiteType = if (showNavigation) {
+        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
     } else {
+        NavigationSuiteType.None
+    }
+    NavigationSuiteScaffold(
+        containerColor = ComicTheme.colorScheme.surface,
+        layoutType = navSuiteType,
+        navigationSuiteItems = navigationSuiteItems,
+        modifier = if (navSuiteType == NavigationSuiteType.NavigationBar || navSuiteType == NavigationSuiteType.None) {
+            modifier
+        } else {
+            modifier
+                .background(ComicTheme.colorScheme.surface)
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Start))
+        }
+    ) {
         Scaffold(
             containerColor = ComicTheme.colorScheme.surface,
-            contentWindowInsets = WindowInsets.safeDrawing,
+            contentWindowInsets = if (navSuiteType == NavigationSuiteType.NavigationBar) {
+                WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+            } else {
+                WindowInsets.safeDrawing
+            },
             content = content
         )
     }

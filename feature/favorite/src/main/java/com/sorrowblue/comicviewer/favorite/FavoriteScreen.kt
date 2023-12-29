@@ -250,28 +250,19 @@ private fun FavoriteScreen(
         contentPadding = contentPadding,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        val dimension = LocalDimension.current
-        val inInnerPadding = innerPadding.add(
-            PaddingValues(
-                start = dimension.margin,
-                top = dimension.margin,
-                end = dimension.margin,
-                bottom = dimension.margin
-            )
-        )
         if (lazyPagingItems.isEmptyData) {
             EmptyContent(
                 imageVector = ComicIcons.UndrawResumeFolder,
                 text = stringResource(id = R.string.favorite_label_no_favorites),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(inInnerPadding)
+                    .padding(innerPadding)
             )
         } else {
             FileContent(
                 type = uiState.fileContentType,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = inInnerPadding,
+                contentPadding = innerPadding,
                 onFileClick = onFileClick,
                 onInfoClick = onFileInfoClick,
                 state = lazyGridState

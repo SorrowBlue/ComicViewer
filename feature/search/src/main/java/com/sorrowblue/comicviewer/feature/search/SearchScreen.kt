@@ -1,19 +1,24 @@
 package com.sorrowblue.comicviewer.feature.search
 
 import android.os.Parcelable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +29,8 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
@@ -40,6 +47,7 @@ import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -142,7 +150,9 @@ internal class SearchScreenState(
 private fun rememberSearchScreenState(
     args: SearchArgs,
     viewModel: SearchViewModel = hiltViewModel(),
-    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(),
+    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
+        calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
+    ),
 ) = rememberSaveable(
     saver = Saver(
         save = { it.uiState },

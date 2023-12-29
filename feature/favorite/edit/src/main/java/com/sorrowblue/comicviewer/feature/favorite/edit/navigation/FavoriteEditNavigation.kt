@@ -14,6 +14,8 @@ import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 private const val FavoriteIdArg = "favoriteId"
 
+const val FavoriteEditRoute = "favorite/{$FavoriteIdArg}/edit"
+
 internal class FavoriteEditArgs(
     val favoriteId: FavoriteId,
 ) {
@@ -34,7 +36,7 @@ fun NavGraphBuilder.favoriteEditScreen(
 ) {
     if (isCompact) {
         composable(
-            route = "favorite/{$FavoriteIdArg}/edit",
+            route = FavoriteEditRoute,
             arguments = listOf(
                 navArgument(FavoriteIdArg) { type = NavType.IntType },
             )
@@ -48,7 +50,7 @@ fun NavGraphBuilder.favoriteEditScreen(
         }
     } else {
         dialog(
-            route = "favorite/{$FavoriteIdArg}/edit",
+            route = FavoriteEditRoute,
             arguments = listOf(
                 navArgument(FavoriteIdArg) { type = NavType.IntType },
             )

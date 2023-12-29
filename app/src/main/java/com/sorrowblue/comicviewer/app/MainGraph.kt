@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.feature.book.navigation.bookScreen
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
-import com.sorrowblue.comicviewer.feature.library.navigation.libraryGroup
+import com.sorrowblue.comicviewer.feature.library.navigation.libraryNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.AddOnNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavigation
@@ -22,7 +22,7 @@ import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGroup
 import com.sorrowblue.comicviewer.feature.search.navigation.navigateToSearch
 import com.sorrowblue.comicviewer.feature.search.navigation.searchGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.navigateToSettings
-import com.sorrowblue.comicviewer.feature.settings.navigation.settingsScreen
+import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavigation
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
@@ -66,7 +66,7 @@ internal fun NavGraphBuilder.mainGraph(
         navigateToSearch = navController::navigateToSearch,
         onFavoriteClick = navController::navigateToFavoriteAdd
     )
-    libraryGroup(
+    libraryNavigation(
         navigateToBook = { navController.navigateToBook(it) },
         onSettingsClick = navController::navigateToSettings,
         onFavoriteClick = navController::navigateToFavoriteAdd,
@@ -95,7 +95,7 @@ internal fun NavGraphBuilder.mainGraph(
         onSettingsClick = navController::navigateToSettings,
     )
 
-    settingsScreen(
+    settingsNavigation(
         onBackClick = navController::navigateUp,
         onChangeAuthEnabled = {
             if (it) {

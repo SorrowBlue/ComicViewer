@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
 @Composable
@@ -58,7 +60,7 @@ private fun <T : File> FileGridContent(
     LazyVerticalGrid(
         columns = columns,
         state = state,
-        contentPadding = contentPadding,
+        contentPadding = contentPadding.add(PaddingValues(ComicTheme.dimension.margin)),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
     ) {
@@ -89,7 +91,7 @@ fun <T : File> FileListContent(
         columns = GridCells.Fixed(1),
         state = state,
         verticalArrangement = if (isCompat) Arrangement.Top else Arrangement.spacedBy(8.dp),
-        contentPadding = if (isCompat) PaddingValues() else contentPadding,
+        contentPadding = if (isCompat) contentPadding else contentPadding.add(PaddingValues(ComicTheme.dimension.margin)),
         modifier = modifier,
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {

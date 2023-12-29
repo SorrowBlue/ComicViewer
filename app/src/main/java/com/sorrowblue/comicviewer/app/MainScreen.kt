@@ -1,7 +1,5 @@
 package com.sorrowblue.comicviewer.app
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -67,9 +65,7 @@ internal fun MainScreen(
                 navController = navController,
                 route = MainGraphRoute,
                 startDestination = startDestination,
-                modifier = Modifier,
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None }
+                modifier = Modifier
             ) {
                 navGraph(it)
             }

@@ -5,7 +5,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
-import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
 import com.sorrowblue.comicviewer.domain.model.Base64.decodeFromBase64
@@ -14,7 +13,9 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.book.BookRoute
+import com.sorrowblue.comicviewer.framework.ui.ComposeTransition
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
+import com.sorrowblue.comicviewer.framework.ui.animatedComposable
 
 private const val BookRoute = "book"
 
@@ -31,8 +32,15 @@ fun NavGraphBuilder.bookScreen(
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-    composable(
-        BookRouteBase,
+    animatedComposable(
+        route = BookRouteBase,
+        transitions = listOf(
+            ComposeTransition(
+                BookRouteBase,
+                null,
+                ComposeTransition.Type.ContainerTransform
+            )
+        ),
         arguments = listOf(
             navArgument(BookshelfIdArg) { type = NavType.IntType },
             navArgument(PathArg) { type = NavType.StringType },

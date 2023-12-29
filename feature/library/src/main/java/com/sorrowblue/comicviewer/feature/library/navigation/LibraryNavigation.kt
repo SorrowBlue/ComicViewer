@@ -2,26 +2,26 @@ package com.sorrowblue.comicviewer.feature.library.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.feature.history.navigation.HistoryScreenRoute
 import com.sorrowblue.comicviewer.feature.history.navigation.historyScreen
 import com.sorrowblue.comicviewer.feature.history.navigation.navigateToHistory
-import com.sorrowblue.comicviewer.feature.library.LibraryRoute
+import com.sorrowblue.comicviewer.feature.library.LibraryScreen
 import com.sorrowblue.comicviewer.feature.library.section.Feature
+import com.sorrowblue.comicviewer.framework.ui.ComposeTransition
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
+import com.sorrowblue.comicviewer.framework.ui.animatedNavigation
 
-private const val LibraryRoute = "library"
-const val LibraryGraphRoute = "${LibraryRoute}_graph"
+private const val LibraryScreenRoute = "library"
+const val LibraryNavigationRoute = "${LibraryScreenRoute}_graph"
 
-val RouteInLibraryGraph get() = listOf(LibraryRoute)
+val RouteInLibraryNavigation get() = listOf(LibraryScreenRoute)
 
 context(ComposeValue)
-private fun NavGraphBuilder.libraryScreen(
-    onFeatureClick: (Feature) -> Unit,
-) {
-    composable(LibraryRoute) {
-        LibraryRoute(
+private fun NavGraphBuilder.libraryScreen(onFeatureClick: (Feature) -> Unit) {
+    composable(LibraryScreenRoute) {
+        LibraryScreen(
             contentPadding = contentPadding,
             onFeatureClick = onFeatureClick
         )
@@ -29,13 +29,29 @@ private fun NavGraphBuilder.libraryScreen(
 }
 
 context(ComposeValue)
-fun NavGraphBuilder.libraryGroup(
+fun NavGraphBuilder.libraryNavigation(
     navigateToBook: (Book) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     onAddOnClick: (Feature.AddOn) -> Unit,
 ) {
-    navigation(route = LibraryGraphRoute, startDestination = LibraryRoute) {
+    animatedNavigation(
+        startDestination = LibraryScreenRoute,
+        route = LibraryNavigationRoute,
+        transitions = listOf(
+            ComposeTransition(
+                LibraryScreenRoute,
+                HistoryScreenRoute,
+                ComposeTransition.Type.SharedAxisX
+            ),
+            ComposeTransition(
+                LibraryNavigationRoute,
+                null,
+                ComposeTransition.Type.ContainerTransform
+            ),
+
+            )
+    ) {
         libraryScreen(
             onFeatureClick = {
                 when (it) {

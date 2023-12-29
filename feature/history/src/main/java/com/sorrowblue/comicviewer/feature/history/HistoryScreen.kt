@@ -105,20 +105,19 @@ internal fun HistoryScreen(
         contentPadding = contentPadding,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        val inInnerPadding = innerPadding.add(PaddingValues(LocalDimension.current.margin))
         if (lazyPagingItems.isEmptyData) {
             EmptyContent(
                 imageVector = ComicIcons.UndrawResumeFolder,
                 text = stringResource(id = R.string.history_label_no_history),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(inInnerPadding)
+                    .padding(innerPadding)
             )
         } else {
             FileContent(
                 type = FileContentType.List,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = inInnerPadding,
+                contentPadding = innerPadding,
                 onFileClick = onFileClick,
                 onInfoClick = onFileInfoClick,
                 state = lazyGridState

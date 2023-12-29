@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.history.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -9,9 +8,9 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.HistoryRoute
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
-private const val HistoryRoute = "history"
+const val HistoryScreenRoute = "history"
 
-fun NavController.navigateToHistory() = navigate(HistoryRoute)
+fun NavController.navigateToHistory() = navigate(HistoryScreenRoute)
 
 context(ComposeValue)
 fun NavGraphBuilder.historyScreen(
@@ -20,7 +19,7 @@ fun NavGraphBuilder.historyScreen(
     onFileClick: (Book) -> Unit,
     onFavoriteClick: (File) -> Unit,
 ) {
-    composable(route = HistoryRoute) { navBackStackEntry ->
+    composable(route = HistoryScreenRoute) { navBackStackEntry ->
         with(navBackStackEntry) {
             HistoryRoute(
                 onBackClick = onBackClick,

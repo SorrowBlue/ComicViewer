@@ -71,7 +71,7 @@ internal sealed interface LibraryScreenUiEvent {
 }
 
 @Composable
-internal fun LibraryRoute(
+internal fun LibraryScreen(
     contentPadding: PaddingValues,
     onFeatureClick: (Feature) -> Unit,
     state: LibraryScreenState = rememberLibraryScreenState(),

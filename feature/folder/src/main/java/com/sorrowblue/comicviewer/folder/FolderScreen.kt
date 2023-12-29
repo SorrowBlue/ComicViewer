@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.folder
 import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -417,16 +419,6 @@ internal fun FolderScreen(
         contentPadding = contentPadding,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
-        val dimension = LocalDimension.current
-        val inInnerPadding = innerPadding.add(
-            PaddingValues(
-                start = dimension.margin,
-                top = dimension.margin,
-                end = dimension.margin,
-                bottom = dimension.margin
-            )
-        )
-
         val scaleFraction = if (pullRefreshState.isRefreshing) {
             1f
         } else {
@@ -448,7 +440,7 @@ internal fun FolderScreen(
                 FileContent(
                     type = uiState.fileContentType,
                     lazyPagingItems = lazyPagingItems,
-                    contentPadding = inInnerPadding,
+                    contentPadding = innerPadding,
                     onFileClick = onFileClick,
                     onInfoClick = onFileInfoClick,
                     state = lazyGridState
@@ -457,7 +449,7 @@ internal fun FolderScreen(
             PullToRefreshContainer(
                 state = pullRefreshState,
                 modifier = Modifier
-                    .padding(inInnerPadding)
+                    .padding(innerPadding)
                     .align(Alignment.TopCenter)
                     .graphicsLayer(scaleX = scaleFraction, scaleY = scaleFraction),
             )

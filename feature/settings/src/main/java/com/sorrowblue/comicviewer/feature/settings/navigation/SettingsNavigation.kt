@@ -7,33 +7,48 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.sorrowblue.comicviewer.feature.settings.SettingsRoute
 import com.sorrowblue.comicviewer.feature.settings.language.InAppLanguagePickerScreen
+import com.sorrowblue.comicviewer.framework.ui.ComposeTransition
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
+import com.sorrowblue.comicviewer.framework.ui.animatedNavigation
 
-private const val SettingsRoute = "settings"
+const val SettingsRoute = "settings"
+const val SettingsNavigationRoute = "settings_graph"
 internal const val InAppLanguagePickerRoute = "settings/inapplanguagepicker"
 
 context(ComposeValue)
-fun NavGraphBuilder.settingsScreen(
+fun NavGraphBuilder.settingsNavigation(
     onBackClick: () -> Unit,
     onChangeAuthEnabled: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
     onStartTutorialClick: () -> Unit,
 ) {
-    composable(SettingsRoute) { navBackStackEntry ->
-        with(navBackStackEntry) {
-            SettingsRoute(
-                onBackClick = onBackClick,
-                onChangeAuthEnabled = onChangeAuthEnabled,
-                onPasswordChangeClick = onPasswordChangeClick,
-                onStartTutorialClick = onStartTutorialClick,
-                contentPadding = contentPadding
+    animatedNavigation(
+        startDestination = SettingsRoute,
+        route = SettingsNavigationRoute,
+        transitions = listOf(
+            ComposeTransition(
+                SettingsNavigationRoute,
+                null,
+                ComposeTransition.Type.ContainerTransform
             )
+        )
+    ) {
+        composable(SettingsRoute) { navBackStackEntry ->
+            with(navBackStackEntry) {
+                SettingsRoute(
+                    onBackClick = onBackClick,
+                    onChangeAuthEnabled = onChangeAuthEnabled,
+                    onPasswordChangeClick = onPasswordChangeClick,
+                    onStartTutorialClick = onStartTutorialClick,
+                    contentPadding = contentPadding
+                )
+            }
         }
     }
 }
 
 fun NavController.navigateToSettings(navOptions: NavOptions? = null) {
-    navigate(SettingsRoute, navOptions)
+    navigate(SettingsNavigationRoute, navOptions)
 }
 
 internal fun NavGraphBuilder.inAppLanguagePickerScreen(

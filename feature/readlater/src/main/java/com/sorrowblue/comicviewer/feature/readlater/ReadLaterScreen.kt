@@ -105,20 +105,19 @@ private fun ReadLaterScreen(
         contentPadding = contentPadding,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        val inInnerPadding = innerPadding.add(PaddingValues(LocalDimension.current.margin))
         if (lazyPagingItems.isEmptyData) {
             EmptyContent(
                 imageVector = ComicIcons.UndrawSaveBookmarks,
                 text = stringResource(id = R.string.readlater_label_nothing_to_read_later),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(inInnerPadding)
+                    .padding(innerPadding)
             )
         } else {
             FileContent(
                 type = FileContentType.List,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = inInnerPadding,
+                contentPadding = innerPadding,
                 onFileClick = onFileClick,
                 onInfoClick = onFileInfoClick,
                 state = lazyGridState
