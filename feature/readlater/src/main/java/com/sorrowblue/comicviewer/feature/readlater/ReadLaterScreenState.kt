@@ -54,9 +54,7 @@ private class ReadLaterScreenStateImpl(
     override val pagingDataFlow = viewModel.pagingDataFlow
 
     override var uiState: ReadLaterScreenUiState by savedStateHandle.saveable {
-        mutableStateOf(
-            ReadLaterScreenUiState()
-        )
+        mutableStateOf(ReadLaterScreenUiState())
     }
         private set
 

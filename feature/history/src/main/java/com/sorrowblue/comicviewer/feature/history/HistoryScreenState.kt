@@ -54,9 +54,7 @@ private class HistoryScreenStateImpl(
     override val pagingDataFlow = viewModel.pagingDataFlow
 
     override var uiState: HistoryScreenUiState by savedStateHandle.saveable {
-        mutableStateOf(
-            HistoryScreenUiState()
-        )
+        mutableStateOf(HistoryScreenUiState())
     }
         private set
 

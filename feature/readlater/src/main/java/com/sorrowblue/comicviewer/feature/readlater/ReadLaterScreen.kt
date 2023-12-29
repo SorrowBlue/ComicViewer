@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.readlater
 
+import android.os.Parcelable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -28,6 +29,7 @@ import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import kotlinx.parcelize.Parcelize
 
 context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -58,9 +60,10 @@ internal fun ReadLaterRoute(
     )
 }
 
+@Parcelize
 internal data class ReadLaterScreenUiState(
     val file: File? = null,
-)
+) : Parcelable
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable

@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.history
 
+import android.os.Parcelable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -29,6 +30,7 @@ import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import kotlinx.parcelize.Parcelize
 
 context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -60,9 +62,10 @@ internal fun HistoryRoute(
     )
 }
 
+@Parcelize
 data class HistoryScreenUiState(
     val file: File? = null,
-)
+): Parcelable
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
