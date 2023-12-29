@@ -24,6 +24,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.ui.DialogController
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
@@ -31,21 +32,65 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+internal interface BookshelfScreenState {
+    val navigator: ThreePaneScaffoldNavigator
+    val snackbarHostState: SnackbarHostState
+    val removeDialogController: DialogController<BookshelfFolder?>
+    val lazyGridState: LazyGridState
+    val pagingDataFlow: Flow<PagingData<BookshelfFolder>>
+    var bookshelfFolder: BookshelfFolder?
+    fun onBookshelfLongClick(bookshelfFolder: BookshelfFolder)
+    fun onRemoveClick()
+    fun onInfoSheetCloseClick()
+    fun onInfoSheetScanClick()
+    fun onDismissRequest()
+    fun onConfirmClick()
+    fun onNavClick()
+    val bookshelfId: BookshelfId
+}
+
+context(NavBackStackEntry)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Composable
+internal fun rememberBookshelfScreenState(
+    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
+        calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
+    ),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    scope: CoroutineScope = rememberCoroutineScope(),
+    viewModel: BookshelfViewModel = hiltViewModel(),
+    removeDialogController: DialogController<BookshelfFolder?> = remember { DialogController(null) },
+    lazyGridState: LazyGridState = rememberLazyGridState(),
+): BookshelfScreenState = remember {
+    BookshelfScreenStateImpl(
+        savedStateHandle = savedStateHandle,
+        viewModel = viewModel,
+        scope = scope,
+        snackbarHostState = snackbarHostState,
+        navigator = navigator,
+        removeDialogController = removeDialogController,
+        lazyGridState = lazyGridState
+    )
+}
+
 @OptIn(SavedStateHandleSaveableApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Stable
-internal class BookshelfScreenState(
+private class BookshelfScreenStateImpl(
     savedStateHandle: SavedStateHandle,
     private val viewModel: BookshelfViewModel,
     private val scope: CoroutineScope,
-    val snackbarHostState: SnackbarHostState,
-    val navigator: ThreePaneScaffoldNavigator,
-    val removeDialogController: DialogController<BookshelfFolder?>,
-    val lazyGridState: LazyGridState,
-) {
+    override val navigator: ThreePaneScaffoldNavigator,
+    override val snackbarHostState: SnackbarHostState,
+    override val removeDialogController: DialogController<BookshelfFolder?>,
+    override val lazyGridState: LazyGridState,
+) : BookshelfScreenState {
 
-    val pagingDataFlow: Flow<PagingData<BookshelfFolder>> = viewModel.pagingDataFlow
+    override val bookshelfId get() = bookshelfFolder!!.bookshelf.id
 
-    var bookshelfFolder: BookshelfFolder? by savedStateHandle.saveable(
+    override val pagingDataFlow: Flow<PagingData<BookshelfFolder>> = viewModel.pagingDataFlow
+
+    override var bookshelfFolder: BookshelfFolder? by savedStateHandle.saveable(
         "bookshelfFolder",
         stateSaver = mapSaver(
             save = { mapOf("bookshelf" to it?.bookshelf, "folder" to it?.folder) },
@@ -64,32 +109,32 @@ internal class BookshelfScreenState(
         ),
     ) { mutableStateOf(null) }
 
-    fun onBookshelfLongClick(bookshelfFolder: BookshelfFolder) {
+    override fun onBookshelfLongClick(bookshelfFolder: BookshelfFolder) {
         this.bookshelfFolder = bookshelfFolder
         scope.launch {
             navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
         }
     }
 
-    fun onRemoveClick() {
+    override fun onRemoveClick() {
         removeDialogController.show(bookshelfFolder)
     }
 
-    fun onInfoSheetCloseClick() {
+    override fun onInfoSheetCloseClick() {
         scope.launch {
             navigator.navigateBack()
         }
     }
 
-    fun onInfoSheetScanClick() {
+    override fun onInfoSheetScanClick() {
         viewModel.scan(bookshelfFolder!!.folder)
     }
 
-    fun onDismissRequest() {
+    override fun onDismissRequest() {
         removeDialogController.dismiss()
     }
 
-    fun onConfirmClick() {
+    override fun onConfirmClick() {
         viewModel.remove(bookshelfFolder!!.bookshelf)
         removeDialogController.dismiss()
         scope.launch {
@@ -98,39 +143,11 @@ internal class BookshelfScreenState(
         }
     }
 
-    fun onNavClick()  {
+    override fun onNavClick() {
         if (lazyGridState.canScrollBackward) {
             scope.launch {
                 lazyGridState.scrollToItem(0)
             }
         }
-    }
-
-    val bookshelfId get() = bookshelfFolder!!.bookshelf.id
-}
-
-context(NavBackStackEntry)
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
-@Composable
-internal fun rememberBookshelfScreenState(
-    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
-        calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
-    ),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: BookshelfViewModel = hiltViewModel(),
-    removeDialogController: DialogController<BookshelfFolder?> = remember { DialogController(null) },
-    lazyGridState: LazyGridState = rememberLazyGridState(),
-): BookshelfScreenState {
-    return remember {
-        BookshelfScreenState(
-            savedStateHandle = savedStateHandle,
-            viewModel = viewModel,
-            scope = scope,
-            snackbarHostState = snackbarHostState,
-            navigator = navigator,
-            removeDialogController = removeDialogController,
-            lazyGridState = lazyGridState
-        )
     }
 }

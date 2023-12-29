@@ -36,15 +36,13 @@ internal fun rememberFavoriteListScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyListState: LazyListState = rememberLazyListState(),
     viewModel: FavoriteListViewModel = hiltViewModel(),
-): FavoriteListScreenState {
-    return remember {
-        FavoriteListScreenStateImpl(
-            savedStateHandle = savedStateHandle,
-            lazyListState = lazyListState,
-            scope = scope,
-            viewModel = viewModel,
-        )
-    }
+): FavoriteListScreenState = remember {
+    FavoriteListScreenStateImpl(
+        savedStateHandle = savedStateHandle,
+        lazyListState = lazyListState,
+        scope = scope,
+        viewModel = viewModel,
+    )
 }
 
 @OptIn(SavedStateHandleSaveableApi::class)

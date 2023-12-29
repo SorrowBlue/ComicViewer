@@ -91,7 +91,13 @@ fun <T : File> FileListContent(
         columns = GridCells.Fixed(1),
         state = state,
         verticalArrangement = if (isCompat) Arrangement.Top else Arrangement.spacedBy(8.dp),
-        contentPadding = if (isCompat) contentPadding else contentPadding.add(PaddingValues(ComicTheme.dimension.margin)),
+        contentPadding = if (isCompat) {
+            contentPadding
+        } else {
+            contentPadding.add(
+                PaddingValues(ComicTheme.dimension.margin)
+            )
+        },
         modifier = modifier,
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {

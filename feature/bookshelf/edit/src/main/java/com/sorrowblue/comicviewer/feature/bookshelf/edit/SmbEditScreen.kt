@@ -455,8 +455,8 @@ private fun SmbEditContent(
 internal fun AlertDialogContent(
     buttons: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    title: (@Composable () -> Unit)?,
-    text: @Composable (() -> Unit)?,
+    title: (@Composable () -> Unit)? = null,
+    text: @Composable (() -> Unit)? = null,
     shape: Shape = ComicTheme.shapes.extraLarge,
     containerColor: Color = ComicTheme.colorScheme.surface,
     tonalElevation: Dp = ElevationTokens.Level3,
@@ -587,8 +587,10 @@ internal fun AlertDialogFlowRow(
                 val mainAxisPositions = IntArray(childrenMainAxisSizes.size) { 0 }
                 with(arrangement) {
                     arrange(
-                        mainAxisLayoutSize, childrenMainAxisSizes,
-                        layoutDirection, mainAxisPositions
+                        mainAxisLayoutSize,
+                        childrenMainAxisSizes,
+                        layoutDirection,
+                        mainAxisPositions
                     )
                 }
                 placeables.fastForEachIndexed { j, placeable ->

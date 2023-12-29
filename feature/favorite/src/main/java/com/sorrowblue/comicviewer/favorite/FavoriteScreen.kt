@@ -44,7 +44,7 @@ internal fun FavoriteScreen(
     onClickFile: (File, FavoriteId) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    state: FavoriteScreenState = rememberFavoriteScreenState()
+    state: FavoriteScreenState = rememberFavoriteScreenState(),
 ) {
     val uiState = state.uiState
     val navigator = state.navigator

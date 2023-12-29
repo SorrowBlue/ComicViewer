@@ -50,7 +50,7 @@ fun NavGraphBuilder.libraryNavigation(
                 ComposeTransition.Type.ContainerTransform
             ),
 
-            )
+        )
     ) {
         libraryScreen(
             onFeatureClick = {

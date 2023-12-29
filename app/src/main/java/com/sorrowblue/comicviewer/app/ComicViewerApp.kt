@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.app
 
-import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -45,13 +44,16 @@ import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
 
 @OptIn(
-    ExperimentalMaterialNavigationApi::class, ExperimentalMaterial3WindowSizeClassApi::class,
+    ExperimentalMaterialNavigationApi::class,
+    ExperimentalMaterial3WindowSizeClassApi::class,
     ExperimentalMaterial3AdaptiveApi::class
 )
 @Composable
 internal fun ComicViewerApp(
     state: ComicViewerAppState,
     windowsSize: WindowSizeClass = calculateWindowSizeClass(LocalContext.current as ComponentActivity),
+    activity: ComponentActivity = LocalContext.current as ComponentActivity,
+    navTabHandler: NavTabHandler = viewModel<NavTabHandler>(viewModelStoreOwner = activity),
 ) {
     val dimension = when (windowsSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> compactDimension
@@ -65,11 +67,9 @@ internal fun ComicViewerApp(
     ) {
         ComicTheme {
             val addOnList = state.addOnList
-            val activity = LocalContext.current as ComponentActivity
             val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
             val slideDistance = rememberSlideDistance()
             val uiState = state.uiState
-            val viewModel = viewModel<NavTabHandler>(viewModelStoreOwner = activity)
             MainScreen(
                 uiState = uiState,
                 bottomSheetNavigator = state.bottomSheetNavigator,
@@ -79,7 +79,7 @@ internal fun ComicViewerApp(
                     state.graphStateHolder.onTabSelected(
                         navController,
                         tab,
-                        viewModel
+                        navTabHandler
                     )
                 },
             ) { contentPadding ->

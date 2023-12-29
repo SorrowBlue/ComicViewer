@@ -184,10 +184,9 @@ class ComposeTransition(
         SharedAxisX,
         SharedAxisY,
         FadeThrough,
-        ContainerTransform
+        ContainerTransform,
     }
 }
-
 
 context(ComposeValue)
 fun NavGraphBuilder.animatedNavigation(
@@ -211,8 +210,8 @@ fun NavGraphBuilder.animatedNavigation(
             val initRoute = initialState.destination.route
             val targetRoute = targetState.destination.route
             val transition = transitions.firstOrNull {
-                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute })
-                    || (initRoute == it.enterRoute && targetRoute == it.exitRoute)
+                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute }) ||
+                    (initRoute == it.enterRoute && targetRoute == it.exitRoute)
             }
             logcat("APPAPP") {
                 "$route enter init=${
@@ -234,8 +233,8 @@ fun NavGraphBuilder.animatedNavigation(
             val initRoute = initialState.destination.route
             val targetRoute = targetState.destination.route
             val transition = transitions.firstOrNull {
-                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute })
-                    || (initRoute == it.enterRoute && targetRoute == it.exitRoute)
+                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute }) ||
+                    (initRoute == it.enterRoute && targetRoute == it.exitRoute)
             }
             logcat("APPAPP") {
                 "$route exit init=${
@@ -265,8 +264,8 @@ fun NavGraphBuilder.animatedNavigation(
             val initRoute = initialState.destination.route
             val targetRoute = targetState.destination.route
             val transition = transitions.firstOrNull {
-                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute })
-                    || (initRoute == it.exitRoute && targetRoute == it.enterRoute)
+                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute }) ||
+                    (initRoute == it.exitRoute && targetRoute == it.enterRoute)
             }
             logcat("APPAPP") {
                 "$route popEnter init=${
@@ -295,8 +294,8 @@ fun NavGraphBuilder.animatedNavigation(
             val initRoute = initialState.destination.route
             val targetRoute = targetState.destination.route
             val transition = transitions.firstOrNull {
-                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute })
-                    || (initRoute == it.exitRoute && targetRoute == it.enterRoute)
+                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute }) ||
+                    (initRoute == it.exitRoute && targetRoute == it.enterRoute)
             }
             logcat("APPAPP") {
                 "$route popExit init=${
@@ -345,8 +344,8 @@ fun NavGraphBuilder.animatedComposable(
             val initRoute = initialState.destination.route
             val targetRoute = targetState.destination.route
             val transition = transitions.firstOrNull {
-                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute })
-                    || (initRoute == it.enterRoute && targetRoute == it.exitRoute)
+                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute }) ||
+                    (initRoute == it.enterRoute && targetRoute == it.exitRoute)
             }
             logcat("APPAPP") {
                 "$route enter init=${
@@ -368,8 +367,8 @@ fun NavGraphBuilder.animatedComposable(
             val initRoute = initialState.destination.route
             val targetRoute = targetState.destination.route
             val transition = transitions.firstOrNull {
-                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute })
-                    || (initRoute == it.enterRoute && targetRoute == it.exitRoute)
+                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute }) ||
+                    (initRoute == it.enterRoute && targetRoute == it.exitRoute)
             }
             logcat("APPAPP") {
                 "$route exit init=${
@@ -399,8 +398,8 @@ fun NavGraphBuilder.animatedComposable(
             val initRoute = initialState.destination.route
             val targetRoute = targetState.destination.route
             val transition = transitions.firstOrNull {
-                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute })
-                    || (initRoute == it.exitRoute && targetRoute == it.enterRoute)
+                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute }) ||
+                    (initRoute == it.exitRoute && targetRoute == it.enterRoute)
             }
             logcat("APPAPP") {
                 "$route popEnter init=${
@@ -429,8 +428,8 @@ fun NavGraphBuilder.animatedComposable(
             val initRoute = initialState.destination.route
             val targetRoute = targetState.destination.route
             val transition = transitions.firstOrNull {
-                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute })
-                    || (initRoute == it.exitRoute && targetRoute == it.enterRoute)
+                (it.exitRoute == null && targetState.destination.hierarchy.any { a -> a.route == it.enterRoute }) ||
+                    (initRoute == it.exitRoute && targetRoute == it.enterRoute)
             }
             logcat("APPAPP") {
                 "$route popExit init=${

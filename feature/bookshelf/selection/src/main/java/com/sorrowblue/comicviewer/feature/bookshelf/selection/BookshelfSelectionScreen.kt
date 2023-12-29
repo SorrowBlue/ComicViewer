@@ -15,15 +15,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -33,18 +29,42 @@ import com.sorrowblue.comicviewer.feature.bookshelf.selection.component.Bookshel
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookshelfSelectionScreen(
+internal fun BookshelfSelectionScreen(
     onCloseClick: () -> Unit,
     onSourceClick: (BookshelfType) -> Unit,
     contentPadding: PaddingValues,
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    state: BookshelfSelectionScreenState = rememberBookshelfSelectionScreenState(),
 ) {
-    val list = remember(BookshelfType.entries::toPersistentList)
+    val uiState = state.uiState
+    BookshelfSelectionScreen(
+        uiState = uiState,
+        onCloseClick = onCloseClick,
+        onSourceClick = onSourceClick,
+        contentPadding = contentPadding,
+        windowSizeClass = state.windowSizeClass,
+        scrollBehavior = state.scrollBehavior,
+    )
+}
+
+internal data class BookshelfSelectionScreenUiState(
+    val list: PersistentList<BookshelfType> = BookshelfType.entries.toPersistentList(),
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BookshelfSelectionScreen(
+    uiState: BookshelfSelectionScreenUiState,
+    onCloseClick: () -> Unit,
+    onSourceClick: (BookshelfType) -> Unit,
+    contentPadding: PaddingValues,
+    windowSizeClass: WindowSizeClass,
+    scrollBehavior: TopAppBarScrollBehavior,
+) {
     if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact || windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact) {
         Scaffold(
             topBar = {
@@ -66,16 +86,13 @@ fun BookshelfSelectionScreen(
         ) {
             LazyVerticalGrid(
                 contentPadding = it.add(
-                    paddingValues = PaddingValues(
-                        horizontal = 24.dp,
-                        vertical = 16.dp
-                    )
+                    paddingValues = PaddingValues(horizontal = 24.dp, vertical = 16.dp)
                 ),
                 columns = GridCells.Adaptive(300.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                items(list) { type ->
+                items(uiState.list) { type ->
                     BookshelfSource(
                         type = type,
                         onClick = { onSourceClick(type) }
@@ -106,7 +123,7 @@ fun BookshelfSelectionScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    items(list) { type ->
+                    items(uiState.list) { type ->
                         BookshelfSource(
                             type = type,
                             onClick = { onSourceClick(type) }

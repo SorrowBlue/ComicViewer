@@ -75,21 +75,19 @@ internal fun rememberFolderScreenState(
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
-    args: FolderArgs,
+    args: FolderArgs = FolderArgs(arguments!!),
     viewModel: FolderViewModel = hiltViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
-): FolderScreenState {
-    return remember {
-        FolderScreenStateImpl(
-            savedStateHandle = savedStateHandle,
-            navigator = navigator,
-            lazyGridState = lazyGridState,
-            args = args,
-            viewModel = viewModel,
-            scope = scope
-        )
-    }
+): FolderScreenState = remember {
+    FolderScreenStateImpl(
+        savedStateHandle = savedStateHandle,
+        navigator = navigator,
+        lazyGridState = lazyGridState,
+        args = args,
+        viewModel = viewModel,
+        scope = scope
+    )
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)

@@ -29,7 +29,8 @@ internal data class MainScreenUiState(
 
 @OptIn(
     ExperimentalMaterialNavigationApi::class,
-    ExperimentalMaterial3AdaptiveNavigationSuiteApi::class, ExperimentalMaterial3AdaptiveApi::class
+    ExperimentalMaterial3AdaptiveNavigationSuiteApi::class,
+    ExperimentalMaterial3AdaptiveApi::class
 )
 @Composable
 internal fun MainScreen(

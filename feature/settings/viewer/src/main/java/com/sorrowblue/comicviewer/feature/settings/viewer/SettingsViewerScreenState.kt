@@ -31,17 +31,14 @@ internal interface SettingsViewerScreenState {
 internal fun rememberSettingsViewerScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: SettingsViewerViewModel = hiltViewModel(),
-): SettingsViewerScreenState {
-    return remember {
-        SettingsViewerScreenStateImpl(scope = scope, viewModel = viewModel)
-    }
+): SettingsViewerScreenState = remember {
+    SettingsViewerScreenStateImpl(scope = scope, viewModel = viewModel)
 }
 
 private class SettingsViewerScreenStateImpl(
     scope: CoroutineScope,
     private val viewModel: SettingsViewerViewModel,
-) :
-    SettingsViewerScreenState {
+) : SettingsViewerScreenState {
 
     override var uiState: SettingsViewerScreenUiState by mutableStateOf(SettingsViewerScreenUiState())
         private set

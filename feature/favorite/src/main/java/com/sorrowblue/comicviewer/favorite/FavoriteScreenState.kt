@@ -61,17 +61,15 @@ internal fun rememberFavoriteScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: FavoriteViewModel = hiltViewModel(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
-): FavoriteScreenState {
-    return remember {
-        FavoriteScreenStateImpl(
-            savedStateHandle = savedStateHandle,
-            args = FavoriteArgs(arguments!!),
-            navigator = navigator,
-            scope = scope,
-            viewModel = viewModel,
-            lazyGridState = lazyGridState
-        )
-    }
+): FavoriteScreenState = remember {
+    FavoriteScreenStateImpl(
+        savedStateHandle = savedStateHandle,
+        args = FavoriteArgs(arguments!!),
+        navigator = navigator,
+        scope = scope,
+        viewModel = viewModel,
+        lazyGridState = lazyGridState
+    )
 }
 
 context(NavBackStackEntry)
