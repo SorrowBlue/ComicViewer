@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.navOptions
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationRoute
@@ -40,6 +41,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.expandedDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
 
 @OptIn(
@@ -63,16 +65,23 @@ internal fun ComicViewerApp(
     ) {
         ComicTheme {
             val addOnList = state.addOnList
-            val activity = LocalContext.current as Activity
+            val activity = LocalContext.current as ComponentActivity
             val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
             val slideDistance = rememberSlideDistance()
             val uiState = state.uiState
+            val viewModel = viewModel<NavTabHandler>(viewModelStoreOwner = activity)
             MainScreen(
                 uiState = uiState,
                 bottomSheetNavigator = state.bottomSheetNavigator,
                 navController = state.navController,
                 startDestination = state.graphStateHolder.startDestination,
-                onTabSelected = state.graphStateHolder::onTabSelected,
+                onTabSelected = { navController, tab ->
+                    state.graphStateHolder.onTabSelected(
+                        navController,
+                        tab,
+                        viewModel
+                    )
+                },
             ) { contentPadding ->
                 with(
                     ComposeValue(

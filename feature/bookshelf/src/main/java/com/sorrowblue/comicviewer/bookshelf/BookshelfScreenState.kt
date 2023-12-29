@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.bookshelf
 
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
@@ -38,6 +40,7 @@ internal class BookshelfScreenState(
     val snackbarHostState: SnackbarHostState,
     val navigator: ThreePaneScaffoldNavigator,
     val removeDialogController: DialogController<BookshelfFolder?>,
+    val lazyGridState: LazyGridState,
 ) {
 
     val pagingDataFlow: Flow<PagingData<BookshelfFolder>> = viewModel.pagingDataFlow
@@ -95,6 +98,14 @@ internal class BookshelfScreenState(
         }
     }
 
+    fun onNavClick()  {
+        if (lazyGridState.canScrollBackward) {
+            scope.launch {
+                lazyGridState.scrollToItem(0)
+            }
+        }
+    }
+
     val bookshelfId get() = bookshelfFolder!!.bookshelf.id
 }
 
@@ -109,15 +120,17 @@ internal fun rememberBookshelfScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: BookshelfViewModel = hiltViewModel(),
     removeDialogController: DialogController<BookshelfFolder?> = remember { DialogController(null) },
+    lazyGridState: LazyGridState = rememberLazyGridState(),
 ): BookshelfScreenState {
     return remember {
         BookshelfScreenState(
             savedStateHandle = savedStateHandle,
+            viewModel = viewModel,
             scope = scope,
+            snackbarHostState = snackbarHostState,
             navigator = navigator,
             removeDialogController = removeDialogController,
-            snackbarHostState = snackbarHostState,
-            viewModel = viewModel
+            lazyGridState = lazyGridState
         )
     }
 }

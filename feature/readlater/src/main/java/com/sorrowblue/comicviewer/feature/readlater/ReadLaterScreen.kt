@@ -24,10 +24,9 @@ import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
@@ -46,8 +45,9 @@ internal fun ReadLaterRoute(
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     ReadLaterScreen(
         uiState = uiState,
-        navigator = state.navigator,
         lazyPagingItems = lazyPagingItems,
+        navigator = state.navigator,
+        lazyGridState = state.lazyGridState,
         contentPadding = contentPadding,
         onFileClick = onFileClick,
         onFileInfoClick = state::onFileInfoClick,
@@ -58,6 +58,8 @@ internal fun ReadLaterRoute(
         onOpenFolderClick = onOpenFolderClick,
         onClearAllClick = state::onClearAllClick,
     )
+
+    NavTabHandler(onClick = state::onNavClick)
 }
 
 @Parcelize
@@ -69,8 +71,9 @@ internal data class ReadLaterScreenUiState(
 @Composable
 private fun ReadLaterScreen(
     uiState: ReadLaterScreenUiState,
-    navigator: ThreePaneScaffoldNavigator,
     lazyPagingItems: LazyPagingItems<File>,
+    navigator: ThreePaneScaffoldNavigator,
+    lazyGridState: LazyGridState,
     contentPadding: PaddingValues,
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,
@@ -80,7 +83,6 @@ private fun ReadLaterScreen(
     onReadLaterClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     CanonicalScaffold(

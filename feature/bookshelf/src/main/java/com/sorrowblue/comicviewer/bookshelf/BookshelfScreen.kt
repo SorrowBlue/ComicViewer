@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -44,6 +45,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
@@ -66,6 +68,7 @@ internal fun BookshelfRoute(
         navigator = state.navigator,
         bookshelfFolder = state.bookshelfFolder,
         lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
+        lazyGridState = state.lazyGridState,
         snackbarHostState = state.snackbarHostState,
         contentPadding = contentPadding,
         onFabClick = onFabClick,
@@ -89,6 +92,8 @@ internal fun BookshelfRoute(
     BackHandler(enabled = state.navigator.scaffoldState.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
         state.navigator.navigateBack()
     }
+
+    NavTabHandler(onClick = state::onNavClick)
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
@@ -107,9 +112,9 @@ private fun BookshelfScreen(
     onInfoSheetEditClick: () -> Unit,
     onInfoSheetScanClick: () -> Unit,
     onInfoSheetCloseClick: () -> Unit,
+    lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val lazyGridState = rememberLazyGridState()
     CanonicalScaffold(
         navigator = navigator,
         topBar = {

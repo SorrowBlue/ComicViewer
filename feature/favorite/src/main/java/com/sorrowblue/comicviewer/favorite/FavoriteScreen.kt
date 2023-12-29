@@ -9,58 +9,34 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteArgs
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBarUiState
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
-import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.add
-import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
+import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-internal fun FavoriteRoute(
+internal fun FavoriteScreen(
     contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
@@ -68,7 +44,7 @@ internal fun FavoriteRoute(
     onClickFile: (File, FavoriteId) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    state: FavoriteScreenState = rememberFavoriteScreenState(),
+    state: FavoriteScreenState = rememberFavoriteScreenState()
 ) {
     val uiState = state.uiState
     val navigator = state.navigator
@@ -93,101 +69,8 @@ internal fun FavoriteRoute(
         onOpenFolderClick = onOpenFolderClick,
         onReadLaterClick = state::onReadLaterClick,
     )
-}
 
-context(NavBackStackEntry)
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
-@Stable
-internal class FavoriteScreenState(
-    savedStateHandle: SavedStateHandle,
-    private val args: FavoriteArgs,
-    val navigator: ThreePaneScaffoldNavigator,
-    private val scope: CoroutineScope,
-    private val viewModel: FavoriteViewModel,
-) {
-
-    init {
-        viewModel.displaySettings.map(FolderDisplaySettings::toFileContentLayout)
-            .distinctUntilChanged().onEach {
-                uiState = uiState.copy(
-                    favoriteAppBarUiState = uiState.favoriteAppBarUiState.copy(fileContentType = it),
-                    fileContentType = it
-                )
-            }.launchIn(scope)
-        scope.launch {
-            viewModel.getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
-                .collectLatest {
-                    if (it.dataOrNull != null) {
-                        uiState =
-                            uiState.copy(
-                                favoriteAppBarUiState = uiState.favoriteAppBarUiState.copy(title = it.dataOrNull!!.name)
-                            )
-                    }
-                }
-        }
-    }
-
-    fun delete(onBackClick: () -> Unit) {
-        viewModel.delete(favoriteId, onBackClick)
-    }
-
-    fun toggleGridSize() {
-        if (uiState.fileContentType is FileContentType.Grid) {
-            viewModel.updateGridSize()
-        }
-    }
-
-    fun onFileInfoClick(file: File) {
-        uiState = uiState.copy(file = file)
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
-    }
-
-    fun toggleFileListType() {
-        viewModel.updateDisplay(
-            when (uiState.fileContentType) {
-                is FileContentType.Grid -> FolderDisplaySettings.Display.LIST
-                FileContentType.List -> FolderDisplaySettings.Display.GRID
-            }
-        )
-    }
-
-    fun onExtraPaneCloseClick() {
-        navigator.navigateBack()
-    }
-
-    fun onReadLaterClick(file: File) {
-        viewModel.addToReadLater(file)
-    }
-
-    val favoriteId: FavoriteId get() = args.favoriteId
-    val pagingDataFlow = viewModel.pagingDataFlow(args.favoriteId)
-    var uiState: FavoriteScreenUiState by savedStateHandle.saveable {
-        mutableStateOf(
-            FavoriteScreenUiState()
-        )
-    }
-        private set
-}
-
-context(NavBackStackEntry)
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
-@Composable
-internal fun rememberFavoriteScreenState(
-    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
-        calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
-    ),
-    scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FavoriteViewModel = hiltViewModel(),
-): FavoriteScreenState {
-    return remember {
-        FavoriteScreenState(
-            savedStateHandle = savedStateHandle,
-            args = FavoriteArgs(arguments!!),
-            navigator = navigator,
-            scope = scope,
-            viewModel = viewModel,
-        )
-    }
+    NavTabHandler(onClick = state::onNavClick)
 }
 
 @Parcelize

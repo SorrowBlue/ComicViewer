@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.favorite.list
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -11,16 +11,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -30,56 +23,11 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteListAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListEmptySheet
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListSheet
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialog
-import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialogUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-
-@OptIn(SavedStateHandleSaveableApi::class)
-@Stable
-internal class FavoriteListScreenState(
-    savedStateHandle: SavedStateHandle,
-    private val viewModel: FavoriteListViewModel,
-) {
-    var dialogUiState by savedStateHandle.saveable { mutableStateOf(FavoriteCreateDialogUiState()) }
-        private set
-
-    val pagingDataFlow = viewModel.pagingDataFlow
-
-    fun onNameChange(name: String) {
-        dialogUiState = dialogUiState.copy(name = name, nameError = name.isBlank())
-    }
-
-    fun onDismissRequest() {
-        dialogUiState = FavoriteCreateDialogUiState()
-    }
-
-    fun onCreateClick() {
-        onNameChange(dialogUiState.name)
-        if (dialogUiState.nameError) return
-        viewModel.create(dialogUiState.name) {
-            dialogUiState = FavoriteCreateDialogUiState()
-        }
-    }
-
-    fun onNewFavoriteClick() {
-        dialogUiState = dialogUiState.copy(isShown = true)
-    }
-}
-
-context(NavBackStackEntry)
-@Composable
-internal fun rememberFavoriteListScreenState(
-    viewModel: FavoriteListViewModel = hiltViewModel(),
-): FavoriteListScreenState {
-    return remember {
-        FavoriteListScreenState(
-            savedStateHandle = savedStateHandle,
-            viewModel = viewModel
-        )
-    }
-}
 
 context(NavBackStackEntry)
 @Composable
@@ -91,8 +39,9 @@ internal fun FavoriteListRoute(
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     FavoriteListScreen(
-        contentPadding = contentPadding,
         lazyPagingItems = lazyPagingItems,
+        lazyListState = state.lazyListState,
+        contentPadding = contentPadding,
         onSettingsClick = onSettingsClick,
         onFavoriteClick = onFavoriteClick,
         onCreateFavoriteClick = state::onNewFavoriteClick
@@ -104,19 +53,21 @@ internal fun FavoriteListRoute(
         onDismissRequest = state::onDismissRequest,
         onCreateClick = state::onCreateClick
     )
+
+    NavTabHandler(onClick = state::onNavClick)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoriteListScreen(
     lazyPagingItems: LazyPagingItems<Favorite>,
+    lazyListState: LazyListState,
+    contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
     onFavoriteClick: (FavoriteId) -> Unit,
     onCreateFavoriteClick: () -> Unit,
-    contentPadding: PaddingValues,
 ) {
     val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val lazyListState = rememberLazyListState()
     Scaffold(
         topBar = {
             FavoriteListAppBar(
