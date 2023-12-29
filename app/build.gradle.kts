@@ -22,11 +22,11 @@ android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 13
+        versionCode = 14
         versionName = grgitService.service.get().grgit.describe {
             longDescr = false
             isTags = true
-        }?.toVersion() ?: "0.1.3-SNAPSHOT"
+        }?.toVersion() ?: "0.1.4-SNAPSHOT"
         logger.lifecycle("versionName=$versionName")
         proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
