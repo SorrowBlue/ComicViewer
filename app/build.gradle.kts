@@ -22,11 +22,11 @@ android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 13
+        versionCode = 14
         versionName = grgitService.service.get().grgit.describe {
             longDescr = false
             isTags = true
-        }?.toVersion() ?: "0.1.3-SNAPSHOT"
+        }?.toVersion() ?: "0.1.4-SNAPSHOT"
         logger.lifecycle("versionName=$versionName")
         proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
@@ -127,7 +127,6 @@ dependencies {
     implementation(projects.feature.bookshelf)
     implementation(projects.feature.favorite)
     implementation(projects.feature.favorite.add)
-    implementation(projects.feature.favorite.create)
     implementation(projects.feature.readlater)
     implementation(projects.feature.search)
     implementation(projects.feature.settings)
@@ -149,8 +148,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.windowSizeClass)
-    implementation(libs.androidx.compose.material3.adaptive)
-    implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.google.accompanist.navigation.material)
     implementation(libs.kotlinx.collections.immutable)

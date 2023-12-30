@@ -14,8 +14,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -54,9 +57,6 @@ import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAcco
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialogUiState
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
-import com.sorrowblue.comicviewer.framework.ui.material3.Scaffold
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
-import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
@@ -251,6 +251,7 @@ internal data class GoogleDriveScreenUiState(
     val googleAccountDialogUiState: GoogleAccountDialogUiState = GoogleAccountDialogUiState.Hide,
 ) : Parcelable
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun GoogleDriveScreen(
     uiState: GoogleDriveScreenUiState,

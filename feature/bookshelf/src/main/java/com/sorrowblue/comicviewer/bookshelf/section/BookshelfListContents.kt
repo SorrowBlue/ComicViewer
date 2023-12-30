@@ -2,10 +2,14 @@ package com.sorrowblue.comicviewer.bookshelf.section
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
@@ -14,21 +18,34 @@ import com.sorrowblue.comicviewer.bookshelf.component.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 
 @Composable
 internal fun BookshelfListContents(
     lazyGridState: LazyGridState,
-    innerPadding: PaddingValues,
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
     onBookshelfClick: (BookshelfId, String) -> Unit,
-    onBookshelfLongClick: (BookshelfFolder) -> Unit,
+    onBookshelfInfoClick: (BookshelfFolder) -> Unit,
+    contentPadding: PaddingValues,
 ) {
+    val gridCells = if (LocalWindowSize.current.widthSizeClass == WindowWidthSizeClass.Compact) {
+        GridCells.Fixed(1)
+    } else {
+        GridCells.Adaptive(200.dp)
+    }
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(400.dp),
+        columns = gridCells,
         state = lazyGridState,
-        contentPadding = innerPadding,
-        verticalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding * 2),
-        horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding * 2)
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(
+            ComicTheme.dimension.padding * 2,
+            alignment = Alignment.Top
+        ),
+        horizontalArrangement = Arrangement.spacedBy(
+            ComicTheme.dimension.padding * 2,
+            alignment = Alignment.Start
+        ),
+        modifier = Modifier.fillMaxSize()
     ) {
         items(
             count = lazyPagingItems.itemCount,
@@ -40,7 +57,7 @@ internal fun BookshelfListContents(
                 Bookshelf(
                     bookshelfFolder = item,
                     onClick = { onBookshelfClick(item.bookshelf.id, item.folder.path) },
-                    onLongClick = { onBookshelfLongClick(item) },
+                    onInfoClick = { onBookshelfInfoClick(item) },
                 )
             }
         }

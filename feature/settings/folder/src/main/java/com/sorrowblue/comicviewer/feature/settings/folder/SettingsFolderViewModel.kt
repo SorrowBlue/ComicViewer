@@ -7,21 +7,18 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-internal class SettingsFolderViewModel @Inject constructor(
+class SettingsFolderViewModel @Inject constructor(
     private val manageFolderSettingsUseCase: ManageFolderSettingsUseCase,
     private val deleteThumbnailsUseCase: DeleteThumbnailsUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsFolderScreenUiState())
-    val uiState = _uiState.asStateFlow()
-
     val settings = manageFolderSettingsUseCase.settings
 
     init {

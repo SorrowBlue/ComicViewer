@@ -5,6 +5,9 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -20,6 +23,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
@@ -65,7 +69,6 @@ fun FileListContent(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FileListMedium(
     file: File?,
@@ -73,37 +76,34 @@ fun FileListMedium(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ListItem(
-        modifier = modifier.combinedClickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = rememberRipple(),
-            onLongClick = onLongClick,
-            onClick = onClick
-        ),
-        headlineContent = {
-            Text(file?.name.orEmpty())
-        },
-        supportingContent = {
-            if (file is Book && 0 < file.lastPageRead) {
-                LinearProgressIndicator(
-                    progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+    Card(onClick = onClick, modifier = modifier) {
+        ListItem(
+            headlineContent = {
+                Text(file?.name.orEmpty())
+            },
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+            supportingContent = {
+                if (file is Book && 0 < file.lastPageRead) {
+                    LinearProgressIndicator(
+                        progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+                    )
+                }
+            },
+            leadingContent = {
+                AsyncImage(
+                    model = file,
+                    modifier = Modifier.size(56.dp),
+                    contentDescription = null,
+                    placeholder = rememberDebugPlaceholder()
                 )
+            },
+            trailingContent = {
+                IconButton(onClick = onLongClick) {
+                    Icon(imageVector = ComicIcons.MoreVert, contentDescription = null)
+                }
             }
-        },
-        leadingContent = {
-            AsyncImage(
-                model = file,
-                modifier = Modifier.size(56.dp),
-                contentDescription = null,
-                placeholder = rememberDebugPlaceholder()
-            )
-        },
-        trailingContent = {
-            if (file is Book && 0 < file.totalPageCount) {
-                Text("${file.totalPageCount}")
-            }
-        }
-    )
+        )
+    }
 }
 
 @Preview
@@ -121,6 +121,19 @@ private fun PreviewFileList() {
 internal val FakeFile = BookFile(
     BookshelfId(0),
     "FakeBookName.zip",
+    "/comic/example/",
+    "/comic/example/FakeBookName.zip",
+    0,
+    0,
+    "",
+    50,
+    123,
+    0
+)
+
+internal val FakeFile2 = BookFile(
+    BookshelfId(0),
+    "1234567890123456789012345678901234567890",
     "/comic/example/",
     "/comic/example/FakeBookName.zip",
     0,

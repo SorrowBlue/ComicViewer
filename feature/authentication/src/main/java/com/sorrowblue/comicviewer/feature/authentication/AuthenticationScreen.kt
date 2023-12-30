@@ -1,9 +1,6 @@
 package com.sorrowblue.comicviewer.feature.authentication
 
-import android.view.View
 import androidx.activity.compose.BackHandler
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -14,8 +11,13 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -25,104 +27,84 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.FragmentActivity
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.lifecycle.LaunchedEffectUiEvent
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
-internal sealed interface AuthenticationUiEvent {
+context(NavBackStackEntry)
+@Composable
+internal fun AuthenticationRoute(
+    onBack: () -> Unit,
+    onBackClick: () -> Unit,
+    onAuthCompleted: (Boolean, Mode) -> Unit,
+    state: AuthenticationScreenState = rememberAuthenticationScreenState(),
+) {
+    if (state.complete != null) {
+        val (handleBack, mode) = state.complete!!
+        state.complete2()
+        onAuthCompleted(handleBack, mode)
+        return
+    }
+    AuthenticationScreen(
+        uiState = state.uiState,
+        onBackClick = onBackClick,
+        onPinClick = state::onPinClick,
+        onBackspaceClick = state::onBackspaceClick,
+        onNextClick = { state.onNextClick(onAuthCompleted) },
+        snackbarHostState = state.snackbarHostState
+    )
 
-    data class Message(val errString: String? = null, val errorRes: Int = View.NO_ID) :
-        AuthenticationUiEvent
-
-    data object AuthCompleted : AuthenticationUiEvent
-    data object ChangeCompleted : AuthenticationUiEvent
-    data object Bio : AuthenticationUiEvent
+    BackHandler(enabled = state.handleBack, onBack = onBack)
 }
 
 internal sealed interface AuthenticationScreenUiState {
     val pinCount: Int
     val error: Int
 
+    fun copyPinCount(count: Int): AuthenticationScreenUiState
+
     sealed interface Register : AuthenticationScreenUiState {
-        data class Input(override val pinCount: Int, override val error: Int) : Register
-        data class Confirm(override val pinCount: Int, override val error: Int) : Register
+        data class Input(override val pinCount: Int, override val error: Int) : Register {
+            override fun copyPinCount(count: Int) = copy(pinCount = count)
+        }
+
+        data class Confirm(override val pinCount: Int, override val error: Int) : Register {
+            override fun copyPinCount(count: Int) = copy(pinCount = count)
+        }
     }
 
     data class Authentication(override val pinCount: Int, override val error: Int) :
-        AuthenticationScreenUiState
+        AuthenticationScreenUiState {
+        override fun copyPinCount(count: Int) = copy(pinCount = count)
+    }
 
     sealed interface Change : AuthenticationScreenUiState {
-        data class ConfirmOld(override val pinCount: Int, override val error: Int) : Change
-        data class Input(override val pinCount: Int, override val error: Int) : Change
-        data class Confirm(override val pinCount: Int, override val error: Int) : Change
+        data class ConfirmOld(override val pinCount: Int, override val error: Int) : Change {
+            override fun copyPinCount(count: Int) = copy(pinCount = count)
+        }
+
+        data class Input(override val pinCount: Int, override val error: Int) : Change {
+            override fun copyPinCount(count: Int) = copy(pinCount = count)
+        }
+
+        data class Confirm(override val pinCount: Int, override val error: Int) : Change {
+            override fun copyPinCount(count: Int) = copy(pinCount = count)
+        }
     }
 
     data class Erase(override val pinCount: Int, override val error: Int) :
-        AuthenticationScreenUiState
-}
-
-@Composable
-internal fun AuthenticationRoute(
-    onBack: () -> Unit,
-    onAuthCompleted: (Boolean, Mode) -> Unit,
-    viewModel: AuthenticationViewModel = hiltViewModel(),
-) {
-    val activity = LocalContext.current as FragmentActivity
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    AuthenticationScreen(
-        viewModel.uiState,
-        snackbarHostState = snackbarHostState,
-        viewModel::onPinClick,
-        viewModel::onBackspaceClick,
-        viewModel::onNextClick
-    )
-
-    BackHandler(enabled = viewModel.handleBack, onBack = onBack)
-
-    LaunchedEffectUiEvent(viewModel.uiEvents, viewModel::consumeUiEvent) {
-        when (it) {
-            AuthenticationUiEvent.AuthCompleted -> onAuthCompleted(
-                viewModel.handleBack,
-                viewModel.mode
-            )
-
-            AuthenticationUiEvent.ChangeCompleted -> onAuthCompleted(
-                viewModel.handleBack,
-                viewModel.mode
-            )
-
-            AuthenticationUiEvent.Bio -> {
-                val info = BiometricPrompt.PromptInfo.Builder()
-                    .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-                    .setTitle(activity.getString(R.string.authentication_title_fingerprint_auth))
-                    .setNegativeButtonText(activity.getString(android.R.string.cancel))
-                    .build()
-                BiometricPrompt(activity, viewModel.authenticationCallback).authenticate(info)
-            }
-
-            is AuthenticationUiEvent.Message -> {
-                snackbarHostState.showSnackbar(
-                    message = it.errString ?: activity.getString(it.errorRes)
-                )
-            }
-        }
+        AuthenticationScreenUiState {
+        override fun copyPinCount(count: Int) = copy(pinCount = count)
     }
 }
 
@@ -130,11 +112,11 @@ internal fun AuthenticationRoute(
 @Composable
 private fun AuthenticationScreen(
     uiState: AuthenticationScreenUiState,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    onValueChange: (String) -> Unit = {},
-    onValueRemove: () -> Unit = {},
-    onNextClick: () -> Unit = {},
-    onBackClick: () -> Unit = {},
+    onBackClick: () -> Unit,
+    onPinClick: (String) -> Unit,
+    onBackspaceClick: () -> Unit,
+    onNextClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
 ) {
     Scaffold(
         topBar = {
@@ -146,15 +128,19 @@ private fun AuthenticationScreen(
                             Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
                         }
                     }
-                }
+                },
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
             )
         },
         snackbarHost = {
             SnackbarHost(snackbarHostState)
-        }
+        },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { contentPadding ->
         Column(
-            modifier = Modifier.padding(contentPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.weight(1f))
@@ -181,8 +167,8 @@ private fun AuthenticationScreen(
                 style = MaterialTheme.typography.titleSmall
             )
             Spacer(modifier = Modifier.size(16.dp))
-            AnimatedVisibility(visible = uiState.error != View.NO_ID) {
-                if (uiState.error != View.NO_ID) {
+            AnimatedVisibility(visible = 0 < uiState.error) {
+                if (0 < uiState.error) {
                     Text(
                         text = stringResource(id = uiState.error),
                         color = MaterialTheme.colorScheme.error,
@@ -193,15 +179,17 @@ private fun AuthenticationScreen(
             Spacer(modifier = Modifier.size(8.dp))
             Row {
                 repeat(uiState.pinCount + 1) {
-                    AnimatedContent(
-                        targetState = it < uiState.pinCount,
-                        transitionSpec = {
-                            (fadeIn() + slideInVertically { height -> height }) togetherWith (fadeOut() + slideOutVertically { height -> height })
-                        },
-                        label = "test"
-                    ) { isVisible ->
-                        if (isVisible) {
-                            Icon(imageVector = ComicIcons.Circle, contentDescription = null)
+                    key(it) {
+                        AnimatedContent(
+                            targetState = it < uiState.pinCount,
+                            transitionSpec = {
+                                (fadeIn() + slideInVertically { height -> height }) togetherWith (fadeOut() + slideOutVertically { height -> height })
+                            },
+                            label = "test"
+                        ) { isVisible ->
+                            if (isVisible) {
+                                Icon(imageVector = ComicIcons.Circle, contentDescription = null)
+                            }
                         }
                     }
                 }
@@ -220,9 +208,9 @@ private fun AuthenticationScreen(
                             TextButton(
                                 onClick = {
                                     if (it != null) {
-                                        onValueChange(it.toString())
+                                        onPinClick(it.toString())
                                     } else {
-                                        onValueRemove()
+                                        onBackspaceClick()
                                     }
                                 },
                                 modifier = Modifier.weight(1f)
@@ -239,21 +227,6 @@ private fun AuthenticationScreen(
                         }
                     }
                 }
-        }
-    }
-}
-
-@Preview(showSystemUi = false, showBackground = false)
-@Composable
-private fun PreviewAuthenticationScreen() {
-    PreviewTheme {
-        Surface {
-            AuthenticationScreen(
-                uiState = AuthenticationScreenUiState.Authentication(
-                    4,
-                    R.string.authentication_error_Invalid_pin
-                )
-            )
         }
     }
 }

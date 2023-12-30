@@ -1,42 +1,33 @@
 package com.sorrowblue.comicviewer.feature.history.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.HistoryRoute
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
-private const val HistoryRoute = "history"
-private const val HistoryGraphRoute = "${HistoryRoute}_graph"
+const val HistoryScreenRoute = "history"
 
-fun NavController.navigateToHistoryGroup() = navigate(HistoryGraphRoute)
+fun NavController.navigateToHistory() = navigate(HistoryScreenRoute)
 
-internal fun NavGraphBuilder.historyScreen(
-    contentPadding: PaddingValues,
+context(ComposeValue)
+fun NavGraphBuilder.historyScreen(
+    onBackClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     onFileClick: (Book) -> Unit,
-    onSettingsClick: () -> Unit,
+    onFavoriteClick: (File) -> Unit,
 ) {
-    composable(route = HistoryRoute) {
-        HistoryRoute(
-            contentPadding = contentPadding,
-            onFileClick = onFileClick,
-            onSettingsClick = onSettingsClick
-        )
-    }
-}
-
-fun NavGraphBuilder.historyGroup(
-    contentPadding: PaddingValues,
-    navigateToBook: (Book) -> Unit,
-    onSettingsClick: () -> Unit,
-) {
-    navigation(route = HistoryGraphRoute, startDestination = HistoryRoute) {
-        historyScreen(
-            contentPadding = contentPadding,
-            onFileClick = navigateToBook,
-            onSettingsClick = onSettingsClick
-        )
+    composable(route = HistoryScreenRoute) { navBackStackEntry ->
+        with(navBackStackEntry) {
+            HistoryRoute(
+                onBackClick = onBackClick,
+                onSettingsClick = onSettingsClick,
+                onFileClick = onFileClick,
+                onFavoriteClick = onFavoriteClick,
+                contentPadding = contentPadding
+            )
+        }
     }
 }

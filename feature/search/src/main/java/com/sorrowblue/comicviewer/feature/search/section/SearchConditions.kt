@@ -5,12 +5,13 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.search.component.DropdownMenuChip
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.parcelize.Parcelize
 
@@ -40,12 +41,13 @@ internal data class SearchConditionsUiState(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SearchConditions(
     uiState: SearchConditionsUiState,
     onChangeSearchCondition: (SearchConditionsUiState.SearchCondition) -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     Row(
         Modifier

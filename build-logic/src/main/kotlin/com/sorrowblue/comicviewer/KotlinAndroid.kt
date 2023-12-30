@@ -15,6 +15,7 @@ internal fun Project.configureKotlinAndroid(
         }
 
         kotlinOptions {
+            freeCompilerArgs += "-Xcontext-receivers"
             jvmTarget = "17"
         }
 

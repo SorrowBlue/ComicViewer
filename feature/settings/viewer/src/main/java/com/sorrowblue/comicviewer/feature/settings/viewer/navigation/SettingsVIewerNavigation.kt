@@ -1,21 +1,17 @@
 package com.sorrowblue.comicviewer.feature.settings.viewer.navigation
 
-import androidx.navigation.NavController
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.sorrowblue.comicviewer.feature.settings.viewer.SettingsViewerRoute
 
-private const val SettingsViewerRoute = "settings/viewer"
+const val SettingsViewerRoute = "settings/viewer"
 
-fun NavGraphBuilder.settingsViewerScreen(onBackClick: () -> Unit) {
+fun NavGraphBuilder.settingsViewerScreen(onBackClick: () -> Unit, contentPadding: PaddingValues) {
     composable(SettingsViewerRoute) {
         SettingsViewerRoute(
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            contentPadding = contentPadding
         )
     }
-}
-
-fun NavController.navigateToSettingsViewer(navOptions: NavOptions? = null) {
-    navigate(SettingsViewerRoute, navOptions)
 }

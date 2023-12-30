@@ -14,6 +14,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +28,6 @@ import androidx.compose.ui.graphics.lerp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarScrollBehavior
 import kotlinx.collections.immutable.PersistentList
 
 @Composable
@@ -46,10 +46,10 @@ fun <T> DropdownMenuChip(
     onChangeSelected: (T) -> Unit,
     menus: PersistentList<T>,
     menu: (T) -> String,
-    scrollBehavior: TopAppBarScrollBehavior?,
+    scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier,
 ) {
-    val colorTransitionFraction = scrollBehavior?.value?.state?.overlappedFraction ?: 0f
+    val colorTransitionFraction = scrollBehavior.state.overlappedFraction
     val fraction = if (colorTransitionFraction > 0.01f) 1f else 0f
     val appBarContainerColor by animateColorAsState(
         targetValue = containerColor(fraction),

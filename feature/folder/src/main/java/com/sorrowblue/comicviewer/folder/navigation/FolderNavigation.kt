@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.folder.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.folder.FolderRoute
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 private const val BookshelfIdArg = "bookshelfId"
 private const val PathArg = "path"
@@ -27,6 +28,12 @@ internal class FolderArgs(
         BookshelfId(checkNotNull(savedStateHandle[BookshelfIdArg])),
         (checkNotNull(savedStateHandle[PathArg]) as String).decodeFromBase64(),
         savedStateHandle.get<String>(RestorePathArg)?.decodeFromBase64()
+    )
+
+    constructor(bundle: Bundle) : this(
+        BookshelfId(bundle.getInt(BookshelfIdArg)),
+        bundle.getString(PathArg, "").decodeFromBase64(),
+        bundle.getString(RestorePathArg)?.decodeFromBase64()
     )
 }
 
@@ -55,9 +62,9 @@ fun NavController.navigateToFolder(
     }
 }
 
+context(ComposeValue)
 fun NavGraphBuilder.folderScreen(
     prefix: String,
-    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
@@ -76,16 +83,18 @@ fun NavGraphBuilder.folderScreen(
                 defaultValue = null
             },
         )
-    ) {
-        FolderRoute(
-            contentPadding = contentPadding,
-            onSearchClick = onSearchClick,
-            onSettingsClick = onSettingsClick,
-            onBackClick = onBackClick,
-            onRestoreComplete = onRestoreComplete,
-            onClickFile = onClickFile,
-            onOpenFolderClick = {},
-            onFavoriteClick = onFavoriteClick
-        )
+    ) { navBackStackEntry ->
+        with(navBackStackEntry) {
+            FolderRoute(
+                contentPadding = contentPadding,
+                onSearchClick = onSearchClick,
+                onSettingsClick = onSettingsClick,
+                onBackClick = onBackClick,
+                onRestoreComplete = onRestoreComplete,
+                onFileClick = onClickFile,
+                onOpenFolderClick = {},
+                onFavoriteClick = onFavoriteClick,
+            )
+        }
     }
 }

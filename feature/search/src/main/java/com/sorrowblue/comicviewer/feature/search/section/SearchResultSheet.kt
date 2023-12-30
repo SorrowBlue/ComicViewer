@@ -23,10 +23,7 @@ import com.sorrowblue.comicviewer.feature.search.R
 import com.sorrowblue.comicviewer.file.component.FileListContent
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileSearching
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
 @Composable
 internal fun SearchResultSheet(
@@ -48,14 +45,7 @@ internal fun SearchResultSheet(
     } else {
         FileListContent(
             state = lazyListState,
-            contentPadding = contentPadding.add(
-                paddingValues = PaddingValues(
-                    start = if (rememberMobile()) 0.dp else ComicTheme.dimension.margin,
-                    top = 8.dp,
-                    end = if (rememberMobile()) 0.dp else ComicTheme.dimension.margin,
-                    bottom = if (rememberMobile()) 0.dp else ComicTheme.dimension.margin,
-                )
-            ),
+            contentPadding = contentPadding,
             lazyPagingItems = lazyPagingItems,
             onClickItem = onFileClick,
             onLongClickItem = onFileLongClick

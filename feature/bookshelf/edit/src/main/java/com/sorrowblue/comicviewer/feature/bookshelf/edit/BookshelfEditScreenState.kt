@@ -2,9 +2,11 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import android.content.Context
 import android.os.Parcelable
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,7 +20,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditArgs
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
-import com.sorrowblue.comicviewer.framework.ui.material3.SnackbarHostState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -154,7 +155,7 @@ internal class BookshelfEditScreenState(
 @Composable
 internal fun rememberNeoBookshelfEditScreenState(
     args: BookshelfEditArgs,
-    snackbarHostState: SnackbarHostState,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: BookshelfEditViewModel = hiltViewModel(),

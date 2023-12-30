@@ -10,14 +10,11 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.largeBottom
-import com.sorrowblue.comicviewer.framework.designsystem.theme.largeTop
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 
@@ -26,33 +23,25 @@ fun <T : File> FileContent(
     type: FileContentType,
     lazyPagingItems: LazyPagingItems<T>,
     contentPadding: PaddingValues,
-    onClickItem: (T) -> Unit,
-    onLongClickItem: (T) -> Unit,
+    onFileClick: (T) -> Unit,
+    onInfoClick: (T) -> Unit,
     state: LazyGridState = rememberLazyGridState(),
 ) {
-    val isCompat = rememberMobile()
     when (type) {
         is FileContentType.Grid -> FileGridContent(
-            columns = type.columns,
+            columns = type.columns3,
             state = state,
-            contentPadding = contentPadding.add(
-                PaddingValues(
-                    start = ComicTheme.dimension.margin,
-                    top = if (isCompat) 0.dp else ComicTheme.dimension.margin,
-                    end = ComicTheme.dimension.margin,
-                    bottom = ComicTheme.dimension.margin
-                )
-            ),
+            contentPadding = contentPadding,
             lazyPagingItems = lazyPagingItems,
-            onClickItem = onClickItem,
-            onLongClickItem = onLongClickItem
+            onClickItem = onFileClick,
+            onLongClickItem = onInfoClick
         )
 
         FileContentType.List -> FileListContent(
             lazyPagingItems = lazyPagingItems,
-            contentPadding = contentPadding.add(PaddingValues(if (isCompat) 0.dp else ComicTheme.dimension.margin)),
-            onClickItem = onClickItem,
-            onLongClickItem = onLongClickItem,
+            contentPadding = contentPadding,
+            onClickItem = onFileClick,
+            onLongClickItem = onInfoClick,
             state = state
         )
     }
@@ -71,7 +60,7 @@ private fun <T : File> FileGridContent(
     LazyVerticalGrid(
         columns = columns,
         state = state,
-        contentPadding = contentPadding,
+        contentPadding = contentPadding.add(PaddingValues(ComicTheme.dimension.margin)),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
     ) {
@@ -80,7 +69,7 @@ private fun <T : File> FileGridContent(
                 FileGrid(
                     file = item,
                     onClick = { onClickItem(item) },
-                    onLongClick = { onLongClickItem(item) },
+                    onInfoClick = { onLongClickItem(item) },
                     modifier = Modifier.animateItemPlacement()
                 )
             }
@@ -101,7 +90,14 @@ fun <T : File> FileListContent(
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         state = state,
-        contentPadding = contentPadding,
+        verticalArrangement = if (isCompat) Arrangement.Top else Arrangement.spacedBy(8.dp),
+        contentPadding = if (isCompat) {
+            contentPadding
+        } else {
+            contentPadding.add(
+                PaddingValues(ComicTheme.dimension.margin)
+            )
+        },
         modifier = modifier,
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
@@ -116,12 +112,7 @@ fun <T : File> FileListContent(
                 FileListMedium(
                     file = item,
                     onClick = { onClickItem(item!!) },
-                    onLongClick = { onLongClickItem(item!!) },
-                    modifier = when (it) {
-                        0 -> Modifier.clip(ComicTheme.shapes.largeTop)
-                        lazyPagingItems.itemCount - 1 -> Modifier.clip(ComicTheme.shapes.largeBottom)
-                        else -> Modifier
-                    }
+                    onLongClick = { onLongClickItem(item!!) }
                 )
             }
         }

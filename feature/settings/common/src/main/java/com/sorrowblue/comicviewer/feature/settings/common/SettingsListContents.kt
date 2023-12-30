@@ -33,7 +33,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,7 +71,6 @@ fun SettingsColumn(
         Modifier
             .verticalScroll(rememberScrollState())
             .padding(padding)
-            .then(if (isMobile) Modifier else Modifier.clip(ComicTheme.shapes.large))
             .then(modifier)
     ) {
         content()

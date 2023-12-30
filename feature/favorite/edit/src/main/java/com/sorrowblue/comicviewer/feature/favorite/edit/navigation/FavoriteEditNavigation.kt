@@ -1,20 +1,25 @@
 package com.sorrowblue.comicviewer.feature.favorite.edit.navigation
 
-import androidx.lifecycle.SavedStateHandle
+import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
+import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEditRoute
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 private const val FavoriteIdArg = "favoriteId"
+
+const val FavoriteEditRoute = "favorite/{$FavoriteIdArg}/edit"
 
 internal class FavoriteEditArgs(
     val favoriteId: FavoriteId,
 ) {
-    constructor(savedStateHandle: SavedStateHandle) : this(FavoriteId(checkNotNull(savedStateHandle[FavoriteIdArg])))
+    constructor(bundle: Bundle) : this(FavoriteId(checkNotNull(bundle.getInt(FavoriteIdArg))))
 }
 
 fun NavController.navigateToFavoriteEdit(
@@ -24,19 +29,38 @@ fun NavController.navigateToFavoriteEdit(
     navigate("favorite/${favoriteId.value}/edit", navOptions)
 }
 
+context(ComposeValue)
 fun NavGraphBuilder.favoriteEditScreen(
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
-    composable(
-        route = "favorite/{$FavoriteIdArg}/edit",
-        arguments = listOf(
-            navArgument(FavoriteIdArg) { type = NavType.IntType },
-        )
-    ) {
-        com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEditRoute(
-            onBackClick = onBackClick,
-            onComplete = onComplete
-        )
+    if (isCompact) {
+        composable(
+            route = FavoriteEditRoute,
+            arguments = listOf(
+                navArgument(FavoriteIdArg) { type = NavType.IntType },
+            )
+        ) { navBackStackEntry ->
+            with(navBackStackEntry) {
+                FavoriteEditRoute(
+                    onBackClick = onBackClick,
+                    onComplete = onComplete
+                )
+            }
+        }
+    } else {
+        dialog(
+            route = FavoriteEditRoute,
+            arguments = listOf(
+                navArgument(FavoriteIdArg) { type = NavType.IntType },
+            )
+        ) { navBackStackEntry ->
+            with(navBackStackEntry) {
+                FavoriteEditRoute(
+                    onBackClick = onBackClick,
+                    onComplete = onComplete
+                )
+            }
+        }
     }
 }

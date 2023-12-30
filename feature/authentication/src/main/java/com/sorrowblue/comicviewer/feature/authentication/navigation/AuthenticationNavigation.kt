@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.authentication.navigation
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -23,9 +24,15 @@ internal class AuthenticationArgs(
     val handleBack: Boolean,
     val mode: Mode,
 ) {
+
     constructor(savedStateHandle: SavedStateHandle) : this(
         checkNotNull<Boolean>(savedStateHandle[HandleBackArg]),
         Mode.valueOf(checkNotNull(savedStateHandle[ModeArg])),
+    )
+
+    constructor(bundle: Bundle) : this(
+        bundle.getBoolean(HandleBackArg),
+        Mode.valueOf(checkNotNull(bundle.getString(ModeArg))),
     )
 }
 
@@ -42,6 +49,7 @@ fun NavController.navigateToAuthentication(
 
 fun NavGraphBuilder.authenticationScreen(
     onBack: () -> Unit,
+    onBackClick: () -> Unit,
     onAuthCompleted: (Boolean, Mode) -> Unit,
 ) {
     composable(
@@ -51,6 +59,12 @@ fun NavGraphBuilder.authenticationScreen(
             navArgument(HandleBackArg) { type = NavType.BoolType },
         )
     ) {
-        AuthenticationRoute(onBack = onBack, onAuthCompleted = onAuthCompleted)
+        with(it) {
+            AuthenticationRoute(
+                onBack = onBack,
+                onBackClick = onBackClick,
+                onAuthCompleted = onAuthCompleted
+            )
+        }
     }
 }

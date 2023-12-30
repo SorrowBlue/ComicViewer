@@ -19,18 +19,14 @@ import kotlin.random.Random
 import kotlin.random.nextInt
 import kotlinx.coroutines.flow.flowOf
 
-@Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
-@Preview(name = "landscape", device = "spec:shape=Normal,width=640,height=360,unit=dp,dpi=480")
-@Preview(name = "foldable", device = "spec:shape=Normal,width=673,height=841,unit=dp,dpi=480")
-@Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
+@Preview(name = "phone", device = "id:pixel_7")
+@Preview(name = "landscape", device = "spec:parent=pixel_7,orientation=landscape")
+@Preview(name = "tablet", device = "id:pixel_tablet")
 annotation class PreviewComic
 
 @Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
 @Preview(name = "landscape", device = "spec:shape=Normal,width=640,height=360,unit=dp,dpi=480")
 annotation class PreviewMobile
-
-@Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
-annotation class PreviewTablet
 
 fun previewBookFile(index: Int = 0): BookFile {
     val path = paths[index]

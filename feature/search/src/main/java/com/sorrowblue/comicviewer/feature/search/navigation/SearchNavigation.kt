@@ -9,7 +9,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.sorrowblue.comicviewer.domain.model.Base64.decodeFromBase64
 import com.sorrowblue.comicviewer.domain.model.Base64.encodeToBase64
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -17,8 +16,12 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.search.SearchRoute
+import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
+import com.sorrowblue.comicviewer.framework.ui.ComposeTransition
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
+import com.sorrowblue.comicviewer.framework.ui.animatedNavigation
 
 private const val BookshelfIdArg = "bookshelfId"
 private const val PathArg = "path"
@@ -50,6 +53,7 @@ fun NavController.navigateToSearch(
     )
 }
 
+context(ComposeValue)
 private fun NavGraphBuilder.searchScreen(
     onBackClick: () -> Unit,
     onFileClick: (File) -> Unit,
@@ -64,9 +68,8 @@ private fun NavGraphBuilder.searchScreen(
             navArgument(PathArg) { type = NavType.StringType },
         )
     ) {
-        val args = SearchArgs(it.arguments!!)
         SearchRoute(
-            args = args,
+            args = SearchArgs(it.arguments!!),
             onBackClick = onBackClick,
             onFileClick = onFileClick,
             contentPadding = contentPadding,
@@ -78,33 +81,46 @@ private fun NavGraphBuilder.searchScreen(
 
 private const val SearchGraph = "search_graph"
 
+context(ComposeValue)
 fun NavGraphBuilder.searchGraph(
-    contentPadding: PaddingValues,
-    navController: NavController,
     navigateToBook: (Book) -> Unit,
     navigateToSettings: () -> Unit,
     navigateToFavoriteAdd: (File) -> Unit,
 ) {
-    navigation(route = SearchGraph, startDestination = SearchRoute) {
+    animatedNavigation(
+        startDestination = SearchRoute,
+        route = SearchGraph,
+        transitions = listOf(
+            ComposeTransition(
+                SearchRoute,
+                folderRoute(SearchRouteBase),
+                ComposeTransition.Type.SharedAxisX
+            ),
+            ComposeTransition(
+                SearchGraph,
+                null,
+                ComposeTransition.Type.ContainerTransform
+            )
+        )
+    ) {
         searchScreen(
             onBackClick = navController::popBackStack,
             onFileClick = { file ->
                 when (file) {
                     is Book -> navigateToBook(file)
                     is Folder ->
-                        navController.navigateToFolder(SearchRoute, file.bookshelfId, file.path)
+                        navController.navigateToFolder(SearchRouteBase, file.bookshelfId, file.path)
                 }
             },
             contentPadding = contentPadding,
             onFavoriteClick = navigateToFavoriteAdd,
             onOpenFolderClick = {
-                navController.navigateToFolder(SearchRoute, it.bookshelfId, it.parent)
+                navController.navigateToFolder(SearchRouteBase, it.bookshelfId, it.parent)
             }
         )
 
         folderScreen(
-            prefix = SearchRoute,
-            contentPadding = contentPadding,
+            prefix = SearchRouteBase,
             onBackClick = navController::popBackStack,
             onSearchClick = navController::navigateToSearch,
             onSettingsClick = navigateToSettings,
@@ -112,7 +128,7 @@ fun NavGraphBuilder.searchGraph(
                 when (file) {
                     is Book -> navigateToBook(file)
                     is Folder -> navController.navigateToFolder(
-                        SearchRoute,
+                        SearchRouteBase,
                         file.bookshelfId,
                         file.path
                     )

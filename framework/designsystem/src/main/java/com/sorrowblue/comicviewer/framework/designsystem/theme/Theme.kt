@@ -12,7 +12,6 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -85,8 +84,7 @@ private val DarkColors = darkColorScheme(
 @Composable
 fun ComicTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    useDynamicColor: Boolean = false,
-    windowSizeClass: WindowSizeClass = LocalWindowSize.current,
+    useDynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val colorScheme = when {
@@ -98,9 +96,7 @@ fun ComicTheme(
         else -> if (darkTheme) DarkColors else LightColors
     }
     MaterialTheme(
-        colorScheme = colorScheme.copy(
-            background = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) colorScheme.surface else colorScheme.surfaceContainer
-        ),
+        colorScheme = colorScheme,
         content = content
     )
 }
@@ -135,6 +131,11 @@ object ComicTheme {
 
 val Shapes.largeTop get() = large.copy(bottomStart = CornerSize(0), bottomEnd = CornerSize(0))
 val Shapes.largeBottom get() = large.copy(topStart = CornerSize(0), topEnd = CornerSize(0))
+val Shapes.extralargeStart
+    get() = extraLarge.copy(
+        topEnd = CornerSize(0),
+        bottomEnd = CornerSize(0)
+    )
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)
 private fun supportsDynamicTheming() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S

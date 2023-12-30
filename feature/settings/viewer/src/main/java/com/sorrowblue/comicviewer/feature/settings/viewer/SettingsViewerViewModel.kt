@@ -5,10 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.logcat
 
@@ -17,26 +13,7 @@ internal class SettingsViewerViewModel @Inject constructor(
     private val settingsUseCase: ManageViewerSettingsUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingsViewerScreenUiState())
-    val uiState = _uiState.asStateFlow()
-
-    init {
-        settingsUseCase.settings.onEach {
-            it.imageQuality
-            _uiState.value = _uiState.value.copy(
-                isStatusBarShow = it.showStatusBar,
-                isNavigationBarShow = it.showNavigationBar,
-                isTurnOnScreen = it.keepOnScreen,
-                isCacheImage = false,
-                isDisplayFirstPage = false,
-                isCutWhitespace = false,
-                preloadPages = it.readAheadPageCount.toFloat(),
-                imageQuality = it.imageQuality.toFloat(),
-                isFixScreenBrightness = it.enableBrightnessControl,
-                screenBrightness = it.screenBrightness
-            )
-        }.launchIn(viewModelScope)
-    }
+    val settings = settingsUseCase.settings
 
     fun onStatusBarShowChange(value: Boolean) {
         viewModelScope.launch {

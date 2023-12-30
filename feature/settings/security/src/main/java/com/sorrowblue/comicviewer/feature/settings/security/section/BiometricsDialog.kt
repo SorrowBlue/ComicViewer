@@ -1,13 +1,14 @@
 package com.sorrowblue.comicviewer.feature.settings.security.section
 
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.feature.settings.security.R
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
-import com.sorrowblue.comicviewer.framework.ui.material3.FilledTonalButton
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.TextButton
 
 @Composable
 internal fun BiometricsDialog(
@@ -20,15 +21,15 @@ internal fun BiometricsDialog(
         confirmButton = {
             FilledTonalButton(
                 onClick = onConfirmClick,
-                text = R.string.settings_security_label_to_settings
-            )
+            ) {
+                Text(text = stringResource(id = R.string.settings_security_label_to_settings))
+            }
         },
         onDismissRequest = onDismissRequest,
         dismissButton = {
-            TextButton(
-                onClick = onDismissRequest,
-                text = android.R.string.cancel
-            )
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(id = android.R.string.cancel))
+            }
         }
     )
 }

@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteEntity
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileCountEntity
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteLocalDataSource
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import javax.inject.Inject
@@ -33,9 +34,13 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
         favoriteDao.delete(FavoriteEntity(favoriteModelId.value, ""))
     }
 
-    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<Favorite>> {
+    override fun pagingDataFlow(
+        pagingConfig: PagingConfig,
+        bookshelfId: BookshelfId,
+        path: String,
+    ): Flow<PagingData<Favorite>> {
         return Pager(pagingConfig) {
-            favoriteDao.pagingSource()
+            favoriteDao.pagingSource(bookshelfId.value, path)
         }.flow.map { pagingData ->
             pagingData.map(FavoriteFileCountEntity::toModel)
         }

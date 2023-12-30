@@ -41,3 +41,34 @@ fun AnimatedContentTransitionScope<*>.navigationBarAnimation() =
         ),
         0f,
     ) using SizeTransform(clip = false)
+
+fun AnimatedContentTransitionScope<*>.topAppBarAnimation() =
+    slideInVertically(
+        animationSpec = tween(
+            MotionTokens.DurationMedium4,
+            0,
+            MotionTokens.EasingEmphasizedInterpolator
+        ),
+        initialOffsetY = { (-it * 0.2).roundToInt() }
+    ) + fadeIn(
+        animationSpec = tween(
+            MotionTokens.DurationMedium4,
+            0,
+            MotionTokens.EasingEmphasizedInterpolator
+        ),
+        0f,
+    ) togetherWith slideOutVertically(
+        animationSpec = tween(
+            MotionTokens.DurationMedium3,
+            0,
+            MotionTokens.EasingEmphasizedInterpolator
+        ),
+        targetOffsetY = { (-it * 0.2).roundToInt() }
+    ) + fadeOut(
+        animationSpec = tween(
+            MotionTokens.DurationMedium2,
+            0,
+            MotionTokens.EasingEmphasizedInterpolator
+        ),
+        0f,
+    ) using SizeTransform(clip = false)

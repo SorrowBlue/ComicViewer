@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.framework.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -23,16 +22,13 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 fun EmptyContent(
     imageVector: ImageVector,
     text: String,
-    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     val isCompact =
         LocalWindowSize.current.widthSizeClass == WindowWidthSizeClass.Compact
     if (isCompact) {
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(contentPadding),
+            modifier = modifier,
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -51,7 +47,6 @@ fun EmptyContent(
     } else {
         Surface(
             modifier = modifier
-                .padding(contentPadding)
                 .padding(top = ComicTheme.dimension.margin)
                 .fillMaxSize(),
             shape = ComicTheme.shapes.large

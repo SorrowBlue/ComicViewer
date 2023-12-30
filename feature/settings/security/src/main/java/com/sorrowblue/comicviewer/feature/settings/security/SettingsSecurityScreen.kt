@@ -9,6 +9,10 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -16,22 +20,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsColumn
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 import com.sorrowblue.comicviewer.feature.settings.security.section.BiometricsDialog
 import com.sorrowblue.comicviewer.framework.ui.DialogController
 import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
-import com.sorrowblue.comicviewer.framework.ui.material3.Scaffold
-import com.sorrowblue.comicviewer.framework.ui.material3.SnackbarHostState
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBar
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarDefaults
-import com.sorrowblue.comicviewer.framework.ui.material3.pinnedScrollBehavior
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
@@ -44,18 +42,19 @@ internal fun SettingsSecurityRoute(
     onBackClick: () -> Unit,
     onChangeAuthEnabled: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
+    contentPadding: PaddingValues,
     state: SecuritySettingsScreenState = rememberSecuritySettingsScreenState(),
 ) {
     val uiState = state.uiState
 
     SettingsSecurityScreen(
         uiState = uiState,
-        snackbarHostState = state.snackbarHostState,
         onBackClick = onBackClick,
         onChangeAuthEnabled = onChangeAuthEnabled,
         onPasswordChangeClick = onPasswordChangeClick,
         onChangeBiometricEnabled = state::onChangeBiometricEnabled,
         onChangeBackgroundLockEnabled = state::onChangeBackgroundLockEnabled,
+        contentPadding = contentPadding
     )
 
     if (uiState.isBiometricsDialogShow) {
@@ -272,18 +271,6 @@ private class RealSecuritySettingsScreenState(
     }
 }
 
-internal interface SecuritySettingsScreenState {
-    fun activityResult(activityResult: ActivityResult)
-    fun onChangeBackgroundLockEnabled(value: Boolean)
-    fun onChangeBiometricEnabled(value: Boolean)
-    fun onResume()
-    fun onBiometricsDialogClick()
-
-    fun onBiometricsDialogDismissRequest()
-    val snackbarHostState: SnackbarHostState
-    var uiState: SecuritySettingsScreenUiState
-}
-
 @Composable
 internal fun rememberSecuritySettingsScreenState(
     state: SecuritySettingsScreenState = rememberChildSecuritySettingsScreenState(),
@@ -315,53 +302,45 @@ internal data class SecuritySettingsScreenUiState(
     val isBiometricsDialogShow: Boolean = false,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsSecurityScreen(
     uiState: SecuritySettingsScreenUiState,
-    snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
     onChangeAuthEnabled: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
     onChangeBiometricEnabled: (Boolean) -> Unit,
     onChangeBackgroundLockEnabled: (Boolean) -> Unit,
+    contentPadding: PaddingValues,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = R.string.settings_security_title,
-                onBackClick = onBackClick,
-                scrollBehavior = scrollBehavior
-            )
-        },
-        snackbarHostState = snackbarHostState,
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) { contentPadding ->
-        SettingsColumn(contentPadding = contentPadding) {
-            SwitchSetting(
-                title = R.string.settings_security_title_password_lock,
-                checked = uiState.isAuthEnabled,
-                onCheckedChange = onChangeAuthEnabled,
-                summary = R.string.settings_security_summary_password_lock,
-            )
-            Setting(
-                title = R.string.settings_security_title_change_password,
-                onClick = onPasswordChangeClick,
-                enabled = uiState.isAuthEnabled
-            )
-            SwitchSetting(
-                title = R.string.settings_security_title_use_biometric_auth,
-                checked = uiState.isBiometricEnabled,
-                onCheckedChange = onChangeBiometricEnabled,
-                summary = R.string.settings_security_summary_use_biometric_auth,
-                enabled = uiState.isAuthEnabled,
-            )
-            SwitchSetting(
-                title = R.string.settings_security_label_background_lock,
-                checked = uiState.isBackgroundLockEnabled,
-                onCheckedChange = onChangeBackgroundLockEnabled,
-                enabled = uiState.isAuthEnabled,
-            )
-        }
+    SettingsDetailPane(
+        title = { Text(text = stringResource(id = R.string.settings_security_title)) },
+        onBackClick = onBackClick,
+        contentPadding = contentPadding
+    ) {
+        SwitchSetting(
+            title = R.string.settings_security_title_password_lock,
+            checked = uiState.isAuthEnabled,
+            onCheckedChange = onChangeAuthEnabled,
+            summary = R.string.settings_security_summary_password_lock,
+        )
+        Setting(
+            title = R.string.settings_security_title_change_password,
+            onClick = onPasswordChangeClick,
+            enabled = uiState.isAuthEnabled
+        )
+        SwitchSetting(
+            title = R.string.settings_security_title_use_biometric_auth,
+            checked = uiState.isBiometricEnabled,
+            onCheckedChange = onChangeBiometricEnabled,
+            summary = R.string.settings_security_summary_use_biometric_auth,
+            enabled = uiState.isAuthEnabled,
+        )
+        SwitchSetting(
+            title = R.string.settings_security_label_background_lock,
+            checked = uiState.isBackgroundLockEnabled,
+            onCheckedChange = onChangeBackgroundLockEnabled,
+            enabled = uiState.isAuthEnabled,
+        )
     }
 }

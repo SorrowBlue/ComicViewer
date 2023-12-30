@@ -1,30 +1,45 @@
 package com.sorrowblue.comicviewer.feature.favorite.edit
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -33,34 +48,51 @@ import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameTextField
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
+context(NavBackStackEntry)
 @Composable
 internal fun FavoriteEditRoute(
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
-    viewModel: FavoriteEditViewModel = hiltViewModel(),
+    state: FavoriteEditScreenState = rememberFavoriteEditScreenState(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    FavoriteEditScreen(
-        uiState = uiState,
-        lazyPagingItems = lazyPagingItems,
-        onBackClick = onBackClick,
-        onSaveClick = { viewModel.save(onComplete) },
-        onNameChange = viewModel::updateName,
-        onDeleteClick = viewModel::removeFile
-    )
+    val uiState = state.uiState
+    val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
+    val isCompact = rememberMobile()
+    if (isCompact) {
+        FavoriteEditScreen(
+            uiState = uiState,
+            lazyPagingItems = lazyPagingItems,
+            onBackClick = onBackClick,
+            onSaveClick = { state.onSaveClick(onComplete) },
+            onNameChange = state::onNameChange,
+            onDeleteClick = state::onDeleteClick
+        )
+    } else {
+        FavoriteEditDialog(
+            uiState = uiState,
+            lazyPagingItems = lazyPagingItems,
+            onNameChange = state::onNameChange,
+            onDeleteClick = state::onDeleteClick,
+            onDismissRequest = onBackClick,
+            onConfirmClick = { state.onSaveClick(onComplete) }
+        )
+    }
 }
 
 data class FavoriteEditScreenUiState(
     val name: String = "",
+    val nameError: Boolean = false,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,69 +105,166 @@ private fun FavoriteEditScreen(
     onNameChange: (String) -> Unit,
     onDeleteClick: (File) -> Unit,
 ) {
-    val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         topBar = {
-            TopAppBar(
-                modifier = Modifier.wrapContentHeight(),
-                title = {
-                    Text(stringResource(R.string.favorite_edit_title))
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(ComicIcons.ArrowBack, null)
-                    }
-                },
-                scrollBehavior = appBarScrollBehavior
+            val colorTransitionFraction = scrollBehavior.state.overlappedFraction
+            val appBarContainerColor by animateColorAsState(
+                targetValue = containerColor(if (colorTransitionFraction > 0.01f) 1f else 0f),
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                label = "DropdownMenuChipColorAnimation"
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onSaveClick) {
-                Icon(ComicIcons.Save, null)
+            Column(Modifier.background(appBarContainerColor)) {
+                TopAppBar(
+                    modifier = Modifier.wrapContentHeight(),
+                    title = { Text(stringResource(R.string.favorite_edit_title)) },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(ComicIcons.ArrowBack, null)
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = onSaveClick) {
+                            Icon(ComicIcons.Save, null)
+                        }
+                    },
+                    scrollBehavior = scrollBehavior
+                )
+                FavoriteNameTextField(
+                    value = uiState.name,
+                    onValueChange = onNameChange,
+                    isError = uiState.nameError,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = ComicTheme.dimension.margin),
+                )
             }
         },
-        modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
-        Column {
-            OutlinedTextField(
-                value = uiState.name,
-                onValueChange = onNameChange,
+        if (lazyPagingItems.isEmptyData) {
+            EmptyContent(
+                imageVector = ComicIcons.UndrawNoData,
+                text = stringResource(R.string.favorite_edit_text_no_favorites),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(contentPadding)
-                    .padding(horizontal = ComicTheme.dimension.margin)
             )
-            if (lazyPagingItems.isEmptyData) {
-                EmptyContent(
-                    imageVector = ComicIcons.UndrawNoData,
-                    text = stringResource(R.string.favorite_edit_text_no_favorites),
-                    contentPadding = contentPadding
-                )
-            } else {
-                LazyColumn(contentPadding = contentPadding) {
-                    items(
-                        lazyPagingItems.itemCount,
-                        key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" }
-                    ) {
-                        val item = lazyPagingItems[it]
-                        if (item != null) {
-                            ListItem(
-                                headlineContent = { Text(item.name) },
-                                leadingContent = {
-                                    AsyncImage(model = item, null, Modifier.size(56.dp))
-                                },
-                                trailingContent = {
-                                    IconButton(onClick = { onDeleteClick(item) }) {
-                                        Icon(ComicIcons.Delete, null)
-                                    }
+        } else {
+            LazyColumn(contentPadding = contentPadding) {
+                items(
+                    lazyPagingItems.itemCount,
+                    key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" }
+                ) {
+                    val item = lazyPagingItems[it]
+                    if (item != null) {
+                        ListItem(
+                            headlineContent = { Text(item.name) },
+                            leadingContent = {
+                                AsyncImage(model = item, null, Modifier.size(56.dp))
+                            },
+                            trailingContent = {
+                                IconButton(onClick = { onDeleteClick(item) }) {
+                                    Icon(ComicIcons.Delete, null)
                                 }
-                            )
-                        }
+                            }
+                        )
                     }
                 }
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+private fun FavoriteEditDialog(
+    uiState: FavoriteEditScreenUiState,
+    lazyPagingItems: LazyPagingItems<File>,
+    onNameChange: (String) -> Unit,
+    onDeleteClick: (File) -> Unit,
+    onDismissRequest: () -> Unit,
+    onConfirmClick: () -> Unit,
+) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        modifier = Modifier.padding(vertical = ComicTheme.dimension.margin),
+        title = {
+            Column {
+                Text(text = stringResource(id = R.string.favorite_edit_title))
+                Spacer(modifier = Modifier.size(ComicTheme.dimension.padding * 2))
+                FavoriteNameTextField(
+                    value = uiState.name,
+                    onValueChange = onNameChange,
+                    isError = uiState.nameError,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirmClick) {
+                Text(text = stringResource(R.string.favorite_edit_action_save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(id = android.R.string.cancel))
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+            ) {
+                if (lazyPagingItems.isEmptyData) {
+                    EmptyContent(
+                        imageVector = ComicIcons.UndrawNoData,
+                        text = stringResource(R.string.favorite_edit_text_no_favorites),
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else {
+                    val lazyListState = rememberLazyListState()
+                    HorizontalDivider(Modifier.alpha(if (lazyListState.canScrollBackward) 1f else 0f))
+                    LazyColumn(
+                        state = lazyListState,
+                        contentPadding = PaddingValues(),
+                    ) {
+                        items(
+                            lazyPagingItems.itemCount,
+                            key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" }
+                        ) {
+                            val item = lazyPagingItems[it]
+                            if (item != null) {
+                                ListItem(
+                                    headlineContent = { Text(item.name) },
+                                    leadingContent = {
+                                        AsyncImage(model = item, null, Modifier.size(56.dp))
+                                    },
+                                    trailingContent = {
+                                        IconButton(onClick = { onDeleteClick(item) }) {
+                                            Icon(ComicIcons.Delete, null)
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .animateItemPlacement()
+                                )
+                            }
+                        }
+                    }
+                    HorizontalDivider(Modifier.alpha(if (lazyListState.canScrollForward) 1f else 0f))
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun containerColor(colorTransitionFraction: Float): Color {
+    return lerp(
+        ComicTheme.colorScheme.surface,
+        MaterialTheme.colorScheme.surfaceColorAtElevation(ElevationTokens.Level2),
+        FastOutLinearInEasing.transform(colorTransitionFraction)
+    )
 }
 
 @Preview
@@ -147,6 +276,25 @@ private fun PreviewFavoriteEditScreen() {
     val a: Flow<PagingData<File>> = flowOf(PagingData.from(files))
     ComicTheme {
         FavoriteEditScreen(
+            FavoriteEditScreenUiState(),
+            a.collectAsLazyPagingItems(),
+            {},
+            {},
+            {},
+            {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewFavoriteEditDialog() {
+    val files = List(20) {
+        BookFile(BookshelfId(it), "Name $it", "", "", 0, 0, "", 0, 0, 0)
+    }
+    val a: Flow<PagingData<File>> = flowOf(PagingData.from(files))
+    ComicTheme {
+        FavoriteEditDialog(
             FavoriteEditScreenUiState(),
             a.collectAsLazyPagingItems(),
             {},

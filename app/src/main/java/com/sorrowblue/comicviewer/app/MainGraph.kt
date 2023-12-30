@@ -1,22 +1,18 @@
 package com.sorrowblue.comicviewer.app
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfGraph
 import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.favorite.navigation.favoriteGroup
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.authentication.navigation.authenticationScreen
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
-import com.sorrowblue.comicviewer.feature.book.navigation.bookGraph
+import com.sorrowblue.comicviewer.feature.book.navigation.bookScreen
 import com.sorrowblue.comicviewer.feature.book.navigation.navigateToBook
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.favoriteAddScreen
 import com.sorrowblue.comicviewer.feature.favorite.add.navigation.navigateToFavoriteAdd
-import com.sorrowblue.comicviewer.feature.favorite.create.navigation.favoriteCreateScreen
-import com.sorrowblue.comicviewer.feature.favorite.create.navigation.navigateToFavoriteCreate
-import com.sorrowblue.comicviewer.feature.library.navigation.libraryGroup
+import com.sorrowblue.comicviewer.feature.library.navigation.libraryNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.AddOnNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavigation
 import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavigation
@@ -26,15 +22,14 @@ import com.sorrowblue.comicviewer.feature.readlater.navigation.readlaterGroup
 import com.sorrowblue.comicviewer.feature.search.navigation.navigateToSearch
 import com.sorrowblue.comicviewer.feature.search.navigation.searchGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.navigateToSettings
-import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavGraph
+import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavigation
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialScreen
+import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 import java.util.ServiceLoader
 
+context(ComposeValue)
 internal fun NavGraphBuilder.mainGraph(
-    isMobile: Boolean,
-    navController: NavHostController,
-    contentPadding: PaddingValues,
     restoreComplete: () -> Unit,
     onTutorialExit: () -> Unit,
     onBackClick: () -> Unit,
@@ -43,6 +38,7 @@ internal fun NavGraphBuilder.mainGraph(
 ) {
     authenticationScreen(
         onBack = onBackClick,
+        onBackClick = navController::navigateUp,
         onAuthCompleted = { back, mode ->
             when (mode) {
                 Mode.Register, Mode.Change, Mode.Erase -> navController.popBackStack()
@@ -51,9 +47,6 @@ internal fun NavGraphBuilder.mainGraph(
         }
     )
     bookshelfGraph(
-        isMobile = isMobile,
-        contentPadding = contentPadding,
-        navController = navController,
         onSettingsClick = navController::navigateToSettings,
         navigateToBook = navController::navigateToBook,
         navigateToSearch = navController::navigateToSearch,
@@ -61,33 +54,22 @@ internal fun NavGraphBuilder.mainGraph(
         onRestoreComplete = restoreComplete,
     )
     favoriteGroup(
-        contentPadding = contentPadding,
-        navController = navController,
         navigateToBook = navController::navigateToBook,
         onFavoriteBookClick = navController::navigateToBook,
-        onClickLongFile = { /*TODO*/ },
         onSettingsClick = navController::navigateToSettings,
         onSearchClick = navController::navigateToSearch,
-        onFavoriteClick = navController::navigateToFavoriteAdd
+        onFavoriteClick = navController::navigateToFavoriteAdd,
     )
-    favoriteAddScreen(
-        onBackClick = navController::popBackStack,
-        onAddClick = navController::navigateToFavoriteCreate
-    )
-    favoriteCreateScreen(onDismissRequest = navController::popBackStack)
     readlaterGroup(
-        contentPadding = contentPadding,
-        navController = navController,
         navigateToBook = navController::navigateToBook,
         onSettingsClick = navController::navigateToSettings,
         navigateToSearch = navController::navigateToSearch,
         onFavoriteClick = navController::navigateToFavoriteAdd
     )
-    libraryGroup(
-        contentPadding = contentPadding,
-        navController = navController,
+    libraryNavigation(
         navigateToBook = { navController.navigateToBook(it) },
         onSettingsClick = navController::navigateToSettings,
+        onFavoriteClick = navController::navigateToFavoriteAdd,
         onAddOnClick = { addOn ->
             addOn.addOn.loadDynamicFeature()?.let {
                 with(it) {
@@ -96,10 +78,11 @@ internal fun NavGraphBuilder.mainGraph(
             }
         }
     )
+    favoriteAddScreen(
+        onBackClick = navController::popBackStack,
+    )
 
     searchGraph(
-        contentPadding = contentPadding,
-        navController = navController,
         navigateToBook = navController::navigateToBook,
         navigateToSettings = navController::navigateToSettings,
         navigateToFavoriteAdd = navController::navigateToFavoriteAdd
@@ -107,24 +90,22 @@ internal fun NavGraphBuilder.mainGraph(
 
     tutorialScreen(onComplete = onTutorialExit)
 
-    bookGraph(
-        navController = navController,
+    bookScreen(
         onBackClick = navController::popBackStack,
         onSettingsClick = navController::navigateToSettings,
-        contentPadding = contentPadding
     )
 
-    settingsNavGraph(
-        navController = navController,
-        onStartTutorialClick = navController::navigateToTutorial,
-        onPasswordChangeClick = { navController.navigateToAuthentication(Mode.Change) },
+    settingsNavigation(
+        onBackClick = navController::navigateUp,
         onChangeAuthEnabled = {
             if (it) {
                 navController.navigateToAuthentication(Mode.Register)
             } else {
                 navController.navigateToAuthentication(Mode.Erase)
             }
-        }
+        },
+        onPasswordChangeClick = { navController.navigateToAuthentication(Mode.Change) },
+        onStartTutorialClick = navController::navigateToTutorial,
     )
 
     addOnList.forEach {

@@ -9,15 +9,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import dagger.hilt.android.AndroidEntryPoint
 import logcat.logcat
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @AndroidEntryPoint
 internal class MainActivity : AppCompatActivity() {
 
@@ -36,11 +36,15 @@ internal class MainActivity : AppCompatActivity() {
         )
 
         setContent {
-            val windowSize = calculateWindowSizeClass(this)
-            ComicViewerApp(
-                windowsSize = windowSize,
-                state = rememberComicViewerAppState(viewModel = viewModel)
-            )
+            NavHost(navController = rememberNavController(), startDestination = "main") {
+                composable("main") { navBackStackEntry ->
+                    with(navBackStackEntry) {
+                        ComicViewerApp(
+                            state = rememberComicViewerAppState(viewModel = viewModel)
+                        )
+                    }
+                }
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

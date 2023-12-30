@@ -25,8 +25,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Lifecycle
 import com.google.android.play.core.ktx.errorCode
 import com.google.android.play.core.ktx.moduleNames
 import com.google.android.play.core.ktx.requestInstall
@@ -72,7 +71,7 @@ internal sealed interface LibraryScreenUiEvent {
 }
 
 @Composable
-internal fun LibraryRoute(
+internal fun LibraryScreen(
     contentPadding: PaddingValues,
     onFeatureClick: (Feature) -> Unit,
     state: LibraryScreenState = rememberLibraryScreenState(),
@@ -101,7 +100,9 @@ internal fun LibraryRoute(
         onInstallClick = state::onInstallClick,
         onCancelClick = state::onCancelClick,
     )
-    LifecycleEffect(state)
+    LifecycleEffect(targetEvent = Lifecycle.Event.ON_START, action = state::onStart)
+    LifecycleEffect(targetEvent = Lifecycle.Event.ON_RESUME, action = state::onResume)
+    LifecycleEffect(targetEvent = Lifecycle.Event.ON_STOP, action = state::onStop)
 }
 
 internal data class LibraryScreenUiState(
@@ -114,7 +115,7 @@ internal class LibraryScreenState(
     private val context: Context,
     private val scope: CoroutineScope,
     private val splitInstallManager: SplitInstallManager,
-) : DefaultLifecycleObserver, SplitInstallStateUpdatedListener {
+) : SplitInstallStateUpdatedListener {
 
     var uiState by mutableStateOf(LibraryScreenUiState())
         private set
@@ -135,13 +136,11 @@ internal class LibraryScreenState(
         uiState = LibraryScreenUiState(addOnList = addOns.toPersistentList())
     }
 
-    override fun onStart(owner: LifecycleOwner) {
-        super.onStart(owner)
+    fun onStart() {
         splitInstallManager.registerListener(this)
     }
 
-    override fun onResume(owner: LifecycleOwner) {
-        super.onResume(owner)
+    fun onResume() {
         val installedModules = splitInstallManager.installedModules
         val list = uiState.addOnList.map {
             it.copy2(
@@ -151,8 +150,7 @@ internal class LibraryScreenState(
         uiState = uiState.copy(addOnList = list.toPersistentList())
     }
 
-    override fun onStop(owner: LifecycleOwner) {
-        super.onStop(owner)
+    fun onStop() {
         splitInstallManager.unregisterListener(this)
     }
 

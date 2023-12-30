@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,9 +32,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawTaken
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.PreviewMobile
-import com.sorrowblue.comicviewer.framework.ui.material3.FilledTonalButton
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.Text
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 import kotlinx.collections.immutable.toPersistentList
 
@@ -66,7 +66,7 @@ internal fun NextBookSheet(
             )
             Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
             Text(
-                text = R.string.book_label_no_next_book,
+                text = stringResource(id = R.string.book_label_no_next_book),
                 style = ComicTheme.typography.titleLarge
             )
         }
@@ -112,11 +112,12 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
         )
         FilledTonalButton(
             onClick = onClick,
-            text = stringResource(id = R.string.book_action_read),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 8.dp, bottom = 16.dp)
-        )
+        ) {
+            Text(text = stringResource(id = R.string.book_action_read))
+        }
     }
 }
 
