@@ -4,10 +4,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,6 +24,7 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
 @Composable
 internal fun BookshelfListContents(
@@ -33,6 +39,7 @@ internal fun BookshelfListContents(
     } else {
         GridCells.Adaptive(200.dp)
     }
+    var spanCount by remember { mutableStateOf(1) }
     LazyVerticalGrid(
         columns = gridCells,
         state = lazyGridState,
@@ -45,10 +52,14 @@ internal fun BookshelfListContents(
             ComicTheme.dimension.padding * 2,
             alignment = Alignment.Start
         ),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().drawVerticalScrollbar(lazyGridState, spanCount)
     ) {
         items(
             count = lazyPagingItems.itemCount,
+            span = {
+                spanCount = maxLineSpan
+                GridItemSpan(1)
+            },
             key = lazyPagingItems.itemKey { it.bookshelf.id.value },
             contentType = { lazyPagingItems.itemContentType { "contentType" } }
         ) {
