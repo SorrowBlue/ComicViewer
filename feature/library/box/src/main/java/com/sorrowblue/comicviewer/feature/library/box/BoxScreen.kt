@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,6 +66,7 @@ import com.sorrowblue.comicviewer.feature.library.box.navigation.BoxArgs
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxDialogUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import java.net.URI
 import kotlin.random.Random
 import kotlinx.coroutines.CoroutineScope
@@ -380,6 +383,7 @@ private fun LoadedBoxScreen(
     onDialogDismissRequest: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     Scaffold(
         topBar = {
@@ -394,7 +398,11 @@ private fun LoadedBoxScreen(
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
-        LazyColumn(contentPadding = innerPadding) {
+        LazyColumn(
+            state = lazyListState,
+            contentPadding = innerPadding,
+            modifier = Modifier.drawVerticalScrollbar(lazyListState)
+        ) {
             items(
                 count = lazyPagingItems.itemCount,
                 key = lazyPagingItems.itemKey { it.path }
