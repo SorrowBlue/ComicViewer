@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -110,7 +111,7 @@ fun <T : File> FileListContent(
                 PaddingValues(ComicTheme.dimension.margin)
             )
         },
-        modifier = modifier,
+        modifier = modifier.drawVerticalScrollbar(state, 1),
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
             val item = lazyPagingItems[it]
