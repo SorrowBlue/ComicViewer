@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.selection.navigation
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -13,7 +12,6 @@ import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 const val BookshelfSelectionRoute = "bookshelf/selection"
 
 context(ComposeValue)
-@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.bookshelfSelectionScreen(
     onBackClick: () -> Unit,
     onSourceClick: (BookshelfType) -> Unit,
