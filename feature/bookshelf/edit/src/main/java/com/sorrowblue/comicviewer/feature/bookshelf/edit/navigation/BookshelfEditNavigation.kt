@@ -10,7 +10,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditRoute
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreen
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
 internal const val BookshelfIdArg = "bookshelfId"
@@ -61,7 +61,7 @@ fun NavGraphBuilder.bookshelfEditScreen(
                 },
             )
         ) {
-            BookshelfEditRoute(
+            BookshelfEditScreen(
                 args = BookshelfEditArgs(it.arguments!!),
                 onBackClick = onBackClick,
                 onComplete = onComplete,
@@ -70,11 +70,11 @@ fun NavGraphBuilder.bookshelfEditScreen(
         }
     } else {
         dialog(
-            route = "$BookshelfEditRoute?bookshelf_id={$BookshelfIdArg}&type={$BookshelfTypeArg}",
+            route = BookshelfEditRoute,
             arguments = listOf(
                 navArgument(BookshelfIdArg) {
                     type = NavType.IntType
-                    defaultValue = 0
+                    defaultValue = BookshelfId.Default
                 },
                 navArgument(BookshelfTypeArg) {
                     type = NavType.StringType
@@ -82,7 +82,7 @@ fun NavGraphBuilder.bookshelfEditScreen(
                 },
             )
         ) {
-            BookshelfEditRoute(
+            BookshelfEditScreen(
                 args = BookshelfEditArgs(it.arguments!!),
                 onBackClick = onBackClick,
                 onComplete = onComplete,
