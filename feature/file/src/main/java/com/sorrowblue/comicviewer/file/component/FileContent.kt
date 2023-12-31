@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,11 +72,14 @@ private fun <T : File> FileGridContent(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
         modifier = Modifier.drawVerticalScrollbar(state, spanCount)
     ) {
-        items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path },
+        items(
+            count = lazyPagingItems.itemCount,
+            key = lazyPagingItems.itemKey { it.path },
             span = {
                 spanCount = maxLineSpan
                 GridItemSpan(1)
-            }) {
+            }
+        ) {
             lazyPagingItems[it]?.let { item ->
                 FileGrid(
                     file = item,
