@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,6 +55,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoDat
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import kotlinx.coroutines.flow.Flow
@@ -104,6 +106,7 @@ private fun FavoriteEditScreen(
     onSaveClick: () -> Unit,
     onNameChange: (String) -> Unit,
     onDeleteClick: (File) -> Unit,
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
@@ -151,7 +154,11 @@ private fun FavoriteEditScreen(
                     .padding(contentPadding)
             )
         } else {
-            LazyColumn(contentPadding = contentPadding) {
+            LazyColumn(
+                state = lazyListState,
+                contentPadding = contentPadding,
+                modifier = Modifier.drawVerticalScrollbar(lazyListState)
+            ) {
                 items(
                     lazyPagingItems.itemCount,
                     key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" }
@@ -185,6 +192,7 @@ private fun FavoriteEditDialog(
     onDeleteClick: (File) -> Unit,
     onDismissRequest: () -> Unit,
     onConfirmClick: () -> Unit,
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     AlertDialog(
@@ -223,11 +231,11 @@ private fun FavoriteEditDialog(
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
-                    val lazyListState = rememberLazyListState()
                     HorizontalDivider(Modifier.alpha(if (lazyListState.canScrollBackward) 1f else 0f))
                     LazyColumn(
                         state = lazyListState,
                         contentPadding = PaddingValues(),
+                        modifier = Modifier.drawVerticalScrollbar(lazyListState)
                     ) {
                         items(
                             lazyPagingItems.itemCount,

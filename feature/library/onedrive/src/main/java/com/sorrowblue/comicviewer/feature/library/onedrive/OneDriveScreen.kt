@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,6 +47,7 @@ import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveDialo
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import java.io.InputStream
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.parcelize.Parcelize
@@ -202,6 +205,7 @@ private fun LoadedOneDriveScreen(
     onDialogDismissRequest: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     Scaffold(
         topBar = {
@@ -215,7 +219,11 @@ private fun LoadedOneDriveScreen(
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
-        LazyColumn(contentPadding = innerPadding) {
+        LazyColumn(
+            state = lazyListState,
+            contentPadding = innerPadding,
+            modifier = Modifier.drawVerticalScrollbar(lazyListState)
+        ) {
             items(
                 count = lazyPagingItems.itemCount,
                 key = lazyPagingItems.itemKey { it.path }

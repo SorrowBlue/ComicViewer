@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,6 +35,7 @@ import com.sorrowblue.comicviewer.feature.settings.Settings2
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.parcelize.Parcelize
@@ -54,6 +57,7 @@ fun SettingsListPane(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     val list = uiState.list
     val currentSettings2 = uiState.currentSettings2
@@ -82,8 +86,11 @@ fun SettingsListPane(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { innerPadding ->
             LazyColumn(
-                Modifier.fillMaxSize(),
-                contentPadding = innerPadding
+                state = lazyListState,
+                contentPadding = innerPadding,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .drawVerticalScrollbar(lazyListState)
             ) {
                 items(list) { settings2 ->
                     ListItem(
@@ -126,7 +133,7 @@ fun SettingsListPane(
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             LazyColumn(
-                Modifier.fillMaxSize(),
+                state = lazyListState,
                 contentPadding = it.add(
                     paddingValues = PaddingValues(
                         start = 24.dp,
@@ -134,7 +141,10 @@ fun SettingsListPane(
                         end = 24.dp,
                         bottom = 8.dp
                     )
-                )
+                ),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .drawVerticalScrollbar(lazyListState)
             ) {
                 items(list) { settings2 ->
                     ListItem(

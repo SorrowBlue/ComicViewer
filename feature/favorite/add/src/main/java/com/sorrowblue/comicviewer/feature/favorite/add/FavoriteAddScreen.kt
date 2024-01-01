@@ -48,6 +48,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import com.sorrowblue.comicviewer.feature.favorite.common.R as FavoriteCommonR
 
@@ -243,6 +244,7 @@ private fun FavoriteAddContent(
     LazyColumn(
         state = lazyListState,
         contentPadding = innerPadding,
+        modifier = Modifier.drawVerticalScrollbar(lazyListState)
     ) {
         if (lazyContent != null) {
             lazyContent(this)

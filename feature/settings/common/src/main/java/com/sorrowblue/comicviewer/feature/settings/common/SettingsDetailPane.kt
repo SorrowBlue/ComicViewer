@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.common
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -42,6 +44,7 @@ fun SettingsDetailPane(
         } else {
             TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
         },
+    scrollState: ScrollState = rememberScrollState(),
     content: @Composable (ColumnScope.() -> Unit),
 ) {
     Scaffold(
@@ -75,8 +78,9 @@ fun SettingsDetailPane(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .drawVerticalScrollbar(scrollState)
+                .verticalScroll(scrollState),
             content = content
         )
     }
@@ -97,6 +101,7 @@ fun SettingsDetailPane2(
         } else {
             TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
         },
+    scrollState: ScrollState = rememberScrollState(),
     content: @Composable (ColumnScope.() -> Unit),
 ) {
     Scaffold(
@@ -135,8 +140,9 @@ fun SettingsDetailPane2(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .drawVerticalScrollbar(scrollState)
+                .verticalScroll(scrollState),
             content = content
         )
     }

@@ -10,6 +10,7 @@ import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
 @Composable
 fun FavoriteListSheet(
@@ -22,7 +23,7 @@ fun FavoriteListSheet(
     LazyColumn(
         contentPadding = contentPadding,
         state = lazyListState,
-        modifier = modifier
+        modifier = modifier.drawVerticalScrollbar(lazyListState)
     ) {
         items(lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.id.value }) {
             val item = lazyPagingItems[it]

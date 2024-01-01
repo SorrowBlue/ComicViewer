@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
@@ -57,6 +59,7 @@ import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAcco
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialogUiState
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
@@ -262,6 +265,7 @@ internal fun GoogleDriveScreen(
     onFileClick: (File) -> Unit,
     onDialogDismissRequest: () -> Unit,
     onLogoutClick: () -> Unit,
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -276,7 +280,11 @@ internal fun GoogleDriveScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         if (uiState.isAuthenticated) {
-            LazyColumn(contentPadding = innerPadding) {
+            LazyColumn(
+                state = lazyListState,
+                contentPadding = innerPadding,
+                modifier = Modifier.drawVerticalScrollbar(lazyListState)
+            ) {
                 items(
                     count = lazyPagingItems.itemCount,
                     key = lazyPagingItems.itemKey { it.path }
