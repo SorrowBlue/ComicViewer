@@ -22,6 +22,7 @@ android-gradle = "8.2.1"
 detekt = "1.23.4"
 mikepenz-aboutlibraries = "10.10.0"
 koin = "3.5.3"
+compose-destinations = "1.9.56"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
@@ -177,6 +178,9 @@ arturbosch-detektGradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-g
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-androidxCompose = { group = "io.insert-koin", name = "koin-compose" }
 koin-androidxWorkmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager" }
+
+compose-destinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "compose-destinations" }
+compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "compose-destinations" }
 
 [bundles]
 androidx-instrumented-tests = ["androidx-test-core-ktx", "androidx-test-runner", "androidx-test-rules", "androidx-test-ext-junit-ktx", "androidx-test-ext-truth"]
