@@ -20,7 +20,7 @@ google-dagger = "2.50"
 android-gradle = "8.2.0"
 
 detekt = "1.23.4"
-mikepenz-aboutlibraries = "10.9.2"
+mikepenz-aboutlibraries = "10.10.0"
 koin = "3.5.3"
 
 [plugins]
