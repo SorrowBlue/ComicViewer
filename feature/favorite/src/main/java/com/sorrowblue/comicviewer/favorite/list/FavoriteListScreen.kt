@@ -14,9 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.SavedStateHandle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListAppBar
@@ -29,13 +30,14 @@ import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
-context(NavBackStackEntry)
+@Destination
 @Composable
-internal fun FavoriteListRoute(
+internal fun FavoriteListScreen(
+    savedStateHandle: SavedStateHandle,
     contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
     onFavoriteClick: (FavoriteId) -> Unit,
-    state: FavoriteListScreenState = rememberFavoriteListScreenState(),
+    state: FavoriteListScreenState = rememberFavoriteListScreenState(savedStateHandle = savedStateHandle),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     FavoriteListScreen(

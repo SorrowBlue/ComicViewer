@@ -35,6 +35,7 @@ import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallSessionState
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.library.component.AddOnItemState
 import com.sorrowblue.comicviewer.feature.library.component.LibraryTopAppBar
 import com.sorrowblue.comicviewer.feature.library.section.Feature
@@ -70,6 +71,7 @@ internal sealed interface LibraryScreenUiEvent {
     data object Restart : LibraryScreenUiEvent
 }
 
+@Destination
 @Composable
 internal fun LibraryScreen(
     contentPadding: PaddingValues,

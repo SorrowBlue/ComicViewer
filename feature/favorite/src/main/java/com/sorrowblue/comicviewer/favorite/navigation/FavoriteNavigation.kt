@@ -1,32 +1,19 @@
 package com.sorrowblue.comicviewer.favorite.navigation
 
-import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
-import androidx.navigation.NavType
-import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.utils.composable
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.favorite.FavoriteScreen
+import com.sorrowblue.comicviewer.favorite.destinations.FavoriteScreenDestination
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
-private const val FavoriteIdArg = "favoriteId"
+class FavoriteArgs(val favoriteId: FavoriteId)
 
-internal class FavoriteArgs(
-    val favoriteId: FavoriteId,
-) {
-    constructor(bundle: Bundle) : this(FavoriteId(checkNotNull(bundle.getInt(FavoriteIdArg))))
-}
-
-const val FavoriteRoute = "$FavoriteListRoute/{$FavoriteIdArg}"
-
-internal fun NavController.navigateToFavorite(
-    favoriteId: FavoriteId,
-    navOptions: NavOptions? = null,
-) {
-    navigate("$FavoriteListRoute/${favoriteId.value}", navOptions)
+internal fun NavController.navigateToFavorite(favoriteId: FavoriteId) {
+    navigate(FavoriteScreenDestination(favoriteId))
 }
 
 context(ComposeValue)
@@ -38,20 +25,17 @@ internal fun NavGraphBuilder.favoriteScreen(
     onOpenFolderClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
 ) {
-    composable(
-        route = FavoriteRoute,
-        arguments = listOf(navArgument(FavoriteIdArg) { type = NavType.IntType })
-    ) { navBackStackEntry ->
-        with(navBackStackEntry) {
-            FavoriteScreen(
-                contentPadding = contentPadding,
-                onBackClick = onBackClick,
-                onEditClick = onEditClick,
-                onSettingsClick = onSettingsClick,
-                onClickFile = onClickFile,
-                onOpenFolderClick = onOpenFolderClick,
-                onFavoriteClick = onFavoriteClick
-            )
-        }
+    composable(FavoriteScreenDestination) {
+        FavoriteScreen(
+            args = navArgs,
+            savedStateHandle = navBackStackEntry.savedStateHandle,
+            contentPadding = contentPadding,
+            onBackClick = onBackClick,
+            onEditClick = onEditClick,
+            onSettingsClick = onSettingsClick,
+            onClickFile = onClickFile,
+            onFavoriteClick = onFavoriteClick,
+            onOpenFolderClick = onOpenFolderClick,
+        )
     }
 }

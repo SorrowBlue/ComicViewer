@@ -20,7 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
@@ -39,10 +38,10 @@ internal interface SettingsScreenState {
     fun onDetailBackClick()
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberSettingsScreenState(
+    savedStateHandle: SavedStateHandle,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
     navigator: ThreePaneScaffoldNavigator = rememberListDetailPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(windowAdaptiveInfo)

@@ -17,7 +17,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationArgs
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import kotlinx.coroutines.CoroutineScope
@@ -35,9 +34,10 @@ internal interface AuthenticationScreenState {
     fun complete2()
 }
 
-context(NavBackStackEntry)
 @Composable
 internal fun rememberAuthenticationScreenState(
+    args: AuthenticationArgs,
+    savedStateHandle: SavedStateHandle,
     activity: FragmentActivity = LocalContext.current as FragmentActivity,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
@@ -47,7 +47,7 @@ internal fun rememberAuthenticationScreenState(
         activity = activity,
         savedStateHandle = savedStateHandle,
         snackbarHostState = snackbarHostState,
-        args = AuthenticationArgs(arguments!!),
+        args = args,
         scope = scope,
         viewModel = viewModel
     )

@@ -5,17 +5,19 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Destination
 @Composable
-internal fun SettingsAppInfoRoute(
+internal fun AppInfoSettingsScreen(
     onBackClick: () -> Unit,
     contentPadding: PaddingValues,
     state: AppInfoSettingsScreenState = rememberAppInfoSettingsScreenState(),
 ) {
-    SettingsAppInfoScreen(
+    AppInfoSettingsScreen(
         state.uiState,
         onBackClick = onBackClick,
         onLicenceClick = state::launchLicence,
@@ -33,7 +35,7 @@ internal data class SettingsAppInfoScreenUiState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsAppInfoScreen(
+private fun AppInfoSettingsScreen(
     uiState: SettingsAppInfoScreenUiState,
     onBackClick: () -> Unit,
     onLicenceClick: () -> Unit,

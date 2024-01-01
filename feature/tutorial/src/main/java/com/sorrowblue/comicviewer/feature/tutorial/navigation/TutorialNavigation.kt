@@ -2,18 +2,18 @@ package com.sorrowblue.comicviewer.feature.tutorial.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
-import com.sorrowblue.comicviewer.feature.tutorial.TutorialRoute
-
-const val TutorialRoute = "tutorial"
+import androidx.navigation.NavOptionsBuilder
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.utils.composable
+import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreen
+import com.sorrowblue.comicviewer.feature.tutorial.destinations.TutorialScreenDestination
 
 fun NavGraphBuilder.tutorialScreen(onComplete: () -> Unit) {
-    composable(TutorialRoute) {
-        TutorialRoute(onComplete = onComplete)
+    composable(TutorialScreenDestination) {
+        TutorialScreen(onComplete = onComplete)
     }
 }
 
-fun NavController.navigateToTutorial(navOptions: NavOptions? = null) {
-    navigate(TutorialRoute, navOptions)
+fun NavController.navigateToTutorial(navOptionsBuilder: NavOptionsBuilder.() -> Unit = {}) {
+    navigate(TutorialScreenDestination, navOptionsBuilder = navOptionsBuilder)
 }

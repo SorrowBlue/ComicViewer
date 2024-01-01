@@ -5,20 +5,22 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 
+@Destination
 @Composable
-internal fun SettingsViewerRoute(
+internal fun ViewerSettingsScreen(
     onBackClick: () -> Unit,
     contentPadding: PaddingValues,
-    state: SettingsViewerScreenState = rememberSettingsViewerScreenState(),
+    state: ViewerSettingsScreenState = rememberViewerSettingsScreenState(),
 ) {
     val uiState = state.uiState
-    SettingsViewerScreen(
+    ViewerSettingsScreen(
         uiState = uiState,
         onBackClick = onBackClick,
         onStatusBarShowChange = state::onStatusBarShowChange,
@@ -50,7 +52,7 @@ internal data class SettingsViewerScreenUiState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsViewerScreen(
+private fun ViewerSettingsScreen(
     uiState: SettingsViewerScreenUiState,
     onBackClick: () -> Unit,
     onStatusBarShowChange: (Boolean) -> Unit,

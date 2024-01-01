@@ -1,32 +1,19 @@
 package com.sorrowblue.comicviewer.feature.favorite.edit.navigation
 
-import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
-import androidx.navigation.NavType
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.dialog
-import androidx.navigation.navArgument
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.utils.composable
+import com.ramcosta.composedestinations.utils.dialogComposable
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
-import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEditRoute
+import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEditScreen
+import com.sorrowblue.comicviewer.feature.favorite.edit.destinations.FavoriteEditScreenDestination
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 
-private const val FavoriteIdArg = "favoriteId"
+class FavoriteEditArgs(val favoriteId: FavoriteId)
 
-const val FavoriteEditRoute = "favorite/{$FavoriteIdArg}/edit"
-
-internal class FavoriteEditArgs(
-    val favoriteId: FavoriteId,
-) {
-    constructor(bundle: Bundle) : this(FavoriteId(checkNotNull(bundle.getInt(FavoriteIdArg))))
-}
-
-fun NavController.navigateToFavoriteEdit(
-    favoriteId: FavoriteId,
-    navOptions: NavOptions? = null,
-) {
-    navigate("favorite/${favoriteId.value}/edit", navOptions)
+fun NavController.navigateToFavoriteEdit(favoriteId: FavoriteId) {
+    navigate(FavoriteEditScreenDestination(favoriteId))
 }
 
 context(ComposeValue)
@@ -35,32 +22,22 @@ fun NavGraphBuilder.favoriteEditScreen(
     onComplete: () -> Unit,
 ) {
     if (isCompact) {
-        composable(
-            route = FavoriteEditRoute,
-            arguments = listOf(
-                navArgument(FavoriteIdArg) { type = NavType.IntType },
+        composable(FavoriteEditScreenDestination) {
+            FavoriteEditScreen(
+                args = navArgs,
+                savedStateHandle = navBackStackEntry.savedStateHandle,
+                onBackClick = onBackClick,
+                onComplete = onComplete,
             )
-        ) { navBackStackEntry ->
-            with(navBackStackEntry) {
-                FavoriteEditRoute(
-                    onBackClick = onBackClick,
-                    onComplete = onComplete
-                )
-            }
         }
     } else {
-        dialog(
-            route = FavoriteEditRoute,
-            arguments = listOf(
-                navArgument(FavoriteIdArg) { type = NavType.IntType },
+        dialogComposable(FavoriteEditScreenDestination) {
+            FavoriteEditScreen(
+                args = navArgs,
+                savedStateHandle = navBackStackEntry.savedStateHandle,
+                onBackClick = onBackClick,
+                onComplete = onComplete,
             )
-        ) { navBackStackEntry ->
-            with(navBackStackEntry) {
-                FavoriteEditRoute(
-                    onBackClick = onBackClick,
-                    onComplete = onComplete
-                )
-            }
         }
     }
 }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-internal class SettingsSecurityViewModel @Inject constructor(
+internal class SecuritySettingsViewModel @Inject constructor(
     private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
 ) : ViewModel() {
 

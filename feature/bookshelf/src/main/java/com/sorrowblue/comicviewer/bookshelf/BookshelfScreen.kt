@@ -30,10 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfInfoSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfMainSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialog
@@ -53,16 +54,17 @@ import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Destination
 @Composable
-internal fun BookshelfRoute(
+internal fun BookshelfScreen(
+    savedStateHandle: SavedStateHandle,
     contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
     onFabClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
-    state: BookshelfScreenState = rememberBookshelfScreenState(),
+    state: BookshelfScreenState = rememberBookshelfScreenState(savedStateHandle = savedStateHandle),
 ) {
     BookshelfScreen(
         navigator = state.navigator,

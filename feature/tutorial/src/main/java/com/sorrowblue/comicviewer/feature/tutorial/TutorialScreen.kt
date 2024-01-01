@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.feature.tutorial.component.TutorialBottomBar
 import com.sorrowblue.comicviewer.feature.tutorial.section.ArchiveSheet
@@ -36,8 +37,9 @@ internal data class TutorialScreenUiState(
 )
 
 @OptIn(ExperimentalFoundationApi::class)
+@Destination
 @Composable
-internal fun TutorialRoute(
+internal fun TutorialScreen(
     onComplete: () -> Unit,
     state: TutorialScreenState = rememberTutorialScreenState(),
 ) {

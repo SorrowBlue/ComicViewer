@@ -6,6 +6,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.SavedStateHandle
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
@@ -14,13 +16,15 @@ import com.sorrowblue.comicviewer.feature.settings.display.section.AppearanceDia
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import kotlinx.parcelize.Parcelize
 
+@Destination
 @Composable
-internal fun SettingsDisplayRoute(
-    onBackClick: () -> Unit,
+internal fun DisplaySettingsScreen(
+    savedStateHandle: SavedStateHandle,
     contentPadding: PaddingValues,
-    state: DisplaySettingsScreenState = rememberDisplaySettingsScreenState(),
+    onBackClick: () -> Unit,
+    state: DisplaySettingsScreenState = rememberDisplaySettingsScreenState(savedStateHandle = savedStateHandle),
 ) {
-    SettingsDisplayScreen(
+    DisplaySettingsScreen(
         uiState = state.uiState,
         onBackClick = onBackClick,
         onRestoreOnLaunchChange = state::onRestoreOnLaunchChange,
@@ -45,7 +49,7 @@ internal data class SettingsDisplayScreenUiState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsDisplayScreen(
+private fun DisplaySettingsScreen(
     uiState: SettingsDisplayScreenUiState,
     onBackClick: () -> Unit,
     onRestoreOnLaunchChange: (Boolean) -> Unit,

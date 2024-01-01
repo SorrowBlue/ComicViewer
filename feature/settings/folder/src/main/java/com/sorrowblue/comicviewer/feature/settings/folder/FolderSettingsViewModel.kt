@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class SettingsFolderViewModel @Inject constructor(
+class FolderSettingsViewModel @Inject constructor(
     private val manageFolderSettingsUseCase: ManageFolderSettingsUseCase,
     private val deleteThumbnailsUseCase: DeleteThumbnailsUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingsFolderScreenUiState())
+    private val _uiState = MutableStateFlow(FolderSettingsScreenUiState())
     val settings = manageFolderSettingsUseCase.settings
 
     init {

@@ -7,9 +7,9 @@ import com.sorrowblue.comicviewer.feature.settings.display.navigation.settingsDi
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.navigateToSettingsSupportExtension
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.settingsFolderScreen
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.settingsSupportExtensionScreen
-import com.sorrowblue.comicviewer.feature.settings.info.navigation.settingsAppInfoScreen
+import com.sorrowblue.comicviewer.feature.settings.info.navigation.appInfoSettingsScreen
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.settingsSecurityScreen
-import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.settingsViewerScreen
+import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.viewerSettingsScreen
 
 internal fun NavGraphBuilder.settingsGraph(
     navController: NavHostController,
@@ -27,7 +27,7 @@ internal fun NavGraphBuilder.settingsGraph(
         onExtensionClick = navController::navigateToSettingsSupportExtension,
         contentPadding = contentPadding
     )
-    settingsViewerScreen(
+    viewerSettingsScreen(
         onBackClick = onBackClick,
         contentPadding = contentPadding
     )
@@ -42,7 +42,7 @@ internal fun NavGraphBuilder.settingsGraph(
         contentPadding = contentPadding
     )
 
-    settingsAppInfoScreen(
+    appInfoSettingsScreen(
         onBackClick = onBackClick,
         contentPadding = contentPadding
     )

@@ -81,7 +81,7 @@ internal class BookshelfEditScreenState(
             }
             // Restore
         } else {
-            if (args.bookshelfId.value == BookshelfId.Default) {
+            if (args.bookshelfId == BookshelfId.Default) {
                 innerScreenState = when (args.bookshelfType) {
                     BookshelfType.SMB -> SmbEditScreenState(
                         SmbEditScreenUiState(),

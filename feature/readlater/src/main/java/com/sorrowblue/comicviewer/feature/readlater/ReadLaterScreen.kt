@@ -13,9 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.SavedStateHandle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
 import com.sorrowblue.comicviewer.file.FileInfoSheet
@@ -29,16 +30,17 @@ import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Destination
 @Composable
-internal fun ReadLaterRoute(
+internal fun ReadLaterScreen(
+    savedStateHandle: SavedStateHandle,
+    contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
     onFileClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    contentPadding: PaddingValues,
-    state: ReadLaterScreenState = rememberReadLaterScreenState(),
+    state: ReadLaterScreenState = rememberReadLaterScreenState(savedStateHandle = savedStateHandle),
 ) {
     val uiState = state.uiState
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()

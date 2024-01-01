@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.app
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.suite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,7 +29,6 @@ internal data class MainScreenUiState(
 @OptIn(
     ExperimentalMaterialNavigationApi::class,
     ExperimentalMaterial3AdaptiveNavigationSuiteApi::class,
-    ExperimentalMaterial3AdaptiveApi::class
 )
 @Composable
 internal fun MainScreen(

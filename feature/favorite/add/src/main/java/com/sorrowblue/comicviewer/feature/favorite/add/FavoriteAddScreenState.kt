@@ -8,7 +8,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialogUiState
@@ -24,9 +23,9 @@ interface FavoriteAddScreenState {
     fun onDismissRequest()
 }
 
-context(NavBackStackEntry)
 @Composable
 internal fun rememberFavoriteAddScreenState(
+    savedStateHandle: SavedStateHandle,
     viewModel: FavoriteAddViewModel = hiltViewModel(),
 ): FavoriteAddScreenState = remember(viewModel) {
     FavoriteAddScreenStateImpl(savedStateHandle = savedStateHandle, viewModel = viewModel)

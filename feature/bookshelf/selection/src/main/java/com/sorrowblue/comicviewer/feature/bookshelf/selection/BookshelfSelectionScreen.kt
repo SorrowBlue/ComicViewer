@@ -6,12 +6,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.section.BookshelfSourceList
 import com.sorrowblue.comicviewer.framework.ui.ResponsiveDialogScaffold
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 
+@Destination
 @Composable
 internal fun BookshelfSelectionScreen(
     onCloseClick: () -> Unit,
@@ -30,9 +32,7 @@ internal fun BookshelfSelectionScreen(
 }
 
 internal data class BookshelfSelectionScreenUiState(
-    val list: PersistentList<BookshelfType> = List(10) {
-        BookshelfType.entries
-    }.flatten().toPersistentList(),
+    val list: PersistentList<BookshelfType> = BookshelfType.entries.toPersistentList(),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)

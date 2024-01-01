@@ -25,7 +25,7 @@ import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialRoute
+import com.sorrowblue.comicviewer.feature.tutorial.destinations.TutorialScreenDestination
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -123,13 +123,11 @@ private class ComicViewerAppStateImpl(
         if (this.isInitialized) return
         scope.launch {
             if (viewModel.isTutorial()) {
-                navController.navigateToTutorial(
-                    navOptions {
-                        popUpTo(MainGraphRoute) {
-                            inclusive = true
-                        }
+                navController.navigateToTutorial {
+                    popUpTo(MainGraphRoute) {
+                        inclusive = true
                     }
-                )
+                }
                 viewModel.shouldKeepSplash = false
                 this@ComicViewerAppStateImpl.isInitialized = true
             } else if (viewModel.isRestore()) {
@@ -204,11 +202,9 @@ private class ComicViewerAppStateImpl(
         if (this.isInitialized) {
             scope.launch {
                 if (viewModel.lockOnBackground()) {
-                    navController.navigateToAuthentication(
-                        Mode.Authentication,
-                        true,
-                        navOptions { launchSingleTop = true }
-                    )
+                    navController.navigateToAuthentication(Mode.Authentication, true) {
+                        launchSingleTop = true
+                    }
                     viewModel.shouldKeepSplash = false
                 } else {
                     viewModel.shouldKeepSplash = false
@@ -227,7 +223,7 @@ private class ComicViewerAppStateImpl(
                 navController.navigate(
                     graphStateHolder.startDestination,
                     navOptions {
-                        popUpTo(TutorialRoute) {
+                        popUpTo(TutorialScreenDestination.route) {
                             inclusive = true
                         }
                     }
@@ -243,22 +239,16 @@ private class ComicViewerAppStateImpl(
             if (viewModel.isAuth()) {
                 logcat { "認証 復元完了後" }
                 if (isRestoredNavHistory) {
-                    navController.navigateToAuthentication(
-                        Mode.Authentication,
-                        true,
-                        navOptions { launchSingleTop = true }
-                    )
+                    navController.navigateToAuthentication(Mode.Authentication, true) {
+                        launchSingleTop = true
+                    }
                 } else {
-                    navController.navigateToAuthentication(
-                        Mode.Authentication,
-                        false,
-                        navOptions {
-                            launchSingleTop = true
-                            popUpTo(MainGraphRoute) {
-                                inclusive = true
-                            }
+                    navController.navigateToAuthentication(Mode.Authentication, false) {
+                        launchSingleTop = true
+                        popUpTo(MainGraphRoute) {
+                            inclusive = true
                         }
-                    )
+                    }
                 }
                 viewModel.shouldKeepSplash = false
                 isInitialized = true

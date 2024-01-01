@@ -14,11 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.SavedStateHandle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteArgs
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBarUiState
 import com.sorrowblue.comicviewer.feature.favorite.R
@@ -33,10 +35,12 @@ import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Destination(navArgsDelegate = FavoriteArgs::class)
 @Composable
 internal fun FavoriteScreen(
+    args: FavoriteArgs,
+    savedStateHandle: SavedStateHandle,
     contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
@@ -44,7 +48,10 @@ internal fun FavoriteScreen(
     onClickFile: (File, FavoriteId) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    state: FavoriteScreenState = rememberFavoriteScreenState(),
+    state: FavoriteScreenState = rememberFavoriteScreenState(
+        savedStateHandle = savedStateHandle,
+        args = args
+    ),
 ) {
     val uiState = state.uiState
     val navigator = state.navigator

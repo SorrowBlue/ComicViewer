@@ -10,7 +10,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-internal class SettingsDisplayViewModel @Inject constructor(
+internal class DisplaySettingsViewModel @Inject constructor(
     private val displaySettingsUseCase: ManageDisplaySettingsUseCase,
 ) : ViewModel() {
 

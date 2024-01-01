@@ -9,7 +9,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
@@ -27,16 +26,17 @@ interface FavoriteEditScreenState {
     fun onSaveClick(onComplete: () -> Unit)
 }
 
-context(NavBackStackEntry)
 @Composable
 internal fun rememberFavoriteEditScreenState(
+    args: FavoriteEditArgs,
+    savedStateHandle: SavedStateHandle,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: FavoriteEditViewModel = hiltViewModel(),
 ): FavoriteEditScreenState = remember {
     FavoriteEditScreenStateImpl(
-        args = FavoriteEditArgs(arguments!!),
         scope = scope,
         savedStateHandle = savedStateHandle,
+        args = args,
         viewModel = viewModel
     )
 }

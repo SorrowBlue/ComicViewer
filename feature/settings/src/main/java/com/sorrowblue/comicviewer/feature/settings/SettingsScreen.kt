@@ -12,33 +12,35 @@ import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.sorrowblue.comicviewer.feature.settings.display.navigation.SettingsDisplayRoute
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.SettingsFolderRoute
-import com.sorrowblue.comicviewer.feature.settings.info.navigation.SettingsAppInfoRoute
-import com.sorrowblue.comicviewer.feature.settings.navigation.InAppLanguagePickerRoute
+import com.ramcosta.composedestinations.annotation.Destination
+import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.folder.destinations.FolderSettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.info.destinations.AppInfoSettingsScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.navigation.settingsGraph
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPaneUiState
-import com.sorrowblue.comicviewer.feature.settings.security.navigation.SettingsSecurityRoute
-import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.SettingsViewerRoute
+import com.sorrowblue.comicviewer.feature.settings.security.destinations.SecuritySettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.viewer.destinations.ViewerSettingsScreenDestination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.copy
 import kotlinx.parcelize.Parcelize
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Destination
 @Composable
-internal fun SettingsRoute(
+internal fun SettingsScreen(
+    savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
     onChangeAuthEnabled: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
     onStartTutorialClick: () -> Unit,
     contentPadding: PaddingValues,
-    state: SettingsScreenState = rememberSettingsScreenState(),
+    state: SettingsScreenState = rememberSettingsScreenState(savedStateHandle = savedStateHandle),
 ) {
     val navigator = state.navigator
     SettingsScreen(
@@ -109,11 +111,27 @@ private fun SettingsScreen(
 }
 
 enum class Settings2(val title: Int, val icon: ImageVector, val route: String = "") {
-    DISPLAY(R.string.settings_label_display, ComicIcons.DisplaySettings, SettingsDisplayRoute),
-    FOLDER(R.string.settings_label_folder, ComicIcons.FolderOpen, SettingsFolderRoute),
-    VIEWER(R.string.settings_label_viewer, ComicIcons.Image, SettingsViewerRoute),
-    SECURITY(R.string.settings_label_security, ComicIcons.Lock, SettingsSecurityRoute),
-    APP(R.string.settings_label_app, ComicIcons.Info, SettingsAppInfoRoute),
+    DISPLAY(
+        R.string.settings_label_display,
+        ComicIcons.DisplaySettings,
+        DisplaySettingsScreenDestination.route
+    ),
+    FOLDER(
+        R.string.settings_label_folder,
+        ComicIcons.FolderOpen,
+        FolderSettingsScreenDestination.route
+    ),
+    VIEWER(R.string.settings_label_viewer, ComicIcons.Image, ViewerSettingsScreenDestination.route),
+    SECURITY(
+        R.string.settings_label_security,
+        ComicIcons.Lock,
+        SecuritySettingsScreenDestination.route
+    ),
+    APP(R.string.settings_label_app, ComicIcons.Info, AppInfoSettingsScreenDestination.route),
     TUTORIAL(R.string.settings_label_tutorial, ComicIcons.Start),
-    LANGUAGE(R.string.settings_label_language, ComicIcons.Language, InAppLanguagePickerRoute),
+    LANGUAGE(
+        R.string.settings_label_language,
+        ComicIcons.Language,
+        InAppLanguagePickerScreenDestination.route
+    ),
 }

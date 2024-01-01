@@ -15,8 +15,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import kotlinx.coroutines.CoroutineScope
@@ -36,10 +36,11 @@ internal interface ReadLaterScreenState {
     fun onNavClick()
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Destination
 @Composable
 internal fun rememberReadLaterScreenState(
+    savedStateHandle: SavedStateHandle,
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),

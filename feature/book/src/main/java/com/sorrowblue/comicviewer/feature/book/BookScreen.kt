@@ -28,6 +28,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.book.navigation.BookArgs
@@ -60,8 +61,9 @@ internal sealed interface BookScreenUiState {
 }
 
 @OptIn(ExperimentalFoundationApi::class)
+@Destination(navArgsDelegate = BookArgs::class)
 @Composable
-internal fun BookRoute(
+internal fun BookScreen(
     args: BookArgs,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,

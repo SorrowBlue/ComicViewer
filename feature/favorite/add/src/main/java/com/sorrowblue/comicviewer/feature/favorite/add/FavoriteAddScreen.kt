@@ -34,13 +34,15 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.SavedStateHandle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.feature.favorite.add.component.FavoriteAddFab
 import com.sorrowblue.comicviewer.feature.favorite.add.component.FavoriteAddTopAppBar
+import com.sorrowblue.comicviewer.feature.favorite.add.navigation.FavoriteAddArgs
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialog
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialogUiState
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
@@ -52,13 +54,14 @@ import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import com.sorrowblue.comicviewer.feature.favorite.common.R as FavoriteCommonR
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3Api::class)
+@Destination(navArgsDelegate = FavoriteAddArgs::class)
 @Composable
-internal fun FavoriteAddRoute(
+internal fun FavoriteAddScreen(
+    savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
     contentPadding: PaddingValues,
-    state: FavoriteAddScreenState = rememberFavoriteAddScreenState(),
+    state: FavoriteAddScreenState = rememberFavoriteAddScreenState(savedStateHandle = savedStateHandle),
 ) {
     val dialogUiState = state.dialogUiState
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()

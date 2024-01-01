@@ -14,9 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.SavedStateHandle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.section.HistoryAppBar
@@ -30,16 +31,17 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Destination
 @Composable
-internal fun HistoryRoute(
+internal fun HistoryScreen(
+    savedStateHandle: SavedStateHandle,
+    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onFileClick: (Book) -> Unit,
     onFavoriteClick: (File) -> Unit,
-    contentPadding: PaddingValues,
-    state: HistoryScreenState = rememberHistoryScreenState(),
+    state: HistoryScreenState = rememberHistoryScreenState(savedStateHandle = savedStateHandle),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     val uiState = state.uiState

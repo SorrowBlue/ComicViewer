@@ -40,16 +40,18 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameTextField
+import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.FavoriteEditArgs
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -61,12 +63,17 @@ import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-context(NavBackStackEntry)
+@Destination(navArgsDelegate = FavoriteEditArgs::class)
 @Composable
-internal fun FavoriteEditRoute(
+internal fun FavoriteEditScreen(
+    args: FavoriteEditArgs,
+    savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
-    state: FavoriteEditScreenState = rememberFavoriteEditScreenState(),
+    state: FavoriteEditScreenState = rememberFavoriteEditScreenState(
+        args = args,
+        savedStateHandle = savedStateHandle
+    ),
 ) {
     val uiState = state.uiState
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()

@@ -31,7 +31,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.navOptions
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationRoute
+import com.sorrowblue.comicviewer.feature.authentication.destinations.AuthenticationScreenDestination
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
@@ -104,7 +104,7 @@ internal fun ComicViewerApp(
                                 state.navController.navigate(
                                     state.graphStateHolder.startDestination,
                                     navOptions {
-                                        popUpTo(AuthenticationRoute) {
+                                        popUpTo(AuthenticationScreenDestination.route) {
                                             inclusive = true
                                         }
                                     }

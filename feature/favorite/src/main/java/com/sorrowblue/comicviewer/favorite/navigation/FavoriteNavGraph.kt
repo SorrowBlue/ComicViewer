@@ -6,7 +6,9 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.FavoriteEditRoute
+import com.sorrowblue.comicviewer.favorite.destinations.FavoriteListScreenDestination
+import com.sorrowblue.comicviewer.favorite.destinations.FavoriteScreenDestination
+import com.sorrowblue.comicviewer.feature.favorite.edit.destinations.FavoriteEditScreenDestination
 import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.favoriteEditScreen
 import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.navigateToFavoriteEdit
 import com.sorrowblue.comicviewer.folder.navigation.folderRoute
@@ -17,7 +19,8 @@ import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 import com.sorrowblue.comicviewer.framework.ui.animatedNavigation
 
 const val FavoriteGraphRoute = "favorite_graph"
-val RouteInFavoriteGraph = listOf(FavoriteListRoute, FavoriteRoute, folderRoute(FavoriteListRoute))
+val RouteInFavoriteGraph =
+    listOf(FavoriteListScreenDestination.route, FavoriteScreenDestination.route, folderRoute(FavoriteListScreenDestination.route))
 
 context(ComposeValue)
 fun NavGraphBuilder.favoriteGroup(
@@ -28,22 +31,22 @@ fun NavGraphBuilder.favoriteGroup(
     onFavoriteClick: (File) -> Unit,
 ) {
     animatedNavigation(
-        startDestination = FavoriteListRoute,
+        startDestination = FavoriteListScreenDestination.route,
         route = FavoriteGraphRoute,
         transitions = listOf(
             ComposeTransition(
-                FavoriteListRoute,
-                FavoriteRoute,
+                FavoriteListScreenDestination.route,
+                FavoriteScreenDestination.route,
                 ComposeTransition.Type.SharedAxisX
             ),
             ComposeTransition(
-                FavoriteRoute,
-                folderRoute(FavoriteListRoute),
+                FavoriteScreenDestination.route,
+                folderRoute(FavoriteListScreenDestination.route),
                 ComposeTransition.Type.SharedAxisX
             ),
             ComposeTransition(
-                FavoriteRoute,
-                FavoriteEditRoute,
+                FavoriteScreenDestination.route,
+                FavoriteEditScreenDestination.route,
                 ComposeTransition.Type.SharedAxisY
             ),
             ComposeTransition(
@@ -67,7 +70,7 @@ fun NavGraphBuilder.favoriteGroup(
 
                     is Folder ->
                         navController.navigateToFolder(
-                            FavoriteListRoute,
+                            FavoriteListScreenDestination.route,
                             file.bookshelfId,
                             file.path
                         )
@@ -77,13 +80,13 @@ fun NavGraphBuilder.favoriteGroup(
             onOpenFolderClick = { file ->
                 when (file) {
                     is Book -> navController.navigateToFolder(
-                        FavoriteListRoute,
+                        FavoriteListScreenDestination.route,
                         file.bookshelfId,
                         file.parent
                     )
 
                     is Folder -> navController.navigateToFolder(
-                        FavoriteListRoute,
+                        FavoriteListScreenDestination.route,
                         file.bookshelfId,
                         file.path
                     )
@@ -95,7 +98,7 @@ fun NavGraphBuilder.favoriteGroup(
             onComplete = navController::popBackStack
         )
         folderScreen(
-            prefix = FavoriteListRoute,
+            prefix = FavoriteListScreenDestination.route,
             onBackClick = navController::popBackStack,
             onSearchClick = onSearchClick,
             onSettingsClick = onSettingsClick,
@@ -103,7 +106,7 @@ fun NavGraphBuilder.favoriteGroup(
                 when (file) {
                     is Book -> navigateToBook(file)
                     is Folder -> navController.navigateToFolder(
-                        FavoriteListRoute,
+                        FavoriteListScreenDestination.route,
                         file.bookshelfId,
                         file.path
                     )

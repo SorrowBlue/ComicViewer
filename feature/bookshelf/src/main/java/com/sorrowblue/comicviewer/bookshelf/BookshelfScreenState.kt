@@ -20,7 +20,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
@@ -50,10 +49,10 @@ internal interface BookshelfScreenState {
     val bookshelfId: BookshelfId
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberBookshelfScreenState(
+    savedStateHandle: SavedStateHandle,
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),

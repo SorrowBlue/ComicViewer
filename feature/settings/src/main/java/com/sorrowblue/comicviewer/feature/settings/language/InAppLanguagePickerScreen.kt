@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.core.os.LocaleListCompat
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.R
 import com.sorrowblue.comicviewer.feature.settings.common.CheckedSetting
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
@@ -17,6 +18,7 @@ import java.util.Locale
 import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Destination
 @Composable
 internal fun InAppLanguagePickerScreen(
     onBackClick: () -> Unit,

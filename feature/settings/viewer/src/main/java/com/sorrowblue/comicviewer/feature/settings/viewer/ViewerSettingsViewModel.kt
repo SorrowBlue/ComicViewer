@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import logcat.logcat
 
 @HiltViewModel
-internal class SettingsViewerViewModel @Inject constructor(
+internal class ViewerSettingsViewModel @Inject constructor(
     private val settingsUseCase: ManageViewerSettingsUseCase,
 ) : ViewModel() {
 

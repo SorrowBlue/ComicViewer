@@ -36,18 +36,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.SavedStateHandle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationArgs
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
-context(NavBackStackEntry)
+@Destination(navArgsDelegate = AuthenticationArgs::class)
 @Composable
-internal fun AuthenticationRoute(
+internal fun AuthenticationScreen(
+    args: AuthenticationArgs,
+    savedStateHandle: SavedStateHandle,
     onBack: () -> Unit,
     onBackClick: () -> Unit,
     onAuthCompleted: (Boolean, Mode) -> Unit,
-    state: AuthenticationScreenState = rememberAuthenticationScreenState(),
+    state: AuthenticationScreenState = rememberAuthenticationScreenState(args, savedStateHandle),
 ) {
     if (state.complete != null) {
         val (handleBack, mode) = state.complete!!

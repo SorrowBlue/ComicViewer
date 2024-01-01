@@ -8,8 +8,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditArgs
 
+@Destination(navArgsDelegate = BookshelfEditArgs::class)
 @Composable
 internal fun BookshelfEditScreen(
     args: BookshelfEditArgs,

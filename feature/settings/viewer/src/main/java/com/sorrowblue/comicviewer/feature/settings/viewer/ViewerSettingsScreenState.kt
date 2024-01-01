@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Stable
-internal interface SettingsViewerScreenState {
+internal interface ViewerSettingsScreenState {
     val uiState: SettingsViewerScreenUiState
     fun onStatusBarShowChange(value: Boolean)
     fun onNavigationBarShowChange(value: Boolean)
@@ -28,17 +28,17 @@ internal interface SettingsViewerScreenState {
 }
 
 @Composable
-internal fun rememberSettingsViewerScreenState(
+internal fun rememberViewerSettingsScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: SettingsViewerViewModel = hiltViewModel(),
-): SettingsViewerScreenState = remember {
-    SettingsViewerScreenStateImpl(scope = scope, viewModel = viewModel)
+    viewModel: ViewerSettingsViewModel = hiltViewModel(),
+): ViewerSettingsScreenState = remember {
+    ViewerSettingsScreenStateImpl(scope = scope, viewModel = viewModel)
 }
 
-private class SettingsViewerScreenStateImpl(
+private class ViewerSettingsScreenStateImpl(
     scope: CoroutineScope,
-    private val viewModel: SettingsViewerViewModel,
-) : SettingsViewerScreenState {
+    private val viewModel: ViewerSettingsViewModel,
+) : ViewerSettingsScreenState {
 
     override var uiState: SettingsViewerScreenUiState by mutableStateOf(SettingsViewerScreenUiState())
         private set

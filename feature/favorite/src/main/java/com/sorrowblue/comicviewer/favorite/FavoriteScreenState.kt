@@ -16,7 +16,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -51,28 +50,28 @@ internal interface FavoriteScreenState {
     fun onNavClick()
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberFavoriteScreenState(
+    savedStateHandle: SavedStateHandle,
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
+    lazyGridState: LazyGridState = rememberLazyGridState(),
+    args: FavoriteArgs,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: FavoriteViewModel = hiltViewModel(),
-    lazyGridState: LazyGridState = rememberLazyGridState(),
 ): FavoriteScreenState = remember {
     FavoriteScreenStateImpl(
         savedStateHandle = savedStateHandle,
-        args = FavoriteArgs(arguments!!),
         navigator = navigator,
+        lazyGridState = lazyGridState,
+        args = args,
         scope = scope,
-        viewModel = viewModel,
-        lazyGridState = lazyGridState
+        viewModel = viewModel
     )
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 @Stable
 private class FavoriteScreenStateImpl(

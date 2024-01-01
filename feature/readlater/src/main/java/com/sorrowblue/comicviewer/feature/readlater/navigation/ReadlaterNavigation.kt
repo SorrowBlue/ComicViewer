@@ -1,12 +1,13 @@
 package com.sorrowblue.comicviewer.feature.readlater.navigation
 
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import com.ramcosta.composedestinations.utils.composable
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.readlater.ReadLaterRoute
+import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreen
+import com.sorrowblue.comicviewer.feature.readlater.destinations.ReadLaterScreenDestination
 import com.sorrowblue.comicviewer.folder.navigation.folderRoute
 import com.sorrowblue.comicviewer.folder.navigation.folderScreen
 import com.sorrowblue.comicviewer.folder.navigation.navigateToFolder
@@ -14,8 +15,8 @@ import com.sorrowblue.comicviewer.framework.ui.ComposeTransition
 import com.sorrowblue.comicviewer.framework.ui.ComposeValue
 import com.sorrowblue.comicviewer.framework.ui.animatedNavigation
 
-private const val ReadLaterRoute = "readlater"
-val RouteInReadlaterGraph = listOf(ReadLaterRoute, folderRoute(ReadLaterRoute))
+val RouteInReadlaterGraph =
+    listOf(ReadLaterScreenDestination.route, folderRoute(ReadLaterScreenDestination.route))
 const val ReadlaterGraphRoute = "readlater_graph"
 
 context(ComposeValue)
@@ -26,12 +27,12 @@ fun NavGraphBuilder.readlaterGroup(
     onFavoriteClick: (File) -> Unit,
 ) {
     animatedNavigation(
-        startDestination = ReadLaterRoute,
+        startDestination = ReadLaterScreenDestination.route,
         route = ReadlaterGraphRoute,
         transitions = listOf(
             ComposeTransition(
-                ReadLaterRoute,
-                folderRoute(ReadLaterRoute),
+                ReadLaterScreenDestination.route,
+                folderRoute(ReadLaterScreenDestination.route),
                 ComposeTransition.Type.SharedAxisX
             ),
             ComposeTransition(
@@ -47,7 +48,7 @@ fun NavGraphBuilder.readlaterGroup(
                     is Book -> navigateToBook(file)
                     is Folder ->
                         navController.navigateToFolder(
-                            prefix = ReadLaterRoute,
+                            prefix = ReadLaterScreenDestination.route,
                             file.bookshelfId,
                             file.path
                         )
@@ -55,19 +56,23 @@ fun NavGraphBuilder.readlaterGroup(
             },
             onFavoriteClick = onFavoriteClick,
             onOpenFolderClick = {
-                navController.navigateToFolder(ReadLaterRoute, it.bookshelfId, it.parent)
+                navController.navigateToFolder(
+                    ReadLaterScreenDestination.route,
+                    it.bookshelfId,
+                    it.parent
+                )
             },
             onSettingsClick = onSettingsClick,
         )
         folderScreen(
-            prefix = ReadLaterRoute,
+            prefix = ReadLaterScreenDestination.route,
             onSearchClick = navigateToSearch,
             onSettingsClick = onSettingsClick,
             onClickFile = { file ->
                 when (file) {
                     is Book -> navigateToBook(file)
                     is Folder -> navController.navigateToFolder(
-                        ReadLaterRoute,
+                        ReadLaterScreenDestination.route,
                         file.bookshelfId,
                         file.path
                     )
@@ -86,15 +91,14 @@ private fun NavGraphBuilder.readLaterScreen(
     onOpenFolderClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-    composable(route = ReadLaterRoute) { navBackStackEntry ->
-        with(navBackStackEntry) {
-            ReadLaterRoute(
-                onFileClick = onFileClick,
-                onSettingsClick = onSettingsClick,
-                contentPadding = contentPadding,
-                onFavoriteClick = onFavoriteClick,
-                onOpenFolderClick = onOpenFolderClick,
-            )
-        }
+    composable(ReadLaterScreenDestination) {
+        ReadLaterScreen(
+            savedStateHandle = navBackStackEntry.savedStateHandle,
+            contentPadding = contentPadding,
+            onSettingsClick = onSettingsClick,
+            onFileClick = onFileClick,
+            onFavoriteClick = onFavoriteClick,
+            onOpenFolderClick = onOpenFolderClick,
+        )
     }
 }
