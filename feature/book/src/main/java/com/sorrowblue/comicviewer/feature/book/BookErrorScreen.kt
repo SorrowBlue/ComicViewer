@@ -3,12 +3,15 @@ package com.sorrowblue.comicviewer.feature.book
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFaq
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +37,6 @@ import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 internal fun BookErrorScreen(
     uiState: BookScreenUiState.Error,
     onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
 ) {
     Scaffold(
         topBar = {
@@ -55,10 +56,11 @@ internal fun BookErrorScreen(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
                         elevation = ElevationTokens.Level2
                     )
-                )
+                ),
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
             )
         },
-        contentWindowInsets = contentPadding.asWindowInsets()
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { innerPadding ->
         Column(
             verticalArrangement = Arrangement.Center,

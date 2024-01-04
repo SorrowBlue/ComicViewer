@@ -3,9 +3,11 @@ package com.sorrowblue.comicviewer.feature.settings.section
 import android.os.Parcelable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -34,7 +36,6 @@ import com.sorrowblue.comicviewer.feature.settings.R
 import com.sorrowblue.comicviewer.feature.settings.Settings2
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.add
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -42,19 +43,18 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 
 @Parcelize
-data class SettingsListPaneUiState(
+internal data class SettingsListPaneUiState(
     val currentSettings2: Settings2 = Settings2.entries.first(),
     val list: @RawValue PersistentList<Settings2> = Settings2.entries.toPersistentList(),
 ) : Parcelable
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun SettingsListPane(
+internal fun SettingsListPane(
     uiState: SettingsListPaneUiState,
     onBackClick: () -> Unit,
     onSettingsClick: (Settings2) -> Unit,
     windowAdaptiveInfo: WindowAdaptiveInfo,
-    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     lazyListState: LazyListState = rememberLazyListState(),
@@ -78,11 +78,11 @@ fun SettingsListPane(
                         }
                     },
                     scrollBehavior = scrollBehavior,
-                    windowInsets = contentPadding.asWindowInsets()
+                    windowInsets = WindowInsets.safeDrawing
                         .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
                 )
             },
-            contentWindowInsets = contentPadding.asWindowInsets(),
+            contentWindowInsets = WindowInsets.safeDrawing,
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { innerPadding ->
             LazyColumn(
@@ -123,11 +123,11 @@ fun SettingsListPane(
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                     ),
-                    windowInsets = contentPadding.asWindowInsets()
+                    windowInsets = WindowInsets.safeDrawing
                         .only(WindowInsetsSides.Top + WindowInsetsSides.Start)
                 )
             },
-            contentWindowInsets = contentPadding.asWindowInsets()
+            contentWindowInsets = WindowInsets.safeDrawing
                 .only(WindowInsetsSides.Vertical + WindowInsetsSides.Start),
             containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)

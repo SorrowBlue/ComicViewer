@@ -33,7 +33,6 @@ internal interface SettingsScreenState {
     val navigator: ThreePaneScaffoldNavigator
     val navController: NavHostController
     val uiState: SettingsScreenUiState
-    fun onAppLanguageClick(fallback: () -> Unit)
     fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit)
     fun onDetailBackClick()
 }
@@ -76,23 +75,23 @@ private class SettingsScreenStateImpl(
     }
         private set
 
-    override fun onAppLanguageClick(fallback: () -> Unit) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.startActivity(
-                Intent(
-                    Settings.ACTION_APP_LOCALE_SETTINGS,
-                    Uri.parse("package:${context.applicationInfo.packageName}")
-                )
-            )
-        } else {
-            fallback()
-        }
-    }
-
     override fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit) {
         when (settings2) {
             Settings2.LANGUAGE -> {
-                onAppLanguageClick { onSettingsClick2(settings2) }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    runCatching {
+                        context.startActivity(
+                            Intent(
+                                Settings.ACTION_APP_LOCALE_SETTINGS,
+                                Uri.parse("package:${context.applicationInfo.packageName}")
+                            )
+                        )
+                    }.onFailure {
+                        onSettingsClick2(settings2)
+                    }
+                } else {
+                    onSettingsClick2(settings2)
+                }
             }
 
             Settings2.TUTORIAL -> {

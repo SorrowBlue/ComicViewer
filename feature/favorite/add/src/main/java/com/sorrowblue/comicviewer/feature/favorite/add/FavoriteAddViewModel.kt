@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.domain.usecase.favorite.CreateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.RemoveFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
 import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddScreenDestination
-import com.sorrowblue.comicviewer.feature.favorite.add.navigation.FavoriteAddArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.collect

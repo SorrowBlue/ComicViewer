@@ -15,15 +15,27 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.feature.settings.common.CheckboxSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane2
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraPane
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Destination
 @Composable
 internal fun SupportExtensionScreen(
-    onBackClick: () -> Unit,
     contentPadding: PaddingValues,
+    navigator: SettingsExtraNavigator,
+) {
+    SupportExtensionScreen(
+        contentPadding = contentPadding,
+        onBackClick = navigator::navigateUp
+    )
+}
+
+@Composable
+private fun SupportExtensionScreen(
+    contentPadding: PaddingValues,
+    onBackClick: () -> Unit,
     state: SupportExtensionScreenState = rememberSupportExtensionScreenState(),
 ) {
     val uiState = state.uiState
@@ -50,7 +62,7 @@ private fun SupportExtensionScreen(
     onExtensionClick: () -> Unit,
     contentPadding: PaddingValues,
 ) {
-    SettingsDetailPane2(
+    SettingsExtraPane(
         title = {
             Text(text = stringResource(id = R.string.settings_folder_title_extension))
         },

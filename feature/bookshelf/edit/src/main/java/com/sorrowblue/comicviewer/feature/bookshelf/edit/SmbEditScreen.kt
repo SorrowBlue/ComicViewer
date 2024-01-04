@@ -33,7 +33,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PasswordField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditArgs
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.ResponsiveDialogScaffold
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
@@ -182,7 +181,6 @@ internal fun SmbEditScreen(
     state: SmbEditScreenState,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
-    contentPadding: PaddingValues,
 ) {
     val uiState = state.uiState
     SmbEditScreen(
@@ -197,8 +195,7 @@ internal fun SmbEditScreen(
         onDomainChange = state::onDomainChange,
         onUsernameChange = state::onUsernameChange,
         onPasswordChange = state::onPasswordChange,
-        onSaveClick = { state.onSaveClick(onComplete) },
-        contentPadding = contentPadding
+        onSaveClick = { state.onSaveClick(onComplete) }
     )
 }
 
@@ -217,7 +214,6 @@ private fun SmbEditScreen(
     onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSaveClick: () -> Unit,
-    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
 ) {
@@ -230,7 +226,6 @@ private fun SmbEditScreen(
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentPadding = contentPadding,
         scrollableState = scrollState,
         modifier = modifier
     ) { innerPadding ->

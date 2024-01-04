@@ -8,8 +8,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -135,9 +139,11 @@ private fun LoadingDropBoxScreen(onCloseClick: () -> Unit) {
                     IconButton(onClick = onCloseClick) {
                         Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
                     }
-                }
+                },
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
             )
-        }
+        },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { contentPadding ->
         Box(
             contentAlignment = Alignment.Center,
@@ -165,9 +171,11 @@ private fun LoginDropBoxScreen(
                     IconButton(onClick = onCloseClick) {
                         Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
                     }
-                }
+                },
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
             )
         },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { contentPadding ->
         Column(
             verticalArrangement = Arrangement.Center,
@@ -209,6 +217,7 @@ private fun LoadedDropBoxScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
+        contentWindowInsets = WindowInsets.safeDrawing,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         LazyColumn(

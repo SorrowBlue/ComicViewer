@@ -8,8 +8,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -143,9 +147,11 @@ private fun LoadingOneDriveScreen(onCloseClick: () -> Unit = {}) {
                     IconButton(onClick = onCloseClick) {
                         Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
                     }
-                }
+                },
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
             )
-        }
+        },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { contentPadding ->
         Box(
             contentAlignment = Alignment.Center,
@@ -173,9 +179,11 @@ private fun LoginOneDriveScreen(
                     IconButton(onClick = onCloseClick) {
                         Icon(imageVector = ComicIcons.Close, contentDescription = "Close")
                     }
-                }
+                },
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
             )
         },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { contentPadding ->
         Column(
             verticalArrangement = Arrangement.Center,
@@ -217,6 +225,7 @@ private fun LoadedOneDriveScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
+        contentWindowInsets = WindowInsets.safeDrawing,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         LazyColumn(

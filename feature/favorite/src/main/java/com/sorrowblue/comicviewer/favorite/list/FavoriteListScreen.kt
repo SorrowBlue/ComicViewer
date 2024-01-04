@@ -1,8 +1,10 @@
 package com.sorrowblue.comicviewer.favorite.list
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -15,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -27,14 +30,29 @@ import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCrea
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.add
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+
+interface FavoriteListNavigator {
+    fun onSettingsClick()
+    fun onFavoriteClick(favoriteId: FavoriteId)
+}
 
 @Destination
 @Composable
 internal fun FavoriteListScreen(
+    navBackStackEntry: NavBackStackEntry,
+    navigator: FavoriteListNavigator,
+) {
+    FavoriteListScreen(
+        savedStateHandle = navBackStackEntry.savedStateHandle,
+        onSettingsClick = navigator::onSettingsClick,
+        onFavoriteClick = navigator::onFavoriteClick
+    )
+}
+
+@Composable
+private fun FavoriteListScreen(
     savedStateHandle: SavedStateHandle,
-    contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
     onFavoriteClick: (FavoriteId) -> Unit,
     state: FavoriteListScreenState = rememberFavoriteListScreenState(savedStateHandle = savedStateHandle),
@@ -43,7 +61,6 @@ internal fun FavoriteListScreen(
     FavoriteListScreen(
         lazyPagingItems = lazyPagingItems,
         lazyListState = state.lazyListState,
-        contentPadding = contentPadding,
         onSettingsClick = onSettingsClick,
         onFavoriteClick = onFavoriteClick,
         onCreateFavoriteClick = state::onNewFavoriteClick
@@ -64,7 +81,6 @@ internal fun FavoriteListScreen(
 private fun FavoriteListScreen(
     lazyPagingItems: LazyPagingItems<Favorite>,
     lazyListState: LazyListState,
-    contentPadding: PaddingValues,
     onSettingsClick: () -> Unit,
     onFavoriteClick: (FavoriteId) -> Unit,
     onCreateFavoriteClick: () -> Unit,
@@ -84,14 +100,14 @@ private fun FavoriteListScreen(
                 onClick = onCreateFavoriteClick
             )
         },
-        contentWindowInsets = contentPadding.asWindowInsets(),
+        contentWindowInsets = WindowInsets.safeDrawing,
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         if (lazyPagingItems.isEmptyData) {
             FavoriteListEmptySheet(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(contentPadding)
+                    .padding(innerPadding)
             )
         } else {
             FavoriteListSheet(

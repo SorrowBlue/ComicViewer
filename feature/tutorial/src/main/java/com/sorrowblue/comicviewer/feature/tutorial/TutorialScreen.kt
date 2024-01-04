@@ -2,6 +2,8 @@ package com.sorrowblue.comicviewer.feature.tutorial
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -36,10 +38,21 @@ internal data class TutorialScreenUiState(
     val directionSheetUiState: DirectionSheetUiState = DirectionSheetUiState(),
 )
 
-@OptIn(ExperimentalFoundationApi::class)
+interface TutorialScreenNavigator {
+    fun onComplete()
+}
+
 @Destination
 @Composable
 internal fun TutorialScreen(
+    navigator: TutorialScreenNavigator,
+) {
+    TutorialScreen(onComplete = navigator::onComplete)
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun TutorialScreen(
     onComplete: () -> Unit,
     state: TutorialScreenState = rememberTutorialScreenState(),
 ) {
@@ -68,7 +81,8 @@ private fun TutorialScreen(
     onBindingDirectionChange: (BindingDirection) -> Unit,
 ) {
     Scaffold(
-        bottomBar = { TutorialBottomBar(pageState, onNextClick) }
+        bottomBar = { TutorialBottomBar(pageState, onNextClick) },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { contentPadding ->
         HorizontalPager(state = pageState) {
             when (uiState.list[it]) {

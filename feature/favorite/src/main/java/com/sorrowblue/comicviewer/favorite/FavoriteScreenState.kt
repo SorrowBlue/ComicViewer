@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteArgs
+import com.sorrowblue.comicviewer.favorite.FavoriteArgs
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective

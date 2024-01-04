@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -20,12 +21,29 @@ internal data class FolderSettingsScreenUiState(
     val isThumbnailEnabled: Boolean = false,
 )
 
+interface FolderSettingsScreenNavigator : SettingsDetailNavigator {
+
+    fun navigateToExtension()
+}
+
 @Destination
 @Composable
 internal fun FolderSettingsScreen(
+    contentPadding: PaddingValues,
+    navigator: FolderSettingsScreenNavigator,
+) {
+    FolderSettingsScreen(
+        contentPadding = contentPadding,
+        onBackClick = navigator::navigateBack,
+        onExtensionClick = navigator::navigateToExtension
+    )
+}
+
+@Composable
+private fun FolderSettingsScreen(
+    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onExtensionClick: () -> Unit,
-    contentPadding: PaddingValues,
     state: FolderSettingsScreenState = rememberFolderSettingsScreenState(),
 ) {
     val uiState = state.uiState

@@ -8,6 +8,7 @@ import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
@@ -15,6 +16,17 @@ import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 @Destination
 @Composable
 internal fun ViewerSettingsScreen(
+    contentPadding: PaddingValues,
+    navigator: SettingsDetailNavigator,
+) {
+    ViewerSettingsScreen(
+        contentPadding = contentPadding,
+        onBackClick = navigator::navigateBack
+    )
+}
+
+@Composable
+private fun ViewerSettingsScreen(
     onBackClick: () -> Unit,
     contentPadding: PaddingValues,
     state: ViewerSettingsScreenState = rememberViewerSettingsScreenState(),

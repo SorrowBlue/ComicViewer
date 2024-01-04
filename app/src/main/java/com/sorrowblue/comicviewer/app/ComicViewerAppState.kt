@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
@@ -8,11 +9,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
@@ -21,12 +22,13 @@ import androidx.navigation.navOptions
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
-import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfFolder
+import com.ramcosta.composedestinations.navigation.navigate
+import com.sorrowblue.comicviewer.bookshelf.destinations.BookshelfFolderScreenDestination
 import com.sorrowblue.comicviewer.domain.model.AddOn
+import com.sorrowblue.comicviewer.feature.authentication.destinations.AuthenticationScreenDestination
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
-import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
 import com.sorrowblue.comicviewer.feature.tutorial.destinations.TutorialScreenDestination
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
+import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -49,14 +51,14 @@ internal interface ComicViewerAppState {
     fun completeRestoreHistory()
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 internal fun rememberComicViewerAppState(
+    savedStateHandle: SavedStateHandle,
+    viewModel: ComicViewerAppViewModel = viewModel(LocalContext.current as ComponentActivity),
     bottomSheetNavigator: BottomSheetNavigator = rememberBottomSheetNavigator(),
     navController: NavHostController = rememberNavController(bottomSheetNavigator),
     graphStateHolder: GraphStateHolder = rememberGraphStateHolder(),
-    viewModel: ComicViewerAppViewModel = hiltViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
 ): ComicViewerAppState = remember {
     ComicViewerAppStateImpl(
@@ -107,7 +109,7 @@ private class ComicViewerAppStateImpl(
         scope.launch {
             navController.currentBackStackEntryFlow.collectLatest {
                 if (it.destination is ComposeNavigator.Destination) {
-                    logcat { "it.destination=${it.destination}" }
+                    logcat { "destination.hierarchy=${it.destination.hierarchy.joinToString(",") { it.route.orEmpty() }}" }
                     val currentTab =
                         it.destination.hierarchy.firstOrNull()?.route?.let(graphStateHolder::routeToTab)
                     uiState = uiState.copy(
@@ -123,7 +125,7 @@ private class ComicViewerAppStateImpl(
         if (this.isInitialized) return
         scope.launch {
             if (viewModel.isTutorial()) {
-                navController.navigateToTutorial {
+                navController.navigate(TutorialNavGraph) {
                     popUpTo(MainGraphRoute) {
                         inclusive = true
                     }
@@ -153,32 +155,41 @@ private class ComicViewerAppStateImpl(
                 val (folderList, book) = history!!.value
                 val bookshelfId = folderList.first().bookshelfId
                 if (folderList.size == 1) {
-                    navController.navigateToBookshelfFolder(
-                        bookshelfId,
-                        folderList.first().path,
-                        book.path
+                    navController.navigate(
+                        BookshelfFolderScreenDestination(
+                            bookshelfId,
+                            folderList.first().path,
+                            book.path
+                        )
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                 } else {
-                    navController.navigateToBookshelfFolder(
-                        bookshelfId,
-                        folderList.first().path
+                    navController.navigate(
+                        BookshelfFolderScreenDestination(bookshelfId, folderList.first().path, null)
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                     folderList.drop(1).dropLast(1).forEach { folder ->
-                        navController.navigateToBookshelfFolder(bookshelfId, folder.path)
+                        navController.navigate(
+                            BookshelfFolderScreenDestination(
+                                bookshelfId,
+                                folder.path,
+                                null
+                            )
+                        )
                         logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                             "-> folder(${folder.path})"
                         }
                     }
-                    navController.navigateToBookshelfFolder(
-                        bookshelfId,
-                        folderList.last().path,
-                        book.path
+                    navController.navigate(
+                        BookshelfFolderScreenDestination(
+                            bookshelfId,
+                            folderList.last().path,
+                            book.path
+                        )
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "-> folder${folderList.last().path}, ${book.path}"
@@ -199,10 +210,14 @@ private class ComicViewerAppStateImpl(
                 .filter { module -> !addOnList.any { it == module } }
         )
 
+        logcat { "addOnList=${addOnList.joinToString(",") { it.moduleName }}" }
+
         if (this.isInitialized) {
             scope.launch {
                 if (viewModel.lockOnBackground()) {
-                    navController.navigateToAuthentication(Mode.Authentication, true) {
+                    navController.navigate(
+                        AuthenticationScreenDestination(Mode.Authentication, true)
+                    ) {
                         launchSingleTop = true
                     }
                     viewModel.shouldKeepSplash = false
@@ -239,11 +254,15 @@ private class ComicViewerAppStateImpl(
             if (viewModel.isAuth()) {
                 logcat { "認証 復元完了後" }
                 if (isRestoredNavHistory) {
-                    navController.navigateToAuthentication(Mode.Authentication, true) {
+                    navController.navigate(
+                        AuthenticationScreenDestination(Mode.Authentication, true)
+                    ) {
                         launchSingleTop = true
                     }
                 } else {
-                    navController.navigateToAuthentication(Mode.Authentication, false) {
+                    navController.navigate(
+                        AuthenticationScreenDestination(Mode.Authentication, false)
+                    ) {
                         launchSingleTop = true
                         popUpTo(MainGraphRoute) {
                             inclusive = true

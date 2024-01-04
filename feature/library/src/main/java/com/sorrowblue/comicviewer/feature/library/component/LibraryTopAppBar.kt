@@ -1,5 +1,9 @@
 package com.sorrowblue.comicviewer.feature.library.component
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -15,6 +19,7 @@ internal fun LibraryTopAppBar(
 ) {
     TopAppBar(
         title = { Text(text = stringResource(id = R.string.library_title)) },
+        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior
     )
 }

@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DisplayNameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectField
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditArgs
 import com.sorrowblue.comicviewer.framework.ui.ResponsiveDialogScaffold
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
@@ -121,7 +120,6 @@ internal fun StorageEditRoute(
     state: StorageEditScreenState,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
-    contentPadding: PaddingValues,
 ) {
     val uiState = state.uiState
     val activityResultLauncher = rememberLauncherForActivityResult(
@@ -134,8 +132,7 @@ internal fun StorageEditRoute(
         onBackClick = onBackClick,
         onDisplayNameChange = state::onDisplayNameChange,
         onSelectFolderClick = { state.onSelectFolderClick(activityResultLauncher) },
-        onSaveClick = { state.onSaveClick(onComplete) },
-        contentPadding = contentPadding,
+        onSaveClick = { state.onSaveClick(onComplete) }
     )
 }
 
@@ -148,7 +145,6 @@ private fun StorageEditScreen(
     onDisplayNameChange: (String) -> Unit,
     onSelectFolderClick: () -> Unit,
     onSaveClick: () -> Unit,
-    contentPadding: PaddingValues,
     scrollState: ScrollState = rememberScrollState(),
 ) {
     ResponsiveDialogScaffold(
@@ -161,8 +157,7 @@ private fun StorageEditScreen(
                 Text(text = "Save")
             }
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentPadding = contentPadding,
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         StorageEditContent(
             uiState = uiState,

@@ -171,7 +171,7 @@ internal fun FolderAppBar(
                 )
             }
         },
-        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior,
     )
 }

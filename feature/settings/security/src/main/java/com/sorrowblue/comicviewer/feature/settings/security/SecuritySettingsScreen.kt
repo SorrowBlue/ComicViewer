@@ -7,19 +7,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 import com.sorrowblue.comicviewer.feature.settings.security.section.BiometricsDialog
 import com.sorrowblue.comicviewer.framework.ui.DialogController
 import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
 
+interface SecuritySettingsScreenNavigator : SettingsDetailNavigator {
+
+    fun navigateToChangeAuth(enabled: Boolean)
+    fun navigateToPasswordChange()
+
+}
+
 @Destination
 @Composable
 internal fun SecuritySettingsScreen(
+    contentPadding: PaddingValues,
+    navigator: SecuritySettingsScreenNavigator
+) {
+    SecuritySettingsScreen(
+        contentPadding = contentPadding,
+        onBackClick = navigator::navigateBack,
+        onChangeAuthEnabled = navigator::navigateToChangeAuth,
+        onPasswordChangeClick = navigator::navigateToPasswordChange
+    )
+}
+
+@Composable
+private fun SecuritySettingsScreen(
     onBackClick: () -> Unit,
+    contentPadding: PaddingValues,
     onChangeAuthEnabled: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
-    contentPadding: PaddingValues,
     state: SecuritySettingsScreenState = rememberSecuritySettingsScreenState(),
 ) {
     val uiState = state.uiState

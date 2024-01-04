@@ -9,7 +9,11 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,9 +33,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import com.ramcosta.composedestinations.annotation.Destination
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.feature.book.navigation.BookArgs
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
 import com.sorrowblue.comicviewer.feature.book.section.BookSheet
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
@@ -40,6 +44,7 @@ import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
@@ -60,30 +65,52 @@ internal sealed interface BookScreenUiState {
     ) : BookScreenUiState
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+interface BookScreenNavigator : CoreNavigator {
+    fun onSettingsClick()
+    fun onNextBookClick(book: Book, favoriteId: FavoriteId)
+}
+
+class BookArgs(
+    val bookshelfId: BookshelfId,
+    val path: String,
+    val name: String,
+    val favoriteId: FavoriteId = FavoriteId.Default,
+)
+
 @Destination(navArgsDelegate = BookArgs::class)
 @Composable
 internal fun BookScreen(
     args: BookArgs,
+    navigator: BookScreenNavigator,
+) {
+    BookScreen(
+        args = args,
+        onBackClick = navigator::navigateUp,
+        onSettingsClick = navigator::onSettingsClick,
+        onNextBookClick = navigator::onNextBookClick
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun BookScreen(
+    args: BookArgs,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onNextBookClick: (Book, FavoriteId) -> Unit,
-    contentPadding: PaddingValues,
     state: BookScreenState = rememberBookScreenState(args = args),
 ) {
     when (val uiState = state.uiState) {
         is BookScreenUiState.Loading ->
             BookLoadingScreen(
                 uiState = uiState,
-                onBackClick = onBackClick,
-                contentPadding = contentPadding
+                onBackClick = onBackClick
             )
 
         is BookScreenUiState.Error ->
             BookErrorScreen(
                 uiState = uiState,
-                onBackClick = onBackClick,
-                contentPadding = contentPadding
+                onBackClick = onBackClick
             )
 
         is BookScreenUiState.Loaded -> {
@@ -160,7 +187,8 @@ private fun BookScreen(
                         containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
                             elevation = ElevationTokens.Level2
                         )
-                    )
+                    ),
+                    windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
                 )
             }
         },
@@ -177,6 +205,7 @@ private fun BookScreen(
                 )
             }
         },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { _ ->
         BookSheet(
             uiState = uiState.bookSheetUiState,

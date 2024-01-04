@@ -20,7 +20,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.BookSettings.PageFormat
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
-import com.sorrowblue.comicviewer.feature.book.navigation.BookArgs
+import com.sorrowblue.comicviewer.feature.book.BookArgs
 import com.sorrowblue.comicviewer.feature.book.section.BookPage
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.NextBook

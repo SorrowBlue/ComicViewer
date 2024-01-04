@@ -12,9 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.ramcosta.composedestinations.utils.composable
+import com.sorrowblue.comicviewer.app.destinations.ComicViewerAppDestination
 import dagger.hilt.android.AndroidEntryPoint
 import logcat.logcat
 
@@ -23,7 +23,6 @@ internal class MainActivity : AppCompatActivity() {
 
     private val viewModel: ComicViewerAppViewModel by viewModels()
 
-    @OptIn(ExperimentalMaterialNavigationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
             super.onCreate(savedInstanceState)
@@ -36,13 +35,9 @@ internal class MainActivity : AppCompatActivity() {
         )
 
         setContent {
-            NavHost(navController = rememberNavController(), startDestination = "main") {
-                composable("main") { navBackStackEntry ->
-                    with(navBackStackEntry) {
-                        ComicViewerApp(
-                            state = rememberComicViewerAppState(viewModel = viewModel)
-                        )
-                    }
+            NavHost(navController = rememberNavController(), startDestination = ComicViewerAppDestination.route) {
+                composable(ComicViewerAppDestination) {
+                    ComicViewerApp(savedStateHandle = navBackStackEntry.savedStateHandle)
                 }
             }
         }

@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.history
 
 import android.os.Parcelable
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -15,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -27,16 +27,36 @@ import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+interface HistoryScreenNavigator : CoreNavigator {
+    fun onSettingsClick()
+    fun navigateToBook(book: Book)
+    fun onFavoriteClick(file: File)
+}
+
 @Destination
 @Composable
 internal fun HistoryScreen(
+    navBackStackEntry: NavBackStackEntry,
+    navigator: HistoryScreenNavigator,
+) {
+    HistoryScreen(
+        savedStateHandle = navBackStackEntry.savedStateHandle,
+        onBackClick = navigator::navigateUp,
+        onSettingsClick = navigator::onSettingsClick,
+        onFileClick = navigator::navigateToBook,
+        onFavoriteClick = navigator::onFavoriteClick
+    )
+}
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Composable
+private fun HistoryScreen(
     savedStateHandle: SavedStateHandle,
-    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onFileClick: (Book) -> Unit,
@@ -57,7 +77,6 @@ internal fun HistoryScreen(
         onExtraPaneCloseClick = state::onExtraPaneCloseClick,
         onReadLaterClick = state::onReadLaterClick,
         onFavoriteClick = onFavoriteClick,
-        contentPadding = contentPadding,
         lazyGridState = lazyGridState,
     )
 }
@@ -79,7 +98,6 @@ internal fun HistoryScreen(
     onExtraPaneCloseClick: () -> Unit,
     onReadLaterClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
-    contentPadding: PaddingValues,
     lazyGridState: LazyGridState,
     onBackClick: () -> Unit,
 ) {
@@ -105,7 +123,6 @@ internal fun HistoryScreen(
                 )
             }
         },
-        contentPadding = contentPadding,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         if (lazyPagingItems.isEmptyData) {

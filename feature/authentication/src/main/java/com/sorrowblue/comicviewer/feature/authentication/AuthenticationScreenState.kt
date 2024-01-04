@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationArgs
+import com.sorrowblue.comicviewer.feature.authentication.AuthenticationArgs
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

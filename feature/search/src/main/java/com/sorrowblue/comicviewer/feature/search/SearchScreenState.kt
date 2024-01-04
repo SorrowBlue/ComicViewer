@@ -18,7 +18,7 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.feature.search.navigation.SearchArgs
+import com.sorrowblue.comicviewer.feature.search.SearchArgs
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditionsUiState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import kotlinx.coroutines.flow.Flow

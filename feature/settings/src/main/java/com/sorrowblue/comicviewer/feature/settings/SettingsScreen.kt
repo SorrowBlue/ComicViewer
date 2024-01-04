@@ -3,6 +3,9 @@ package com.sorrowblue.comicviewer.feature.settings
 import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.ListDetailPaneScaffold
@@ -13,55 +16,121 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
+import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.dependency
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.scope.DestinationScopeWithNoDependencies
+import com.ramcosta.composedestinations.spec.Route
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
 import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.folder.destinations.FolderSettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.folder.destinations.SupportExtensionScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.info.destinations.AppInfoSettingsScreenDestination
-import com.sorrowblue.comicviewer.feature.settings.navigation.settingsGraph
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPaneUiState
+import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.security.destinations.SecuritySettingsScreenDestination
-import com.sorrowblue.comicviewer.feature.settings.viewer.destinations.ViewerSettingsScreenDestination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.copy
 import kotlinx.parcelize.Parcelize
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+interface SettingsScreenNavigator : CoreNavigator {
+    fun onStartTutorialClick()
+    fun navigateToChangeAuth(enabled: Boolean)
+    fun onPasswordChange()
+}
+
 @Destination
 @Composable
 internal fun SettingsScreen(
+    navBackStackEntry: NavBackStackEntry,
+    navigator: SettingsScreenNavigator,
+) {
+    SettingsScreen(
+        savedStateHandle = navBackStackEntry.savedStateHandle,
+        settingsScreenNavigator = navigator
+    )
+}
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Composable
+private fun SettingsScreen(
     savedStateHandle: SavedStateHandle,
-    onBackClick: () -> Unit,
-    onChangeAuthEnabled: (Boolean) -> Unit,
-    onPasswordChangeClick: () -> Unit,
-    onStartTutorialClick: () -> Unit,
-    contentPadding: PaddingValues,
+    settingsScreenNavigator: SettingsScreenNavigator,
     state: SettingsScreenState = rememberSettingsScreenState(savedStateHandle = savedStateHandle),
 ) {
+    val uiState = state.uiState
     val navigator = state.navigator
+    val windowAdaptiveInfo = state.windowAdaptiveInfo
     SettingsScreen(
-        uiState = state.uiState,
+        uiState = uiState,
         navigator = navigator,
-        navController = state.navController,
-        windowAdaptiveInfo = state.windowAdaptiveInfo,
-        contentPadding = contentPadding,
-        onBackClick = onBackClick,
-        onSettingsClick = { state.onSettingsClick(it, onStartTutorialClick) },
-    ) { navController, innerPadding ->
-        settingsGraph(
-            navController = navController,
-            onBackClick = state::onDetailBackClick,
-            contentPadding = innerPadding,
-            onChangeAuthEnabled = onChangeAuthEnabled,
-            onPasswordChangeClick = onPasswordChangeClick
+        windowAdaptiveInfo = windowAdaptiveInfo,
+        onBackClick = settingsScreenNavigator::navigateUp,
+        onSettingsClick = {
+            state.onSettingsClick(it, settingsScreenNavigator::onStartTutorialClick)
+        },
+    ) { contentPadding ->
+        DestinationsNavHost(
+            navGraph = SettingsDetailNavGraph,
+            startRoute = state.uiState.listPaneUiState.currentSettings2.route
+                ?: SettingsDetailNavGraph.startRoute,
+            dependenciesContainerBuilder = {
+                dependency(contentPadding)
+                dependency(createCoreFeatureNavigator(navigator, settingsScreenNavigator))
+            }
         )
     }
     BackHandler(navigator.canNavigateBack()) {
         navigator.navigateBack()
+    }
+}
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+fun DestinationScopeWithNoDependencies<*>.createCoreFeatureNavigator(
+    scaffoldNavigator: ThreePaneScaffoldNavigator,
+    settingsScreenNavigator: SettingsScreenNavigator,
+) = SettingsDetailNavigatorImpl(
+    scaffoldNavigator = scaffoldNavigator,
+    navController = navController,
+    settingsScreenNavigator = settingsScreenNavigator
+)
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+class SettingsDetailNavigatorImpl(
+    private val scaffoldNavigator: ThreePaneScaffoldNavigator,
+    private val settingsScreenNavigator: SettingsScreenNavigator,
+    private val navController: NavController,
+) : SecuritySettingsScreenNavigator,
+    FolderSettingsScreenNavigator,
+    SettingsDetailNavigator,
+    SettingsExtraNavigator {
+
+    override fun navigateToChangeAuth(enabled: Boolean) {
+        settingsScreenNavigator.navigateToChangeAuth(enabled)
+    }
+
+    override fun navigateToPasswordChange() {
+        settingsScreenNavigator.onPasswordChange()
+    }
+
+    override fun navigateToExtension() {
+        navController.navigate(SupportExtensionScreenDestination)
+    }
+
+    override fun navigateBack() {
+        scaffoldNavigator.navigateBack()
+    }
+
+    override fun navigateUp() {
+        navController.navigateUp()
     }
 }
 
@@ -75,12 +144,10 @@ internal data class SettingsScreenUiState(
 private fun SettingsScreen(
     uiState: SettingsScreenUiState,
     navigator: ThreePaneScaffoldNavigator,
-    navController: NavHostController,
     windowAdaptiveInfo: WindowAdaptiveInfo,
-    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onSettingsClick: (Settings2) -> Unit,
-    navGraph: NavGraphBuilder.(NavHostController, PaddingValues) -> Unit,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     ListDetailPaneScaffold(
         scaffoldState = navigator.scaffoldState,
@@ -89,49 +156,50 @@ private fun SettingsScreen(
                 uiState = uiState.listPaneUiState,
                 onBackClick = onBackClick,
                 onSettingsClick = onSettingsClick,
-                windowAdaptiveInfo = windowAdaptiveInfo,
-                contentPadding = contentPadding
+                windowAdaptiveInfo = windowAdaptiveInfo
             )
         }
     ) {
         val innerPadding =
             if (navigator.scaffoldState.scaffoldValue.secondary == PaneAdaptedValue.Expanded) {
-                contentPadding.copy(start = 0.dp)
+                WindowInsets.safeDrawing.asPaddingValues().copy(start = 0.dp)
             } else {
-                contentPadding
+                WindowInsets.safeDrawing.asPaddingValues()
             }
-
-        NavHost(
-            navController = navController,
-            startDestination = uiState.listPaneUiState.currentSettings2.route
-        ) {
-            navGraph(navController, innerPadding)
-        }
+        content(innerPadding)
     }
 }
 
-enum class Settings2(val title: Int, val icon: ImageVector, val route: String = "") {
+enum class Settings2(
+    val title: Int,
+    val icon: ImageVector,
+    val route: Route? = null,
+) {
     DISPLAY(
         R.string.settings_label_display,
         ComicIcons.DisplaySettings,
-        DisplaySettingsScreenDestination.route
+        DisplaySettingsScreenDestination
     ),
     FOLDER(
         R.string.settings_label_folder,
         ComicIcons.FolderOpen,
-        FolderSettingsScreenDestination.route
+        FolderSettingsScreenDestination
     ),
-    VIEWER(R.string.settings_label_viewer, ComicIcons.Image, ViewerSettingsScreenDestination.route),
+    VIEWER(R.string.settings_label_viewer, ComicIcons.Image),
     SECURITY(
         R.string.settings_label_security,
         ComicIcons.Lock,
-        SecuritySettingsScreenDestination.route
+        SecuritySettingsScreenDestination
     ),
-    APP(R.string.settings_label_app, ComicIcons.Info, AppInfoSettingsScreenDestination.route),
+    APP(
+        R.string.settings_label_app,
+        ComicIcons.Info,
+        AppInfoSettingsScreenDestination
+    ),
     TUTORIAL(R.string.settings_label_tutorial, ComicIcons.Start),
     LANGUAGE(
         R.string.settings_label_language,
         ComicIcons.Language,
-        InAppLanguagePickerScreenDestination.route
+        InAppLanguagePickerScreenDestination
     ),
 }

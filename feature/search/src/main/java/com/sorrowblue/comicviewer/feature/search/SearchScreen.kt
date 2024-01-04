@@ -2,10 +2,11 @@ package com.sorrowblue.comicviewer.feature.search
 
 import android.os.Parcelable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -18,19 +19,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.search.component.SearchAppBar
-import com.sorrowblue.comicviewer.feature.search.navigation.SearchArgs
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditions
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditionsUiState
 import com.sorrowblue.comicviewer.feature.search.section.SearchResultSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import kotlinx.coroutines.delay
 import kotlinx.parcelize.Parcelize
@@ -44,13 +46,37 @@ internal data class SearchScreenUiState(
 
 private const val WaitLoadPage = 500L
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+interface SearchScreenNavigator : CoreNavigator {
+    fun onFileClick(file: File)
+    fun onFavoriteClick(file: File)
+    fun onOpenFolderClick(file: File)
+}
+
+class SearchArgs(val bookshelfId: BookshelfId, val path: String)
+
 @Destination(navArgsDelegate = SearchArgs::class)
 @Composable
 internal fun SearchScreen(
     args: SearchArgs,
+    navBackStackEntry: NavBackStackEntry,
+    navigator: SearchScreenNavigator,
+) {
+    SearchScreen(
+        args = args,
+        savedStateHandle = navBackStackEntry.savedStateHandle,
+        onBackClick = navigator::navigateUp,
+        onFileClick = navigator::onFileClick,
+        onFavoriteClick = navigator::onFavoriteClick,
+        onOpenFolderClick = navigator::onOpenFolderClick
+    )
+
+}
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Composable
+private fun SearchScreen(
+    args: SearchArgs,
     savedStateHandle: SavedStateHandle,
-    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onFileClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
@@ -76,8 +102,7 @@ internal fun SearchScreen(
         onFileInfoCloseClick = state::onFileInfoCloseClick,
         onReadLaterClick = state::onReadLaterClick,
         onFavoriteClick = onFavoriteClick,
-        onOpenFolderClick = onOpenFolderClick,
-        contentPadding = contentPadding
+        onOpenFolderClick = onOpenFolderClick
     )
     LaunchedEffect(uiState) {
         if (!state.isSkipFirstRefresh) {
@@ -109,7 +134,6 @@ private fun SearchScreen(
     onReadLaterClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    contentPadding: PaddingValues,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     CanonicalScaffold(
@@ -127,11 +151,7 @@ private fun SearchScreen(
                     onChangeSearchCondition = onChangeSearchCondition,
                     scrollBehavior = scrollBehavior,
                     modifier = Modifier
-                        .windowInsetsPadding(
-                            contentPadding
-                                .asWindowInsets()
-                                .only(WindowInsetsSides.Horizontal)
-                        )
+                        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
                         .padding(horizontal = ComicTheme.dimension.margin)
                         .padding(top = ComicTheme.dimension.padding * 2)
                 )
@@ -151,7 +171,6 @@ private fun SearchScreen(
                 )
             }
         },
-        contentPadding = contentPadding,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         SearchResultSheet(

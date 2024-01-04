@@ -12,7 +12,7 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.feature.favorite.edit.navigation.FavoriteEditArgs
+import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEditArgs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -35,32 +37,48 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.ramcosta.composedestinations.annotation.Destination
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.feature.favorite.add.component.FavoriteAddFab
 import com.sorrowblue.comicviewer.feature.favorite.add.component.FavoriteAddTopAppBar
-import com.sorrowblue.comicviewer.feature.favorite.add.navigation.FavoriteAddArgs
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialog
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialogUiState
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.add
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import com.sorrowblue.comicviewer.feature.favorite.common.R as FavoriteCommonR
 
-@OptIn(ExperimentalMaterial3Api::class)
+class FavoriteAddArgs(
+    val bookshelfId: BookshelfId,
+    val path: String,
+)
+
 @Destination(navArgsDelegate = FavoriteAddArgs::class)
 @Composable
 internal fun FavoriteAddScreen(
+    navBackStackEntry: NavBackStackEntry,
+    navigator: CoreNavigator,
+) {
+    FavoriteAddScreen(
+        savedStateHandle = navBackStackEntry.savedStateHandle,
+        onBackClick = navigator::navigateUp
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FavoriteAddScreen(
     savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
     state: FavoriteAddScreenState = rememberFavoriteAddScreenState(savedStateHandle = savedStateHandle),
 ) {
     val dialogUiState = state.dialogUiState
@@ -71,7 +89,6 @@ internal fun FavoriteAddScreen(
             onBackClick = onBackClick,
             onFavoriteClick = state::onFavoriteClick,
             onAddClick = state::onNewFavoriteClick,
-            contentPadding = contentPadding
         )
         FavoriteCreateDialog(
             uiState = dialogUiState,
@@ -99,14 +116,13 @@ private fun FavoriteAddScreen(
     onBackClick: () -> Unit,
     onFavoriteClick: (Favorite) -> Unit,
     onAddClick: () -> Unit,
-    contentPadding: PaddingValues = PaddingValues(),
     lazyListState: LazyListState = rememberLazyListState(),
     appBarScrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     Scaffold(
         topBar = { FavoriteAddTopAppBar(onBackClick, appBarScrollBehavior) },
         floatingActionButton = { FavoriteAddFab(onAddClick) },
-        contentWindowInsets = contentPadding.asWindowInsets(),
+        contentWindowInsets = WindowInsets.safeDrawing,
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         FavoriteAddContent(

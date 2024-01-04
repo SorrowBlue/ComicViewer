@@ -7,12 +7,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @Destination
 @Composable
 internal fun AppInfoSettingsScreen(
+    contentPadding: PaddingValues,
+    navigator: SettingsDetailNavigator,
+) {
+    AppInfoSettingsScreen(
+        contentPadding = contentPadding,
+        onBackClick = navigator::navigateBack
+    )
+}
+
+@Composable
+private fun AppInfoSettingsScreen(
     onBackClick: () -> Unit,
     contentPadding: PaddingValues,
     state: AppInfoSettingsScreenState = rememberAppInfoSettingsScreenState(),

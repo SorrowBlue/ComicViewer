@@ -37,15 +37,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
-import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationArgs
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
+
+interface AuthenticationScreenNavigator : CoreNavigator {
+    fun onBack()
+    fun onAuthCompleted(handleBack: Boolean, mode: Mode)
+}
+
+class AuthenticationArgs(
+    val mode: Mode,
+    val handleBack: Boolean,
+)
 
 @Destination(navArgsDelegate = AuthenticationArgs::class)
 @Composable
 internal fun AuthenticationScreen(
+    args: AuthenticationArgs,
+    navBackStackEntry: NavBackStackEntry,
+    navigator: AuthenticationScreenNavigator,
+) {
+    AuthenticationScreen(
+        args = args,
+        savedStateHandle = navBackStackEntry.savedStateHandle,
+        onBack = navigator::onBack,
+        onBackClick = navigator::navigateUp,
+        onAuthCompleted = navigator::onAuthCompleted
+    )
+}
+
+@Composable
+private fun AuthenticationScreen(
     args: AuthenticationArgs,
     savedStateHandle: SavedStateHandle,
     onBack: () -> Unit,
@@ -133,7 +159,7 @@ private fun AuthenticationScreen(
                         }
                     }
                 },
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
             )
         },
         snackbarHost = {

@@ -6,13 +6,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.navOptions
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphRoute
+import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfNavGraph
 import com.sorrowblue.comicviewer.bookshelf.navigation.routeInBookshelfGraph
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphRoute
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraph
 import com.sorrowblue.comicviewer.favorite.navigation.RouteInFavoriteGraph
-import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavigationRoute
+import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavGraph
 import com.sorrowblue.comicviewer.feature.library.navigation.RouteInLibraryNavigation
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadlaterGraphRoute
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.RouteInReadlaterGraph
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 
@@ -28,7 +28,7 @@ internal fun rememberGraphStateHolder(): GraphStateHolder = remember {
 }
 
 private class ComicViewerAppGraphStateHolder : GraphStateHolder {
-    override val startDestination: String = BookshelfGraphRoute
+    override val startDestination: String = BookshelfNavGraph.route
 
     override fun routeToTab(route: String): MainScreenTab? {
         return when (route) {
@@ -46,10 +46,10 @@ private class ComicViewerAppGraphStateHolder : GraphStateHolder {
         viewModel: NavTabHandler,
     ) {
         when (tab) {
-            MainScreenTab.Bookshelf -> BookshelfGraphRoute
-            MainScreenTab.Favorite -> FavoriteGraphRoute
-            MainScreenTab.Readlater -> ReadlaterGraphRoute
-            MainScreenTab.Library -> LibraryNavigationRoute
+            MainScreenTab.Bookshelf -> BookshelfNavGraph.route
+            MainScreenTab.Favorite -> FavoriteNavGraph.route
+            MainScreenTab.Readlater -> ReadLaterNavGraph.route
+            MainScreenTab.Library -> LibraryNavGraph.route
         }.let { route ->
             if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.route == route } == true) {
                 viewModel.currentOnClick?.let { it() }

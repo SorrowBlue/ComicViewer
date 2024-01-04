@@ -4,7 +4,6 @@ import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -25,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.SavedStateHandle
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
@@ -37,6 +36,7 @@ import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.SortItem
@@ -45,6 +45,7 @@ import com.sorrowblue.comicviewer.folder.section.SortSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
@@ -65,19 +66,65 @@ internal data class FolderScreenUiState(
     val fileContentType: FileContentType = FileContentType.Grid(),
 ) : Parcelable
 
-context(NavBackStackEntry)
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
+interface FolderScreenNavigator : CoreNavigator {
+    fun onSearchClick(bookshelfId: BookshelfId, path: String)
+    fun onSettingsClick()
+    fun onFileClick(file: File)
+    fun onFavoriteClick(file: File)
+}
+
 @Composable
-internal fun FolderRoute(
-    contentPadding: PaddingValues,
+fun FolderScreen(
+    args: FolderArgs,
+    savedStateHandle: SavedStateHandle,
+    navigator: FolderScreenNavigator,
+    onRestoreComplete: () -> Unit = {},
+) {
+    FolderScreen(
+        args = args,
+        savedStateHandle = savedStateHandle,
+        onBackClick = navigator::navigateUp,
+        onSearchClick = navigator::onSearchClick,
+        onSettingsClick = navigator::onSettingsClick,
+        onFileClick = navigator::onFileClick,
+        onFavoriteClick = navigator::onFavoriteClick,
+        onRestoreComplete = onRestoreComplete
+    )
+}
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Composable
+fun FolderScreen(
+    args: FolderArgs,
+    savedStateHandle: SavedStateHandle,
+    onBackClick: () -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
-    onBackClick: () -> Unit,
-    onRestoreComplete: () -> Unit,
     onFileClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
-    onOpenFolderClick: (File) -> Unit,
-    state: FolderScreenState = rememberFolderScreenState(),
+    onRestoreComplete: () -> Unit = {},
+) {
+    FolderScreen(
+        onBackClick = onBackClick,
+        onSearchClick = onSearchClick,
+        onSettingsClick = onSettingsClick,
+        onFileClick = onFileClick,
+        onFavoriteClick = onFavoriteClick,
+        state = rememberFolderScreenState(args = args, savedStateHandle = savedStateHandle),
+        onRestoreComplete = onRestoreComplete
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
+@Composable
+internal fun FolderScreen(
+    onBackClick: () -> Unit,
+    onSearchClick: (BookshelfId, String) -> Unit,
+    onSettingsClick: () -> Unit,
+    onFileClick: (File) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+    state: FolderScreenState,
+    onRestoreComplete: () -> Unit = {},
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     val uiState = state.uiState
@@ -89,7 +136,6 @@ internal fun FolderRoute(
         }
     }
     FolderScreen(
-        contentPadding = contentPadding,
         uiState = uiState,
         navigator = state.navigator,
         lazyPagingItems = lazyPagingItems,
@@ -107,8 +153,7 @@ internal fun FolderRoute(
         onSortItemClick = state::onSortItemClick,
         onSortOrderClick = state::onSortOrderClick,
         onReadLaterClick = state::onReadLaterClick,
-        onFavoriteClick = onFavoriteClick,
-        onOpenFolderClick = onOpenFolderClick,
+        onFavoriteClick = onFavoriteClick
     )
 
     if (uiState.openSortSheet) {
@@ -162,10 +207,6 @@ val CombinedLoadStates.isLoading
     get() =
         source.any { it == LoadState.Loading } || mediator?.any { it == LoadState.Loading } ?: false
 
-fun LoadStates.all(op: (LoadState) -> Boolean): Boolean {
-    return op(refresh) && op(append) && op(prepend)
-}
-
 fun LoadStates.any(op: (LoadState) -> Boolean): Boolean {
     return op(refresh) || op(append) || op(prepend)
 }
@@ -173,7 +214,6 @@ fun LoadStates.any(op: (LoadState) -> Boolean): Boolean {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun FolderScreen(
-    contentPadding: PaddingValues,
     navigator: ThreePaneScaffoldNavigator,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
@@ -192,7 +232,6 @@ internal fun FolderScreen(
     onSortOrderClick: (SortOrder) -> Unit,
     onReadLaterClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
-    onOpenFolderClick: (File) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     CanonicalScaffold(
@@ -219,12 +258,11 @@ internal fun FolderScreen(
                     onCloseClick = onExtraPaneCloseClick,
                     onReadLaterClick = { onReadLaterClick(file) },
                     onFavoriteClick = { onFavoriteClick(file) },
-                    onOpenFolderClick = { onOpenFolderClick(file) },
+                    onOpenFolderClick = null,
                     contentPadding = innerPadding
                 )
             }
         },
-        contentPadding = contentPadding,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         val scaleFraction = if (pullRefreshState.isRefreshing) {
@@ -242,7 +280,7 @@ internal fun FolderScreen(
                     ),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(contentPadding)
+                        .padding(innerPadding)
                 )
             } else {
                 FileContent(
