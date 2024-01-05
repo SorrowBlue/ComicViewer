@@ -152,7 +152,7 @@ dependencies {
     implementation(libs.google.accompanist.navigation.material)
     implementation(libs.kotlinx.collections.immutable)
 
-//    debugImplementation(libs.squareup.leakcanary.android)
+    debugImplementation(libs.squareup.leakcanary.android)
 
     androidTestImplementation(libs.androidx.test.ext.junit.ktx)
     androidTestImplementation(libs.androidx.test.espresso.core)

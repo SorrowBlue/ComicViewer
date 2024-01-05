@@ -80,8 +80,8 @@ internal class GoogleDriveScreenState(
     var uiState by savedStateHandle.saveable { mutableStateOf(GoogleDriveScreenUiState()) }
         private set
 
-    var file: File? by savedStateHandle.saveable(
-        key = "file",
+    var book: Book? by savedStateHandle.saveable(
+        key = "book",
         stateSaver = autoSaver()
     ) { mutableStateOf(null) }
         private set
@@ -99,7 +99,7 @@ internal class GoogleDriveScreenState(
 
     fun onResult(activityResult: ActivityResult) {
         if (activityResult.resultCode == Activity.RESULT_OK && activityResult.data?.data != null) {
-            enqueueDownload(activityResult.data!!.data!!.toString(), file!!)
+            enqueueDownload(activityResult.data!!.data!!.toString(), book!!)
         }
     }
 
@@ -164,7 +164,7 @@ internal class GoogleDriveScreenState(
                 intent.addCategory(Intent.CATEGORY_OPENABLE)
                 intent.putExtra(Intent.EXTRA_TITLE, file.name)
                 intent.type = "*/*"
-                this.file = file
+                this.book = file
                 createFileRequest.launch(intent)
             }
 
