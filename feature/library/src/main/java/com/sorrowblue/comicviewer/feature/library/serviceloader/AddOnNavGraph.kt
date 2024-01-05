@@ -45,8 +45,8 @@ interface DropBoxNavGraph : AddOnNavGraph {
 
     companion object {
         operator fun invoke() = loadAddOnNavGraph(
-            BoxNavGraph.Provider::class.java,
-            BoxNavGraph.Provider::class.java.classLoader
+            Provider::class.java,
+            Provider::class.java.classLoader
         )
     }
 }
@@ -57,8 +57,8 @@ interface GoogleDriveNavGraph : AddOnNavGraph {
 
     companion object {
         operator fun invoke() = loadAddOnNavGraph(
-            BoxNavGraph.Provider::class.java,
-            BoxNavGraph.Provider::class.java.classLoader
+            Provider::class.java,
+            Provider::class.java.classLoader
         )
     }
 }
@@ -69,8 +69,8 @@ interface OneDriveNavGraph : AddOnNavGraph {
 
     companion object {
         operator fun invoke() = loadAddOnNavGraph(
-            BoxNavGraph.Provider::class.java,
-            BoxNavGraph.Provider::class.java.classLoader
+            Provider::class.java,
+            Provider::class.java.classLoader
         )
     }
 }

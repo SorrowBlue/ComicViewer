@@ -7,10 +7,13 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.autoSaver
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
@@ -29,6 +32,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
+import com.sorrowblue.comicviewer.feature.library.box.data.BoxDownloadWorker
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxDialogUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -89,11 +93,14 @@ private class BoxScreenStateImpl(
     private val context: Context,
     private val scope: CoroutineScope,
     private val repository: BoxApiRepository,
-    var book: Book? = null,
 ) : BoxScreenState {
 
     override var uiState by savedStateHandle.saveable { mutableStateOf(BoxScreenUiState()) }
         private set
+
+    private var book: Book? by savedStateHandle.saveable("", stateSaver = autoSaver()) {
+        mutableStateOf(null)
+    }
 
     override var event = mutableStateListOf<BoxScreenUiEvent>()
         private set
@@ -134,7 +141,7 @@ private class BoxScreenStateImpl(
     }
 
     override fun onDialogDismissRequest() {
-            uiState = uiState.copy(showDialog = false)
+        uiState = uiState.copy(showDialog = false)
     }
 
     override fun onLogoutClick() {

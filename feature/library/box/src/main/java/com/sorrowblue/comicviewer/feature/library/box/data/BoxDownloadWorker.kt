@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.library.box
+package com.sorrowblue.comicviewer.feature.library.box.data
 
 import android.Manifest
 import android.content.Context
@@ -13,7 +13,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.app.IoDispatcher
-import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
+import com.sorrowblue.comicviewer.feature.library.box.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.FrameworkDrawable
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import kotlin.math.ceil

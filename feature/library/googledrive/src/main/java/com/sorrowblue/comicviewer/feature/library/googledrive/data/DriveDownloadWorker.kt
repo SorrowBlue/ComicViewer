@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.library.googledrive
+package com.sorrowblue.comicviewer.feature.library.googledrive.data
 
 import android.Manifest
 import android.content.Context
@@ -19,6 +19,7 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.sorrowblue.comicviewer.app.IoDispatcher
+import com.sorrowblue.comicviewer.feature.library.googledrive.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.FrameworkDrawable
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.createNotification
