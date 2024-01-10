@@ -13,7 +13,7 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version ("0.7.0")
-    id("com.android.settings") version "8.2.0"
+    id("com.android.settings") version "8.2.1"
 }
 
 extensions.configure<SettingsExtension> {
