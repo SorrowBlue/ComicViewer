@@ -8,7 +8,7 @@ kotlinx-coroutines = "1.7.3"
 kotlinx-serialization = "1.6.2"
 
 androidx-datastore = "1.0.0"
-androidx-lifecycle = "2.6.2"
+androidx-lifecycle = "2.7.0"
 androidx-navigation = "2.7.6"
 androidx-paging = "3.2.1"
 androidx-room = "2.6.1"
