@@ -28,7 +28,7 @@ dependencies {
     implementation(libs.microsoft.identity.client.msal) {
         exclude(group = "io.opentelemetry")
     }
-    implementation("io.opentelemetry:opentelemetry-api:1.32.0")
+    implementation("io.opentelemetry:opentelemetry-api:1.34.1")
 
     implementation(libs.kotlinx.coroutines.jdk8)
 }
