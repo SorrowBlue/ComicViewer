@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.autoSaver
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -31,7 +32,9 @@ import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.SortItem
 import com.sorrowblue.comicviewer.folder.section.SortOrder
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,7 +47,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Stable
-internal interface FolderScreenState {
+internal interface FolderScreenState: SaveableScreenState {
 
     fun onSortOrderClick(sortOrder: SortOrder)
     fun onSortItemClick(sortItem: SortItem)
@@ -72,16 +75,15 @@ internal interface FolderScreenState {
 @Composable
 internal fun rememberFolderScreenState(
     args: FolderArgs,
-    savedStateHandle: SavedStateHandle,
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     viewModel: FolderViewModel = hiltViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
-): FolderScreenState = remember {
+): FolderScreenState = rememberSaveableScreenState {
     FolderScreenStateImpl(
-        savedStateHandle = savedStateHandle,
+        savedStateHandle = it,
         navigator = navigator,
         lazyGridState = lazyGridState,
         args = args,
@@ -92,7 +94,7 @@ internal fun rememberFolderScreenState(
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 private class FolderScreenStateImpl(
-    savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator,
     override val lazyGridState: LazyGridState,
     private val args: FolderArgs,
@@ -101,10 +103,7 @@ private class FolderScreenStateImpl(
 ) : FolderScreenState {
 
     override val pagingDataFlow = viewModel.pagingDataFlow(args.bookshelfId, args.path)
-    override var restorePath by savedStateHandle.saveable(
-        "restorePath",
-        stateSaver = Saver(save = { it }, restore = { it })
-    ) {
+    override var restorePath by savedStateHandle.saveable("restorePath", stateSaver = autoSaver()) {
         mutableStateOf(args.restorePath)
     }
     override var isSkipFirstRefresh by savedStateHandle.saveable { mutableStateOf(true) }

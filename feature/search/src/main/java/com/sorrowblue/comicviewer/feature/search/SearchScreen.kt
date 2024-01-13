@@ -18,8 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -56,35 +54,25 @@ class SearchArgs(val bookshelfId: BookshelfId, val path: String)
 
 @Destination(navArgsDelegate = SearchArgs::class)
 @Composable
-internal fun SearchScreen(
-    args: SearchArgs,
-    navBackStackEntry: NavBackStackEntry,
-    navigator: SearchScreenNavigator,
-) {
+internal fun SearchScreen(args: SearchArgs, navigator: SearchScreenNavigator) {
     SearchScreen(
         args = args,
-        savedStateHandle = navBackStackEntry.savedStateHandle,
         onBackClick = navigator::navigateUp,
         onFileClick = navigator::onFileClick,
         onFavoriteClick = navigator::onFavoriteClick,
         onOpenFolderClick = navigator::onOpenFolderClick
     )
-
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun SearchScreen(
     args: SearchArgs,
-    savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
     onFileClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    state: SearchScreenState = rememberSearchScreenState(
-        args = args,
-        savedStateHandle = savedStateHandle
-    ),
+    state: SearchScreenState = rememberSearchScreenState(args = args),
 ) {
     val uiState = state.uiState
     val lazyPagingItems = state.lazyPagingItems.collectAsLazyPagingItems()

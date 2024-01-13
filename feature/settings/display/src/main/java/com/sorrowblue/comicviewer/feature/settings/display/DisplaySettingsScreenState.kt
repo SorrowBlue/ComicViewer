@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.settings.display
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -12,12 +11,14 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.display.section.AppearanceDialogController
 import com.sorrowblue.comicviewer.feature.settings.display.section.rememberAppearanceDialogController
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Stable
-internal interface DisplaySettingsScreenState {
+internal interface DisplaySettingsScreenState : SaveableScreenState {
 
     val appearanceDialogController: AppearanceDialogController
     val uiState: SettingsDisplayScreenUiState
@@ -30,14 +31,13 @@ internal interface DisplaySettingsScreenState {
 
 @Composable
 internal fun rememberDisplaySettingsScreenState(
-    savedStateHandle: SavedStateHandle,
     scope: CoroutineScope = rememberCoroutineScope(),
     appearanceDialogController: AppearanceDialogController = rememberAppearanceDialogController(),
     viewModel: DisplaySettingsViewModel = hiltViewModel(),
-): DisplaySettingsScreenState = remember {
+): DisplaySettingsScreenState = rememberSaveableScreenState {
     DisplaySettingsScreenStateImpl(
-        savedStateHandle = savedStateHandle,
         scope = scope,
+        savedStateHandle = it,
         appearanceDialogController = appearanceDialogController,
         viewModel = viewModel
     )
@@ -45,8 +45,8 @@ internal fun rememberDisplaySettingsScreenState(
 
 @OptIn(SavedStateHandleSaveableApi::class)
 private class DisplaySettingsScreenStateImpl(
-    savedStateHandle: SavedStateHandle,
     scope: CoroutineScope,
+    override val savedStateHandle: SavedStateHandle,
     override val appearanceDialogController: AppearanceDialogController,
     private val viewModel: DisplaySettingsViewModel,
 ) : DisplaySettingsScreenState {

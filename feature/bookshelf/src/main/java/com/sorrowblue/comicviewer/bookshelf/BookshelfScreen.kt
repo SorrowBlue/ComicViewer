@@ -23,7 +23,6 @@ import androidx.compose.material3.adaptive.PaneAdaptedValue
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -31,8 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -54,7 +51,6 @@ import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
-import logcat.logcat
 
 interface BookshelfScreenNavigator {
     fun onSettingsClick()
@@ -65,12 +61,8 @@ interface BookshelfScreenNavigator {
 
 @Destination
 @Composable
-internal fun BookshelfScreen(
-    navBackStackEntry: NavBackStackEntry,
-    navigator: BookshelfScreenNavigator,
-) {
+internal fun BookshelfScreen(navigator: BookshelfScreenNavigator) {
     BookshelfScreen(
-        savedStateHandle = navBackStackEntry.savedStateHandle,
         onSettingsClick = navigator::onSettingsClick,
         onFabClick = navigator::onFabClick,
         onBookshelfClick = navigator::onBookshelfClick,
@@ -81,12 +73,11 @@ internal fun BookshelfScreen(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun BookshelfScreen(
-    savedStateHandle: SavedStateHandle,
     onSettingsClick: () -> Unit,
     onFabClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onEditClick: (BookshelfId) -> Unit,
-    state: BookshelfScreenState = rememberBookshelfScreenState(savedStateHandle = savedStateHandle),
+    state: BookshelfScreenState = rememberBookshelfScreenState(),
 ) {
     BookshelfScreen(
         navigator = state.navigator,
@@ -97,7 +88,7 @@ private fun BookshelfScreen(
         onFabClick = onFabClick,
         onSettingsClick = onSettingsClick,
         onBookshelfClick = onBookshelfClick,
-        onBookshelfInfoClick = state::onBookshelfLongClick,
+        onBookshelfInfoClick = state::onBookshelfInfoClick,
         onInfoSheetRemoveClick = state::onRemoveClick,
         onInfoSheetEditClick = { onEditClick(state.bookshelfId) },
         onInfoSheetCloseClick = state::onInfoSheetCloseClick,
@@ -136,9 +127,6 @@ private fun BookshelfScreen(
     onInfoSheetCloseClick: () -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
-    LaunchedEffect(navigator.scaffoldState.scaffoldValue) {
-        logcat { "tertiary=${navigator.scaffoldState.scaffoldValue.tertiary}" }
-    }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     CanonicalScaffold(
         navigator = navigator,
@@ -188,9 +176,9 @@ private fun BookshelfScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) { innerPadding ->
+    ) { contentPadding ->
         val dimension = LocalDimension.current
-        val inInnerPadding = innerPadding.add(
+        val innerPadding = contentPadding.add(
             PaddingValues(
                 start = dimension.margin,
                 top = dimension.margin,
@@ -203,7 +191,7 @@ private fun BookshelfScreen(
             lazyGridState = lazyGridState,
             onBookshelfClick = onBookshelfClick,
             onBookshelfInfoClick = onBookshelfInfoClick,
-            innerPadding = inInnerPadding
+            innerPadding = innerPadding
         )
     }
 }

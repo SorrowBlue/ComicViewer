@@ -76,9 +76,8 @@ import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraph
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.navigation.searchNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.settings.destinations.SettingsScreenDestination
-import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraphNavigator
-import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavGraphNavigator
+import com.sorrowblue.comicviewer.feature.settings.navigation.dependencySettingsNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.destinations.TutorialScreenDestination
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraphNavigator
@@ -314,30 +313,28 @@ fun DependenciesContainerBuilder<*>.mainDependency(
         })
     }
 
-    dependency(SettingsNavGraph) {
-        settingsNavGraphNavigator(object : SettingsNavGraphNavigator {
-            override fun onStartTutorialClick() {
-                navController.navigate(TutorialScreenDestination)
-            }
+    dependencySettingsNavGraph(object : SettingsNavGraphNavigator {
+        override fun onStartTutorialClick() {
+            navController.navigate(TutorialScreenDestination)
+        }
 
-            override fun onPasswordChange() {
-                navController.navigate(
-                    AuthenticationScreenDestination(
-                        mode = Mode.Change,
-                        handleBack = false
-                    )
+        override fun onPasswordChange() {
+            navController.navigate(
+                AuthenticationScreenDestination(
+                    mode = Mode.Change,
+                    handleBack = false
                 )
-            }
+            )
+        }
 
-            override fun navigateToChangeAuth(enabled: Boolean) {
-                if (enabled) {
-                    navController.navigate(AuthenticationScreenDestination(Mode.Register, false))
-                } else {
-                    navController.navigate(AuthenticationScreenDestination(Mode.Erase, false))
-                }
+        override fun navigateToChangeAuth(enabled: Boolean) {
+            if (enabled) {
+                navController.navigate(AuthenticationScreenDestination(Mode.Register, false))
+            } else {
+                navController.navigate(AuthenticationScreenDestination(Mode.Erase, false))
             }
-        })
-    }
+        }
+    })
 
     dependency(AuthenticationNavGraph) {
         authenticationNavGraphNavigator(object : AuthenticationNavGraphNavigator {

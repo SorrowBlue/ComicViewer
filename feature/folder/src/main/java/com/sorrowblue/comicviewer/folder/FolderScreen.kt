@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.SavedStateHandle
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
@@ -76,13 +75,11 @@ interface FolderScreenNavigator : CoreNavigator {
 @Composable
 fun FolderScreen(
     args: FolderArgs,
-    savedStateHandle: SavedStateHandle,
     navigator: FolderScreenNavigator,
     onRestoreComplete: () -> Unit = {},
 ) {
     FolderScreen(
         args = args,
-        savedStateHandle = savedStateHandle,
         onBackClick = navigator::navigateUp,
         onSearchClick = navigator::onSearchClick,
         onSettingsClick = navigator::onSettingsClick,
@@ -96,7 +93,6 @@ fun FolderScreen(
 @Composable
 fun FolderScreen(
     args: FolderArgs,
-    savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
@@ -110,7 +106,7 @@ fun FolderScreen(
         onSettingsClick = onSettingsClick,
         onFileClick = onFileClick,
         onFavoriteClick = onFavoriteClick,
-        state = rememberFolderScreenState(args = args, savedStateHandle = savedStateHandle),
+        state = rememberFolderScreenState(args = args),
         onRestoreComplete = onRestoreComplete
     )
 }

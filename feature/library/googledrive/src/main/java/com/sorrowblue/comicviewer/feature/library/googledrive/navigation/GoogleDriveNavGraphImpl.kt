@@ -5,7 +5,7 @@ import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popUpTo
-import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.googledrive.GoogleDriveLoginScreenNavigator
 import com.sorrowblue.comicviewer.feature.library.googledrive.GoogleDriveScreenNavigator
 import com.sorrowblue.comicviewer.feature.library.googledrive.destinations.GoogleDriveLoginScreenDestination
@@ -68,8 +68,8 @@ private class GoogleDriveNavGraphNavigator(private val navController: NavControl
         navController.navigateUp()
     }
 
-    override fun onFileClick(file: File) {
-        navController.navigateUp()
+    override fun onFolderClick(folder: Folder) {
+        navController.navigate(GoogleDriveScreenDestination(folder.path))
     }
 
     override fun requireAuthentication() {

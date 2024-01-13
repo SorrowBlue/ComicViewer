@@ -44,8 +44,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -77,14 +75,9 @@ class FavoriteEditArgs(val favoriteId: FavoriteId)
 
 @Destination(navArgsDelegate = FavoriteEditArgs::class)
 @Composable
-internal fun FavoriteEditScreen(
-    args: FavoriteEditArgs,
-    navBackStackEntry: NavBackStackEntry,
-    navigator: FavoriteEditScreenNavigator,
-) {
+internal fun FavoriteEditScreen(args: FavoriteEditArgs, navigator: FavoriteEditScreenNavigator) {
     FavoriteEditScreen(
         args = args,
-        savedStateHandle = navBackStackEntry.savedStateHandle,
         onBackClick = navigator::navigateUp,
         onComplete = navigator::onComplete
     )
@@ -93,13 +86,9 @@ internal fun FavoriteEditScreen(
 @Composable
 private fun FavoriteEditScreen(
     args: FavoriteEditArgs,
-    savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
-    state: FavoriteEditScreenState = rememberFavoriteEditScreenState(
-        args = args,
-        savedStateHandle = savedStateHandle
-    ),
+    state: FavoriteEditScreenState = rememberFavoriteEditScreenState(args = args),
 ) {
     val uiState = state.uiState
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()

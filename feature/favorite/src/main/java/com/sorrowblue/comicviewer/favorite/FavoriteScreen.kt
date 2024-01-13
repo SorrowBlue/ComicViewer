@@ -13,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -47,14 +45,9 @@ class FavoriteArgs(val favoriteId: FavoriteId)
 
 @Destination(navArgsDelegate = FavoriteArgs::class)
 @Composable
-internal fun FavoriteScreen(
-    args: FavoriteArgs,
-    navBackStackEntry: NavBackStackEntry,
-    navigator: FavoriteScreenNavigator,
-) {
+internal fun FavoriteScreen(args: FavoriteArgs, navigator: FavoriteScreenNavigator) {
     FavoriteScreen(
         args = args,
-        savedStateHandle = navBackStackEntry.savedStateHandle,
         onBackClick = navigator::navigateUp,
         onEditClick = navigator::onEditClick,
         onSettingsClick = navigator::onSettingsClick,
@@ -68,17 +61,13 @@ internal fun FavoriteScreen(
 @Composable
 private fun FavoriteScreen(
     args: FavoriteArgs,
-    savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,
     onFileClick: (File, FavoriteId) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    state: FavoriteScreenState = rememberFavoriteScreenState(
-        savedStateHandle = savedStateHandle,
-        args = args
-    ),
+    state: FavoriteScreenState = rememberFavoriteScreenState(args = args),
 ) {
     val uiState = state.uiState
     val navigator = state.navigator

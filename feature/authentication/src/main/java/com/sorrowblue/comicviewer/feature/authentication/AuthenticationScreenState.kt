@@ -17,13 +17,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import com.sorrowblue.comicviewer.feature.authentication.AuthenticationArgs
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Stable
-internal interface AuthenticationScreenState {
+internal interface AuthenticationScreenState : SaveableScreenState {
     val complete: Pair<Boolean, Mode>?
     val handleBack: Boolean
     val uiState: AuthenticationScreenUiState
@@ -37,15 +38,14 @@ internal interface AuthenticationScreenState {
 @Composable
 internal fun rememberAuthenticationScreenState(
     args: AuthenticationArgs,
-    savedStateHandle: SavedStateHandle,
     activity: FragmentActivity = LocalContext.current as FragmentActivity,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: AuthenticationViewModel = hiltViewModel(),
-): AuthenticationScreenState = remember {
+): AuthenticationScreenState = rememberSaveableScreenState {
     AuthenticationScreenStateImpl(
         activity = activity,
-        savedStateHandle = savedStateHandle,
+        savedStateHandle = it,
         snackbarHostState = snackbarHostState,
         args = args,
         scope = scope,
@@ -56,7 +56,7 @@ internal fun rememberAuthenticationScreenState(
 @OptIn(SavedStateHandleSaveableApi::class)
 private class AuthenticationScreenStateImpl(
     activity: FragmentActivity,
-    savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val snackbarHostState: SnackbarHostState,
     private val args: AuthenticationArgs,
     private val scope: CoroutineScope,

@@ -76,7 +76,7 @@ internal class BookshelfEditScreenState(
                     )
                 }
 
-                UnitUiState -> TODO()
+                UnitUiState -> {}
             }
             // Restore
         } else {

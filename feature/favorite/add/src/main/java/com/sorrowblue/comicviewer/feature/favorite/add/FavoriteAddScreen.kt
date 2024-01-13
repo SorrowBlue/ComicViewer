@@ -36,8 +36,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -64,12 +62,8 @@ class FavoriteAddArgs(
 
 @Destination(navArgsDelegate = FavoriteAddArgs::class)
 @Composable
-internal fun FavoriteAddScreen(
-    navBackStackEntry: NavBackStackEntry,
-    navigator: CoreNavigator,
-) {
+internal fun FavoriteAddScreen(navigator: CoreNavigator) {
     FavoriteAddScreen(
-        savedStateHandle = navBackStackEntry.savedStateHandle,
         onBackClick = navigator::navigateUp
     )
 }
@@ -77,9 +71,8 @@ internal fun FavoriteAddScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoriteAddScreen(
-    savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
-    state: FavoriteAddScreenState = rememberFavoriteAddScreenState(savedStateHandle = savedStateHandle),
+    state: FavoriteAddScreenState = rememberFavoriteAddScreenState(),
 ) {
     val dialogUiState = state.dialogUiState
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()

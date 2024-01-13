@@ -13,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -40,12 +38,8 @@ interface HistoryScreenNavigator : CoreNavigator {
 
 @Destination
 @Composable
-internal fun HistoryScreen(
-    navBackStackEntry: NavBackStackEntry,
-    navigator: HistoryScreenNavigator,
-) {
+internal fun HistoryScreen(navigator: HistoryScreenNavigator) {
     HistoryScreen(
-        savedStateHandle = navBackStackEntry.savedStateHandle,
         onBackClick = navigator::navigateUp,
         onSettingsClick = navigator::onSettingsClick,
         onFileClick = navigator::navigateToBook,
@@ -56,12 +50,11 @@ internal fun HistoryScreen(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun HistoryScreen(
-    savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onFileClick: (Book) -> Unit,
     onFavoriteClick: (File) -> Unit,
-    state: HistoryScreenState = rememberHistoryScreenState(savedStateHandle = savedStateHandle),
+    state: HistoryScreenState = rememberHistoryScreenState(),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     val uiState = state.uiState

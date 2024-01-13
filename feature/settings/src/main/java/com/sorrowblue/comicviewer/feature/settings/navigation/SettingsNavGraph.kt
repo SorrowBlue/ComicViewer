@@ -1,7 +1,8 @@
 package com.sorrowblue.comicviewer.feature.settings.navigation
 
 import androidx.navigation.NavController
-import com.ramcosta.composedestinations.scope.DestinationScopeWithNoDependencies
+import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
+import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.destinations.SettingsScreenDestination
@@ -22,16 +23,19 @@ object SettingsNavGraph : AnimatedNavGraphSpec {
     )
 }
 
-fun DestinationScopeWithNoDependencies<*>.settingsNavGraphNavigator(navigator: SettingsNavGraphNavigator) =
-    SettingsNavGraphNavigatorImpl(navigator, navController)
-
 interface SettingsNavGraphNavigator {
     fun onStartTutorialClick()
     fun onPasswordChange()
     fun navigateToChangeAuth(enabled: Boolean)
 }
 
-class SettingsNavGraphNavigatorImpl internal constructor(
+fun DependenciesContainerBuilder<*>.dependencySettingsNavGraph(navigator: SettingsNavGraphNavigator) {
+    dependency(SettingsNavGraph) {
+        SettingsNavGraphNavigatorImpl(navigator, navController)
+    }
+}
+
+private class SettingsNavGraphNavigatorImpl(
     navigator: SettingsNavGraphNavigator,
     private val navController: NavController,
 ) : SettingsScreenNavigator,

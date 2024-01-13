@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.favorite.edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -12,13 +11,14 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEditArgs
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-interface FavoriteEditScreenState {
+interface FavoriteEditScreenState : SaveableScreenState {
     val uiState: FavoriteEditScreenUiState
     val pagingDataFlow: Flow<PagingData<File>>
     fun onDeleteClick(file: File)
@@ -29,13 +29,12 @@ interface FavoriteEditScreenState {
 @Composable
 internal fun rememberFavoriteEditScreenState(
     args: FavoriteEditArgs,
-    savedStateHandle: SavedStateHandle,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: FavoriteEditViewModel = hiltViewModel(),
-): FavoriteEditScreenState = remember {
+): FavoriteEditScreenState = rememberSaveableScreenState {
     FavoriteEditScreenStateImpl(
         scope = scope,
-        savedStateHandle = savedStateHandle,
+        savedStateHandle = it,
         args = args,
         viewModel = viewModel
     )
@@ -45,7 +44,7 @@ internal fun rememberFavoriteEditScreenState(
 @Stable
 private class FavoriteEditScreenStateImpl(
     scope: CoroutineScope,
-    savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     private val args: FavoriteEditArgs,
     private val viewModel: FavoriteEditViewModel,
 ) : FavoriteEditScreenState {

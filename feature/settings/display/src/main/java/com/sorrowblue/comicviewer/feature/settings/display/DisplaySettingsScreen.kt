@@ -6,8 +6,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
@@ -21,12 +19,10 @@ import kotlinx.parcelize.Parcelize
 @Destination
 @Composable
 internal fun DisplaySettingsScreen(
-    navBackStackEntry: NavBackStackEntry,
     contentPadding: PaddingValues,
     navigator: SettingsDetailNavigator,
 ) {
     DisplaySettingsScreen(
-        savedStateHandle = navBackStackEntry.savedStateHandle,
         contentPadding = contentPadding,
         onBackClick = navigator::navigateBack
     )
@@ -34,10 +30,9 @@ internal fun DisplaySettingsScreen(
 
 @Composable
 private fun DisplaySettingsScreen(
-    savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
     contentPadding: PaddingValues,
-    state: DisplaySettingsScreenState = rememberDisplaySettingsScreenState(savedStateHandle = savedStateHandle),
+    state: DisplaySettingsScreenState = rememberDisplaySettingsScreenState(),
 ) {
     DisplaySettingsScreen(
         uiState = state.uiState,

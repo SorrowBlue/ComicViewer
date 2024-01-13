@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -39,12 +37,8 @@ interface ReadLaterScreenNavigator {
 
 @Destination
 @Composable
-internal fun ReadLaterScreen(
-    navBackStackEntry: NavBackStackEntry,
-    navigator: ReadLaterScreenNavigator,
-) {
+internal fun ReadLaterScreen(navigator: ReadLaterScreenNavigator) {
     ReadLaterScreen(
-        savedStateHandle = navBackStackEntry.savedStateHandle,
         onSettingsClick = navigator::onSettingsClick,
         onFileClick = navigator::onFileClick,
         onFavoriteClick = navigator::onFavoriteClick,
@@ -55,12 +49,11 @@ internal fun ReadLaterScreen(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun ReadLaterScreen(
-    savedStateHandle: SavedStateHandle,
     onSettingsClick: () -> Unit,
     onFileClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    state: ReadLaterScreenState = rememberReadLaterScreenState(savedStateHandle = savedStateHandle),
+    state: ReadLaterScreenState = rememberReadLaterScreenState(),
 ) {
     val uiState = state.uiState
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()

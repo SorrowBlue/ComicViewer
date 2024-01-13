@@ -80,7 +80,7 @@ internal class GoogleDriveScreenState(
     var uiState by savedStateHandle.saveable { mutableStateOf(GoogleDriveScreenUiState()) }
         private set
 
-    var book: Book? by savedStateHandle.saveable(
+    private var book: Book? by savedStateHandle.saveable(
         key = "book",
         stateSaver = autoSaver()
     ) { mutableStateOf(null) }
@@ -156,7 +156,7 @@ internal class GoogleDriveScreenState(
     fun onFileClick(
         file: File,
         createFileRequest: ManagedActivityResultLauncher<Intent, ActivityResult>,
-        onFileClick: (File) -> Unit,
+        onFileClick: (Folder) -> Unit,
     ) {
         when (file) {
             is Book -> {

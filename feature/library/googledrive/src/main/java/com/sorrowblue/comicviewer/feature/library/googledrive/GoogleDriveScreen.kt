@@ -25,6 +25,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.googledrive.component.FileListItem
 import com.sorrowblue.comicviewer.feature.library.googledrive.component.GoogleDriveTopAppBar
 import com.sorrowblue.comicviewer.feature.library.googledrive.data.googleDriveModule
@@ -38,7 +39,7 @@ import org.koin.core.context.loadKoinModules
 
 interface GoogleDriveScreenNavigator : CoreNavigator {
 
-    fun onFileClick(file: File)
+    fun onFolderClick(folder: Folder)
     fun requireAuthentication()
 }
 
@@ -56,7 +57,7 @@ internal fun GoogleDriveScreen(
         args = args,
         savedStateHandle = navBackStackEntry.savedStateHandle,
         onBackClick = navigator::navigateUp,
-        onFileClick = navigator::onFileClick,
+        onFolderClick = navigator::onFolderClick,
         requireAuthentication = navigator::requireAuthentication
     )
 }
@@ -67,7 +68,7 @@ private fun GoogleDriveScreen(
     args: GoogleDriveArgs,
     savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
-    onFileClick: (File) -> Unit,
+    onFolderClick: (Folder) -> Unit,
     requireAuthentication: () -> Unit,
     state: GoogleDriveScreenState = rememberGoogleDriveScreenState(args = args, savedStateHandle),
 ) {
@@ -93,7 +94,7 @@ private fun GoogleDriveScreen(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onProfileImageClick = state::onProfileImageClick,
-        onFileClick = { file -> state.onFileClick(file, createFileRequest, onFileClick) },
+        onFileClick = { file -> state.onFileClick(file, createFileRequest, onFolderClick) },
         onDialogDismissRequest = state::onDialogDismissRequest,
         onLogoutClick = { state.onLogoutClick(activity) },
         onBackClick = onBackClick,

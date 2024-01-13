@@ -18,14 +18,15 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.feature.search.SearchArgs
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditionsUiState
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Stable
-internal interface SearchScreenState {
+internal interface SearchScreenState : SaveableScreenState {
     val navigator: ThreePaneScaffoldNavigator
 
     val uiState: SearchScreenUiState
@@ -43,14 +44,13 @@ internal interface SearchScreenState {
 @Composable
 internal fun rememberSearchScreenState(
     args: SearchArgs,
-    savedStateHandle: SavedStateHandle,
     viewModel: SearchViewModel = hiltViewModel(),
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
-): SearchScreenState = remember {
+): SearchScreenState = rememberSaveableScreenState {
     SearchScreenStateImpl(
-        savedStateHandle = savedStateHandle,
+        savedStateHandle = it,
         args = args,
         navigator = navigator,
         viewModel = viewModel
@@ -59,7 +59,7 @@ internal fun rememberSearchScreenState(
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 private class SearchScreenStateImpl(
-    savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator,
     private val args: SearchArgs,
     private val viewModel: SearchViewModel,
