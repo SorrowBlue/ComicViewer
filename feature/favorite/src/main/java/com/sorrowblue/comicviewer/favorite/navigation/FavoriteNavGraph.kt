@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.feature.favorite.edit.destinations.FavoriteEdi
 import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec
 import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
 
-
 object FavoriteNavGraph : AnimatedNavGraphSpec {
 
     override val route = "favorite_graph"

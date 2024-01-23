@@ -30,8 +30,11 @@ interface FavoriteNavGraphNavigator {
 class FavoriteNavGraphNavigatorImpl internal constructor(
     navigator: FavoriteNavGraphNavigator,
     private val navController: NavController,
-) : FavoriteListNavigator, FavoriteScreenNavigator, FolderScreenNavigator,
-    FavoriteEditScreenNavigator, FavoriteNavGraphNavigator by navigator {
+) : FavoriteListNavigator,
+    FavoriteScreenNavigator,
+    FolderScreenNavigator,
+    FavoriteEditScreenNavigator,
+    FavoriteNavGraphNavigator by navigator {
 
     override fun navigateUp() {
         navController.navigateUp()

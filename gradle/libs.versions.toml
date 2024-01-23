@@ -22,7 +22,7 @@ android-gradle = "8.2.1"
 detekt = "1.23.4"
 mikepenz-aboutlibraries = "10.10.0"
 koin = "3.5.3"
-compose-destinations = "1.9.56"
+compose-destinations = "1.9.62"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }

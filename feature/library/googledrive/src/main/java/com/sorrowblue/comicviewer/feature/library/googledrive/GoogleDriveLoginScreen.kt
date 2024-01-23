@@ -55,7 +55,7 @@ private fun GoogleDriveLoginScreen(
     savedStateHandle: SavedStateHandle,
     onCloseClick: () -> Unit,
     onComplete: () -> Unit,
-    state: GoogleDriveLoginScreenState = rememberGoogleDriveLoginScreenState(savedStateHandle = savedStateHandle),
+    state: GoogleDriveLoginScreenState = rememberGoogleDriveLoginScreenState(savedStateHandle = savedStateHandle,),
 ) {
     state.events.forEach {
         when (it) {

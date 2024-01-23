@@ -11,10 +11,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
-import com.ramcosta.composedestinations.utils.composable
-import com.sorrowblue.comicviewer.app.destinations.ComicViewerAppDestination
 import dagger.hilt.android.AndroidEntryPoint
 import logcat.logcat
 
@@ -25,21 +21,17 @@ internal class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
+            enableEdgeToEdge(
+                navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+            )
             super.onCreate(savedInstanceState)
             setKeepOnScreenCondition(viewModel::shouldKeepSplash)
             setOnExitAnimationListener(SplashScreenViewProvider::startSlideUpAnime)
         }
 
-        enableEdgeToEdge(
-            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
-        )
 
         setContent {
-            NavHost(navController = rememberNavController(), startDestination = ComicViewerAppDestination.route) {
-                composable(ComicViewerAppDestination) {
-                    ComicViewerApp(savedStateHandle = navBackStackEntry.savedStateHandle)
-                }
-            }
+            ComicViewerApp()
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

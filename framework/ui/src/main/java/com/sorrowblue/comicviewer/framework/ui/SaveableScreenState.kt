@@ -13,7 +13,7 @@ interface SaveableScreenState {
 @SuppressLint("RestrictedApi")
 @Composable
 fun <R : SaveableScreenState> rememberSaveableScreenState(init: (SavedStateHandle) -> R): R {
-    return rememberSaveable<R>(
+    return rememberSaveable(
         saver = Saver(
             save = {
                 it.savedStateHandle.savedStateProvider().saveState()

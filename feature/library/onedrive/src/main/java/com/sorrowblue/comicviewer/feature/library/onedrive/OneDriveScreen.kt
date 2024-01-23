@@ -71,7 +71,6 @@ private fun OneDriveScreen(
         savedStateHandle = savedStateHandle
     ),
 ) {
-
     state.events.forEach { event ->
         when (event) {
             OneDriveScreenEvent.RequireAuthentication -> {

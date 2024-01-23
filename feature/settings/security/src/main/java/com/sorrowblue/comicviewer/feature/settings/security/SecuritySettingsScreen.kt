@@ -18,14 +18,13 @@ interface SecuritySettingsScreenNavigator : SettingsDetailNavigator {
 
     fun navigateToChangeAuth(enabled: Boolean)
     fun navigateToPasswordChange()
-
 }
 
 @Destination
 @Composable
 internal fun SecuritySettingsScreen(
     contentPadding: PaddingValues,
-    navigator: SecuritySettingsScreenNavigator
+    navigator: SecuritySettingsScreenNavigator,
 ) {
     SecuritySettingsScreen(
         contentPadding = contentPadding,

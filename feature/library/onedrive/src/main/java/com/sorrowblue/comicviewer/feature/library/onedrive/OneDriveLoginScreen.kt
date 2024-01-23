@@ -39,9 +39,9 @@ internal interface OneDriveLoginScreenNavigator : CoreNavigator {
 internal fun OneDriveLoginScreen(
     navBackStackEntry: NavBackStackEntry,
     navigator: OneDriveLoginScreenNavigator,
-    state: OneDriveLoginScreenState = rememberOneDriveLoginScreenState(savedStateHandle = navBackStackEntry.savedStateHandle),
+    state: OneDriveLoginScreenState =
+        rememberOneDriveLoginScreenState(savedStateHandle = navBackStackEntry.savedStateHandle),
 ) {
-
     state.events.forEach { event ->
         when (event) {
             OneDriveLoginScreenEvent.Authenticated -> {

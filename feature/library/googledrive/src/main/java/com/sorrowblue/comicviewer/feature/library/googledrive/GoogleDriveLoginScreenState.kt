@@ -9,12 +9,15 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import com.sorrowblue.comicviewer.feature.library.googledrive.data.GoogleDriveApiRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.compose.koinInject
 
@@ -35,12 +38,14 @@ internal interface GoogleDriveLoginScreenState {
 @Composable
 internal fun rememberGoogleDriveLoginScreenState(
     savedStateHandle: SavedStateHandle,
+    scope: CoroutineScope = rememberCoroutineScope(),
     activity: ComponentActivity = LocalContext.current as ComponentActivity,
     repository: GoogleDriveApiRepository = koinInject(),
 ): GoogleDriveLoginScreenState {
     return remember {
         GoogleDriveLoginScreenStateImpl(
             savedStateHandle = savedStateHandle,
+            scope = scope,
             activity = activity,
             repository = repository
         )
@@ -54,6 +59,7 @@ sealed interface GoogleDriveLoginScreenEvent {
 @OptIn(SavedStateHandleSaveableApi::class)
 private class GoogleDriveLoginScreenStateImpl(
     savedStateHandle: SavedStateHandle,
+    scope: CoroutineScope,
     private val activity: ComponentActivity,
     private val repository: GoogleDriveApiRepository,
 ) : GoogleDriveLoginScreenState {
@@ -66,12 +72,11 @@ private class GoogleDriveLoginScreenStateImpl(
             if (it != null) {
                 events += GoogleDriveLoginScreenEvent.Authenticated
             }
-        }
+        }.launchIn(scope)
     }
 
     override var uiState by savedStateHandle.saveable { mutableStateOf(GoogleDriveLoginScreenUiState()) }
         private set
-
 
     override fun consumeEvent(event: GoogleDriveLoginScreenEvent) {
         events.remove(event)

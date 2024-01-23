@@ -53,11 +53,11 @@ internal interface FavoriteScreenState : SaveableScreenState {
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberFavoriteScreenState(
+    args: FavoriteArgs,
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     lazyGridState: LazyGridState = rememberLazyGridState(),
-    args: FavoriteArgs,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: FavoriteViewModel = hiltViewModel(),
 ): FavoriteScreenState = rememberSaveableScreenState {

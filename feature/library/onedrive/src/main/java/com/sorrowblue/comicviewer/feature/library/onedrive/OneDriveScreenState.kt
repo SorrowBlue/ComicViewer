@@ -43,7 +43,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-import logcat.logcat
 import org.koin.compose.koinInject
 
 sealed interface OneDriveScreenEvent {

@@ -72,7 +72,6 @@ private fun GoogleDriveScreen(
     requireAuthentication: () -> Unit,
     state: GoogleDriveScreenState = rememberGoogleDriveScreenState(args = args, savedStateHandle),
 ) {
-
     state.events.forEach { event ->
         when (event) {
             GoogleDriveScreenEvent.RequireAuthentication -> {

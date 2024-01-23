@@ -72,7 +72,6 @@ private fun DropBoxScreen(
         savedStateHandle = savedStateHandle
     ),
 ) {
-
     state.events.forEach { event ->
         when (event) {
             DropBoxScreenEvent.RequireAuthentication -> {

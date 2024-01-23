@@ -14,13 +14,17 @@ import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
 
-object RootNavGraph : NavGraphSpec {
+internal object RootNavGraph : NavGraphSpec {
+
+    override val route = "root"
+
+    override val startRoute = BookshelfNavGraph
+
     override val destinationsByRoute = listOf(
         FavoriteAddScreenDestination,
         BookScreenDestination
     ).associateBy(DestinationSpec<*>::route)
-    override val route = "root"
-    override val startRoute = BookshelfNavGraph
+
     override val nestedNavGraphs = listOf(
         BookshelfNavGraph,
         FavoriteNavGraph,
@@ -33,6 +37,3 @@ object RootNavGraph : NavGraphSpec {
         LibraryNavGraph,
     )
 }
-
-val NavGraphSpec.allNestedNavGraphs: List<NavGraphSpec>
-    get() = nestedNavGraphs + nestedNavGraphs.flatMap(NavGraphSpec::allNestedNavGraphs)

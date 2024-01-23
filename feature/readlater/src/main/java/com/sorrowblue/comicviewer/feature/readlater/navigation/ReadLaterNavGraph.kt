@@ -75,7 +75,6 @@ class ReadLaterNavGraphNavigatorImpl internal constructor(
     override fun navigateUp() {
         navController.navigateUp()
     }
-
 }
 
 val RouteInReadlaterGraph = listOf(
