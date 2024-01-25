@@ -6,12 +6,14 @@ import com.sorrowblue.comicviewer.data.infrastructure.repository.impl.FavoriteRe
 import com.sorrowblue.comicviewer.data.infrastructure.repository.impl.FileRepositoryImpl
 import com.sorrowblue.comicviewer.data.infrastructure.repository.impl.ReadLaterRepositoryImpl
 import com.sorrowblue.comicviewer.data.infrastructure.repository.impl.SettingsCommonRepositoryImpl
+import com.sorrowblue.comicviewer.data.infrastructure.repository.impl.SplitInstallRepositoryImpl
 import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FavoriteFileRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FavoriteRepository
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.service.repository.ReadLaterRepository
 import com.sorrowblue.comicviewer.domain.service.repository.SettingsCommonRepository
+import com.sorrowblue.comicviewer.domain.service.repository.SplitInstallRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -45,4 +47,8 @@ internal interface SingletonBindsModule {
     @Singleton
     @Binds
     fun bindFavoriteBookRepository(factory: FavoriteFileRepositoryImpl): FavoriteFileRepository
+
+    @Singleton
+    @Binds
+    fun bindSplitInstallRepository(repository: SplitInstallRepositoryImpl): SplitInstallRepository
 }

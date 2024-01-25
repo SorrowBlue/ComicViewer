@@ -42,6 +42,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -100,9 +101,7 @@ private class ComicViewerAppStateImpl(
     override var uiState by savedStateHandle.saveable { mutableStateOf(MainScreenUiState()) }
         private set
 
-    override val addOnList = mutableStateListOf<AddOn>().apply {
-        addAll(viewModel.installedModules.mapNotNull { module -> AddOn.entries.find { it.moduleName == module } })
-    }
+    override val addOnList = mutableStateListOf<AddOn>()
 
     init {
         val backStackEntryFlow = navController.currentBackStackEntryFlow
@@ -146,15 +145,16 @@ private class ComicViewerAppStateImpl(
     }
 
     override fun onStart() {
-        val installedModules = viewModel.installedModules
+        scope.launch {
+            val installedModules = viewModel.installedModules.first()
+            addOnList.removeAll { !installedModules.contains(it.moduleName) }
+            addOnList.addAll(
+                installedModules
+                    .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }
+                    .filter { module -> !addOnList.any { it == module } }
+            )
 
-        addOnList.removeAll { !installedModules.contains(it.moduleName) }
-
-        addOnList.addAll(
-            installedModules
-                .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }
-                .filter { module -> !addOnList.any { it == module } }
-        )
+        }
 
         logcat { "addOnList=${addOnList.joinToString(",") { it.moduleName }}" }
 
