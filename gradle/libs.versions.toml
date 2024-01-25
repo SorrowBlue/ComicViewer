@@ -17,7 +17,7 @@ androidx-work = "2.9.0"
 androidx-compose-compiler = "1.5.8"
 
 google-dagger = "2.50"
-android-gradle = "8.2.1"
+android-gradle = "8.2.2"
 
 detekt = "1.23.4"
 mikepenz-aboutlibraries = "10.10.0"
