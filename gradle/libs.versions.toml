@@ -33,7 +33,7 @@ kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", versio
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
-ben-manes-versions = "com.github.ben-manes.versions:0.50.0"
+ben-manes-versions = "com.github.ben-manes.versions:0.51.0"
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
 mikepenz-aboutlibraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "mikepenz-aboutlibraries" }
 dependency-graph-generator = "com.vanniktech.dependency.graph.generator:0.8.0"
@@ -148,17 +148,17 @@ github-omicronapps-SevenZipJBinding4Android = "com.github.omicronapps:7-Zip-JBin
 artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.23.7"
 squareup-logcat = "com.squareup.logcat:logcat:0.1"
 chrisbanes-insetter = "dev.chrisbanes.insetter:insetter-dbx:0.6.1"
-fasterxml-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.16.0"
+fasterxml-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.16.1"
 
 google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "google-dagger" }
 google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "google-dagger" }
 google-dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "google-dagger" }
 
 junit = "junit:junit:4.13.2"
-box-java-sdk = "com.box:box-java-sdk:4.6.1"
+box-java-sdk = "com.box:box-java-sdk:4.7.0"
 
 microsoft-identity-client-msal = "com.microsoft.identity.client:msal:4.10.0"
-microsoft-graph = "com.microsoft.graph:microsoft-graph:5.77.0"
+microsoft-graph = "com.microsoft.graph:microsoft-graph:5.80.0"
 
 androidx-test-core-ktx = "androidx.test:core-ktx:1.5.0"
 androidx-test-runner = "androidx.test:runner:1.5.2"
@@ -171,7 +171,7 @@ androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.1"
 robolectric = "org.robolectric:robolectric:4.11.1"
 
 mikepenz-aboutlibraries = { module = "com.mikepenz:aboutlibraries", version.ref = "mikepenz-aboutlibraries" }
-nlopez-compose-rules-detekt = "io.nlopez.compose.rules:detekt:0.3.8"
+nlopez-compose-rules-detekt = "io.nlopez.compose.rules:detekt:0.3.10"
 arturbosch-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 arturbosch-detektGradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 
