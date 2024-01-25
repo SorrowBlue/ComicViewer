@@ -21,21 +21,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
-abstract class StateEvent {
-    val uuid: UUID = UUID.randomUUID()
-
-    override fun hashCode(): Int {
-        return uuid.hashCode()
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as DropBoxLoginScreenEvent
-        return uuid == other.uuid
-    }
-}
-
 internal sealed class DropBoxLoginScreenEvent {
 
     val uuid: UUID = UUID.randomUUID()

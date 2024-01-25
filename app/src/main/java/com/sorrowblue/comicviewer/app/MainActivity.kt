@@ -29,7 +29,6 @@ internal class MainActivity : AppCompatActivity() {
             setOnExitAnimationListener(SplashScreenViewProvider::startSlideUpAnime)
         }
 
-
         setContent {
             ComicViewerApp()
         }

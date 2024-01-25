@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
 import androidx.lifecycle.ViewModel
-import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.mapNotNull
 @HiltViewModel
 internal class ComicViewerAppViewModel @Inject constructor(
     private val getInstalledModulesUseCase: GetInstalledModulesUseCase,
-    private val splitInstallManager: SplitInstallManager,
     private val loadSettingsUseCase: LoadSettingsUseCase,
     private val securitySettingsUseCase: ManageSecuritySettingsUseCase,
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,

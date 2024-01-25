@@ -61,6 +61,7 @@ internal object BoxNavGraphImpl : BoxNavGraph {
         override fun get() = BoxNavGraphImpl
     }
 }
+
 private class BoxNavGraphNavigator(private val navController: NavController) :
     BoxScreenNavigator,
     BoxOauth2RouteNavigator {

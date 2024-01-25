@@ -27,7 +27,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
-import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.SortItem
 import com.sorrowblue.comicviewer.folder.section.SortOrder
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState

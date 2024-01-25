@@ -35,7 +35,6 @@ import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
-import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.SortItem
@@ -54,6 +53,12 @@ import kotlin.math.min
 import kotlinx.parcelize.Parcelize
 import logcat.asLog
 import logcat.logcat
+
+class FolderArgs(
+    val bookshelfId: BookshelfId,
+    val path: String,
+    val restorePath: String?,
+)
 
 @Parcelize
 internal data class FolderScreenUiState(

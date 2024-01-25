@@ -153,7 +153,6 @@ private class ComicViewerAppStateImpl(
                     .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }
                     .filter { module -> !addOnList.any { it == module } }
             )
-
         }
 
         logcat { "addOnList=${addOnList.joinToString(",") { it.moduleName }}" }
