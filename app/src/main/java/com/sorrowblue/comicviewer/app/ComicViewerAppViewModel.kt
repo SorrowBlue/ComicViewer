@@ -26,7 +26,7 @@ internal class ComicViewerAppViewModel @Inject constructor(
     var shouldKeepSplash = true
 
     suspend fun isTutorial() = !loadSettingsUseCase.settings.first().doneTutorial
-    suspend fun isRestore() = manageDisplaySettingsUseCase.settings.first().restoreOnLaunch
+    suspend fun isNeedToRestore() = manageDisplaySettingsUseCase.settings.first().restoreOnLaunch
 
     suspend fun history() =
         getNavigationHistoryUseCase.execute(EmptyRequest).first().fold({ it }, { null })

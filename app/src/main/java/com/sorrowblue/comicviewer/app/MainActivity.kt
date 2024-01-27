@@ -1,9 +1,7 @@
 package com.sorrowblue.comicviewer.app
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,8 +9,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
+import androidx.navigation.compose.rememberNavController
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popUpTo
+import com.sorrowblue.comicviewer.feature.authentication.destinations.AuthenticationScreenDestination
+import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
+import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
 import dagger.hilt.android.AndroidEntryPoint
-import logcat.logcat
 
 @AndroidEntryPoint
 internal class MainActivity : AppCompatActivity() {
@@ -30,17 +33,31 @@ internal class MainActivity : AppCompatActivity() {
         }
 
         setContent {
-            ComicViewerApp()
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            onBackPressedDispatcher.addCallback(
-                this,
-                object : OnBackPressedCallback(false) {
-                    override fun handleOnBackPressed() {
-                        logcat { "onback" }
+            val navController = rememberNavController()
+            ComicViewerApp(
+                onTutorial = {
+                    navController.navigate(TutorialNavGraph) {
+                        popUpTo(RootNavGraph) {
+                            inclusive = true
+                        }
                     }
-                }
+                },
+                onAuth = {
+                    navController.navigate(
+                        AuthenticationScreenDestination(
+                            Mode.Authentication,
+                            it
+                        )
+                    ) {
+                        launchSingleTop = true
+                        if (it) {
+                            popUpTo(RootNavGraph) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                },
+                navController = navController
             )
         }
     }

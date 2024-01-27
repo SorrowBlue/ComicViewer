@@ -30,20 +30,17 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 internal data class MainScreenUiState(
     val currentTab: MainScreenTab? = null,
-    val showNavigation: Boolean = currentTab != null,
     val tabs: PersistentList<MainScreenTab> = MainScreenTab.entries.toPersistentList(),
 ) : Parcelable {
 
     companion object : Parceler<MainScreenUiState> {
         override fun MainScreenUiState.write(parcel: Parcel, flags: Int) {
             parcel.writeString(currentTab?.name)
-            parcel.writeByte(if (showNavigation) 1 else 0)
             parcel.writeStringList(tabs.map(MainScreenTab::name))
         }
 
         override fun create(parcel: Parcel) = MainScreenUiState(
             parcel.readString()?.let(MainScreenTab::valueOf),
-            parcel.readByte() != 0.toByte(),
             mutableListOf<String>().also(parcel::readStringList)
                 .map(MainScreenTab::valueOf).toPersistentList()
         )
@@ -61,7 +58,7 @@ internal fun MainScreen(
     onTabSelected: (NavController, MainScreenTab) -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val navSuiteType: NavigationSuiteType = if (uiState.showNavigation) {
+    val navSuiteType: NavigationSuiteType = if (uiState.currentTab != null) {
         NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
     } else {
         NavigationSuiteType.None

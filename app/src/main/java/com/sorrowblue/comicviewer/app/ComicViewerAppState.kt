@@ -24,17 +24,13 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popUpTo
 import com.sorrowblue.comicviewer.bookshelf.destinations.BookshelfFolderScreenDestination
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfNavGraph
 import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraph
-import com.sorrowblue.comicviewer.feature.authentication.destinations.AuthenticationScreenDestination
-import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.destinations.TutorialScreenDestination
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
@@ -51,6 +47,7 @@ import logcat.logcat
 
 internal interface ComicViewerAppState : SaveableScreenState {
 
+    val appEvent: ComicViewerAppEvent
     val uiState: MainScreenUiState
     val navController: NavHostController
     val addOnList: SnapshotStateList<AddOn>
@@ -64,6 +61,11 @@ internal interface ComicViewerAppState : SaveableScreenState {
         tab: MainScreenTab,
     )
 }
+
+internal data class ComicViewerAppEvent(
+    val navigateToTutorial: Boolean = false,
+    val navigateToAuth: Boolean? = null,
+)
 
 @Composable
 internal fun rememberComicViewerAppState(
@@ -101,6 +103,9 @@ private class ComicViewerAppStateImpl(
     override var uiState by savedStateHandle.saveable { mutableStateOf(MainScreenUiState()) }
         private set
 
+    override var appEvent by savedStateHandle.saveable { mutableStateOf(ComicViewerAppEvent()) }
+        private set
+
     override val addOnList = mutableStateListOf<AddOn>()
 
     init {
@@ -108,40 +113,46 @@ private class ComicViewerAppStateImpl(
         backStackEntryFlow
             .filter { it.destination is ComposeNavigator.Destination }
             .onEach {
-                logcat { "destination.hierarchy=${it.destination.hierarchy.joinToString(",") { it.route.orEmpty() }}" }
                 val currentTab = MainScreenTab.entries.find { tab ->
                     it.destination.hierarchy.any { it.route == tab.navGraph.route }
                 }
-                uiState = uiState.copy(
-                    currentTab = currentTab,
-                    showNavigation = currentTab != null
-                )
+                uiState = uiState.copy(currentTab = currentTab)
+                logcat {
+                    "destination.hierarchy=${
+                        it.destination.hierarchy.joinToString(",") {
+                            it.route.orEmpty().ifEmpty { "null" }
+                        }
+                    }"
+                }
             }.flowWithLifecycle(lifecycle)
             .launchIn(scope)
     }
 
     override fun onCreate() {
-        if (this.isInitialized) return
+        if (isInitialized) return
         scope.launch {
             if (viewModel.isTutorial()) {
-                navController.navigate(TutorialNavGraph) {
-                    popUpTo(RootNavGraph) {
-                        inclusive = true
-                    }
-                }
-                viewModel.shouldKeepSplash = false
-                this@ComicViewerAppStateImpl.isInitialized = true
-            } else if (viewModel.isRestore()) {
-                val job = restoreNavigation()
-                scope.launch {
-                    delay(3000)
-                    completeRestoreHistory()
-                    job.cancel()
-                }
+                appEvent = appEvent.copy(navigateToTutorial = true)
+                finishInit()
+            } else if (viewModel.isNeedToRestore()) {
+                cancelJob(
+                    scope = scope,
+                    waitTimeMillis = 3000,
+                    onCancel = ::completeRestoreHistory,
+                    action = ::restoreNavigation
+                )
             } else {
                 completeRestoreHistory()
             }
         }
+    }
+
+    /**
+     * 初期化処理を終了する。
+     */
+    private fun finishInit() {
+        isInitialized = true
+        viewModel.shouldKeepSplash = false
     }
 
     override fun onStart() {
@@ -157,14 +168,10 @@ private class ComicViewerAppStateImpl(
 
         logcat { "addOnList=${addOnList.joinToString(",") { it.moduleName }}" }
 
-        if (this.isInitialized) {
+        if (isInitialized) {
             scope.launch {
                 if (viewModel.lockOnBackground()) {
-                    navController.navigate(
-                        AuthenticationScreenDestination(Mode.Authentication, true)
-                    ) {
-                        launchSingleTop = true
-                    }
+                    appEvent = appEvent.copy(navigateToAuth = true)
                     viewModel.shouldKeepSplash = false
                 } else {
                     viewModel.shouldKeepSplash = false
@@ -198,21 +205,10 @@ private class ComicViewerAppStateImpl(
         scope.launch {
             if (viewModel.isAuth()) {
                 logcat { "認証 復元完了後" }
-                if (isRestoredNavHistory) {
-                    navController.navigate(
-                        AuthenticationScreenDestination(Mode.Authentication, true)
-                    ) {
-                        launchSingleTop = true
-                    }
+                appEvent = if (isRestoredNavHistory) {
+                    appEvent.copy(navigateToAuth = true)
                 } else {
-                    navController.navigate(
-                        AuthenticationScreenDestination(Mode.Authentication, false)
-                    ) {
-                        launchSingleTop = true
-                        popUpTo(RootNavGraph) {
-                            inclusive = true
-                        }
-                    }
+                    appEvent.copy(navigateToAuth = false)
                 }
                 viewModel.shouldKeepSplash = false
                 isInitialized = true
@@ -302,5 +298,21 @@ private class ComicViewerAppStateImpl(
                 }
             }
         }
+    }
+}
+
+fun cancelJob(
+    scope: CoroutineScope,
+    waitTimeMillis: Long,
+    onCancel: () -> Unit,
+    action: () -> Unit,
+) {
+    val job = scope.launch {
+        action()
+    }
+    scope.launch {
+        delay(waitTimeMillis)
+        onCancel()
+        job.cancel()
     }
 }

@@ -19,13 +19,20 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.NestedNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.navigation.navigate
@@ -47,11 +54,16 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
 import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.mapNotNull
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 internal fun ComicViewerApp(
-    state: ComicViewerAppState = rememberComicViewerAppState(),
+    onTutorial: () -> Unit,
+    onAuth: (Boolean) -> Unit,
+    navController: NavHostController,
+    state: ComicViewerAppState = rememberComicViewerAppState(navController = navController),
     windowsSize: WindowSizeClass = calculateWindowSizeClass(LocalContext.current as ComponentActivity),
     activity: ComponentActivity = LocalContext.current as ComponentActivity,
 ) {
@@ -135,6 +147,30 @@ internal fun ComicViewerApp(
     }
     LifecycleEffect(Lifecycle.Event.ON_CREATE, action = state::onCreate)
     LifecycleEffect(Lifecycle.Event.ON_START, action = state::onStart)
+
+
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val currentOnTutorial by rememberUpdatedState(onTutorial)
+    LaunchedEffect(state, lifecycle) {
+        // Whenever the uiState changes, check if the user is logged in and
+        // call the `onUserLogin` event when `lifecycle` is at least STARTED
+        snapshotFlow { state.appEvent }
+            .filter { it.navigateToTutorial }
+            .flowWithLifecycle(lifecycle)
+            .collect {
+                currentOnTutorial()
+            }
+    }
+    val currentOnAuth by rememberUpdatedState(onAuth)
+    LaunchedEffect(state, lifecycle) {
+        // Whenever the uiState changes, check if the user is logged in and
+        // call the `onUserLogin` event when `lifecycle` is at least STARTED
+        snapshotFlow { state.appEvent }
+            .mapNotNull { it.navigateToAuth }
+            .flowWithLifecycle(lifecycle)
+            .collect(currentOnAuth)
+    }
+
 }
 
 fun AddOn.findNavGraph(): AddOnNavGraph? {

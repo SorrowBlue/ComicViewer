@@ -5,6 +5,7 @@ import com.ramcosta.composedestinations.spec.NavGraphSpec
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfNavGraph
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraph
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavGraph
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 enum class MainScreenTab(
@@ -28,7 +29,7 @@ enum class MainScreenTab(
     ),
 
     Readlater(
-        RootNavGraph,
+        ReadLaterNavGraph,
         R.string.app_label_read_later,
         ComicIcons.WatchLater,
         R.string.app_label_read_later
