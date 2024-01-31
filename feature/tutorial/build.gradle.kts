@@ -9,5 +9,4 @@ android {
 
 dependencies {
     implementation(libs.google.android.play.feature.delivery.ktx)
-    implementation(libs.google.accompanist.pagerIndicators)
 }

@@ -11,7 +11,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialogUiState
@@ -30,9 +29,9 @@ internal interface FavoriteListScreenState {
     fun onNavClick()
 }
 
-context(NavBackStackEntry)
 @Composable
 internal fun rememberFavoriteListScreenState(
+    savedStateHandle: SavedStateHandle,
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyListState: LazyListState = rememberLazyListState(),
     viewModel: FavoriteListViewModel = hiltViewModel(),

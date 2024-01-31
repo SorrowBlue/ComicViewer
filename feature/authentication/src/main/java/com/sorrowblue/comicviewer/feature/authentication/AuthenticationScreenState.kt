@@ -17,37 +17,36 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
-import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationArgs
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Stable
-internal interface AuthenticationScreenState {
-    val complete: Pair<Boolean, Mode>?
+internal interface AuthenticationScreenState : SaveableScreenState {
+    val event: AuthenticationEvent
     val handleBack: Boolean
     val uiState: AuthenticationScreenUiState
     val snackbarHostState: SnackbarHostState
     fun onPinClick(pin: String)
     fun onBackspaceClick()
-    fun onNextClick(onCompleted: (Boolean, Mode) -> Unit)
-    fun complete2()
+    fun onNextClick()
 }
 
-context(NavBackStackEntry)
 @Composable
 internal fun rememberAuthenticationScreenState(
+    args: AuthenticationArgs,
     activity: FragmentActivity = LocalContext.current as FragmentActivity,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: AuthenticationViewModel = hiltViewModel(),
-): AuthenticationScreenState = remember {
+): AuthenticationScreenState = rememberSaveableScreenState {
     AuthenticationScreenStateImpl(
         activity = activity,
-        savedStateHandle = savedStateHandle,
+        savedStateHandle = it,
         snackbarHostState = snackbarHostState,
-        args = AuthenticationArgs(arguments!!),
+        args = args,
         scope = scope,
         viewModel = viewModel
     )
@@ -56,25 +55,21 @@ internal fun rememberAuthenticationScreenState(
 @OptIn(SavedStateHandleSaveableApi::class)
 private class AuthenticationScreenStateImpl(
     activity: FragmentActivity,
-    savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val snackbarHostState: SnackbarHostState,
     private val args: AuthenticationArgs,
     private val scope: CoroutineScope,
     private val viewModel: AuthenticationViewModel,
 ) : AuthenticationScreenState {
 
-    override var complete by mutableStateOf<Pair<Boolean, Mode>?>(null)
+    override var event by mutableStateOf(AuthenticationEvent())
         private set
-
-    override fun complete2() {
-        complete = null
-    }
 
     val authenticationCallback = object : BiometricPrompt.AuthenticationCallback() {
 
         override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
             super.onAuthenticationSucceeded(result)
-            complete = args.handleBack to args.mode
+            event = event.copy(completed = true)
         }
 
         override fun onAuthenticationFailed() {
@@ -115,7 +110,7 @@ private class AuthenticationScreenStateImpl(
     }
         private set
 
-    override val handleBack = args.handleBack
+    override val handleBack = args.mode == Mode.Authentication
 
     private var pin by savedStateHandle.saveable { mutableStateOf("") }
     private var pinHistory by savedStateHandle.saveable { mutableStateOf("") }
@@ -130,15 +125,15 @@ private class AuthenticationScreenStateImpl(
         uiState = uiState.copyPinCount(pin.count())
     }
 
-    override fun onNextClick(
-        onCompleted: (Boolean, Mode) -> Unit,
-    ) {
+    override fun onNextClick() {
         when (uiState) {
             is AuthenticationScreenUiState.Authentication -> {
                 viewModel.check(
                     pin,
                     onSuccess = {
-                        onCompleted(args.handleBack, args.mode)
+                        uiState =
+                            (uiState as AuthenticationScreenUiState.Authentication).copy(loading = true)
+                        event = event.copy(completed = true)
                     },
                     onError = {
                         pin = ""
@@ -184,7 +179,7 @@ private class AuthenticationScreenStateImpl(
             is AuthenticationScreenUiState.Change.Confirm -> {
                 if (pin == pinHistory) {
                     viewModel.change(pin) {
-                        onCompleted(args.handleBack, args.mode)
+                        event = event.copy(completed = true)
                     }
                 } else {
                     pin = ""
@@ -199,7 +194,7 @@ private class AuthenticationScreenStateImpl(
                 viewModel.remove(
                     pin,
                     onSuccess = {
-                        onCompleted(args.handleBack, args.mode)
+                        event = event.copy(completed = true)
                     },
                     onError = {
                         pin = ""
@@ -229,7 +224,7 @@ private class AuthenticationScreenStateImpl(
             is AuthenticationScreenUiState.Register.Confirm -> {
                 if (pin == pinHistory) {
                     viewModel.register(pin)
-                    onCompleted(args.handleBack, args.mode)
+                    event = event.copy(completed = true)
                 } else {
                     pin = ""
                     pinHistory = ""

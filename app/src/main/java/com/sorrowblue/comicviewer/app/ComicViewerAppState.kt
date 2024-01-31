@@ -1,220 +1,205 @@
 package com.sorrowblue.comicviewer.app
 
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.google.accompanist.navigation.material.BottomSheetNavigator
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
-import com.sorrowblue.comicviewer.bookshelf.navigation.navigateToBookshelfFolder
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popUpTo
+import com.sorrowblue.comicviewer.app.navigation.RootNavGraph
+import com.sorrowblue.comicviewer.bookshelf.destinations.BookshelfFolderScreenDestination
+import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfNavGraph
 import com.sorrowblue.comicviewer.domain.model.AddOn
-import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
-import com.sorrowblue.comicviewer.feature.authentication.navigation.navigateToAuthentication
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialRoute
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.navigateToTutorial
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraph
+import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavGraph
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
+import com.sorrowblue.comicviewer.feature.tutorial.destinations.TutorialScreenDestination
+import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
 
-@OptIn(ExperimentalMaterialNavigationApi::class)
-internal interface ComicViewerAppState {
-    var uiState: MainScreenUiState
+internal interface ComicViewerAppState : SaveableScreenState {
 
-    val bottomSheetNavigator: BottomSheetNavigator
+    val appEvent: ComicViewerAppEvent
+    val uiState: MainScreenUiState
     val navController: NavHostController
-    val graphStateHolder: GraphStateHolder
     val addOnList: SnapshotStateList<AddOn>
+
     fun onCreate()
     fun onStart()
     fun onCompleteTutorial()
     fun completeRestoreHistory()
+    fun onTabSelected(
+        navController: NavController,
+        tab: MainScreenTab,
+    )
+
+    fun onAuthCompleted()
 }
 
-context(NavBackStackEntry)
-@OptIn(ExperimentalMaterialNavigationApi::class)
+internal data class ComicViewerAppEvent(
+    val navigateToTutorial: Boolean = false,
+    val navigateToAuth: Boolean? = null,
+)
+
 @Composable
 internal fun rememberComicViewerAppState(
-    bottomSheetNavigator: BottomSheetNavigator = rememberBottomSheetNavigator(),
-    navController: NavHostController = rememberNavController(bottomSheetNavigator),
-    graphStateHolder: GraphStateHolder = rememberGraphStateHolder(),
-    viewModel: ComicViewerAppViewModel = hiltViewModel(),
+    viewModel: ComicViewerAppViewModel = viewModel(LocalContext.current as ComponentActivity),
+    navTabHandler: NavTabHandler = viewModel(LocalContext.current as ComponentActivity),
+    navController: NavHostController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope(),
-): ComicViewerAppState = remember {
+    lifecycle: LifecycleOwner = LocalLifecycleOwner.current,
+): ComicViewerAppState = rememberSaveableScreenState {
     ComicViewerAppStateImpl(
-        savedStateHandle,
-        bottomSheetNavigator,
-        navController,
-        graphStateHolder,
-        viewModel,
-        scope
+        savedStateHandle = it,
+        lifecycle = lifecycle.lifecycle,
+        navController = navController,
+        viewModel = viewModel,
+        navTabHandler = navTabHandler,
+        scope = scope
     )
 }
 
-@OptIn(ExperimentalMaterialNavigationApi::class, SavedStateHandleSaveableApi::class)
+@OptIn(SavedStateHandleSaveableApi::class)
 @Stable
 private class ComicViewerAppStateImpl(
-    savedStateHandle: SavedStateHandle,
-    override val bottomSheetNavigator: BottomSheetNavigator,
+    lifecycle: Lifecycle,
+    override val savedStateHandle: SavedStateHandle,
     override val navController: NavHostController,
-    override val graphStateHolder: GraphStateHolder,
     private val viewModel: ComicViewerAppViewModel,
+    private val navTabHandler: NavTabHandler,
     private val scope: CoroutineScope,
 ) : ComicViewerAppState {
 
-    var isInitialized: Boolean by savedStateHandle.saveable { mutableStateOf(false) }
-    var isRestoredNavHistory = false
+    private var isInitialized by savedStateHandle.saveable { mutableStateOf(false) }
 
-    override var uiState by savedStateHandle.saveable(
-        stateSaver = mapSaver(
-            save = {
-                mapOf("currentTab" to it.currentTab?.name, "showNavigation" to it.showNavigation)
-            },
-            restore = {
-                MainScreenUiState(
-                    currentTab = (it["currentTab"] as? String)?.let(MainScreenTab::valueOf),
-                    showNavigation = it["showNavigation"] as Boolean
-                )
-            }
-        )
-    ) {
-        mutableStateOf(MainScreenUiState())
-    }
+    private var isRestoredNavHistory = false
 
-    override val addOnList = mutableStateListOf<AddOn>().apply {
-        addAll(viewModel.installedModules.mapNotNull { module -> AddOn.entries.find { it.moduleName == module } })
-    }
+    override var uiState by savedStateHandle.saveable { mutableStateOf(MainScreenUiState()) }
+        private set
+
+    override var appEvent by savedStateHandle.saveable { mutableStateOf(ComicViewerAppEvent()) }
+        private set
+
+    override val addOnList = mutableStateListOf<AddOn>()
 
     init {
-        scope.launch {
-            navController.currentBackStackEntryFlow.collectLatest {
-                if (it.destination is ComposeNavigator.Destination) {
-                    logcat { "it.destination=${it.destination}" }
-                    val currentTab =
-                        it.destination.hierarchy.firstOrNull()?.route?.let(graphStateHolder::routeToTab)
-                    uiState = uiState.copy(
-                        currentTab = currentTab,
-                        showNavigation = currentTab != null
-                    )
+        val backStackEntryFlow = navController.currentBackStackEntryFlow
+        backStackEntryFlow
+            .filter { it.destination is ComposeNavigator.Destination }
+            .onEach {
+                val currentTab = MainScreenTab.entries.find { tab ->
+                    it.destination.hierarchy.any { it.route == tab.navGraph.route }
                 }
-            }
-        }
+                uiState = uiState.copy(currentTab = currentTab)
+                logcat {
+                    "destination.hierarchy=${
+                        it.destination.hierarchy.joinToString(",") {
+                            it.route.orEmpty().ifEmpty { "null" }
+                        }
+                    }"
+                }
+            }.flowWithLifecycle(lifecycle)
+            .launchIn(scope)
     }
 
     override fun onCreate() {
-        if (this.isInitialized) return
+        if (isInitialized) return
         scope.launch {
             if (viewModel.isTutorial()) {
-                navController.navigateToTutorial(
-                    navOptions {
-                        popUpTo(MainGraphRoute) {
-                            inclusive = true
-                        }
-                    }
+                appEvent = appEvent.copy(navigateToTutorial = true)
+                closeSplashScreen()
+                isInitialized = true
+            } else if (viewModel.isAuth()) {
+                uiState = uiState.copy(isAuthenticating = true)
+                closeSplashScreen()
+            } else if (viewModel.isNeedToRestore()) {
+                cancelJob(
+                    scope = scope,
+                    waitTimeMillis = 3000,
+                    onCancel = ::completeRestoreHistory,
+                    action = ::restoreNavigation
                 )
-                viewModel.shouldKeepSplash = false
-                this@ComicViewerAppStateImpl.isInitialized = true
-            } else if (viewModel.isRestore()) {
-                val job = restoreNavigation()
-                scope.launch {
-                    delay(3000)
-                    completeRestoreHistory()
-                    job.cancel()
-                }
             } else {
-                completeRestoreHistory()
-            }
-        }
-    }
-
-    private fun restoreNavigation(): Job {
-        return scope.launch {
-            val history = viewModel.history()
-            if (history?.folderList.isNullOrEmpty()) {
-                completeRestoreHistory()
-            } else {
-                isRestoredNavHistory = true
-                val (folderList, book) = history!!.value
-                val bookshelfId = folderList.first().bookshelfId
-                if (folderList.size == 1) {
-                    navController.navigateToBookshelfFolder(
-                        bookshelfId,
-                        folderList.first().path,
-                        book.path
-                    )
-                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
-                    }
-                } else {
-                    navController.navigateToBookshelfFolder(
-                        bookshelfId,
-                        folderList.first().path
-                    )
-                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
-                    }
-                    folderList.drop(1).dropLast(1).forEach { folder ->
-                        navController.navigateToBookshelfFolder(bookshelfId, folder.path)
-                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                            "-> folder(${folder.path})"
-                        }
-                    }
-                    navController.navigateToBookshelfFolder(
-                        bookshelfId,
-                        folderList.last().path,
-                        book.path
-                    )
-                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "-> folder${folderList.last().path}, ${book.path}"
-                    }
-                }
+                closeSplashScreen()
+                isInitialized = true
             }
         }
     }
 
     override fun onStart() {
-        val installedModules = viewModel.installedModules
+        scope.launch {
+            val installedModules = viewModel.installedModules.first()
+            addOnList.removeAll { !installedModules.contains(it.moduleName) }
+            addOnList.addAll(
+                installedModules
+                    .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }
+                    .filter { module -> !addOnList.any { it == module } }
+            )
+        }
 
-        addOnList.removeAll { !installedModules.contains(it.moduleName) }
+        logcat { "addOnList=${addOnList.joinToString(",") { it.moduleName }}" }
 
-        addOnList.addAll(
-            installedModules
-                .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }
-                .filter { module -> !addOnList.any { it == module } }
-        )
-
-        if (this.isInitialized) {
+        if (isInitialized) {
             scope.launch {
                 if (viewModel.lockOnBackground()) {
-                    navController.navigateToAuthentication(
-                        Mode.Authentication,
-                        true,
-                        navOptions { launchSingleTop = true }
+                    appEvent = appEvent.copy(navigateToAuth = true)
+                }
+                closeSplashScreen()
+            }
+        }
+    }
+
+    override fun onAuthCompleted() {
+        if (isInitialized) {
+            // 初期化済み = 履歴復元する必要がない ので何もしない
+        } else {
+            scope.launch {
+                if (viewModel.isNeedToRestore()) {
+                    cancelJob(
+                        scope = scope,
+                        waitTimeMillis = 3000,
+                        onCancel = ::completeRestoreHistory,
+                        action = ::restoreNavigation
                     )
-                    viewModel.shouldKeepSplash = false
                 } else {
-                    viewModel.shouldKeepSplash = false
+                    uiState = uiState.copy(isAuthenticating = false)
                 }
             }
         }
+    }
+
+    fun closeSplashScreen() {
+        viewModel.shouldKeepSplash = false
     }
 
     override fun onCompleteTutorial() {
@@ -225,9 +210,9 @@ private class ComicViewerAppStateImpl(
             }
             if (isTutorial) {
                 navController.navigate(
-                    graphStateHolder.startDestination,
+                    BookshelfNavGraph.route,
                     navOptions {
-                        popUpTo(TutorialRoute) {
+                        popUpTo(TutorialScreenDestination.route) {
                             inclusive = true
                         }
                     }
@@ -239,33 +224,110 @@ private class ComicViewerAppStateImpl(
     }
 
     override fun completeRestoreHistory() {
-        scope.launch {
-            if (viewModel.isAuth()) {
-                logcat { "認証 復元完了後" }
-                if (isRestoredNavHistory) {
-                    navController.navigateToAuthentication(
-                        Mode.Authentication,
-                        true,
-                        navOptions { launchSingleTop = true }
-                    )
-                } else {
-                    navController.navigateToAuthentication(
-                        Mode.Authentication,
-                        false,
-                        navOptions {
-                            launchSingleTop = true
-                            popUpTo(MainGraphRoute) {
-                                inclusive = true
-                            }
-                        }
-                    )
-                }
-                viewModel.shouldKeepSplash = false
-                isInitialized = true
+        uiState = uiState.copy(isAuthenticating = false)
+        closeSplashScreen()
+        isInitialized = true
+    }
+
+    override fun onTabSelected(
+        navController: NavController,
+        tab: MainScreenTab,
+    ) {
+        when (tab) {
+            MainScreenTab.Bookshelf -> BookshelfNavGraph.route
+            MainScreenTab.Favorite -> FavoriteNavGraph.route
+            MainScreenTab.Readlater -> ReadLaterNavGraph.route
+            MainScreenTab.Library -> LibraryNavGraph.route
+        }.let { route ->
+            if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.route == route } == true) {
+                navTabHandler.click.tryEmit(Unit)
             } else {
-                viewModel.shouldKeepSplash = false
-                isInitialized = true
+                navController.navigate(
+                    route,
+                    navOptions {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                )
             }
         }
+    }
+
+    private fun restoreNavigation(): Job {
+        return scope.launch {
+            val history = viewModel.history()
+            navController.navigate(BookshelfNavGraph) {
+                popUpTo(RootNavGraph) {
+                    inclusive = true
+                }
+            }
+            if (history?.folderList.isNullOrEmpty()) {
+                completeRestoreHistory()
+            } else {
+                isRestoredNavHistory = true
+                val (folderList, book) = history!!.value
+                val bookshelfId = folderList.first().bookshelfId
+                if (folderList.size == 1) {
+                    navController.navigate(
+                        BookshelfFolderScreenDestination(
+                            bookshelfId,
+                            folderList.first().path,
+                            book.path
+                        )
+                    )
+                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                        "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
+                    }
+                } else {
+                    navController.navigate(
+                        BookshelfFolderScreenDestination(bookshelfId, folderList.first().path, null)
+                    )
+                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                        "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
+                    }
+                    folderList.drop(1).dropLast(1).forEach { folder ->
+                        navController.navigate(
+                            BookshelfFolderScreenDestination(
+                                bookshelfId,
+                                folder.path,
+                                null
+                            )
+                        )
+                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                            "-> folder(${folder.path})"
+                        }
+                    }
+                    navController.navigate(
+                        BookshelfFolderScreenDestination(
+                            bookshelfId,
+                            folderList.last().path,
+                            book.path
+                        )
+                    )
+                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                        "-> folder${folderList.last().path}, ${book.path}"
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun cancelJob(
+    scope: CoroutineScope,
+    waitTimeMillis: Long,
+    onCancel: () -> Unit,
+    action: () -> Unit,
+) {
+    val job = scope.launch {
+        action()
+    }
+    scope.launch {
+        delay(waitTimeMillis)
+        onCancel()
+        job.cancel()
     }
 }

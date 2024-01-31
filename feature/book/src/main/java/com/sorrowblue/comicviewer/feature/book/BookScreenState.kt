@@ -14,12 +14,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings.PageFormat
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
-import com.sorrowblue.comicviewer.feature.book.navigation.BookArgs
 import com.sorrowblue.comicviewer.feature.book.section.BookPage
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.NextBook
@@ -113,7 +113,7 @@ internal class BookScreenState2(
         viewModel.manageBookSettingsUseCase.settings.map { it.pageFormat }.distinctUntilChanged()
             .onEach { pageFormat ->
                 if (nextPage == null) {
-                    val favorite = if (args.favoriteId.value != -1) {
+                    val favorite = if (args.favoriteId != FavoriteId.Default) {
                         viewModel.getNextBookUseCase.execute(
                             GetNextBookUseCase.Request(
                                 args.bookshelfId,
@@ -147,7 +147,7 @@ internal class BookScreenState2(
                     } ?: NextPage(emptyList<NextBook>().toPersistentList())
                 }
                 if (previousPage == null) {
-                    val favorite = if (args.favoriteId.value != -1) {
+                    val favorite = if (args.favoriteId != FavoriteId.Default) {
                         viewModel.getNextBookUseCase.execute(
                             GetNextBookUseCase.Request(
                                 args.bookshelfId,

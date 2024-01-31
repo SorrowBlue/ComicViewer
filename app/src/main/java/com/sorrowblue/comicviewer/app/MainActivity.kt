@@ -1,61 +1,63 @@
 package com.sorrowblue.comicviewer.app
 
+import android.animation.ObjectAnimator
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
+import android.view.View
+import android.view.animation.AnticipateInterpolator
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popUpTo
+import com.sorrowblue.comicviewer.app.navigation.RootNavGraph
+import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
 import dagger.hilt.android.AndroidEntryPoint
-import logcat.logcat
 
 @AndroidEntryPoint
 internal class MainActivity : AppCompatActivity() {
 
     private val viewModel: ComicViewerAppViewModel by viewModels()
 
-    @OptIn(ExperimentalMaterialNavigationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
+            enableEdgeToEdge(
+                navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+            )
             super.onCreate(savedInstanceState)
             setKeepOnScreenCondition(viewModel::shouldKeepSplash)
             setOnExitAnimationListener(SplashScreenViewProvider::startSlideUpAnime)
         }
 
-        enableEdgeToEdge(
-            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
-        )
-
         setContent {
-            NavHost(navController = rememberNavController(), startDestination = "main") {
-                composable("main") { navBackStackEntry ->
-                    with(navBackStackEntry) {
-                        ComicViewerApp(
-                            state = rememberComicViewerAppState(viewModel = viewModel)
-                        )
+            val navController = rememberNavController()
+            ComicViewerApp(
+                onTutorial = {
+                    navController.navigate(TutorialNavGraph) {
+                        popUpTo(RootNavGraph) {
+                            inclusive = true
+                        }
                     }
-                }
-            }
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            onBackPressedDispatcher.addCallback(
-                this,
-                object : OnBackPressedCallback(false) {
-                    override fun handleOnBackPressed() {
-                        logcat { "onback" }
-                    }
-                }
+                },
+                navController = navController
             )
         }
     }
+}
+
+private fun SplashScreenViewProvider.startSlideUpAnime() {
+    kotlin.runCatching {
+        val slideUp = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0f, -iconView.height * 2f)
+        slideUp.interpolator = AnticipateInterpolator()
+        slideUp.doOnEnd { remove() }
+        slideUp.duration =
+            if (iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis < 0) 300 else iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis
+        slideUp.start()
+    }.onFailure { remove() }
 }

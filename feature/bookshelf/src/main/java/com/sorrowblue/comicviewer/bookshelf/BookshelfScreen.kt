@@ -30,10 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfInfoSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfMainSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialog
@@ -48,16 +48,31 @@ import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 import com.sorrowblue.comicviewer.framework.ui.add
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 
-context(NavBackStackEntry)
+interface BookshelfScreenNavigator {
+    fun onSettingsClick()
+    fun onFabClick()
+    fun onBookshelfClick(bookshelfId: BookshelfId, path: String)
+    fun onEditClick(bookshelfId: BookshelfId)
+}
+
+@Destination
+@Composable
+internal fun BookshelfScreen(navigator: BookshelfScreenNavigator) {
+    BookshelfScreen(
+        onSettingsClick = navigator::onSettingsClick,
+        onFabClick = navigator::onFabClick,
+        onBookshelfClick = navigator::onBookshelfClick,
+        onEditClick = navigator::onEditClick
+    )
+}
+
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-internal fun BookshelfRoute(
-    contentPadding: PaddingValues,
+private fun BookshelfScreen(
     onSettingsClick: () -> Unit,
     onFabClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
@@ -70,11 +85,10 @@ internal fun BookshelfRoute(
         lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
         lazyGridState = state.lazyGridState,
         snackbarHostState = state.snackbarHostState,
-        contentPadding = contentPadding,
         onFabClick = onFabClick,
         onSettingsClick = onSettingsClick,
         onBookshelfClick = onBookshelfClick,
-        onBookshelfInfoClick = state::onBookshelfLongClick,
+        onBookshelfInfoClick = state::onBookshelfInfoClick,
         onInfoSheetRemoveClick = state::onRemoveClick,
         onInfoSheetEditClick = { onEditClick(state.bookshelfId) },
         onInfoSheetCloseClick = state::onInfoSheetCloseClick,
@@ -103,7 +117,6 @@ private fun BookshelfScreen(
     bookshelfFolder: BookshelfFolder?,
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
     snackbarHostState: SnackbarHostState,
-    contentPadding: PaddingValues,
     onFabClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
@@ -127,8 +140,7 @@ private fun BookshelfScreen(
                         Icon(imageVector = ComicIcons.Settings, contentDescription = null)
                     }
                 },
-                windowInsets = contentPadding.asWindowInsets()
-                    .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -162,12 +174,11 @@ private fun BookshelfScreen(
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentPadding = contentPadding,
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) { innerPadding ->
+    ) { contentPadding ->
         val dimension = LocalDimension.current
-        val inInnerPadding = innerPadding.add(
+        val innerPadding = contentPadding.add(
             PaddingValues(
                 start = dimension.margin,
                 top = dimension.margin,
@@ -180,7 +191,7 @@ private fun BookshelfScreen(
             lazyGridState = lazyGridState,
             onBookshelfClick = onBookshelfClick,
             onBookshelfInfoClick = onBookshelfInfoClick,
-            innerPadding = inInnerPadding
+            innerPadding = innerPadding
         )
     }
 }
@@ -228,7 +239,6 @@ private fun PreviewBookshelfScreen() {
                 )
             ),
             lazyPagingItems = lazyPagingItems,
-            contentPadding = PaddingValues(),
             onFabClick = {},
             onSettingsClick = {},
             onBookshelfClick = { _, _ -> },

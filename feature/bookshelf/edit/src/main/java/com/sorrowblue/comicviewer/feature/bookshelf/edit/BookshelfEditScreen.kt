@@ -1,21 +1,44 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditArgs
+import com.ramcosta.composedestinations.annotation.Destination
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 
+interface BookshelfEditScreenNavigator : CoreNavigator {
+    fun onComplete()
+}
+
+data class BookshelfEditArgs(
+    val bookshelfId: BookshelfId = BookshelfId.Default,
+    val bookshelfType: BookshelfType = BookshelfType.DEVICE,
+)
+
+@Destination(navArgsDelegate = BookshelfEditArgs::class)
 @Composable
 internal fun BookshelfEditScreen(
     args: BookshelfEditArgs,
+    navigator: BookshelfEditScreenNavigator,
+) {
+    BookshelfEditScreen(
+        args = args,
+        onBackClick = navigator::navigateUp,
+        onComplete = navigator::onComplete
+    )
+}
+
+@Composable
+private fun BookshelfEditScreen(
+    args: BookshelfEditArgs,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
-    contentPadding: PaddingValues,
     state: BookshelfEditScreenState = rememberNeoBookshelfEditScreenState(args),
 ) {
     when (val screenState = state.innerScreenState) {
@@ -32,8 +55,7 @@ internal fun BookshelfEditScreen(
             StorageEditRoute(
                 state = screenState,
                 onBackClick = onBackClick,
-                onComplete = onComplete,
-                contentPadding = contentPadding
+                onComplete = onComplete
             )
         }
 
@@ -41,8 +63,7 @@ internal fun BookshelfEditScreen(
             SmbEditScreen(
                 state = screenState,
                 onBackClick = onBackClick,
-                onComplete = onComplete,
-                contentPadding = contentPadding
+                onComplete = onComplete
             )
         }
     }

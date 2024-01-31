@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.domain.usecase.favorite.AddFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.CreateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.RemoveFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
-import com.sorrowblue.comicviewer.feature.favorite.add.navigation.FavoriteAddArgs
+import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddScreenDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.collect
@@ -27,7 +27,7 @@ internal class FavoriteAddViewModel @Inject constructor(
     private val createFavoriteUseCase: CreateFavoriteUseCase,
 ) : ViewModel() {
 
-    private val args = FavoriteAddArgs(savedStateHandle)
+    private val args = FavoriteAddScreenDestination.argsFrom(savedStateHandle)
 
     val pagingDataFlow =
         pagingFavoriteUseCase.execute(

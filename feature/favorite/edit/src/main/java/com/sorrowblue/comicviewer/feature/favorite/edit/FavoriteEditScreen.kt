@@ -9,9 +9,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,19 +44,21 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameTextField
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
@@ -61,12 +67,28 @@ import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-context(NavBackStackEntry)
+interface FavoriteEditScreenNavigator : CoreNavigator {
+    fun onComplete()
+}
+
+class FavoriteEditArgs(val favoriteId: FavoriteId)
+
+@Destination(navArgsDelegate = FavoriteEditArgs::class)
 @Composable
-internal fun FavoriteEditRoute(
+internal fun FavoriteEditScreen(args: FavoriteEditArgs, navigator: FavoriteEditScreenNavigator) {
+    FavoriteEditScreen(
+        args = args,
+        onBackClick = navigator::navigateUp,
+        onComplete = navigator::onComplete
+    )
+}
+
+@Composable
+private fun FavoriteEditScreen(
+    args: FavoriteEditArgs,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
-    state: FavoriteEditScreenState = rememberFavoriteEditScreenState(),
+    state: FavoriteEditScreenState = rememberFavoriteEditScreenState(args = args),
 ) {
     val uiState = state.uiState
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
@@ -131,6 +153,7 @@ private fun FavoriteEditScreen(
                             Icon(ComicIcons.Save, null)
                         }
                     },
+                    windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
                     scrollBehavior = scrollBehavior
                 )
                 FavoriteNameTextField(
@@ -143,6 +166,7 @@ private fun FavoriteEditScreen(
                 )
             }
         },
+        contentWindowInsets = WindowInsets.safeDrawing,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         if (lazyPagingItems.isEmptyData) {

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.settings.folder
 
-import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -9,34 +8,35 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.play.core.splitinstall.SplitInstallManager
-import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.feature.settings.common.CheckboxSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane2
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraPane
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+
+@Destination
+@Composable
+internal fun SupportExtensionScreen(
+    contentPadding: PaddingValues,
+    navigator: SettingsExtraNavigator,
+) {
+    SupportExtensionScreen(
+        contentPadding = contentPadding,
+        onBackClick = navigator::navigateUp
+    )
+}
 
 @Composable
-internal fun SupportExtensionRoute(
-    onBackClick: () -> Unit,
+private fun SupportExtensionScreen(
     contentPadding: PaddingValues,
-    state: SupportExtensionScreenState = rememberScreenState(),
+    onBackClick: () -> Unit,
+    state: SupportExtensionScreenState = rememberSupportExtensionScreenState(),
 ) {
     val uiState = state.uiState
     SupportExtensionScreen(
@@ -53,45 +53,6 @@ internal data class SupportExtensionScreenUiState(
     val isDocumentInstalled: Boolean = false,
 )
 
-@Stable
-internal class SupportExtensionScreenState(
-    scope: CoroutineScope,
-    val splitInstallManager: SplitInstallManager,
-    private val viewModel: SupportExtensionViewModel,
-) {
-
-    var uiState by mutableStateOf(
-        SupportExtensionScreenUiState(
-            isDocumentInstalled = splitInstallManager.installedModules.contains("document")
-        )
-    )
-        private set
-
-    init {
-        viewModel.settingsFlow.onEach {
-            uiState = uiState.copy(supportExtension = it)
-        }.launchIn(scope)
-    }
-
-    fun toggleExtension(supportExtension: SupportExtension) {
-        viewModel.toggleExtension(supportExtension)
-    }
-}
-
-@Composable
-private fun rememberScreenState(
-    context: Context = LocalContext.current,
-    scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: SupportExtensionViewModel = hiltViewModel(),
-): SupportExtensionScreenState = remember {
-    val splitInstallManager = SplitInstallManagerFactory.create(context)
-    SupportExtensionScreenState(
-        scope = scope,
-        splitInstallManager = splitInstallManager,
-        viewModel = viewModel
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SupportExtensionScreen(
@@ -101,7 +62,7 @@ private fun SupportExtensionScreen(
     onExtensionClick: () -> Unit,
     contentPadding: PaddingValues,
 ) {
-    SettingsDetailPane2(
+    SettingsExtraPane(
         title = {
             Text(text = stringResource(id = R.string.settings_folder_title_extension))
         },

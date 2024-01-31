@@ -2,7 +2,11 @@ package com.sorrowblue.comicviewer.feature.library.dropbox.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,6 +62,7 @@ internal fun DropBoxTopAppBar(
                     .clickable(onClick = onProfileImageClick)
             )
         },
+        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior
     )
 }

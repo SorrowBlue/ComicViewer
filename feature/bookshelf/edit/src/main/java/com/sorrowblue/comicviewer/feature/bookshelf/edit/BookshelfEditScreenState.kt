@@ -18,7 +18,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditArgs
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -77,11 +76,11 @@ internal class BookshelfEditScreenState(
                     )
                 }
 
-                UnitUiState -> TODO()
+                UnitUiState -> {}
             }
             // Restore
         } else {
-            if (args.bookshelfId.value == BookshelfId.Default) {
+            if (args.bookshelfId == BookshelfId.Default) {
                 innerScreenState = when (args.bookshelfType) {
                     BookshelfType.SMB -> SmbEditScreenState(
                         SmbEditScreenUiState(),

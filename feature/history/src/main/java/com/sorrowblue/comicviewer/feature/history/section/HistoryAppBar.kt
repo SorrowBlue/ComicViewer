@@ -1,5 +1,9 @@
 package com.sorrowblue.comicviewer.feature.history.section
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +39,7 @@ internal fun HistoryAppBar(
                 )
             }
         },
+        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior
     )
 }

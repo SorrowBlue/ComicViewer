@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.domain.service.di
 import com.sorrowblue.comicviewer.domain.service.interactor.AddReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.DeleteAllReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.DeleteReadLaterInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.GetInstalledModulesInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.GetNavigationHistoryInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.ScanBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.DeleteHistoryInteractor
@@ -38,6 +39,7 @@ import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageSecur
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.DeleteHistoryUseCase
@@ -194,4 +196,7 @@ internal interface ViewModelBindsModule {
     fun bindManageSecuritySettingsUseCase(
         interactor: ManageSecuritySettingsInteractor,
     ): ManageSecuritySettingsUseCase
+
+    @Binds
+    fun bindGetInstalledModulesUseCase(interactor: GetInstalledModulesInteractor): GetInstalledModulesUseCase
 }

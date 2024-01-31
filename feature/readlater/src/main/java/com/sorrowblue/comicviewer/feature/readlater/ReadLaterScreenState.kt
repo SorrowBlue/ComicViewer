@@ -9,22 +9,23 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-internal interface ReadLaterScreenState {
+internal interface ReadLaterScreenState : SaveableScreenState {
     val uiState: ReadLaterScreenUiState
     val pagingDataFlow: Flow<PagingData<File>>
     val navigator: ThreePaneScaffoldNavigator
@@ -36,8 +37,8 @@ internal interface ReadLaterScreenState {
     fun onNavClick()
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Destination
 @Composable
 internal fun rememberReadLaterScreenState(
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
@@ -46,9 +47,9 @@ internal fun rememberReadLaterScreenState(
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: ReadLaterViewModel = hiltViewModel(),
-): ReadLaterScreenState = remember {
+): ReadLaterScreenState = rememberSaveableScreenState {
     ReadLaterScreenStateImpl(
-        savedStateHandle = savedStateHandle,
+        savedStateHandle = it,
         navigator = navigator,
         lazyGridState = lazyGridState,
         scope = scope,
@@ -58,7 +59,7 @@ internal fun rememberReadLaterScreenState(
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 private class ReadLaterScreenStateImpl(
-    savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator,
     override val lazyGridState: LazyGridState,
     private val scope: CoroutineScope,

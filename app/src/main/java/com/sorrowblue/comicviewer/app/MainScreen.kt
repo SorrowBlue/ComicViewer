@@ -1,48 +1,79 @@
 package com.sorrowblue.comicviewer.app
 
-import androidx.compose.foundation.layout.PaddingValues
+import android.os.Parcel
+import android.os.Parcelable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigation.suite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
+import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import com.google.accompanist.navigation.material.BottomSheetNavigator
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.ModalBottomSheetLayout
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
 
-internal const val MainGraphRoute = "main"
-
+@Parcelize
 internal data class MainScreenUiState(
+    val isAuthenticating: Boolean = false,
     val currentTab: MainScreenTab? = null,
     val tabs: PersistentList<MainScreenTab> = MainScreenTab.entries.toPersistentList(),
-    val showNavigation: Boolean = currentTab != null,
-)
+) : Parcelable {
+
+    companion object : Parceler<MainScreenUiState> {
+        override fun MainScreenUiState.write(parcel: Parcel, flags: Int) {
+            parcel.writeBoolean(isAuthenticating)
+            parcel.writeString(currentTab?.name)
+            parcel.writeStringList(tabs.map(MainScreenTab::name))
+        }
+
+        override fun create(parcel: Parcel) = MainScreenUiState(
+            parcel.readBoolean(),
+            parcel.readString()?.let(MainScreenTab::valueOf),
+            mutableListOf<String>().also(parcel::readStringList)
+                .map(MainScreenTab::valueOf).toPersistentList()
+        )
+    }
+}
 
 @OptIn(
-    ExperimentalMaterialNavigationApi::class,
     ExperimentalMaterial3AdaptiveNavigationSuiteApi::class,
     ExperimentalMaterial3AdaptiveApi::class
 )
 @Composable
 internal fun MainScreen(
     uiState: MainScreenUiState,
-    bottomSheetNavigator: BottomSheetNavigator,
     navController: NavHostController,
-    startDestination: String,
     onTabSelected: (NavController, MainScreenTab) -> Unit,
-    navGraph: NavGraphBuilder.(PaddingValues) -> Unit,
+    content: @Composable () -> Unit,
 ) {
+    val navSuiteType: NavigationSuiteType = if (uiState.currentTab != null) {
+        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
+    } else {
+        NavigationSuiteType.None
+    }
     NavigationSuiteScaffold(
-        showNavigation = uiState.showNavigation,
+        modifier = if (navSuiteType == NavigationSuiteType.NavigationBar || navSuiteType == NavigationSuiteType.None) {
+            Modifier
+        } else {
+            Modifier
+                .background(ComicTheme.colorScheme.background)
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Start))
+        },
         navigationSuiteItems = {
             uiState.tabs.forEach {
                 item(
@@ -59,17 +90,8 @@ internal fun MainScreen(
                     }
                 )
             }
-        }
-    ) {
-        ModalBottomSheetLayout(bottomSheetNavigator) {
-            NavHost(
-                navController = navController,
-                route = MainGraphRoute,
-                startDestination = startDestination,
-                modifier = Modifier
-            ) {
-                navGraph(it)
-            }
-        }
-    }
+        },
+        layoutType = navSuiteType,
+        content = content
+    )
 }

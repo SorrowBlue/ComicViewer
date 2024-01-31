@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.favorite
 
 import android.os.Parcelable
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -14,9 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
@@ -28,23 +27,47 @@ import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
-context(NavBackStackEntry)
+interface FavoriteScreenNavigator : CoreNavigator {
+    fun onEditClick(favoriteId: FavoriteId)
+    fun onSettingsClick()
+    fun onFileClick(file: File, favoriteId: FavoriteId)
+    fun onFavoriteClick(file: File)
+    fun onOpenFolderClick(file: File)
+}
+
+class FavoriteArgs(val favoriteId: FavoriteId)
+
+@Destination(navArgsDelegate = FavoriteArgs::class)
+@Composable
+internal fun FavoriteScreen(args: FavoriteArgs, navigator: FavoriteScreenNavigator) {
+    FavoriteScreen(
+        args = args,
+        onBackClick = navigator::navigateUp,
+        onEditClick = navigator::onEditClick,
+        onSettingsClick = navigator::onSettingsClick,
+        onFileClick = navigator::onFileClick,
+        onFavoriteClick = navigator::onFavoriteClick,
+        onOpenFolderClick = navigator::onOpenFolderClick
+    )
+}
+
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-internal fun FavoriteScreen(
-    contentPadding: PaddingValues,
+private fun FavoriteScreen(
+    args: FavoriteArgs,
     onBackClick: () -> Unit,
     onEditClick: (FavoriteId) -> Unit,
     onSettingsClick: () -> Unit,
-    onClickFile: (File, FavoriteId) -> Unit,
+    onFileClick: (File, FavoriteId) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    state: FavoriteScreenState = rememberFavoriteScreenState(),
+    state: FavoriteScreenState = rememberFavoriteScreenState(args = args),
 ) {
     val uiState = state.uiState
     val navigator = state.navigator
@@ -60,10 +83,9 @@ internal fun FavoriteScreen(
         onGridSizeChange = state::toggleGridSize,
         onDeleteClick = { state.delete(onBackClick) },
         onSettingsClick = onSettingsClick,
-        onFileClick = { onClickFile(it, state.favoriteId) },
+        onFileClick = { onFileClick(it, state.favoriteId) },
         onFileInfoClick = state::onFileInfoClick,
         lazyGridState = lazyGridState,
-        contentPadding = contentPadding,
         onFavoriteClick = onFavoriteClick,
         onExtraPaneCloseClick = state::onExtraPaneCloseClick,
         onOpenFolderClick = onOpenFolderClick,
@@ -86,7 +108,6 @@ private fun FavoriteScreen(
     uiState: FavoriteScreenUiState,
     navigator: ThreePaneScaffoldNavigator,
     lazyPagingItems: LazyPagingItems<File>,
-    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onEditClick: () -> Unit,
     onFileListTypeChange: () -> Unit,
@@ -130,7 +151,6 @@ private fun FavoriteScreen(
             }
         },
         navigator = navigator,
-        contentPadding = contentPadding,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         if (lazyPagingItems.isEmptyData) {

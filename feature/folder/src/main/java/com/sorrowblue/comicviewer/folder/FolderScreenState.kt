@@ -11,15 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.autoSaver
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -29,10 +27,11 @@ import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
-import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import com.sorrowblue.comicviewer.folder.section.SortItem
 import com.sorrowblue.comicviewer.folder.section.SortOrder
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,7 +43,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-internal interface FolderScreenState {
+@Stable
+internal interface FolderScreenState : SaveableScreenState {
 
     fun onSortOrderClick(sortOrder: SortOrder)
     fun onSortItemClick(sortItem: SortItem)
@@ -68,20 +68,19 @@ internal interface FolderScreenState {
     fun onNavClick()
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberFolderScreenState(
+    args: FolderArgs,
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
-    args: FolderArgs = FolderArgs(arguments!!),
     viewModel: FolderViewModel = hiltViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
-): FolderScreenState = remember {
+): FolderScreenState = rememberSaveableScreenState {
     FolderScreenStateImpl(
-        savedStateHandle = savedStateHandle,
+        savedStateHandle = it,
         navigator = navigator,
         lazyGridState = lazyGridState,
         args = args,
@@ -91,9 +90,8 @@ internal fun rememberFolderScreenState(
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
-@Stable
 private class FolderScreenStateImpl(
-    savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator,
     override val lazyGridState: LazyGridState,
     private val args: FolderArgs,
@@ -101,21 +99,14 @@ private class FolderScreenStateImpl(
     private val scope: CoroutineScope,
 ) : FolderScreenState {
 
-    override val pagingDataFlow = viewModel.pagingDataFlow
-    override var restorePath by savedStateHandle.saveable(
-        "restorePath",
-        stateSaver = Saver(save = { it }, restore = { it })
-    ) {
+    override val pagingDataFlow = viewModel.pagingDataFlow(args.bookshelfId, args.path)
+    override var restorePath by savedStateHandle.saveable("restorePath", stateSaver = autoSaver()) {
         mutableStateOf(args.restorePath)
     }
     override var isSkipFirstRefresh by savedStateHandle.saveable { mutableStateOf(true) }
     override var isScrollableTop by savedStateHandle.saveable { mutableStateOf(false) }
 
-    override var uiState by savedStateHandle.saveable {
-        mutableStateOf(
-            FolderScreenUiState()
-        )
-    }
+    override var uiState by savedStateHandle.saveable { mutableStateOf(FolderScreenUiState()) }
         private set
 
     init {

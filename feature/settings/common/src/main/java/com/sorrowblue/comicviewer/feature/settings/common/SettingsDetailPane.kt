@@ -29,6 +29,14 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
+interface SettingsDetailNavigator {
+    fun navigateBack()
+}
+
+interface SettingsExtraNavigator {
+    fun navigateUp()
+}
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun SettingsDetailPane(
@@ -78,9 +86,9 @@ fun SettingsDetailPane(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .drawVerticalScrollbar(scrollState)
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .padding(innerPadding),
             content = content
         )
     }
@@ -88,7 +96,7 @@ fun SettingsDetailPane(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun SettingsDetailPane2(
+fun SettingsExtraPane(
     title: @Composable () -> Unit,
     onBackClick: () -> Unit,
     contentPadding: PaddingValues,
@@ -140,9 +148,9 @@ fun SettingsDetailPane2(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .drawVerticalScrollbar(scrollState)
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .padding(innerPadding),
             content = content
         )
     }

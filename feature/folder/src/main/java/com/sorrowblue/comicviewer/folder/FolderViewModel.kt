@@ -1,12 +1,11 @@
 package com.sorrowblue.comicviewer.folder
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
@@ -14,7 +13,6 @@ import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.folder.navigation.FolderArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,21 +30,16 @@ import kotlinx.coroutines.runBlocking
 @HiltViewModel
 internal class FolderViewModel @Inject constructor(
     val getFileUseCase: GetFileUseCase,
-    pagingFileUseCase: PagingFileUseCase,
-    val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
+    private val pagingFileUseCase: PagingFileUseCase,
+    private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     private val addReadLaterUseCase: AddReadLaterUseCase,
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val args = FolderArgs(savedStateHandle)
-    val bookshelfId = args.bookshelfId
-    val path = args.path
-    var restorePath = args.restorePath
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pagingDataFlow: Flow<PagingData<File>> = pagingFileUseCase.execute(
-        PagingFileUseCase.Request(PagingConfig(30), bookshelfId, path)
-    ).filterSuccess().flattenConcat().cachedIn(viewModelScope)
+    fun pagingDataFlow(bookshelfId: BookshelfId, path: String) =
+        pagingFileUseCase.execute(
+            PagingFileUseCase.Request(PagingConfig(30), bookshelfId, path)
+        ).filterSuccess().flattenConcat().cachedIn(viewModelScope)
 
     val displaySettings = displaySettingsUseCase.settings
 

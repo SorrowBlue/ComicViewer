@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
-import com.sorrowblue.comicviewer.feature.search.navigation.SearchArgs
+import com.sorrowblue.comicviewer.feature.search.destinations.SearchScreenDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
@@ -21,9 +21,8 @@ internal class SearchViewModel @Inject constructor(
     private val addReadLaterUseCase: AddReadLaterUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val args = SearchArgs(savedStateHandle)
 
-    private val bookshelfId = args.bookshelfId
+    private val args = SearchScreenDestination.argsFrom(savedStateHandle)
 
     var searchCondition: () -> SearchCondition = {
         SearchCondition(
@@ -36,7 +35,7 @@ internal class SearchViewModel @Inject constructor(
     }
 
     val pagingDataFlow = pagingQueryFileUseCase.execute(
-        PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) { searchCondition() }
+        PagingQueryFileUseCase.Request(PagingConfig(100), args.bookshelfId) { searchCondition() }
     ).cachedIn(viewModelScope)
 
     fun addReadLater(file: File) {

@@ -8,14 +8,20 @@ import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.autoSaver
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequestBuilder
@@ -26,33 +32,74 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.DropBoxApiRepository
-import com.sorrowblue.comicviewer.feature.library.dropbox.navigation.DropBoxArgs
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxDialogUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import logcat.logcat
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 
+internal sealed interface DropBoxScreenEvent {
+    data object RequireAuthentication : DropBoxScreenEvent
+}
+
 @Stable
-internal class DropBoxScreenState(
+internal interface DropBoxScreenState {
+    val uiState: DropBoxScreenUiState
+    val events: SnapshotStateList<DropBoxScreenEvent>
+    val pagingDataFlow: Flow<PagingData<File>>
+    fun consumeEvent(event: DropBoxScreenEvent)
+    fun onProfileImageClick()
+    fun onDialogDismissRequest()
+    fun onLogoutClick()
+    fun onResume()
+    fun onResult(result: ActivityResult)
+    fun onFileClick(
+        file: File,
+        createFileRequest: ManagedActivityResultLauncher<Intent, ActivityResult>,
+        onFolderClick: (Folder) -> Unit,
+    )
+}
+
+@Composable
+internal fun rememberDropBoxScreenState(
     args: DropBoxArgs,
+    savedStateHandle: SavedStateHandle,
+    context: Context = LocalContext.current,
+    scope: CoroutineScope = rememberCoroutineScope(),
+    repository: DropBoxApiRepository = koinInject(),
+): DropBoxScreenState {
+    return remember {
+        DropBoxScreenStateImpl(
+            args = args,
+            savedStateHandle = savedStateHandle,
+            context = context,
+            scope = scope,
+            repository = repository
+        )
+    }
+}
+
+@OptIn(SavedStateHandleSaveableApi::class)
+private class DropBoxScreenStateImpl(
+    args: DropBoxArgs,
+    savedStateHandle: SavedStateHandle,
     context: Context,
     private val scope: CoroutineScope,
     private val repository: DropBoxApiRepository,
-    restoreUiState: DropBoxScreenUiState = DropBoxScreenUiState.Loading,
-) : KoinComponent {
+) : DropBoxScreenState, KoinComponent {
+
     init {
         repository.accountFlow.onEach {
-            uiState = if (it == null) {
-                DropBoxScreenUiState.Login(false)
+            if (it == null) {
+                events += DropBoxScreenEvent.RequireAuthentication
             } else {
-                DropBoxScreenUiState.Loaded(
+                uiState = uiState.copy(
                     path = args.path,
                     profileUri = it.profilePhotoUrl.orEmpty(),
                 )
@@ -60,67 +107,62 @@ internal class DropBoxScreenState(
         }.launchIn(scope)
     }
 
-    var uiState: DropBoxScreenUiState by mutableStateOf(restoreUiState)
+    private var book: Book? by savedStateHandle.saveable(
+        key = "book",
+        stateSaver = autoSaver()
+    ) { mutableStateOf(null) }
+
+    override var uiState by savedStateHandle.saveable { mutableStateOf(DropBoxScreenUiState()) }
         private set
 
+    override var events = mutableStateListOf<DropBoxScreenEvent>()
+        private set
+
+    override fun consumeEvent(event: DropBoxScreenEvent) {
+        events.remove(event)
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pagingDataFlow = repository.accountFlow.flatMapLatest {
+    override val pagingDataFlow = repository.accountFlow.flatMapLatest {
         Pager(PagingConfig(20)) {
             DropBoxPagingSource(args.path, repository)
         }.flow
     }.cachedIn(scope)
 
-    fun onSignInClick() {
-        uiState = DropBoxScreenUiState.Login(true)
-        repository.startSignIn()
-    }
-
-    fun onProfileImageClick() {
-        if (uiState is DropBoxScreenUiState.Loaded) {
-            scope.launch {
-                val account = repository.accountFlow.first()
-                uiState = (uiState as DropBoxScreenUiState.Loaded).copy(
-                    dropBoxDialogUiState = DropBoxDialogUiState.Show(
-                        photoUrl = account?.profilePhotoUrl.orEmpty(),
-                        name = account?.name?.displayName.orEmpty()
-                    )
+    override fun onProfileImageClick() {
+        scope.launch {
+            val account = repository.accountFlow.first()
+            uiState = uiState.copy(
+                dropBoxDialogUiState = DropBoxDialogUiState.Show(
+                    photoUrl = account?.profilePhotoUrl.orEmpty(),
+                    name = account?.name?.displayName.orEmpty()
                 )
-            }
+            )
         }
     }
 
-    fun onDialogDismissRequest() {
-        uiState = DropBoxScreenUiState.Loaded(dropBoxDialogUiState = DropBoxDialogUiState.Hide)
+    override fun onDialogDismissRequest() {
+        uiState = uiState.copy(dropBoxDialogUiState = DropBoxDialogUiState.Hide)
     }
 
-    fun onLogoutClick() {
+    override fun onLogoutClick() {
         scope.launch {
             repository.signOut()
         }
     }
 
-    fun onResume() {
-        logcat { "dropbox onResumes" }
-        if (uiState is DropBoxScreenUiState.Login) {
-            scope.launch {
-                if (!repository.dbxCredential()) {
-                    uiState = DropBoxScreenUiState.Login(false)
-                }
-            }
-        } else {
-            scope.launch {
-                repository.refresh()
-            }
+    override fun onResume() {
+        scope.launch {
+            repository.refresh()
         }
     }
 
-    fun onResult(result: ActivityResult) {
+    override fun onResult(result: ActivityResult) {
         if (result.resultCode == Activity.RESULT_OK && result.data?.data != null) {
-            enqueueDownload(result.data!!.data!!.toString(), file!!)
+            enqueueDownload(result.data!!.data!!.toString(), book!!)
         }
     }
 
-    private var file: File? = null
     private val workManager = WorkManager.getInstance(context)
 
     private fun enqueueDownload(outputUri: String, file: File) {
@@ -132,7 +174,7 @@ internal class DropBoxScreenState(
         workManager.enqueue(request)
     }
 
-    fun onFileClick(
+    override fun onFileClick(
         file: File,
         createFileRequest: ManagedActivityResultLauncher<Intent, ActivityResult>,
         onFolderClick: (Folder) -> Unit,
@@ -143,7 +185,7 @@ internal class DropBoxScreenState(
                 intent.addCategory(Intent.CATEGORY_OPENABLE)
                 intent.putExtra(Intent.EXTRA_TITLE, file.name)
                 intent.type = "*/*"
-                this.file = file
+                this.book = file
                 createFileRequest.launch(intent)
             }
 
@@ -152,32 +194,4 @@ internal class DropBoxScreenState(
             }
         }
     }
-}
-
-@Composable
-internal fun rememberDropBoxScreenState(
-    args: DropBoxArgs,
-    context: Context = LocalContext.current,
-    scope: CoroutineScope = rememberCoroutineScope(),
-    repository: DropBoxApiRepository = koinInject(),
-) = rememberSaveable(
-    saver = Saver(
-        save = { it.uiState },
-        restore = {
-            DropBoxScreenState(
-                restoreUiState = it,
-                args = args,
-                scope = scope,
-                context = context,
-                repository = repository
-            )
-        }
-    )
-) {
-    DropBoxScreenState(
-        args = args,
-        scope = scope,
-        context = context,
-        repository = repository
-    )
 }

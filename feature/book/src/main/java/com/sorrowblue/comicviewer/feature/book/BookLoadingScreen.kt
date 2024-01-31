@@ -1,9 +1,12 @@
 package com.sorrowblue.comicviewer.feature.book
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -18,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,7 +28,6 @@ import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 internal fun BookLoadingScreen(
     uiState: BookScreenUiState.Loading,
     onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
 ) {
     Scaffold(
         topBar = {
@@ -46,10 +47,11 @@ internal fun BookLoadingScreen(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
                         elevation = ElevationTokens.Level2
                     )
-                )
+                ),
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
             )
         },
-        contentWindowInsets = contentPadding.asWindowInsets()
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { innerPadding ->
         Box(
             contentAlignment = Alignment.Center,

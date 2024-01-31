@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.readlater
 
 import android.os.Parcelable
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -13,9 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
 import com.sorrowblue.comicviewer.file.FileInfoSheet
@@ -29,15 +28,31 @@ import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
-context(NavBackStackEntry)
+interface ReadLaterScreenNavigator {
+    fun onSettingsClick()
+    fun onFileClick(file: File)
+    fun onFavoriteClick(file: File)
+    fun onOpenFolderClick(file: File)
+}
+
+@Destination
+@Composable
+internal fun ReadLaterScreen(navigator: ReadLaterScreenNavigator) {
+    ReadLaterScreen(
+        onSettingsClick = navigator::onSettingsClick,
+        onFileClick = navigator::onFileClick,
+        onFavoriteClick = navigator::onFavoriteClick,
+        onOpenFolderClick = navigator::onOpenFolderClick
+    )
+}
+
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-internal fun ReadLaterRoute(
+private fun ReadLaterScreen(
     onSettingsClick: () -> Unit,
     onFileClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
-    contentPadding: PaddingValues,
     state: ReadLaterScreenState = rememberReadLaterScreenState(),
 ) {
     val uiState = state.uiState
@@ -47,7 +62,6 @@ internal fun ReadLaterRoute(
         lazyPagingItems = lazyPagingItems,
         navigator = state.navigator,
         lazyGridState = state.lazyGridState,
-        contentPadding = contentPadding,
         onFileClick = onFileClick,
         onFileInfoClick = state::onFileInfoClick,
         onSettingsClick = onSettingsClick,
@@ -73,7 +87,6 @@ private fun ReadLaterScreen(
     lazyPagingItems: LazyPagingItems<File>,
     navigator: ThreePaneScaffoldNavigator,
     lazyGridState: LazyGridState,
-    contentPadding: PaddingValues,
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
@@ -106,7 +119,6 @@ private fun ReadLaterScreen(
                 )
             }
         },
-        contentPadding = contentPadding,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         if (lazyPagingItems.isEmptyData) {

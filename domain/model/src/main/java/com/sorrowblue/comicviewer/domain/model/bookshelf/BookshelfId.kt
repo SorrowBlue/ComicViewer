@@ -10,6 +10,6 @@ import kotlinx.serialization.Serializable
 value class BookshelfId(val value: Int = 0) : Parcelable {
 
     companion object {
-        const val Default = 0
+        val Default = BookshelfId(0)
     }
 }

@@ -14,32 +14,30 @@ import androidx.compose.material3.adaptive.rememberListDetailPaneScaffoldNavigat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-internal interface SettingsScreenState {
+internal interface SettingsScreenState : SaveableScreenState {
     val windowAdaptiveInfo: WindowAdaptiveInfo
     val navigator: ThreePaneScaffoldNavigator
     val navController: NavHostController
     val uiState: SettingsScreenUiState
-    fun onAppLanguageClick(fallback: () -> Unit)
     fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit)
     fun onDetailBackClick()
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberSettingsScreenState(
@@ -50,9 +48,9 @@ internal fun rememberSettingsScreenState(
     navController: NavHostController = rememberNavController(),
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
-): SettingsScreenState = remember {
+): SettingsScreenState = rememberSaveableScreenState {
     SettingsScreenStateImpl(
-        savedStateHandle = savedStateHandle,
+        savedStateHandle = it,
         windowAdaptiveInfo = windowAdaptiveInfo,
         navigator = navigator,
         navController = navController,
@@ -64,7 +62,7 @@ internal fun rememberSettingsScreenState(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 @Stable
 private class SettingsScreenStateImpl(
-    savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val windowAdaptiveInfo: WindowAdaptiveInfo,
     override val navigator: ThreePaneScaffoldNavigator,
     override val navController: NavHostController,
@@ -72,28 +70,26 @@ private class SettingsScreenStateImpl(
     private val scope: CoroutineScope,
 ) : SettingsScreenState {
 
-    override var uiState: SettingsScreenUiState by savedStateHandle.saveable {
-        mutableStateOf(SettingsScreenUiState())
-    }
+    override var uiState by savedStateHandle.saveable { mutableStateOf(SettingsScreenUiState()) }
         private set
-
-    override fun onAppLanguageClick(fallback: () -> Unit) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.startActivity(
-                Intent(
-                    Settings.ACTION_APP_LOCALE_SETTINGS,
-                    Uri.parse("package:${context.applicationInfo.packageName}")
-                )
-            )
-        } else {
-            fallback()
-        }
-    }
 
     override fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit) {
         when (settings2) {
             Settings2.LANGUAGE -> {
-                onAppLanguageClick { onSettingsClick2(settings2) }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    runCatching {
+                        context.startActivity(
+                            Intent(
+                                Settings.ACTION_APP_LOCALE_SETTINGS,
+                                Uri.parse("package:${context.applicationInfo.packageName}")
+                            )
+                        )
+                    }.onFailure {
+                        onSettingsClick2(settings2)
+                    }
+                } else {
+                    onSettingsClick2(settings2)
+                }
             }
 
             Settings2.TUTORIAL -> {

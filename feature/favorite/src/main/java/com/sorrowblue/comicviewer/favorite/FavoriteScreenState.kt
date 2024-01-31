@@ -10,22 +10,21 @@ import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteArgs
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -36,7 +35,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-internal interface FavoriteScreenState {
+internal interface FavoriteScreenState : SaveableScreenState {
     val favoriteId: FavoriteId
     val uiState: FavoriteScreenUiState
     val pagingDataFlow: Flow<PagingData<File>>
@@ -51,32 +50,31 @@ internal interface FavoriteScreenState {
     fun onNavClick()
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberFavoriteScreenState(
+    args: FavoriteArgs,
     navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
+    lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: FavoriteViewModel = hiltViewModel(),
-    lazyGridState: LazyGridState = rememberLazyGridState(),
-): FavoriteScreenState = remember {
+): FavoriteScreenState = rememberSaveableScreenState {
     FavoriteScreenStateImpl(
-        savedStateHandle = savedStateHandle,
-        args = FavoriteArgs(arguments!!),
+        savedStateHandle = it,
         navigator = navigator,
+        lazyGridState = lazyGridState,
+        args = args,
         scope = scope,
-        viewModel = viewModel,
-        lazyGridState = lazyGridState
+        viewModel = viewModel
     )
 }
 
-context(NavBackStackEntry)
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 @Stable
 private class FavoriteScreenStateImpl(
-    savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator,
     override val lazyGridState: LazyGridState,
     private val args: FavoriteArgs,

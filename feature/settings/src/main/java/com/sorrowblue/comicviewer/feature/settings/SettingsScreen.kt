@@ -3,59 +3,74 @@ package com.sorrowblue.comicviewer.feature.settings
 import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.adaptive.AnimatedPane
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.PaneAdaptedValue
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import com.sorrowblue.comicviewer.feature.settings.display.navigation.SettingsDisplayRoute
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.SettingsFolderRoute
-import com.sorrowblue.comicviewer.feature.settings.info.navigation.SettingsAppInfoRoute
-import com.sorrowblue.comicviewer.feature.settings.navigation.InAppLanguagePickerRoute
-import com.sorrowblue.comicviewer.feature.settings.navigation.settingsGraph
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.dependency
+import com.ramcosta.composedestinations.spec.Route
+import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.folder.destinations.FolderSettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.info.destinations.AppInfoSettingsScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPaneUiState
-import com.sorrowblue.comicviewer.feature.settings.security.navigation.SettingsSecurityRoute
-import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.SettingsViewerRoute
+import com.sorrowblue.comicviewer.feature.settings.security.destinations.SecuritySettingsScreenDestination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.copy
 import kotlinx.parcelize.Parcelize
 
-context(NavBackStackEntry)
+internal interface SettingsScreenNavigator : CoreNavigator {
+    fun onStartTutorialClick()
+    fun navigateToChangeAuth(enabled: Boolean)
+    fun onPasswordChange()
+}
+
+@Destination
+@Composable
+internal fun SettingsScreen(navigator: SettingsScreenNavigator) {
+    SettingsScreen(settingsScreenNavigator = navigator)
+}
+
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-internal fun SettingsRoute(
-    onBackClick: () -> Unit,
-    onChangeAuthEnabled: (Boolean) -> Unit,
-    onPasswordChangeClick: () -> Unit,
-    onStartTutorialClick: () -> Unit,
-    contentPadding: PaddingValues,
+private fun SettingsScreen(
+    settingsScreenNavigator: SettingsScreenNavigator,
     state: SettingsScreenState = rememberSettingsScreenState(),
 ) {
+    val uiState = state.uiState
     val navigator = state.navigator
+    val windowAdaptiveInfo = state.windowAdaptiveInfo
     SettingsScreen(
-        uiState = state.uiState,
+        uiState = uiState,
         navigator = navigator,
-        navController = state.navController,
-        windowAdaptiveInfo = state.windowAdaptiveInfo,
-        contentPadding = contentPadding,
-        onBackClick = onBackClick,
-        onSettingsClick = { state.onSettingsClick(it, onStartTutorialClick) },
-    ) { navController, innerPadding ->
-        settingsGraph(
-            navController = navController,
-            onBackClick = state::onDetailBackClick,
-            contentPadding = innerPadding,
-            onChangeAuthEnabled = onChangeAuthEnabled,
-            onPasswordChangeClick = onPasswordChangeClick
+        windowAdaptiveInfo = windowAdaptiveInfo,
+        onBackClick = settingsScreenNavigator::navigateUp,
+        onSettingsClick = {
+            state.onSettingsClick(it, settingsScreenNavigator::onStartTutorialClick)
+        },
+    ) { contentPadding ->
+        DestinationsNavHost(
+            navGraph = SettingsDetailNavGraph,
+            startRoute = state.uiState.listPaneUiState.currentSettings2.route
+                ?: SettingsDetailNavGraph.startRoute,
+            dependenciesContainerBuilder = {
+                dependency(contentPadding)
+                dependency(innerSettingsNavigator(navigator, settingsScreenNavigator))
+            }
         )
     }
     BackHandler(navigator.canNavigateBack()) {
@@ -73,47 +88,67 @@ internal data class SettingsScreenUiState(
 private fun SettingsScreen(
     uiState: SettingsScreenUiState,
     navigator: ThreePaneScaffoldNavigator,
-    navController: NavHostController,
     windowAdaptiveInfo: WindowAdaptiveInfo,
-    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onSettingsClick: (Settings2) -> Unit,
-    navGraph: NavGraphBuilder.(NavHostController, PaddingValues) -> Unit,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     ListDetailPaneScaffold(
         scaffoldState = navigator.scaffoldState,
         listPane = {
-            SettingsListPane(
-                uiState = uiState.listPaneUiState,
-                onBackClick = onBackClick,
-                onSettingsClick = onSettingsClick,
-                windowAdaptiveInfo = windowAdaptiveInfo,
-                contentPadding = contentPadding
-            )
-        }
-    ) {
-        val innerPadding =
-            if (navigator.scaffoldState.scaffoldValue.secondary == PaneAdaptedValue.Expanded) {
-                contentPadding.copy(start = 0.dp)
-            } else {
-                contentPadding
+            AnimatedPane(modifier = Modifier) {
+                SettingsListPane(
+                    uiState = uiState.listPaneUiState,
+                    onBackClick = onBackClick,
+                    onSettingsClick = onSettingsClick,
+                    windowAdaptiveInfo = windowAdaptiveInfo
+                )
             }
-
-        NavHost(
-            navController = navController,
-            startDestination = uiState.listPaneUiState.currentSettings2.route
-        ) {
-            navGraph(navController, innerPadding)
+        },
+        windowInsets = WindowInsets(0)
+    ) {
+        val contentPadding =
+            if (navigator.scaffoldState.scaffoldValue.secondary == PaneAdaptedValue.Expanded) {
+                WindowInsets.safeDrawing.asPaddingValues().copy(start = 0.dp)
+            } else {
+                WindowInsets.safeDrawing.asPaddingValues()
+            }
+        AnimatedPane(modifier = Modifier) {
+            content(contentPadding)
         }
     }
 }
 
-enum class Settings2(val title: Int, val icon: ImageVector, val route: String = "") {
-    DISPLAY(R.string.settings_label_display, ComicIcons.DisplaySettings, SettingsDisplayRoute),
-    FOLDER(R.string.settings_label_folder, ComicIcons.FolderOpen, SettingsFolderRoute),
-    VIEWER(R.string.settings_label_viewer, ComicIcons.Image, SettingsViewerRoute),
-    SECURITY(R.string.settings_label_security, ComicIcons.Lock, SettingsSecurityRoute),
-    APP(R.string.settings_label_app, ComicIcons.Info, SettingsAppInfoRoute),
+enum class Settings2(
+    val title: Int,
+    val icon: ImageVector,
+    val route: Route? = null,
+) {
+    DISPLAY(
+        R.string.settings_label_display,
+        ComicIcons.DisplaySettings,
+        DisplaySettingsScreenDestination
+    ),
+    FOLDER(
+        R.string.settings_label_folder,
+        ComicIcons.FolderOpen,
+        FolderSettingsScreenDestination
+    ),
+    VIEWER(R.string.settings_label_viewer, ComicIcons.Image),
+    SECURITY(
+        R.string.settings_label_security,
+        ComicIcons.Lock,
+        SecuritySettingsScreenDestination
+    ),
+    APP(
+        R.string.settings_label_app,
+        ComicIcons.Info,
+        AppInfoSettingsScreenDestination
+    ),
     TUTORIAL(R.string.settings_label_tutorial, ComicIcons.Start),
-    LANGUAGE(R.string.settings_label_language, ComicIcons.Language, InAppLanguagePickerRoute),
+    LANGUAGE(
+        R.string.settings_label_language,
+        ComicIcons.Language,
+        InAppLanguagePickerScreenDestination
+    ),
 }
