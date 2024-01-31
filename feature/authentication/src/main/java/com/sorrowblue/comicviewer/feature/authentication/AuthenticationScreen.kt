@@ -297,9 +297,7 @@ private fun AuthenticationScreen(
                             .aspectRatio(1f)
                     ) {
                         if (it != null) {
-                            if (it.isEmpty()) {
-
-                            } else {
+                            if (it.isNotEmpty()) {
                                 Text(text = it)
                             }
                         } else {

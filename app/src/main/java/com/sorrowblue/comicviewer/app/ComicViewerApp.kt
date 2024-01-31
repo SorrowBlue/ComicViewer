@@ -112,7 +112,6 @@ internal fun ComicViewerApp(
     LifecycleEffect(Lifecycle.Event.ON_CREATE, action = state::onCreate)
     LifecycleEffect(Lifecycle.Event.ON_START, action = state::onStart)
 
-
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val currentOnTutorial by rememberUpdatedState(onTutorial)
     LaunchedEffect(state, lifecycle) {
@@ -135,7 +134,6 @@ private fun ComicViewerApp(
     onTabSelected: (MainScreenTab) -> Unit,
     content: @Composable () -> Unit,
 ) {
-
     val navSuiteType: NavigationSuiteType = if (uiState.currentTab != null) {
         NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
     } else {
@@ -143,7 +141,8 @@ private fun ComicViewerApp(
     }
     val colors = NavigationSuiteItemColors2.def(
         NavigationBarItemDefaults.colors(),
-        NavigationRailItemDefaults.colors(), NavigationDrawerItemDefaults.colors()
+        NavigationRailItemDefaults.colors(),
+        NavigationDrawerItemDefaults.colors()
     )
     NavigationSuiteScaffold(
         modifier = if (navSuiteType == NavigationSuiteType.NavigationBar || navSuiteType == NavigationSuiteType.None) {
