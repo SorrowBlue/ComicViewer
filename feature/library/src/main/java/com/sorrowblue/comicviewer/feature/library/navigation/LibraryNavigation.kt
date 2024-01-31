@@ -1,8 +1,9 @@
 package com.sorrowblue.comicviewer.feature.library.navigation
 
 import androidx.navigation.NavController
+import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
+import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.scope.DestinationScopeWithNoDependencies
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.NavGraphSpec
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -18,8 +19,6 @@ import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavGr
 import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavGraph
 import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec
 import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
-
-val RouteInLibraryNavigation get() = listOf(LibraryScreenDestination.route)
 
 object LibraryNavGraph : AnimatedNavGraphSpec {
 
@@ -59,8 +58,11 @@ object LibraryNavGraph : AnimatedNavGraphSpec {
         )
 }
 
-fun DestinationScopeWithNoDependencies<*>.libraryNavGraphNavigator(navigator: LibraryNavGraphNavigator) =
-    LibraryNavGraphNavigatorImpl(navigator, navController)
+fun DependenciesContainerBuilder<*>.dependencyLibraryNavGraph(navigator: LibraryNavGraphNavigator) {
+    dependency(LibraryNavGraph) {
+        LibraryNavGraphNavigatorImpl(navigator, navController)
+    }
+}
 
 interface LibraryNavGraphNavigator {
     fun onSettingsClick()
@@ -68,7 +70,7 @@ interface LibraryNavGraphNavigator {
     fun onFavoriteClick(file: File)
 }
 
-class LibraryNavGraphNavigatorImpl internal constructor(
+private class LibraryNavGraphNavigatorImpl(
     navigator: LibraryNavGraphNavigator,
     private val navController: NavController,
 ) : LibraryScreenNavigator,

@@ -24,6 +24,8 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popUpTo
+import com.sorrowblue.comicviewer.app.navigation.RootNavGraph
 import com.sorrowblue.comicviewer.bookshelf.destinations.BookshelfFolderScreenDestination
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfNavGraph
 import com.sorrowblue.comicviewer.domain.model.AddOn
@@ -60,6 +62,8 @@ internal interface ComicViewerAppState : SaveableScreenState {
         navController: NavController,
         tab: MainScreenTab,
     )
+
+    fun onAuthCompleted()
 }
 
 internal data class ComicViewerAppEvent(
@@ -133,7 +137,11 @@ private class ComicViewerAppStateImpl(
         scope.launch {
             if (viewModel.isTutorial()) {
                 appEvent = appEvent.copy(navigateToTutorial = true)
-                finishInit()
+                closeSplashScreen()
+                isInitialized = true
+            } else if (viewModel.isAuth()) {
+                uiState = uiState.copy(isAuthenticating = true)
+                closeSplashScreen()
             } else if (viewModel.isNeedToRestore()) {
                 cancelJob(
                     scope = scope,
@@ -142,17 +150,10 @@ private class ComicViewerAppStateImpl(
                     action = ::restoreNavigation
                 )
             } else {
-                completeRestoreHistory()
+                closeSplashScreen()
+                isInitialized = true
             }
         }
-    }
-
-    /**
-     * 初期化処理を終了する。
-     */
-    private fun finishInit() {
-        isInitialized = true
-        viewModel.shouldKeepSplash = false
     }
 
     override fun onStart() {
@@ -172,12 +173,33 @@ private class ComicViewerAppStateImpl(
             scope.launch {
                 if (viewModel.lockOnBackground()) {
                     appEvent = appEvent.copy(navigateToAuth = true)
-                    viewModel.shouldKeepSplash = false
+                }
+                closeSplashScreen()
+            }
+        }
+    }
+
+    override fun onAuthCompleted() {
+        if (isInitialized) {
+            // 初期化済み = 履歴復元する必要がない ので何もしない
+        } else {
+            scope.launch {
+                if (viewModel.isNeedToRestore()) {
+                    cancelJob(
+                        scope = scope,
+                        waitTimeMillis = 3000,
+                        onCancel = ::completeRestoreHistory,
+                        action = ::restoreNavigation
+                    )
                 } else {
-                    viewModel.shouldKeepSplash = false
+                    uiState = uiState.copy(isAuthenticating = false)
                 }
             }
         }
+    }
+
+    fun closeSplashScreen() {
+        viewModel.shouldKeepSplash = false
     }
 
     override fun onCompleteTutorial() {
@@ -202,21 +224,9 @@ private class ComicViewerAppStateImpl(
     }
 
     override fun completeRestoreHistory() {
-        scope.launch {
-            if (viewModel.isAuth()) {
-                logcat { "認証 復元完了後" }
-                appEvent = if (isRestoredNavHistory) {
-                    appEvent.copy(navigateToAuth = true)
-                } else {
-                    appEvent.copy(navigateToAuth = false)
-                }
-                viewModel.shouldKeepSplash = false
-                isInitialized = true
-            } else {
-                viewModel.shouldKeepSplash = false
-                isInitialized = true
-            }
-        }
+        uiState = uiState.copy(isAuthenticating = false)
+        closeSplashScreen()
+        isInitialized = true
     }
 
     override fun onTabSelected(
@@ -249,6 +259,11 @@ private class ComicViewerAppStateImpl(
     private fun restoreNavigation(): Job {
         return scope.launch {
             val history = viewModel.history()
+            navController.navigate(BookshelfNavGraph) {
+                popUpTo(RootNavGraph) {
+                    inclusive = true
+                }
+            }
             if (history?.folderList.isNullOrEmpty()) {
                 completeRestoreHistory()
             } else {
@@ -316,3 +331,4 @@ fun cancelJob(
         job.cancel()
     }
 }
+

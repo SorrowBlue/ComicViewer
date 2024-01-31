@@ -1,9 +1,10 @@
-package com.sorrowblue.comicviewer.app
+package com.sorrowblue.comicviewer.app.navigation
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
+import com.sorrowblue.comicviewer.app.findNavGraph
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfNavGraph
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfNavGraphNavigator
 import com.sorrowblue.comicviewer.bookshelf.navigation.bookshelfNavGraphNavigator
@@ -25,9 +26,8 @@ import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.book.navigation.bookNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddScreenDestination
-import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavGraph
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavGraphNavigator
-import com.sorrowblue.comicviewer.feature.library.navigation.libraryNavGraphNavigator
+import com.sorrowblue.comicviewer.feature.library.navigation.dependencyLibraryNavGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readLaterNavGraphNavigator
@@ -47,8 +47,6 @@ import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 fun DependenciesContainerBuilder<*>.mainDependency(
     addOnList: SnapshotStateList<AddOn>,
     onRestoreComplete: () -> Unit,
-    onBack: () -> Unit,
-    onAuthCompleted: (Boolean) -> Unit,
     onTutorialExit: () -> Unit,
 ) {
     dependency(object : CoreNavigator {
@@ -168,19 +166,14 @@ fun DependenciesContainerBuilder<*>.mainDependency(
         }
 
         override fun onPasswordChange() {
-            navController.navigate(
-                AuthenticationScreenDestination(
-                    mode = Mode.Change,
-                    handleBack = false
-                )
-            )
+            navController.navigate(AuthenticationScreenDestination(Mode.Change))
         }
 
         override fun navigateToChangeAuth(enabled: Boolean) {
             if (enabled) {
-                navController.navigate(AuthenticationScreenDestination(Mode.Register, false))
+                navController.navigate(AuthenticationScreenDestination(Mode.Register))
             } else {
-                navController.navigate(AuthenticationScreenDestination(Mode.Erase, false))
+                navController.navigate(AuthenticationScreenDestination(Mode.Erase))
             }
         }
     })
@@ -188,14 +181,11 @@ fun DependenciesContainerBuilder<*>.mainDependency(
     dependency(AuthenticationNavGraph) {
         authenticationNavGraphNavigator(object : AuthenticationNavGraphNavigator {
             override fun onBack() {
-                onBack()
+                navController.popBackStack()
             }
 
-            override fun onAuthCompleted(handleBack: Boolean, mode: Mode) {
-                when (mode) {
-                    Mode.Register, Mode.Change, Mode.Erase -> navController.popBackStack()
-                    Mode.Authentication -> onAuthCompleted(handleBack)
-                }
+            override fun onCompleted() {
+                navController.popBackStack()
             }
         })
     }
@@ -208,22 +198,21 @@ fun DependenciesContainerBuilder<*>.mainDependency(
         })
     }
 
-    dependency(LibraryNavGraph) {
-        libraryNavGraphNavigator(object : LibraryNavGraphNavigator {
-            override fun onSettingsClick() {
-                navController.navigate(SettingsScreenDestination)
-            }
+    dependencyLibraryNavGraph(object : LibraryNavGraphNavigator {
+        override fun onSettingsClick() {
+            navController.navigate(SettingsScreenDestination)
+        }
 
-            override fun navigateToBook(book: Book) {
-                navController.navigate(
-                    BookScreenDestination(book.bookshelfId, book.path, book.name)
-                )
-            }
+        override fun navigateToBook(book: Book) {
+            navController.navigate(
+                BookScreenDestination(book.bookshelfId, book.path, book.name)
+            )
+        }
 
-            override fun onFavoriteClick(file: File) {
-                navController.navigate(FavoriteAddScreenDestination(file.bookshelfId, file.path))
-            }
-        })
-    }
+        override fun onFavoriteClick(file: File) {
+            navController.navigate(FavoriteAddScreenDestination(file.bookshelfId, file.path))
+        }
+    })
+
     addOnList.forEach { it.findNavGraph()?.dependency() }
 }

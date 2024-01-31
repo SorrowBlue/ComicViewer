@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.app
+package com.sorrowblue.comicviewer.app.navigation
 
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.NavGraphSpec

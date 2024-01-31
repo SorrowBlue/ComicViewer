@@ -1,19 +1,22 @@
 package com.sorrowblue.comicviewer.app
 
+import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.view.animation.AnticipateInterpolator
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popUpTo
-import com.sorrowblue.comicviewer.feature.authentication.destinations.AuthenticationScreenDestination
-import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
+import com.sorrowblue.comicviewer.app.navigation.RootNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,23 +45,19 @@ internal class MainActivity : AppCompatActivity() {
                         }
                     }
                 },
-                onAuth = {
-                    navController.navigate(
-                        AuthenticationScreenDestination(
-                            Mode.Authentication,
-                            it
-                        )
-                    ) {
-                        launchSingleTop = true
-                        if (it) {
-                            popUpTo(RootNavGraph) {
-                                inclusive = true
-                            }
-                        }
-                    }
-                },
                 navController = navController
             )
         }
     }
+}
+
+private fun SplashScreenViewProvider.startSlideUpAnime() {
+    kotlin.runCatching {
+        val slideUp = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0f, -iconView.height * 2f)
+        slideUp.interpolator = AnticipateInterpolator()
+        slideUp.doOnEnd { remove() }
+        slideUp.duration =
+            if (iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis < 0) 300 else iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis
+        slideUp.start()
+    }.onFailure { remove() }
 }

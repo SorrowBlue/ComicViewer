@@ -8,18 +8,25 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,61 +38,75 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.flowWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.filter
 
 interface AuthenticationScreenNavigator : CoreNavigator {
     fun onBack()
-    fun onAuthCompleted(handleBack: Boolean, mode: Mode)
+    fun onCompleted()
 }
 
-class AuthenticationArgs(
-    val mode: Mode,
-    val handleBack: Boolean,
-)
+data class AuthenticationArgs(val mode: Mode)
 
 @Destination(navArgsDelegate = AuthenticationArgs::class)
 @Composable
-internal fun AuthenticationScreen(
+fun AuthenticationScreen(
     args: AuthenticationArgs,
     navigator: AuthenticationScreenNavigator,
 ) {
     AuthenticationScreen(
         args = args,
-        onBack = navigator::onBack,
         onBackClick = navigator::navigateUp,
-        onAuthCompleted = navigator::onAuthCompleted
+        onBack = navigator::onBack,
+        onCompleted = navigator::onCompleted
     )
 }
+
+internal data class AuthenticationEvent(
+    val completed: Boolean = false,
+)
 
 @Composable
 private fun AuthenticationScreen(
     args: AuthenticationArgs,
-    onBack: () -> Unit,
     onBackClick: () -> Unit,
-    onAuthCompleted: (Boolean, Mode) -> Unit,
+    onBack: () -> Unit,
+    onCompleted: () -> Unit,
     state: AuthenticationScreenState = rememberAuthenticationScreenState(args = args),
 ) {
-    if (state.complete != null) {
-        val (handleBack, mode) = state.complete!!
-        state.complete2()
-        onAuthCompleted(handleBack, mode)
-        return
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val currentOnCompleted by rememberUpdatedState(onCompleted)
+    LaunchedEffect(state, lifecycle) {
+        snapshotFlow { state.event }
+            .filter { it.completed }
+            .flowWithLifecycle(lifecycle)
+            .collect {
+                currentOnCompleted()
+            }
     }
     AuthenticationScreen(
         uiState = state.uiState,
         onBackClick = onBackClick,
         onPinClick = state::onPinClick,
         onBackspaceClick = state::onBackspaceClick,
-        onNextClick = { state.onNextClick(onAuthCompleted) },
+        onNextClick = state::onNextClick,
         snackbarHostState = state.snackbarHostState
     )
 
@@ -108,8 +129,11 @@ internal sealed interface AuthenticationScreenUiState {
         }
     }
 
-    data class Authentication(override val pinCount: Int, override val error: Int) :
-        AuthenticationScreenUiState {
+    data class Authentication(
+        override val pinCount: Int,
+        override val error: Int,
+        val loading: Boolean = false,
+    ) : AuthenticationScreenUiState {
         override fun copyPinCount(count: Int) = copy(pinCount = count)
     }
 
@@ -148,7 +172,11 @@ private fun AuthenticationScreen(
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    if (uiState !is AuthenticationScreenUiState.Authentication) {
+                    if (uiState is AuthenticationScreenUiState.Authentication) {
+                        TextButton(onClick = onBackClick) {
+                            Text(text = "Quit App")
+                        }
+                    } else {
                         IconButton(onClick = onBackClick) {
                             Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
                         }
@@ -220,38 +248,69 @@ private fun AuthenticationScreen(
                 }
             }
             Spacer(modifier = Modifier.size(16.dp))
-            IconButton(onClick = onNextClick) {
-                Icon(imageVector = ComicIcons.ArrowForward, contentDescription = null)
+            if (uiState is AuthenticationScreenUiState.Authentication && uiState.loading) {
+                CircularProgressIndicator()
+            } else {
+                IconButton(onClick = onNextClick) {
+                    Icon(imageVector = ComicIcons.ArrowForward, contentDescription = null)
+                }
             }
             Spacer(modifier = Modifier.weight(1f))
 
             HorizontalDivider(Modifier.padding(ComicTheme.dimension.margin))
-            listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", null).chunked(3)
-                .forEach { chunk ->
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        chunk.forEach {
-                            TextButton(
-                                onClick = {
-                                    if (it != null) {
-                                        onPinClick(it.toString())
-                                    } else {
-                                        onBackspaceClick()
-                                    }
-                                },
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                if (it != null) {
-                                    Text(text = it)
-                                } else {
-                                    Icon(
-                                        imageVector = ComicIcons.Backspace,
-                                        contentDescription = null
-                                    )
-                                }
+            val list = remember {
+                listOf(
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "",
+                    "0",
+                    null
+                ).toPersistentList()
+            }
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .padding(horizontal = 32.dp)
+                    .padding(bottom = 32.dp)
+            ) {
+                items(list) {
+                    FilledTonalButton(
+                        onClick = {
+                            if (it != null) {
+                                onPinClick(it.toString())
+                            } else {
+                                onBackspaceClick()
                             }
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                    ) {
+                        if (it != null) {
+                            if (it.isEmpty()) {
+
+                            } else {
+                                Text(text = it)
+                            }
+                        } else {
+                            Icon(
+                                imageVector = ComicIcons.Backspace,
+                                contentDescription = null
+                            )
                         }
                     }
                 }
+            }
         }
     }
 }

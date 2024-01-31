@@ -35,7 +35,7 @@ fun DestinationScopeWithNoDependencies<*>.authenticationNavGraphNavigator(naviga
 
 interface AuthenticationNavGraphNavigator {
     fun onBack()
-    fun onAuthCompleted(handleBack: Boolean, mode: Mode)
+    fun onCompleted()
 }
 
 class ReadLaterNavGraphNavigatorImpl internal constructor(
