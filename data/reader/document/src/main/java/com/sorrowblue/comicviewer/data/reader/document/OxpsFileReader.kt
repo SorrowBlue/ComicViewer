@@ -5,6 +5,7 @@ import androidx.annotation.Keep
 import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 
+@Suppress("unused")
 @Keep
 internal class OxpsFileReader(
     context: Context,

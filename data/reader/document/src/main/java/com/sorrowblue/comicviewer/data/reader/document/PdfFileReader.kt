@@ -5,6 +5,7 @@ import androidx.annotation.Keep
 import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 
+@Suppress("unused")
 @Keep
 internal class PdfFileReader(context: Context, seekableInputStream: SeekableInputStream) :
     DocumentFileReader(context, "application/pdf", seekableInputStream) {
