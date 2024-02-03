@@ -31,14 +31,13 @@ import com.sorrowblue.comicviewer.feature.library.googledrive.component.GoogleDr
 import com.sorrowblue.comicviewer.feature.library.googledrive.data.googleDriveModule
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialog
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialogUiState
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.parcelize.Parcelize
 import org.koin.core.context.loadKoinModules
 
-interface GoogleDriveScreenNavigator : CoreNavigator {
-
+interface GoogleDriveScreenNavigator {
+    fun navigateUp()
     fun onFolderClick(folder: Folder)
     fun requireAuthentication()
 }

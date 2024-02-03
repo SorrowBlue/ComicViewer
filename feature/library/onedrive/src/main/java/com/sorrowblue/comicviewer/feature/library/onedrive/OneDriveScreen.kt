@@ -29,14 +29,14 @@ import com.sorrowblue.comicviewer.feature.library.onedrive.data.oneDriveModule
 import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveArgs
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveAccountDialog
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveDialogUiState
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import java.io.InputStream
 import kotlinx.parcelize.Parcelize
 import org.koin.core.context.loadKoinModules
 
-internal interface OneDriveScreenNavigator : CoreNavigator {
+internal interface OneDriveScreenNavigator {
+    fun navigateUp()
     fun onFileClick(file: File)
     fun requireAuthentication()
 }

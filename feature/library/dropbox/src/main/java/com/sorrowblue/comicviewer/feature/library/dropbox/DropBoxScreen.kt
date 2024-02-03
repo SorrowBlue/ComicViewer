@@ -29,13 +29,13 @@ import com.sorrowblue.comicviewer.feature.library.dropbox.component.FileListItem
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.dropBoxModule
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxDialogUiState
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.parcelize.Parcelize
 import org.koin.core.context.loadKoinModules
 
-internal interface DropBoxScreenNavigator : CoreNavigator {
+internal interface DropBoxScreenNavigator {
+    fun navigateUp()
     fun onFolderClick(folder: Folder)
     fun requireAuthentication()
 }

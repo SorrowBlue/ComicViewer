@@ -25,15 +25,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 internal data class GoogleDriveLoginScreenUiState(val isRunning: Boolean = false) : Parcelable
 
-interface GoogleDriveLoginScreenNavigator : CoreNavigator {
-
+interface GoogleDriveLoginScreenNavigator {
+    fun navigateUp()
     fun onComplete()
 }
 
@@ -55,7 +54,7 @@ private fun GoogleDriveLoginScreen(
     savedStateHandle: SavedStateHandle,
     onCloseClick: () -> Unit,
     onComplete: () -> Unit,
-    state: GoogleDriveLoginScreenState = rememberGoogleDriveLoginScreenState(savedStateHandle = savedStateHandle,),
+    state: GoogleDriveLoginScreenState = rememberGoogleDriveLoginScreenState(savedStateHandle = savedStateHandle),
 ) {
     state.events.forEach {
         when (it) {

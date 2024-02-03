@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.tutorial.navigation
 
-import com.ramcosta.composedestinations.scope.DestinationScopeWithNoDependencies
+import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
+import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenNavigator
 import com.sorrowblue.comicviewer.feature.tutorial.destinations.TutorialScreenDestination
@@ -22,14 +23,10 @@ object TutorialNavGraph : AnimatedNavGraphSpec {
     )
 }
 
-fun DestinationScopeWithNoDependencies<*>.tutorialNavGraphNavigator(navigator: TutorialNavGraphNavigator) =
-    ReadLaterNavGraphNavigatorImpl(navigator)
-
-interface TutorialNavGraphNavigator {
-    fun onComplete()
+fun DependenciesContainerBuilder<*>.dependencyTutorialNavGraph(onComplete: () -> Unit) {
+    dependency(TutorialNavGraph) {
+        object : TutorialScreenNavigator {
+            override fun onComplete() = onComplete()
+        }
+    }
 }
-
-class ReadLaterNavGraphNavigatorImpl internal constructor(
-    navigator: TutorialNavGraphNavigator,
-) : TutorialScreenNavigator,
-    TutorialNavGraphNavigator by navigator

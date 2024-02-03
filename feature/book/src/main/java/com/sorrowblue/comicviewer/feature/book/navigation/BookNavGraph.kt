@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.feature.book.navigation
 
-import androidx.navigation.NavController
+import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
+import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.scope.DestinationScopeWithNoDependencies
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.Route
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
@@ -27,35 +27,31 @@ object BookNavGraph : AnimatedNavGraphSpec {
     )
 }
 
-fun DestinationScopeWithNoDependencies<*>.bookNavGraphNavigator(navigator: BookNavGraphNavigator) =
-    BookNavGraphNavigatorImpl(navigator, navController)
+fun DependenciesContainerBuilder<*>.dependencyBookNavGraph(
+    onSettingsClick: () -> Unit,
+) {
+    dependency(BookNavGraph) {
+        object : BookScreenNavigator {
+            override fun onSettingsClick() = onSettingsClick()
 
-interface BookNavGraphNavigator {
-    fun onSettingsClick()
-}
+            override fun onNextBookClick(book: Book, favoriteId: FavoriteId) {
+                navController.navigate(
+                    BookScreenDestination(
+                        bookshelfId = book.bookshelfId,
+                        path = book.path,
+                        name = book.name,
+                        favoriteId = favoriteId
+                    )
+                ) {
+                    popUpTo(BookScreenDestination.route) {
+                        inclusive = true
+                    }
+                }
+            }
 
-class BookNavGraphNavigatorImpl internal constructor(
-    navigator: BookNavGraphNavigator,
-    private val navController: NavController,
-) : BookScreenNavigator,
-    BookNavGraphNavigator by navigator {
-
-    override fun onNextBookClick(book: Book, favoriteId: FavoriteId) {
-        navController.navigate(
-            BookScreenDestination(
-                bookshelfId = book.bookshelfId,
-                path = book.path,
-                name = book.name,
-                favoriteId = favoriteId
-            )
-        ) {
-            popUpTo(BookScreenDestination.route) {
-                inclusive = true
+            override fun navigateUp() {
+                navController.navigateUp()
             }
         }
-    }
-
-    override fun navigateUp() {
-        navController.navigateUp()
     }
 }

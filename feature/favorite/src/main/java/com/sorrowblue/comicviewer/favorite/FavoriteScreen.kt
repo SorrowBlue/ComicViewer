@@ -27,13 +27,13 @@ import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
-interface FavoriteScreenNavigator : CoreNavigator {
+interface FavoriteScreenNavigator {
+    fun navigateUp()
     fun onEditClick(favoriteId: FavoriteId)
     fun onSettingsClick()
     fun onFileClick(file: File, favoriteId: FavoriteId)

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.authentication
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -35,7 +34,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,12 +52,11 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.filter
 
-interface AuthenticationScreenNavigator : CoreNavigator {
-    fun onBack()
+interface AuthenticationScreenNavigator {
+    fun navigateUp()
     fun onCompleted()
 }
 
@@ -74,7 +71,6 @@ fun AuthenticationScreen(
     AuthenticationScreen(
         args = args,
         onBackClick = navigator::navigateUp,
-        onBack = navigator::onBack,
         onCompleted = navigator::onCompleted
     )
 }
@@ -87,7 +83,6 @@ internal data class AuthenticationEvent(
 private fun AuthenticationScreen(
     args: AuthenticationArgs,
     onBackClick: () -> Unit,
-    onBack: () -> Unit,
     onCompleted: () -> Unit,
     state: AuthenticationScreenState = rememberAuthenticationScreenState(args = args),
 ) {
@@ -109,8 +104,6 @@ private fun AuthenticationScreen(
         onNextClick = state::onNextClick,
         snackbarHostState = state.snackbarHostState
     )
-
-    BackHandler(enabled = state.handleBack, onBack = onBack)
 }
 
 internal sealed interface AuthenticationScreenUiState {
@@ -172,14 +165,8 @@ private fun AuthenticationScreen(
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    if (uiState is AuthenticationScreenUiState.Authentication) {
-                        TextButton(onClick = onBackClick) {
-                            Text(text = "Quit App")
-                        }
-                    } else {
-                        IconButton(onClick = onBackClick) {
-                            Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
-                        }
+                    IconButton(onClick = onBackClick) {
+                        Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
                     }
                 },
                 windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)

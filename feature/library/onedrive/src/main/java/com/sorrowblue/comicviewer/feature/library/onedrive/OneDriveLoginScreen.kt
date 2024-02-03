@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
 import kotlinx.parcelize.Parcelize
@@ -30,7 +29,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 internal data class OneDriveLoginScreenUiState(val isRunning: Boolean = false) : Parcelable
 
-internal interface OneDriveLoginScreenNavigator : CoreNavigator {
+internal interface OneDriveLoginScreenNavigator {
+    fun navigateUp()
     fun onCompleted()
 }
 

@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 
-interface BookshelfEditScreenNavigator : CoreNavigator {
+interface BookshelfEditScreenNavigator {
+    fun navigateUp()
     fun onComplete()
 }
 

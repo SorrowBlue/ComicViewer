@@ -29,11 +29,11 @@ import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPaneUiState
 import com.sorrowblue.comicviewer.feature.settings.security.destinations.SecuritySettingsScreenDestination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.copy
 import kotlinx.parcelize.Parcelize
 
-internal interface SettingsScreenNavigator : CoreNavigator {
+internal interface SettingsScreenNavigator {
+    fun navigateUp()
     fun onStartTutorialClick()
     fun navigateToChangeAuth(enabled: Boolean)
     fun onPasswordChange()

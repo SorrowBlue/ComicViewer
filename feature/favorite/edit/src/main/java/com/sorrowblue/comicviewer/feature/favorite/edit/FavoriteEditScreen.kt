@@ -58,7 +58,6 @@ import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteName
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
@@ -67,7 +66,8 @@ import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-interface FavoriteEditScreenNavigator : CoreNavigator {
+interface FavoriteEditScreenNavigator {
+    fun navigateUp()
     fun onComplete()
 }
 

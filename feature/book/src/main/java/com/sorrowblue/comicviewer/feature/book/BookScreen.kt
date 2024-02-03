@@ -44,7 +44,6 @@ import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
@@ -65,7 +64,8 @@ internal sealed interface BookScreenUiState {
     ) : BookScreenUiState
 }
 
-interface BookScreenNavigator : CoreNavigator {
+interface BookScreenNavigator {
+    fun navigateUp()
     fun onSettingsClick()
     fun onNextBookClick(book: Book, favoriteId: FavoriteId)
 }

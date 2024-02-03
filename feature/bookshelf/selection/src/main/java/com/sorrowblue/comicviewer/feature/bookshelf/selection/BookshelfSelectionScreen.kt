@@ -8,12 +8,12 @@ import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.section.BookshelfSourceList
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.ResponsiveDialogScaffold
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 
-interface BookshelfSelectionScreenNavigator : CoreNavigator {
+interface BookshelfSelectionScreenNavigator {
+    fun navigateUp()
     fun onSourceClick(bookshelfType: BookshelfType)
 }
 

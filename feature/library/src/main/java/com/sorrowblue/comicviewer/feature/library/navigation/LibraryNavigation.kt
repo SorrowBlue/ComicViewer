@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.library.navigation
 
-import androidx.navigation.NavController
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
@@ -58,44 +57,42 @@ object LibraryNavGraph : AnimatedNavGraphSpec {
         )
 }
 
-fun DependenciesContainerBuilder<*>.dependencyLibraryNavGraph(navigator: LibraryNavGraphNavigator) {
+fun DependenciesContainerBuilder<*>.dependencyLibraryNavGraph(
+    onSettingsClick: () -> Unit,
+    navigateToBook: (Book) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+) {
     dependency(LibraryNavGraph) {
-        LibraryNavGraphNavigatorImpl(navigator, navController)
-    }
-}
+        object : LibraryScreenNavigator,
+            HistoryScreenNavigator {
+            override fun onSettingsClick() = onSettingsClick()
 
-interface LibraryNavGraphNavigator {
-    fun onSettingsClick()
-    fun navigateToBook(book: Book)
-    fun onFavoriteClick(file: File)
-}
+            override fun navigateToBook(book: Book) = navigateToBook(book)
 
-private class LibraryNavGraphNavigatorImpl(
-    navigator: LibraryNavGraphNavigator,
-    private val navController: NavController,
-) : LibraryScreenNavigator,
-    HistoryScreenNavigator,
-    LibraryNavGraphNavigator by navigator {
+            override fun onFavoriteClick(file: File) = onFavoriteClick(file)
 
-    override fun navigateUp() {
-        navController.navigateUp()
-    }
-
-    override fun onFeatureClick(feature: Feature) {
-        when (feature) {
-            is Feature.AddOn -> {
-                when (feature) {
-                    is Feature.AddOn.Box -> BoxNavGraph()
-                    is Feature.AddOn.Dropbox -> DropBoxNavGraph()
-                    is Feature.AddOn.GoogleDrive -> GoogleDriveNavGraph()
-                    is Feature.AddOn.OneDrive -> OneDriveNavGraph()
-                }?.let {
-                    navController.navigate(it)
-                }
+            override fun navigateUp() {
+                navController.navigateUp()
             }
 
-            Feature.Basic.History -> navController.navigate(HistoryScreenDestination)
-            Feature.Basic.Download -> TODO()
+            override fun onFeatureClick(feature: Feature) {
+                when (feature) {
+                    is Feature.AddOn -> {
+                        when (feature) {
+                            is Feature.AddOn.Box -> BoxNavGraph()
+                            is Feature.AddOn.Dropbox -> DropBoxNavGraph()
+                            is Feature.AddOn.GoogleDrive -> GoogleDriveNavGraph()
+                            is Feature.AddOn.OneDrive -> OneDriveNavGraph()
+                        }?.let {
+                            navController.navigate(it)
+                        }
+                    }
+
+                    Feature.Basic.History -> navController.navigate(HistoryScreenDestination)
+                    Feature.Basic.Download -> TODO()
+
+                }
+            }
         }
     }
 }

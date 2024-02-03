@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.feature.search.navigation
 
-import androidx.navigation.NavController
+import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
+import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.scope.DestinationScopeWithNoDependencies
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -41,38 +41,40 @@ object SearchNavGraph : AnimatedNavGraphSpec {
     )
 }
 
-fun DestinationScopeWithNoDependencies<*>.searchNavGraphNavigator(navigator: SearchNavGraphNavigator) =
-    SearchNavGraphNavigatorImpl(navigator, navController)
+fun DependenciesContainerBuilder<*>.dependencySearchNavGraph(
+    onBookClick: (Book) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+    onSearchClick: (BookshelfId, String) -> Unit,
+    onSettingsClick: () -> Unit,
+) {
+    dependency(SearchNavGraph) {
+        object : SearchScreenNavigator,
+            FolderScreenNavigator {
+            override fun onFavoriteClick(file: File) = onFavoriteClick(file)
 
-interface SearchNavGraphNavigator {
-    fun navigateToBook(book: Book)
-    fun onFavoriteClick(file: File)
-    fun onSettingsClick()
-    fun onSearchClick(bookshelfId: BookshelfId, path: String)
-}
+            override fun onSearchClick(bookshelfId: BookshelfId, path: String) =
+                onSearchClick(bookshelfId, path)
 
-class SearchNavGraphNavigatorImpl internal constructor(
-    navigator: SearchNavGraphNavigator,
-    private val navController: NavController,
-) : SearchScreenNavigator,
-    FolderScreenNavigator,
-    SearchNavGraphNavigator by navigator {
-    override fun onFileClick(file: File) {
-        when (file) {
-            is Book -> navigateToBook(file)
-            is Folder -> navController.navigate(
-                SearchFolderScreenDestination(file.bookshelfId, file.path, null)
-            )
+            override fun onSettingsClick() = onSettingsClick()
+
+            override fun onFileClick(file: File) {
+                when (file) {
+                    is Book -> onBookClick(file)
+                    is Folder -> navController.navigate(
+                        SearchFolderScreenDestination(file.bookshelfId, file.path, null)
+                    )
+                }
+            }
+
+            override fun onOpenFolderClick(file: File) {
+                navController.navigate(
+                    SearchFolderScreenDestination(file.bookshelfId, file.parent, null)
+                )
+            }
+
+            override fun navigateUp() {
+                navController.navigateUp()
+            }
         }
-    }
-
-    override fun onOpenFolderClick(file: File) {
-        navController.navigate(
-            SearchFolderScreenDestination(file.bookshelfId, file.parent, null)
-        )
-    }
-
-    override fun navigateUp() {
-        navController.navigateUp()
     }
 }

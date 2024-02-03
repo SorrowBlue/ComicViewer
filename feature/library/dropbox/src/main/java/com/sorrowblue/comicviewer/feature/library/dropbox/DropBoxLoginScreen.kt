@@ -29,11 +29,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import kotlinx.parcelize.Parcelize
 
-internal interface DropBoxLoginScreenNavigator : CoreNavigator {
+internal interface DropBoxLoginScreenNavigator {
+    fun navigateUp()
     fun onLoginCompleted()
 }
 

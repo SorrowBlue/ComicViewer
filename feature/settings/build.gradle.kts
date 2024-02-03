@@ -14,6 +14,7 @@ dependencies {
     implementation(projects.feature.settings.info)
     implementation(projects.feature.settings.security)
     implementation(projects.feature.settings.viewer)
+    implementation(projects.feature.authentication)
 
     implementation(libs.androidx.appcompat)
 }

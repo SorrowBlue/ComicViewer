@@ -25,7 +25,6 @@ internal fun LockScreen(
             args = AuthenticationArgs(Mode.Authentication),
             navigator = object : AuthenticationScreenNavigator {
                 override fun navigateUp() = onBack()
-                override fun onBack() = onBack()
                 override fun onCompleted() = onCompleted()
             }
         )

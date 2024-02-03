@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.feature.readlater.navigation
 
-import androidx.navigation.NavController
+import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
+import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.scope.DestinationScopeWithNoDependencies
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -41,43 +41,37 @@ object ReadLaterNavGraph : AnimatedNavGraphSpec {
     )
 }
 
-fun DestinationScopeWithNoDependencies<*>.readLaterNavGraphNavigator(navigator: ReadLaterNavGraphNavigator) =
-    ReadLaterNavGraphNavigatorImpl(navigator, navController)
+fun DependenciesContainerBuilder<*>.dependencyReadLaterNavGraph(
+    onBookClick: (Book) -> Unit,
+    onFavoriteClick: (File) -> Unit,
+    onSearchClick: (BookshelfId, String) -> Unit,
+    onSettingsClick: () -> Unit,
+) {
+    dependency(ReadLaterNavGraph) {
+        object : ReadLaterScreenNavigator, FolderScreenNavigator {
+            override fun onFavoriteClick(file: File) = onFavoriteClick(file)
+            override fun onSearchClick(bookshelfId: BookshelfId, path: String) =
+                onSearchClick(bookshelfId, path)
 
-interface ReadLaterNavGraphNavigator {
-    fun navigateToBook(book: Book)
-    fun onFavoriteClick(file: File)
-    fun onSearchClick(bookshelfId: BookshelfId, path: String)
-    fun onSettingsClick()
-}
+            override fun onSettingsClick() = onSettingsClick()
+            override fun onFileClick(file: File) {
+                when (file) {
+                    is Book -> onBookClick(file)
+                    is Folder -> navController.navigate(
+                        ReadLaterFolderScreenDestination(file.bookshelfId, file.path, null)
+                    )
+                }
+            }
 
-class ReadLaterNavGraphNavigatorImpl internal constructor(
-    navigator: ReadLaterNavGraphNavigator,
-    private val navController: NavController,
-) : ReadLaterScreenNavigator,
-    FolderScreenNavigator,
-    ReadLaterNavGraphNavigator by navigator {
-    override fun onFileClick(file: File) {
-        when (file) {
-            is Book -> navigateToBook(file)
-            is Folder -> navController.navigate(
-                ReadLaterFolderScreenDestination(file.bookshelfId, file.path, null)
-            )
+            override fun onOpenFolderClick(file: File) {
+                navController.navigate(
+                    ReadLaterFolderScreenDestination(file.bookshelfId, file.parent, null)
+                )
+            }
+
+            override fun navigateUp() {
+                navController.navigateUp()
+            }
         }
     }
-
-    override fun onOpenFolderClick(file: File) {
-        navController.navigate(
-            ReadLaterFolderScreenDestination(file.bookshelfId, file.parent, null)
-        )
-    }
-
-    override fun navigateUp() {
-        navController.navigateUp()
-    }
 }
-
-val RouteInReadlaterGraph = listOf(
-    ReadLaterScreenDestination.route,
-    ReadLaterFolderScreenDestination.route
-)

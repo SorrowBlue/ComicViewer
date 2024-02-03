@@ -30,7 +30,6 @@ import com.sorrowblue.comicviewer.feature.search.section.SearchResultSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import kotlinx.coroutines.delay
 import kotlinx.parcelize.Parcelize
@@ -44,7 +43,8 @@ internal data class SearchScreenUiState(
 
 private const val WaitLoadPage = 500L
 
-interface SearchScreenNavigator : CoreNavigator {
+interface SearchScreenNavigator {
+    fun navigateUp()
     fun onFileClick(file: File)
     fun onFavoriteClick(file: File)
     fun onOpenFolderClick(file: File)

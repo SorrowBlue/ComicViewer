@@ -43,7 +43,6 @@ import com.sorrowblue.comicviewer.folder.section.SortSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
@@ -70,7 +69,8 @@ internal data class FolderScreenUiState(
     val fileContentType: FileContentType = FileContentType.Grid(),
 ) : Parcelable
 
-interface FolderScreenNavigator : CoreNavigator {
+interface FolderScreenNavigator {
+    fun navigateUp()
     fun onSearchClick(bookshelfId: BookshelfId, path: String)
     fun onSettingsClick()
     fun onFileClick(file: File)

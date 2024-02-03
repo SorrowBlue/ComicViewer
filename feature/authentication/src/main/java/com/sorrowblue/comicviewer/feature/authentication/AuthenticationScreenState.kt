@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
 @Stable
 internal interface AuthenticationScreenState : SaveableScreenState {
     val event: AuthenticationEvent
-    val handleBack: Boolean
     val uiState: AuthenticationScreenUiState
     val snackbarHostState: SnackbarHostState
     fun onPinClick(pin: String)
@@ -109,8 +108,6 @@ private class AuthenticationScreenStateImpl(
         )
     }
         private set
-
-    override val handleBack = args.mode == Mode.Authentication
 
     private var pin by savedStateHandle.saveable { mutableStateOf("") }
     private var pinHistory by savedStateHandle.saveable { mutableStateOf("") }

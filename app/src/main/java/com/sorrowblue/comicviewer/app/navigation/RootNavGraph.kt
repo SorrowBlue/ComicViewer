@@ -4,7 +4,6 @@ import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.NavGraphSpec
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfNavGraph
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraph
-import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationNavGraph
 import com.sorrowblue.comicviewer.feature.book.destinations.BookScreenDestination
 import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraph
 import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddScreenDestination
@@ -32,7 +31,6 @@ internal object RootNavGraph : NavGraphSpec {
         BookNavGraph,
         SearchNavGraph,
         SettingsNavGraph,
-        AuthenticationNavGraph,
         TutorialNavGraph,
         LibraryNavGraph,
     )
