@@ -6,15 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,43 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.CustomSlider
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
-
-interface SettingsItem {
-    val title: Int
-    val icon: ImageVector? get() = null
-    val text: String? get() = null
-}
-
-@Composable
-fun SettingsColumn(
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
-    content: @Composable ColumnScope.() -> Unit,
-) {
-    val isMobile = rememberMobile()
-    val padding = if (isMobile) {
-        contentPadding
-    } else {
-        contentPadding.add(
-            paddingValues = PaddingValues(
-                horizontal = ComicTheme.dimension.margin,
-                vertical = ComicTheme.dimension.margin
-            )
-        )
-    }
-    Column(
-        Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(padding)
-            .then(modifier)
-    ) {
-        content()
-    }
-}
 
 @Composable
 fun Setting(

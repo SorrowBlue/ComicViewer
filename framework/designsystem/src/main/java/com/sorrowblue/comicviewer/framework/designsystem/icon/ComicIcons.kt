@@ -26,7 +26,6 @@ import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.FolderOpen
 import androidx.compose.material.icons.rounded.Grid4x4
@@ -103,6 +102,5 @@ object ComicIcons {
     val Grid4x4 = Icons.Rounded.Grid4x4
     val Book = Icons.Rounded.Book
     val BrokenImage = Icons.Rounded.BrokenImage
-    val FilterAlt = Icons.Rounded.FilterAlt
     val Folder = Icons.Rounded.Folder
 }

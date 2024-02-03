@@ -41,12 +41,12 @@ internal class TutorialScreenState(
     var uiState by mutableStateOf(TutorialScreenUiState())
 
     init {
-        if (viewModel.splitInstallManager.installedModules.contains(DocumentModule)) {
+        uiState = if (viewModel.splitInstallManager.installedModules.contains(DocumentModule)) {
             logcat { "Feature module($DocumentModule) is already installed." }
-            uiState = uiState.copy(documentSheetUiState = DocumentSheetUiState.INSTALLED)
+            uiState.copy(documentSheetUiState = DocumentSheetUiState.INSTALLED)
         } else {
             logcat { "Feature module($DocumentModule) is not installed." }
-            uiState = uiState.copy(documentSheetUiState = DocumentSheetUiState.NONE)
+            uiState.copy(documentSheetUiState = DocumentSheetUiState.NONE)
         }
         viewModel.viewerOperationSettingsUseCase.settings.onEach {
             uiState = uiState.copy(

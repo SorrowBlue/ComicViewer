@@ -57,19 +57,6 @@ internal class FolderViewModel @Inject constructor(
                 runBlocking { displaySettingsUseCase.settings.first().sortType }
             )
 
-    fun toggleFileListType() {
-        viewModelScope.launch {
-            displaySettingsUseCase.edit {
-                it.copy(
-                    display = when (it.display) {
-                        FolderDisplaySettings.Display.GRID -> FolderDisplaySettings.Display.LIST
-                        FolderDisplaySettings.Display.LIST -> FolderDisplaySettings.Display.GRID
-                    }
-                )
-            }
-        }
-    }
-
     fun addToReadLater(file: File) {
         viewModelScope.launch {
             addReadLaterUseCase.execute(AddReadLaterUseCase.Request(file.bookshelfId, file.path))

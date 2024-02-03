@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 import logcat.logcat
 
 internal class OneDrivePagingSource(
-    val driveId: String?,
+    private val driveId: String?,
     private val itemId: String,
     private val repository: OneDriveApiRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,

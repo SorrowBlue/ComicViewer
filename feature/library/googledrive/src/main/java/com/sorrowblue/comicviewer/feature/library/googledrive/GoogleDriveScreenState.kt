@@ -84,7 +84,6 @@ internal class GoogleDriveScreenState(
         key = "book",
         stateSaver = autoSaver()
     ) { mutableStateOf(null) }
-        private set
 
     var events = mutableStateListOf<GoogleDriveScreenEvent>()
         private set
@@ -126,7 +125,7 @@ internal class GoogleDriveScreenState(
     }
 
     private val workManager = WorkManager.getInstance(context)
-    fun enqueueDownload(outputUri: String, file: File) {
+    private fun enqueueDownload(outputUri: String, file: File) {
         val request = OneTimeWorkRequestBuilder<DriveDownloadWorker>()
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .setInputData(workDataOf("outputUri" to outputUri, "fileId" to file.path))

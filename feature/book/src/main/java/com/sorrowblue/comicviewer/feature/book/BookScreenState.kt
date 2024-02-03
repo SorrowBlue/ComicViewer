@@ -306,17 +306,22 @@ internal class BookScreenState2(
                         newList.add(item)
                         nextSingle = null
                     } else {
-                        val nextItem = currentList[index1 + 1]
-                        if (nextItem is BookPage.Spread.Single) {
-                            newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
-                            skipIndex += index1 + 1
-                            nextSingle = null
-                        } else if (nextItem is BookPage.Spread.Combine) {
-                            newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
-                            nextSingle = BookPage.Spread.Single(nextItem.nextIndex)
-                        } else {
-                            newList.add(item)
-                            nextSingle = null
+                        when (val nextItem = currentList[index1 + 1]) {
+                            is BookPage.Spread.Single -> {
+                                newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
+                                skipIndex += index1 + 1
+                                nextSingle = null
+                            }
+
+                            is BookPage.Spread.Combine -> {
+                                newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
+                                nextSingle = BookPage.Spread.Single(nextItem.nextIndex)
+                            }
+
+                            else -> {
+                                newList.add(item)
+                                nextSingle = null
+                            }
                         }
                     }
                 }

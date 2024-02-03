@@ -13,12 +13,6 @@ import com.sorrowblue.comicviewer.feature.library.component.AddOnItemState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
-internal sealed interface RequestInstallDialogUiState {
-
-    data object Hide : RequestInstallDialogUiState
-    data class Show(val feature: Feature.AddOn) : RequestInstallDialogUiState
-}
-
 @Composable
 internal fun LibraryCloudStorageDialog(
     addOn: Feature.AddOn,

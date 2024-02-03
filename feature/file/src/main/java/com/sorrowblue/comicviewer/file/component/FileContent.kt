@@ -10,7 +10,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,7 +63,7 @@ private fun <T : File> FileGridContent(
     onClickItem: (T) -> Unit,
     onLongClickItem: (T) -> Unit,
 ) {
-    var spanCount by remember { mutableStateOf(1) }
+    var spanCount by remember { mutableIntStateOf(1) }
     LazyVerticalGrid(
         columns = columns,
         state = state,

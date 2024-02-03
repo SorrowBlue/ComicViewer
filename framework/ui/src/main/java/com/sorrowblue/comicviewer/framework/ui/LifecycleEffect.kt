@@ -5,19 +5,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-
-@Composable
-fun LifecycleEffect(
-    lifecycleObserver: LifecycleObserver,
-    lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
-) {
-    DisposableEffect(lifecycle, lifecycleObserver) {
-        lifecycle.addObserver(lifecycleObserver)
-        onDispose { lifecycle.removeObserver(lifecycleObserver) }
-    }
-}
 
 @Composable
 fun LifecycleResumeEffect(
@@ -38,24 +26,6 @@ fun LifecycleEffect(
             if (event == targetEvent) {
                 action()
             }
-        }
-
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-}
-
-@Composable
-fun LifecycleEffect(
-    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
-    action: (Lifecycle.Event) -> Unit,
-) {
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            action(event)
         }
 
         lifecycleOwner.lifecycle.addObserver(observer)

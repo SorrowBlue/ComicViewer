@@ -10,13 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 
-sealed interface BookshelfRemoveDialogUiState {
-
-    data object Hide : BookshelfRemoveDialogUiState
-
-    data class Show(val title: String) : BookshelfRemoveDialogUiState
-}
-
 @Composable
 internal fun BookshelfRemoveDialog(
     title: String,

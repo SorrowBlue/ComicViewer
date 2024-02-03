@@ -90,7 +90,7 @@ internal sealed interface BoxScreenUiEvent {
 private class BoxScreenStateImpl(
     args: BoxArgs,
     savedStateHandle: SavedStateHandle,
-    private val context: Context,
+    context: Context,
     private val scope: CoroutineScope,
     private val repository: BoxApiRepository,
 ) : BoxScreenState {

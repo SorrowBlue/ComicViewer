@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.App2" parent="Theme.Material3.DynamicColors.DayNight">
-    </style>
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
 <!--        <item name="windowSplashScreenBackground">@android:color/system_surface_dark</item>-->
         <item name="windowSplashScreenBackground">?android:colorBackground</item>

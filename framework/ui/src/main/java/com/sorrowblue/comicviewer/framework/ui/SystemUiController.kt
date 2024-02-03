@@ -79,7 +79,7 @@ fun rememberSystemUiController(
     window: Window? = findWindow(),
 ): SystemUiController {
     val view = LocalView.current
-    return remember(view, window) { AndroidSystemUiController(view, window) }
+    return remember(view, window) { AndroidSystemUiController(window, view) }
 }
 
 @Composable
@@ -102,8 +102,8 @@ private tailrec fun Context.findWindow(): Window? =
  * instance of this.
  */
 internal class AndroidSystemUiController(
+    window: Window?,
     private val view: View,
-    private val window: Window?,
 ) : SystemUiController {
     private val windowInsetsController = window?.let {
         WindowCompat.getInsetsController(it, view)

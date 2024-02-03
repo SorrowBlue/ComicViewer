@@ -17,7 +17,7 @@ import kotlin.math.min
 private val COMPRESS_FORMAT = Bitmap.CompressFormat.WEBP_LOSSY
 
 @Keep
-open class DocumentFileReader constructor(
+open class DocumentFileReader(
     context: Context,
     mimeType: String,
     private val seekableInputStream: SeekableInputStream,

@@ -10,7 +10,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,7 +39,7 @@ internal fun BookshelfListContents(
     } else {
         GridCells.Adaptive(200.dp)
     }
-    var spanCount by remember { mutableStateOf(1) }
+    var spanCount by remember { mutableIntStateOf(1) }
     LazyVerticalGrid(
         columns = gridCells,
         state = lazyGridState,
@@ -52,7 +52,9 @@ internal fun BookshelfListContents(
             ComicTheme.dimension.padding * 2,
             alignment = Alignment.Start
         ),
-        modifier = Modifier.fillMaxSize().drawVerticalScrollbar(lazyGridState, spanCount)
+        modifier = Modifier
+            .fillMaxSize()
+            .drawVerticalScrollbar(lazyGridState, spanCount)
     ) {
         items(
             count = lazyPagingItems.itemCount,
