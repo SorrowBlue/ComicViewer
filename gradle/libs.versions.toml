@@ -2,8 +2,8 @@
 
 targetSdk = "34"
 
-kotlin = "1.9.22"
-google-ksp = "1.9.22-1.0.17"
+kotlin = "2.0.0-Beta3"
+google-ksp = "2.0.0-Beta3-1.0.17"
 kotlinx-coroutines = "1.7.3"
 kotlinx-serialization = "1.6.2"
 
@@ -15,7 +15,7 @@ androidx-paging = "3.2.1"
 androidx-room = "2.6.1"
 androidx-work = "2.9.0"
 
-androidx-compose-compiler = "1.5.8"
+androidx-compose-compiler = "1.5.9-dev-k2.0.0-Beta3-7c5ec6895a0"
 
 google-dagger = "2.50"
 android-gradle = "8.2.2"
