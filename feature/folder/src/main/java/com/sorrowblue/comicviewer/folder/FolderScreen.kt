@@ -3,10 +3,12 @@ package com.sorrowblue.comicviewer.folder
 import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -42,6 +44,7 @@ import com.sorrowblue.comicviewer.folder.section.SortOrder
 import com.sorrowblue.comicviewer.folder.section.SortSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
@@ -166,6 +169,18 @@ internal fun FolderScreen(
             onDismissRequest = state::onSortSheetDismissRequest
         )
     }
+
+    if (state.isScrollableTop) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(ComicTheme.colorScheme.scrim.copy(alpha = 0.75f)),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
     LaunchedEffect(lazyPagingItems.loadState) {
         if (0 < lazyPagingItems.itemCount && state.restorePath != null) {
             val index = lazyPagingItems.indexOf { it?.path == state.restorePath }
@@ -185,8 +200,8 @@ internal fun FolderScreen(
             pullRefreshState.endRefresh()
         }
         if (lazyPagingItems.isLoadedData && state.isScrollableTop) {
-            state.isScrollableTop = false
             state.lazyGridState.scrollToItem(0)
+            state.isScrollableTop = false
         }
     }
 

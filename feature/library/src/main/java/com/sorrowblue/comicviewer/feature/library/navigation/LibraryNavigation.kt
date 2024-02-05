@@ -25,6 +25,11 @@ object LibraryNavGraph : AnimatedNavGraphSpec {
 
     override val startRoute = LibraryScreenDestination
 
+    override val showNavigation = listOf(
+        LibraryScreenDestination,
+        HistoryScreenDestination
+    ).map(DestinationSpec<out Any>::route)
+
     override val destinationsByRoute = listOf(
         LibraryScreenDestination,
         HistoryScreenDestination

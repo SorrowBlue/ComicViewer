@@ -16,12 +16,21 @@ import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec
 import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
 
 object ReadLaterNavGraph : AnimatedNavGraphSpec {
+
     override val route = "readlater_graph"
+
     override val startRoute = ReadLaterScreenDestination
+
+    override val showNavigation = listOf(
+        ReadLaterScreenDestination,
+        ReadLaterFolderScreenDestination
+    ).map(DestinationSpec<out Any>::route)
+
     override val destinationsByRoute = listOf(
         ReadLaterScreenDestination,
         ReadLaterFolderScreenDestination
     ).associateBy(DestinationSpec<*>::route)
+
     override val transitions = listOf(
         TransitionsConfigure(
             ReadLaterScreenDestination.route,
