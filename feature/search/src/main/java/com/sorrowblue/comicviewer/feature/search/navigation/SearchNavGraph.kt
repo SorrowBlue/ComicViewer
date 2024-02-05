@@ -48,7 +48,8 @@ fun DependenciesContainerBuilder<*>.dependencySearchNavGraph(
     onSettingsClick: () -> Unit,
 ) {
     dependency(SearchNavGraph) {
-        object : SearchScreenNavigator,
+        object :
+            SearchScreenNavigator,
             FolderScreenNavigator {
             override fun onFavoriteClick(file: File) = onFavoriteClick(file)
 

@@ -73,7 +73,8 @@ fun DependenciesContainerBuilder<*>.dependencyBookshelfNavGraph(
     onSettingsClick: () -> Unit,
 ) {
     dependency(BookshelfNavGraph) {
-        object : BookshelfScreenNavigator,
+        object :
+            BookshelfScreenNavigator,
             BookshelfSelectionScreenNavigator,
             BookshelfEditScreenNavigator,
             BookshelfFolderScreenNavigator {

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.authentication.navigation
+package com.sorrowblue.comicviewer.feature.authentication
 
 enum class Mode {
     Register,

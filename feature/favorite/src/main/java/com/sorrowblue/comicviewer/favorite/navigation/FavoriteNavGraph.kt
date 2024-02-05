@@ -68,9 +68,9 @@ fun DependenciesContainerBuilder<*>.dependencyFavoriteNavGraph(
     onSearchClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-
     dependency(FavoriteNavGraph) {
-        object : FavoriteListNavigator,
+        object :
+            FavoriteListNavigator,
             FavoriteScreenNavigator,
             FolderScreenNavigator,
             FavoriteEditScreenNavigator {

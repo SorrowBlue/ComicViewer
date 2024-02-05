@@ -63,7 +63,8 @@ fun DependenciesContainerBuilder<*>.dependencyLibraryNavGraph(
     onFavoriteClick: (File) -> Unit,
 ) {
     dependency(LibraryNavGraph) {
-        object : LibraryScreenNavigator,
+        object :
+            LibraryScreenNavigator,
             HistoryScreenNavigator {
             override fun onSettingsClick() = onSettingsClick()
 
@@ -90,7 +91,6 @@ fun DependenciesContainerBuilder<*>.dependencyLibraryNavGraph(
 
                     Feature.Basic.History -> navController.navigate(HistoryScreenDestination)
                     Feature.Basic.Download -> TODO()
-
                 }
             }
         }

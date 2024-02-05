@@ -5,8 +5,8 @@ import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNavigator
+import com.sorrowblue.comicviewer.feature.authentication.Mode
 import com.sorrowblue.comicviewer.feature.authentication.destinations.AuthenticationScreenDestination
-import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.destinations.SettingsScreenDestination
 import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec

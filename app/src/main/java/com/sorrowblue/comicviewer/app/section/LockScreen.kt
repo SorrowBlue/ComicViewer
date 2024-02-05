@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.app.MainScreenUiState
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationArgs
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreen
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNavigator
-import com.sorrowblue.comicviewer.feature.authentication.navigation.Mode
+import com.sorrowblue.comicviewer.feature.authentication.Mode
 
 @Composable
 internal fun LockScreen(
