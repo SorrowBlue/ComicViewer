@@ -807,7 +807,6 @@ private var _undrawTaken: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconUndrawTakenPreview() {
     Image(imageVector = ComicIcons.UndrawTaken, contentDescription = null)
 }

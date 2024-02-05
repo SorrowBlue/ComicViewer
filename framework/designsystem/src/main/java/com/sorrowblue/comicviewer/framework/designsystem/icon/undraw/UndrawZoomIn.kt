@@ -481,7 +481,6 @@ private var _undrawZoomIn: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconUndrawZoomInPreview() {
     Image(imageVector = ComicIcons.UndrawZoomIn, contentDescription = null)
 }

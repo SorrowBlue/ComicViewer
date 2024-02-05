@@ -253,7 +253,6 @@ private var _undrawNoData: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconUndrawNoDataPreview() {
     Image(imageVector = ComicIcons.UndrawNoData, contentDescription = null)
 }

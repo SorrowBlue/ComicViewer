@@ -1344,7 +1344,6 @@ private var _undrawFileBundle: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconUndrawFileBundlePreview() {
     Image(imageVector = ComicIcons.UndrawFileBundle, contentDescription = null)
 }

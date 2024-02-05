@@ -19,6 +19,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
@@ -92,25 +93,29 @@ private class BookshelfScreenStateImpl(
     private val context: Context,
 ) : BookshelfScreenState {
 
-    override val bookshelfId get() = bookshelfId2.value!!
+    override val bookshelfId get() = bookshelfIdLiveData.value!!
 
     override val pagingDataFlow: Flow<PagingData<BookshelfFolder>> = viewModel.pagingDataFlow
 
-    private var bookshelfId2 = savedStateHandle.getLiveData<BookshelfId?>("bookshelfId")
+    private val bookshelfIdLiveData = savedStateHandle.getLiveData<BookshelfId?>("bookshelfId")
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override var bookshelfFolder: Flow<BookshelfFolder?> = bookshelfId2.asFlow().flatMapLatest {
-        if (it != null) {
-            viewModel.getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(bookshelfId = it))
-                .map { it.dataOrNull() }
-        } else {
-            flowOf(null)
+    override var bookshelfFolder: Flow<BookshelfFolder?> =
+        bookshelfIdLiveData.asFlow().flatMapLatest {
+            if (it != null) {
+                viewModel.getBookshelfInfoUseCase.execute(
+                    GetBookshelfInfoUseCase.Request(
+                        bookshelfId = it
+                    )
+                )
+                    .map(Resource<BookshelfFolder, GetBookshelfInfoUseCase.Error>::dataOrNull)
+            } else {
+                flowOf(null)
+            }
         }
-    }
-
 
     override fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder) {
-        bookshelfId2.value = bookshelfFolder.bookshelf.id
+        bookshelfIdLiveData.value = bookshelfFolder.bookshelf.id
         navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
     }
 

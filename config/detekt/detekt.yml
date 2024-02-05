@@ -58,6 +58,7 @@ style:
       - 'PreviewComic'
       - 'PreviewMobile'
       - 'PreviewTablet'
+      - 'PreviewScreenSizes'
 
 # https://mrmans0n.github.io/compose-rules/detekt/
 Compose:

@@ -882,7 +882,6 @@ private var _undrawFileSearching: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconUndrawFileSearchingPreview() {
     Image(imageVector = ComicIcons.UndrawFileSearching, contentDescription = null)
 }
