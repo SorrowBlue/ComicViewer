@@ -2,8 +2,10 @@ package com.sorrowblue.comicviewer.app
 
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -171,7 +173,17 @@ private fun ComicViewerApp(
             }
         },
         layoutType = navSuiteType,
-        content = content
+        content = {
+            Box(
+                modifier = if (navSuiteType == NavigationSuiteType.NavigationBar) {
+                    Modifier.consumeWindowInsets(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom))
+                } else {
+                    Modifier
+                }
+            ) {
+                content()
+            }
+        }
     )
 }
 

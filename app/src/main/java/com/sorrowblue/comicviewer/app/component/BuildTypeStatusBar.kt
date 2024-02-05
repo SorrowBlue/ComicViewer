@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.app.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -28,7 +27,6 @@ internal fun BuildTypeStatusBar(buildType: String) {
                 .height(
                     (WindowInsets.statusBars.getTop(LocalDensity.current) / LocalDensity.current.density).dp
                 )
-                .background(ComicTheme.colorScheme.tertiaryContainer.copy(alpha = 0.25f))
                 .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
                 .padding(end = 80.dp)
         ) {
