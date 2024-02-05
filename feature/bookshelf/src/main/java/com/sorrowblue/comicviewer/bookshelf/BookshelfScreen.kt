@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -23,12 +22,14 @@ import androidx.compose.material3.adaptive.PaneAdaptedValue
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -46,9 +47,9 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
-import com.sorrowblue.comicviewer.framework.ui.PreviewComic
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.material3.SettingsButton
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -79,9 +80,10 @@ private fun BookshelfScreen(
     onEditClick: (BookshelfId) -> Unit,
     state: BookshelfScreenState = rememberBookshelfScreenState(),
 ) {
+    val bookshelfFolder by state.bookshelfFolder.collectAsState(null)
     BookshelfScreen(
         navigator = state.navigator,
-        bookshelfFolder = state.bookshelfFolder,
+        bookshelfFolder = bookshelfFolder,
         lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
         lazyGridState = state.lazyGridState,
         snackbarHostState = state.snackbarHostState,
@@ -136,9 +138,7 @@ private fun BookshelfScreen(
                     Text(text = stringResource(id = R.string.bookshelf_list_title))
                 },
                 actions = {
-                    IconButton(onClick = onSettingsClick) {
-                        Icon(imageVector = ComicIcons.Settings, contentDescription = null)
-                    }
+                    SettingsButton(onClick = onSettingsClick)
                 },
                 windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
                 scrollBehavior = scrollBehavior,
@@ -151,13 +151,10 @@ private fun BookshelfScreen(
             ExtendedFloatingActionButton(
                 expanded = expanded,
                 onClick = onFabClick,
-                text = { Text(text = "Add") },
+                text = { Text(text = stringResource(R.string.bookshelf_btn_add)) },
                 icon = { Icon(imageVector = ComicIcons.Add, contentDescription = null) },
-                modifier = Modifier.windowInsetsPadding(
-                    WindowInsets.safeDrawing.only(
-                        WindowInsetsSides.End
-                    )
-                )
+                modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.End))
             )
         },
         extraPane = { innerPadding ->
@@ -199,7 +196,7 @@ private fun BookshelfScreen(
 private val FabSpace get() = 72.dp
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-@PreviewComic
+@PreviewScreenSizes
 @Composable
 private fun PreviewBookshelfScreen() {
     PreviewTheme {

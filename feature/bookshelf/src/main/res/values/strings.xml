@@ -2,10 +2,6 @@
 <resources>
     <string name="bookshelf_list_title">List of bookshelves</string>
     <string name="bookshelf_list_message_no_bookshelves_added_yet">No bookshelves added yet</string>
-    <plurals name="bookshelf_list_label_files">
-        <item quantity="one">1 file</item>
-        <item quantity="other">%1$d files</item>
-    </plurals>
     <string name="bookshelf_info_title">Bookshelf Info</string>
     <string name="bookshelf_info_label_display_name">Display name</string>
     <string name="bookshelf_info_label_host">IP/Host</string>
@@ -20,4 +16,7 @@
     <string name="bookshelf_remove_label">Do you want to remove %1$s?</string>
     <string name="bookshelf_remove_label_delete">Delete</string>
     <string name="bookshelf_msg_delete">\"%1$s\" has been deleted.</string>
+    <string name="bookshelf_desc_open_bookshelf_info">Open bookshelf information</string>
+    <string name="bookshelf_desc_thumbnail">bookshelf thumbnail</string>
+    <string name="bookshelf_btn_add">Add</string>
 </resources>

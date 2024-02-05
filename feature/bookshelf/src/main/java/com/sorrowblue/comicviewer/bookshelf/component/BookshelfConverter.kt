@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.bookshelf
+package com.sorrowblue.comicviewer.bookshelf.component
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage

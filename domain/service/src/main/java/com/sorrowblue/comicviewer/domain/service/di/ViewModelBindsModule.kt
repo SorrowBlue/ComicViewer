@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.domain.service.interactor.ScanBookshelfInterac
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.DeleteHistoryInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfFileInteractor
-import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfFolderInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfInfoInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RegisterBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RemoveBookshelfInteractor
@@ -45,7 +44,6 @@ import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.DeleteHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFolderUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
@@ -118,9 +116,6 @@ internal interface ViewModelBindsModule {
 
     @Binds
     fun bindUpdateLastReadPageUseCase(interactor: UpdateLastReadPageInteractor): UpdateLastReadPageUseCase
-
-    @Binds
-    fun bindGetBookshelfFolderUseCase(interactor: GetBookshelfFolderInteractor): GetBookshelfFolderUseCase
 
     @Binds
     fun bindDeleteHistoryUseCase(interactor: DeleteHistoryInteractor): DeleteHistoryUseCase

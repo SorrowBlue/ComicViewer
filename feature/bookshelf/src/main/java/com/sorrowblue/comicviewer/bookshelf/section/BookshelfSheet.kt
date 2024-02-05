@@ -25,7 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.sorrowblue.comicviewer.bookshelf.BookshelfConverter.source
+import com.sorrowblue.comicviewer.bookshelf.component.BookshelfConverter.source
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
@@ -36,21 +36,6 @@ import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffoldDefault
 import com.sorrowblue.comicviewer.framework.ui.material3.OptionButton
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
-
-@Composable
-private fun ListItem(
-    overline: String,
-    headline: String,
-) {
-    val colors = ListItemDefaults.colors(
-        containerColor = Color.Transparent
-    )
-    ListItem(
-        colors = colors,
-        headlineContent = { Text(text = headline) },
-        overlineContent = { Text(text = overline) }
-    )
-}
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -151,4 +136,19 @@ fun BookshelfInfoSheet(
             )
         }
     }
+}
+
+@Composable
+private fun ListItem(
+    overline: String,
+    headline: String,
+) {
+    val colors = ListItemDefaults.colors(
+        containerColor = Color.Transparent
+    )
+    ListItem(
+        colors = colors,
+        headlineContent = { Text(text = headline) },
+        overlineContent = { Text(text = overline) }
+    )
 }

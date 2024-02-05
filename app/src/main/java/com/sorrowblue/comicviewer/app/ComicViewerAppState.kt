@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
+import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -33,6 +34,7 @@ import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraph
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.destinations.TutorialScreenDestination
+import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
@@ -44,6 +46,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import logcat.LogPriority
 import logcat.logcat
 
@@ -66,10 +69,11 @@ internal interface ComicViewerAppState : SaveableScreenState {
     fun onAuthCompleted()
 }
 
+@Parcelize
 internal data class ComicViewerAppEvent(
     val navigateToTutorial: Boolean = false,
     val navigateToAuth: Boolean? = null,
-)
+) : Parcelable
 
 @Composable
 internal fun rememberComicViewerAppState(
@@ -116,14 +120,16 @@ private class ComicViewerAppStateImpl(
         val backStackEntryFlow = navController.currentBackStackEntryFlow
         backStackEntryFlow
             .filter { it.destination is ComposeNavigator.Destination }
-            .onEach {
+            .onEach { backStackEntry ->
                 val currentTab = MainScreenTab.entries.find { tab ->
-                    it.destination.hierarchy.any { it.route == tab.navGraph.route }
+                    tab.navGraph is AnimatedNavGraphSpec && backStackEntry.destination.hierarchy.any {
+                        tab.navGraph.showNavigation.contains(it.route)
+                    }
                 }
                 uiState = uiState.copy(currentTab = currentTab)
                 logcat {
                     "destination.hierarchy=${
-                        it.destination.hierarchy.joinToString(",") {
+                        backStackEntry.destination.hierarchy.joinToString(",") {
                             it.route.orEmpty().ifEmpty { "null" }
                         }
                     }"

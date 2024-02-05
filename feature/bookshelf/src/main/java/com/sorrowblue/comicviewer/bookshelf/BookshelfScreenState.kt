@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.bookshelf
 
+import android.content.Context
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHostState
@@ -10,25 +11,29 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.autoSaver
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.lifecycle.asFlow
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.dataOrNull
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
+import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.ui.DialogController
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -38,7 +43,7 @@ internal interface BookshelfScreenState : SaveableScreenState {
     val removeDialogController: DialogController<BookshelfFolder?>
     val lazyGridState: LazyGridState
     val pagingDataFlow: Flow<PagingData<BookshelfFolder>>
-    var bookshelfFolder: BookshelfFolder?
+    var bookshelfFolder: Flow<BookshelfFolder?>
     fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder)
     fun onRemoveClick()
     fun onInfoSheetCloseClick()
@@ -60,6 +65,7 @@ internal fun rememberBookshelfScreenState(
     viewModel: BookshelfViewModel = hiltViewModel(),
     removeDialogController: DialogController<BookshelfFolder?> = remember { DialogController(null) },
     lazyGridState: LazyGridState = rememberLazyGridState(),
+    context: Context = LocalContext.current,
 ): BookshelfScreenState = rememberSaveableScreenState {
     BookshelfScreenStateImpl(
         savedStateHandle = it,
@@ -68,11 +74,12 @@ internal fun rememberBookshelfScreenState(
         snackbarHostState = snackbarHostState,
         navigator = navigator,
         removeDialogController = removeDialogController,
-        lazyGridState = lazyGridState
+        lazyGridState = lazyGridState,
+        context = context
     )
 }
 
-@OptIn(SavedStateHandleSaveableApi::class, ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Stable
 private class BookshelfScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
@@ -82,30 +89,35 @@ private class BookshelfScreenStateImpl(
     override val snackbarHostState: SnackbarHostState,
     override val removeDialogController: DialogController<BookshelfFolder?>,
     override val lazyGridState: LazyGridState,
+    private val context: Context,
 ) : BookshelfScreenState {
 
-    override val bookshelfId get() = bookshelfFolder!!.bookshelf.id
+    override val bookshelfId get() = bookshelfId2.value!!
 
     override val pagingDataFlow: Flow<PagingData<BookshelfFolder>> = viewModel.pagingDataFlow
 
-    override var bookshelfFolder: BookshelfFolder? by savedStateHandle.saveable(
-        "bookshelfFolder",
-        saver = autoSaver()
-    ) {
-        mutableStateOf(null)
+    private var bookshelfId2 = savedStateHandle.getLiveData<BookshelfId?>("bookshelfId")
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override var bookshelfFolder: Flow<BookshelfFolder?> = bookshelfId2.asFlow().flatMapLatest {
+        if (it != null) {
+            viewModel.getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(bookshelfId = it))
+                .map { it.dataOrNull() }
+        } else {
+            flowOf(null)
+        }
     }
-    /*var bookshelfFolder: BookshelfFolder? get() = viewModel.bookshelfFolder
-        set(value) {
-            viewModel.bookshelfFolder = value
-        }*/
+
 
     override fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder) {
-        this.bookshelfFolder = bookshelfFolder
+        bookshelfId2.value = bookshelfFolder.bookshelf.id
         navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
     }
 
     override fun onRemoveClick() {
-        removeDialogController.show(bookshelfFolder)
+        scope.launch {
+            removeDialogController.show(bookshelfFolder.first())
+        }
     }
 
     override fun onInfoSheetCloseClick() {
@@ -115,7 +127,9 @@ private class BookshelfScreenStateImpl(
     }
 
     override fun onInfoSheetScanClick() {
-        viewModel.scan(bookshelfFolder!!.folder)
+        scope.launch {
+            viewModel.scan(bookshelfFolder.first()!!.folder)
+        }
     }
 
     override fun onDismissRequest() {
@@ -123,11 +137,14 @@ private class BookshelfScreenStateImpl(
     }
 
     override fun onConfirmClick() {
-        viewModel.remove(bookshelfFolder!!.bookshelf)
-        removeDialogController.dismiss()
         scope.launch {
+            val bookshelf = bookshelfFolder.first()!!.bookshelf
+            viewModel.remove(bookshelf)
+            removeDialogController.dismiss()
             navigator.navigateBack()
-            snackbarHostState.showSnackbar("削除しました。")
+            snackbarHostState.showSnackbar(
+                context.getString(R.string.bookshelf_msg_delete, bookshelf.displayName)
+            )
         }
     }
 

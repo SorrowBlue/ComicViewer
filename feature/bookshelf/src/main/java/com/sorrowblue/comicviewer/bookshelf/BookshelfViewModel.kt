@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.Scan
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 internal class BookshelfViewModel @Inject constructor(
     pagingBookshelfFolderUseCase: PagingBookshelfFolderUseCase,
     private val removeBookshelfUseCase: RemoveBookshelfUseCase,
+    val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val scanBookshelfUseCase: ScanBookshelfUseCase,
 ) : ViewModel() {
 
