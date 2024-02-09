@@ -125,7 +125,8 @@ internal fun ComicViewerApp(
 
 @Composable
 @OptIn(
-    ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3AdaptiveNavigationSuiteApi::class
+    ExperimentalMaterial3AdaptiveApi::class,
+    ExperimentalMaterial3AdaptiveNavigationSuiteApi::class
 )
 private fun ComicViewerApp(
     uiState: MainScreenUiState,

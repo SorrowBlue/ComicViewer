@@ -186,7 +186,6 @@ private fun AuthenticationScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-
             TopContent(
                 uiState = uiState,
                 modifier = Modifier

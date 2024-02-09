@@ -97,12 +97,12 @@ private class BookshelfScreenStateImpl(
         MutableStateFlow(navigator.currentDestination?.content?.bookshelf?.id)
 
     init {
-        bookshelfIdLiveData.onEach {
-            if (it != null) {
+        bookshelfIdLiveData.onEach { id ->
+            if (id != null) {
                 viewModel.getBookshelfInfoUseCase.execute(
-                    GetBookshelfInfoUseCase.Request(bookshelfId = it)
-                ).collectLatest {
-                    it.dataOrNull()?.let {
+                    GetBookshelfInfoUseCase.Request(bookshelfId = id)
+                ).collectLatest { resource ->
+                    resource.dataOrNull()?.let {
                         navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
                     } ?: run {
                         navigator.navigateTo(SupportingPaneScaffoldRole.Extra, null)
@@ -159,4 +159,3 @@ private class BookshelfScreenStateImpl(
         }
     }
 }
-

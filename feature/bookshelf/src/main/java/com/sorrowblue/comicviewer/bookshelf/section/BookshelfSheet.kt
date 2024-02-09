@@ -109,7 +109,6 @@ fun BookshelfInfoSheet(
             }
 
             is SmbServer -> {
-
                 ListItem(
                     colors = colors,
                     overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_host)) },
