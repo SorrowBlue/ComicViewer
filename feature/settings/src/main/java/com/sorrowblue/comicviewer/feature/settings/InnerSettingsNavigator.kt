@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScre
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 internal fun DestinationScopeWithNoDependencies<*>.innerSettingsNavigator(
-    scaffoldNavigator: ThreePaneScaffoldNavigator,
+    scaffoldNavigator: ThreePaneScaffoldNavigator<Unit>,
     settingsScreenNavigator: SettingsScreenNavigator,
 ) = InnerSettingsNavigator(
     scaffoldNavigator = scaffoldNavigator,
@@ -23,7 +23,7 @@ internal fun DestinationScopeWithNoDependencies<*>.innerSettingsNavigator(
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 internal class InnerSettingsNavigator(
-    private val scaffoldNavigator: ThreePaneScaffoldNavigator,
+    private val scaffoldNavigator: ThreePaneScaffoldNavigator<Unit>,
     private val settingsScreenNavigator: SettingsScreenNavigator,
     private val navController: NavController,
 ) : SecuritySettingsScreenNavigator,

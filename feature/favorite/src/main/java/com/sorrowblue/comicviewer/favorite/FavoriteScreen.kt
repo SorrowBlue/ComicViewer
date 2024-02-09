@@ -10,6 +10,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -97,7 +102,6 @@ private fun FavoriteScreen(
 
 @Parcelize
 internal data class FavoriteScreenUiState(
-    val file: File? = null,
     val favoriteAppBarUiState: FavoriteAppBarUiState = FavoriteAppBarUiState(),
     val fileContentType: FileContentType = FileContentType.List,
 ) : Parcelable
@@ -106,7 +110,7 @@ internal data class FavoriteScreenUiState(
 @Composable
 private fun FavoriteScreen(
     uiState: FavoriteScreenUiState,
-    navigator: ThreePaneScaffoldNavigator,
+    navigator: ThreePaneScaffoldNavigator<File>,
     lazyPagingItems: LazyPagingItems<File>,
     onBackClick: () -> Unit,
     onEditClick: () -> Unit,
@@ -137,15 +141,18 @@ private fun FavoriteScreen(
             )
         },
         extraPane = { innerPadding ->
-            val file = uiState.file
-            if (file != null) {
+            var file by remember { mutableStateOf(navigator.currentDestination?.content) }
+            LaunchedEffect(key1 = navigator.currentDestination) {
+                navigator.currentDestination?.content?.let { file = it }
+            }
+            file?.let {
                 FileInfoSheet(
-                    file = file,
+                    file = it,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
-                    onReadLaterClick = { onReadLaterClick(file) },
-                    onFavoriteClick = { onFavoriteClick(file) },
-                    onOpenFolderClick = { onOpenFolderClick(file) },
+                    onReadLaterClick = { onReadLaterClick(it) },
+                    onFavoriteClick = { onFavoriteClick(it) },
+                    onOpenFolderClick = { onOpenFolderClick(it) },
                     contentPadding = innerPadding
                 )
             }

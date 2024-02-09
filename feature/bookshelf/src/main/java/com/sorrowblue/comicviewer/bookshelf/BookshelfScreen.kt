@@ -22,10 +22,13 @@ import androidx.compose.material3.adaptive.PaneAdaptedValue
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -80,10 +83,8 @@ private fun BookshelfScreen(
     onEditClick: (BookshelfId) -> Unit,
     state: BookshelfScreenState = rememberBookshelfScreenState(),
 ) {
-    val bookshelfFolder by state.bookshelfFolder.collectAsState(null)
     BookshelfScreen(
         navigator = state.navigator,
-        bookshelfFolder = bookshelfFolder,
         lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
         lazyGridState = state.lazyGridState,
         snackbarHostState = state.snackbarHostState,
@@ -115,8 +116,7 @@ private fun BookshelfScreen(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun BookshelfScreen(
-    navigator: ThreePaneScaffoldNavigator,
-    bookshelfFolder: BookshelfFolder?,
+    navigator: ThreePaneScaffoldNavigator<BookshelfFolder>,
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
     snackbarHostState: SnackbarHostState,
     onFabClick: () -> Unit,
@@ -158,11 +158,15 @@ private fun BookshelfScreen(
             )
         },
         extraPane = { innerPadding ->
-            if (bookshelfFolder != null) {
+            var bookshelfFolder by rememberSaveable { mutableStateOf<BookshelfFolder?>(null) }
+            LaunchedEffect(key1 = navigator.currentDestination) {
+                navigator.currentDestination?.content?.let { bookshelfFolder = it }
+            }
+            bookshelfFolder?.let {
                 BookshelfInfoSheet(
                     contentPadding = innerPadding,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
-                    bookshelfFolder = bookshelfFolder,
+                    bookshelfFolder = it,
                     onRemoveClick = onInfoSheetRemoveClick,
                     onEditClick = onInfoSheetEditClick,
                     onScanClick = onInfoSheetScanClick,
@@ -224,17 +228,6 @@ private fun PreviewBookshelfScreen() {
         BookshelfScreen(
             snackbarHostState = remember { SnackbarHostState() },
             navigator = rememberSupportingPaneScaffoldNavigator(),
-            bookshelfFolder = BookshelfFolder(
-                InternalStorage(BookshelfId(0), "display name", 0),
-                Folder(
-                    BookshelfId(0),
-                    "",
-                    "",
-                    "",
-                    0,
-                    0
-                )
-            ),
             lazyPagingItems = lazyPagingItems,
             onFabClick = {},
             onSettingsClick = {},

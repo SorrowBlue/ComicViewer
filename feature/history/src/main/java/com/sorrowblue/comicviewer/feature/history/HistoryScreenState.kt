@@ -6,11 +6,9 @@ import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -21,9 +19,8 @@ import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 interface HistoryScreenState : SaveableScreenState {
-    val navigator: ThreePaneScaffoldNavigator
+    val navigator: ThreePaneScaffoldNavigator<File>
     val pagingDataFlow: Flow<PagingData<Book>>
-    val uiState: HistoryScreenUiState
     fun onFileInfoClick(file: File)
     fun onExtraPaneCloseClick()
     fun onReadLaterClick(file: File)
@@ -32,7 +29,7 @@ interface HistoryScreenState : SaveableScreenState {
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberHistoryScreenState(
-    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     viewModel: HistoryViewModel = hiltViewModel(),
@@ -47,19 +44,13 @@ internal fun rememberHistoryScreenState(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 private class HistoryScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator,
+    override val navigator: ThreePaneScaffoldNavigator<File>,
     private val viewModel: HistoryViewModel,
 ) : HistoryScreenState {
     override val pagingDataFlow = viewModel.pagingDataFlow
 
-    override var uiState: HistoryScreenUiState by savedStateHandle.saveable {
-        mutableStateOf(HistoryScreenUiState())
-    }
-        private set
-
     override fun onFileInfoClick(file: File) {
-        uiState = uiState.copy(file = file)
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
+        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
     }
 
     override fun onExtraPaneCloseClick() {

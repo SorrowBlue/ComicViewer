@@ -35,7 +35,7 @@ android {
     }
 
     signingConfigs {
-        val localProperties = gradleLocalProperties(rootDir)
+        val localProperties = gradleLocalProperties(rootDir, providers)
         fun propertyString(name: String) =
             System.getenv(name) ?: localProperties.propertyString(name)
 

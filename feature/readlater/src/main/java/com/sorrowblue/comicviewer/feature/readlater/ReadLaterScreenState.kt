@@ -8,12 +8,9 @@ import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -26,9 +23,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 internal interface ReadLaterScreenState : SaveableScreenState {
-    val uiState: ReadLaterScreenUiState
     val pagingDataFlow: Flow<PagingData<File>>
-    val navigator: ThreePaneScaffoldNavigator
+    val navigator: ThreePaneScaffoldNavigator<File>
     val lazyGridState: LazyGridState
     fun onFileInfoClick(file: File)
     fun onExtraPaneCloseClick()
@@ -41,7 +37,7 @@ internal interface ReadLaterScreenState : SaveableScreenState {
 @Destination
 @Composable
 internal fun rememberReadLaterScreenState(
-    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     lazyGridState: LazyGridState = rememberLazyGridState(),
@@ -57,24 +53,18 @@ internal fun rememberReadLaterScreenState(
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private class ReadLaterScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator,
+    override val navigator: ThreePaneScaffoldNavigator<File>,
     override val lazyGridState: LazyGridState,
     private val scope: CoroutineScope,
     private val viewModel: ReadLaterViewModel,
 ) : ReadLaterScreenState {
     override val pagingDataFlow = viewModel.pagingDataFlow
 
-    override var uiState: ReadLaterScreenUiState by savedStateHandle.saveable {
-        mutableStateOf(ReadLaterScreenUiState())
-    }
-        private set
-
     override fun onFileInfoClick(file: File) {
-        uiState = uiState.copy(file = file)
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
+        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
     }
 
     override fun onExtraPaneCloseClick() {

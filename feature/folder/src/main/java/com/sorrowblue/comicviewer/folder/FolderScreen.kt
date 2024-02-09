@@ -21,6 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -64,7 +67,6 @@ class FolderArgs(
 
 @Parcelize
 internal data class FolderScreenUiState(
-    var file: File? = null,
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
     val openSortSheet: Boolean = false,
     val sortItem: SortItem = SortItem.Name,
@@ -230,7 +232,7 @@ fun LoadStates.any(op: (LoadState) -> Boolean): Boolean {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun FolderScreen(
-    navigator: ThreePaneScaffoldNavigator,
+    navigator: ThreePaneScaffoldNavigator<File>,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onSearchClick: () -> Unit,
@@ -267,13 +269,17 @@ internal fun FolderScreen(
             )
         },
         extraPane = { innerPadding ->
-            uiState.file?.let { file ->
+            var file by remember { mutableStateOf(navigator.currentDestination?.content) }
+            LaunchedEffect(key1 = navigator.currentDestination) {
+                navigator.currentDestination?.content?.let { file = it }
+            }
+            file?.let {
                 FileInfoSheet(
-                    file = file,
+                    file = it,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
-                    onReadLaterClick = { onReadLaterClick(file) },
-                    onFavoriteClick = { onFavoriteClick(file) },
+                    onReadLaterClick = { onReadLaterClick(it) },
+                    onFavoriteClick = { onFavoriteClick(it) },
                     onOpenFolderClick = null,
                     contentPadding = innerPadding
                 )

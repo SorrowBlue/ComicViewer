@@ -61,7 +61,7 @@ internal interface FolderScreenState : SaveableScreenState {
     var isSkipFirstRefresh: Boolean
     var restorePath: String?
     val pagingDataFlow: Flow<PagingData<File>>
-    val navigator: ThreePaneScaffoldNavigator
+    val navigator: ThreePaneScaffoldNavigator<File>
     val bookshelfId: BookshelfId
     val path: String
     val sort: StateFlow<SortType>
@@ -72,7 +72,7 @@ internal interface FolderScreenState : SaveableScreenState {
 @Composable
 internal fun rememberFolderScreenState(
     args: FolderArgs,
-    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     viewModel: FolderViewModel = hiltViewModel(),
@@ -92,7 +92,7 @@ internal fun rememberFolderScreenState(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 private class FolderScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator,
+    override val navigator: ThreePaneScaffoldNavigator<File>,
     override val lazyGridState: LazyGridState,
     private val args: FolderArgs,
     private val viewModel: FolderViewModel,
@@ -181,8 +181,7 @@ private class FolderScreenStateImpl(
     }
 
     override fun onFileInfoClick(file: File) {
-        uiState = uiState.copy(file = file)
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
+        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
     }
 
     override fun onSortItemClick(sortItem: SortItem) {

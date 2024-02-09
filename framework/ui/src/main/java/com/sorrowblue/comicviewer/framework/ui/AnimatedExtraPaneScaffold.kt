@@ -22,15 +22,16 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun AnimatedExtraPaneScaffold(
+fun <T> AnimatedExtraPaneScaffold(
     extraPane: @Composable () -> Unit,
-    navigator: ThreePaneScaffoldNavigator,
+    navigator: ThreePaneScaffoldNavigator<T>,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     SupportingPaneScaffold(
         scaffoldState = navigator.scaffoldState,
-        supportingPane = {},
+        supportingPane = {
+        },
         extraPane = {
             AnimatedPane(modifier = Modifier) {
                 extraPane()
