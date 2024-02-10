@@ -10,4 +10,5 @@
     <string name="file_list_label_switch_list_view">Switch to list view</string>
     <string name="file_text_page_count">%1$d/%2$d pages</string>
     <string name="file_title">File info</string>
+    <string name="file_desc_open_file_info">Open file information</string>
 </resources>
