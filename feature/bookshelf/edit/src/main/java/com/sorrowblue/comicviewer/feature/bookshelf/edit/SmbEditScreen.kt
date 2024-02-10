@@ -15,9 +15,13 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Folder
@@ -32,6 +36,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.ResponsiveDialogScaffold
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
+import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.parcelize.Parcelize
 
@@ -95,7 +100,7 @@ internal fun SmbEditScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun SmbEditScreen(
     uiState: SmbEditScreenUiState,
@@ -197,6 +202,7 @@ private fun SmbEditContent(
         Spacer(modifier = Modifier.size(16.dp))
 
         AuthButtons(currentAuth = uiState.auth, onAuthChange = onAuthChange)
+        Spacer(modifier = Modifier.size(16.dp))
 
         when (uiState.auth) {
             SmbEditScreenUiState.Auth.Guest -> Unit
@@ -226,3 +232,39 @@ private fun SmbEditContent(
         }
     }
 }
+
+@Composable
+@PreviewMultiScreen
+private fun PreviewBookshelfEditScreen() {
+    PreviewTheme {
+        SmbEditScreen(
+            uiState = SmbEditScreenUiState(auth = SmbEditScreenUiState.Auth.UserPass),
+            snackbarHostState = remember { SnackbarHostState() },
+            onBackClick = { /*TODO*/ },
+            onDisplayNameChange = {},
+            onHostChange = {},
+            onPortChange = {},
+            onPathChange = {},
+            onAuthChange = {},
+            onDomainChange = {},
+            onUsernameChange = {},
+            onPasswordChange = {},
+            onSaveClick = { /*TODO*/ }
+        )
+    }
+}
+
+@Retention(AnnotationRetention.BINARY)
+@Target(
+    AnnotationTarget.ANNOTATION_CLASS,
+    AnnotationTarget.FUNCTION
+)
+@Preview(name = "Phone", device = Devices.PHONE)
+@Preview(
+    name = "Phone - Landscape",
+    device = "spec:width=411dp,height=891dp,orientation=landscape,dpi=420",
+)
+@Preview(name = "Unfolded Foldable", device = Devices.FOLDABLE)
+@Preview(name = "Tablet", device = Devices.TABLET)
+@Preview(name = "Desktop", device = Devices.DESKTOP)
+annotation class PreviewMultiScreen

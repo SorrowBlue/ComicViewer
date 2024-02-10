@@ -5,17 +5,23 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonDefaults.ButtonWithIconContentPadding
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.PaneScaffoldDirective
 import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
@@ -88,12 +94,27 @@ fun BookshelfInfoSheet(
                 Icon(imageVector = ComicIcons.DocumentUnknown, contentDescription = null)
             }
         )
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .padding(horizontal = 8.dp)
+        ) {
+            AssistChip(
+                onClick = onScanClick,
+                label = { Text(text = stringResource(id = R.string.bookshelf_action_scan)) },
+                leadingIcon = { Icon(imageVector = ComicIcons.Refresh, contentDescription = null) }
+            )
+        }
         ListItem(
             colors = colors,
+            modifier = Modifier.height(56.dp),
             overlineContent = { Text(text = "種類") },
             headlineContent = { Text(text = stringResource(id = bookshelf.source())) },
         )
         ListItem(
+            modifier = Modifier.height(56.dp),
             colors = colors,
             overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_display_name)) },
             headlineContent = { Text(text = bookshelf.displayName) },
@@ -102,6 +123,7 @@ fun BookshelfInfoSheet(
         when (bookshelf) {
             is InternalStorage -> {
                 ListItem(
+                    modifier = Modifier.height(56.dp),
                     colors = colors,
                     overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
                     headlineContent = { Text(text = folder.path) },
@@ -110,16 +132,19 @@ fun BookshelfInfoSheet(
 
             is SmbServer -> {
                 ListItem(
+                    modifier = Modifier.height(56.dp),
                     colors = colors,
                     overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_host)) },
                     headlineContent = { Text(text = bookshelf.host) },
                 )
                 ListItem(
+                    modifier = Modifier.height(56.dp),
                     colors = colors,
                     overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_port)) },
                     headlineContent = { Text(text = bookshelf.port.toString()) },
                 )
                 ListItem(
+                    modifier = Modifier.height(56.dp),
                     colors = colors,
                     overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
                     headlineContent = { Text(text = folder.path) },
@@ -127,28 +152,18 @@ fun BookshelfInfoSheet(
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-        HorizontalDivider()
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-        ) {
-            AssistChip(
-                onClick = onRemoveClick,
-                label = { Text(text = stringResource(id = R.string.bookshelf_action_delete)) },
-                leadingIcon = { Icon(imageVector = ComicIcons.Delete, contentDescription = null) }
-            )
-            AssistChip(
+        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+            TextButton(onClick = onRemoveClick) {
+                Text(text = stringResource(id = R.string.bookshelf_action_delete))
+            }
+            FilledTonalButton(
                 onClick = onEditClick,
-                label = { Text(text = stringResource(id = R.string.bookshelf_action_edit)) },
-                leadingIcon = { Icon(imageVector = ComicIcons.Edit, contentDescription = null) }
-            )
-            AssistChip(
-                onClick = onScanClick,
-                label = { Text(text = stringResource(id = R.string.bookshelf_action_scan)) },
-                leadingIcon = { Icon(imageVector = ComicIcons.Refresh, contentDescription = null) }
-            )
+                contentPadding = ButtonWithIconContentPadding
+            ) {
+                Icon(imageVector = ComicIcons.Edit, contentDescription = null)
+                Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                Text(text = stringResource(id = R.string.bookshelf_action_edit))
+            }
         }
     }
 }
