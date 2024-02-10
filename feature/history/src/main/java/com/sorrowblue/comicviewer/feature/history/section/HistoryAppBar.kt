@@ -5,15 +5,14 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.history.R
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
+import com.sorrowblue.comicviewer.framework.ui.material3.SettingsButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,19 +24,10 @@ internal fun HistoryAppBar(
     TopAppBar(
         title = { Text(stringResource(R.string.history_title)) },
         navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
-            }
+            BackButton(onClick = onBackClick)
         },
         actions = {
-            IconButton(onClick = onSettingsClick) {
-                Icon(
-                    imageVector = ComicIcons.Settings,
-                    contentDescription = stringResource(
-                        id = com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_desc_open_settings
-                    )
-                )
-            }
+            SettingsButton(onClick = onSettingsClick)
         },
         windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior
