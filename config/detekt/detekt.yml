@@ -59,6 +59,7 @@ style:
       - 'PreviewMobile'
       - 'PreviewTablet'
       - 'PreviewScreenSizes'
+      - 'PreviewMultiScreen'
 
 # https://mrmans0n.github.io/compose-rules/detekt/
 Compose:
@@ -67,6 +68,7 @@ Compose:
     allowedCompositionLocals:
       - 'LocalDimension'
       - 'LocalWindowSize'
+      - 'LocalWindowAdaptiveInfo'
     # You can optionally define a list of CompositionLocals that are allowed here
     # allowedCompositionLocals: LocalSomething,LocalSomethingElse
   ContentEmitterReturningValues:
