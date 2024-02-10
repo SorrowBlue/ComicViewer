@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.history
 
-import android.os.Parcelable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -10,6 +9,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -27,7 +31,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResum
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import kotlinx.parcelize.Parcelize
 
 interface HistoryScreenNavigator {
     fun navigateUp()
@@ -57,10 +60,8 @@ private fun HistoryScreen(
     state: HistoryScreenState = rememberHistoryScreenState(),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
-    val uiState = state.uiState
     val lazyGridState = rememberLazyGridState()
     HistoryScreen(
-        uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         navigator = state.navigator,
         onBackClick = onBackClick,
@@ -74,17 +75,11 @@ private fun HistoryScreen(
     )
 }
 
-@Parcelize
-data class HistoryScreenUiState(
-    val file: File? = null,
-) : Parcelable
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun HistoryScreen(
-    uiState: HistoryScreenUiState,
     lazyPagingItems: LazyPagingItems<Book>,
-    navigator: ThreePaneScaffoldNavigator,
+    navigator: ThreePaneScaffoldNavigator<File>,
     onFileClick: (Book) -> Unit,
     onFileInfoClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
@@ -105,13 +100,17 @@ internal fun HistoryScreen(
             )
         },
         extraPane = { innerPadding ->
-            if (uiState.file != null) {
+            var file by remember { mutableStateOf(navigator.currentDestination?.content) }
+            LaunchedEffect(key1 = navigator.currentDestination) {
+                navigator.currentDestination?.content?.let { file = it }
+            }
+            file?.let {
                 FileInfoSheet(
-                    file = uiState.file,
+                    file = it,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
-                    onReadLaterClick = { onReadLaterClick(uiState.file) },
-                    onFavoriteClick = { onFavoriteClick(uiState.file) },
+                    onReadLaterClick = { onReadLaterClick(it) },
+                    onFavoriteClick = { onFavoriteClick(it) },
                     contentPadding = innerPadding
                 )
             }

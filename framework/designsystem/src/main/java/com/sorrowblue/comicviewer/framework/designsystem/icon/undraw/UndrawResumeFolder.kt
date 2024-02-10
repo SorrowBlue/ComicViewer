@@ -744,7 +744,6 @@ private var _undrawResumeFolder: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconUndrawResumeFolderPreview() {
     Image(imageVector = ComicIcons.UndrawResumeFolder, contentDescription = null)
 }

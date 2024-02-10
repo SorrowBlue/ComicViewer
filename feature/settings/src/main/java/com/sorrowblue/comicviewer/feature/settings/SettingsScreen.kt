@@ -87,7 +87,7 @@ internal data class SettingsScreenUiState(
 @Composable
 private fun SettingsScreen(
     uiState: SettingsScreenUiState,
-    navigator: ThreePaneScaffoldNavigator,
+    navigator: ThreePaneScaffoldNavigator<Unit>,
     windowAdaptiveInfo: WindowAdaptiveInfo,
     onBackClick: () -> Unit,
     onSettingsClick: (Settings2) -> Unit,

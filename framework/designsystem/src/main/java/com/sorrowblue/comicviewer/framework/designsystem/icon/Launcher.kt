@@ -90,7 +90,6 @@ private var _launcher: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconLauncherPreview() {
     Image(imageVector = ComicIcons.Launcher, contentDescription = null)
 }

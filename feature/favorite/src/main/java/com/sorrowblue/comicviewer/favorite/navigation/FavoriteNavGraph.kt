@@ -26,6 +26,12 @@ object FavoriteNavGraph : AnimatedNavGraphSpec {
 
     override val startRoute = FavoriteListScreenDestination
 
+    override val showNavigation = listOf(
+        FavoriteListScreenDestination,
+        FavoriteScreenDestination,
+        FavoriteFolderScreenDestination
+    ).map(DestinationSpec<out Any>::route)
+
     override val destinationsByRoute: Map<String, DestinationSpec<*>> = listOf(
         FavoriteListScreenDestination,
         FavoriteScreenDestination,

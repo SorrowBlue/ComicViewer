@@ -1236,7 +1236,6 @@ private var _undrawBookLover: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconUndrawBookLoverPreview() {
     Image(imageVector = ComicIcons.UndrawBookLover, contentDescription = null)
 }

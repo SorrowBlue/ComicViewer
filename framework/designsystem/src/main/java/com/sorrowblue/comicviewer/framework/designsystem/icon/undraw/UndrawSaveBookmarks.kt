@@ -591,7 +591,6 @@ private var _unDrawSaveBookmarks: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconUndrawSaveBookmarksPreview() {
     Image(imageVector = ComicIcons.UndrawSaveBookmarks, contentDescription = null)
 }

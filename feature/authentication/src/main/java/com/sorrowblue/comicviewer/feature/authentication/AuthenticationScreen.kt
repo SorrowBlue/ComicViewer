@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.authentication
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -9,24 +10,25 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,12 +48,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.flowWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import kotlinx.collections.immutable.toPersistentList
+import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import kotlinx.coroutines.flow.filter
 
 interface AuthenticationScreenNavigator {
@@ -149,7 +152,7 @@ internal sealed interface AuthenticationScreenUiState {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun AuthenticationScreen(
     uiState: AuthenticationScreenUiState,
@@ -176,125 +179,177 @@ private fun AuthenticationScreen(
         },
         contentWindowInsets = WindowInsets.safeDrawing
     ) { contentPadding ->
-        Column(
+        FlowColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                imageVector = ComicIcons.Key,
-                contentDescription = null,
-                modifier = Modifier.size(48.dp)
-            )
-            Text(
-                text = stringResource(
-                    id = when (uiState) {
-                        is AuthenticationScreenUiState.Authentication -> R.string.authentication_text_enter_pin
-
-                        is AuthenticationScreenUiState.Register.Input -> R.string.authentication_text_enter_new_pin
-                        is AuthenticationScreenUiState.Register.Confirm -> R.string.authentication_text_reenter_pin
-
-                        is AuthenticationScreenUiState.Change.ConfirmOld -> R.string.authentication_text_enter_pin
-                        is AuthenticationScreenUiState.Change.Input -> R.string.authentication_text_enter_new_pin
-                        is AuthenticationScreenUiState.Change.Confirm -> R.string.authentication_text_reenter_pin
-
-                        is AuthenticationScreenUiState.Erase -> R.string.authentication_text_enter_pin
-                    }
-                ),
-                style = MaterialTheme.typography.titleSmall
-            )
-            Spacer(modifier = Modifier.size(16.dp))
-            AnimatedVisibility(visible = 0 < uiState.error) {
-                if (0 < uiState.error) {
-                    Text(
-                        text = stringResource(id = uiState.error),
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.size(8.dp))
-            Row {
-                repeat(uiState.pinCount + 1) {
-                    key(it) {
-                        AnimatedContent(
-                            targetState = it < uiState.pinCount,
-                            transitionSpec = {
-                                (fadeIn() + slideInVertically { height -> height }) togetherWith (fadeOut() + slideOutVertically { height -> height })
-                            },
-                            label = "test"
-                        ) { isVisible ->
-                            if (isVisible) {
-                                Icon(imageVector = ComicIcons.Circle, contentDescription = null)
-                            }
-                        }
-                    }
-                }
-            }
-            Spacer(modifier = Modifier.size(16.dp))
-            if (uiState is AuthenticationScreenUiState.Authentication && uiState.loading) {
-                CircularProgressIndicator()
-            } else {
-                IconButton(onClick = onNextClick) {
-                    Icon(imageVector = ComicIcons.ArrowForward, contentDescription = null)
-                }
-            }
-            Spacer(modifier = Modifier.weight(1f))
-
-            HorizontalDivider(Modifier.padding(ComicTheme.dimension.margin))
-            val list = remember {
-                listOf(
-                    "1",
-                    "2",
-                    "3",
-                    "4",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "9",
-                    "",
-                    "0",
-                    null
-                ).toPersistentList()
-            }
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            TopContent(
+                uiState = uiState,
                 modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .padding(horizontal = 32.dp)
-                    .padding(bottom = 32.dp)
-            ) {
-                items(list) {
-                    FilledTonalButton(
-                        onClick = {
-                            if (it != null) {
-                                onPinClick(it.toString())
-                            } else {
-                                onBackspaceClick()
-                            }
+                    .weight(1f)
+                    .align(alignment = Alignment.CenterHorizontally)
+            )
+
+            NumberPad(
+                onPinClick = onPinClick,
+                onBackspaceClick = onBackspaceClick,
+                onNextClick = onNextClick,
+                modifier = Modifier.padding(bottom = 32.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun TopContent(
+    uiState: AuthenticationScreenUiState,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+            imageVector = ComicIcons.Key,
+            contentDescription = null,
+            modifier = Modifier.size(48.dp)
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        AnimatedVisibility(visible = 0 < uiState.error) {
+            if (0 < uiState.error) {
+                Text(
+                    text = stringResource(id = uiState.error),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+
+        Text(
+            text = stringResource(
+                id = when (uiState) {
+                    is AuthenticationScreenUiState.Authentication -> R.string.authentication_text_enter_pin
+
+                    is AuthenticationScreenUiState.Register.Input -> R.string.authentication_text_enter_new_pin
+                    is AuthenticationScreenUiState.Register.Confirm -> R.string.authentication_text_reenter_pin
+
+                    is AuthenticationScreenUiState.Change.ConfirmOld -> R.string.authentication_text_enter_pin
+                    is AuthenticationScreenUiState.Change.Input -> R.string.authentication_text_enter_new_pin
+                    is AuthenticationScreenUiState.Change.Confirm -> R.string.authentication_text_reenter_pin
+
+                    is AuthenticationScreenUiState.Erase -> R.string.authentication_text_enter_pin
+                }
+            ),
+            style = MaterialTheme.typography.titleSmall
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+
+        Row {
+            repeat(uiState.pinCount + 1) {
+                key(it) {
+                    AnimatedContent(
+                        targetState = it < uiState.pinCount,
+                        transitionSpec = {
+                            fadeIn() + slideInVertically { height -> height } togetherWith
+                                fadeOut() + slideOutVertically { height -> height } using
+                                SizeTransform(false)
                         },
-                        modifier = Modifier
-                            .weight(1f)
-                            .aspectRatio(1f)
-                    ) {
-                        if (it != null) {
-                            if (it.isNotEmpty()) {
-                                Text(text = it)
-                            }
-                        } else {
-                            Icon(
-                                imageVector = ComicIcons.Backspace,
-                                contentDescription = null
-                            )
+                        label = "test"
+                    ) { isVisible ->
+                        if (isVisible) {
+                            Icon(imageVector = ComicIcons.Circle, contentDescription = null)
                         }
                     }
                 }
             }
         }
+
+        Spacer(modifier = Modifier.size(16.dp))
+
+        if (uiState is AuthenticationScreenUiState.Authentication && uiState.loading) {
+            CircularProgressIndicator()
+        }
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun NumberPad(
+    onPinClick: (String) -> Unit,
+    onBackspaceClick: () -> Unit,
+    onNextClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.sizeIn(maxWidth = 60.dp * 3 + 16.dp, maxHeight = 60.dp * 4 + 24.dp)
+    ) {
+        items(Button.listList) {
+            FilledTonalButton(
+                onClick = {
+                    when (it) {
+                        Button.Delete -> onBackspaceClick()
+                        Button.Next -> onNextClick()
+                        is Button.Number -> onPinClick(it.value.toString())
+                    }
+                },
+                modifier = Modifier.aspectRatio(1f)
+            ) {
+                when (it) {
+                    Button.Delete -> {
+                        Icon(imageVector = ComicIcons.Backspace, contentDescription = null)
+                    }
+
+                    Button.Next -> {
+                        Icon(
+                            imageVector = ComicIcons.ArrowForward,
+                            contentDescription = null
+                        )
+                    }
+
+                    is Button.Number -> {
+                        Text(text = it.value.toString())
+                    }
+                }
+            }
+        }
+    }
+}
+
+sealed interface Button {
+    data class Number(val value: Int) : Button
+    data object Delete : Button
+    data object Next : Button
+
+    companion object {
+        val listList = List(9) { Number(it + 1) } + Delete + Number(0) + Next
+    }
+}
+
+@Preview(name = "Phone", device = Devices.PHONE)
+@Preview(
+    name = "Phone - Landscape",
+    device = "spec:width = 411dp, height = 891dp, orientation = landscape, dpi = 420"
+)
+@Preview(name = "Unfolded Foldable", device = Devices.FOLDABLE)
+@Preview(name = "Tablet", device = Devices.TABLET)
+@Preview(name = "Desktop", device = Devices.DESKTOP)
+@Composable
+private fun PreviewAuthenticationScreen() {
+    PreviewTheme {
+        AuthenticationScreen(
+            uiState = AuthenticationScreenUiState.Authentication(4, 0, false),
+            onBackClick = { /*TODO*/ },
+            onPinClick = {},
+            onBackspaceClick = { /*TODO*/ },
+            onNextClick = { /*TODO*/ },
+            snackbarHostState = remember { SnackbarHostState() }
+        )
     }
 }

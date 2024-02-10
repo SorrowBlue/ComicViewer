@@ -39,7 +39,7 @@ internal interface FavoriteScreenState : SaveableScreenState {
     val favoriteId: FavoriteId
     val uiState: FavoriteScreenUiState
     val pagingDataFlow: Flow<PagingData<File>>
-    val navigator: ThreePaneScaffoldNavigator
+    val navigator: ThreePaneScaffoldNavigator<File>
     val lazyGridState: LazyGridState
     fun onReadLaterClick(file: File)
     fun onExtraPaneCloseClick()
@@ -54,7 +54,7 @@ internal interface FavoriteScreenState : SaveableScreenState {
 @Composable
 internal fun rememberFavoriteScreenState(
     args: FavoriteArgs,
-    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     lazyGridState: LazyGridState = rememberLazyGridState(),
@@ -75,7 +75,7 @@ internal fun rememberFavoriteScreenState(
 @Stable
 private class FavoriteScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator,
+    override val navigator: ThreePaneScaffoldNavigator<File>,
     override val lazyGridState: LazyGridState,
     private val args: FavoriteArgs,
     private val scope: CoroutineScope,
@@ -119,8 +119,7 @@ private class FavoriteScreenStateImpl(
     }
 
     override fun onFileInfoClick(file: File) {
-        uiState = uiState.copy(file = file)
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
+        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
     }
 
     override fun toggleFileListType() {

@@ -16,6 +16,10 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.paging.compose.LazyPagingItems
@@ -37,7 +41,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 internal data class SearchScreenUiState(
     val query: String = "",
-    val file: File? = null,
     val searchConditionsUiState: SearchConditionsUiState = SearchConditionsUiState(),
 ) : Parcelable
 
@@ -110,7 +113,7 @@ private fun SearchScreen(
 @Composable
 private fun SearchScreen(
     uiState: SearchScreenUiState,
-    navigator: ThreePaneScaffoldNavigator,
+    navigator: ThreePaneScaffoldNavigator<File>,
     lazyGridState: LazyGridState,
     lazyPagingItems: LazyPagingItems<File>,
     onQueryChange: (String) -> Unit,
@@ -146,14 +149,17 @@ private fun SearchScreen(
             }
         },
         extraPane = { innerPadding ->
-            val file = uiState.file
-            if (file != null) {
+            var file by remember { mutableStateOf(navigator.currentDestination?.content) }
+            LaunchedEffect(key1 = navigator.currentDestination) {
+                navigator.currentDestination?.content?.let { file = it }
+            }
+            file?.let {
                 FileInfoSheet(
-                    file = file,
+                    file = it,
                     onCloseClick = onFileInfoCloseClick,
-                    onReadLaterClick = { onReadLaterClick(file) },
-                    onFavoriteClick = { onFavoriteClick(file) },
-                    onOpenFolderClick = { onOpenFolderClick(file) },
+                    onReadLaterClick = { onReadLaterClick(it) },
+                    onFavoriteClick = { onFavoriteClick(it) },
+                    onOpenFolderClick = { onOpenFolderClick(it) },
                     contentPadding = innerPadding,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective
                 )

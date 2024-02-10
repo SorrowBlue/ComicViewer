@@ -4,7 +4,6 @@ import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DestinationSpec
-import com.ramcosta.composedestinations.spec.Route
 import com.sorrowblue.comicviewer.bookshelf.BookshelfFolderScreenNavigator
 import com.sorrowblue.comicviewer.bookshelf.BookshelfScreenNavigator
 import com.sorrowblue.comicviewer.bookshelf.destinations.BookshelfFolderScreenDestination
@@ -23,7 +22,11 @@ import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
 
 object BookshelfNavGraph : AnimatedNavGraphSpec {
     override val route = "bookshelf_graph"
-    override val startRoute: Route = BookshelfScreenDestination
+    override val startRoute = BookshelfScreenDestination
+    override val showNavigation = listOf(
+        BookshelfScreenDestination,
+        BookshelfFolderScreenDestination
+    ).map(DestinationSpec<out Any>::route)
     override val destinationsByRoute: Map<String, DestinationSpec<*>> = listOf(
         BookshelfScreenDestination,
         BookshelfSelectionScreenDestination,

@@ -2,9 +2,6 @@
 <resources>
     <string name="bookshelf_list_title">本棚一覧</string>
     <string name="bookshelf_list_message_no_bookshelves_added_yet">本棚はまだ追加されていません。</string>
-    <plurals name="bookshelf_list_label_files">
-        <item quantity="other">%1$d files</item>
-    </plurals>
     <string name="bookshelf_info_title">本棚情報</string>
     <string name="bookshelf_info_label_display_name">表示名</string>
     <string name="bookshelf_info_label_host">IP/ホスト名</string>
@@ -19,4 +16,7 @@
     <string name="bookshelf_remove_label">%1$s を削除しますか?</string>
     <string name="bookshelf_remove_label_delete">削除</string>
     <string name="bookshelf_msg_delete">「%1$s」は削除されました。</string>
+    <string name="bookshelf_desc_open_bookshelf_info">本棚情報を開く</string>
+    <string name="bookshelf_desc_thumbnail">本棚のサムネイル</string>
+    <string name="bookshelf_btn_add">新規</string>
 </resources>

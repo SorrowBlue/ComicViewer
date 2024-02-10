@@ -10,6 +10,8 @@ interface AnimatedNavGraphSpec : NavGraphSpec {
 
     val transitions: List<TransitionsConfigure> get() = emptyList()
 
+    val showNavigation: List<String> get() = emptyList()
+
     fun animations(slideDistance: Int) = NestedNavGraphDefaultAnimations(
         enterTransition = {
             val initRoute = initialState.destination.route

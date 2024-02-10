@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -58,11 +59,13 @@ fun ExtraPaneScaffold(
             ComicTheme.colorScheme.surfaceContainer
         }
     ) {
+        val screenState = rememberScrollState()
         Column(
             Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(it)
+                .drawVerticalScrollbar(screenState)
+                .verticalScroll(screenState)
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 16.dp)
         ) {

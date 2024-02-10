@@ -75,7 +75,6 @@ private var _brandDropbox: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconBrandDropboxPreview() {
     Image(imageVector = ComicIcons.BrandDropbox, contentDescription = null)
 }

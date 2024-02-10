@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.readlater.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.material3.SettingsButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,14 +33,7 @@ internal fun ReadLaterAppBar(
                     contentDescription = stringResource(R.string.readlater_action_clear_read_later)
                 )
             }
-            IconButton(onClick = onSettingsClick) {
-                Icon(
-                    imageVector = ComicIcons.Settings,
-                    contentDescription = stringResource(
-                        com.sorrowblue.comicviewer.framework.ui.R.string.framework_ui_label_settings
-                    )
-                )
-            }
+            SettingsButton(onClick = onSettingsClick)
         },
         windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior

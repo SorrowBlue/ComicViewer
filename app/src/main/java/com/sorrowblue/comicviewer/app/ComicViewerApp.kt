@@ -2,22 +2,21 @@ package com.sorrowblue.comicviewer.app
 
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.navigation.suite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
-import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteScaffold
-import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteScaffoldDefaults
-import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteType
+import androidx.compose.material3.adaptive.navigationsuite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -126,8 +125,8 @@ internal fun ComicViewerApp(
 
 @Composable
 @OptIn(
-    ExperimentalMaterial3AdaptiveNavigationSuiteApi::class,
-    ExperimentalMaterial3AdaptiveApi::class
+    ExperimentalMaterial3AdaptiveApi::class,
+    ExperimentalMaterial3AdaptiveNavigationSuiteApi::class
 )
 private fun ComicViewerApp(
     uiState: MainScreenUiState,
@@ -139,11 +138,6 @@ private fun ComicViewerApp(
     } else {
         NavigationSuiteType.None
     }
-    val colors = NavigationSuiteItemColors2.def(
-        NavigationBarItemDefaults.colors(),
-        NavigationRailItemDefaults.colors(),
-        NavigationDrawerItemDefaults.colors()
-    )
     NavigationSuiteScaffold(
         modifier = if (navSuiteType == NavigationSuiteType.NavigationBar || navSuiteType == NavigationSuiteType.None) {
             Modifier
@@ -165,13 +159,22 @@ private fun ComicViewerApp(
                     },
                     label = {
                         Text(text = stringResource(id = it.label))
-                    },
-                    colors = colors
+                    }
                 )
             }
         },
         layoutType = navSuiteType,
-        content = content
+        content = {
+            Box(
+                modifier = if (navSuiteType == NavigationSuiteType.NavigationBar) {
+                    Modifier.consumeWindowInsets(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom))
+                } else {
+                    Modifier
+                }
+            ) {
+                content()
+            }
+        }
     )
 }
 

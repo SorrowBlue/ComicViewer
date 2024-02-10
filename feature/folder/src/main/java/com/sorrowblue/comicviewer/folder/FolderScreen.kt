@@ -3,10 +3,12 @@ package com.sorrowblue.comicviewer.folder
 import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -19,6 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -42,6 +47,7 @@ import com.sorrowblue.comicviewer.folder.section.SortOrder
 import com.sorrowblue.comicviewer.folder.section.SortSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
@@ -61,7 +67,6 @@ class FolderArgs(
 
 @Parcelize
 internal data class FolderScreenUiState(
-    var file: File? = null,
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
     val openSortSheet: Boolean = false,
     val sortItem: SortItem = SortItem.Name,
@@ -166,6 +171,18 @@ internal fun FolderScreen(
             onDismissRequest = state::onSortSheetDismissRequest
         )
     }
+
+    if (state.isScrollableTop) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(ComicTheme.colorScheme.scrim.copy(alpha = 0.75f)),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
     LaunchedEffect(lazyPagingItems.loadState) {
         if (0 < lazyPagingItems.itemCount && state.restorePath != null) {
             val index = lazyPagingItems.indexOf { it?.path == state.restorePath }
@@ -185,8 +202,8 @@ internal fun FolderScreen(
             pullRefreshState.endRefresh()
         }
         if (lazyPagingItems.isLoadedData && state.isScrollableTop) {
-            state.isScrollableTop = false
             state.lazyGridState.scrollToItem(0)
+            state.isScrollableTop = false
         }
     }
 
@@ -215,7 +232,7 @@ fun LoadStates.any(op: (LoadState) -> Boolean): Boolean {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun FolderScreen(
-    navigator: ThreePaneScaffoldNavigator,
+    navigator: ThreePaneScaffoldNavigator<File>,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onSearchClick: () -> Unit,
@@ -252,13 +269,17 @@ internal fun FolderScreen(
             )
         },
         extraPane = { innerPadding ->
-            uiState.file?.let { file ->
+            var file by remember { mutableStateOf(navigator.currentDestination?.content) }
+            LaunchedEffect(key1 = navigator.currentDestination) {
+                navigator.currentDestination?.content?.let { file = it }
+            }
+            file?.let {
                 FileInfoSheet(
-                    file = file,
+                    file = it,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
-                    onReadLaterClick = { onReadLaterClick(file) },
-                    onFavoriteClick = { onFavoriteClick(file) },
+                    onReadLaterClick = { onReadLaterClick(it) },
+                    onFavoriteClick = { onFavoriteClick(it) },
                     onOpenFolderClick = null,
                     contentPadding = innerPadding
                 )

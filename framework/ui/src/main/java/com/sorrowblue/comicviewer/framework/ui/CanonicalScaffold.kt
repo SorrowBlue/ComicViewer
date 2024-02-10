@@ -23,8 +23,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun CanonicalScaffold(
-    navigator: ThreePaneScaffoldNavigator,
+fun <T> CanonicalScaffold(
+    navigator: ThreePaneScaffoldNavigator<T>,
     extraPane: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},

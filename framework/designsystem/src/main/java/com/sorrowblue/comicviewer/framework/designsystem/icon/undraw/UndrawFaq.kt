@@ -746,7 +746,6 @@ private var _undrawFaq: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconUndrawFaqPreview() {
     Image(imageVector = ComicIcons.UndrawFaq, contentDescription = null)
 }

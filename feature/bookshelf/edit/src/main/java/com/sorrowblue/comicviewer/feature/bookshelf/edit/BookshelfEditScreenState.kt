@@ -1,56 +1,65 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import android.content.Context
-import android.os.Parcelable
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
 
-sealed interface BookshelfEditScreenUiState : Parcelable
-
-@Parcelize
-data object UnitUiState : BookshelfEditScreenUiState
-
-sealed class BookshelfEditInnerScreenState<T : BookshelfEditScreenUiState> {
-    abstract var uiState: T
-        protected set
+internal interface BookshelfEditScreenState : SaveableScreenState {
+    val innerScreenState: BookshelfEditInnerScreenState<*>
 }
 
-data object BookshelfEditLoading : BookshelfEditInnerScreenState<UnitUiState>() {
-    override var uiState: UnitUiState = UnitUiState
+@Composable
+internal fun rememberNeoBookshelfEditScreenState(
+    args: BookshelfEditArgs,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    context: Context = LocalContext.current,
+    scope: CoroutineScope = rememberCoroutineScope(),
+    viewModel: BookshelfEditViewModel = hiltViewModel(),
+): BookshelfEditScreenState = rememberSaveableScreenState {
+    BookshelfEditScreenStateImpl(
+        args = args,
+        context = context,
+        scope = scope,
+        snackbarHostState = snackbarHostState,
+        viewModel = viewModel,
+        savedStateHandle = it
+    )
 }
 
-internal class BookshelfEditScreenState(
-    restoredUiState: BookshelfEditScreenUiState?,
+private class BookshelfEditScreenStateImpl(
     val snackbarHostState: SnackbarHostState,
+    override val savedStateHandle: SavedStateHandle,
     private val args: BookshelfEditArgs,
     private val context: Context,
     private val scope: CoroutineScope,
     private val viewModel: BookshelfEditViewModel,
-) {
+) : BookshelfEditScreenState {
 
-    var innerScreenState: BookshelfEditInnerScreenState<*> by mutableStateOf(BookshelfEditLoading)
+    override var innerScreenState: BookshelfEditInnerScreenState<*> by mutableStateOf(
+        BookshelfEditLoading
+    )
         private set
 
     init {
+        val restoredUiState = savedStateHandle.get<BookshelfEditScreenUiState>("restoredUiState")
         if (restoredUiState != null) {
             when (restoredUiState) {
                 is StorageEditScreenUiState -> {
@@ -78,7 +87,6 @@ internal class BookshelfEditScreenState(
 
                 UnitUiState -> {}
             }
-            // Restore
         } else {
             if (args.bookshelfId == BookshelfId.Default) {
                 innerScreenState = when (args.bookshelfType) {
@@ -101,10 +109,8 @@ internal class BookshelfEditScreenState(
                         viewModel
                     )
                 }
-                // 新規作成
             } else {
                 scope.launch {
-                    delay(1000)
                     viewModel.fetch(args.bookshelfId)?.let {
                         innerScreenState = when (val bookshelf = it.bookshelf) {
                             is InternalStorage -> {
@@ -149,38 +155,4 @@ internal class BookshelfEditScreenState(
             }
         }
     }
-}
-
-@Composable
-internal fun rememberNeoBookshelfEditScreenState(
-    args: BookshelfEditArgs,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    context: Context = LocalContext.current,
-    scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: BookshelfEditViewModel = hiltViewModel(),
-) = rememberSaveable(
-    saver = Saver(
-        save = {
-            it.innerScreenState.uiState
-        },
-        restore = {
-            BookshelfEditScreenState(
-                restoredUiState = it,
-                args = args,
-                context = context,
-                scope = scope,
-                snackbarHostState = snackbarHostState,
-                viewModel = viewModel
-            )
-        }
-    )
-) {
-    BookshelfEditScreenState(
-        args = args,
-        restoredUiState = null,
-        context = context,
-        scope = scope,
-        snackbarHostState = snackbarHostState,
-        viewModel = viewModel
-    )
 }

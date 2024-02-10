@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.readlater
 
-import android.os.Parcelable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -9,6 +8,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -26,7 +30,6 @@ import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import kotlinx.parcelize.Parcelize
 
 interface ReadLaterScreenNavigator {
     fun onSettingsClick()
@@ -55,10 +58,8 @@ private fun ReadLaterScreen(
     onOpenFolderClick: (File) -> Unit,
     state: ReadLaterScreenState = rememberReadLaterScreenState(),
 ) {
-    val uiState = state.uiState
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     ReadLaterScreen(
-        uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         navigator = state.navigator,
         lazyGridState = state.lazyGridState,
@@ -75,17 +76,11 @@ private fun ReadLaterScreen(
     NavTabHandler(onClick = state::onNavClick)
 }
 
-@Parcelize
-internal data class ReadLaterScreenUiState(
-    val file: File? = null,
-) : Parcelable
-
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun ReadLaterScreen(
-    uiState: ReadLaterScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
-    navigator: ThreePaneScaffoldNavigator,
+    navigator: ThreePaneScaffoldNavigator<File>,
     lazyGridState: LazyGridState,
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,
@@ -107,14 +102,18 @@ private fun ReadLaterScreen(
             )
         },
         extraPane = { innerPadding ->
-            if (uiState.file != null) {
+            var file by remember { mutableStateOf(navigator.currentDestination?.content) }
+            LaunchedEffect(key1 = navigator.currentDestination) {
+                navigator.currentDestination?.content?.let { file = it }
+            }
+            file?.let {
                 FileInfoSheet(
-                    file = uiState.file,
+                    file = it,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
-                    onReadLaterClick = { onReadLaterClick(uiState.file) },
-                    onFavoriteClick = { onFavoriteClick(uiState.file) },
-                    onOpenFolderClick = { onOpenFolderClick(uiState.file) },
+                    onReadLaterClick = { onReadLaterClick(it) },
+                    onFavoriteClick = { onFavoriteClick(it) },
+                    onOpenFolderClick = { onOpenFolderClick(it) },
                     contentPadding = innerPadding
                 )
             }

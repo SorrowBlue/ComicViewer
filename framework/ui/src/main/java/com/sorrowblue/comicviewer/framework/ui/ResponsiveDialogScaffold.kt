@@ -15,7 +15,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -27,6 +26,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
+import com.sorrowblue.comicviewer.framework.ui.material3.LocalWindowAdaptiveInfo
 
 val WindowSizeClass.isCompact get() = widthSizeClass == WindowWidthSizeClass.Compact || heightSizeClass == WindowHeightSizeClass.Compact
 
@@ -39,7 +39,7 @@ fun ResponsiveDialogScaffold(
     confirmButton: (@Composable () -> Unit)? = null,
     snackbarHost: @Composable () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
-    widthSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
+    widthSizeClass: WindowSizeClass = LocalWindowAdaptiveInfo.current.windowSizeClass,
     scrollableState: ScrollableState? = null,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     content: @Composable (PaddingValues) -> Unit,
@@ -72,13 +72,9 @@ fun ResponsiveDialogScaffold(
             },
             text = {
                 Column {
-                    if (widthSizeClass.isCompact) {
-                        HorizontalDivider(Modifier.alpha(if (scrollableState?.canScrollBackward == true) 1f else 0f))
-                    }
+                    HorizontalDivider(Modifier.alpha(if (scrollableState?.canScrollBackward == true) 1f else 0f))
                     content(PaddingValues())
-                    if (widthSizeClass.isCompact) {
-                        HorizontalDivider(Modifier.alpha(if (scrollableState?.canScrollForward == true) 1f else 0f))
-                    }
+                    HorizontalDivider(Modifier.alpha(if (scrollableState?.canScrollForward == true) 1f else 0f))
                 }
             },
             confirmButton = { confirmButton?.invoke() },

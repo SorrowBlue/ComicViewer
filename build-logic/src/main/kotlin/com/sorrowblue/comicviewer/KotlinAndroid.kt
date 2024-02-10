@@ -5,7 +5,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 
 internal fun Project.configureKotlinAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *>,
+    commonExtension: CommonExtension<*, *, *, *, *, *>,
 ) {
     commonExtension.apply {
 

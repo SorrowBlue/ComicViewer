@@ -115,7 +115,6 @@ private var _brandOnedrive: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconBrandOnedrivePreview() {
     Image(imageVector = ComicIcons.BrandOnedrive, contentDescription = null)
 }

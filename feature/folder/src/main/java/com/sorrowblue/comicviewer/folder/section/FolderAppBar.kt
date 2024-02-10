@@ -30,9 +30,11 @@ import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
+import com.sorrowblue.comicviewer.framework.ui.material3.SettingsButton
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.parcelize.Parcelize
 
@@ -61,9 +63,8 @@ internal fun FolderAppBar(
     TopAppBar(
         title = { Text(text = uiState.title) },
         navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(imageVector = ComicIcons.ArrowBack, contentDescription = "Back")
-            }
+            SettingsButton(onClick = { /*TODO*/ })
+            BackButton(onClick = onBackClick)
         },
         actions = {
             PlainTooltipBox(tooltipContent = { Text(stringResource(R.string.folder_action_search)) }) {

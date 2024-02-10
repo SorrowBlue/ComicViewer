@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 internal interface SettingsScreenState : SaveableScreenState {
     val windowAdaptiveInfo: WindowAdaptiveInfo
-    val navigator: ThreePaneScaffoldNavigator
+    val navigator: ThreePaneScaffoldNavigator<Unit>
     val navController: NavHostController
     val uiState: SettingsScreenUiState
     fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit)
@@ -42,7 +42,7 @@ internal interface SettingsScreenState : SaveableScreenState {
 @Composable
 internal fun rememberSettingsScreenState(
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
-    navigator: ThreePaneScaffoldNavigator = rememberListDetailPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<Unit> = rememberListDetailPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(windowAdaptiveInfo)
     ),
     navController: NavHostController = rememberNavController(),
@@ -64,7 +64,7 @@ internal fun rememberSettingsScreenState(
 private class SettingsScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
     override val windowAdaptiveInfo: WindowAdaptiveInfo,
-    override val navigator: ThreePaneScaffoldNavigator,
+    override val navigator: ThreePaneScaffoldNavigator<Unit>,
     override val navController: NavHostController,
     private val context: Context,
     private val scope: CoroutineScope,

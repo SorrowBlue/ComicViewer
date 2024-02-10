@@ -10,4 +10,5 @@
     <string name="file_list_label_switch_list_view">リスト表示に切り替え</string>
     <string name="file_text_page_count">%1$d/%2$d ページ</string>
     <string name="file_title">ファイル情報</string>
+    <string name="file_desc_open_file_info">ファイル情報を見る</string>
 </resources>

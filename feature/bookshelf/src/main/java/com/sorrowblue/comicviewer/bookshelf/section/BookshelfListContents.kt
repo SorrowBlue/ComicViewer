@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.bookshelf.component.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
@@ -62,8 +61,7 @@ internal fun BookshelfListContents(
                 spanCount = maxLineSpan
                 GridItemSpan(1)
             },
-            key = lazyPagingItems.itemKey { it.bookshelf.id.value },
-            contentType = { lazyPagingItems.itemContentType { "contentType" } }
+            key = lazyPagingItems.itemKey { it.bookshelf.id.value }
         ) {
             val item = lazyPagingItems[it]
             if (item != null) {

@@ -656,7 +656,6 @@ private var _undrawServer: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconUndrawServerPreview() {
     Image(imageVector = ComicIcons.UndrawServer, contentDescription = null)
 }

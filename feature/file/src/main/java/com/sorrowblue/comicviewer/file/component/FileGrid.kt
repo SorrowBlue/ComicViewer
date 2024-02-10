@@ -21,12 +21,14 @@ import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -68,7 +70,7 @@ fun FileGrid(
             ) {
                 Icon(
                     imageVector = ComicIcons.MoreVert,
-                    contentDescription = "ファイルの情報を開く",
+                    contentDescription = stringResource(R.string.file_desc_open_file_info),
                 )
             }
         }

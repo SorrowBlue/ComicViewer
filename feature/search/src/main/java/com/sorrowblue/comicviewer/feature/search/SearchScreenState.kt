@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.Flow
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Stable
 internal interface SearchScreenState : SaveableScreenState {
-    val navigator: ThreePaneScaffoldNavigator
+    val navigator: ThreePaneScaffoldNavigator<File>
 
     val uiState: SearchScreenUiState
     val lazyPagingItems: Flow<PagingData<File>>
@@ -44,7 +44,7 @@ internal interface SearchScreenState : SaveableScreenState {
 internal fun rememberSearchScreenState(
     args: SearchArgs,
     viewModel: SearchViewModel = hiltViewModel(),
-    navigator: ThreePaneScaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
 ): SearchScreenState = rememberSaveableScreenState {
@@ -59,7 +59,7 @@ internal fun rememberSearchScreenState(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 private class SearchScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator,
+    override val navigator: ThreePaneScaffoldNavigator<File>,
     private val args: SearchArgs,
     private val viewModel: SearchViewModel,
 ) : SearchScreenState {
@@ -131,8 +131,7 @@ private class SearchScreenStateImpl(
     }
 
     override fun onFileInfoClick(file: File) {
-        uiState = uiState.copy(file = file)
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
+        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
     }
 
     override fun onFileInfoCloseClick() {

@@ -134,7 +134,6 @@ private var _brandGoogleDrive: ImageVector? = null
 
 @Preview
 @Composable
-@Suppress("UnusedPrivateMember")
 private fun IconBrandGoogleDrivePreview() {
     Image(imageVector = ComicIcons.BrandGoogleDrive, contentDescription = null)
 }
