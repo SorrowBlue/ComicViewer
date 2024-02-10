@@ -17,3 +17,13 @@ fun SettingsButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         )
     }
 }
+
+@Composable
+fun BackButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    IconButton(onClick = onClick, modifier = modifier) {
+        Icon(
+            imageVector = ComicIcons.ArrowBack,
+            contentDescription = stringResource(R.string.ui_desc_to_settings)
+        )
+    }
+}

@@ -3,5 +3,5 @@
     <string name="app_name" translatable="false">ComicViewer</string>
     <string name="framework_ui_label_settings">Settings</string>
     <string name="framework_ui_desc_open_settings">Open settings</string>
-    <string name="ui_desc_to_settings">To settings</string>
+    <string name="ui_desc_back">Back</string>
 </resources>
