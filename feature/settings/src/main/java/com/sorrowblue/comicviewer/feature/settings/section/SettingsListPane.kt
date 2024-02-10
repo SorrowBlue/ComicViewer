@@ -36,6 +36,7 @@ import com.sorrowblue.comicviewer.feature.settings.R
 import com.sorrowblue.comicviewer.feature.settings.Settings2
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -70,12 +71,7 @@ internal fun SettingsListPane(
                         Text(text = stringResource(id = R.string.settings_title))
                     },
                     navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(
-                                imageVector = ComicIcons.ArrowBack,
-                                contentDescription = null
-                            )
-                        }
+                        BackButton(onClick = onBackClick)
                     },
                     scrollBehavior = scrollBehavior,
                     windowInsets = WindowInsets.safeDrawing
