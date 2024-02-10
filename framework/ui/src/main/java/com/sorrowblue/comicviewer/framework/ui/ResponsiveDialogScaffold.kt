@@ -26,7 +26,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
-import com.sorrowblue.comicviewer.framework.ui.material3.LocalWindowAdaptiveInfo
 
 val WindowSizeClass.isCompact get() = widthSizeClass == WindowWidthSizeClass.Compact || heightSizeClass == WindowHeightSizeClass.Compact
 

@@ -58,10 +58,11 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.expandedDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
 import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.ui.LocalWindowAdaptiveInfo
 import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
 import kotlinx.coroutines.flow.filter
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun ComicViewerApp(
     onTutorial: () -> Unit,
@@ -79,6 +80,7 @@ internal fun ComicViewerApp(
     CompositionLocalProvider(
         LocalWindowSize provides windowsSize,
         LocalDimension provides dimension,
+        LocalWindowAdaptiveInfo provides currentWindowAdaptiveInfo()
     ) {
         ComicTheme {
             val addOnList = state.addOnList
