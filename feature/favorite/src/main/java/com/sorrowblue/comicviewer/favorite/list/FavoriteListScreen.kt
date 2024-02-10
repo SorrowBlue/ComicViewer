@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
@@ -26,6 +27,7 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListEmptySheet
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListSheet
+import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialog
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
@@ -95,7 +97,7 @@ private fun FavoriteListScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                text = { Text("Create Favorite") },
+                text = { Text(stringResource(R.string.favorite_btn_create)) },
                 icon = { Icon(imageVector = ComicIcons.Add, contentDescription = "") },
                 onClick = onCreateFavoriteClick
             )
