@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,13 +53,12 @@ internal fun DisplayNameField(
 }
 
 @Composable
-internal fun FolderSelectField(input: Input, onClick: () -> Unit) {
+internal fun FolderSelectField(input: Input, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
     ValidateOutlinedTextField(
         input = input,
         onValueChange = {},
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .onFocusChanged {
                 if (it.isFocused) {
                     onClick()

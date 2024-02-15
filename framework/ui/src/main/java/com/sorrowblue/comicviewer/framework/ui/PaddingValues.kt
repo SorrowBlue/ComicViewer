@@ -4,10 +4,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
 fun PaddingValues.asWindowInsets(localLayoutDirection: LayoutDirection = LocalLayoutDirection.current) =
@@ -17,23 +21,6 @@ fun PaddingValues.asWindowInsets(localLayoutDirection: LayoutDirection = LocalLa
         right = calculateRightPadding(localLayoutDirection),
         bottom = calculateBottomPadding()
     )
-
-@Composable
-fun PaddingValues.plus(
-    paddingValues: PaddingValues,
-    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
-): PaddingValues {
-    return PaddingValues(
-        start = calculateStartPadding(layoutDirection) + paddingValues.calculateStartPadding(
-            layoutDirection
-        ),
-        top = calculateTopPadding() + paddingValues.calculateTopPadding(),
-        end = calculateEndPadding(layoutDirection) + paddingValues.calculateEndPadding(
-            layoutDirection
-        ),
-        bottom = calculateBottomPadding() + paddingValues.calculateBottomPadding(),
-    )
-}
 
 @Composable
 fun PaddingValues.add(
@@ -60,3 +47,20 @@ fun PaddingValues.copy(
     end: Dp = calculateEndPadding(layoutDirection),
     bottom: Dp = calculateBottomPadding(),
 ) = PaddingValues(start = start, top = top, end = end, bottom = bottom)
+
+@Composable
+fun Modifier.marginPadding(
+    horizontal: Boolean = false,
+    vertical: Boolean = false,
+    start: Boolean = false,
+    top: Boolean = false,
+    end: Boolean = false,
+    bottom: Boolean = false,
+) = with(this) {
+    padding(
+        start = if (horizontal || start) ComicTheme.dimension.margin else 0.dp,
+        top = if (vertical || top) ComicTheme.dimension.margin else 0.dp,
+        end = if (horizontal || end) ComicTheme.dimension.margin else 0.dp,
+        bottom = if (vertical || bottom) ComicTheme.dimension.margin else 0.dp
+    )
+}

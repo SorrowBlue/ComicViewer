@@ -15,6 +15,8 @@ interface BookshelfRepository {
 
     sealed interface Error : Resource.AppError {
         data object NotFound : Error
+        data object InvalidServer : Error
+        data object InvalidAuth : Error
         data object Network : Error
         data object System : Error
     }

@@ -44,8 +44,8 @@ internal class BookshelfRepositoryImpl @Inject constructor(
         }.catch {
             emit(
                 when (it as RemoteException) {
-                    RemoteException.InvalidAuth -> Resource.Error(BookshelfRepository.Error.NotFound)
-                    RemoteException.InvalidServer -> Resource.Error(BookshelfRepository.Error.NotFound)
+                    RemoteException.InvalidAuth -> Resource.Error(BookshelfRepository.Error.InvalidAuth)
+                    RemoteException.InvalidServer -> Resource.Error(BookshelfRepository.Error.InvalidServer)
                     RemoteException.NotFound -> Resource.Error(BookshelfRepository.Error.NotFound)
                     RemoteException.NoNetwork -> Resource.Error(BookshelfRepository.Error.Network)
                     RemoteException.Unknown -> Resource.Error(BookshelfRepository.Error.System)

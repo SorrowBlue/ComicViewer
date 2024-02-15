@@ -5,7 +5,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -17,6 +19,7 @@ internal class SmbEditScreenState(
     private val viewModel: BookshelfEditViewModel,
     private val context: Context,
     private val scope: CoroutineScope,
+    private val softwareKeyboardController: SoftwareKeyboardController?,
 ) : BookshelfEditInnerScreenState<SmbEditScreenUiState>() {
 
     override var uiState by mutableStateOf(uiState)
@@ -54,6 +57,7 @@ internal class SmbEditScreenState(
     }
 
     fun onSaveClick(complete: () -> Unit) {
+        softwareKeyboardController?.hide()
         onDisplayNameChange(uiState.displayName.value)
         onHostChange(uiState.host.value)
         onPortChange(uiState.port.value)
@@ -94,11 +98,24 @@ internal class SmbEditScreenState(
                 "/"
             } else {
                 ("/${uiState.path.value}/").replace("(/+)".toRegex(), "/")
+            },
+            onError = {
+                uiState = uiState.copy(isProgress = false, isError = true)
+                scope.launch {
+                    when (it) {
+                        RegisterBookshelfUseCase.Error.Auth -> snackbarHostState.showSnackbar("認証エラー")
+                        RegisterBookshelfUseCase.Error.Host -> snackbarHostState.showSnackbar("ホスト名、またはIPアドレスが間違っています。")
+                        RegisterBookshelfUseCase.Error.Network -> snackbarHostState.showSnackbar("ネットワークに接続できませんでした。")
+                        RegisterBookshelfUseCase.Error.Path -> snackbarHostState.showSnackbar("Pathが間違っています。")
+                        RegisterBookshelfUseCase.Error.System -> snackbarHostState.showSnackbar("システムエラー")
+                    }
+                }
+            },
+            complete = {
+                uiState = uiState.copy(isProgress = false, isError = false)
+                complete()
             }
-        ) {
-            uiState = uiState.copy(isProgress = false)
-            complete()
-        }
+        )
     }
 }
 

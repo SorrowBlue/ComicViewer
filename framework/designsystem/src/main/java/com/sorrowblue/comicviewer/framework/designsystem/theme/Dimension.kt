@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 class Dimension(
     val margin: Dp,
     val spacer: Dp,
+    val targetSpacing: Dp = 8.dp,
     val padding: Dp = 4.dp,
 )
 
@@ -30,3 +31,4 @@ val expandedDimension = Dimension(
 val LocalDimension = staticCompositionLocalOf {
     compactDimension
 }
+

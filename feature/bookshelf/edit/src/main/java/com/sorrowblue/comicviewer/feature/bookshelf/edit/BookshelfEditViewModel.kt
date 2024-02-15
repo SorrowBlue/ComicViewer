@@ -27,11 +27,17 @@ internal class BookshelfEditViewModel @Inject constructor(
             .first().dataOrNull()
     }
 
-    fun save(bookshelf: Bookshelf, path: String, complete: () -> Unit) {
+    fun save(
+        bookshelf: Bookshelf,
+        path: String,
+        onError: (RegisterBookshelfUseCase.Error) -> Unit,
+        complete: () -> Unit,
+    ) {
         viewModelScope.launch {
             registerBookshelfUseCase.execute(RegisterBookshelfUseCase.Request(bookshelf, path))
                 .first()
                 .onError {
+                    onError(it)
                     logcat { it.toString() }
                 }.onSuccess {
                     complete()

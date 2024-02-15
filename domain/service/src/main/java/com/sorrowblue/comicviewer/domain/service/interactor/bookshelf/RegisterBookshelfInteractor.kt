@@ -29,8 +29,10 @@ internal class RegisterBookshelfInteractor @Inject constructor(
                     Resource.Error(
                         when (it) {
                             BookshelfRepository.Error.Network -> Error.Network
-                            BookshelfRepository.Error.System -> Error.Auth
+                            BookshelfRepository.Error.System -> Error.System
                             BookshelfRepository.Error.NotFound -> Error.Path
+                            BookshelfRepository.Error.InvalidAuth -> Error.Auth
+                            BookshelfRepository.Error.InvalidServer -> Error.Host
                         }
                     )
                 )
@@ -55,9 +57,11 @@ internal class RegisterBookshelfInteractor @Inject constructor(
                                 {
                                     Resource.Error(
                                         when (it) {
-                                            BookshelfRepository.Error.NotFound -> Error.Path
                                             BookshelfRepository.Error.Network -> Error.Network
-                                            BookshelfRepository.Error.System -> Error.Auth
+                                            BookshelfRepository.Error.System -> Error.System
+                                            BookshelfRepository.Error.NotFound -> Error.Path
+                                            BookshelfRepository.Error.InvalidAuth -> Error.Auth
+                                            BookshelfRepository.Error.InvalidServer -> Error.Host
                                         }
                                     )
                                 }

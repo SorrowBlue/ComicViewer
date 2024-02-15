@@ -35,6 +35,8 @@ internal class GetBookshelfInfoInteractor @Inject constructor(
                     BookshelfRepository.Error.Network -> Resource.Error(Error.System)
                     BookshelfRepository.Error.NotFound -> Resource.Error(Error.System)
                     BookshelfRepository.Error.System -> Resource.Error(Error.System)
+                    BookshelfRepository.Error.InvalidAuth -> Resource.Error(Error.System)
+                    BookshelfRepository.Error.InvalidServer -> Resource.Error(Error.System)
                 }
             )
         })
