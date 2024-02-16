@@ -84,10 +84,10 @@ private class BookshelfEditScreenStateImpl(
                         restoredUiState,
                         snackbarHostState,
                         args,
-                        viewModel,
                         context,
                         scope,
-                        softwareKeyboardController = softwareKeyboardController
+                        softwareKeyboardController = softwareKeyboardController,
+                        viewModel.registerBookshelfUseCase,
                     )
                 }
 
@@ -100,10 +100,10 @@ private class BookshelfEditScreenStateImpl(
                         SmbEditScreenUiState(),
                         snackbarHostState,
                         args,
-                        viewModel,
                         context,
                         scope,
-                        softwareKeyboardController = softwareKeyboardController
+                        softwareKeyboardController = softwareKeyboardController,
+                        viewModel.registerBookshelfUseCase,
                     )
 
                     BookshelfType.DEVICE -> StorageEditScreenState(
@@ -149,10 +149,10 @@ private class BookshelfEditScreenStateImpl(
                                     uiState = uiState,
                                     snackbarHostState = snackbarHostState,
                                     args = args,
-                                    viewModel = viewModel,
                                     context = context,
                                     scope = scope,
-                                    softwareKeyboardController = softwareKeyboardController
+                                    softwareKeyboardController = softwareKeyboardController,
+                                    viewModel.registerBookshelfUseCase,
                                 )
                             }
                         }

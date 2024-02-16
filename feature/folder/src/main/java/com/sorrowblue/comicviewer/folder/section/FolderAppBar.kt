@@ -63,7 +63,6 @@ internal fun FolderAppBar(
     TopAppBar(
         title = { Text(text = uiState.title) },
         navigationIcon = {
-            SettingsButton(onClick = { /*TODO*/ })
             BackButton(onClick = onBackClick)
         },
         actions = {

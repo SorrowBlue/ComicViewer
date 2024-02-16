@@ -6,20 +6,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.SoftwareKeyboardController
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal class SmbEditScreenState(
     uiState: SmbEditScreenUiState,
     val snackbarHostState: SnackbarHostState,
     private val args: BookshelfEditArgs,
-    private val viewModel: BookshelfEditViewModel,
     private val context: Context,
     private val scope: CoroutineScope,
     private val softwareKeyboardController: SoftwareKeyboardController?,
+    private val registerBookshelfUseCase: RegisterBookshelfUseCase,
 ) : BookshelfEditInnerScreenState<SmbEditScreenUiState>() {
 
     override var uiState by mutableStateOf(uiState)
@@ -29,7 +32,7 @@ internal class SmbEditScreenState(
     }
 
     fun onHostChange(text: String) {
-        uiState = uiState.copy(host = Input(value = text, isError = !hostRegex.matches(text)))
+        uiState = uiState.copy(host = Input(value = text, isError = text.isBlank()))
     }
 
     fun onPortChange(text: String) {
@@ -92,35 +95,55 @@ internal class SmbEditScreenState(
             },
             port = uiState.port.value.toInt(),
         )
-        viewModel.save(
-            smbServer,
-            if (uiState.path.value.isEmpty()) {
-                "/"
-            } else {
-                ("/${uiState.path.value}/").replace("(/+)".toRegex(), "/")
-            },
-            onError = {
-                uiState = uiState.copy(isProgress = false, isError = true)
-                scope.launch {
-                    when (it) {
-                        RegisterBookshelfUseCase.Error.Auth -> snackbarHostState.showSnackbar("認証エラー")
-                        RegisterBookshelfUseCase.Error.Host -> snackbarHostState.showSnackbar("ホスト名、またはIPアドレスが間違っています。")
-                        RegisterBookshelfUseCase.Error.Network -> snackbarHostState.showSnackbar("ネットワークに接続できませんでした。")
-                        RegisterBookshelfUseCase.Error.Path -> snackbarHostState.showSnackbar("Pathが間違っています。")
-                        RegisterBookshelfUseCase.Error.System -> snackbarHostState.showSnackbar("システムエラー")
+        scope.launch {
+
+            registerBookshelfUseCase.execute(
+                RegisterBookshelfUseCase.Request(
+                    smbServer,
+                    if (uiState.path.value.isEmpty()) {
+                        "/"
+                    } else {
+                        ("/${uiState.path.value}/").replace("(/+)".toRegex(), "/")
+                    }
+                )
+            ).collectLatest {
+                when (it) {
+                    is Resource.Error -> {
+                        uiState = uiState.copy(isProgress = false, isError = true)
+                        scope.launch {
+                            when (it.error) {
+                                RegisterBookshelfUseCase.Error.Auth -> snackbarHostState.showSnackbar(
+                                    "認証エラー"
+                                )
+
+                                RegisterBookshelfUseCase.Error.Host -> snackbarHostState.showSnackbar(
+                                    "サーバー名、またはIPアドレスが見つかりませんでした。"
+                                )
+
+                                RegisterBookshelfUseCase.Error.Network -> snackbarHostState.showSnackbar(
+                                    "ネットワークに接続できませんでした。"
+                                )
+
+                                RegisterBookshelfUseCase.Error.Path -> snackbarHostState.showSnackbar(
+                                    "Pathが間違っています。"
+                                )
+
+                                RegisterBookshelfUseCase.Error.System -> snackbarHostState.showSnackbar(
+                                    "システムエラー"
+                                )
+                            }
+                        }
+                    }
+
+                    is Resource.Success -> {
+                        uiState = uiState.copy(isProgress = false, isError = false)
+                        complete()
                     }
                 }
-            },
-            complete = {
-                uiState = uiState.copy(isProgress = false, isError = false)
-                complete()
             }
-        )
+        }
     }
 }
 
 private val portRegex =
     "^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{1,5})|([0-9]{1,4}))\$".toRegex()
-
-private val hostRegex =
-    "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])\$".toRegex()

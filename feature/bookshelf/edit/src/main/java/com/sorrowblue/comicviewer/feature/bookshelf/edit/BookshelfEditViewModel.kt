@@ -18,8 +18,8 @@ import logcat.logcat
 
 @HiltViewModel
 internal class BookshelfEditViewModel @Inject constructor(
-    private val registerBookshelfUseCase: RegisterBookshelfUseCase,
-    private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
+    val registerBookshelfUseCase: RegisterBookshelfUseCase,
+    val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
 ) : ViewModel() {
 
     suspend fun fetch(bookshelfId: BookshelfId): BookshelfFolder? {
