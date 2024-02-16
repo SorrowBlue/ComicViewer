@@ -29,7 +29,7 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.android.gms:play-services-auth-api-phone:18.0.2")
-    implementation("com.google.android.gms:play-services-auth-base:18.0.10")
+    implementation("com.google.android.gms:play-services-auth-base:18.0.11")
     implementation("com.google.android.gms:play-services-base:18.3.0")
     implementation("com.google.android.gms:play-services-fido:20.1.0")
 }
