@@ -40,6 +40,7 @@ mikepenz-aboutlibraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", ve
 dependency-graph-generator = "com.vanniktech.dependency.graph.generator:0.8.0"
 arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 grgit = "org.ajoberstar.grgit.service:5.2.1"
+roborazzi = "io.github.takahirom.roborazzi:1.9.0"
 
 [libraries]
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
@@ -111,7 +112,7 @@ androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version
 google-android-play-feature-delivery-ktx = "com.google.android.play:feature-delivery-ktx:2.1.0"
 google-android-play-review-ktx = "com.google.android.play:review-ktx:2.0.1"
 google-code-gson = "com.google.code.gson:gson:2.10.1"
-google-guava = "com.google.guava:guava:32.1.3-jre"
+google-guava = "com.google.guava:guava:30.1.1-jre"
 google-material = "com.google.android.material:material:1.11.0"
 google-android-gms-play-services-auth = "com.google.android.gms:play-services-auth:20.7.0"
 google-api-client-android = "com.google.api-client:google-api-client-android:2.3.0"

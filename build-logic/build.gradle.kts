@@ -63,15 +63,15 @@ gradlePlugin {
         }
         register("comicviewer.android.hilt") {
             id = name
-            implementationClass = "AndroidHiltConventionPlugin"
+            implementationClass = "DaggerHiltConventionPlugin"
         }
         register("comicviewer.android.lint") {
             id = name
-            implementationClass = "AndroidLintConventionPlugin"
+            implementationClass = "DetektConventionPlugin"
         }
         register("comicviewer.android.koin") {
             id = name
-            implementationClass = "AndroidKoinConventionPlugin"
+            implementationClass = "KoinConventionPlugin"
         }
     }
 }

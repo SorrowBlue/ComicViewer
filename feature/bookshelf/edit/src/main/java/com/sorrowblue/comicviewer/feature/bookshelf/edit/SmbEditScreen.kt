@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.AuthButtons
@@ -190,7 +192,8 @@ private fun SmbEditContent(
     scrollState: ScrollState = rememberScrollState(),
 ) {
     Column(
-        modifier
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
             .fillMaxSize()
             .imePadding()
             .drawVerticalScrollbar(scrollState)
@@ -202,13 +205,16 @@ private fun SmbEditContent(
         DisplayNameField(
             input = uiState.displayName,
             onValueChange = onDisplayNameChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .widthIn(max = 340.dp)
+                .fillMaxWidth()
         )
 
         HostField(
             input = uiState.host,
             onValueChange = onHostChange,
             modifier = Modifier
+                .widthIn(max = 340.dp)
                 .fillMaxWidth()
                 .padding(top = dimension.targetSpacing)
         )
@@ -217,6 +223,7 @@ private fun SmbEditContent(
             input = uiState.port,
             onValueChange = onPortChange,
             modifier = Modifier
+                .widthIn(max = 340.dp)
                 .fillMaxWidth()
                 .padding(top = dimension.targetSpacing)
         )
@@ -226,6 +233,7 @@ private fun SmbEditContent(
             auth = uiState.auth,
             onValueChange = onPathChange,
             modifier = Modifier
+                .widthIn(max = 340.dp)
                 .fillMaxWidth()
                 .padding(top = dimension.targetSpacing)
         )
@@ -251,6 +259,7 @@ private fun SmbEditContent(
                     value = uiState.domain,
                     onValueChange = onDomainChange,
                     modifier = Modifier
+                        .widthIn(max = 340.dp)
                         .fillMaxWidth()
                         .padding(top = dimension.targetSpacing)
                 )
@@ -259,6 +268,7 @@ private fun SmbEditContent(
                     input = uiState.username,
                     onValueChange = onUsernameChange,
                     modifier = Modifier
+                        .widthIn(max = 340.dp)
                         .fillMaxWidth()
                         .padding(top = dimension.targetSpacing)
                 )
@@ -267,6 +277,7 @@ private fun SmbEditContent(
                     input = uiState.password,
                     onValueChange = onPasswordChange,
                     modifier = Modifier
+                        .widthIn(max = 340.dp)
                         .fillMaxWidth()
                         .padding(top = dimension.targetSpacing)
                 )

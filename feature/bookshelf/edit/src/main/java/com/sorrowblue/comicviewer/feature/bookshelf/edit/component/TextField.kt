@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,7 +40,7 @@ internal fun DisplayNameField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.testTag("DisplayName"),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_label_display_name)) },
         errorText = {
             Text(text = stringResource(id = R.string.bookshelf_edit_error_display_name))

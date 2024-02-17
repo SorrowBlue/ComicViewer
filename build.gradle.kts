@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.androidx.navigation.safeargs.kotlin) apply false
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
+    alias(libs.plugins.roborazzi) apply false
     alias(libs.plugins.dependency.graph.generator)
     alias(libs.plugins.arturbosch.detekt)
     id("androidx.room") version libs.versions.androidx.room.get() apply false

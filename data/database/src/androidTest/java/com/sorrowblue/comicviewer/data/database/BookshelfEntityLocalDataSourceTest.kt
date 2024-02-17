@@ -7,7 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
 import com.sorrowblue.comicviewer.data.database.entity.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.DecryptedPasswordEntity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import logcat.LogcatLogger
@@ -19,7 +18,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 class BookshelfEntityLocalDataSourceTest {
     private lateinit var bookshelfDao: BookshelfDao

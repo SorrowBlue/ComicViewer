@@ -24,12 +24,12 @@ dependencies {
 
     // :feature:library:googledrive
     // Type com.google.common.util.concurrent.ListenableFuture is defined multiple times:
-    implementation(libs.google.guava)
+//    implementation(libs.google.guava)
 
 
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
-    implementation("com.google.android.gms:play-services-auth-api-phone:18.0.2")
-    implementation("com.google.android.gms:play-services-auth-base:18.0.10")
-    implementation("com.google.android.gms:play-services-base:18.3.0")
-    implementation("com.google.android.gms:play-services-fido:20.1.0")
+//    implementation("com.google.android.gms:play-services-auth:20.7.0")
+//    implementation("com.google.android.gms:play-services-auth-api-phone:18.0.2")
+//    implementation("com.google.android.gms:play-services-auth-base:18.0.10")
+//    implementation("com.google.android.gms:play-services-base:18.3.0")
+//    implementation("com.google.android.gms:play-services-fido:20.1.0")
 }

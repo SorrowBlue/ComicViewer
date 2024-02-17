@@ -1,5 +1,6 @@
 plugins {
     id("comicviewer.android.feature")
+    alias(libs.plugins.roborazzi)
 }
 
 android {

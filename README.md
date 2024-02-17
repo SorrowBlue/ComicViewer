@@ -12,16 +12,41 @@ Use [detekt](https://github.com/detekt/detekt) as a static code analysis tool.
 ## Plugin configuration
 
 ```mermaid
-graph LR
-    comicviewer.android.application --> comicviewer.android.lint
-    comicviewer.android.library --> comicviewer.android.lint
-    comicviewer.android.dynamic-feature --> comicviewer.android.lint
-    comicviewer.android.feature --> comicviewer.android.library
-    comicviewer.android.feature --> comicviewer.android.library.compose
-    comicviewer.android.feature --> comicviewer.android.hilt
-    comicviewer.android.feature.dynamic-feature --> comicviewer.android.dynamic-feature
-    comicviewer.android.feature.dynamic-feature --> comicviewer.android.dynamic-feature.compose
-    comicviewer.android.feature.dynamic-feature --> comicviewer.android.koin
+classDiagram
+    class DaggerHilt
+    class Koin
+    class Detekt
+
+    class AndroidApplication
+    class AndroidLibrary
+    class AndroidDynamicFeature
+
+    class AndroidApplicationCompose
+    class AndroidLibraryCompose
+    class AndroidDynamicFeatureCompose
+
+    class AndroidApp
+    class AndroidFeature
+    class AndroidFeatureDynamicFeature
+
+    AndroidApplication ..> Detekt
+    AndroidLibrary ..> Detekt
+    AndroidDynamicFeature ..> Detekt
+
+    AndroidApp ..> AndroidApplication
+    AndroidApp ..> AndroidApplicationCompose
+    AndroidApp ..> DaggerHilt
+    AndroidApp ..> Koin
+
+    AndroidFeature ..> AndroidLibrary
+    AndroidFeature ..> AndroidLibraryCompose
+    AndroidFeature ..> DaggerHilt
+
+    AndroidFeatureDynamicFeature ..> AndroidDynamicFeature
+    AndroidFeatureDynamicFeature ..> AndroidDynamicFeatureCompose
+    AndroidFeatureDynamicFeature ..> DaggerHilt
+    AndroidFeatureDynamicFeature ..> Koin
+
 ```
 
 ## Module configuration
