@@ -43,6 +43,9 @@ grgit = "org.ajoberstar.grgit.service:5.2.1"
 roborazzi = "io.github.takahirom.roborazzi:1.9.0"
 
 [libraries]
+roborazzi = "io.github.takahirom.roborazzi:roborazzi:1.9.0"
+roborazzi-compose = "io.github.takahirom.roborazzi:roborazzi-compose:1.9.0"
+roborazzi-junitRule = "io.github.takahirom.roborazzi:roborazzi-junit-rule:1.9.0"
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
 android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -70,7 +73,7 @@ androidx-compose-bom = "androidx.compose:compose-bom:2024.02.00"
 androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidx-compose-compiler" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-toolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
-androidx-compose-ui-testJunit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-testJunit4 = { module = "androidx.compose.ui:ui-test-junit4", version = "1.6.1" }
 androidx-compose-ui-testManifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util" }
 androidx-compose-material = { module = "androidx.compose.material:material" }

@@ -3,11 +3,12 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.platform.SoftwareKeyboardController
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onParent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.github.takahirom.roborazzi.captureRoboImage
 import com.google.common.truth.Truth.assertThat
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
@@ -65,7 +66,8 @@ internal class SmbEditScreenStateTest {
                 }
             }
         }
-        composeTestRule.onNodeWithTag("DisplayName").captureToImage()
+        composeTestRule.onNodeWithTag("DisplayName").onParent()
+            .captureRoboImage()
     }
 
     @Test

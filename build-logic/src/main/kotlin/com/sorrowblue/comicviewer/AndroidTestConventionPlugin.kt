@@ -9,6 +9,9 @@ fun Project.dependTestImplementation() {
         testImplementation(libs.findLibrary("androidx-compose-ui-testJunit4").get())
         testImplementation(libs.findLibrary("androidx-test-ext-junit-ktx").get())
         testImplementation(libs.findLibrary("androidx-test-ext-truth").get())
+        testImplementation(libs.findLibrary("roborazzi").get())
+        testImplementation(libs.findLibrary("roborazzi-compose").get())
+        testImplementation(libs.findLibrary("roborazzi-junitRule").get())
         testImplementation(libs.findLibrary("kotlinx-coroutines-test").get())
         testImplementation(libs.findLibrary("robolectric").get())
     }
