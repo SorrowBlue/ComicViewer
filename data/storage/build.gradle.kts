@@ -13,6 +13,6 @@ dependencies {
     api(projects.domain.model)
     api(projects.data.reader)
 
-    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
+    androidTestImplementation(libs.androidx.test.ext.junitKtx)
     androidTestImplementation(libs.androidx.test.espresso.core)
 }

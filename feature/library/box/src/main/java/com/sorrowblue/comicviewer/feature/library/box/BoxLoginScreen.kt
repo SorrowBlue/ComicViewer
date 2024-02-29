@@ -66,7 +66,7 @@ private fun BoxLoginScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(R.string.box_title2)) },
+                title = { Text(text = stringResource(com.sorrowblue.comicviewer.app.R.string.box_title)) },
                 navigationIcon = {
                     CloseIconButton(onClick = onCloseClick)
                 },

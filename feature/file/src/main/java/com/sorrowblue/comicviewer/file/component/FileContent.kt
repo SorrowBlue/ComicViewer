@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.file.component
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -70,7 +71,9 @@ private fun <T : File> FileGridContent(
         contentPadding = contentPadding.add(PaddingValues(ComicTheme.dimension.margin)),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-        modifier = Modifier.drawVerticalScrollbar(state, spanCount)
+        modifier = Modifier
+            .fillMaxSize()
+            .drawVerticalScrollbar(state, spanCount)
     ) {
         items(
             count = lazyPagingItems.itemCount,
@@ -113,7 +116,9 @@ fun <T : File> FileListContent(
                 PaddingValues(ComicTheme.dimension.margin)
             )
         },
-        modifier = modifier.drawVerticalScrollbar(state, 1),
+        modifier = modifier
+            .fillMaxSize()
+            .drawVerticalScrollbar(state, 1),
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
             val item = lazyPagingItems[it]

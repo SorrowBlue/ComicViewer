@@ -20,6 +20,7 @@ interface FileRepository {
         data object System : Error
     }
 
+    fun existsReadLater(bookshelfId: BookshelfId, path: String): Flow<Resource<Boolean, Error>>
     fun addReadLater(bookshelfId: BookshelfId, path: String): Flow<Resource<Unit, Error>>
     fun deleteReadLater(bookshelfId: BookshelfId, path: String): Flow<Resource<Unit, Error>>
     fun deleteAllReadLater(): Flow<Resource<Unit, Error>>

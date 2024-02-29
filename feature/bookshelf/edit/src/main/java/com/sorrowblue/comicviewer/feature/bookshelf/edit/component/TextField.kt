@@ -60,6 +60,7 @@ internal fun FolderSelectField(input: Input, onClick: () -> Unit, modifier: Modi
         input = input,
         onValueChange = {},
         modifier = modifier
+            .testTag("FolderSelect")
             .onFocusChanged {
                 if (it.isFocused) {
                     onClick()
@@ -90,7 +91,7 @@ internal fun HostField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.testTag("Host"),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_host)) },
         errorText = {
             Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_host))
@@ -112,7 +113,7 @@ internal fun PortField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.testTag("Port"),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_port)) },
         errorText = {
             Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_port))
@@ -135,7 +136,7 @@ internal fun PathField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.testTag("Path"),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_path)) },
         prefix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_prefix_path)) },
         suffix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_suffix_path)) },
@@ -166,7 +167,7 @@ internal fun DomainField(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next
         ),
-        modifier = modifier
+        modifier = modifier.testTag("Domain"),
     )
 }
 
@@ -188,6 +189,7 @@ internal fun UsernameField(
             if (it.isEmpty()) usernameAutoFillHandler.requestVerifyManual()
         },
         modifier = modifier
+            .testTag("Username")
             .connectNode(handler = usernameAutoFillHandler)
             .defaultFocusChangeAutoFill(handler = usernameAutoFillHandler),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_hint_username)) },
@@ -221,6 +223,7 @@ internal fun PasswordField(
             if (it.isEmpty()) passwordAutoFillHandler.requestVerifyManual()
         },
         modifier = modifier
+            .testTag("Password")
             .connectNode(handler = passwordAutoFillHandler)
             .defaultFocusChangeAutoFill(handler = passwordAutoFillHandler),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_hint_password)) },

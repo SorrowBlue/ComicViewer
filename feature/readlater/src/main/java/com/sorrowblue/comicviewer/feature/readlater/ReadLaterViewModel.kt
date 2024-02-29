@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.DeleteAllReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

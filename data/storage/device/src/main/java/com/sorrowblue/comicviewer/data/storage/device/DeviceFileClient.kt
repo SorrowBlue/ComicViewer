@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -47,6 +48,10 @@ internal class DeviceFileClient @AssistedInject constructor(
         }
     }
 
+    override suspend fun getAttribute(path: String): FileAttribute? {
+        return null
+    }
+
     override suspend fun connect(path: String) {
         kotlin.runCatching {
             documentFile(path).exists()
@@ -55,19 +60,6 @@ internal class DeviceFileClient @AssistedInject constructor(
                 throw FileClientException.InvalidPath
             }
         }) {
-            it.printStackTrace()
-            when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth
-                is IllegalArgumentException -> throw FileClientException.InvalidPath
-                else -> throw it
-            }
-        }
-    }
-
-    override suspend fun exists(file: File): Boolean {
-        return kotlin.runCatching {
-            file.documentFile.exists()
-        }.getOrElse {
             it.printStackTrace()
             when (it) {
                 is SecurityException -> throw FileClientException.InvalidAuth
@@ -93,19 +85,6 @@ internal class DeviceFileClient @AssistedInject constructor(
     override suspend fun current(path: String): File {
         return kotlin.runCatching {
             documentFile(path).toFileModel()
-        }.getOrElse {
-            it.printStackTrace()
-            when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth
-                is IllegalArgumentException -> throw FileClientException.InvalidPath
-                else -> throw it
-            }
-        }
-    }
-
-    override suspend fun current(file: File): File {
-        return kotlin.runCatching {
-            file.documentFile.toFileModel()
         }.getOrElse {
             it.printStackTrace()
             when (it) {

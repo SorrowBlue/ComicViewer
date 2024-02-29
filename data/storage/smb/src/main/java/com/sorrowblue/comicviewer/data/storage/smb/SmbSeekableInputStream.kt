@@ -1,18 +1,17 @@
 package com.sorrowblue.comicviewer.data.storage.smb
 
 import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
-import jcifs.CIFSContext
 import jcifs.SmbConstants
-import jcifs.smb.SmbRandomAccessFile
+import jcifs.smb.SmbFile
 
-internal class SmbSeekableInputStream(uri: String, tc: CIFSContext, write: Boolean) :
+internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) :
     SeekableInputStream {
 
     private val file = kotlin.runCatching {
         if (write) {
-            SmbRandomAccessFile(uri, "rw", SmbConstants.DEFAULT_SHARING, tc)
+            smbFile.openRandomAccess("rw", SmbConstants.DEFAULT_SHARING)
         } else {
-            SmbRandomAccessFile(uri, "r", SmbConstants.DEFAULT_SHARING, tc)
+            smbFile.openRandomAccess("r", SmbConstants.DEFAULT_SHARING)
         }
     }.onFailure {
         it.printStackTrace()

@@ -42,9 +42,9 @@ internal class ZipFileReader @AssistedInject constructor(
             .sortedWith(Comparator.comparing({ it.path }, collator::compare))
     private val mutex = Mutex()
 
-    override fun fileSize(pageIndex: Int): Long = entries[pageIndex].size ?: 0
+    override suspend fun fileSize(pageIndex: Int): Long = entries[pageIndex].size ?: 0
 
-    override fun fileName(pageIndex: Int): String = entries[pageIndex].path.orEmpty()
+    override suspend fun fileName(pageIndex: Int): String = entries[pageIndex].path.orEmpty()
 
     override suspend fun pageInputStream(pageIndex: Int): InputStream {
         return mutex.withLock {
@@ -57,7 +57,7 @@ internal class ZipFileReader @AssistedInject constructor(
         }
     }
 
-    override fun pageCount(): Int {
+    override suspend fun pageCount(): Int {
         return entries.size
     }
 

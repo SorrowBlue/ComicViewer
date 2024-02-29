@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -82,11 +81,12 @@ fun BookshelfInfoSheet(
             contentDescription = stringResource(id = R.string.bookshelf_desc_thumbnail),
             placeholder = rememberDebugPlaceholder(),
             modifier = Modifier
-                .aspectRatio(16f / 9f)
+                .padding(horizontal = ComicTheme.dimension.margin)
+                .height(120.dp)
                 .align(Alignment.CenterHorizontally)
                 .clip(RoundedCornerShape(16.dp))
                 .background(ComicTheme.colorScheme.surfaceContainerHighest),
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Fit,
             error = {
                 Icon(imageVector = ComicIcons.Image, contentDescription = null)
             },
@@ -104,6 +104,11 @@ fun BookshelfInfoSheet(
             AssistChip(
                 onClick = onScanClick,
                 label = { Text(text = stringResource(id = R.string.bookshelf_action_scan)) },
+                leadingIcon = { Icon(imageVector = ComicIcons.Refresh, contentDescription = null) }
+            )
+            AssistChip(
+                onClick = onScanClick,
+                label = { Text(text = stringResource(id = R.string.bookshelf_action_scan) + "サムネイル") },
                 leadingIcon = { Icon(imageVector = ComicIcons.Refresh, contentDescription = null) }
             )
         }
@@ -152,7 +157,12 @@ fun BookshelfInfoSheet(
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = ComicTheme.dimension.margin)
+        ) {
             TextButton(onClick = onRemoveClick) {
                 Text(text = stringResource(id = R.string.bookshelf_action_delete))
             }

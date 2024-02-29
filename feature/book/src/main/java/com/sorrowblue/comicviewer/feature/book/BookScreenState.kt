@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book
 
 import android.graphics.Bitmap
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -88,7 +87,6 @@ internal fun rememberBookScreenState(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Stable
 internal class BookScreenState2(
     private val args: BookArgs,
@@ -376,7 +374,6 @@ internal class BookScreenState2(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun rememberBookScreenState2(
     args: BookArgs,

@@ -16,6 +16,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
+import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepository
@@ -41,6 +42,21 @@ internal class BookshelfRepositoryImpl @Inject constructor(
         flow<Resource<Unit, BookshelfRepository.Error>> {
             remoteDataSourceFactory.create(bookshelf).connect(path)
             emit(Resource.Success(Unit))
+        }.catch {
+            emit(
+                when (it as RemoteException) {
+                    RemoteException.InvalidAuth -> Resource.Error(BookshelfRepository.Error.InvalidAuth)
+                    RemoteException.InvalidServer -> Resource.Error(BookshelfRepository.Error.InvalidServer)
+                    RemoteException.NotFound -> Resource.Error(BookshelfRepository.Error.NotFound)
+                    RemoteException.NoNetwork -> Resource.Error(BookshelfRepository.Error.Network)
+                    RemoteException.Unknown -> Resource.Error(BookshelfRepository.Error.System)
+                }
+            )
+        }.flowOn(dispatcher)
+
+    override fun getAttribute(bookshelf: Bookshelf, path: String) =
+        flow<Resource<FileAttribute?, BookshelfRepository.Error>> {
+            emit(Resource.Success(remoteDataSourceFactory.create(bookshelf).getAttribute(path)))
         }.catch {
             emit(
                 when (it as RemoteException) {

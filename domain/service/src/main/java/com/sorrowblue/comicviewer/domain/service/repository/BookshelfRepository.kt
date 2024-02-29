@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import kotlinx.coroutines.flow.Flow
 
@@ -61,4 +62,5 @@ interface BookshelfRepository {
 
     fun get(bookshelfId: BookshelfId): Flow<Result<Bookshelf, LibraryStatus>>
     suspend fun delete(bookshelf: Bookshelf): Response<Boolean>
+    fun getAttribute(bookshelf: Bookshelf, path: String): Flow<Resource<FileAttribute?, Error>>
 }

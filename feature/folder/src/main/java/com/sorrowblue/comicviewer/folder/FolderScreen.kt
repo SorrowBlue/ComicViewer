@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.PaneAdaptedValue
@@ -37,6 +39,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.folder.R
+import com.sorrowblue.comicviewer.file.FileInfo
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
@@ -136,30 +139,31 @@ internal fun FolderScreen(
     val uiState = state.uiState
     val pullRefreshState = rememberPullToRefreshState()
     if (pullRefreshState.isRefreshing) {
-        LaunchedEffect(true) {
+        LaunchedEffect(Unit) {
             // fetch something
             lazyPagingItems.refresh()
         }
     }
     FolderScreen(
-        uiState = uiState,
         navigator = state.navigator,
+        uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onSearchClick = { onSearchClick(state.bookshelfId, state.path) },
         onFileClick = onFileClick,
         onFileInfoClick = state::onFileInfoClick,
         lazyGridState = state.lazyGridState,
         pullRefreshState = pullRefreshState,
+        snackbarHostState = state.snackbarHostState,
         onFileListChange = state::toggleFileListType,
         onSettingsClick = onSettingsClick,
-        onGridSizeChange = state::onGridSizeChange,
         onExtraPaneCloseClick = state::onExtraPaneCloseClick,
+        onGridSizeChange = state::onGridSizeChange,
         onBackClick = onBackClick,
         onSortClick = state::openSort,
         onSortItemClick = state::onSortItemClick,
         onSortOrderClick = state::onSortOrderClick,
         onReadLaterClick = state::onReadLaterClick,
-        onFavoriteClick = onFavoriteClick
+        onFavoriteClick = onFavoriteClick,
     )
 
     if (uiState.openSortSheet) {
@@ -232,7 +236,7 @@ fun LoadStates.any(op: (LoadState) -> Boolean): Boolean {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun FolderScreen(
-    navigator: ThreePaneScaffoldNavigator<File>,
+    navigator: ThreePaneScaffoldNavigator<FileInfo>,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onSearchClick: () -> Unit,
@@ -240,6 +244,7 @@ internal fun FolderScreen(
     onFileInfoClick: (File) -> Unit,
     lazyGridState: LazyGridState,
     pullRefreshState: PullToRefreshState,
+    snackbarHostState: SnackbarHostState,
     onFileListChange: () -> Unit,
     onSettingsClick: () -> Unit,
     onExtraPaneCloseClick: () -> Unit,
@@ -275,15 +280,18 @@ internal fun FolderScreen(
             }
             file?.let {
                 FileInfoSheet(
-                    file = it,
+                    fileInfo = it,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
-                    onReadLaterClick = { onReadLaterClick(it) },
-                    onFavoriteClick = { onFavoriteClick(it) },
+                    onReadLaterClick = { onReadLaterClick(it.file) },
+                    onFavoriteClick = { onFavoriteClick(it.file) },
                     onOpenFolderClick = null,
                     contentPadding = innerPadding
                 )
             }
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
@@ -292,7 +300,11 @@ internal fun FolderScreen(
         } else {
             LinearOutSlowInEasing.transform(pullRefreshState.progress).coerceIn(0f, 1f)
         }
-        Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .nestedScroll(pullRefreshState.nestedScrollConnection)
+        ) {
             if (lazyPagingItems.isEmptyData) {
                 EmptyContent(
                     imageVector = ComicIcons.UndrawResumeFolder,

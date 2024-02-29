@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.tutorial
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ import logcat.logcat
 
 private const val DocumentModule = "document"
 
-@OptIn(ExperimentalFoundationApi::class)
 @Stable
 internal class TutorialScreenState(
     private val scope: CoroutineScope,
@@ -116,7 +114,6 @@ internal class TutorialScreenState(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun rememberTutorialScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),

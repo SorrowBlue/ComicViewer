@@ -335,7 +335,7 @@ sealed interface Button {
 @Preview(name = "Phone", device = Devices.PHONE)
 @Preview(
     name = "Phone - Landscape",
-    device = "spec:width = 411dp, height = 891dp, orientation = landscape, dpi = 420"
+    device = "spec:width=411dp,height=891dp,orientation=landscape,dpi=420"
 )
 @Preview(name = "Unfolded Foldable", device = Devices.FOLDABLE)
 @Preview(name = "Tablet", device = Devices.TABLET)

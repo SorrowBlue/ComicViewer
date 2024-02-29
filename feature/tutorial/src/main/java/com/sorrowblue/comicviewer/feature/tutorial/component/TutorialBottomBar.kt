@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.tutorial.component
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.HorizontalPagerIndicator
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TutorialBottomBar(pageState: PagerState, onNextClick: () -> Unit) {
     Row(

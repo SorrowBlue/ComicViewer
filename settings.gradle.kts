@@ -51,6 +51,7 @@ include(":framework:common")
 include(":framework:notification")
 include(":framework:designsystem")
 include(":framework:ui")
+include(":framework:test")
 
 include(":domain:model")
 include(":domain:service")

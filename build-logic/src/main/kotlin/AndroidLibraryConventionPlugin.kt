@@ -1,10 +1,8 @@
 import com.android.build.api.dsl.LibraryExtension
 import com.sorrowblue.comicviewer.configureKotlinAndroid
-import com.sorrowblue.comicviewer.dependTestImplementation
 import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.kotlin
 import com.sorrowblue.comicviewer.libs
-import com.sorrowblue.comicviewer.testOption
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -29,15 +27,12 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
                 defaultConfig {
                     consumerProguardFiles("consumer-rules.pro")
                 }
-
-                testOption()
             }
 
 
             dependencies {
                 implementation(libs.findLibrary("squareup.logcat").get())
             }
-            dependTestImplementation()
         }
     }
 }

@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlinx.parcelize.Parcelize
 
 sealed interface File : Parcelable {
     val bookshelfId: BookshelfId
@@ -24,3 +25,17 @@ sealed interface File : Parcelable {
 
     fun areContentsTheSame(file: File): Boolean
 }
+
+@Parcelize
+data class FileAttribute(
+    val archive: Boolean,
+    val compressed: Boolean,
+    val directory: Boolean,
+    val normal: Boolean,
+    val readonly: Boolean,
+    val system: Boolean,
+    val temporary: Boolean,
+    val sharedRead: Boolean,
+    val hidden: Boolean,
+    val volume: Boolean,
+) : Parcelable

@@ -7,12 +7,6 @@
     <string name="settings_security_msg_enabled_bio_auth">生体認証を有効にしました。</string>
     <string name="settings_security_msg_temporarily_unavailable_bio_auth">生体認証が一時的に利用できなくなりました。後でもう一度試してください。</string>
     <string name="settings_security_not_available_bio_auth">このデバイスでは生体認証は利用できません。</string>
-    <string name="settings_security_password_manage_dialog_error_passwords_do_not_match">パスワードが一致しません。</string>
-    <string name="settings_security_password_manage_dialog_hint_new_password">新しいパスワード</string>
-    <string name="settings_security_password_manage_dialog_hint_old_password">以前のパスワード</string>
-    <string name="settings_security_password_manage_dialog_title_change_password">パスワードの変更</string>
-    <string name="settings_security_password_manage_dialog_title_delete_password">パスワードの削除</string>
-    <string name="settings_security_password_manage_dialog_title_password_setting">パスワードの設定</string>
     <string name="settings_security_summary_password_lock">アプリ起動時にパスワードを要求します</string>
     <string name="settings_security_summary_use_biometric_auth">パスワードの代わりに生体認証を使用します</string>
     <string name="settings_security_text_bio_auth">アプリ内で生体認証を有効にするには認証を行ってください。</string>
@@ -22,7 +16,6 @@
     <string name="settings_security_title_bio_auth">アプリ内生体認証</string>
     <string name="settings_security_title_change_password">パスワードの変更</string>
     <string name="settings_security_title_device_settings_required">デバイスの設定が必要です</string>
-    <string name="settings_security_title_password">パスワード</string>
     <string name="settings_security_title_password_lock">パスワードロック</string>
     <string name="settings_security_title_use_biometric_auth">生体認証でロック解除</string>
 </resources>

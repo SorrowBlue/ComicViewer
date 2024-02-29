@@ -21,6 +21,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import logcat.logcat
 
 @OptIn(ExperimentalPagingApi::class)
 internal class FileModelRemoteMediator @AssistedInject constructor(
@@ -41,12 +42,13 @@ internal class FileModelRemoteMediator @AssistedInject constructor(
     private val folderSettings = datastoreDataSource.folderSettings
     private val remoteDataSource = remoteDataSourceFactory.create(bookshelf)
 
-    override suspend fun initialize() = InitializeAction.SKIP_INITIAL_REFRESH
-
+    //    override suspend fun initialize() = InitializeAction.SKIP_INITIAL_REFRESH
+//
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, FileWithCountEntity>,
     ): MediatorResult {
+        logcat { "load $loadType" }
         kotlin.runCatching {
             withContext(dispatcher) {
                 val settings = folderSettings.first()

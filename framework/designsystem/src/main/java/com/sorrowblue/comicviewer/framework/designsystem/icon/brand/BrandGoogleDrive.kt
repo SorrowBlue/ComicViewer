@@ -55,7 +55,13 @@ val ComicIcons.BrandGoogleDrive: ImageVector
             lineToRelative(-13.75F, -23.8F)
             curveToRelative(-1.35F, 0.8F, -2.5F, 1.9F, -3.3F, 3.3F)
             lineToRelative(-25.4F, 44.0F)
-            arcToRelative(9.06F, 9.06F, 0.0F, false, false, -1.2F, 4.5F)
+            arcToRelative(
+                9.06F, 9.06F, 0.0F,
+                isMoreThanHalf = false,
+                isPositiveArc = false,
+                dx1 = -1.2F,
+                dy1 = 4.5F
+            )
             horizontalLineToRelative(27.5F)
             close()
         }.path(

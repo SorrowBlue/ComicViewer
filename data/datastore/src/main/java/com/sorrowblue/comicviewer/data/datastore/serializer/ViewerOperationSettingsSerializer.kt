@@ -22,7 +22,6 @@ internal class ViewerOperationSettingsSerializer(
 
     override suspend fun writeTo(t: ViewerOperationSettings, output: OutputStream) {
         withContext(coroutineDispatcher) {
-            @Suppress("BlockingMethodInNonBlockingContext")
             output.write(ProtoBuf.encodeToByteArray(ViewerOperationSettings.serializer(), t))
         }
     }

@@ -5,6 +5,7 @@ import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 
 interface RemoteDataSource {
 
@@ -29,4 +30,5 @@ interface RemoteDataSource {
     suspend fun file(path: String): File
 
     suspend fun fileReader(book: Book): FileReader?
+    suspend fun getAttribute(path: String): FileAttribute?
 }

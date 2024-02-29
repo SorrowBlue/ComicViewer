@@ -8,7 +8,6 @@ import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigat
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -41,7 +40,7 @@ internal fun rememberHistoryScreenState(
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private class HistoryScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<File>,

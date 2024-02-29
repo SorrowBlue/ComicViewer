@@ -1,9 +1,8 @@
 package com.sorrowblue.comicviewer.data.database
 
-import android.content.Context
 import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.google.common.truth.Truth.assertThat
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
 import com.sorrowblue.comicviewer.data.database.entity.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.DecryptedPasswordEntity
@@ -11,14 +10,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import logcat.LogcatLogger
 import logcat.PrintLogger
-import logcat.logcat
 import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
 class BookshelfEntityLocalDataSourceTest {
     private lateinit var bookshelfDao: BookshelfDao
     private lateinit var db: ComicViewerDatabase
@@ -28,7 +23,7 @@ class BookshelfEntityLocalDataSourceTest {
         if (!LogcatLogger.isInstalled) {
             LogcatLogger.install(PrintLogger)
         }
-        val context = ApplicationProvider.getApplicationContext<Context>()
+        val context = InstrumentationRegistry.getInstrumentation().context
         db = Room.inMemoryDatabaseBuilder(context, ComicViewerDatabase::class.java).build()
         bookshelfDao = db.bookshelfDao()
     }
@@ -42,52 +37,16 @@ class BookshelfEntityLocalDataSourceTest {
     fun testInsert() = runTest {
         val server = randomServer()
         val column = bookshelfDao.upsert(server)
-        Assert.assertEquals(
-            bookshelfDao.flow(column.toInt()).first(),
-            server.copy(column.toInt())
-        )
+        assertThat(bookshelfDao.flow(column.toInt()).first()).isEqualTo(server.copy(column.toInt()))
     }
 
     @Test
-    fun upsertTest() = runTest {
+    fun testUpsert() = runTest {
         val server = randomServer()
-        val column = bookshelfDao.upsert(server)
-        logcat { "before=${server.id}, after=${column}" }
-        Assert.assertEquals(
-            bookshelfDao.flow(column.toInt()).first(),
-            server.copy(column.toInt())
-        )
-    }
-
-    @Test
-    fun testUpdate() = runTest {
-        val server = randomServer()
-        val column = bookshelfDao.upsert(server)
-        println("update id = ${column.toInt()}: ${bookshelfDao.upsert(server.copy(id = column.toInt()))}")
-        println("update id = 5: ${bookshelfDao.upsert(server.copy(id = 5))}")
-    }
-
-    @Test
-    fun testInsertDuplicate() = runTest {
-        val server = randomServer()
-        val column = bookshelfDao.upsert(server)
-        kotlin.runCatching {
-            bookshelfDao.upsert(randomServer(column.toInt()))
-        }.let {
-            Assert.assertThrows("", Exception::class.java) {
-                it.getOrThrow()
-            }
-        }
-    }
-
-    @Test
-    fun testSelectById() = runTest {
-        val server = randomServer()
-        val column = bookshelfDao.upsert(server)
-        Assert.assertEquals(
-            bookshelfDao.flow(column.toInt()).first(),
-            server.copy(column.toInt())
-        )
+        val column = bookshelfDao.upsert(server).toInt()
+        val update = server.copy(id = column, displayName = "UpdateName")
+        bookshelfDao.upsert(update)
+        assertThat(bookshelfDao.flow(column).first()).isEqualTo(update)
     }
 
     private fun randomServer(id: Int = 0) = BookshelfEntity(

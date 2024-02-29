@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.autoSaver
 import androidx.compose.runtime.setValue
@@ -21,10 +23,12 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.model.onSuccess
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
+import com.sorrowblue.comicviewer.file.FileInfo
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.section.SortItem
@@ -33,6 +37,7 @@ import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -55,13 +60,14 @@ internal interface FolderScreenState : SaveableScreenState {
     fun openSort()
     fun onGridSizeChange()
     fun toggleFileListType()
+    val snackbarHostState: SnackbarHostState
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
     var isScrollableTop: Boolean
     var isSkipFirstRefresh: Boolean
     var restorePath: String?
     val pagingDataFlow: Flow<PagingData<File>>
-    val navigator: ThreePaneScaffoldNavigator<File>
+    val navigator: ThreePaneScaffoldNavigator<FileInfo>
     val bookshelfId: BookshelfId
     val path: String
     val sort: StateFlow<SortType>
@@ -72,9 +78,10 @@ internal interface FolderScreenState : SaveableScreenState {
 @Composable
 internal fun rememberFolderScreenState(
     args: FolderArgs,
-    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<FileInfo> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: FolderViewModel = hiltViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
@@ -83,6 +90,7 @@ internal fun rememberFolderScreenState(
         savedStateHandle = it,
         navigator = navigator,
         lazyGridState = lazyGridState,
+        snackbarHostState = snackbarHostState,
         args = args,
         viewModel = viewModel,
         scope = scope
@@ -92,8 +100,9 @@ internal fun rememberFolderScreenState(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 private class FolderScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator<File>,
+    override val navigator: ThreePaneScaffoldNavigator<FileInfo>,
     override val lazyGridState: LazyGridState,
+    override val snackbarHostState: SnackbarHostState,
     private val args: FolderArgs,
     private val viewModel: FolderViewModel,
     private val scope: CoroutineScope,
@@ -169,7 +178,15 @@ private class FolderScreenStateImpl(
     }
 
     override fun onReadLaterClick(file: File) {
-        viewModel.addToReadLater(file = file)
+        val fileInfo = navigator.currentDestination?.content ?: return
+        viewModel.readLater(file = file, !fileInfo.isReadLater)
+        scope.launch {
+            if (fileInfo.isReadLater) {
+                snackbarHostState.showSnackbar("「${file.name}」を\"あとで読む\"から削除しました")
+            } else {
+                snackbarHostState.showSnackbar("「${file.name}」を\"あとで読む\"に追加しました")
+            }
+        }
     }
 
     override fun onSortSheetDismissRequest() {
@@ -180,8 +197,24 @@ private class FolderScreenStateImpl(
         navigator.navigateBack()
     }
 
+    private var fileInfoJob: Job? = null
+
     override fun onFileInfoClick(file: File) {
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
+        fileInfoJob?.cancel()
+        fileInfoJob = scope.launch {
+            viewModel.fileInfo(file).onEach {
+                it.fold({
+                    navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
+                }, {
+                })
+            }.launchIn(scope)
+        }
+    }
+
+    init {
+        navigator.currentDestination?.content?.let {
+            onFileInfoClick(it.file)
+        }
     }
 
     override fun onSortItemClick(sortItem: SortItem) {

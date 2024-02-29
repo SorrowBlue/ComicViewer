@@ -4,8 +4,8 @@ targetSdk = "34"
 
 kotlin = "1.9.22"
 google-ksp = "1.9.22-1.0.17"
-kotlinx-coroutines = "1.7.3"
-kotlinx-serialization = "1.6.2"
+kotlinx-coroutines = "1.8.0"
+kotlinx-serialization = "1.6.3"
 
 androidx-activity = "1.8.2"
 androidx-datastore = "1.0.0"
@@ -15,7 +15,7 @@ androidx-paging = "3.2.1"
 androidx-room = "2.6.1"
 androidx-work = "2.9.0"
 
-androidx-compose-compiler = "1.5.9"
+androidx-compose-compiler = "1.5.10"
 
 google-dagger = "2.50"
 android-gradle = "8.3.0-rc02"
@@ -23,7 +23,8 @@ android-gradle = "8.3.0-rc02"
 detekt = "1.23.5"
 mikepenz-aboutlibraries = "10.10.0"
 koin = "3.5.3"
-compose-destinations = "1.10.0"
+compose-destinations = "1.10.1"
+junit = "1.1.5"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
@@ -39,11 +40,11 @@ dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "go
 mikepenz-aboutlibraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "mikepenz-aboutlibraries" }
 dependency-graph-generator = "com.vanniktech.dependency.graph.generator:0.8.0"
 arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-grgit = "org.ajoberstar.grgit.service:5.2.1"
-roborazzi = "io.github.takahirom.roborazzi:1.9.0"
+grgit = "org.ajoberstar.grgit.service:5.2.2"
+roborazzi = "io.github.takahirom.roborazzi:1.10.1"
 
 [libraries]
-roborazzi = "io.github.takahirom.roborazzi:roborazzi:1.9.0"
+roborazzi = "io.github.takahirom.roborazzi:roborazzi:1.10.1"
 roborazzi-compose = "io.github.takahirom.roborazzi:roborazzi-compose:1.9.0"
 roborazzi-junitRule = "io.github.takahirom.roborazzi:roborazzi-junit-rule:1.9.0"
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
@@ -55,6 +56,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-coroutines-jdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity" }
@@ -69,16 +71,16 @@ androidx-browser = "androidx.browser:browser:1.7.0"
 androidx-core-ktx = "androidx.core:core-ktx:1.12.0"
 androidx-core-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 
-androidx-compose-bom = "androidx.compose:compose-bom:2024.02.00"
+androidx-compose-bom = "androidx.compose:compose-bom:2024.02.01"
 androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidx-compose-compiler" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-toolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
-androidx-compose-ui-testJunit4 = { module = "androidx.compose.ui:ui-test-junit4", version = "1.6.1" }
+androidx-compose-ui-testJunit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 androidx-compose-ui-testManifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util" }
 androidx-compose-material = { module = "androidx.compose.material:material" }
 androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
-androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3", version = "1.3.0-alpha01" }
 androidx-compose-material3-adaptive = { group = "androidx.compose.material3", name = "material3-adaptive", version = "1.0.0-alpha06" }
 androidx-compose-material3-adaptiveNavigationSuite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version = "1.0.0-alpha03" }
 androidx-compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class" }
@@ -91,9 +93,9 @@ androidx-documentfile = "androidx.documentfile:documentfile:1.0.1"
 
 androidx-exifinterface = "androidx.exifinterface:exifinterface:1.3.7"
 
-androidx-hilt-compiler = "androidx.hilt:hilt-compiler:1.1.0"
-androidx-hilt-navigationCompose = "androidx.hilt:hilt-navigation-compose:1.1.0"
-androidx-hilt-work = "androidx.hilt:hilt-work:1.1.0"
+androidx-hilt-compiler = "androidx.hilt:hilt-compiler:1.2.0"
+androidx-hilt-navigationCompose = "androidx.hilt:hilt-navigation-compose:1.2.0"
+androidx-hilt-work = "androidx.hilt:hilt-work:1.2.0"
 
 androidx-lifecycle-viewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
 
@@ -117,19 +119,20 @@ google-android-play-review-ktx = "com.google.android.play:review-ktx:2.0.1"
 google-code-gson = "com.google.code.gson:gson:2.10.1"
 google-guava = "com.google.guava:guava:30.1.1-jre"
 google-material = "com.google.android.material:material:1.11.0"
-google-android-gms-play-services-auth = "com.google.android.gms:play-services-auth:20.7.0"
+google-android-gms-play-services-auth = "com.google.android.gms:play-services-auth:21.0.0"
 google-api-client-android = "com.google.api-client:google-api-client-android:2.3.0"
 google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev20240123-2.0.0"
 
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.13"
 dropbox-androidSdk = "com.dropbox.core:dropbox-android-sdk:6.0.0"
 
-coil = "io.coil-kt:coil:2.5.0"
-coil-compose = "io.coil-kt:coil-compose:2.5.0"
+coil = "io.coil-kt:coil:2.6.0"
+coil-compose = "io.coil-kt:coil-compose:2.6.0"
 jcifs-ng = "eu.agno3.jcifs:jcifs-ng:2.1.10"
+smbj = "com.hierynomus:smbj:0.13.0"
 github-omicronapps-SevenZipJBinding4Android = "com.github.omicronapps:7-Zip-JBinding-4Android:Release-16.02-2.02"
 
-artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.23.7"
+artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.23.11"
 squareup-logcat = "com.squareup.logcat:logcat:0.1"
 fasterxml-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.16.1"
 
@@ -147,7 +150,7 @@ androidx-test-core-ktx = "androidx.test:core-ktx:1.5.0"
 androidx-test-runner = "androidx.test:runner:1.5.2"
 androidx-test-rules = "androidx.test:rules:1.5.0"
 
-androidx-test-ext-junit-ktx = "androidx.test.ext:junit-ktx:1.1.5"
+androidx-test-ext-junitKtx = "androidx.test.ext:junit-ktx:1.1.5"
 androidx-test-ext-truth = "androidx.test.ext:truth:1.5.0"
 
 androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.1"
@@ -164,7 +167,8 @@ koin-androidxWorkmanager = { group = "io.insert-koin", name = "koin-androidx-wor
 
 compose-destinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "compose-destinations" }
 compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "compose-destinations" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 
 [bundles]
-androidx-instrumented-tests = ["androidx-test-core-ktx", "androidx-test-runner", "androidx-test-rules", "androidx-test-ext-junit-ktx", "androidx-test-ext-truth"]
+androidx-instrumented-tests = ["androidx-test-core-ktx", "androidx-test-runner", "androidx-test-rules", "androidx-test-ext-junitKtx", "androidx-test-ext-truth"]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx", "androidx-room-paging"]

@@ -56,6 +56,15 @@ internal class FileRepositoryImpl @Inject constructor(
         }.flowOn(dispatcher)
     }
 
+    override fun existsReadLater(
+        bookshelfId: BookshelfId,
+        path: String,
+    ): Flow<Resource<Boolean, FileRepository.Error>> {
+        return readLaterFileModelLocalDataSource.exists(ReadLaterFile(bookshelfId, path)).map {
+            Resource.Success(it)
+        }
+    }
+
     override fun deleteReadLater(
         bookshelfId: BookshelfId,
         path: String,
@@ -182,11 +191,7 @@ internal class FileRepositoryImpl @Inject constructor(
         val folderSettings = settingsCommonRepository.folderSettings.first()
         return fileScanService.enqueue(
             folder,
-            when (scan) {
-                Scan.ALL -> Scan.ALL
-                Scan.IN_FOLDER -> Scan.IN_FOLDER
-                Scan.IN_FOLDER_SUB -> Scan.IN_FOLDER_SUB
-            },
+            scan,
             folderSettings.resolveImageFolder,
             folderSettings.supportExtension.map(SupportExtension::extension)
         )

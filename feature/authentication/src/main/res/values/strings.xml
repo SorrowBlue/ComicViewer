@@ -4,7 +4,6 @@
     <string name="authentication_error_pin_4_more">PIN must be 4 or more digits</string>
     <string name="authentication_error_pin_not_match">PIN does not match</string>
     <string name="authentication_msg_auth_failed">Authentication failed</string>
-    <string name="authentication_text_enter_confirm">Verify PIN</string>
     <string name="authentication_text_enter_new_pin">Enter new PIN</string>
     <string name="authentication_text_enter_pin">Enter PIN</string>
     <string name="authentication_text_reenter_pin">Re-enter PIN</string>

@@ -66,7 +66,6 @@ fun ExtraPaneScaffold(
                 .padding(it)
                 .drawVerticalScrollbar(screenState)
                 .verticalScroll(screenState)
-                .padding(horizontal = 16.dp)
                 .padding(bottom = 16.dp)
         ) {
             content()

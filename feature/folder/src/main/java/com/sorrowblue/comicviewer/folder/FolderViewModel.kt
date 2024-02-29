@@ -9,16 +9,21 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
-import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.file.FileInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flattenConcat
@@ -33,6 +38,9 @@ internal class FolderViewModel @Inject constructor(
     private val pagingFileUseCase: PagingFileUseCase,
     private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     private val addReadLaterUseCase: AddReadLaterUseCase,
+    private val deleteReadLaterUseCase: DeleteReadLaterUseCase,
+    private val getFileAttributeUseCase: GetFileAttributeUseCase,
+    private val existsReadlaterUseCase: ExistsReadlaterUseCase,
 ) : ViewModel() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -42,6 +50,20 @@ internal class FolderViewModel @Inject constructor(
         ).filterSuccess().flattenConcat().cachedIn(viewModelScope)
 
     val displaySettings = displaySettingsUseCase.settings
+
+    fun fileInfo(file: File): Flow<Resource<FileInfo, Resource.AppError>> {
+        val getRequest = GetFileAttributeUseCase.Request(file.bookshelfId, file.path)
+        val isRequest = ExistsReadlaterUseCase.Request(file.bookshelfId, file.path)
+
+        return getFileAttributeUseCase(getRequest)
+            .combine(existsReadlaterUseCase(isRequest)) { a, b ->
+                if (a is Resource.Success && b is Resource.Success) {
+                    Resource.Success(FileInfo(file, a.data, b.data))
+                } else {
+                    Resource.Error(GetFileAttributeUseCase.Error.NotFound)
+                }
+            }
+    }
 
     fun updateDisplaySettings(folderDisplaySettings: (FolderDisplaySettings) -> FolderDisplaySettings) {
         viewModelScope.launch {
@@ -57,10 +79,23 @@ internal class FolderViewModel @Inject constructor(
                 runBlocking { displaySettingsUseCase.settings.first().sortType }
             )
 
-    fun addToReadLater(file: File) {
+    fun readLater(file: File, isAdd: Boolean) {
         viewModelScope.launch {
-            addReadLaterUseCase.execute(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
-                .first()
+            if (isAdd) {
+                addReadLaterUseCase(
+                    AddReadLaterUseCase.Request(
+                        file.bookshelfId,
+                        file.path
+                    )
+                ).first()
+            } else {
+                deleteReadLaterUseCase(
+                    DeleteReadLaterUseCase.Request(
+                        file.bookshelfId,
+                        file.path
+                    )
+                ).first()
+            }
         }
     }
 

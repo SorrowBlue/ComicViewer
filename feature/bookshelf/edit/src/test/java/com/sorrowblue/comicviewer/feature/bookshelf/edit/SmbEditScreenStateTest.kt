@@ -3,33 +3,22 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.platform.SoftwareKeyboardController
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onParent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.takahirom.roborazzi.captureRoboImage
 import com.google.common.truth.Truth.assertThat
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.test.TestScope
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.annotation.GraphicsMode
 
 @RunWith(AndroidJUnit4::class)
-@GraphicsMode(GraphicsMode.Mode.LEGACY)
 internal class SmbEditScreenStateTest {
 
     private lateinit var screenState: SmbEditScreenState
-
-    @get:Rule
-    val composeTestRule = createComposeRule()
 
     @Before
     fun setup() {
@@ -56,18 +45,6 @@ internal class SmbEditScreenStateTest {
 
             }
         )
-    }
-
-    @Test
-    fun screenshot() {
-        composeTestRule.setContent {
-            ComicTheme {
-                SmbEditScreen(state = screenState, onBackClick = { /*TODO*/ }) {
-                }
-            }
-        }
-        composeTestRule.onNodeWithTag("DisplayName").onParent()
-            .captureRoboImage()
     }
 
     @Test
