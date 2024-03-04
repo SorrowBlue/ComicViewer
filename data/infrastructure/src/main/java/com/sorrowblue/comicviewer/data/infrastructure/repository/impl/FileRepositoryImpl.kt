@@ -178,7 +178,8 @@ internal class FileRepositoryImpl @Inject constructor(
                     is SortType.NAME -> SearchCondition.Order.NAME
                     is SortType.SIZE -> SearchCondition.Order.SIZE
                 },
-                if (settings.sortType.isAsc) SearchCondition.Sort.ASC else SearchCondition.Sort.DESC
+                if (settings.sortType.isAsc) SearchCondition.Sort.ASC else SearchCondition.Sort.DESC,
+                settings.showHidden,
             )
         }
     }

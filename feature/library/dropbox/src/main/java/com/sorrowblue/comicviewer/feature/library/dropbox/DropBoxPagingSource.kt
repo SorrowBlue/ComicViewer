@@ -39,6 +39,7 @@ internal class DropBoxPagingSource(
                         it.pathLower,
                         0,
                         0,
+                        false,
                         mapOf("preview_url" to it.previewUrl)
                     )
                 }
@@ -51,6 +52,7 @@ internal class DropBoxPagingSource(
                         it.pathLower,
                         it.size,
                         it.serverModified.time,
+                        false,
                         "",
                         0,
                         0,

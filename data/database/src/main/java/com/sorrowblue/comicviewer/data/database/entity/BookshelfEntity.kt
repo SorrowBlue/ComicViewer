@@ -3,15 +3,33 @@ package com.sorrowblue.comicviewer.data.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
+
+internal class BookshelfIdConverter {
+    @TypeConverter
+    fun toBookshelfId(value: Int?): BookshelfId? = value?.let(::BookshelfId)
+
+    @TypeConverter
+    fun toString(value: BookshelfId?): Int? = value?.value
+}
+
+internal class FavoriteIdConverter {
+    @TypeConverter
+    fun toBookshelfId(value: Int?): FavoriteId? = value?.let(::FavoriteId)
+
+    @TypeConverter
+    fun toString(value: FavoriteId?): Int? = value?.value
+}
 
 @Entity(tableName = "bookshelf")
 internal data class BookshelfEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(ID) val id: Int,
+    @ColumnInfo(ID) val id: BookshelfId,
     @ColumnInfo("display_name") val displayName: String,
     val type: Type,
     /*↓SmbServer↓*/
@@ -27,7 +45,7 @@ internal data class BookshelfEntity(
 
         fun fromModel(model: Bookshelf) = when (model) {
             is InternalStorage -> BookshelfEntity(
-                id = model.id.value,
+                id = model.id,
                 displayName = model.displayName,
                 type = Type.INTERNAL,
                 host = "",
@@ -38,7 +56,7 @@ internal data class BookshelfEntity(
             )
 
             is SmbServer -> BookshelfEntity(
-                id = model.id.value,
+                id = model.id,
                 displayName = model.displayName,
                 type = Type.SMB,
                 host = model.host,
@@ -63,13 +81,13 @@ internal data class BookshelfEntity(
 
     fun toModel(fileCount: Int): Bookshelf = when (type) {
         Type.INTERNAL -> InternalStorage(
-            id = BookshelfId(id),
+            id = id,
             displayName = displayName,
             fileCount = fileCount
         )
 
         Type.SMB -> SmbServer(
-            id = BookshelfId(id),
+            id = id,
             displayName = displayName,
             host = host,
             port = port,

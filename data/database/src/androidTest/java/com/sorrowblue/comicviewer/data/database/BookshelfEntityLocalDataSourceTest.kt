@@ -6,6 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
 import com.sorrowblue.comicviewer.data.database.entity.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.DecryptedPasswordEntity
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import logcat.LogcatLogger
@@ -37,20 +38,26 @@ class BookshelfEntityLocalDataSourceTest {
     fun testInsert() = runTest {
         val server = randomServer()
         val column = bookshelfDao.upsert(server)
-        assertThat(bookshelfDao.flow(column.toInt()).first()).isEqualTo(server.copy(column.toInt()))
+        assertThat(bookshelfDao.flow(column.toInt()).first()).isEqualTo(
+            server.copy(
+                BookshelfId(
+                    column.toInt()
+                )
+            )
+        )
     }
 
     @Test
     fun testUpsert() = runTest {
         val server = randomServer()
         val column = bookshelfDao.upsert(server).toInt()
-        val update = server.copy(id = column, displayName = "UpdateName")
+        val update = server.copy(id = BookshelfId(column), displayName = "UpdateName")
         bookshelfDao.upsert(update)
         assertThat(bookshelfDao.flow(column).first()).isEqualTo(update)
     }
 
     private fun randomServer(id: Int = 0) = BookshelfEntity(
-        id,
+        BookshelfId(id),
         "TestDisplayName_$id",
         BookshelfEntity.Type.SMB,
         "192.168.0.$id",

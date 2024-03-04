@@ -43,6 +43,7 @@ internal class GoogleDrivePagingSource(
                         it.id,
                         0,
                         it.modifiedTime.value,
+                        false,
                         mapOf("iconLink" to it.iconLink)
                     )
                 } else {
@@ -53,6 +54,7 @@ internal class GoogleDrivePagingSource(
                         it.id,
                         kotlin.runCatching { it.getSize() }.getOrElse { 0 },
                         it.modifiedTime.value,
+                        false,
                         "",
                         0,
                         0,

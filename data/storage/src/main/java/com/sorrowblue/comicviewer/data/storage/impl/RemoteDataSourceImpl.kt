@@ -12,6 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -65,10 +66,10 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
     }
 
     override suspend fun listFiles(
-        file: com.sorrowblue.comicviewer.domain.model.file.File,
+        file: File,
         resolveImageFolder: Boolean,
-        filter: (com.sorrowblue.comicviewer.domain.model.file.File) -> Boolean,
-    ): List<com.sorrowblue.comicviewer.domain.model.file.File> {
+        filter: (File) -> Boolean,
+    ): List<File> {
         return runCatching {
             fileClient.listFiles(file, resolveImageFolder).filter(filter)
         }.getOrElse {
@@ -85,7 +86,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }
     }
 
-    override suspend fun file(path: String): com.sorrowblue.comicviewer.domain.model.file.File {
+    override suspend fun file(path: String): File {
         return runCatching {
             fileClient.current(path)
         }.getOrElse {

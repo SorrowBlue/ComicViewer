@@ -20,10 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -116,35 +115,9 @@ fun FileListMedium(
 private fun PreviewFileList() {
     ComicTheme {
         FileListContent(
-            file = FakeFile,
+            file = fakeBookFile(),
             onClick = {},
             onLongClick = {}
         )
     }
 }
-
-internal val FakeFile = BookFile(
-    BookshelfId(0),
-    "FakeBookName.zip",
-    "/comic/example/",
-    "/comic/example/FakeBookName.zip",
-    0,
-    0,
-    "",
-    50,
-    123,
-    0
-)
-
-internal val FakeFile2 = BookFile(
-    BookshelfId(0),
-    "1234567890123456789012345678901234567890",
-    "/comic/example/",
-    "/comic/example/FakeBookName.zip",
-    0,
-    0,
-    "",
-    50,
-    123,
-    0
-)

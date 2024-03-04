@@ -22,8 +22,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.PaneScaffoldDirective
-import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
+import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
+import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,13 +36,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
+import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.file.component.forwardingPainter
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -51,8 +50,6 @@ import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffoldDefault
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -281,18 +278,7 @@ fun FileInfoSheet(
 fun PreviewFileInfoSheet() {
     PreviewTheme {
         FileInfoSheet(
-            file = BookFile(
-                BookshelfId(0),
-                "SampleFileName.zip",
-                "/sharename/home/example/comic/",
-                "/sharename/home/example/comic/SampleFileName.zip",
-                56 * 1024 * 1024,
-                LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli(),
-                "",
-                34,
-                198,
-                LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli(),
-            ),
+            file = fakeBookFile(),
             fileAttribute = FileAttribute(
                 true,
                 true,

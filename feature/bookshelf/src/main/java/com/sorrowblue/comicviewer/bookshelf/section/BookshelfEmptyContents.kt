@@ -10,12 +10,12 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookshelves
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -23,7 +23,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 
 @Composable
 internal fun BookshelfEmptyContents(innerPadding: PaddingValues) {
-    val windowSizeClass = LocalWindowSize.current.widthSizeClass == WindowWidthSizeClass.Compact
+    val windowSizeClass =
+        LocalWindowSize.current.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
     if (windowSizeClass) {
         Column(
             modifier = Modifier

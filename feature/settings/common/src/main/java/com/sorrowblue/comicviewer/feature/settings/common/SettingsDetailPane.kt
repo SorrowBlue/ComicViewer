@@ -21,10 +21,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
@@ -45,9 +45,9 @@ fun SettingsDetailPane(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     actions: @Composable (RowScope.() -> Unit) = {},
-    widthSizeClass: WindowWidthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.widthSizeClass,
+    widthSizeClass: WindowWidthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass,
     scrollBehavior: TopAppBarScrollBehavior =
-        if (widthSizeClass == WindowWidthSizeClass.Compact || widthSizeClass == WindowWidthSizeClass.Medium) {
+        if (widthSizeClass == WindowWidthSizeClass.COMPACT || widthSizeClass == WindowWidthSizeClass.MEDIUM) {
             TopAppBarDefaults.pinnedScrollBehavior()
         } else {
             TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -57,7 +57,7 @@ fun SettingsDetailPane(
 ) {
     Scaffold(
         topBar = {
-            if (widthSizeClass == WindowWidthSizeClass.Compact || widthSizeClass == WindowWidthSizeClass.Medium) {
+            if (widthSizeClass == WindowWidthSizeClass.COMPACT || widthSizeClass == WindowWidthSizeClass.MEDIUM) {
                 TopAppBar(
                     title = title,
                     navigationIcon = {
@@ -102,9 +102,9 @@ fun SettingsExtraPane(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     actions: @Composable (RowScope.() -> Unit) = {},
-    widthSizeClass: WindowWidthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.widthSizeClass,
+    widthSizeClass: WindowWidthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass,
     scrollBehavior: TopAppBarScrollBehavior =
-        if (widthSizeClass == WindowWidthSizeClass.Compact || widthSizeClass == WindowWidthSizeClass.Medium) {
+        if (widthSizeClass == WindowWidthSizeClass.COMPACT || widthSizeClass == WindowWidthSizeClass.MEDIUM) {
             TopAppBarDefaults.pinnedScrollBehavior()
         } else {
             TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -114,7 +114,7 @@ fun SettingsExtraPane(
 ) {
     Scaffold(
         topBar = {
-            if (widthSizeClass == WindowWidthSizeClass.Compact || widthSizeClass == WindowWidthSizeClass.Medium) {
+            if (widthSizeClass == WindowWidthSizeClass.COMPACT || widthSizeClass == WindowWidthSizeClass.MEDIUM) {
                 TopAppBar(
                     title = title,
                     navigationIcon = {

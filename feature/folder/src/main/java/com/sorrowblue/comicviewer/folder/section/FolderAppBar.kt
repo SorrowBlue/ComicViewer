@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,7 +19,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -43,6 +44,7 @@ internal data class FolderAppBarUiState(
     val sortItem: SortItem = SortItem.Name,
     val sortOrder: SortOrder = SortOrder.Asc,
     val fileContentType: FileContentType = FileContentType.Grid(FileContentType.GridSize.Medium),
+    val showHidden: Boolean = false,
 ) : Parcelable
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
@@ -56,6 +58,7 @@ internal fun FolderAppBar(
     onSortOrderClick: (SortOrder) -> Unit,
     onFileListChange: () -> Unit,
     onGridSizeChange: () -> Unit,
+    onHideFileClick: () -> Unit,
     onSettingsClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
@@ -71,8 +74,8 @@ internal fun FolderAppBar(
                 }
             }
 
-            val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass.widthSizeClass
-            if (windowSizeClass == WindowWidthSizeClass.Compact) {
+            val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+            if (windowSizeClass == WindowWidthSizeClass.COMPACT) {
                 IconButton(onClick = onSortClick) {
                     Icon(ComicIcons.SortByAlpha, "sort")
                 }
@@ -163,6 +166,25 @@ internal fun FolderAppBar(
                         onClick = onGridSizeChange
                     )
                 }
+                DropdownMenuItem(
+                    text = { Text(text = "隠しファイルを表示") },
+                    leadingIcon = {
+                        Icon(imageVector = ComicIcons.FolderOff, contentDescription = null)
+                    },
+                    trailingIcon = {
+                        Checkbox(
+                            checked = uiState.showHidden,
+                            onCheckedChange = {
+                                onHideFileClick()
+                                state.collapse()
+                            }
+                        )
+                    },
+                    onClick = {
+                        onHideFileClick()
+                        state.collapse()
+                    }
+                )
                 OverflowMenuItem(
                     text = stringResource(R.string.folder_action_settings),
                     icon = ComicIcons.Settings,

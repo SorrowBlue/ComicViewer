@@ -6,11 +6,11 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -53,23 +53,23 @@ sealed interface FileContentType : Parcelable {
             )
         override val columns3: GridCells
             @Composable get() {
-                val widthSizeClass = LocalWindowSize.current.widthSizeClass
+                val widthSizeClass = LocalWindowSize.current.windowWidthSizeClass
                 return when (widthSizeClass) {
-                    WindowWidthSizeClass.Compact -> {
+                    WindowWidthSizeClass.COMPACT -> {
                         when (size) {
                             GridSize.Medium -> 120.dp
                             GridSize.Large -> 180.dp
                         }
                     }
 
-                    WindowWidthSizeClass.Medium -> {
+                    WindowWidthSizeClass.MEDIUM -> {
                         when (size) {
                             GridSize.Medium -> 160.dp
                             GridSize.Large -> 200.dp
                         }
                     }
 
-                    WindowWidthSizeClass.Expanded -> {
+                    WindowWidthSizeClass.EXPANDED -> {
                         when (size) {
                             GridSize.Medium -> 160.dp
                             GridSize.Large -> 200.dp

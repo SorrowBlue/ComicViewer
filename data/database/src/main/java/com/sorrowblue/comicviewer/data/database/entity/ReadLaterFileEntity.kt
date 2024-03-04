@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 
 @Entity(
     tableName = "read_later_file",
@@ -21,12 +22,12 @@ import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
 )
 internal data class ReadLaterFileEntity(
     @ColumnInfo(FILE_PATH) val filePath: String,
-    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: Int,
+    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: BookshelfId,
 ) {
     companion object {
         const val FILE_PATH = "file_path"
         const val BOOKSHELF_ID = "bookshelf_id"
         fun fromModel(model: ReadLaterFile) =
-            ReadLaterFileEntity(filePath = model.path, bookshelfId = model.bookshelfId.value)
+            ReadLaterFileEntity(filePath = model.path, bookshelfId = model.bookshelfId)
     }
 }

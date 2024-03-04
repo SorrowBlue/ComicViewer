@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.rounded.FolderOff
 import androidx.compose.material.icons.rounded.FolderOpen
 import androidx.compose.material.icons.rounded.Grid4x4
 import androidx.compose.material.icons.rounded.GridView
@@ -55,6 +56,7 @@ import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.WatchLater
 
 object ComicIcons {
+    val FolderOff = Icons.Rounded.FolderOff
     val Logout = Icons.AutoMirrored.Rounded.Logout
     val LibraryBooks = Icons.AutoMirrored.Rounded.LibraryBooks
     val WatchLater = Icons.Rounded.WatchLater

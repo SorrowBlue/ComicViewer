@@ -40,7 +40,7 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.file.fakeFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
@@ -185,14 +185,7 @@ private fun PreviewBookshelf() {
         Bookshelf(
             bookshelfFolder = BookshelfFolder(
                 InternalStorage(BookshelfId(0), "display name", 0),
-                Folder(
-                    BookshelfId(0),
-                    "",
-                    "",
-                    "",
-                    0,
-                    0
-                )
+                fakeFolder()
             ),
             {},
             {},

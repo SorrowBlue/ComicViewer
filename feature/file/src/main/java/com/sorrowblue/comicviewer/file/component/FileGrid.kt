@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,9 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
@@ -49,7 +50,8 @@ fun FileGrid(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 loading = {
-                    Icon(imageVector = ComicIcons.DocumentUnknown, contentDescription = null)
+                    CircularProgressIndicator()
+//                    Icon(imageVector = ComicIcons.DocumentUnknown, contentDescription = null)
                 },
                 error = {
                     Icon(imageVector = ComicIcons.Image, contentDescription = null)
@@ -105,7 +107,7 @@ fun FileGrid(
 private fun PreviewFileGrid() {
     PreviewTheme {
         FileGrid(
-            file = FakeFile2,
+            file = fakeBookFile(),
             onClick = {},
             onInfoClick = {}
         )

@@ -18,9 +18,7 @@ internal interface ReadLaterFileDao {
     @Delete
     suspend fun delete(readLaterFileEntity: ReadLaterFileEntity)
 
-    @Query(
-        "SELECT file.* FROM read_later_file INNER JOIN file ON read_later_file.bookshelf_id = file.bookshelf_id AND read_later_file.file_path = file.path"
-    )
+    @Query("SELECT file.* FROM read_later_file INNER JOIN file ON read_later_file.bookshelf_id = file.bookshelf_id AND read_later_file.file_path = file.path")
     fun pagingSource(): PagingSource<Int, FileEntity>
 
     @Query("DELETE FROM read_later_file")

@@ -25,13 +25,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.feature.settings.R
 import com.sorrowblue.comicviewer.feature.settings.Settings2
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -62,8 +62,8 @@ internal fun SettingsListPane(
 ) {
     val list = uiState.list
     val currentSettings2 = uiState.currentSettings2
-    val windowSizeClass = windowAdaptiveInfo.windowSizeClass.widthSizeClass
-    if (windowSizeClass == WindowWidthSizeClass.Compact || windowSizeClass == WindowWidthSizeClass.Medium) {
+    val windowSizeClass = windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass
+    if (windowSizeClass == WindowWidthSizeClass.COMPACT || windowSizeClass == WindowWidthSizeClass.MEDIUM) {
         Scaffold(
             topBar = {
                 TopAppBar(

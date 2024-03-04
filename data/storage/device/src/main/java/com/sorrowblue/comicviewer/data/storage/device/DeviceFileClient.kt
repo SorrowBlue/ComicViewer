@@ -136,6 +136,7 @@ internal class DeviceFileClient @AssistedInject constructor(
                 parent = parentFile?.uri?.toString().orEmpty(),
                 size = length(),
                 lastModifier = lastModified(),
+                isHidden = false,
                 sortIndex = 0,
                 cacheKey = "",
                 totalPageCount = 0,
@@ -150,6 +151,7 @@ internal class DeviceFileClient @AssistedInject constructor(
                 parent = parentFile?.uri?.toString().orEmpty(),
                 size = length(),
                 lastModifier = lastModified(),
+                isHidden = false,
                 sortIndex = 0,
                 cacheKey = "",
                 totalPageCount = 0,
@@ -164,6 +166,7 @@ internal class DeviceFileClient @AssistedInject constructor(
                 parent = parentFile?.uri?.toString().orEmpty(),
                 size = length(),
                 lastModifier = lastModified(),
+                isHidden = false,
                 sortIndex = 0
             )
         }

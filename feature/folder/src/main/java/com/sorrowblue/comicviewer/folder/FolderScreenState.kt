@@ -4,10 +4,10 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
-import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
+import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -43,7 +43,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -71,7 +70,9 @@ internal interface FolderScreenState : SaveableScreenState {
     val bookshelfId: BookshelfId
     val path: String
     val sort: StateFlow<SortType>
+    val showHidden: StateFlow<Boolean>
     fun onNavClick()
+    fun onHideFileClick()
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -119,30 +120,25 @@ private class FolderScreenStateImpl(
         private set
 
     init {
-        viewModel.displaySettings.map(FolderDisplaySettings::toFileContentLayout)
-            .distinctUntilChanged().onEach {
-                uiState = uiState.copy(
-                    folderAppBarUiState = uiState.folderAppBarUiState.copy(fileContentType = it),
-                    fileContentType = it
-                )
-            }.launchIn(scope)
-        viewModel.displaySettings.map { it.sortType }
-            .distinctUntilChanged().onEach {
-                val sortItem = when (it) {
-                    is SortType.DATE -> SortItem.Date
-                    is SortType.NAME -> SortItem.Name
-                    is SortType.SIZE -> SortItem.Size
-                }
-                val sortOrder = if (it.isAsc) SortOrder.Asc else SortOrder.Desc
-                uiState = uiState.copy(
+        viewModel.displaySettings.distinctUntilChanged().onEach {
+            val sortItem = when (it.sortType) {
+                is SortType.DATE -> SortItem.Date
+                is SortType.NAME -> SortItem.Name
+                is SortType.SIZE -> SortItem.Size
+            }
+            val sortOrder = if (it.sortType.isAsc) SortOrder.Asc else SortOrder.Desc
+            uiState = uiState.copy(
+                sortItem = sortItem,
+                sortOrder = sortOrder,
+                fileContentType = it.toFileContentLayout(),
+                folderAppBarUiState = uiState.folderAppBarUiState.copy(
                     sortItem = sortItem,
+                    fileContentType = it.toFileContentLayout(),
                     sortOrder = sortOrder,
-                    folderAppBarUiState = uiState.folderAppBarUiState.copy(
-                        sortItem = sortItem,
-                        sortOrder = sortOrder
-                    )
+                    showHidden = it.showHidden
                 )
-            }.launchIn(scope)
+            )
+        }.launchIn(scope)
         scope.launch {
             viewModel.getFileUseCase.execute(GetFileUseCase.Request(bookshelfId, path)).first()
                 .onSuccess {
@@ -158,6 +154,8 @@ private class FolderScreenStateImpl(
 
     override val sort = viewModel.sort
 
+    override val showHidden = viewModel.showHidden
+
     override fun toggleFileListType() {
         viewModel.updateDisplay(
             when (uiState.fileContentType) {
@@ -165,6 +163,12 @@ private class FolderScreenStateImpl(
                 FileContentType.List -> FolderDisplaySettings.Display.GRID
             }
         )
+    }
+
+    override fun onHideFileClick() {
+        isScrollableTop = true
+        isSkipFirstRefresh = false
+        viewModel.updateShowHide(!uiState.folderAppBarUiState.showHidden)
     }
 
     override fun onGridSizeChange() {

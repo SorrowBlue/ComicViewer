@@ -14,8 +14,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.PaneAdaptedValue
-import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -31,11 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.folder.R
@@ -54,6 +56,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
+import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
@@ -155,6 +158,7 @@ internal fun FolderScreen(
         pullRefreshState = pullRefreshState,
         snackbarHostState = state.snackbarHostState,
         onFileListChange = state::toggleFileListType,
+        onHideFileClick = state::onHideFileClick,
         onSettingsClick = onSettingsClick,
         onExtraPaneCloseClick = state::onExtraPaneCloseClick,
         onGridSizeChange = state::onGridSizeChange,
@@ -205,14 +209,43 @@ internal fun FolderScreen(
         if (lazyPagingItems.isLoadedData) {
             pullRefreshState.endRefresh()
         }
-        if (lazyPagingItems.isLoadedData && state.isScrollableTop) {
-            state.lazyGridState.scrollToItem(0)
+        if (state.isScrollableTop) {
+//            state.lazyGridState.scrollToItem(0)
             state.isScrollableTop = false
+        }
+
+        if (lazyPagingItems.loadState.append is LoadState.Error) {
+            ((lazyPagingItems.loadState.append as LoadState.Error).error as? PagingException)?.let {
+                when (it) {
+                    PagingException.InvalidAuth -> {
+                        state.snackbarHostState.showSnackbar("認証エラー")
+                    }
+
+                    PagingException.InvalidServer -> {
+                        state.snackbarHostState.showSnackbar("サーバーエラー")
+                    }
+
+                    PagingException.NoNetwork -> {
+                        state.snackbarHostState.showSnackbar("ネットワークエラー")
+                    }
+
+                    PagingException.NotFound -> {
+                        state.snackbarHostState.showSnackbar("見つかりませんでした")
+                    }
+                }
+            }
         }
     }
 
     val sort by state.sort.collectAsState()
     LaunchedEffect(sort) {
+        if (!state.isSkipFirstRefresh) {
+            lazyPagingItems.refresh()
+        }
+    }
+
+    val showHidden by state.showHidden.collectAsState()
+    LaunchedEffect(showHidden) {
         if (!state.isSkipFirstRefresh) {
             lazyPagingItems.refresh()
         }
@@ -246,6 +279,7 @@ internal fun FolderScreen(
     pullRefreshState: PullToRefreshState,
     snackbarHostState: SnackbarHostState,
     onFileListChange: () -> Unit,
+    onHideFileClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onExtraPaneCloseClick: () -> Unit,
     onGridSizeChange: () -> Unit,
@@ -269,6 +303,7 @@ internal fun FolderScreen(
                 onSortClick = onSortClick,
                 onSortItemClick = onSortItemClick,
                 onSortOrderClick = onSortOrderClick,
+                onHideFileClick = onHideFileClick,
                 onSettingsClick = onSettingsClick,
                 scrollBehavior = scrollBehavior,
             )
@@ -294,7 +329,7 @@ internal fun FolderScreen(
             SnackbarHost(hostState = snackbarHostState)
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) { innerPadding ->
+    ) { contentPadding ->
         val scaleFraction = if (pullRefreshState.isRefreshing) {
             1f
         } else {
@@ -303,6 +338,10 @@ internal fun FolderScreen(
         Box(
             Modifier
                 .fillMaxSize()
+                .padding(
+                    top = contentPadding.calculateTopPadding(),
+                    bottom = contentPadding.calculateBottomPadding()
+                )
                 .nestedScroll(pullRefreshState.nestedScrollConnection)
         ) {
             if (lazyPagingItems.isEmptyData) {
@@ -314,13 +353,13 @@ internal fun FolderScreen(
                     ),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
+                        .padding(contentPadding)
                 )
             } else {
                 FileContent(
                     type = uiState.fileContentType,
                     lazyPagingItems = lazyPagingItems,
-                    contentPadding = innerPadding,
+                    contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp),
                     onFileClick = onFileClick,
                     onInfoClick = onFileInfoClick,
                     state = lazyGridState
@@ -329,7 +368,7 @@ internal fun FolderScreen(
             PullToRefreshContainer(
                 state = pullRefreshState,
                 modifier = Modifier
-                    .padding(innerPadding)
+                    .padding(contentPadding)
                     .align(Alignment.TopCenter)
                     .graphicsLayer(scaleX = scaleFraction, scaleY = scaleFraction),
             )

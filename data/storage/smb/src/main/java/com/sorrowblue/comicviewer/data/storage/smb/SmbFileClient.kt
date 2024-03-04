@@ -31,6 +31,7 @@ import jcifs.smb.NtlmPasswordAuthenticator
 import jcifs.smb.SmbAuthException
 import jcifs.smb.SmbException
 import jcifs.smb.SmbFile
+import jcifs.smb.SmbFileFilter
 import jcifs.util.transport.TransportException
 import kotlin.io.path.Path
 import kotlinx.coroutines.sync.Mutex
@@ -138,7 +139,6 @@ internal class SmbFileClient @AssistedInject constructor(
     ): List<File> {
         return runCommand {
             smbFile(file.path).listFiles()
-                .filterNot { it.isHidden }
                 .map { smbFile -> smbFile.toFileModel(resolveImageFolder) }
         }
     }
@@ -178,7 +178,7 @@ internal class SmbFileClient @AssistedInject constructor(
     }
 
     private fun SmbFile.toFileModel(resolveImageFolder: Boolean = false): File {
-        if (resolveImageFolder && isDirectory && runCatching { listFiles().any { it.use { it.name.extension in SUPPORTED_IMAGE } } }.getOrDefault(
+        if (resolveImageFolder && isDirectory && runCatching { listFiles(SmbFileFilter { it.isFile && it.name.extension in SUPPORTED_IMAGE }).isNotEmpty() }.getOrDefault(
                 false
             )
         ) {
@@ -189,11 +189,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 parent = Path(url.path).parent.toString() + "/",
                 size = length(),
                 lastModifier = lastModified,
-                sortIndex = 0,
-                cacheKey = "",
-                totalPageCount = 0,
-                lastPageRead = 0,
-                lastReadTime = 0
+                isHidden = isHidden,
             )
         }
         return if (isDirectory) {
@@ -204,7 +200,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 parent = Path(url.path).parent?.toString().orEmpty().removeSuffix("/") + "/",
                 size = runCatching { length() }.getOrElse { 0 },
                 lastModifier = lastModified,
-                sortIndex = 0,
+                isHidden = isHidden,
             )
         } else {
             BookFile(
@@ -214,11 +210,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 parent = Path(url.path).parent?.toString().orEmpty().removeSuffix("/") + "/",
                 size = length(),
                 lastModifier = lastModified,
-                sortIndex = 0,
-                cacheKey = "",
-                totalPageCount = 0,
-                lastPageRead = 0,
-                lastReadTime = 0
+                isHidden = isHidden,
             )
         }
     }
@@ -228,8 +220,8 @@ internal class SmbFileClient @AssistedInject constructor(
             URI(
                 "smb",
                 null,
-                bookshelf.host,
-                bookshelf.port,
+                host,
+                port,
                 path,
                 null,
                 null
@@ -240,37 +232,22 @@ internal class SmbFileClient @AssistedInject constructor(
 
     private suspend fun smbFile(path: String): SmbFile {
         return mutex.withLock {
-            logcat { "smbFile = $path" }
-            rootSmbFile?.let {
-                if (it.server == bookshelf.host && it.share == bookshelf.smbFile(path).share) {
-                    val nPath = path.removePrefix("/${it.share}/")
-                    if (nPath.isEmpty() || nPath == "/") it else it.resolve(nPath) as SmbFile
+            rootSmbFile?.let { smbFile ->
+                if (smbFile.server == bookshelf.host && smbFile.share == bookshelf.smbFile(path).share) {
+                    val nPath = path.removePrefix("/${smbFile.share}/")
+                    if (nPath.isEmpty() || nPath == "/") smbFile else smbFile.resolve(nPath) as SmbFile
                 } else {
-                    val smbFile = bookshelf.smbFile(path)
-                    smbFile.share?.let {
-                        logcat { "ini shareName is ${smbFile.share}" }
-                        bookshelf.smbFile("/${smbFile.share}/").let {
-                            rootSmbFile = it
-                            val nPath = path.removePrefix("/${smbFile.share}/")
-                            if (nPath.isEmpty() || nPath == "/") it else it.resolve(nPath) as SmbFile
-                        }
-                    } ?: smbFile.also {
-                        logcat { "init shareName is null" }
-                        rootSmbFile = smbFile
-                    }
+                    null
                 }
             } ?: kotlin.run {
-                logcat { "localSmbFile is null" }
                 val smbFile = bookshelf.smbFile(path)
                 smbFile.share?.let {
-                    logcat { "ini shareName is ${smbFile.share}" }
                     bookshelf.smbFile("/${smbFile.share}/").let {
                         rootSmbFile = it
                         val nPath = path.removePrefix("/${smbFile.share}/")
                         if (nPath.isEmpty() || nPath == "/") it else it.resolve(nPath) as SmbFile
                     }
                 } ?: smbFile.also {
-                    logcat { "init shareName is null" }
                     rootSmbFile = smbFile
                 }
             }

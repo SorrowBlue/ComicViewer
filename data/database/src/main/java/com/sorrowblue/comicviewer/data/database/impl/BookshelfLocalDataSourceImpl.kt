@@ -14,7 +14,6 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import logcat.logcat
 
 internal class BookshelfLocalDataSourceImpl @Inject constructor(
     private val dao: BookshelfDao,
@@ -22,12 +21,11 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
 
     override suspend fun create(bookshelf: Bookshelf): Bookshelf {
         val entity = BookshelfEntity.fromModel(bookshelf)
-        return dao.upsert(BookshelfEntity.fromModel(bookshelf)).let {
-            logcat { "dao.upsert(): before=${entity.id}, after=$it" }
+        return dao.upsert(entity).let {
             if (it == -1L) {
                 entity
             } else {
-                entity.copy(id = it.toInt())
+                entity.copy(id = BookshelfId(it.toInt()))
             }
         }.toModel(0)
     }

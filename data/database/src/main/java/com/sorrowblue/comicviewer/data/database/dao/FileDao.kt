@@ -51,7 +51,6 @@ internal interface FileDao {
     @Query("SELECT * FROM file WHERE bookshelf_id = :id AND parent = :parent AND path NOT IN (:paths)")
     suspend fun findByNotPaths(id: Int, parent: String, paths: List<String>): List<FileEntity>
 
-    @Deprecated("使用禁止")
     @RawQuery(observedEntities = [FileEntity::class])
     fun flowPrevNextFile(supportSQLiteQuery: SupportSQLiteQuery): Flow<List<FileEntity>>
 
@@ -68,7 +67,6 @@ internal interface FileDao {
         }
         val (comparison, order) = if (isNext && sortType.isAsc) ">=" to "ASC" else "<=" to "DESC"
 
-        @Suppress("DEPRECATION")
         return flowPrevNextFile(
             SimpleSQLiteQuery(
                 """
@@ -100,31 +98,24 @@ internal interface FileDao {
         )
     }
 
-    @Deprecated("使用禁止")
     @RawQuery(observedEntities = [FileEntity::class])
     fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileWithCountEntity>
 
-    @Query(
-        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit"
-    )
+    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit")
     suspend fun findCacheKeyOrderSortIndex(
         bookshelfId: Int,
         parent: String,
         limit: Int,
     ): List<String>
 
-    @Query(
-        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit"
-    )
+    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit")
     suspend fun findCacheKeyOrderLastModified(
         bookshelfId: Int,
         parent: String,
         limit: Int,
     ): List<String>
 
-    @Query(
-        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit"
-    )
+    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit")
     suspend fun findCacheKeysOrderLastRead(
         bookshelfId: Int,
         parent: String,
@@ -155,6 +146,11 @@ internal interface FileDao {
             )
             var selectionStr = "bookshelf_id = :bookshelfId"
             val bindArgs = mutableListOf<Any>(bookshelfId)
+
+            if (!searchCondition.showHidden) {
+                selectionStr += " AND hidden = :hidden"
+                bindArgs += false
+            }
 
             when (val range = searchCondition.range) {
                 is SearchCondition.Range.InFolder -> {

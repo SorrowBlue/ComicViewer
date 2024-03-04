@@ -79,6 +79,14 @@ internal class FolderViewModel @Inject constructor(
                 runBlocking { displaySettingsUseCase.settings.first().sortType }
             )
 
+    val showHidden: StateFlow<Boolean> =
+        displaySettingsUseCase.settings.map { it.showHidden }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                runBlocking { displaySettingsUseCase.settings.first().showHidden }
+            )
+
     fun readLater(file: File, isAdd: Boolean) {
         viewModelScope.launch {
             if (isAdd) {
@@ -116,6 +124,14 @@ internal class FolderViewModel @Inject constructor(
                         FolderDisplaySettings.Size.LARGE -> FolderDisplaySettings.Size.MEDIUM
                     }
                 )
+            }
+        }
+    }
+
+    fun updateShowHide(value: Boolean) {
+        viewModelScope.launch {
+            displaySettingsUseCase.edit {
+                it.copy(showHidden = value)
             }
         }
     }

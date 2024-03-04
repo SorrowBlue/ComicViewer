@@ -54,7 +54,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         dao.updateHistory(
             UpdateFileHistoryEntity(
                 path,
-                bookshelfId.value,
+                bookshelfId,
                 lastReadPage,
                 lastReading
             )
@@ -67,7 +67,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         cacheKey: String,
         totalPage: Int,
     ) {
-        dao.updateInfo(UpdateFileInfoEntity(path, bookshelfId.value, cacheKey, totalPage))
+        dao.updateInfo(UpdateFileInfoEntity(path, bookshelfId, cacheKey, totalPage))
     }
 
     override suspend fun updateSimpleAll(list: List<File>) {

@@ -31,7 +31,7 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun delete(favoriteModelId: FavoriteId) {
-        favoriteDao.delete(FavoriteEntity(favoriteModelId.value, ""))
+        favoriteDao.delete(FavoriteEntity(favoriteModelId, ""))
     }
 
     override fun pagingDataFlow(

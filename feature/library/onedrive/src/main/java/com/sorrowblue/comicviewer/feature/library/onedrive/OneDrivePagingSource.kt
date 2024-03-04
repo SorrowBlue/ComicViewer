@@ -41,6 +41,7 @@ internal class OneDrivePagingSource(
                         it.id.orEmpty(),
                         it.size ?: 0,
                         it.lastModifiedDateTime?.toEpochSecond() ?: 0,
+                        false,
                         mapOf(
                             "driveId" to driveId,
                             "thumbnail" to it.thumbnails?.currentPage?.firstOrNull()?.medium?.url.orEmpty()
@@ -54,6 +55,7 @@ internal class OneDrivePagingSource(
                         it.id.orEmpty(),
                         it.size ?: 0,
                         it.lastModifiedDateTime?.toEpochSecond() ?: 0,
+                        false,
                         "",
                         0,
                         0,

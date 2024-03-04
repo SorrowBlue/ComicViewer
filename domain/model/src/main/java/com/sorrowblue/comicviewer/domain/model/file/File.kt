@@ -13,6 +13,7 @@ sealed interface File : Parcelable {
     val path: String
     val size: Long
     val lastModifier: Long
+    val isHidden: Boolean
 
     val params: Map<String, String?>
     val sortIndex: Int

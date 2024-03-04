@@ -26,9 +26,7 @@ internal interface SingletonBindsModule {
 
     @Singleton
     @Binds
-    fun bindReadLaterFileModelLocalDataSource(
-        dataSource: ReadLaterFileModelLocalDataSourceImpl,
-    ): ReadLaterFileModelLocalDataSource
+    fun bindReadLaterFileModelLocalDataSource(dataSource: ReadLaterFileModelLocalDataSourceImpl): ReadLaterFileModelLocalDataSource
 
     @Singleton
     @Binds
@@ -40,7 +38,5 @@ internal interface SingletonBindsModule {
 
     @Singleton
     @Binds
-    fun bindFavoriteBookLocalDataSource(
-        dataSource: FavoriteFileLocalDataSourceImpl,
-    ): FavoriteFileLocalDataSource
+    fun bindFavoriteBookLocalDataSource(dataSource: FavoriteFileLocalDataSourceImpl): FavoriteFileLocalDataSource
 }

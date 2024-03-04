@@ -9,6 +9,7 @@ data class FolderDisplaySettings(
     val spanCount: Int = 3,
     val columnSize: Size = Size.MEDIUM,
     val sortType: SortType = SortType.NAME(true),
+    val showHidden: Boolean = false,
 ) {
 
     enum class Size {

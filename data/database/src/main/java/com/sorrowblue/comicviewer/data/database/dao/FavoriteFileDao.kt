@@ -12,6 +12,8 @@ import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.FileEntity
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import kotlinx.coroutines.flow.Flow
 
@@ -66,13 +68,12 @@ internal interface FavoriteFileDao {
     )
     suspend fun findCacheKey(favoriteId: Int, limit: Int): List<String>
 
-    @Deprecated("使用禁止")
     @RawQuery(observedEntities = [FileEntity::class])
     fun flowPrevNext(supportSQLiteQuery: SupportSQLiteQuery): Flow<List<FileEntity>>
 
     fun flowPrevNext(
-        favoriteId: Int,
-        bookshelfId: Int,
+        favoriteId: FavoriteId,
+        bookshelfId: BookshelfId,
         path: String,
         isNext: Boolean,
         sortType: SortType,
@@ -84,7 +85,6 @@ internal interface FavoriteFileDao {
         }
         val comparison = if (isNext && sortType.isAsc) ">=" else "<="
         val order = if (isNext && sortType.isAsc) "ASC" else "DESC"
-        @Suppress("DEPRECATION")
         return flowPrevNext(
             SimpleSQLiteQuery(
                 """
@@ -108,7 +108,7 @@ internal interface FavoriteFileDao {
                     LIMIT 1
                     ;
                 """.trimIndent(),
-                arrayOf(favoriteId.toLong(), bookshelfId.toLong(), path)
+                arrayOf(favoriteId.value.toLong(), bookshelfId.value.toLong(), path)
             )
         )
     }

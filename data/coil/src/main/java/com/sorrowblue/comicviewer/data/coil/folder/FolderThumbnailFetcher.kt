@@ -17,15 +17,11 @@ import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
-import com.sorrowblue.comicviewer.data.coil.book.thumbnailBitmap
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.reader.FileReader
-import com.sorrowblue.comicviewer.domain.model.SortUtil
-import com.sorrowblue.comicviewer.domain.model.SupportExtension
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
 import javax.inject.Inject
@@ -33,8 +29,6 @@ import kotlin.math.floor
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import logcat.asLog
-import logcat.logcat
 import okhttp3.internal.closeQuietly
 import okio.ByteString.Companion.encodeUtf8
 
@@ -86,33 +80,34 @@ internal class FolderThumbnailFetcher(
             try {
                 val thumbnails = cacheList(size, folderThumbnailOrder)
                 if (thumbnails.isEmpty()) {
+                    throw CoilRuntimeException("フォルダにファイルなし。")
                     // キャッシュがない場合、取得する。
-                    val bookshelfModel =
-                        bookshelfLocalDataSource.flow(folder.bookshelfId).first()!!
-                    val supportExtensions =
-                        datastoreDataSource.folderSettings.first().supportExtension.map(
-                            SupportExtension::extension
-                        )
-                    snapshot = remoteDataSourceFactory.create(bookshelfModel)
-                        .listFiles(folder, false) { SortUtil.filter(it, supportExtensions) }.let {
-                            SortUtil.sortedIndex(it)
-                        }.firstOrNull { it is BookFile }?.let {
-                            val fileReader =
-                                remoteDataSourceFactory.create(bookshelfModel)
-                                    .fileReader(it as BookFile)
-                                    ?: throw CoilRuntimeException("FileReaderが取得できない")
-                            val bitmap = fileReader.thumbnailBitmap(
-                                requestWidth.toInt(), requestHeight.toInt()
-                            ) ?: throw CoilRuntimeException("画像を取得できない")
-                            writeToDiskCache(
-                                snapshot = snapshot, fileReader = fileReader, bitmap = bitmap
-                            )
-                        } ?: throw CoilRuntimeException("フォルダにファイルなし。")
-                    return SourceResult(
-                        source = snapshot.toImageSource(),
-                        mimeType = null,
-                        dataSource = DataSource.DISK
-                    )
+//                    val bookshelfModel =
+//                        bookshelfLocalDataSource.flow(folder.bookshelfId).first()!!
+//                    val supportExtensions =
+//                        datastoreDataSource.folderSettings.first().supportExtension.map(
+//                            SupportExtension::extension
+//                        )
+//                    snapshot = remoteDataSourceFactory.create(bookshelfModel)
+//                        .listFiles(folder, false) { SortUtil.filter(it, supportExtensions) }.let {
+//                            SortUtil.sortedIndex(it)
+//                        }.firstOrNull { it is BookFile }?.let {
+//                            val fileReader =
+//                                remoteDataSourceFactory.create(bookshelfModel)
+//                                    .fileReader(it as BookFile)
+//                                    ?: throw CoilRuntimeException("FileReaderが取得できない")
+//                            val bitmap = fileReader.thumbnailBitmap(
+//                                requestWidth.toInt(), requestHeight.toInt()
+//                            ) ?: throw CoilRuntimeException("画像を取得できない")
+//                            writeToDiskCache(
+//                                snapshot = snapshot, fileReader = fileReader, bitmap = bitmap
+//                            )
+//                        } ?: throw CoilRuntimeException("フォルダにファイルなし。")
+//                    return SourceResult(
+//                        source = snapshot.toImageSource(),
+//                        mimeType = null,
+//                        dataSource = DataSource.DISK
+//                    )
                 } else {
                     // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
                     snapshot = writeToDiskCache(snapshot = snapshot, list = thumbnails)
@@ -131,7 +126,7 @@ internal class FolderThumbnailFetcher(
                     }
                 }
             } catch (e: Exception) {
-                logcat { e.asLog() }
+//                logcat { e.asLog() }
                 throw e
             }
         } catch (e: Exception) {

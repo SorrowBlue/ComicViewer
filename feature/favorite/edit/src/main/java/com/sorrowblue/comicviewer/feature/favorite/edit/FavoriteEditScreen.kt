@@ -52,8 +52,8 @@ import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameTextField
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
@@ -303,7 +303,7 @@ private fun containerColor(colorTransitionFraction: Float): Color {
 @Composable
 private fun PreviewFavoriteEditScreen() {
     val files = List(20) {
-        BookFile(BookshelfId(it), "Name $it", "", "", 0, 0, "", 0, 0, 0)
+        fakeBookFile(BookshelfId(it))
     }
     val a: Flow<PagingData<File>> = flowOf(PagingData.from(files))
     ComicTheme {
@@ -322,7 +322,7 @@ private fun PreviewFavoriteEditScreen() {
 @Composable
 private fun PreviewFavoriteEditDialog() {
     val files = List(20) {
-        BookFile(BookshelfId(it), "Name $it", "", "", 0, 0, "", 0, 0, 0)
+        fakeBookFile(BookshelfId(it))
     }
     val a: Flow<PagingData<File>> = flowOf(PagingData.from(files))
     ComicTheme {
