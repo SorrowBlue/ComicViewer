@@ -10,13 +10,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -77,8 +77,8 @@ internal data class ComicViewerAppEvent(
 
 @Composable
 internal fun rememberComicViewerAppState(
-    viewModel: ComicViewerAppViewModel = viewModel(LocalContext.current as ComponentActivity),
-    navTabHandler: NavTabHandler = viewModel(LocalContext.current as ComponentActivity),
+    viewModel: ComicViewerAppViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
+    navTabHandler: NavTabHandler = hiltViewModel(LocalContext.current as ComponentActivity),
     navController: NavHostController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope(),
     lifecycle: LifecycleOwner = LocalLifecycleOwner.current,

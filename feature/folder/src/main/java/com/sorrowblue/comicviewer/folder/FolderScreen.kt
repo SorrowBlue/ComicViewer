@@ -23,9 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -41,10 +38,11 @@ import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.folder.R
-import com.sorrowblue.comicviewer.file.FileInfo
 import com.sorrowblue.comicviewer.file.FileInfoSheet
+import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.rememberThreePaneScaffoldNavigatorContent
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.SortItem
@@ -210,7 +208,7 @@ internal fun FolderScreen(
             pullRefreshState.endRefresh()
         }
         if (state.isScrollableTop) {
-//            state.lazyGridState.scrollToItem(0)
+            state.lazyGridState.scrollToItem(0)
             state.isScrollableTop = false
         }
 
@@ -269,7 +267,7 @@ fun LoadStates.any(op: (LoadState) -> Boolean): Boolean {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun FolderScreen(
-    navigator: ThreePaneScaffoldNavigator<FileInfo>,
+    navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onSearchClick: () -> Unit,
@@ -287,7 +285,7 @@ internal fun FolderScreen(
     onSortClick: () -> Unit,
     onSortItemClick: (SortItem) -> Unit,
     onSortOrderClick: (SortOrder) -> Unit,
-    onReadLaterClick: (File) -> Unit,
+    onReadLaterClick: () -> Unit,
     onFavoriteClick: (File) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -309,16 +307,13 @@ internal fun FolderScreen(
             )
         },
         extraPane = { innerPadding ->
-            var file by remember { mutableStateOf(navigator.currentDestination?.content) }
-            LaunchedEffect(key1 = navigator.currentDestination) {
-                navigator.currentDestination?.content?.let { file = it }
-            }
-            file?.let {
+            val fileInfo by rememberThreePaneScaffoldNavigatorContent(navigator)
+            fileInfo?.let {
                 FileInfoSheet(
-                    fileInfo = it,
+                    fileInfoUiState = it,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
-                    onReadLaterClick = { onReadLaterClick(it.file) },
+                    onReadLaterClick = onReadLaterClick,
                     onFavoriteClick = { onFavoriteClick(it.file) },
                     onOpenFolderClick = null,
                     contentPadding = innerPadding
@@ -338,10 +333,6 @@ internal fun FolderScreen(
         Box(
             Modifier
                 .fillMaxSize()
-                .padding(
-                    top = contentPadding.calculateTopPadding(),
-                    bottom = contentPadding.calculateBottomPadding()
-                )
                 .nestedScroll(pullRefreshState.nestedScrollConnection)
         ) {
             if (lazyPagingItems.isEmptyData) {
@@ -362,7 +353,14 @@ internal fun FolderScreen(
                     contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp),
                     onFileClick = onFileClick,
                     onInfoClick = onFileInfoClick,
-                    state = lazyGridState
+                    state = lazyGridState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = contentPadding.calculateTopPadding(),
+                            bottom = contentPadding.calculateBottomPadding()
+                        )
+
                 )
             }
             PullToRefreshContainer(

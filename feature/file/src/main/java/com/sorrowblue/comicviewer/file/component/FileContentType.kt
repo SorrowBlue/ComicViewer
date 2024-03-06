@@ -14,7 +14,7 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
+import com.sorrowblue.comicviewer.framework.ui.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
 import kotlinx.parcelize.Parcelize
 

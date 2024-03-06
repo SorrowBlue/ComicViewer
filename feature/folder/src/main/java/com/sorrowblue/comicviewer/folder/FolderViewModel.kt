@@ -16,7 +16,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.file.FileInfo
+import com.sorrowblue.comicviewer.file.FileInfoUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,10 +37,10 @@ internal class FolderViewModel @Inject constructor(
     val getFileUseCase: GetFileUseCase,
     private val pagingFileUseCase: PagingFileUseCase,
     private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    private val addReadLaterUseCase: AddReadLaterUseCase,
-    private val deleteReadLaterUseCase: DeleteReadLaterUseCase,
-    private val getFileAttributeUseCase: GetFileAttributeUseCase,
-    private val existsReadlaterUseCase: ExistsReadlaterUseCase,
+    val addReadLaterUseCase: AddReadLaterUseCase,
+    val deleteReadLaterUseCase: DeleteReadLaterUseCase,
+    val getFileAttributeUseCase: GetFileAttributeUseCase,
+    val existsReadlaterUseCase: ExistsReadlaterUseCase,
 ) : ViewModel() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -51,14 +51,14 @@ internal class FolderViewModel @Inject constructor(
 
     val displaySettings = displaySettingsUseCase.settings
 
-    fun fileInfo(file: File): Flow<Resource<FileInfo, Resource.AppError>> {
+    fun fileInfo(file: File): Flow<Resource<FileInfoUiState, Resource.AppError>> {
         val getRequest = GetFileAttributeUseCase.Request(file.bookshelfId, file.path)
         val isRequest = ExistsReadlaterUseCase.Request(file.bookshelfId, file.path)
 
         return getFileAttributeUseCase(getRequest)
             .combine(existsReadlaterUseCase(isRequest)) { a, b ->
                 if (a is Resource.Success && b is Resource.Success) {
-                    Resource.Success(FileInfo(file, a.data, b.data))
+                    Resource.Success(FileInfoUiState(file, a.data, b.data))
                 } else {
                     Resource.Error(GetFileAttributeUseCase.Error.NotFound)
                 }

@@ -51,13 +51,13 @@ import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavGr
 import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.designsystem.theme.compactDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.expandedDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
 import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.LocalWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
 import kotlinx.coroutines.flow.filter
 

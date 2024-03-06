@@ -9,8 +9,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.ui.LocalWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.LocalWindowSize
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable

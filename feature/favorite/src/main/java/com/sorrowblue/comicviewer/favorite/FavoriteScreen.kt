@@ -10,14 +10,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -27,6 +26,7 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBarUiState
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.FileInfoSheet
+import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -34,6 +34,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResum
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
+import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
@@ -110,7 +111,7 @@ internal data class FavoriteScreenUiState(
 @Composable
 private fun FavoriteScreen(
     uiState: FavoriteScreenUiState,
-    navigator: ThreePaneScaffoldNavigator<File>,
+    navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     lazyPagingItems: LazyPagingItems<File>,
     onBackClick: () -> Unit,
     onEditClick: () -> Unit,
@@ -141,41 +142,46 @@ private fun FavoriteScreen(
             )
         },
         extraPane = { innerPadding ->
-            var file by remember { mutableStateOf(navigator.currentDestination?.content) }
-            LaunchedEffect(key1 = navigator.currentDestination) {
-                navigator.currentDestination?.content?.let { file = it }
+            val fileInfo by remember(navigator.currentDestination?.content) {
+                mutableStateOf(navigator.currentDestination?.content)
             }
-            file?.let {
+            fileInfo?.let {
                 FileInfoSheet(
-                    file = it,
+                    fileInfoUiState = it,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
-                    onReadLaterClick = { onReadLaterClick(it) },
-                    onFavoriteClick = { onFavoriteClick(it) },
-                    onOpenFolderClick = { onOpenFolderClick(it) },
+                    onReadLaterClick = { onReadLaterClick(it.file) },
+                    onFavoriteClick = { onFavoriteClick(it.file) },
+                    onOpenFolderClick = { onOpenFolderClick(it.file) },
                     contentPadding = innerPadding
                 )
             }
         },
         navigator = navigator,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) { innerPadding ->
+    ) { contentPadding ->
         if (lazyPagingItems.isEmptyData) {
             EmptyContent(
                 imageVector = ComicIcons.UndrawResumeFolder,
                 text = stringResource(id = R.string.favorite_label_no_favorites),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(contentPadding)
             )
         } else {
             FileContent(
                 type = uiState.fileContentType,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = innerPadding,
+                contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp),
                 onFileClick = onFileClick,
                 onInfoClick = onFileInfoClick,
-                state = lazyGridState
+                state = lazyGridState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = contentPadding.calculateTopPadding(),
+                        bottom = contentPadding.calculateBottomPadding()
+                    )
             )
         }
     }

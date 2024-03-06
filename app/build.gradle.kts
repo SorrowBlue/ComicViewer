@@ -134,21 +134,16 @@ dependencies {
     implementation(projects.feature.tutorial)
     implementation(projects.feature.library)
 
+    implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.biometric)
-    implementation(libs.androidx.hilt.navigationCompose)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.hilt.work)
     implementation(libs.google.android.play.review.ktx)
     implementation(libs.google.android.play.feature.delivery.ktx)
-    implementation(libs.coil.compose)
     implementation(libs.mikepenz.aboutlibraries)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.kotlinx.collections.immutable)
 
     debugImplementation(libs.squareup.leakcanary.android)
 }

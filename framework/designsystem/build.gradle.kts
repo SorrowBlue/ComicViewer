@@ -8,16 +8,12 @@ android {
 }
 
 dependencies {
-    api(libs.google.material)
-    api(libs.androidx.window)
-    implementation(libs.androidx.compose.material)
+    api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.iconsExtended)
-    implementation(libs.androidx.compose.material3)
 
-    // Android Studio Preview support
-    api(libs.androidx.compose.ui.toolingPreview)
-    debugApi(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.appcompat)
 
-    // UI Tests
-    debugApi(libs.androidx.compose.ui.testManifest)
+    implementation(libs.androidx.compose.ui.toolingPreview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }

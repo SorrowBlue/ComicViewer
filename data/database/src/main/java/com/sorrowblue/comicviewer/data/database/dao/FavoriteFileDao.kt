@@ -26,7 +26,6 @@ internal interface FavoriteFileDao {
     @Delete
     suspend fun delete(favoriteFileEntity: FavoriteFileEntity): Int
 
-    @Deprecated("", level = DeprecationLevel.WARNING)
     @RawQuery(observedEntities = [FavoriteFileEntity::class, FileEntity::class])
     fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileEntity>
 
@@ -36,7 +35,6 @@ internal interface FavoriteFileDao {
             is SortType.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
             is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
         }
-        @Suppress("DEPRECATION")
         return pagingSource(
             object : SupportSQLiteQuery {
                 override val argCount = 1

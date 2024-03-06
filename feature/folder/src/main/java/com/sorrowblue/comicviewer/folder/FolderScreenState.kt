@@ -23,12 +23,16 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.model.onSuccess
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
+import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
-import com.sorrowblue.comicviewer.file.FileInfo
+import com.sorrowblue.comicviewer.file.FileInfoSheetState
+import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.section.SortItem
@@ -46,27 +50,23 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Stable
-internal interface FolderScreenState : SaveableScreenState {
+internal interface FolderScreenState : SaveableScreenState, FileInfoSheetState {
 
     fun onSortOrderClick(sortOrder: SortOrder)
     fun onSortItemClick(sortItem: SortItem)
     fun onFileInfoClick(file: File)
     fun onExtraPaneCloseClick()
     fun onSortSheetDismissRequest()
-    fun onReadLaterClick(file: File)
     fun openSort()
     fun onGridSizeChange()
     fun toggleFileListType()
-    val snackbarHostState: SnackbarHostState
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
     var isScrollableTop: Boolean
     var isSkipFirstRefresh: Boolean
     var restorePath: String?
     val pagingDataFlow: Flow<PagingData<File>>
-    val navigator: ThreePaneScaffoldNavigator<FileInfo>
     val bookshelfId: BookshelfId
     val path: String
     val sort: StateFlow<SortType>
@@ -79,7 +79,7 @@ internal interface FolderScreenState : SaveableScreenState {
 @Composable
 internal fun rememberFolderScreenState(
     args: FolderArgs,
-    navigator: ThreePaneScaffoldNavigator<FileInfo> = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
@@ -101,13 +101,20 @@ internal fun rememberFolderScreenState(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 private class FolderScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator<FileInfo>,
+    override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val lazyGridState: LazyGridState,
     override val snackbarHostState: SnackbarHostState,
     private val args: FolderArgs,
     private val viewModel: FolderViewModel,
-    private val scope: CoroutineScope,
+    override val scope: CoroutineScope,
 ) : FolderScreenState {
+
+    override val existsReadlaterUseCase: ExistsReadlaterUseCase = viewModel.existsReadlaterUseCase
+    override val getFileAttributeUseCase: GetFileAttributeUseCase =
+        viewModel.getFileAttributeUseCase
+
+    override val addReadLaterUseCase: AddReadLaterUseCase = viewModel.addReadLaterUseCase
+    override val deleteReadLaterUseCase: DeleteReadLaterUseCase = viewModel.deleteReadLaterUseCase
 
     override val pagingDataFlow = viewModel.pagingDataFlow(args.bookshelfId, args.path)
     override var restorePath by savedStateHandle.saveable("restorePath", stateSaver = autoSaver()) {
@@ -181,18 +188,6 @@ private class FolderScreenStateImpl(
         uiState = uiState.copy(openSortSheet = true)
     }
 
-    override fun onReadLaterClick(file: File) {
-        val fileInfo = navigator.currentDestination?.content ?: return
-        viewModel.readLater(file = file, !fileInfo.isReadLater)
-        scope.launch {
-            if (fileInfo.isReadLater) {
-                snackbarHostState.showSnackbar("「${file.name}」を\"あとで読む\"から削除しました")
-            } else {
-                snackbarHostState.showSnackbar("「${file.name}」を\"あとで読む\"に追加しました")
-            }
-        }
-    }
-
     override fun onSortSheetDismissRequest() {
         uiState = uiState.copy(openSortSheet = false)
     }
@@ -201,17 +196,11 @@ private class FolderScreenStateImpl(
         navigator.navigateBack()
     }
 
-    private var fileInfoJob: Job? = null
+    override var fileInfoJob: Job? = null
 
     override fun onFileInfoClick(file: File) {
-        fileInfoJob?.cancel()
-        fileInfoJob = scope.launch {
-            viewModel.fileInfo(file).onEach {
-                it.fold({
-                    navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
-                }, {
-                })
-            }.launchIn(scope)
+        fetchFileInfo(file) {
+            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
         }
     }
 

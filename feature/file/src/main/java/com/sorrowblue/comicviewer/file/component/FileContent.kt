@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.file.component
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -32,6 +31,7 @@ fun <T : File> FileContent(
     contentPadding: PaddingValues,
     onFileClick: (T) -> Unit,
     onInfoClick: (T) -> Unit,
+    modifier: Modifier = Modifier,
     state: LazyGridState = rememberLazyGridState(),
 ) {
     when (type) {
@@ -41,7 +41,8 @@ fun <T : File> FileContent(
             contentPadding = contentPadding,
             lazyPagingItems = lazyPagingItems,
             onClickItem = onFileClick,
-            onLongClickItem = onInfoClick
+            onLongClickItem = onInfoClick,
+            modifier = modifier
         )
 
         FileContentType.List -> FileListContent(
@@ -49,7 +50,8 @@ fun <T : File> FileContent(
             contentPadding = contentPadding,
             onClickItem = onFileClick,
             onLongClickItem = onInfoClick,
-            state = state
+            state = state,
+            modifier = modifier
         )
     }
 }
@@ -63,6 +65,7 @@ private fun <T : File> FileGridContent(
     lazyPagingItems: LazyPagingItems<T>,
     onClickItem: (T) -> Unit,
     onLongClickItem: (T) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var spanCount by remember { mutableIntStateOf(1) }
     LazyVerticalGrid(
@@ -71,9 +74,7 @@ private fun <T : File> FileGridContent(
         contentPadding = contentPadding.add(PaddingValues(ComicTheme.dimension.margin)),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-        modifier = Modifier
-            .fillMaxSize()
-            .drawVerticalScrollbar(state, spanCount)
+        modifier = modifier.drawVerticalScrollbar(state, spanCount)
     ) {
         items(
             count = lazyPagingItems.itemCount,
@@ -117,7 +118,6 @@ fun <T : File> FileListContent(
             )
         },
         modifier = modifier
-            .fillMaxSize()
             .drawVerticalScrollbar(state, 1),
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {

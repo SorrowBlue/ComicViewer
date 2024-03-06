@@ -7,6 +7,9 @@ import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteAllReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,9 +18,12 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class ReadLaterViewModel @Inject constructor(
-    private val addReadLaterUseCase: AddReadLaterUseCase,
-    private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
+    val addReadLaterUseCase: AddReadLaterUseCase,
+    val deleteReadLaterUseCase: DeleteReadLaterUseCase,
+    val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
     pagingReadLaterFileUseCase: PagingReadLaterFileUseCase,
+    val existsReadlaterUseCase: ExistsReadlaterUseCase,
+    val getFileAttributeUseCase: GetFileAttributeUseCase,
 ) : ViewModel() {
 
     val pagingDataFlow = pagingReadLaterFileUseCase

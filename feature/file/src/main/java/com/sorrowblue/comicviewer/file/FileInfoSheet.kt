@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -23,8 +24,12 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,11 +58,20 @@ import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class FileInfo(
+data class FileInfoUiState(
     val file: File,
     val attribute: FileAttribute? = null,
     val isReadLater: Boolean = false,
+    val loading: Boolean = true,
 ) : Parcelable
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Composable
+fun <T> rememberThreePaneScaffoldNavigatorContent(
+    navigator: ThreePaneScaffoldNavigator<T>,
+): MutableState<T?> = remember(navigator.currentDestination?.content) {
+    mutableStateOf(navigator.currentDestination?.content)
+}
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -74,7 +88,7 @@ fun FileInfoSheet(
     onOpenFolderClick: (() -> Unit)? = null,
 ) {
     FileInfoSheet(
-        fileInfo = FileInfo(file, fileAttribute, isReadLater),
+        fileInfoUiState = FileInfoUiState(file, fileAttribute, isReadLater),
         onCloseClick = onCloseClick,
         onReadLaterClick = onReadLaterClick,
         onFavoriteClick = onFavoriteClick,
@@ -89,7 +103,7 @@ fun FileInfoSheet(
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun FileInfoSheet(
-    fileInfo: FileInfo,
+    fileInfoUiState: FileInfoUiState,
     onCloseClick: () -> Unit,
     onReadLaterClick: () -> Unit,
     onFavoriteClick: () -> Unit,
@@ -98,8 +112,8 @@ fun FileInfoSheet(
     modifier: Modifier = Modifier,
     onOpenFolderClick: (() -> Unit)? = null,
 ) {
-    val file = fileInfo.file
-    val fileAttribute = fileInfo.attribute
+    val file = fileInfoUiState.file
+    val fileAttribute = fileInfoUiState.attribute
     ExtraPaneScaffold(
         topBar = {
             ExtraPaneScaffoldDefault.TopAppBar(
@@ -127,7 +141,7 @@ fun FileInfoSheet(
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
         )
-        if (fileInfo.isReadLater) {
+        if (fileInfoUiState.isReadLater) {
             FilledTonalButton(
                 onClick = onReadLaterClick,
                 modifier = Modifier
@@ -147,7 +161,11 @@ fun FileInfoSheet(
                     .padding(top = ComicTheme.dimension.padding * 4)
                     .padding(horizontal = ComicTheme.dimension.padding * 4)
             ) {
-                Icon(imageVector = ComicIcons.WatchLater, contentDescription = null)
+                if (fileInfoUiState.loading) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                } else {
+                    Icon(imageVector = ComicIcons.WatchLater, contentDescription = null)
+                }
                 Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
                 Text(text = stringResource(id = R.string.file_info_label_add_read_later))
             }

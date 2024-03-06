@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.designsystem.theme
+package com.sorrowblue.comicviewer.framework.ui
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.window.core.layout.WindowSizeClass

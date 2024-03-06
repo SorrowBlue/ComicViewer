@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.history
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -7,16 +8,14 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -24,12 +23,15 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.section.HistoryAppBar
 import com.sorrowblue.comicviewer.file.FileInfoSheet
+import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.file.component.FileContent
 import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.rememberThreePaneScaffoldNavigatorContent
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 interface HistoryScreenNavigator {
@@ -73,18 +75,23 @@ private fun HistoryScreen(
         onFavoriteClick = onFavoriteClick,
         lazyGridState = lazyGridState,
     )
+
+
+    BackHandler(enabled = state.navigator.scaffoldState.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
+        state.navigator.navigateBack()
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun HistoryScreen(
     lazyPagingItems: LazyPagingItems<Book>,
-    navigator: ThreePaneScaffoldNavigator<File>,
+    navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     onFileClick: (Book) -> Unit,
     onFileInfoClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     onExtraPaneCloseClick: () -> Unit,
-    onReadLaterClick: (File) -> Unit,
+    onReadLaterClick: () -> Unit,
     onFavoriteClick: (File) -> Unit,
     lazyGridState: LazyGridState,
     onBackClick: () -> Unit,
@@ -100,39 +107,42 @@ internal fun HistoryScreen(
             )
         },
         extraPane = { innerPadding ->
-            var file by remember { mutableStateOf(navigator.currentDestination?.content) }
-            LaunchedEffect(key1 = navigator.currentDestination) {
-                navigator.currentDestination?.content?.let { file = it }
-            }
-            file?.let {
+            val fileInfo by rememberThreePaneScaffoldNavigatorContent(navigator)
+            fileInfo?.let {
                 FileInfoSheet(
-                    file = it,
+                    fileInfoUiState = it,
                     scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
-                    onReadLaterClick = { onReadLaterClick(it) },
-                    onFavoriteClick = { onFavoriteClick(it) },
+                    onReadLaterClick = { onReadLaterClick() },
+                    onFavoriteClick = { onFavoriteClick(it.file) },
                     contentPadding = innerPadding
                 )
             }
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) { innerPadding ->
+    ) { contentPadding ->
         if (lazyPagingItems.isEmptyData) {
             EmptyContent(
                 imageVector = ComicIcons.UndrawResumeFolder,
                 text = stringResource(id = R.string.history_label_no_history),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(contentPadding)
             )
         } else {
             FileContent(
                 type = FileContentType.List,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = innerPadding,
+                contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp),
                 onFileClick = onFileClick,
                 onInfoClick = onFileInfoClick,
-                state = lazyGridState
+                state = lazyGridState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = contentPadding.calculateTopPadding(),
+                        bottom = contentPadding.calculateBottomPadding()
+                    )
             )
         }
     }

@@ -51,10 +51,13 @@ fun FileGrid(
                 contentScale = ContentScale.Crop,
                 loading = {
                     CircularProgressIndicator()
-//                    Icon(imageVector = ComicIcons.DocumentUnknown, contentDescription = null)
                 },
                 error = {
-                    Icon(imageVector = ComicIcons.Image, contentDescription = null)
+                    if (file is Book) {
+                        Icon(imageVector = ComicIcons.Image, contentDescription = null)
+                    } else {
+                        Icon(imageVector = ComicIcons.Folder, contentDescription = null)
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
