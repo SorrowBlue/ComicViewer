@@ -45,11 +45,11 @@ internal fun BookshelfListContents(
         state = lazyGridState,
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(
-            ComicTheme.dimension.padding * 2,
+            ComicTheme.dimension.minPadding * 2,
             alignment = Alignment.Top
         ),
         horizontalArrangement = Arrangement.spacedBy(
-            ComicTheme.dimension.padding * 2,
+            ComicTheme.dimension.minPadding * 2,
             alignment = Alignment.Start
         ),
         modifier = Modifier

@@ -188,7 +188,7 @@ private fun PreviewBookshelfInfoSheet() {
                 SmbServer("DisplayName", "127.0.0.1", 455, SmbServer.Auth.Guest),
                 fakeFolder()
             ),
-            scaffoldDirective = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>().scaffoldState.scaffoldDirective,
+            scaffoldDirective = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>().scaffoldDirective,
             onCloseClick = {},
             onEditClick = {},
             onRemoveClick = {},

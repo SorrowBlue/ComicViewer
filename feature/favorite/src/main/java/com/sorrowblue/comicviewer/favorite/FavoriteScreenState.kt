@@ -139,8 +139,8 @@ private class FavoriteScreenStateImpl(
     override fun toggleFileListType() {
         viewModel.updateDisplay(
             when (uiState.fileContentType) {
-                is FileContentType.Grid -> FolderDisplaySettings.Display.LIST
-                FileContentType.List -> FolderDisplaySettings.Display.GRID
+                is FileContentType.Grid -> FolderDisplaySettings.Display.List
+                FileContentType.List -> FolderDisplaySettings.Display.Grid
             }
         )
     }

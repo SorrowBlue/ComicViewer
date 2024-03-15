@@ -62,8 +62,8 @@ internal class FavoriteViewModel @Inject constructor(
             displaySettingsUseCase.edit {
                 it.copy(
                     columnSize = when (it.columnSize) {
-                        FolderDisplaySettings.Size.MEDIUM -> FolderDisplaySettings.Size.LARGE
-                        FolderDisplaySettings.Size.LARGE -> FolderDisplaySettings.Size.MEDIUM
+                        FolderDisplaySettings.ColumnSize.Medium -> FolderDisplaySettings.ColumnSize.Large
+                        FolderDisplaySettings.ColumnSize.Large -> FolderDisplaySettings.ColumnSize.Medium
                     }
                 )
             }

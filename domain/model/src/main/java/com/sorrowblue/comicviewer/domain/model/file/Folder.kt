@@ -17,11 +17,4 @@ data class Folder(
     override val sortIndex: Int = -1,
 ) : IFolder {
 
-    override fun areContentsTheSame(file: File): Boolean {
-        return if (file is Folder) {
-            bookshelfId == file.bookshelfId && path == file.path
-        } else {
-            false
-        }
-    }
 }

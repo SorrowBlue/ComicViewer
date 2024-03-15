@@ -10,7 +10,8 @@ class Dimension(
     val margin: Dp,
     val spacer: Dp,
     val targetSpacing: Dp = 8.dp,
-    val padding: Dp = 4.dp,
+    val minPadding: Dp = 4.dp,
+    val padding: Dp = 8.dp,
 )
 
 val compactDimension = Dimension(

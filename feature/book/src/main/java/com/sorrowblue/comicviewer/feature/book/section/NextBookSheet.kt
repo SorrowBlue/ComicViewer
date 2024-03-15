@@ -64,7 +64,7 @@ internal fun NextBookSheet(
                     .sizeIn(maxWidth = 300.dp, maxHeight = 300.dp)
                     .fillMaxWidth(0.5f)
             )
-            Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
+            Spacer(modifier = Modifier.size(ComicTheme.dimension.minPadding))
             Text(
                 text = stringResource(id = R.string.book_label_no_next_book),
                 style = ComicTheme.typography.titleLarge

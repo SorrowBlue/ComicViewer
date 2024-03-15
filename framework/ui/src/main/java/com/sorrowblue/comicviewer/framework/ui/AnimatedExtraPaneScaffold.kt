@@ -28,8 +28,10 @@ fun <T> AnimatedExtraPaneScaffold(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
+    navigator.scaffoldDirective
     SupportingPaneScaffold(
-        scaffoldState = navigator.scaffoldState,
+        directive = navigator.scaffoldDirective,
+        value = navigator.scaffoldValue,
         supportingPane = {
         },
         extraPane = {

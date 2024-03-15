@@ -1,20 +1,17 @@
 package com.sorrowblue.comicviewer.feature.readlater
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -30,7 +27,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveB
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
-import com.sorrowblue.comicviewer.framework.ui.copy
+import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
+import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 interface ReadLaterScreenNavigator {
@@ -77,9 +75,7 @@ private fun ReadLaterScreen(
 
     NavTabHandler(onClick = state::onNavClick)
 
-    BackHandler(enabled = state.navigator.scaffoldState.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
-        state.navigator.navigateBack()
-    }
+    BackHandlerForNavigator(navigator = state.navigator)
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
@@ -112,7 +108,7 @@ private fun ReadLaterScreen(
             fileInfo?.let {
                 FileInfoSheet(
                     fileInfoUiState = it,
-                    scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
+                    scaffoldDirective = navigator.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
                     onReadLaterClick = onReadLaterClick,
                     onFavoriteClick = { onFavoriteClick(it.file) },
@@ -132,19 +128,17 @@ private fun ReadLaterScreen(
                     .padding(contentPadding)
             )
         } else {
+            val (paddings, margins) = calculatePaddingMargins(contentPadding)
             FileContent(
                 type = FileContentType.List,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp),
+                contentPadding = paddings,
                 onFileClick = onFileClick,
                 onInfoClick = onFileInfoClick,
                 state = lazyGridState,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(
-                        top = contentPadding.calculateTopPadding(),
-                        bottom = contentPadding.calculateBottomPadding()
-                    )
+                    .padding(margins)
             )
         }
     }

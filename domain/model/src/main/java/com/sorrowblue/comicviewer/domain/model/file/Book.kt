@@ -14,7 +14,7 @@ fun fakeBookFile(bookshelfId: BookshelfId = BookshelfId(0)) =
         bookshelfId,
         "Qiitaから通知を受け取りませんか？",
         "parent",
-        "path",
+        "path${bookshelfId.value}",
         100,
         100,
         false,

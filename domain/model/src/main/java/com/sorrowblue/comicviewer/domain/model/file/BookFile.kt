@@ -23,11 +23,4 @@ data class BookFile(
 
     val extension get() = path.extension
 
-    override fun areContentsTheSame(file: File): Boolean {
-        return if (file is BookFile) {
-            bookshelfId == file.bookshelfId && path == file.path && lastPageRead == file.lastPageRead && lastReadTime == file.lastReadTime
-        } else {
-            false
-        }
-    }
 }

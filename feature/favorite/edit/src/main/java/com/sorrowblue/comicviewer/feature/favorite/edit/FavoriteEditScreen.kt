@@ -225,7 +225,7 @@ private fun FavoriteEditDialog(
         title = {
             Column {
                 Text(text = stringResource(id = R.string.favorite_edit_title))
-                Spacer(modifier = Modifier.size(ComicTheme.dimension.padding * 2))
+                Spacer(modifier = Modifier.size(ComicTheme.dimension.minPadding * 2))
                 FavoriteNameTextField(
                     value = uiState.name,
                     onValueChange = onNameChange,

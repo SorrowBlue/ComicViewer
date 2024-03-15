@@ -146,8 +146,8 @@ fun FileInfoSheet(
                 onClick = onReadLaterClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = ComicTheme.dimension.padding * 4)
-                    .padding(horizontal = ComicTheme.dimension.padding * 4)
+                    .padding(top = ComicTheme.dimension.minPadding * 4)
+                    .padding(horizontal = ComicTheme.dimension.minPadding * 4)
             ) {
                 Icon(imageVector = ComicIcons.WatchLater, contentDescription = null)
                 Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
@@ -158,8 +158,8 @@ fun FileInfoSheet(
                 onClick = onReadLaterClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = ComicTheme.dimension.padding * 4)
-                    .padding(horizontal = ComicTheme.dimension.padding * 4)
+                    .padding(top = ComicTheme.dimension.minPadding * 4)
+                    .padding(horizontal = ComicTheme.dimension.minPadding * 4)
             ) {
                 if (fileInfoUiState.loading) {
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))
@@ -174,7 +174,7 @@ fun FileInfoSheet(
             onClick = onFavoriteClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = ComicTheme.dimension.padding * 4)
+                .padding(horizontal = ComicTheme.dimension.minPadding * 4)
         ) {
             Icon(imageVector = ComicIcons.Favorite, contentDescription = null)
             Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
@@ -185,7 +185,7 @@ fun FileInfoSheet(
                 onClick = onOpenFolderClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = ComicTheme.dimension.padding * 4)
+                    .padding(horizontal = ComicTheme.dimension.minPadding * 4)
             ) {
                 Icon(imageVector = ComicIcons.FolderOpen, contentDescription = null)
                 Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
@@ -245,13 +245,13 @@ fun FileInfoSheet(
             style = ComicTheme.typography.labelSmall,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = ComicTheme.dimension.padding * 4)
+                .padding(horizontal = ComicTheme.dimension.minPadding * 4)
         )
         FlowRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = ComicTheme.dimension.padding * 4),
-            horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding)
+                .padding(horizontal = ComicTheme.dimension.minPadding * 4),
+            horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.minPadding)
         ) {
             fileAttribute?.let {
                 if (it.archive) {
@@ -314,7 +314,7 @@ fun PreviewFileInfoSheet() {
             onFavoriteClick = { /*TODO*/ },
             onOpenFolderClick = {},
             contentPadding = PaddingValues(),
-            scaffoldDirective = rememberSupportingPaneScaffoldNavigator<Pair<File, FileAttribute?>>().scaffoldState.scaffoldDirective
+            scaffoldDirective = rememberSupportingPaneScaffoldNavigator<Pair<File, FileAttribute?>>().scaffoldDirective
         )
 
     }

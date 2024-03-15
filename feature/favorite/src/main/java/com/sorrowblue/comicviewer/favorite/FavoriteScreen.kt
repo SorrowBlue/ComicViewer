@@ -16,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -34,7 +33,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResum
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
-import com.sorrowblue.comicviewer.framework.ui.copy
+import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
@@ -148,7 +147,7 @@ private fun FavoriteScreen(
             fileInfo?.let {
                 FileInfoSheet(
                     fileInfoUiState = it,
-                    scaffoldDirective = navigator.scaffoldState.scaffoldDirective,
+                    scaffoldDirective = navigator.scaffoldDirective,
                     onCloseClick = onExtraPaneCloseClick,
                     onReadLaterClick = { onReadLaterClick(it.file) },
                     onFavoriteClick = { onFavoriteClick(it.file) },
@@ -169,19 +168,17 @@ private fun FavoriteScreen(
                     .padding(contentPadding)
             )
         } else {
+            val (paddings, margins) = calculatePaddingMargins(contentPadding)
             FileContent(
                 type = uiState.fileContentType,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp),
+                contentPadding = paddings,
                 onFileClick = onFileClick,
                 onInfoClick = onFileInfoClick,
                 state = lazyGridState,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(
-                        top = contentPadding.calculateTopPadding(),
-                        bottom = contentPadding.calculateBottomPadding()
-                    )
+                    .padding(margins)
             )
         }
     }

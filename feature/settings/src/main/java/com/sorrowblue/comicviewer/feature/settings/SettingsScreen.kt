@@ -94,7 +94,8 @@ private fun SettingsScreen(
     content: @Composable (PaddingValues) -> Unit,
 ) {
     ListDetailPaneScaffold(
-        scaffoldState = navigator.scaffoldState,
+        value = navigator.scaffoldValue,
+        directive = navigator.scaffoldDirective,
         listPane = {
             AnimatedPane(modifier = Modifier) {
                 SettingsListPane(
@@ -108,7 +109,7 @@ private fun SettingsScreen(
         windowInsets = WindowInsets(0)
     ) {
         val contentPadding =
-            if (navigator.scaffoldState.scaffoldValue.secondary == PaneAdaptedValue.Expanded) {
+            if (navigator.scaffoldValue.secondary == PaneAdaptedValue.Expanded) {
                 WindowInsets.safeDrawing.asPaddingValues().copy(start = 0.dp)
             } else {
                 WindowInsets.safeDrawing.asPaddingValues()

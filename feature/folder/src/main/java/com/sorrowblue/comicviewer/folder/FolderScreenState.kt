@@ -2,12 +2,15 @@ package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -28,8 +31,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
 import com.sorrowblue.comicviewer.file.FileInfoUiState
@@ -37,6 +38,8 @@ import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.section.SortItem
 import com.sorrowblue.comicviewer.folder.section.SortOrder
+import com.sorrowblue.comicviewer.folder.section.SortSheetState
+import com.sorrowblue.comicviewer.folder.section.SortSheetUiState
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
@@ -50,20 +53,18 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Stable
-internal interface FolderScreenState : SaveableScreenState, FileInfoSheetState {
+internal interface FolderScreenState : SaveableScreenState, FileInfoSheetState, SortSheetState {
 
-    fun onSortOrderClick(sortOrder: SortOrder)
-    fun onSortItemClick(sortItem: SortItem)
     fun onFileInfoClick(file: File)
     fun onExtraPaneCloseClick()
-    fun onSortSheetDismissRequest()
-    fun openSort()
     fun onGridSizeChange()
     fun toggleFileListType()
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
     var isScrollableTop: Boolean
+    val pullRefreshState: PullToRefreshState
     var isSkipFirstRefresh: Boolean
     var restorePath: String?
     val pagingDataFlow: Flow<PagingData<File>>
@@ -75,13 +76,14 @@ internal interface FolderScreenState : SaveableScreenState, FileInfoSheetState {
     fun onHideFileClick()
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun rememberFolderScreenState(
     args: FolderArgs,
     navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
+    pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: FolderViewModel = hiltViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
@@ -93,25 +95,32 @@ internal fun rememberFolderScreenState(
         lazyGridState = lazyGridState,
         snackbarHostState = snackbarHostState,
         args = args,
+        pullRefreshState = pullRefreshState,
         viewModel = viewModel,
         scope = scope
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
+@OptIn(
+    ExperimentalMaterial3AdaptiveApi::class,
+    SavedStateHandleSaveableApi::class,
+    ExperimentalMaterial3Api::class
+)
 private class FolderScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val lazyGridState: LazyGridState,
     override val snackbarHostState: SnackbarHostState,
     private val args: FolderArgs,
+    override val pullRefreshState: PullToRefreshState,
     private val viewModel: FolderViewModel,
     override val scope: CoroutineScope,
 ) : FolderScreenState {
 
-    override val existsReadlaterUseCase: ExistsReadlaterUseCase = viewModel.existsReadlaterUseCase
-    override val getFileAttributeUseCase: GetFileAttributeUseCase =
-        viewModel.getFileAttributeUseCase
+    override val existsReadlaterUseCase = viewModel.existsReadlaterUseCase
+    override val getFileAttributeUseCase = viewModel.getFileAttributeUseCase
+
+    override val manageFolderDisplaySettingsUseCase = viewModel.displaySettingsUseCase
 
     override val addReadLaterUseCase: AddReadLaterUseCase = viewModel.addReadLaterUseCase
     override val deleteReadLaterUseCase: DeleteReadLaterUseCase = viewModel.deleteReadLaterUseCase
@@ -126,6 +135,17 @@ private class FolderScreenStateImpl(
     override var uiState by savedStateHandle.saveable { mutableStateOf(FolderScreenUiState()) }
         private set
 
+    override var sortSheetUiState by savedStateHandle.saveable { mutableStateOf(SortSheetUiState()) }
+        private set
+
+    override fun openSortSheet() {
+        sortSheetUiState = sortSheetUiState.copy(isVisible = true)
+    }
+
+    override fun onSortSheetDismissRequest() {
+        sortSheetUiState = sortSheetUiState.copy(isVisible = false)
+    }
+
     init {
         viewModel.displaySettings.distinctUntilChanged().onEach {
             val sortItem = when (it.sortType) {
@@ -135,16 +155,16 @@ private class FolderScreenStateImpl(
             }
             val sortOrder = if (it.sortType.isAsc) SortOrder.Asc else SortOrder.Desc
             uiState = uiState.copy(
-                sortItem = sortItem,
-                sortOrder = sortOrder,
-                fileContentType = it.toFileContentLayout(),
+                display = it.display,
+                columnSize = it.columnSize,
                 folderAppBarUiState = uiState.folderAppBarUiState.copy(
-                    sortItem = sortItem,
                     fileContentType = it.toFileContentLayout(),
-                    sortOrder = sortOrder,
-                    showHidden = it.showHidden
-                )
+                    showHiddenFile = it.showHiddenFile
+                ),
+                isThumbnailEnabled = it.isEnabledThumbnail
             )
+            sortSheetUiState =
+                sortSheetUiState.copy(currentSortItem = sortItem, currentSortOrder = sortOrder)
         }.launchIn(scope)
         scope.launch {
             viewModel.getFileUseCase.execute(GetFileUseCase.Request(bookshelfId, path)).first()
@@ -165,31 +185,23 @@ private class FolderScreenStateImpl(
 
     override fun toggleFileListType() {
         viewModel.updateDisplay(
-            when (uiState.fileContentType) {
-                is FileContentType.Grid -> FolderDisplaySettings.Display.LIST
-                FileContentType.List -> FolderDisplaySettings.Display.GRID
+            when (uiState.folderAppBarUiState.fileContentType) {
+                is FileContentType.Grid -> FolderDisplaySettings.Display.List
+                FileContentType.List -> FolderDisplaySettings.Display.Grid
             }
         )
     }
 
     override fun onHideFileClick() {
         isScrollableTop = true
-        isSkipFirstRefresh = false
-        viewModel.updateShowHide(!uiState.folderAppBarUiState.showHidden)
+        pullRefreshState.startRefresh()
+        viewModel.updateShowHide(!uiState.folderAppBarUiState.showHiddenFile)
     }
 
     override fun onGridSizeChange() {
-        if (uiState.fileContentType is FileContentType.Grid) {
+        if (uiState.folderAppBarUiState.fileContentType is FileContentType.Grid) {
             viewModel.updateGridSize()
         }
-    }
-
-    override fun openSort() {
-        uiState = uiState.copy(openSortSheet = true)
-    }
-
-    override fun onSortSheetDismissRequest() {
-        uiState = uiState.copy(openSortSheet = false)
     }
 
     override fun onExtraPaneCloseClick() {
@@ -211,32 +223,15 @@ private class FolderScreenStateImpl(
     }
 
     override fun onSortItemClick(sortItem: SortItem) {
+        super.onSortItemClick(sortItem)
         isScrollableTop = true
-        isSkipFirstRefresh = false
-        onSortSheetDismissRequest()
-        viewModel.updateDisplaySettings {
-            it.copy(
-                sortType = when (sortItem) {
-                    SortItem.Date -> SortType.DATE(uiState.sortOrder == SortOrder.Asc)
-                    SortItem.Name -> SortType.NAME(uiState.sortOrder == SortOrder.Asc)
-                    SortItem.Size -> SortType.SIZE(uiState.sortOrder == SortOrder.Asc)
-                }
-            )
-        }
+        pullRefreshState.startRefresh()
     }
 
     override fun onSortOrderClick(sortOrder: SortOrder) {
+        super.onSortOrderClick(sortOrder)
         isScrollableTop = true
-        isSkipFirstRefresh = false
-        onSortSheetDismissRequest()
-        viewModel.updateDisplaySettings {
-            it.copy(
-                sortType = when (sortOrder) {
-                    SortOrder.Asc -> it.sortType.copy2(isAsc = true)
-                    SortOrder.Desc -> it.sortType.copy2(isAsc = false)
-                }
-            )
-        }
+        pullRefreshState.startRefresh()
     }
 
     override fun onNavClick() {

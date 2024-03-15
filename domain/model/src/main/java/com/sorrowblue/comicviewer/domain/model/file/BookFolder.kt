@@ -21,11 +21,4 @@ data class BookFolder(
     override val sortIndex: Int = -1,
 ) : Book, IFolder {
 
-    override fun areContentsTheSame(file: File): Boolean {
-        return if (file is BookFolder) {
-            bookshelfId == file.bookshelfId && path == file.path && lastPageRead == file.lastPageRead && lastReadTime == file.lastReadTime
-        } else {
-            false
-        }
-    }
 }

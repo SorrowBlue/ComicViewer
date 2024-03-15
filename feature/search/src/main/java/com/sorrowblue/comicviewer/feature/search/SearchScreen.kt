@@ -34,6 +34,7 @@ import com.sorrowblue.comicviewer.feature.search.section.SearchResultSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import kotlinx.coroutines.delay
 import kotlinx.parcelize.Parcelize
@@ -95,6 +96,9 @@ private fun SearchScreen(
         onFavoriteClick = onFavoriteClick,
         onOpenFolderClick = onOpenFolderClick
     )
+
+    BackHandlerForNavigator(navigator = state.navigator)
+
     LaunchedEffect(uiState) {
         if (!state.isSkipFirstRefresh) {
             delay(WaitLoadPage)
@@ -107,6 +111,7 @@ private fun SearchScreen(
             lazyGridState.scrollToItem(0)
         }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
@@ -144,7 +149,7 @@ private fun SearchScreen(
                     modifier = Modifier
                         .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
                         .padding(horizontal = ComicTheme.dimension.margin)
-                        .padding(top = ComicTheme.dimension.padding * 2)
+                        .padding(top = ComicTheme.dimension.minPadding * 2)
                 )
             }
         },
@@ -161,7 +166,7 @@ private fun SearchScreen(
                     onFavoriteClick = { onFavoriteClick(it) },
                     onOpenFolderClick = { onOpenFolderClick(it) },
                     contentPadding = innerPadding,
-                    scaffoldDirective = navigator.scaffoldState.scaffoldDirective
+                    scaffoldDirective = navigator.scaffoldDirective
                 )
             }
         },

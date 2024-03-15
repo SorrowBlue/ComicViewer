@@ -37,10 +37,10 @@ private class FolderSettingsScreenStateImpl(
 
     init {
         viewModel.settings.onEach {
-            uiState = uiState.copy(
-                isOpenImageFolder = it.resolveImageFolder,
-                isThumbnailEnabled = it.showPreview
-            )
+            uiState = uiState.copy(isOpenImageFolder = it.resolveImageFolder)
+        }.launchIn(scope)
+        viewModel.folderDisplaySettings.onEach {
+            uiState = uiState.copy(isThumbnailEnabled = it.isEnabledThumbnail)
         }.launchIn(scope)
     }
 

@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.folder.section
 
+import android.os.Parcelable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,9 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.sorrowblue.comicviewer.domain.model.settings.SortType
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 enum class SortItem(val label: Int) {
     Name(R.string.folder_label_name),
@@ -35,16 +41,64 @@ enum class SortOrder(val label: Int) {
     Desc(R.string.folder_label_desc),
 }
 
+interface SortSheetState {
+
+    val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
+
+    val scope: CoroutineScope
+
+    val sortSheetUiState: SortSheetUiState
+
+    fun openSortSheet()
+
+    fun onSortSheetDismissRequest()
+
+    fun onSortItemClick(sortItem: SortItem) {
+        scope.launch {
+            manageFolderDisplaySettingsUseCase.edit {
+                it.copy(
+                    sortType = when (sortItem) {
+                        SortItem.Date -> SortType.DATE(sortSheetUiState.currentSortOrder == SortOrder.Asc)
+                        SortItem.Name -> SortType.NAME(sortSheetUiState.currentSortOrder == SortOrder.Asc)
+                        SortItem.Size -> SortType.SIZE(sortSheetUiState.currentSortOrder == SortOrder.Asc)
+                    }
+                )
+            }
+        }
+    }
+
+    fun onSortOrderClick(sortOrder: SortOrder) {
+        scope.launch {
+            manageFolderDisplaySettingsUseCase.edit {
+                it.copy(
+                    sortType = when (sortOrder) {
+                        SortOrder.Asc -> it.sortType.copy2(isAsc = true)
+                        SortOrder.Desc -> it.sortType.copy2(isAsc = false)
+                    }
+                )
+            }
+        }
+    }
+
+}
+
+@Parcelize
+data class SortSheetUiState(
+    val isVisible: Boolean = false,
+    val currentSortItem: SortItem = SortItem.Name,
+    val currentSortOrder: SortOrder = SortOrder.Asc,
+) : Parcelable
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SortSheet(
-    currentSortItem: SortItem,
-    currentSortOrder: SortOrder,
+    uiState: SortSheetUiState,
     onDismissRequest: () -> Unit,
     onSortItemClick: (SortItem) -> Unit,
     onSortOrderClick: (SortOrder) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (!uiState.isVisible) return
     val sortItems = remember { SortItem.entries.toPersistentList() }
     val sortOrders = remember { SortOrder.entries.toPersistentList() }
     ModalBottomSheet(
@@ -70,7 +124,7 @@ fun SortSheet(
                         modifier = Modifier
                             .weight(1f, true)
                     )
-                    if (item == currentSortItem) {
+                    if (item == uiState.currentSortItem) {
                         Icon(ComicIcons.Check, contentDescription = null)
                     }
                 }
@@ -95,7 +149,7 @@ fun SortSheet(
                         modifier = Modifier
                             .weight(1f, true)
                     )
-                    if (item == currentSortOrder) {
+                    if (item == uiState.currentSortOrder) {
                         Icon(ComicIcons.Check, contentDescription = null)
                     }
                 }

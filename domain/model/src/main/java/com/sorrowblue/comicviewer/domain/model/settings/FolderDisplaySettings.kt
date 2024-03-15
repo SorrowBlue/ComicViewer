@@ -2,21 +2,30 @@ package com.sorrowblue.comicviewer.domain.model.settings
 
 import kotlinx.serialization.Serializable
 
+/**
+ * フォルダ表示設定
+ *
+ * @property display ファイル/フォルダの表示方式。
+ * @property isEnabledThumbnail サムネイルを表示するか
+ * @property columnSize グリッド表示時のカラムサイズ
+ * @property sortType ソート順所
+ * @property showHiddenFile 隠しファイルを表示するか
+ */
 @Serializable
 data class FolderDisplaySettings(
-    val display: Display = Display.GRID,
-    val isEnabledThumbnail: Boolean = true,
-    val spanCount: Int = 3,
-    val columnSize: Size = Size.MEDIUM,
+    val display: Display = Display.Grid,
+    val columnSize: ColumnSize = ColumnSize.Medium,
     val sortType: SortType = SortType.NAME(true),
-    val showHidden: Boolean = false,
+    val showHiddenFile: Boolean = false,
+    val isEnabledThumbnail: Boolean = true,
 ) {
 
-    enum class Size {
-        MEDIUM, LARGE
+    enum class ColumnSize {
+        Medium, Large
     }
 
     enum class Display {
-        GRID, LIST
+        List,
+        Grid
     }
 }

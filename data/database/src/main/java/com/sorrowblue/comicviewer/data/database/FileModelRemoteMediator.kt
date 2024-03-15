@@ -42,7 +42,7 @@ internal class FileModelRemoteMediator @AssistedInject constructor(
     private val folderSettings = datastoreDataSource.folderSettings
     private val remoteDataSource = remoteDataSourceFactory.create(bookshelf)
 
-    override suspend fun initialize() = InitializeAction.SKIP_INITIAL_REFRESH
+    override suspend fun initialize() = InitializeAction.LAUNCH_INITIAL_REFRESH
 
     override suspend fun load(
         loadType: LoadType,

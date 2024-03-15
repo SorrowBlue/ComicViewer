@@ -27,6 +27,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 @Composable
 fun <T : File> FileContent(
     type: FileContentType,
+    isThumbnailEnabled: Boolean = true,
     lazyPagingItems: LazyPagingItems<T>,
     contentPadding: PaddingValues,
     onFileClick: (T) -> Unit,
@@ -36,10 +37,11 @@ fun <T : File> FileContent(
 ) {
     when (type) {
         is FileContentType.Grid -> FileGridContent(
-            columns = type.columns3,
+            lazyPagingItems = lazyPagingItems,
+            columns = type.columns,
             state = state,
             contentPadding = contentPadding,
-            lazyPagingItems = lazyPagingItems,
+            isThumbnailEnabled = isThumbnailEnabled,
             onClickItem = onFileClick,
             onLongClickItem = onInfoClick,
             modifier = modifier
@@ -59,13 +61,14 @@ fun <T : File> FileContent(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun <T : File> FileGridContent(
-    columns: GridCells,
-    state: LazyGridState,
-    contentPadding: PaddingValues,
     lazyPagingItems: LazyPagingItems<T>,
+    columns: GridCells,
     onClickItem: (T) -> Unit,
     onLongClickItem: (T) -> Unit,
     modifier: Modifier = Modifier,
+    isThumbnailEnabled: Boolean = false,
+    state: LazyGridState = rememberLazyGridState(),
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     var spanCount by remember { mutableIntStateOf(1) }
     LazyVerticalGrid(
@@ -87,6 +90,7 @@ private fun <T : File> FileGridContent(
             lazyPagingItems[it]?.let { item ->
                 FileGrid(
                     file = item,
+                    isThumbnailEnabled = isThumbnailEnabled,
                     onClick = { onClickItem(item) },
                     onInfoClick = { onLongClickItem(item) },
                     modifier = Modifier.animateItemPlacement()

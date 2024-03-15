@@ -17,10 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.DefaultAlpha
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -36,52 +32,21 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
+
 @Composable
-fun FileGrid(
+fun GridFile(
     file: File,
-    isThumbnailEnabled: Boolean = true,
     onClick: () -> Unit,
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isThumbnailEnabled: Boolean = true,
 ) {
     ElevatedCard(onClick = onClick, modifier = modifier) {
         Box {
             if (isThumbnailEnabled) {
-                AsyncImage2(
-                    model = file,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    loading = {
-                        CircularProgressIndicator()
-                    },
-                    error = {
-                        if (file is Book) {
-                            Icon(imageVector = ComicIcons.Image, contentDescription = null)
-                        } else {
-                            Icon(imageVector = ComicIcons.Folder, contentDescription = null)
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .clip(CardDefaults.shape)
-                        .background(ComicTheme.colorScheme.surfaceVariant)
-                )
+                GridFileThumbnail(file = file)
             } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .clip(CardDefaults.shape)
-                        .background(ComicTheme.colorScheme.surfaceVariant),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (file is Book) {
-                        Icon(imageVector = ComicIcons.Book, contentDescription = null)
-                    } else {
-                        Icon(imageVector = ComicIcons.Folder, contentDescription = null)
-                    }
-                }
+                GridFileIcon(file = file)
             }
             IconButton(
                 onClick = onInfoClick,
@@ -121,6 +86,50 @@ fun FileGrid(
     }
 }
 
+@Composable
+private fun GridFileThumbnail(
+    file: File,
+) {
+    AsyncImage2(
+        model = file,
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        loading = {
+            CircularProgressIndicator()
+        },
+        error = {
+            if (file is Book) {
+                Icon(imageVector = ComicIcons.Image, contentDescription = null)
+            } else {
+                Icon(imageVector = ComicIcons.Folder, contentDescription = null)
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f)
+            .clip(CardDefaults.shape)
+            .background(ComicTheme.colorScheme.surfaceVariant)
+    )
+}
+
+@Composable
+private fun GridFileIcon(file: File) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f)
+            .clip(CardDefaults.shape)
+            .background(ComicTheme.colorScheme.surfaceVariant),
+        contentAlignment = Alignment.Center
+    ) {
+        if (file is Book) {
+            Icon(imageVector = ComicIcons.Book, contentDescription = null)
+        } else {
+            Icon(imageVector = ComicIcons.Folder, contentDescription = null)
+        }
+    }
+}
+
 @Preview(widthDp = 88)
 @Preview(widthDp = 120)
 @Preview(widthDp = 180)
@@ -133,56 +142,5 @@ private fun PreviewFileGrid() {
             onClick = {},
             onInfoClick = {}
         )
-    }
-}
-
-fun forwardingPainter(
-    painter: Painter,
-    alpha: Float = DefaultAlpha,
-    colorFilter: ColorFilter? = null,
-    onDraw: DrawScope.(ForwardingDrawInfo) -> Unit = DefaultOnDraw,
-): Painter = ForwardingPainter(painter, alpha, colorFilter, onDraw)
-
-data class ForwardingDrawInfo(
-    val painter: Painter,
-    val alpha: Float,
-    val colorFilter: ColorFilter?,
-)
-
-private class ForwardingPainter(
-    private val painter: Painter,
-    private var alpha: Float,
-    private var colorFilter: ColorFilter?,
-    private val onDraw: DrawScope.(ForwardingDrawInfo) -> Unit,
-) : Painter() {
-
-    private var info = newInfo()
-
-    override val intrinsicSize get() = painter.intrinsicSize
-
-    override fun applyAlpha(alpha: Float): Boolean {
-        if (alpha != DefaultAlpha) {
-            this.alpha = alpha
-            this.info = newInfo()
-        }
-        return true
-    }
-
-    override fun applyColorFilter(colorFilter: ColorFilter?): Boolean {
-        if (colorFilter != null) {
-            this.colorFilter = colorFilter
-            this.info = newInfo()
-        }
-        return true
-    }
-
-    override fun DrawScope.onDraw() = onDraw(info)
-
-    private fun newInfo() = ForwardingDrawInfo(painter, alpha, colorFilter)
-}
-
-private val DefaultOnDraw: DrawScope.(ForwardingDrawInfo) -> Unit = { info ->
-    with(info.painter) {
-        draw(size, info.alpha, info.colorFilter)
     }
 }

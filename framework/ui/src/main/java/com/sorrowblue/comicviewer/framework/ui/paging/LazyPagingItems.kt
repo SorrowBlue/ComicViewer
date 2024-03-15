@@ -9,7 +9,7 @@ val <T : Any> LazyPagingItems<T>.isEmptyData
 
 val <T : Any> LazyPagingItems<T>.isLoadedData
     get() =
-        loadState.source.refresh is LoadState.NotLoading && (loadState.mediator == null || loadState.mediator?.refresh is LoadState.NotLoading)
+        loadState.source.refresh is LoadState.NotLoading && (loadState.mediator == null || loadState.mediator!!.refresh is LoadState.NotLoading)
 
 fun <T : Any> LazyPagingItems<T>.indexOf(op: (T?) -> Boolean): Int {
     for (i in 0..<itemCount) {

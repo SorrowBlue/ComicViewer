@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
@@ -63,4 +64,20 @@ fun Modifier.marginPadding(
         end = if (horizontal || end) ComicTheme.dimension.margin else 0.dp,
         bottom = if (vertical || bottom) ComicTheme.dimension.margin else 0.dp
     )
+}
+
+@Composable
+fun calculatePaddingMargins(contentPadding: PaddingValues): Pair<PaddingValues, PaddingValues> {
+    val isCompact = LocalWindowSize.current.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+    val paddings = if (isCompact) contentPadding.copy(
+        top = 0.dp,
+        bottom = 0.dp
+    ) else contentPadding.copy(top = 0.dp)
+    val margins = if (isCompact) PaddingValues(
+        top = contentPadding.calculateTopPadding(),
+        bottom = contentPadding.calculateBottomPadding()
+    ) else PaddingValues(
+        top = contentPadding.calculateTopPadding(),
+    )
+    return paddings to margins
 }
