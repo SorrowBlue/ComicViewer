@@ -48,6 +48,9 @@ internal class FileModelRemoteMediator @AssistedInject constructor(
         loadType: LoadType,
         state: PagingState<Int, FileWithCountEntity>,
     ): MediatorResult {
+        if (loadType != LoadType.REFRESH) {
+            return MediatorResult.Success(endOfPaginationReached = true)
+        }
         logcat { "load $loadType" }
         kotlin.runCatching {
             withContext(dispatcher) {

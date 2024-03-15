@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.framework.ui.paging
 
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 
@@ -19,3 +20,9 @@ fun <T : Any> LazyPagingItems<T>.indexOf(op: (T?) -> Boolean): Int {
     }
     return -1
 }
+
+val CombinedLoadStates.isLoading
+    get() = source.refresh is LoadState.Loading || (mediator == null || mediator!!.refresh is LoadState.Loading)
+
+val CombinedLoadStates.isNotLoading
+    get() = source.refresh is LoadState.NotLoading && (mediator?.refresh is LoadState.NotLoading)

@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 14
+        versionCode = 15
         versionName = grgitService.service.get().grgit.describe {
             longDescr = false
             isTags = true
@@ -144,6 +144,8 @@ dependencies {
     implementation(libs.google.android.play.feature.delivery.ktx)
     implementation(libs.mikepenz.aboutlibraries)
     implementation(libs.androidx.appcompat)
+
+    implementation("com.android.billingclient:billing-ktx:6.2.0")
 
     debugImplementation(libs.squareup.leakcanary.android)
 }
