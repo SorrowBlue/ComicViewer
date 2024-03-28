@@ -38,6 +38,7 @@ import androidx.compose.material.icons.rounded.InstallMobile
 import androidx.compose.material.icons.rounded.Key
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Money
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.PermDeviceInformation
@@ -93,6 +94,7 @@ object ComicIcons {
     val MusicNote = Icons.Rounded.MusicNote
     val VolumeUp = Icons.AutoMirrored.Rounded.VolumeUp
     val Start = Icons.Rounded.Start
+    val Money = Icons.Rounded.Money
     val Language = Icons.Rounded.Language
     val Info = Icons.Rounded.Info
     val Lock = Icons.Rounded.Lock

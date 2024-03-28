@@ -32,6 +32,11 @@ fun <T> AnimatedExtraPaneScaffold(
     SupportingPaneScaffold(
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
+        mainPane = {
+            AnimatedPane(modifier = Modifier) {
+                content()
+            }
+        },
         supportingPane = {
         },
         extraPane = {
@@ -41,11 +46,7 @@ fun <T> AnimatedExtraPaneScaffold(
         },
         windowInsets = WindowInsets(0),
         modifier = modifier
-    ) {
-        AnimatedPane(modifier = Modifier) {
-            content()
-        }
-    }
+    )
 }
 
 @ExperimentalMaterial3AdaptiveApi

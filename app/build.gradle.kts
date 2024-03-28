@@ -145,7 +145,7 @@ dependencies {
     implementation(libs.mikepenz.aboutlibraries)
     implementation(libs.androidx.appcompat)
 
-    implementation("com.android.billingclient:billing-ktx:6.2.0")
+    implementation(libs.google.android.billingclient.billingKtx)
 
     debugImplementation(libs.squareup.leakcanary.android)
 }

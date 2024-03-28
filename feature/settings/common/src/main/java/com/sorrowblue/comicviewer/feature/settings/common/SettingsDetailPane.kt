@@ -44,6 +44,7 @@ fun SettingsDetailPane(
     onBackClick: () -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
+    snackbarHost: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
     widthSizeClass: WindowWidthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass,
     scrollBehavior: TopAppBarScrollBehavior =
@@ -80,6 +81,7 @@ fun SettingsDetailPane(
                 )
             }
         },
+        snackbarHost = snackbarHost,
         contentWindowInsets = contentPadding.asWindowInsets(),
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
