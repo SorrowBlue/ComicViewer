@@ -42,7 +42,7 @@ dependency-graph-generator = "com.vanniktech.dependency.graph.generator:0.8.0"
 arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 grgit = "org.ajoberstar.grgit.service:5.2.2"
 roborazzi = "io.github.takahirom.roborazzi:1.11.0"
-
+dokka = "org.jetbrains.dokka:1.9.20"
 [libraries]
 roborazzi = "io.github.takahirom.roborazzi:roborazzi:1.11.0"
 roborazzi-compose = "io.github.takahirom.roborazzi:roborazzi-compose:1.9.0"
@@ -50,6 +50,7 @@ roborazzi-junitRule = "io.github.takahirom.roborazzi:roborazzi-junit-rule:1.9.0"
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
 android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "1.9.20" }
 
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version = "0.3.7" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }

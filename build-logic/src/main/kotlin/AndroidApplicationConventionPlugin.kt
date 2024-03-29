@@ -18,6 +18,7 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
                 apply("comicviewer.android.lint")
+                apply("comicviewer.android.dokka")
             }
 
             kotlin {
