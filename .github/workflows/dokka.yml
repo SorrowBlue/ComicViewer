@@ -20,6 +20,7 @@ jobs:
     environment: android
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-java-gradle
 
       - name: dokkaHtmlMultiModule
         run: ./gradlew :dokkaHtmlMultiModule --no-configuration-cache
