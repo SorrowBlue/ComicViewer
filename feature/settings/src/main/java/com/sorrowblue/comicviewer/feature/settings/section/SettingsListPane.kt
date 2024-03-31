@@ -25,34 +25,34 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.feature.settings.R
 import com.sorrowblue.comicviewer.feature.settings.Settings2
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
 
 @Parcelize
 internal data class SettingsListPaneUiState(
     val currentSettings2: Settings2 = Settings2.entries.first(),
-    val list: @RawValue PersistentList<Settings2> = Settings2.entries.toPersistentList(),
+    val list: List<Settings2> = Settings2.entries,
 ) : Parcelable
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun SettingsListPane(
-    uiState: SettingsListPaneUiState,
+    navigator: ThreePaneScaffoldNavigator<Settings2>,
     onBackClick: () -> Unit,
     onSettingsClick: (Settings2) -> Unit,
     windowAdaptiveInfo: WindowAdaptiveInfo,
@@ -60,10 +60,9 @@ internal fun SettingsListPane(
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
-    val list = uiState.list
-    val currentSettings2 = uiState.currentSettings2
-    val windowSizeClass = windowAdaptiveInfo.windowSizeClass.widthSizeClass
-    if (windowSizeClass == WindowWidthSizeClass.Compact || windowSizeClass == WindowWidthSizeClass.Medium) {
+    val list = remember { Settings2.entries.toPersistentList() }
+    val windowSizeClass = windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass
+    if (windowSizeClass == WindowWidthSizeClass.COMPACT || windowSizeClass == WindowWidthSizeClass.MEDIUM) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -152,7 +151,7 @@ internal fun SettingsListPane(
                             .clip(MaterialTheme.shapes.large)
                             .clickable { onSettingsClick(settings2) },
                         colors = ListItemDefaults.colors(
-                            containerColor = if (currentSettings2 == settings2) {
+                            containerColor = if (navigator.currentDestination?.content == settings2) {
                                 MaterialTheme.colorScheme.primaryContainer
                             } else {
                                 MaterialTheme.colorScheme.surfaceContainerHighest

@@ -20,7 +20,6 @@ internal class SettingsSerializer(private val coroutineDispatcher: CoroutineDisp
 
     override suspend fun writeTo(t: Settings, output: OutputStream) {
         withContext(coroutineDispatcher) {
-            @Suppress("BlockingMethodInNonBlockingContext")
             output.write(ProtoBuf.encodeToByteArray(Settings.serializer(), t))
         }
     }

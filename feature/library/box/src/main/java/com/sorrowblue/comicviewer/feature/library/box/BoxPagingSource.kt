@@ -37,6 +37,7 @@ internal class BoxPagingSource(
                         it.id,
                         0,
                         0,
+                        false
                     )
                 }
 
@@ -48,6 +49,7 @@ internal class BoxPagingSource(
                         it.id,
                         it.size,
                         0,
+                        false,
                         "",
                         0,
                         0,

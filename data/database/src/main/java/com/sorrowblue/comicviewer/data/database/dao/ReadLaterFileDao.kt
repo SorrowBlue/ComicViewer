@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Upsert
 import com.sorrowblue.comicviewer.data.database.entity.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.ReadLaterFileEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface ReadLaterFileDao {
@@ -24,4 +25,7 @@ internal interface ReadLaterFileDao {
 
     @Query("DELETE FROM read_later_file")
     suspend fun deleteAll()
+
+    @Query("SELECT EXISTS(SELECT * FROM read_later_file WHERE bookshelf_id=:bookshelfId AND file_path=:path)")
+    fun exists(bookshelfId: Int, path: String): Flow<Boolean>
 }

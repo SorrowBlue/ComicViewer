@@ -29,6 +29,10 @@ internal class ReadLaterFileModelLocalDataSourceImpl @Inject constructor(
         })
     }
 
+    override fun exists(model: ReadLaterFile): Flow<Boolean> {
+        return readLaterFileDao.exists(model.bookshelfId.value, model.path)
+    }
+
     override suspend fun delete(model: ReadLaterFile): Result<ReadLaterFile, Unit> {
         return kotlin.runCatching {
             readLaterFileDao.delete(ReadLaterFileEntity.fromModel(model))

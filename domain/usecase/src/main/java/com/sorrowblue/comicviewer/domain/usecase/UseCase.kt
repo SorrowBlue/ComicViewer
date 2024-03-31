@@ -11,5 +11,9 @@ abstract class UseCase<in R : UseCase.Request, out D, out E : Resource.AppError>
         return run(request)
     }
 
+    operator fun invoke(request: R): Flow<Resource<D, E>> {
+        return run(request)
+    }
+
     protected abstract fun run(request: R): Flow<Resource<D, E>>
 }

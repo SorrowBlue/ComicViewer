@@ -12,6 +12,8 @@ import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.FileEntity
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import kotlinx.coroutines.flow.Flow
 
@@ -24,7 +26,6 @@ internal interface FavoriteFileDao {
     @Delete
     suspend fun delete(favoriteFileEntity: FavoriteFileEntity): Int
 
-    @Deprecated("", level = DeprecationLevel.WARNING)
     @RawQuery(observedEntities = [FavoriteFileEntity::class, FileEntity::class])
     fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileEntity>
 
@@ -34,7 +35,6 @@ internal interface FavoriteFileDao {
             is SortType.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
             is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
         }
-        @Suppress("DEPRECATION")
         return pagingSource(
             object : SupportSQLiteQuery {
                 override val argCount = 1
@@ -66,13 +66,12 @@ internal interface FavoriteFileDao {
     )
     suspend fun findCacheKey(favoriteId: Int, limit: Int): List<String>
 
-    @Deprecated("使用禁止")
     @RawQuery(observedEntities = [FileEntity::class])
     fun flowPrevNext(supportSQLiteQuery: SupportSQLiteQuery): Flow<List<FileEntity>>
 
     fun flowPrevNext(
-        favoriteId: Int,
-        bookshelfId: Int,
+        favoriteId: FavoriteId,
+        bookshelfId: BookshelfId,
         path: String,
         isNext: Boolean,
         sortType: SortType,
@@ -84,7 +83,6 @@ internal interface FavoriteFileDao {
         }
         val comparison = if (isNext && sortType.isAsc) ">=" else "<="
         val order = if (isNext && sortType.isAsc) "ASC" else "DESC"
-        @Suppress("DEPRECATION")
         return flowPrevNext(
             SimpleSQLiteQuery(
                 """
@@ -108,7 +106,7 @@ internal interface FavoriteFileDao {
                     LIMIT 1
                     ;
                 """.trimIndent(),
-                arrayOf(favoriteId.toLong(), bookshelfId.toLong(), path)
+                arrayOf(favoriteId.value.toLong(), bookshelfId.value.toLong(), path)
             )
         )
     }

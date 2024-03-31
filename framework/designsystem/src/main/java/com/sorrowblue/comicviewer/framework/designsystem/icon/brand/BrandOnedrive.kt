@@ -39,7 +39,13 @@ val ComicIcons.BrandOnedrive: ImageVector
             lineToRelative(6.718F, 4.024F)
             lineToRelative(4.003F, -1.685F)
             lineToRelative(0.0F, 0.001F)
-            arcTo(6.477F, 6.477F, 0.0F, false, true, 25.5F, 7.5F)
+            arcTo(
+                6.477F, 6.477F, 0.0F,
+                isMoreThanHalf = false,
+                isPositiveArc = true,
+                x1 = 25.5F,
+                y1 = 7.5F
+            )
             curveToRelative(0.148F, 0.0F, 0.294F, 0.007F, 0.439F, 0.016F)
             arcToRelative(10.001F, 10.001F, 0.0F, false, false, -18.041F, -3.014F)
             curveTo(7.932F, 4.502F, 7.966F, 4.5F, 8.0F, 4.5F)

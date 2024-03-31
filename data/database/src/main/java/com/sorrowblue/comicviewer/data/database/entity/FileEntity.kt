@@ -13,11 +13,12 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 
 data class FileWithCountEntity(
     @ColumnInfo(FileEntity.PATH) val path: String,
-    @ColumnInfo(FileEntity.BOOKSHELF_ID) val bookshelfId: Int,
+    @ColumnInfo(FileEntity.BOOKSHELF_ID) val bookshelfId: BookshelfId,
     val name: String,
     val parent: String,
     val size: Long,
     @ColumnInfo(name = "last_modified") val lastModified: Long,
+    @ColumnInfo(name = "hidden") val isHidden: Boolean,
     @ColumnInfo(name = "file_type") val fileEntityType: FileEntity.Type,
     @ColumnInfo(name = "file_type_order") val fileTypeOrder: Int = fileEntityType.order,
     @ColumnInfo(name = "sort_index") val sortIndex: Int,
@@ -30,11 +31,12 @@ data class FileWithCountEntity(
         return when (fileEntityType) {
             FileEntity.Type.FILE -> BookFile(
                 path = path,
-                bookshelfId = BookshelfId(bookshelfId),
+                bookshelfId = bookshelfId,
                 parent = parent,
                 name = name,
                 size = size,
                 lastModifier = lastModified,
+                isHidden = isHidden,
                 sortIndex = sortIndex,
                 cacheKey = info.cacheKey,
                 totalPageCount = info.totalPageCount,
@@ -44,22 +46,24 @@ data class FileWithCountEntity(
 
             FileEntity.Type.FOLDER -> Folder(
                 path = path,
-                bookshelfId = BookshelfId(bookshelfId),
+                bookshelfId = bookshelfId,
                 name = name,
                 parent = parent,
                 size = size,
                 lastModifier = lastModified,
+                isHidden = isHidden,
                 sortIndex = sortIndex,
                 count = count
             )
 
             FileEntity.Type.IMAGE_FOLDER -> BookFolder(
                 path = path,
-                bookshelfId = BookshelfId(bookshelfId),
+                bookshelfId = bookshelfId,
                 name = name,
                 parent = parent,
                 size = size,
                 lastModifier = lastModified,
+                isHidden = isHidden,
                 sortIndex = sortIndex,
                 cacheKey = info.cacheKey,
                 totalPageCount = info.totalPageCount,
@@ -91,6 +95,7 @@ data class FileEntity(
     val parent: String,
     val size: Long,
     @ColumnInfo(name = "last_modified") val lastModified: Long,
+    @ColumnInfo(name = "hidden", defaultValue = "false") val isHidden: Boolean,
     @ColumnInfo(name = "file_type") val fileType: Type,
     @ColumnInfo(name = "file_type_order") val fileTypeOrder: Int = fileType.order,
     @ColumnInfo(name = "sort_index") val sortIndex: Int,
@@ -111,6 +116,7 @@ data class FileEntity(
                     parent = model.parent,
                     size = model.size,
                     lastModified = model.lastModifier,
+                    isHidden = model.isHidden,
                     fileType = Type.FILE,
                     sortIndex = model.sortIndex,
                     info = FileInfoEntity(model.cacheKey, model.totalPageCount),
@@ -124,6 +130,7 @@ data class FileEntity(
                     parent = model.parent,
                     size = model.size,
                     lastModified = model.lastModifier,
+                    isHidden = model.isHidden,
                     fileType = Type.FOLDER,
                     sortIndex = model.sortIndex,
                     info = FileInfoEntity("", 0),
@@ -137,6 +144,7 @@ data class FileEntity(
                     parent = model.parent,
                     size = model.size,
                     lastModified = model.lastModifier,
+                    isHidden = model.isHidden,
                     fileType = Type.IMAGE_FOLDER,
                     sortIndex = model.sortIndex,
                     info = FileInfoEntity(model.cacheKey, model.totalPageCount),
@@ -154,6 +162,7 @@ data class FileEntity(
                 name = name,
                 size = size,
                 lastModifier = lastModified,
+                isHidden = isHidden,
                 sortIndex = sortIndex,
                 cacheKey = info.cacheKey,
                 totalPageCount = info.totalPageCount,
@@ -168,6 +177,7 @@ data class FileEntity(
                 parent = parent,
                 size = size,
                 lastModifier = lastModified,
+                isHidden = isHidden,
                 sortIndex = sortIndex
             )
 
@@ -178,6 +188,7 @@ data class FileEntity(
                 parent = parent,
                 size = size,
                 lastModifier = lastModified,
+                isHidden = isHidden,
                 sortIndex = sortIndex,
                 cacheKey = info.cacheKey,
                 totalPageCount = info.totalPageCount,

@@ -17,15 +17,8 @@ import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
-import com.sorrowblue.comicviewer.data.coil.book.thumbnailBitmap
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.reader.FileReader
-import com.sorrowblue.comicviewer.domain.model.SortUtil
-import com.sorrowblue.comicviewer.domain.model.SupportExtension
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
 import javax.inject.Inject
@@ -43,8 +36,6 @@ internal class FolderThumbnailFetcher(
     private val folder: Folder,
     options: Options,
     diskCache: dagger.Lazy<DiskCache?>,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : FileModelFetcher(options, diskCache) {
@@ -86,33 +77,34 @@ internal class FolderThumbnailFetcher(
             try {
                 val thumbnails = cacheList(size, folderThumbnailOrder)
                 if (thumbnails.isEmpty()) {
+                    throw CoilRuntimeException("フォルダにファイルなし。")
                     // キャッシュがない場合、取得する。
-                    val bookshelfModel =
-                        bookshelfLocalDataSource.flow(folder.bookshelfId).first()!!
-                    val supportExtensions =
-                        datastoreDataSource.folderSettings.first().supportExtension.map(
-                            SupportExtension::extension
-                        )
-                    snapshot = remoteDataSourceFactory.create(bookshelfModel)
-                        .listFiles(folder, false) { SortUtil.filter(it, supportExtensions) }.let {
-                            SortUtil.sortedIndex(it)
-                        }.firstOrNull { it is BookFile }?.let {
-                            val fileReader =
-                                remoteDataSourceFactory.create(bookshelfModel)
-                                    .fileReader(it as BookFile)
-                                    ?: throw CoilRuntimeException("FileReaderが取得できない")
-                            val bitmap = fileReader.thumbnailBitmap(
-                                requestWidth.toInt(), requestHeight.toInt()
-                            ) ?: throw CoilRuntimeException("画像を取得できない")
-                            writeToDiskCache(
-                                snapshot = snapshot, fileReader = fileReader, bitmap = bitmap
-                            )
-                        } ?: throw CoilRuntimeException("フォルダにファイルなし。")
-                    return SourceResult(
-                        source = snapshot.toImageSource(),
-                        mimeType = null,
-                        dataSource = DataSource.DISK
-                    )
+//                    val bookshelfModel =
+//                        bookshelfLocalDataSource.flow(folder.bookshelfId).first()!!
+//                    val supportExtensions =
+//                        datastoreDataSource.folderSettings.first().supportExtension.map(
+//                            SupportExtension::extension
+//                        )
+//                    snapshot = remoteDataSourceFactory.create(bookshelfModel)
+//                        .listFiles(folder, false) { SortUtil.filter(it, supportExtensions) }.let {
+//                            SortUtil.sortedIndex(it)
+//                        }.firstOrNull { it is BookFile }?.let {
+//                            val fileReader =
+//                                remoteDataSourceFactory.create(bookshelfModel)
+//                                    .fileReader(it as BookFile)
+//                                    ?: throw CoilRuntimeException("FileReaderが取得できない")
+//                            val bitmap = fileReader.thumbnailBitmap(
+//                                requestWidth.toInt(), requestHeight.toInt()
+//                            ) ?: throw CoilRuntimeException("画像を取得できない")
+//                            writeToDiskCache(
+//                                snapshot = snapshot, fileReader = fileReader, bitmap = bitmap
+//                            )
+//                        } ?: throw CoilRuntimeException("フォルダにファイルなし。")
+//                    return SourceResult(
+//                        source = snapshot.toImageSource(),
+//                        mimeType = null,
+//                        dataSource = DataSource.DISK
+//                    )
                 } else {
                     // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
                     snapshot = writeToDiskCache(snapshot = snapshot, list = thumbnails)
@@ -225,51 +217,6 @@ internal class FolderThumbnailFetcher(
         }
     }
 
-    private fun writeToDiskCache(
-        snapshot: DiskCache.Snapshot?,
-        fileReader: FileReader,
-        bitmap: Bitmap,
-    ): DiskCache.Snapshot? {
-        // この応答をキャッシュすることが許可されていない場合は短絡します。
-        if (!isCacheable()) {
-            snapshot?.closeQuietly()
-            return null
-        }
-
-        // 新しいエディターを開きます。
-        val editor = if (snapshot != null) {
-            snapshot.closeAndOpenEditor()
-        } else {
-            diskCache?.openEditor(diskCacheKey)
-        }
-
-        // このエントリに書き込めない場合は「null」を返します。
-        if (editor == null) return null
-
-        try {
-            // 応答をディスク キャッシュに書き込みます。
-            // メタデータと画像データを更新します。
-            fileSystem.write(editor.metadata) {
-                FolderThumbnailMetadata(
-                    folder.path,
-                    folder.bookshelfId.value,
-                    folder.lastModifier,
-                    emptyList()
-                ).writeTo(this)
-            }
-            fileSystem.write(editor.data) {
-                bitmap.compress(COMPRESS_FORMAT, 75, outputStream())
-            }
-            return editor.commitAndOpenSnapshot()
-        } catch (e: Exception) {
-            editor.abortQuietly()
-            throw e
-        } finally {
-            bitmap.recycle()
-            fileReader.closeQuietly()
-        }
-    }
-
     private fun combineThumbnail(canvas: Canvas, snap: DiskCache.Snapshot, rightSpace: Float) {
         val bitmap = BitmapFactory.decodeFile(snap.data.toString())
         val resizeScale =
@@ -302,8 +249,6 @@ internal class FolderThumbnailFetcher(
 
     class Factory @Inject constructor(
         @ThumbnailDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
-        private val remoteDataSourceFactory: RemoteDataSource.Factory,
-        private val bookshelfLocalDataSource: BookshelfLocalDataSource,
         private val fileModelLocalDataSource: FileModelLocalDataSource,
         private val datastoreDataSource: DatastoreDataSource,
     ) : Fetcher.Factory<Folder> {
@@ -317,8 +262,6 @@ internal class FolderThumbnailFetcher(
                 data,
                 options,
                 diskCache,
-                remoteDataSourceFactory,
-                bookshelfLocalDataSource,
                 fileModelLocalDataSource,
                 datastoreDataSource
             )

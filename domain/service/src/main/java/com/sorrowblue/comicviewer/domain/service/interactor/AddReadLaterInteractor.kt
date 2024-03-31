@@ -2,9 +2,9 @@ package com.sorrowblue.comicviewer.domain.service.interactor
 
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
-import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.DeleteAllReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.DeleteAllReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

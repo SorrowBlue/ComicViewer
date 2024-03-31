@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.data.database.entity
 
 import androidx.room.Embedded
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 
 internal data class FavoriteFileCountEntity(
     @Embedded val favoriteEntity: FavoriteEntity,
@@ -12,7 +11,7 @@ internal data class FavoriteFileCountEntity(
 
     fun toModel(): Favorite {
         return Favorite(
-            id = FavoriteId(favoriteEntity.id),
+            id = favoriteEntity.id,
             name = favoriteEntity.name,
             count = count,
             exist = exist

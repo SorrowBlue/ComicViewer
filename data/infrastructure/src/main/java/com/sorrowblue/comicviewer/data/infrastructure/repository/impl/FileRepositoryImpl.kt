@@ -56,6 +56,15 @@ internal class FileRepositoryImpl @Inject constructor(
         }.flowOn(dispatcher)
     }
 
+    override fun existsReadLater(
+        bookshelfId: BookshelfId,
+        path: String,
+    ): Flow<Resource<Boolean, FileRepository.Error>> {
+        return readLaterFileModelLocalDataSource.exists(ReadLaterFile(bookshelfId, path)).map {
+            Resource.Success(it)
+        }
+    }
+
     override fun deleteReadLater(
         bookshelfId: BookshelfId,
         path: String,
@@ -169,7 +178,8 @@ internal class FileRepositoryImpl @Inject constructor(
                     is SortType.NAME -> SearchCondition.Order.NAME
                     is SortType.SIZE -> SearchCondition.Order.SIZE
                 },
-                if (settings.sortType.isAsc) SearchCondition.Sort.ASC else SearchCondition.Sort.DESC
+                if (settings.sortType.isAsc) SearchCondition.Sort.ASC else SearchCondition.Sort.DESC,
+                settings.showHiddenFile,
             )
         }
     }
@@ -182,11 +192,7 @@ internal class FileRepositoryImpl @Inject constructor(
         val folderSettings = settingsCommonRepository.folderSettings.first()
         return fileScanService.enqueue(
             folder,
-            when (scan) {
-                Scan.ALL -> Scan.ALL
-                Scan.IN_FOLDER -> Scan.IN_FOLDER
-                Scan.IN_FOLDER_SUB -> Scan.IN_FOLDER_SUB
-            },
+            scan,
             folderSettings.resolveImageFolder,
             folderSettings.supportExtension.map(SupportExtension::extension)
         )

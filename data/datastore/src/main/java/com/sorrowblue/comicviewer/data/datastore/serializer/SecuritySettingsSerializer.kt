@@ -21,7 +21,6 @@ internal class SecuritySettingsSerializer(private val coroutineDispatcher: Corou
 
     override suspend fun writeTo(t: SecuritySettings, output: OutputStream) {
         withContext(coroutineDispatcher) {
-            @Suppress("BlockingMethodInNonBlockingContext")
             output.write(ProtoBuf.encodeToByteArray(SecuritySettings.serializer(), t))
         }
     }
@@ -37,7 +36,6 @@ internal class OneTimeFlagSerializer(private val coroutineDispatcher: CoroutineD
 
     override suspend fun writeTo(t: OneTimeFlag, output: OutputStream) {
         withContext(coroutineDispatcher) {
-            @Suppress("BlockingMethodInNonBlockingContext")
             output.write(ProtoBuf.encodeToByteArray(OneTimeFlag.serializer(), t))
         }
     }

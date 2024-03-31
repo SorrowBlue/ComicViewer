@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.adaptive.AnimatedPane
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.ListDetailPaneScaffold
-import androidx.compose.material3.adaptive.PaneAdaptedValue
-import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.AnimatedPane
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -21,6 +21,7 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.spec.Route
+import com.sorrowblue.comicviewer.feature.settings.destinations.DonationScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.folder.destinations.FolderSettingsScreenDestination
@@ -51,11 +52,9 @@ private fun SettingsScreen(
     settingsScreenNavigator: SettingsScreenNavigator,
     state: SettingsScreenState = rememberSettingsScreenState(),
 ) {
-    val uiState = state.uiState
     val navigator = state.navigator
     val windowAdaptiveInfo = state.windowAdaptiveInfo
     SettingsScreen(
-        uiState = uiState,
         navigator = navigator,
         windowAdaptiveInfo = windowAdaptiveInfo,
         onBackClick = settingsScreenNavigator::navigateUp,
@@ -65,7 +64,7 @@ private fun SettingsScreen(
     ) { contentPadding ->
         DestinationsNavHost(
             navGraph = SettingsDetailNavGraph,
-            startRoute = state.uiState.listPaneUiState.currentSettings2.route
+            startRoute = navigator.currentDestination?.content?.route
                 ?: SettingsDetailNavGraph.startRoute,
             dependenciesContainerBuilder = {
                 dependency(contentPadding)
@@ -86,19 +85,30 @@ internal data class SettingsScreenUiState(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsScreen(
-    uiState: SettingsScreenUiState,
-    navigator: ThreePaneScaffoldNavigator<Unit>,
+    navigator: ThreePaneScaffoldNavigator<Settings2>,
     windowAdaptiveInfo: WindowAdaptiveInfo,
     onBackClick: () -> Unit,
     onSettingsClick: (Settings2) -> Unit,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     ListDetailPaneScaffold(
-        scaffoldState = navigator.scaffoldState,
+        value = navigator.scaffoldValue,
+        directive = navigator.scaffoldDirective,
+        detailPane = {
+            val contentPadding =
+                if (navigator.scaffoldValue.secondary == PaneAdaptedValue.Expanded) {
+                    WindowInsets.safeDrawing.asPaddingValues().copy(start = 0.dp)
+                } else {
+                    WindowInsets.safeDrawing.asPaddingValues()
+                }
+            AnimatedPane(modifier = Modifier) {
+                content(contentPadding)
+            }
+        },
         listPane = {
             AnimatedPane(modifier = Modifier) {
                 SettingsListPane(
-                    uiState = uiState.listPaneUiState,
+                    navigator = navigator,
                     onBackClick = onBackClick,
                     onSettingsClick = onSettingsClick,
                     windowAdaptiveInfo = windowAdaptiveInfo
@@ -106,17 +116,7 @@ private fun SettingsScreen(
             }
         },
         windowInsets = WindowInsets(0)
-    ) {
-        val contentPadding =
-            if (navigator.scaffoldState.scaffoldValue.secondary == PaneAdaptedValue.Expanded) {
-                WindowInsets.safeDrawing.asPaddingValues().copy(start = 0.dp)
-            } else {
-                WindowInsets.safeDrawing.asPaddingValues()
-            }
-        AnimatedPane(modifier = Modifier) {
-            content(contentPadding)
-        }
-    }
+    )
 }
 
 enum class Settings2(
@@ -146,6 +146,7 @@ enum class Settings2(
         AppInfoSettingsScreenDestination
     ),
     TUTORIAL(R.string.settings_label_tutorial, ComicIcons.Start),
+    Donation(R.string.settings_label_donation, ComicIcons.Money, DonationScreenDestination),
     LANGUAGE(
         R.string.settings_label_language,
         ComicIcons.Language,

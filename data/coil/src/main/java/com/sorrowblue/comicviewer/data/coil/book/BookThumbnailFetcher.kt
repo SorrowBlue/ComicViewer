@@ -30,6 +30,8 @@ import okhttp3.internal.closeQuietly
 import okio.Buffer
 import okio.ByteString.Companion.encodeUtf8
 
+private const val MIME_IMAGE_WEBP = "image/webp"
+
 @OptIn(ExperimentalCoilApi::class)
 internal class BookThumbnailFetcher(
     private val book: Book,
@@ -44,12 +46,13 @@ internal class BookThumbnailFetcher(
     override suspend fun fetch(): FetchResult {
         var snapshot = readFromDiskCache()
         try {
+            // 高速パス: ネットワーク要求を実行せずに、ディスク キャッシュからイメージをフェッチする。
             if (snapshot != null) {
                 // キャッシュされた画像は手動で追加された可能性が高いため、常にメタデータが空の状態で返されます。
                 if (fileSystem.metadata(snapshot.metadata).size == 0L) {
                     return SourceResult(
                         source = snapshot.toImageSource(),
-                        mimeType = null,
+                        mimeType = MIME_IMAGE_WEBP,
                         dataSource = DataSource.DISK
                     )
                 }
@@ -58,14 +61,15 @@ internal class BookThumbnailFetcher(
                 if (snapshot.toBookThumbnailMetadata() == BookThumbnailMetadata(book)) {
                     return SourceResult(
                         source = snapshot.toImageSource(),
-                        mimeType = null,
+                        mimeType = MIME_IMAGE_WEBP,
                         dataSource = DataSource.DISK
                     )
                 }
             }
             val bookshelfModel = bookshelfLocalDataSource.flow(book.bookshelfId).first()
                 ?: throw CoilRuntimeException("本棚が取得できない")
-            if (!remoteDataSourceFactory.create(bookshelfModel).exists(book.path)) {
+            val source = remoteDataSourceFactory.create(bookshelfModel)
+            if (!source.exists(book.path)) {
                 throw CoilRuntimeException("ファイルがない(${book.path})")
             }
             var fileReader = remoteDataSourceFactory.create(bookshelfModel).fileReader(book)
@@ -106,6 +110,9 @@ internal class BookThumbnailFetcher(
                 bitmap.recycle()
                 fileReader.closeQuietly()
                 throw e
+            } finally {
+                bitmap.recycle()
+                fileReader.closeQuietly()
             }
         } catch (e: Exception) {
             snapshot?.closeQuietly()
@@ -154,9 +161,6 @@ internal class BookThumbnailFetcher(
         } catch (e: Exception) {
             editor.abortQuietly()
             throw e
-        } finally {
-            bitmap.recycle()
-            fileReader.closeQuietly()
         }
     }
 

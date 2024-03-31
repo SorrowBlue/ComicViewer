@@ -6,19 +6,16 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.ListDetailPaneScaffoldRole
-import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.rememberListDetailPaneScaffoldNavigator
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
@@ -31,9 +28,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 internal interface SettingsScreenState : SaveableScreenState {
     val windowAdaptiveInfo: WindowAdaptiveInfo
-    val navigator: ThreePaneScaffoldNavigator<Unit>
+    val navigator: ThreePaneScaffoldNavigator<Settings2>
     val navController: NavHostController
-    val uiState: SettingsScreenUiState
     fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit)
     fun onDetailBackClick()
 }
@@ -42,7 +38,7 @@ internal interface SettingsScreenState : SaveableScreenState {
 @Composable
 internal fun rememberSettingsScreenState(
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
-    navigator: ThreePaneScaffoldNavigator<Unit> = rememberListDetailPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<Settings2> = rememberListDetailPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(windowAdaptiveInfo)
     ),
     navController: NavHostController = rememberNavController(),
@@ -59,19 +55,16 @@ internal fun rememberSettingsScreenState(
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Stable
 private class SettingsScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
     override val windowAdaptiveInfo: WindowAdaptiveInfo,
-    override val navigator: ThreePaneScaffoldNavigator<Unit>,
+    override val navigator: ThreePaneScaffoldNavigator<Settings2>,
     override val navController: NavHostController,
     private val context: Context,
     private val scope: CoroutineScope,
 ) : SettingsScreenState {
-
-    override var uiState by savedStateHandle.saveable { mutableStateOf(SettingsScreenUiState()) }
-        private set
 
     override fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit) {
         when (settings2) {
@@ -103,14 +96,9 @@ private class SettingsScreenStateImpl(
     }
 
     private fun onSettingsClick2(settings2: Settings2) {
-        uiState = uiState.copy(
-            listPaneUiState = uiState.listPaneUiState.copy(
-                currentSettings2 = settings2
-            )
-        )
         scope.launch {
             delay(250)
-            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, settings2)
         }
     }
 

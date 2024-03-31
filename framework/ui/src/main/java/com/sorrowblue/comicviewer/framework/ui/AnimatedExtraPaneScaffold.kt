@@ -2,23 +2,23 @@ package com.sorrowblue.comicviewer.framework.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.material3.adaptive.AnimatedPane
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.HingePolicy
-import androidx.compose.material3.adaptive.PaneScaffoldDirective
 import androidx.compose.material3.adaptive.Posture
-import androidx.compose.material3.adaptive.SupportingPaneScaffold
-import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.allVerticalHingeBounds
+import androidx.compose.material3.adaptive.layout.AnimatedPane
+import androidx.compose.material3.adaptive.layout.HingePolicy
+import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
+import androidx.compose.material3.adaptive.layout.SupportingPaneScaffold
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.occludingVerticalHingeBounds
 import androidx.compose.material3.adaptive.separatingVerticalHingeBounds
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -28,8 +28,15 @@ fun <T> AnimatedExtraPaneScaffold(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
+    navigator.scaffoldDirective
     SupportingPaneScaffold(
-        scaffoldState = navigator.scaffoldState,
+        directive = navigator.scaffoldDirective,
+        value = navigator.scaffoldValue,
+        mainPane = {
+            AnimatedPane(modifier = Modifier) {
+                content()
+            }
+        },
         supportingPane = {
         },
         extraPane = {
@@ -39,11 +46,7 @@ fun <T> AnimatedExtraPaneScaffold(
         },
         windowInsets = WindowInsets(0),
         modifier = modifier
-    ) {
-        AnimatedPane(modifier = Modifier) {
-            content()
-        }
-    }
+    )
 }
 
 @ExperimentalMaterial3AdaptiveApi
@@ -54,14 +57,14 @@ fun calculateStandardPaneScaffoldDirective(
     val maxHorizontalPartitions: Int
     val contentPadding: PaddingValues
     val verticalSpacerSize: Dp
-    when (windowAdaptiveInfo.windowSizeClass.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> {
+    when (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
+        WindowWidthSizeClass.COMPACT -> {
             maxHorizontalPartitions = 1
             contentPadding = PaddingValues()
             verticalSpacerSize = 0.dp
         }
 
-        WindowWidthSizeClass.Medium -> {
+        WindowWidthSizeClass.MEDIUM -> {
             maxHorizontalPartitions = 1
             contentPadding = PaddingValues()
             verticalSpacerSize = 0.dp

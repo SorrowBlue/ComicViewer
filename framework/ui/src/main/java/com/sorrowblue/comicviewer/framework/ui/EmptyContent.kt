@@ -9,14 +9,13 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 
 @Composable
 fun EmptyContent(
@@ -25,7 +24,7 @@ fun EmptyContent(
     modifier: Modifier = Modifier,
 ) {
     val isCompact =
-        LocalWindowSize.current.widthSizeClass == WindowWidthSizeClass.Compact
+        LocalWindowSize.current.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
     if (isCompact) {
         Column(
             modifier = modifier,

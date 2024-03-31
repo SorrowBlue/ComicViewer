@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -5,27 +7,39 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DisplayNameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectField
-import com.sorrowblue.comicviewer.framework.ui.ResponsiveDialogScaffold
-import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
+import com.sorrowblue.comicviewer.framework.ui.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
+import com.sorrowblue.comicviewer.framework.ui.marginPadding
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
+import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.parcelize.Parcelize
 
@@ -68,26 +82,33 @@ private fun StorageEditScreen(
     onDisplayNameChange: (String) -> Unit,
     onSelectFolderClick: () -> Unit,
     onSaveClick: () -> Unit,
+    modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
-    ResponsiveDialogScaffold(
-        title = {
-            Text(text = stringResource(id = uiState.editType.title))
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(id = uiState.editType.title)) },
+                navigationIcon = { CloseIconButton(onClick = onBackClick) },
+                actions = {
+                    TextButton(onClick = onSaveClick) {
+                        Text(text = stringResource(id = R.string.bookshelf_edit_label_save))
+                    }
+                },
+                scrollBehavior = scrollBehavior
+            )
         },
-        onCloseClick = onBackClick,
-        confirmButton = {
-            TextButton(onClick = onSaveClick) {
-                Text(text = stringResource(id = R.string.bookshelf_edit_label_save))
-            }
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { innerPadding ->
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        contentWindowInsets = WindowInsets.safeDrawing,
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) { contentPadding ->
         StorageEditContent(
             uiState = uiState,
             onDisplayNameChange = onDisplayNameChange,
             onSelectFolderClick = onSelectFolderClick,
             scrollState = scrollState,
-            contentPadding = innerPadding.add(PaddingValues(16.dp))
+            contentPadding = contentPadding
         )
     }
 }
@@ -101,23 +122,43 @@ private fun StorageEditContent(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
+    val dimension = LocalDimension.current
     Column(
         modifier
             .fillMaxSize()
-            .padding(contentPadding)
+            .imePadding()
             .drawVerticalScrollbar(scrollState)
             .verticalScroll(scrollState)
+            .windowInsetsPadding(contentPadding.asWindowInsets())
+            .marginPadding(dimension = ComicTheme.dimension, horizontal = true, bottom = true)
     ) {
         DisplayNameField(
             input = uiState.displayName,
             onValueChange = onDisplayNameChange,
             modifier = Modifier.fillMaxWidth()
         )
+        FolderSelectField(
+            input = uiState.dir,
+            onClick = onSelectFolderClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = dimension.targetSpacing)
+        )
+    }
+}
 
-        Spacer(modifier = Modifier.size(8.dp))
-
-        FolderSelectField(input = uiState.dir, onClick = onSelectFolderClick)
-
-        Spacer(modifier = Modifier.weight(1f))
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+@PreviewMultiScreen
+private fun PreviewStorageEditScreen() {
+    PreviewTheme {
+        StorageEditScreen(
+            uiState = StorageEditScreenUiState(),
+            snackbarHostState = remember { SnackbarHostState() },
+            onBackClick = { },
+            onDisplayNameChange = { },
+            onSelectFolderClick = { },
+            onSaveClick = { }
+        )
     }
 }

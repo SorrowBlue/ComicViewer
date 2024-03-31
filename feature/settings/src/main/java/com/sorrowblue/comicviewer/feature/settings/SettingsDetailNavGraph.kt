@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.settings
 
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.NavGraphSpec
+import com.sorrowblue.comicviewer.feature.settings.destinations.DonationScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.folder.destinations.FolderSettingsScreenDestination
@@ -15,6 +16,7 @@ internal object SettingsDetailNavGraph : NavGraphSpec {
     override val startRoute = DisplaySettingsScreenDestination
     override val destinationsByRoute = listOf(
         DisplaySettingsScreenDestination,
+        DonationScreenDestination,
         FolderSettingsScreenDestination,
         ViewerSettingsScreenDestination,
         SecuritySettingsScreenDestination,

@@ -9,7 +9,9 @@ import androidx.compose.ui.unit.dp
 class Dimension(
     val margin: Dp,
     val spacer: Dp,
-    val padding: Dp = 4.dp,
+    val targetSpacing: Dp = 8.dp,
+    val minPadding: Dp = 4.dp,
+    val padding: Dp = 8.dp,
 )
 
 val compactDimension = Dimension(

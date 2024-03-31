@@ -51,7 +51,6 @@ internal interface FileDao {
     @Query("SELECT * FROM file WHERE bookshelf_id = :id AND parent = :parent AND path NOT IN (:paths)")
     suspend fun findByNotPaths(id: Int, parent: String, paths: List<String>): List<FileEntity>
 
-    @Deprecated("使用禁止")
     @RawQuery(observedEntities = [FileEntity::class])
     fun flowPrevNextFile(supportSQLiteQuery: SupportSQLiteQuery): Flow<List<FileEntity>>
 
@@ -68,7 +67,6 @@ internal interface FileDao {
         }
         val (comparison, order) = if (isNext && sortType.isAsc) ">=" to "ASC" else "<=" to "DESC"
 
-        @Suppress("DEPRECATION")
         return flowPrevNextFile(
             SimpleSQLiteQuery(
                 """
@@ -100,7 +98,6 @@ internal interface FileDao {
         )
     }
 
-    @Deprecated("使用禁止")
     @RawQuery(observedEntities = [FileEntity::class])
     fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileWithCountEntity>
 
@@ -155,6 +152,11 @@ internal interface FileDao {
             )
             var selectionStr = "bookshelf_id = :bookshelfId"
             val bindArgs = mutableListOf<Any>(bookshelfId)
+
+            if (!searchCondition.showHidden) {
+                selectionStr += " AND hidden = :hidden"
+                bindArgs += false
+            }
 
             when (val range = searchCondition.range) {
                 is SearchCondition.Range.InFolder -> {

@@ -19,7 +19,7 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
 
     implementation(libs.box.java.sdk) {
-        exclude("org.bouncycastle")
+//        exclude("org.bouncycastle")
     }
     implementation(libs.kotlinx.serialization.protobuf)
 }

@@ -12,21 +12,14 @@ data class BookFile(
     override val path: String,
     override val size: Long,
     override val lastModifier: Long,
-    override val cacheKey: String,
-    override val lastPageRead: Int,
-    override val totalPageCount: Int,
-    override val lastReadTime: Long,
+    override val isHidden: Boolean,
+    override val cacheKey: String = "",
+    override val lastPageRead: Int = 0,
+    override val totalPageCount: Int = 0,
+    override val lastReadTime: Long = 0,
     override val params: Map<String, String?> = emptyMap(),
     override val sortIndex: Int = -1,
 ) : Book {
 
     val extension get() = path.extension
-
-    override fun areContentsTheSame(file: File): Boolean {
-        return if (file is BookFile) {
-            bookshelfId == file.bookshelfId && path == file.path && lastPageRead == file.lastPageRead && lastReadTime == file.lastReadTime
-        } else {
-            false
-        }
-    }
 }

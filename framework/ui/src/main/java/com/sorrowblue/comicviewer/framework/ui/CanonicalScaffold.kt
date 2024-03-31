@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.PaneAdaptedValue
-import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,8 +35,8 @@ fun <T> CanonicalScaffold(
     Scaffold(
         topBar = {
             AnimatedContent(
-                targetState = navigator.scaffoldState.scaffoldDirective.maxHorizontalPartitions != 1 ||
-                    navigator.scaffoldState.scaffoldValue.tertiary == PaneAdaptedValue.Hidden,
+                targetState = navigator.scaffoldDirective.maxHorizontalPartitions != 1 ||
+                    navigator.scaffoldValue.tertiary == PaneAdaptedValue.Hidden,
                 transitionSpec = { topAppBarAnimation() },
                 contentAlignment = Alignment.TopCenter,
                 label = "top_app_bar"
@@ -49,7 +49,7 @@ fun <T> CanonicalScaffold(
             }
         },
         floatingActionButton = {
-            if (navigator.scaffoldState.scaffoldValue.tertiary == PaneAdaptedValue.Hidden) {
+            if (navigator.scaffoldValue.tertiary == PaneAdaptedValue.Hidden) {
                 floatingActionButton()
             }
         },
@@ -63,7 +63,7 @@ fun <T> CanonicalScaffold(
             extraPane = { extraPane(innerPadding) }
         ) {
             val end by animateDpAsState(
-                targetValue = if (navigator.scaffoldState.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
+                targetValue = if (navigator.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
                     0.dp
                 } else {
                     innerPadding.calculateEndPadding(LocalLayoutDirection.current)

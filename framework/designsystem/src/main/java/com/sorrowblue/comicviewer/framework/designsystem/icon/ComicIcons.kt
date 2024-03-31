@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.rounded.FolderOff
 import androidx.compose.material.icons.rounded.FolderOpen
 import androidx.compose.material.icons.rounded.Grid4x4
 import androidx.compose.material.icons.rounded.GridView
@@ -37,6 +38,7 @@ import androidx.compose.material.icons.rounded.InstallMobile
 import androidx.compose.material.icons.rounded.Key
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Money
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.PermDeviceInformation
@@ -50,9 +52,12 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.SortByAlpha
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Start
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.WatchLater
 
 object ComicIcons {
+    val FolderOff = Icons.Rounded.FolderOff
     val Logout = Icons.AutoMirrored.Rounded.Logout
     val LibraryBooks = Icons.AutoMirrored.Rounded.LibraryBooks
     val WatchLater = Icons.Rounded.WatchLater
@@ -60,6 +65,8 @@ object ComicIcons {
     val RocketLaunch = Icons.Rounded.RocketLaunch
     val Download = Icons.Rounded.Download
     val History = Icons.Rounded.History
+    val Visibility = Icons.Rounded.Visibility
+    val VisibilityOff = Icons.Rounded.VisibilityOff
     val ErrorOutline = Icons.Rounded.ErrorOutline
     val RestartAlt = Icons.Rounded.RestartAlt
     val Refresh = Icons.Rounded.Refresh
@@ -87,6 +94,7 @@ object ComicIcons {
     val MusicNote = Icons.Rounded.MusicNote
     val VolumeUp = Icons.AutoMirrored.Rounded.VolumeUp
     val Start = Icons.Rounded.Start
+    val Money = Icons.Rounded.Money
     val Language = Icons.Rounded.Language
     val Info = Icons.Rounded.Info
     val Lock = Icons.Rounded.Lock

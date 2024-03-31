@@ -9,6 +9,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -33,6 +35,7 @@ internal fun rememberNeoBookshelfEditScreenState(
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: BookshelfEditViewModel = hiltViewModel(),
+    softwareKeyboardController: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current,
 ): BookshelfEditScreenState = rememberSaveableScreenState {
     BookshelfEditScreenStateImpl(
         args = args,
@@ -40,7 +43,8 @@ internal fun rememberNeoBookshelfEditScreenState(
         scope = scope,
         snackbarHostState = snackbarHostState,
         viewModel = viewModel,
-        savedStateHandle = it
+        savedStateHandle = it,
+        softwareKeyboardController = softwareKeyboardController,
     )
 }
 
@@ -51,6 +55,7 @@ private class BookshelfEditScreenStateImpl(
     private val context: Context,
     private val scope: CoroutineScope,
     private val viewModel: BookshelfEditViewModel,
+    private val softwareKeyboardController: SoftwareKeyboardController?,
 ) : BookshelfEditScreenState {
 
     override var innerScreenState: BookshelfEditInnerScreenState<*> by mutableStateOf(
@@ -79,9 +84,10 @@ private class BookshelfEditScreenStateImpl(
                         restoredUiState,
                         snackbarHostState,
                         args,
-                        viewModel,
                         context,
                         scope,
+                        softwareKeyboardController = softwareKeyboardController,
+                        viewModel.registerBookshelfUseCase,
                     )
                 }
 
@@ -94,9 +100,10 @@ private class BookshelfEditScreenStateImpl(
                         SmbEditScreenUiState(),
                         snackbarHostState,
                         args,
-                        viewModel,
                         context,
                         scope,
+                        softwareKeyboardController = softwareKeyboardController,
+                        viewModel.registerBookshelfUseCase,
                     )
 
                     BookshelfType.DEVICE -> StorageEditScreenState(
@@ -142,9 +149,10 @@ private class BookshelfEditScreenStateImpl(
                                     uiState = uiState,
                                     snackbarHostState = snackbarHostState,
                                     args = args,
-                                    viewModel = viewModel,
                                     context = context,
                                     scope = scope,
+                                    softwareKeyboardController = softwareKeyboardController,
+                                    viewModel.registerBookshelfUseCase,
                                 )
                             }
                         }

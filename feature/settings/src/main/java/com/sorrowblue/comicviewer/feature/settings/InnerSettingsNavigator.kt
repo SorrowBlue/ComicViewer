@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.feature.settings
 
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.scope.DestinationScopeWithNoDependencies
@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScre
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 internal fun DestinationScopeWithNoDependencies<*>.innerSettingsNavigator(
-    scaffoldNavigator: ThreePaneScaffoldNavigator<Unit>,
+    scaffoldNavigator: ThreePaneScaffoldNavigator<Settings2>,
     settingsScreenNavigator: SettingsScreenNavigator,
 ) = InnerSettingsNavigator(
     scaffoldNavigator = scaffoldNavigator,
@@ -23,7 +23,7 @@ internal fun DestinationScopeWithNoDependencies<*>.innerSettingsNavigator(
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 internal class InnerSettingsNavigator(
-    private val scaffoldNavigator: ThreePaneScaffoldNavigator<Unit>,
+    private val scaffoldNavigator: ThreePaneScaffoldNavigator<Settings2>,
     private val settingsScreenNavigator: SettingsScreenNavigator,
     private val navController: NavController,
 ) : SecuritySettingsScreenNavigator,

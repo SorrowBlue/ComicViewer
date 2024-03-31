@@ -17,10 +17,6 @@ import androidx.compose.material3.adaptive.navigationsuite.ExperimentalMaterial3
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -35,6 +32,8 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.NestedNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
@@ -52,33 +51,37 @@ import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavGr
 import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.designsystem.theme.compactDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.expandedDimension
 import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
 import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
+import com.sorrowblue.comicviewer.framework.ui.LocalWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
 import kotlinx.coroutines.flow.filter
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun ComicViewerApp(
     onTutorial: () -> Unit,
     navController: NavHostController,
     state: ComicViewerAppState = rememberComicViewerAppState(navController = navController),
-    windowsSize: WindowSizeClass = calculateWindowSizeClass(LocalContext.current as ComponentActivity),
+    windowsSize: WindowSizeClass = LocalConfiguration.current.run {
+        WindowSizeClass(screenWidthDp, screenHeightDp)
+    },
     activity: ComponentActivity = LocalContext.current as ComponentActivity,
 ) {
-    val dimension = when (windowsSize.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> compactDimension
-        WindowWidthSizeClass.Medium -> mediumDimension
-        WindowWidthSizeClass.Expanded -> expandedDimension
+    val dimension = when (windowsSize.windowWidthSizeClass) {
+        WindowWidthSizeClass.COMPACT -> compactDimension
+        WindowWidthSizeClass.MEDIUM -> mediumDimension
+        WindowWidthSizeClass.EXPANDED -> expandedDimension
         else -> compactDimension
     }
     CompositionLocalProvider(
         LocalWindowSize provides windowsSize,
         LocalDimension provides dimension,
+        LocalWindowAdaptiveInfo provides currentWindowAdaptiveInfo()
     ) {
         ComicTheme {
             val addOnList = state.addOnList

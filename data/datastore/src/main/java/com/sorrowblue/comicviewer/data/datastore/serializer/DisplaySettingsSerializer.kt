@@ -20,7 +20,6 @@ internal class DisplaySettingsSerializer(private val coroutineDispatcher: Corout
 
     override suspend fun writeTo(t: DisplaySettings, output: OutputStream) {
         withContext(coroutineDispatcher) {
-            @Suppress("BlockingMethodInNonBlockingContext")
             output.write(ProtoBuf.encodeToByteArray(DisplaySettings.serializer(), t))
         }
     }

@@ -24,7 +24,6 @@ internal data class DropboxCredential(val credential: String? = null) {
 
         override suspend fun writeTo(t: DropboxCredential, output: OutputStream) {
             withContext(coroutineDispatcher) {
-                @Suppress("BlockingMethodInNonBlockingContext")
                 output.write(ProtoBuf.encodeToByteArray(serializer(), t))
             }
         }

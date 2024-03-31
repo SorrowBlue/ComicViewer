@@ -8,11 +8,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +35,7 @@ fun NavTabHandler(
     lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModelStoreOwner: ViewModelStoreOwner = LocalContext.current as ComponentActivity,
-    viewModel: NavTabHandler = viewModel<NavTabHandler>(viewModelStoreOwner = viewModelStoreOwner),
+    viewModel: NavTabHandler = hiltViewModel<NavTabHandler>(viewModelStoreOwner = viewModelStoreOwner),
     onClick: () -> Unit,
 ) {
     val currentOnClick by rememberUpdatedState(onClick)

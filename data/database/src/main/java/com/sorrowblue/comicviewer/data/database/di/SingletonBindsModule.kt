@@ -40,7 +40,5 @@ internal interface SingletonBindsModule {
 
     @Singleton
     @Binds
-    fun bindFavoriteBookLocalDataSource(
-        dataSource: FavoriteFileLocalDataSourceImpl,
-    ): FavoriteFileLocalDataSource
+    fun bindFavoriteBookLocalDataSource(dataSource: FavoriteFileLocalDataSourceImpl): FavoriteFileLocalDataSource
 }

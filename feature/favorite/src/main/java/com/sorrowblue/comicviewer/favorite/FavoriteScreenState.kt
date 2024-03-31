@@ -3,10 +3,10 @@ package com.sorrowblue.comicviewer.favorite
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.SupportingPaneScaffoldRole
-import androidx.compose.material3.adaptive.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
+import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
@@ -18,14 +18,17 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
+import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -39,7 +42,7 @@ internal interface FavoriteScreenState : SaveableScreenState {
     val favoriteId: FavoriteId
     val uiState: FavoriteScreenUiState
     val pagingDataFlow: Flow<PagingData<File>>
-    val navigator: ThreePaneScaffoldNavigator<File>
+    val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>
     val lazyGridState: LazyGridState
     fun onReadLaterClick(file: File)
     fun onExtraPaneCloseClick()
@@ -54,7 +57,7 @@ internal interface FavoriteScreenState : SaveableScreenState {
 @Composable
 internal fun rememberFavoriteScreenState(
     args: FavoriteArgs,
-    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator(
         calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
     ),
     lazyGridState: LazyGridState = rememberLazyGridState(),
@@ -75,7 +78,7 @@ internal fun rememberFavoriteScreenState(
 @Stable
 private class FavoriteScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator<File>,
+    override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val lazyGridState: LazyGridState,
     private val args: FavoriteArgs,
     private val scope: CoroutineScope,
@@ -118,15 +121,25 @@ private class FavoriteScreenStateImpl(
         }
     }
 
+    private var fileInfoJob: Job? = null
+
     override fun onFileInfoClick(file: File) {
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
+        fileInfoJob?.cancel()
+        fileInfoJob = scope.launch {
+            viewModel.fileInfo(file).onEach { resource ->
+                resource.fold({
+                    navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
+                }, {
+                })
+            }.launchIn(scope)
+        }
     }
 
     override fun toggleFileListType() {
         viewModel.updateDisplay(
             when (uiState.fileContentType) {
-                is FileContentType.Grid -> FolderDisplaySettings.Display.LIST
-                FileContentType.List -> FolderDisplaySettings.Display.GRID
+                is FileContentType.Grid -> FolderDisplaySettings.Display.List
+                FileContentType.List -> FolderDisplaySettings.Display.Grid
             }
         )
     }

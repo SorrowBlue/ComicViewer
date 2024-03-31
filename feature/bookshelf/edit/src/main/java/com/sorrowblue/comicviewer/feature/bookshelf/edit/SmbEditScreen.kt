@@ -1,27 +1,37 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Folder
@@ -34,7 +44,11 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.ResponsiveDialogScaffold
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
+import com.sorrowblue.comicviewer.framework.ui.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
+import com.sorrowblue.comicviewer.framework.ui.marginPadding
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
@@ -52,14 +66,14 @@ data class SmbEditScreenUiState(
     val username: Input = Input(),
     val password: Input = Input(),
     val isError: Boolean = false,
-    val isProgress: Boolean = true,
+    val isProgress: Boolean = false,
 ) : BookshelfEditScreenUiState {
 
     constructor(smbServer: SmbServer, folder: Folder) : this(
         displayName = Input(smbServer.displayName),
         host = Input(smbServer.host),
         port = Input(smbServer.port.toString()),
-        path = Input(folder.path.removeSurrounding("/")),
+        path = Input(folder.path.removePrefix("/").removeSuffix("/")),
         auth = when (smbServer.auth) {
             SmbServer.Auth.Guest -> Auth.Guest
             is SmbServer.Auth.UsernamePassword -> Auth.UserPass
@@ -68,7 +82,7 @@ data class SmbEditScreenUiState(
         username = Input((smbServer.auth as? SmbServer.Auth.UsernamePassword)?.username.orEmpty()),
         password = Input((smbServer.auth as? SmbServer.Auth.UsernamePassword)?.password.orEmpty()),
         isError = false,
-        isProgress = true
+        isProgress = false
     )
 
     enum class Auth {
@@ -77,6 +91,7 @@ data class SmbEditScreenUiState(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SmbEditScreen(
     state: SmbEditScreenState,
@@ -100,7 +115,7 @@ internal fun SmbEditScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SmbEditScreen(
     uiState: SmbEditScreenUiState,
@@ -117,19 +132,25 @@ private fun SmbEditScreen(
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
-    ResponsiveDialogScaffold(
-        title = { Text(text = stringResource(id = uiState.editType.title)) },
-        onCloseClick = onBackClick,
-        confirmButton = {
-            TextButton(onClick = onSaveClick) {
-                Text(text = "Save")
-            }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(id = uiState.editType.title)) },
+                navigationIcon = { CloseIconButton(onClick = onBackClick) },
+                actions = {
+                    TextButton(onClick = onSaveClick) {
+                        Text(text = stringResource(id = R.string.bookshelf_edit_label_save))
+                    }
+                },
+                scrollBehavior = scrollBehavior
+            )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        scrollableState = scrollState,
-        modifier = modifier
-    ) { innerPadding ->
+        contentWindowInsets = WindowInsets.safeDrawing,
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) { contentPadding ->
         SmbEditContent(
             uiState = uiState,
             onDisplayNameChange = onDisplayNameChange,
@@ -141,8 +162,18 @@ private fun SmbEditScreen(
             onUsernameChange = onUsernameChange,
             onPasswordChange = onPasswordChange,
             scrollState = scrollState,
-            contentPadding = innerPadding
+            contentPadding = contentPadding
         )
+    }
+    if (uiState.isProgress) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .safeDrawingPadding(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
     }
 }
 
@@ -162,47 +193,65 @@ private fun SmbEditContent(
     scrollState: ScrollState = rememberScrollState(),
 ) {
     Column(
-        modifier
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
             .fillMaxSize()
-            .padding(contentPadding)
+            .imePadding()
             .drawVerticalScrollbar(scrollState)
             .verticalScroll(scrollState)
+            .windowInsetsPadding(contentPadding.asWindowInsets())
+            .marginPadding(dimension = ComicTheme.dimension, horizontal = true, bottom = true)
     ) {
+        val dimension = LocalDimension.current
         DisplayNameField(
             input = uiState.displayName,
             onValueChange = onDisplayNameChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .widthIn(max = 340.dp)
+                .fillMaxWidth()
         )
-
-        Spacer(modifier = Modifier.size(8.dp))
 
         HostField(
             input = uiState.host,
             onValueChange = onHostChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .widthIn(max = 340.dp)
+                .fillMaxWidth()
+                .padding(top = dimension.targetSpacing)
         )
-
-        Spacer(modifier = Modifier.size(ComicTheme.dimension.padding * 2))
 
         PortField(
             input = uiState.port,
             onValueChange = onPortChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .widthIn(max = 340.dp)
+                .fillMaxWidth()
+                .padding(top = dimension.targetSpacing)
         )
-
-        Spacer(modifier = Modifier.size(8.dp))
 
         PathField(
             input = uiState.path,
             auth = uiState.auth,
             onValueChange = onPathChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .widthIn(max = 340.dp)
+                .fillMaxWidth()
+                .padding(top = dimension.targetSpacing)
         )
 
-        Spacer(modifier = Modifier.size(16.dp))
+        HorizontalDivider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = dimension.targetSpacing * 2)
+        )
 
-        AuthButtons(currentAuth = uiState.auth, onAuthChange = onAuthChange)
-        Spacer(modifier = Modifier.size(16.dp))
+        AuthButtons(
+            currentAuth = uiState.auth,
+            onAuthChange = onAuthChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = dimension.targetSpacing)
+        )
 
         when (uiState.auth) {
             SmbEditScreenUiState.Auth.Guest -> Unit
@@ -210,29 +259,35 @@ private fun SmbEditContent(
                 DomainField(
                     value = uiState.domain,
                     onValueChange = onDomainChange,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .widthIn(max = 340.dp)
+                        .fillMaxWidth()
+                        .padding(top = dimension.targetSpacing)
                 )
-
-                Spacer(modifier = Modifier.size(8.dp))
 
                 UsernameField(
                     input = uiState.username,
                     onValueChange = onUsernameChange,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .widthIn(max = 340.dp)
+                        .fillMaxWidth()
+                        .padding(top = dimension.targetSpacing)
                 )
-
-                Spacer(modifier = Modifier.size(8.dp))
 
                 PasswordField(
                     input = uiState.password,
                     onValueChange = onPasswordChange,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .widthIn(max = 340.dp)
+                        .fillMaxWidth()
+                        .padding(top = dimension.targetSpacing)
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @PreviewMultiScreen
 private fun PreviewBookshelfEditScreen() {
@@ -240,31 +295,16 @@ private fun PreviewBookshelfEditScreen() {
         SmbEditScreen(
             uiState = SmbEditScreenUiState(auth = SmbEditScreenUiState.Auth.UserPass),
             snackbarHostState = remember { SnackbarHostState() },
-            onBackClick = { /*TODO*/ },
-            onDisplayNameChange = {},
-            onHostChange = {},
-            onPortChange = {},
-            onPathChange = {},
-            onAuthChange = {},
-            onDomainChange = {},
-            onUsernameChange = {},
-            onPasswordChange = {},
-            onSaveClick = { /*TODO*/ }
+            onBackClick = { },
+            onDisplayNameChange = { },
+            onHostChange = { },
+            onPortChange = { },
+            onPathChange = { },
+            onAuthChange = { },
+            onDomainChange = { },
+            onUsernameChange = { },
+            onPasswordChange = { },
+            onSaveClick = { }
         )
     }
 }
-
-@Retention(AnnotationRetention.BINARY)
-@Target(
-    AnnotationTarget.ANNOTATION_CLASS,
-    AnnotationTarget.FUNCTION
-)
-@Preview(name = "Phone", device = Devices.PHONE)
-@Preview(
-    name = "Phone - Landscape",
-    device = "spec:width=411dp,height=891dp,orientation=landscape,dpi=420",
-)
-@Preview(name = "Unfolded Foldable", device = Devices.FOLDABLE)
-@Preview(name = "Tablet", device = Devices.TABLET)
-@Preview(name = "Desktop", device = Devices.DESKTOP)
-annotation class PreviewMultiScreen

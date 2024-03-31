@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -19,9 +18,10 @@ import kotlinx.collections.immutable.toPersistentList
 internal fun AuthButtons(
     currentAuth: SmbEditScreenUiState.Auth,
     onAuthChange: (SmbEditScreenUiState.Auth) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val list = remember { SmbEditScreenUiState.Auth.entries.toPersistentList() }
-    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+    SingleChoiceSegmentedButtonRow(modifier = modifier) {
         list.forEachIndexed { index, auth ->
             SegmentedButton(
                 selected = auth == currentAuth,

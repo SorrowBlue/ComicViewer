@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.book.section
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,11 +13,14 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.feature.book.trimBorders
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @Composable
@@ -51,6 +55,7 @@ private fun DefaultBookPage(
     pageScale: PageScale,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     AsyncImage(
         model = BookPageRequest(book to bookPage.index),
         contentScale = pageScale.contentScale,
@@ -59,6 +64,20 @@ private fun DefaultBookPage(
         modifier = Modifier
             .fillMaxSize()
             .then(modifier),
+        transform = {
+            when (it) {
+                AsyncImagePainter.State.Empty -> it
+                is AsyncImagePainter.State.Error -> it
+                is AsyncImagePainter.State.Loading -> it
+                is AsyncImagePainter.State.Success ->
+                    it.copy(
+                        result = it.result.copy(
+                            it.result.drawable.toBitmap().trimBorders(Color.WHITE)
+                                .toDrawable(context.resources)
+                        )
+                    )
+            }
+        }
     )
 }
 

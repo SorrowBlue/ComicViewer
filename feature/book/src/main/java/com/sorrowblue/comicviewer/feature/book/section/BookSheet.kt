@@ -34,7 +34,7 @@ internal fun BookSheet(
 ) {
     HorizontalPager(
         state = pagerState,
-        beyondBoundsPageCount = 4,
+        outOfBoundsPageCount = 4,
         pageSize = object : PageSize {
             override fun Density.calculateMainAxisPageSize(
                 availableSpace: Int,

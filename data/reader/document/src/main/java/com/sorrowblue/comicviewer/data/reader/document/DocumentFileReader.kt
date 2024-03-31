@@ -40,15 +40,15 @@ open class DocumentFileReader(
     private val document =
         Document.openDocument(SeekableInputStreamImpl(seekableInputStream), mimeType)
 
-    override fun pageCount(): Int {
+    override suspend fun pageCount(): Int {
         return document.countPages()
     }
 
-    override fun fileName(pageIndex: Int): String {
+    override suspend fun fileName(pageIndex: Int): String {
         return ""
     }
 
-    override fun fileSize(pageIndex: Int): Long {
+    override suspend fun fileSize(pageIndex: Int): Long {
         return 0
     }
 

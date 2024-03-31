@@ -31,16 +31,20 @@ fun <T : File> FileContent(
     contentPadding: PaddingValues,
     onFileClick: (T) -> Unit,
     onInfoClick: (T) -> Unit,
+    modifier: Modifier = Modifier,
+    isThumbnailEnabled: Boolean = true,
     state: LazyGridState = rememberLazyGridState(),
 ) {
     when (type) {
         is FileContentType.Grid -> FileGridContent(
-            columns = type.columns3,
+            lazyPagingItems = lazyPagingItems,
+            columns = type.columns,
             state = state,
             contentPadding = contentPadding,
-            lazyPagingItems = lazyPagingItems,
+            isThumbnailEnabled = isThumbnailEnabled,
             onClickItem = onFileClick,
-            onLongClickItem = onInfoClick
+            onLongClickItem = onInfoClick,
+            modifier = modifier
         )
 
         FileContentType.List -> FileListContent(
@@ -48,7 +52,8 @@ fun <T : File> FileContent(
             contentPadding = contentPadding,
             onClickItem = onFileClick,
             onLongClickItem = onInfoClick,
-            state = state
+            state = state,
+            modifier = modifier
         )
     }
 }
@@ -56,12 +61,14 @@ fun <T : File> FileContent(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun <T : File> FileGridContent(
-    columns: GridCells,
-    state: LazyGridState,
-    contentPadding: PaddingValues,
     lazyPagingItems: LazyPagingItems<T>,
+    columns: GridCells,
     onClickItem: (T) -> Unit,
     onLongClickItem: (T) -> Unit,
+    modifier: Modifier = Modifier,
+    isThumbnailEnabled: Boolean = false,
+    state: LazyGridState = rememberLazyGridState(),
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     var spanCount by remember { mutableIntStateOf(1) }
     LazyVerticalGrid(
@@ -70,7 +77,7 @@ private fun <T : File> FileGridContent(
         contentPadding = contentPadding.add(PaddingValues(ComicTheme.dimension.margin)),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-        modifier = Modifier.drawVerticalScrollbar(state, spanCount)
+        modifier = modifier.drawVerticalScrollbar(state, spanCount)
     ) {
         items(
             count = lazyPagingItems.itemCount,
@@ -83,6 +90,7 @@ private fun <T : File> FileGridContent(
             lazyPagingItems[it]?.let { item ->
                 FileGrid(
                     file = item,
+                    isThumbnailEnabled = isThumbnailEnabled,
                     onClick = { onClickItem(item) },
                     onInfoClick = { onLongClickItem(item) },
                     modifier = Modifier.animateItemPlacement()
@@ -113,7 +121,8 @@ fun <T : File> FileListContent(
                 PaddingValues(ComicTheme.dimension.margin)
             )
         },
-        modifier = modifier.drawVerticalScrollbar(state, 1),
+        modifier = modifier
+            .drawVerticalScrollbar(state, 1),
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
             val item = lazyPagingItems[it]

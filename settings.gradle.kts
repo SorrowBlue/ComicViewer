@@ -13,7 +13,7 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.0")
-    id("com.android.settings") version "8.3.0-rc01"
+    id("com.android.settings") version "8.4.0-beta02"
 }
 
 extensions.configure<SettingsExtension> {
@@ -51,6 +51,7 @@ include(":framework:common")
 include(":framework:notification")
 include(":framework:designsystem")
 include(":framework:ui")
+include(":framework:test")
 
 include(":domain:model")
 include(":domain:service")

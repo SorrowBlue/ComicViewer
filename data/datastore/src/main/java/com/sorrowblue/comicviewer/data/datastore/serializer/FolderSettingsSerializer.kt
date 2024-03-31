@@ -22,7 +22,6 @@ internal class FolderSettingsSerializer(private val coroutineDispatcher: Corouti
 
     override suspend fun writeTo(t: FolderSettings, output: OutputStream) {
         withContext(coroutineDispatcher) {
-            @Suppress("BlockingMethodInNonBlockingContext")
             output.write(ProtoBuf.encodeToByteArray(FolderSettings.serializer(), t))
         }
     }

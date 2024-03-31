@@ -24,7 +24,6 @@ data class BoxConnectionState(val state: String? = null) {
 
         override suspend fun writeTo(t: BoxConnectionState, output: OutputStream) {
             withContext(coroutineDispatcher) {
-                @Suppress("BlockingMethodInNonBlockingContext")
                 output.write(ProtoBuf.encodeToByteArray(serializer(), t))
             }
         }

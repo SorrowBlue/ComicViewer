@@ -1,21 +1,25 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -36,7 +40,7 @@ internal fun DisplayNameField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.testTag("DisplayName"),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_label_display_name)) },
         errorText = {
             Text(text = stringResource(id = R.string.bookshelf_edit_error_display_name))
@@ -50,13 +54,13 @@ internal fun DisplayNameField(
 }
 
 @Composable
-internal fun FolderSelectField(input: Input, onClick: () -> Unit) {
+internal fun FolderSelectField(input: Input, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
     ValidateOutlinedTextField(
         input = input,
         onValueChange = {},
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
+            .testTag("FolderSelect")
             .onFocusChanged {
                 if (it.isFocused) {
                     onClick()
@@ -87,7 +91,7 @@ internal fun HostField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.testTag("Host"),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_host)) },
         errorText = {
             Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_host))
@@ -109,7 +113,7 @@ internal fun PortField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.testTag("Port"),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_port)) },
         errorText = {
             Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_error_port))
@@ -132,7 +136,7 @@ internal fun PathField(
     ValidateOutlinedTextField(
         input = input,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.testTag("Path"),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_label_path)) },
         prefix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_prefix_path)) },
         suffix = { Text(text = stringResource(id = R.string.bookshelf_edit_smb_input_suffix_path)) },
@@ -163,7 +167,7 @@ internal fun DomainField(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next
         ),
-        modifier = modifier
+        modifier = modifier.testTag("Domain"),
     )
 }
 
@@ -185,6 +189,7 @@ internal fun UsernameField(
             if (it.isEmpty()) usernameAutoFillHandler.requestVerifyManual()
         },
         modifier = modifier
+            .testTag("Username")
             .connectNode(handler = usernameAutoFillHandler)
             .defaultFocusChangeAutoFill(handler = usernameAutoFillHandler),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_hint_username)) },
@@ -210,6 +215,7 @@ internal fun PasswordField(
         autofillTypes = remember { persistentListOf(AutofillType.Password) },
         onFill = onValueChange
     )
+    var visibility by remember { mutableStateOf(false) }
     ValidateOutlinedTextField(
         input = input,
         onValueChange = {
@@ -217,6 +223,7 @@ internal fun PasswordField(
             if (it.isEmpty()) passwordAutoFillHandler.requestVerifyManual()
         },
         modifier = modifier
+            .testTag("Password")
             .connectNode(handler = passwordAutoFillHandler)
             .defaultFocusChangeAutoFill(handler = passwordAutoFillHandler),
         label = { Text(text = stringResource(id = R.string.bookshelf_edit_hint_password)) },
@@ -225,7 +232,15 @@ internal fun PasswordField(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),
-        visualTransformation = PasswordVisualTransformation(),
+        trailingIcon = {
+            IconButton(onClick = { visibility = !visibility }) {
+                Icon(
+                    imageVector = if (visibility) ComicIcons.Visibility else ComicIcons.VisibilityOff,
+                    contentDescription = null
+                )
+            }
+        },
+        visualTransformation = if (visibility) VisualTransformation.None else PasswordVisualTransformation(),
         singleLine = true,
     )
 }

@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.tutorial
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.pager.HorizontalPager
@@ -50,7 +49,6 @@ internal fun TutorialScreen(
     TutorialScreen(onComplete = navigator::onComplete)
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TutorialScreen(
     onComplete: () -> Unit,
@@ -71,7 +69,6 @@ private fun TutorialScreen(
     LifecycleEffect(targetEvent = Lifecycle.Event.ON_STOP, action = state::onStop)
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TutorialScreen(
     uiState: TutorialScreenUiState,
@@ -104,7 +101,6 @@ private fun TutorialScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 private fun PreviewTutorialScreen() {
@@ -119,6 +115,5 @@ private fun PreviewTutorialScreen() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 internal val PagerState.isLastPage: Boolean
     get() = currentPage == pageCount - 1

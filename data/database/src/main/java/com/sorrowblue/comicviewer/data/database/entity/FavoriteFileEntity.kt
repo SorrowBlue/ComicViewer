@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 
 @Entity(
     tableName = "favorite_file",
@@ -26,9 +28,9 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
     indices = [Index(value = [FavoriteFileEntity.FILE_PATH, FavoriteFileEntity.BOOKSHELF_ID])]
 )
 internal data class FavoriteFileEntity(
-    @ColumnInfo(FAVORITE_ID) val favoriteId: Int,
+    @ColumnInfo(FAVORITE_ID) val favoriteId: FavoriteId,
     @ColumnInfo(FILE_PATH) val filePath: String,
-    @ColumnInfo(BOOKSHELF_ID) val serverId: Int,
+    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: BookshelfId,
 ) {
 
     companion object {
@@ -36,9 +38,9 @@ internal data class FavoriteFileEntity(
         const val BOOKSHELF_ID = "bookshelf_id"
         const val FILE_PATH = "file_path"
         fun fromModel(model: FavoriteFile) = FavoriteFileEntity(
-            favoriteId = model.id.value,
+            favoriteId = model.id,
             filePath = model.path,
-            serverId = model.bookshelfId.value
+            bookshelfId = model.bookshelfId
         )
     }
 }

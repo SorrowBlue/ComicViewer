@@ -18,8 +18,8 @@ import logcat.logcat
 
 @HiltViewModel
 internal class BookshelfEditViewModel @Inject constructor(
-    private val registerBookshelfUseCase: RegisterBookshelfUseCase,
-    private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
+    val registerBookshelfUseCase: RegisterBookshelfUseCase,
+    val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
 ) : ViewModel() {
 
     suspend fun fetch(bookshelfId: BookshelfId): BookshelfFolder? {
@@ -27,11 +27,17 @@ internal class BookshelfEditViewModel @Inject constructor(
             .first().dataOrNull()
     }
 
-    fun save(bookshelf: Bookshelf, path: String, complete: () -> Unit) {
+    fun save(
+        bookshelf: Bookshelf,
+        path: String,
+        onError: (RegisterBookshelfUseCase.Error) -> Unit,
+        complete: () -> Unit,
+    ) {
         viewModelScope.launch {
             registerBookshelfUseCase.execute(RegisterBookshelfUseCase.Request(bookshelf, path))
                 .first()
                 .onError {
+                    onError(it)
                     logcat { it.toString() }
                 }.onSuccess {
                     complete()

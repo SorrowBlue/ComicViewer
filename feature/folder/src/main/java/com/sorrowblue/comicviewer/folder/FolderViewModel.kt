@@ -9,7 +9,10 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
-import com.sorrowblue.comicviewer.domain.usecase.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
@@ -31,8 +34,11 @@ import kotlinx.coroutines.runBlocking
 internal class FolderViewModel @Inject constructor(
     val getFileUseCase: GetFileUseCase,
     private val pagingFileUseCase: PagingFileUseCase,
-    private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    private val addReadLaterUseCase: AddReadLaterUseCase,
+    val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
+    val addReadLaterUseCase: AddReadLaterUseCase,
+    val deleteReadLaterUseCase: DeleteReadLaterUseCase,
+    val getFileAttributeUseCase: GetFileAttributeUseCase,
+    val existsReadlaterUseCase: ExistsReadlaterUseCase,
 ) : ViewModel() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -43,12 +49,6 @@ internal class FolderViewModel @Inject constructor(
 
     val displaySettings = displaySettingsUseCase.settings
 
-    fun updateDisplaySettings(folderDisplaySettings: (FolderDisplaySettings) -> FolderDisplaySettings) {
-        viewModelScope.launch {
-            displaySettingsUseCase.edit(folderDisplaySettings)
-        }
-    }
-
     val sort: StateFlow<SortType> =
         displaySettingsUseCase.settings.map { it.sortType }
             .stateIn(
@@ -57,10 +57,31 @@ internal class FolderViewModel @Inject constructor(
                 runBlocking { displaySettingsUseCase.settings.first().sortType }
             )
 
-    fun addToReadLater(file: File) {
+    val showHidden: StateFlow<Boolean> =
+        displaySettingsUseCase.settings.map { it.showHiddenFile }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                runBlocking { displaySettingsUseCase.settings.first().showHiddenFile }
+            )
+
+    fun readLater(file: File, isAdd: Boolean) {
         viewModelScope.launch {
-            addReadLaterUseCase.execute(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
-                .first()
+            if (isAdd) {
+                addReadLaterUseCase(
+                    AddReadLaterUseCase.Request(
+                        file.bookshelfId,
+                        file.path
+                    )
+                ).first()
+            } else {
+                deleteReadLaterUseCase(
+                    DeleteReadLaterUseCase.Request(
+                        file.bookshelfId,
+                        file.path
+                    )
+                ).first()
+            }
         }
     }
 
@@ -77,10 +98,18 @@ internal class FolderViewModel @Inject constructor(
             displaySettingsUseCase.edit {
                 it.copy(
                     columnSize = when (it.columnSize) {
-                        FolderDisplaySettings.Size.MEDIUM -> FolderDisplaySettings.Size.LARGE
-                        FolderDisplaySettings.Size.LARGE -> FolderDisplaySettings.Size.MEDIUM
+                        FolderDisplaySettings.ColumnSize.Medium -> FolderDisplaySettings.ColumnSize.Large
+                        FolderDisplaySettings.ColumnSize.Large -> FolderDisplaySettings.ColumnSize.Medium
                     }
                 )
+            }
+        }
+    }
+
+    fun updateShowHide(value: Boolean) {
+        viewModelScope.launch {
+            displaySettingsUseCase.edit {
+                it.copy(showHiddenFile = value)
             }
         }
     }

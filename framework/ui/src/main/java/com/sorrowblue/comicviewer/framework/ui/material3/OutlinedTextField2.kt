@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.text.input.VisualTransformation
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
@@ -103,7 +102,6 @@ private fun Modifier.bringIntoViewRequester2(
         .onFocusEvent {
             if (it.isFocused) {
                 scope.launch {
-                    delay(500)
                     bringIntoViewRequester.bringIntoView()
                 }
             }

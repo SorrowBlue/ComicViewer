@@ -20,6 +20,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 dependencies {
     implementation(libs.android.tools.build.gradle)
     implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.dokka.gradle.plugin)
     implementation(libs.arturbosch.detektGradlePlugin)
     implementation(libs.ksp.gradlePlugin)
 }
@@ -63,15 +64,19 @@ gradlePlugin {
         }
         register("comicviewer.android.hilt") {
             id = name
-            implementationClass = "AndroidHiltConventionPlugin"
+            implementationClass = "DaggerHiltConventionPlugin"
         }
         register("comicviewer.android.lint") {
             id = name
-            implementationClass = "AndroidLintConventionPlugin"
+            implementationClass = "DetektConventionPlugin"
         }
         register("comicviewer.android.koin") {
             id = name
-            implementationClass = "AndroidKoinConventionPlugin"
+            implementationClass = "KoinConventionPlugin"
+        }
+        register("comicviewer.android.dokka") {
+            id = name
+            implementationClass = "DokkaConventionPlugin"
         }
     }
 }

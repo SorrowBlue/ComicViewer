@@ -72,9 +72,16 @@ internal class StorageEditScreenState(
             id = args.bookshelfId,
             displayName = uiState.displayName.value
         )
-        viewModel.save(internalStorage, folderUri.toString()) {
-            uiState = uiState.copy(isProgress = false)
-            complete()
-        }
+        viewModel.save(
+            internalStorage,
+            folderUri.toString(),
+            onError = {
+                uiState = uiState.copy(isProgress = false, isError = true)
+            },
+            complete = {
+                uiState = uiState.copy(isProgress = false, isError = false)
+                complete()
+            }
+        )
     }
 }

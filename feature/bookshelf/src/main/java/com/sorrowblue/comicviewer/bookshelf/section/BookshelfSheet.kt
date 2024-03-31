@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,8 +22,8 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.PaneScaffoldDirective
-import androidx.compose.material3.adaptive.rememberSupportingPaneScaffoldNavigator
+import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
+import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,10 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.bookshelf.component.BookshelfConverter.source
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.file.fakeFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
@@ -82,11 +80,12 @@ fun BookshelfInfoSheet(
             contentDescription = stringResource(id = R.string.bookshelf_desc_thumbnail),
             placeholder = rememberDebugPlaceholder(),
             modifier = Modifier
-                .aspectRatio(16f / 9f)
+                .padding(horizontal = ComicTheme.dimension.margin)
+                .height(120.dp)
                 .align(Alignment.CenterHorizontally)
                 .clip(RoundedCornerShape(16.dp))
                 .background(ComicTheme.colorScheme.surfaceContainerHighest),
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Fit,
             error = {
                 Icon(imageVector = ComicIcons.Image, contentDescription = null)
             },
@@ -104,6 +103,11 @@ fun BookshelfInfoSheet(
             AssistChip(
                 onClick = onScanClick,
                 label = { Text(text = stringResource(id = R.string.bookshelf_action_scan)) },
+                leadingIcon = { Icon(imageVector = ComicIcons.Refresh, contentDescription = null) }
+            )
+            AssistChip(
+                onClick = onScanClick,
+                label = { Text(text = stringResource(id = R.string.bookshelf_action_scan) + "サムネイル") },
                 leadingIcon = { Icon(imageVector = ComicIcons.Refresh, contentDescription = null) }
             )
         }
@@ -152,7 +156,12 @@ fun BookshelfInfoSheet(
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = ComicTheme.dimension.margin)
+        ) {
             TextButton(onClick = onRemoveClick) {
                 Text(text = stringResource(id = R.string.bookshelf_action_delete))
             }
@@ -177,9 +186,9 @@ private fun PreviewBookshelfInfoSheet() {
             contentPadding = PaddingValues(),
             bookshelfFolder = BookshelfFolder(
                 SmbServer("DisplayName", "127.0.0.1", 455, SmbServer.Auth.Guest),
-                Folder(bookshelfId = BookshelfId(0), "DisplayName", "", "/comic/test/test1", 0, 0)
+                fakeFolder()
             ),
-            scaffoldDirective = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>().scaffoldState.scaffoldDirective,
+            scaffoldDirective = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>().scaffoldDirective,
             onCloseClick = {},
             onEditClick = {},
             onRemoveClick = {},

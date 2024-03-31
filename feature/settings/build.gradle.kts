@@ -17,4 +17,5 @@ dependencies {
     implementation(projects.feature.authentication)
 
     implementation(libs.androidx.appcompat)
+    implementation(libs.google.android.billingclient.billingKtx)
 }

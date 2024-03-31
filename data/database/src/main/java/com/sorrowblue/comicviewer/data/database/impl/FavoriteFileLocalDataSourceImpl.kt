@@ -52,7 +52,7 @@ internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
         val favoriteFileEntity = FavoriteFileEntity.fromModel(favoriteFileModel)
         return favoriteFileDao.flowPrevNext(
             favoriteFileEntity.favoriteId,
-            favoriteFileEntity.serverId,
+            favoriteFileEntity.bookshelfId,
             favoriteFileEntity.filePath,
             true,
             sortEntity
@@ -66,7 +66,7 @@ internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
         val favoriteFileEntity = FavoriteFileEntity.fromModel(favoriteFileModel)
         return favoriteFileDao.flowPrevNext(
             favoriteFileEntity.favoriteId,
-            favoriteFileEntity.serverId,
+            favoriteFileEntity.bookshelfId,
             favoriteFileEntity.filePath,
             false,
             sortEntity

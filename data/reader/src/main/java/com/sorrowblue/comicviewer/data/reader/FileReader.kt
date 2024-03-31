@@ -9,9 +9,9 @@ interface FileReader : Closeable {
         fun create(seekableInputStream: SeekableInputStream): FileReader
     }
 
-    fun pageCount(): Int
+    suspend fun pageCount(): Int
 
     suspend fun pageInputStream(pageIndex: Int): InputStream
-    fun fileSize(pageIndex: Int): Long
-    fun fileName(pageIndex: Int): String
+    suspend fun fileSize(pageIndex: Int): Long
+    suspend fun fileName(pageIndex: Int): String
 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.component.BookshelfSource
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.collections.immutable.PersistentList
 
@@ -23,7 +24,7 @@ internal fun BookshelfSourceList(
 ) {
     LazyColumn(
         state = state,
-        contentPadding = contentPadding,
+        contentPadding = contentPadding.add(paddingValues = PaddingValues(16.dp)),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.drawVerticalScrollbar(state)
     ) {
