@@ -27,5 +27,4 @@ fun <T : Any> PagingData.Companion.flowEmptyData() = flowOf(
     )
 )
 
-
 fun <T : Any> PagingData.Companion.flowData(data: List<T>) = flowOf(from(data = data))

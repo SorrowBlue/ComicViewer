@@ -32,4 +32,3 @@ val expandedDimension = Dimension(
 val LocalDimension = staticCompositionLocalOf {
     compactDimension
 }
-

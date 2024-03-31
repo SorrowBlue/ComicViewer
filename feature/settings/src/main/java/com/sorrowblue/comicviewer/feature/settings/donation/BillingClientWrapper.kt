@@ -22,6 +22,7 @@ import com.android.billingclient.api.consumePurchase
 import com.android.billingclient.api.queryProductDetails
 import com.android.billingclient.api.queryPurchaseHistory
 import com.android.billingclient.api.queryPurchasesAsync
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -30,8 +31,11 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
-class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
-
+class BillingClientWrapper(
+    context: Context,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) :
+    PurchasesUpdatedListener {
 
     var onCancell: (() -> Unit)? = null
     var onError: ((BillingResult) -> Unit)? = null
@@ -80,7 +84,9 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                             isConnectionEstablished = true
                             logcat { "Billing connection retry succeeded." }
                         } else {
-                            logcat(LogPriority.ERROR) { "Billing connection retry failed: ${billingResult.debugMessage}" }
+                            logcat(
+                                LogPriority.ERROR
+                            ) { "Billing connection retry failed: ${billingResult.debugMessage}" }
                         }
                     }
                 })
@@ -111,7 +117,6 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
     }
 
     suspend fun queryProductDetail(productId: String): ProductDetails? {
-
         val retryDelayMs = 2000L
         val retryFactor = 2
         val maxTries = 3
@@ -143,11 +148,11 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                 // これは、古い Play キャッシュに関連している可能性があります。
                 // 購入を再度クエリします。
                 logcat { "queryProductDetails failed with ITEM_NOT_OWNED" }
-                val productDetailsResult =
+                val productDetailsResult1 =
                     billingClient.queryProductDetails(queryProductDetailsParams)
-                when (productDetailsResult.billingResult.responseCode) {
+                when (productDetailsResult1.billingResult.responseCode) {
                     BillingClient.BillingResponseCode.OK -> {
-                        return productDetailsResult.productDetailsList?.firstOrNull()
+                        return productDetailsResult1.productDetailsList?.firstOrNull()
                     }
                 }
             }
@@ -158,7 +163,9 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                 BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
             ),
             -> {
-                logcat { "Acknowledgement failed, but can be retried -- Response Code: ${billingResult.responseCode} -- Debug Message: ${billingResult.debugMessage}" }
+                logcat {
+                    "Acknowledgement failed, but can be retried -- Response Code: ${billingResult.responseCode} -- Debug Message: ${billingResult.debugMessage}"
+                }
                 return runBlocking {
                     exponentialRetry(
                         maxTries = maxTries,
@@ -174,15 +181,18 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                 BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED,
             ),
             -> {
-                logcat(LogPriority.ERROR) { "Acknowledgement failed and cannot be retried -- Response Code: ${billingResult.responseCode} -- Debug Message: ${billingResult.debugMessage}" }
-                throw Exception("Failed to acknowledge the purchase!")
+                logcat(
+                    LogPriority.ERROR
+                ) {
+                    "Acknowledgement failed and cannot be retried -- Response Code: ${billingResult.responseCode} -- Debug Message: ${billingResult.debugMessage}"
+                }
+                throw BillingException("Failed to acknowledge the purchase!")
             }
         }
         return null
     }
 
     suspend fun queryProductDetails(productIds: List<String>): List<ProductDetails> {
-
         val retryDelayMs = 2000L
         val retryFactor = 2
         val maxTries = 3
@@ -206,7 +216,9 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
         val playBillingResponseCode = billingResult.responseCode
         when (playBillingResponseCode) {
             BillingClient.BillingResponseCode.OK -> {
-                logcat(LogPriority.INFO) { "queryProductDetails was successful, ${productDetailsResult.productDetailsList}" }
+                logcat(
+                    LogPriority.INFO
+                ) { "queryProductDetails was successful, ${productDetailsResult.productDetailsList}" }
                 return productDetailsResult.productDetailsList.orEmpty()
             }
 
@@ -214,11 +226,11 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                 // これは、古い Play キャッシュに関連している可能性があります。
                 // 購入を再度クエリします。
                 logcat { "queryProductDetails failed with ITEM_NOT_OWNED" }
-                val productDetailsResult =
+                val productDetailsResult1 =
                     billingClient.queryProductDetails(queryProductDetailsParams)
-                when (productDetailsResult.billingResult.responseCode) {
+                when (productDetailsResult1.billingResult.responseCode) {
                     BillingClient.BillingResponseCode.OK -> {
-                        return productDetailsResult.productDetailsList.orEmpty()
+                        return productDetailsResult1.productDetailsList.orEmpty()
                     }
                 }
             }
@@ -229,7 +241,9 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                 BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
             ),
             -> {
-                logcat { "Acknowledgement failed, but can be retried -- Response Code: ${billingResult.responseCode} -- Debug Message: ${billingResult.debugMessage}" }
+                logcat {
+                    "Acknowledgement failed, but can be retried -- Response Code: ${billingResult.responseCode} -- Debug Message: ${billingResult.debugMessage}"
+                }
                 return runBlocking {
                     exponentialRetry(
                         maxTries = maxTries,
@@ -245,14 +259,18 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                 BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED,
             ),
             -> {
-                logcat(LogPriority.ERROR) { "Acknowledgement failed and cannot be retried -- Response Code: ${billingResult.responseCode} -- Debug Message: ${billingResult.debugMessage}" }
-                throw Exception("Failed to acknowledge the purchase!")
+                logcat(
+                    LogPriority.ERROR
+                ) {
+                    "Acknowledgement failed and cannot be retried -- Response Code: ${billingResult.responseCode} -- Debug Message: ${billingResult.debugMessage}"
+                }
+                throw BillingException("Failed to acknowledge the purchase!")
             }
         }
         return emptyList()
     }
 
-    suspend fun launchBillingFlow(activity: Activity, productDetails: ProductDetails) {
+    fun launchBillingFlow(activity: Activity, productDetails: ProductDetails) {
         val productDetailsParamsList = listOf(
             BillingFlowParams.ProductDetailsParams.newBuilder()
                 .setProductDetails(productDetails)
@@ -261,8 +279,7 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
         val billingFlowParams = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(productDetailsParamsList)
             .build()
-        val billingResult = billingClient.launchBillingFlow(activity, billingFlowParams)
-
+        billingClient.launchBillingFlow(activity, billingFlowParams)
     }
 
     private suspend fun acknowledge(purchaseToken: String): BillingResult {
@@ -297,12 +314,11 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
     }
 
     suspend fun acknowledgePurchase(purchaseToken: String) {
-
         val retryDelayMs = 2000L
         val retryFactor = 2
         val maxTries = 3
 
-        val acknowledgePurchaseResult = withContext(Dispatchers.IO) {
+        val acknowledgePurchaseResult = withContext(dispatcher) {
             acknowledge(purchaseToken)
         }
 
@@ -336,7 +352,9 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                 BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
             ),
             -> {
-                logcat { "Acknowledgement failed, but can be retried -- Response Code: ${acknowledgePurchaseResult.responseCode} -- Debug Message: ${acknowledgePurchaseResult.debugMessage}" }
+                logcat {
+                    "Acknowledgement failed, but can be retried -- Response Code: ${acknowledgePurchaseResult.responseCode} -- Debug Message: ${acknowledgePurchaseResult.debugMessage}"
+                }
                 runBlocking {
                     exponentialRetry(
                         maxTries = maxTries,
@@ -352,8 +370,12 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                 BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED,
             ),
             -> {
-                logcat(LogPriority.ERROR) { "Acknowledgement failed and cannot be retried -- Response Code: ${acknowledgePurchaseResult.responseCode} -- Debug Message: ${acknowledgePurchaseResult.debugMessage}" }
-                throw Exception("Failed to acknowledge the purchase!")
+                logcat(
+                    LogPriority.ERROR
+                ) {
+                    "Acknowledgement failed and cannot be retried -- Response Code: ${acknowledgePurchaseResult.responseCode} -- Debug Message: ${acknowledgePurchaseResult.debugMessage}"
+                }
+                throw BillingException("Failed to acknowledge the purchase!")
             }
         }
     }
@@ -376,7 +398,9 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                     return@onSuccess
                 }
                 .onFailure { throwable ->
-                    logcat(LogPriority.ERROR) { "Retry Failed -- Cause: ${throwable.cause} -- Message: ${throwable.message}" }
+                    logcat(
+                        LogPriority.ERROR
+                    ) { "Retry Failed -- Cause: ${throwable.cause} -- Message: ${throwable.message}" }
                 }
             currentDelay *= retryFactor
             retryAttempt++
@@ -385,3 +409,5 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
         return block() // last attempt
     }
 }
+
+class BillingException(message: String?) : RuntimeException(message)

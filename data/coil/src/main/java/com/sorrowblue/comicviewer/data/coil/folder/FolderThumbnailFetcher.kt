@@ -17,11 +17,8 @@ import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
 import javax.inject.Inject
@@ -29,6 +26,8 @@ import kotlin.math.floor
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import logcat.asLog
+import logcat.logcat
 import okhttp3.internal.closeQuietly
 import okio.ByteString.Companion.encodeUtf8
 
@@ -37,8 +36,6 @@ internal class FolderThumbnailFetcher(
     private val folder: Folder,
     options: Options,
     diskCache: dagger.Lazy<DiskCache?>,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileModelLocalDataSource: FileModelLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : FileModelFetcher(options, diskCache) {
@@ -126,7 +123,7 @@ internal class FolderThumbnailFetcher(
                     }
                 }
             } catch (e: Exception) {
-//                logcat { e.asLog() }
+                logcat { e.asLog() }
                 throw e
             }
         } catch (e: Exception) {
@@ -220,51 +217,6 @@ internal class FolderThumbnailFetcher(
         }
     }
 
-    private fun writeToDiskCache(
-        snapshot: DiskCache.Snapshot?,
-        fileReader: FileReader,
-        bitmap: Bitmap,
-    ): DiskCache.Snapshot? {
-        // この応答をキャッシュすることが許可されていない場合は短絡します。
-        if (!isCacheable()) {
-            snapshot?.closeQuietly()
-            return null
-        }
-
-        // 新しいエディターを開きます。
-        val editor = if (snapshot != null) {
-            snapshot.closeAndOpenEditor()
-        } else {
-            diskCache?.openEditor(diskCacheKey)
-        }
-
-        // このエントリに書き込めない場合は「null」を返します。
-        if (editor == null) return null
-
-        try {
-            // 応答をディスク キャッシュに書き込みます。
-            // メタデータと画像データを更新します。
-            fileSystem.write(editor.metadata) {
-                FolderThumbnailMetadata(
-                    folder.path,
-                    folder.bookshelfId.value,
-                    folder.lastModifier,
-                    emptyList()
-                ).writeTo(this)
-            }
-            fileSystem.write(editor.data) {
-                bitmap.compress(COMPRESS_FORMAT, 75, outputStream())
-            }
-            return editor.commitAndOpenSnapshot()
-        } catch (e: Exception) {
-            editor.abortQuietly()
-            throw e
-        } finally {
-            bitmap.recycle()
-            fileReader.closeQuietly()
-        }
-    }
-
     private fun combineThumbnail(canvas: Canvas, snap: DiskCache.Snapshot, rightSpace: Float) {
         val bitmap = BitmapFactory.decodeFile(snap.data.toString())
         val resizeScale =
@@ -297,8 +249,6 @@ internal class FolderThumbnailFetcher(
 
     class Factory @Inject constructor(
         @ThumbnailDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
-        private val remoteDataSourceFactory: RemoteDataSource.Factory,
-        private val bookshelfLocalDataSource: BookshelfLocalDataSource,
         private val fileModelLocalDataSource: FileModelLocalDataSource,
         private val datastoreDataSource: DatastoreDataSource,
     ) : Fetcher.Factory<Folder> {
@@ -312,8 +262,6 @@ internal class FolderThumbnailFetcher(
                 data,
                 options,
                 diskCache,
-                remoteDataSourceFactory,
-                bookshelfLocalDataSource,
                 fileModelLocalDataSource,
                 datastoreDataSource
             )

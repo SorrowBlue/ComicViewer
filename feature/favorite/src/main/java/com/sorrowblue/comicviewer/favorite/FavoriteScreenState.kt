@@ -124,11 +124,10 @@ private class FavoriteScreenStateImpl(
     private var fileInfoJob: Job? = null
 
     override fun onFileInfoClick(file: File) {
-
         fileInfoJob?.cancel()
         fileInfoJob = scope.launch {
-            viewModel.fileInfo(file).onEach {
-                it.fold({
+            viewModel.fileInfo(file).onEach { resource ->
+                resource.fold({
                     navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
                 }, {
                 })

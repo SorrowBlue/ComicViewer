@@ -90,7 +90,8 @@ fun <T : File> FileLazyVerticalGrid(
                     is FileContentType2.Grid -> GridFile(
                         file = item,
                         onClick = { onItemClick(item) },
-                        onInfoClick = { onItemInfoClick(item) })
+                        onInfoClick = { onItemInfoClick(item) }
+                    )
                 }
             }
         }
@@ -118,7 +119,6 @@ private fun PreviewGridFileLazyGrid(
         }
     }
 }
-
 
 class FileContentType2PreviewParameterProvider : PreviewParameterProvider<FileContentType2> {
     override val values: Sequence<FileContentType2>

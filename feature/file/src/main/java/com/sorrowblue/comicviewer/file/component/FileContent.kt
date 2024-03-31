@@ -27,12 +27,12 @@ import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 @Composable
 fun <T : File> FileContent(
     type: FileContentType,
-    isThumbnailEnabled: Boolean = true,
     lazyPagingItems: LazyPagingItems<T>,
     contentPadding: PaddingValues,
     onFileClick: (T) -> Unit,
     onInfoClick: (T) -> Unit,
     modifier: Modifier = Modifier,
+    isThumbnailEnabled: Boolean = true,
     state: LazyGridState = rememberLazyGridState(),
 ) {
     when (type) {

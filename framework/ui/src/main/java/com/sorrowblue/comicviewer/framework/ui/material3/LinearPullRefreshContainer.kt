@@ -23,6 +23,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 @Composable
 fun LinearPullRefreshContainer(
     pullRefreshState: PullToRefreshState,
+    modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     content: @Composable () -> Unit,
 ) {
@@ -39,7 +40,7 @@ fun LinearPullRefreshContainer(
         }
     }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .nestedScroll(pullRefreshState.nestedScrollConnection)
     ) {

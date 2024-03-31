@@ -26,6 +26,6 @@ data class FolderDisplaySettings(
 
     enum class Display {
         List,
-        Grid
+        Grid,
     }
 }

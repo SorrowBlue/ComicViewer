@@ -22,5 +22,4 @@ data class BookFile(
 ) : Book {
 
     val extension get() = path.extension
-
 }

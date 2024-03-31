@@ -32,6 +32,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DisplayNameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectField
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
@@ -129,7 +130,7 @@ private fun StorageEditContent(
             .drawVerticalScrollbar(scrollState)
             .verticalScroll(scrollState)
             .windowInsetsPadding(contentPadding.asWindowInsets())
-            .marginPadding(horizontal = true, bottom = true)
+            .marginPadding(dimension = ComicTheme.dimension, horizontal = true, bottom = true)
     ) {
         DisplayNameField(
             input = uiState.displayName,

@@ -17,11 +17,11 @@ internal class GetFileAttributeInteractor @Inject constructor(
     private val fileRepository: BookshelfRepository,
 ) : GetFileAttributeUseCase() {
     override fun run(request: Request): Flow<Resource<FileAttribute?, Error>> {
-        return fileRepository.get(request.bookshelfId).flatMapLatest {
-            it.dataOrNull?.let {
-                fileRepository.getAttribute(it, request.path).map { result ->
-                    result.fold({
-                        it?.let { Resource.Success(it) } ?: Resource.Error(Error.NotFound)
+        return fileRepository.get(request.bookshelfId).flatMapLatest { result ->
+            result.dataOrNull?.let { bookshelf ->
+                fileRepository.getAttribute(bookshelf, request.path).map { result ->
+                    result.fold({ attribute ->
+                        attribute?.let { Resource.Success(it) } ?: Resource.Error(Error.NotFound)
                     }, {
                         Resource.Error(Error.NotFound)
                     })

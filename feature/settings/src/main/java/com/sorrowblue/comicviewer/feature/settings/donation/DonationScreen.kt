@@ -43,7 +43,6 @@ sealed interface Product {
 enum class ConsumableProduct(override val productId: String) : Product {
     Coffee("consumable_coffee"),
     Cake("consumable_cake"),
-    ;
 }
 
 enum class TestProduct(override val productId: String) : Product {
@@ -51,12 +50,10 @@ enum class TestProduct(override val productId: String) : Product {
     Canceled("android.test.canceled"),
     Refunded("android.test.refunded"),
     ItemUnavailable("android.test.item_unavailable"),
-    ;
 }
 
 enum class NonConsumableProduct(override val productId: String) : Product {
     EndlessBookshelf("non_consumable_bookshelf_infinite"),
-    ;
 }
 
 data class InAppItem(

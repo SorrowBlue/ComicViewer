@@ -19,6 +19,4 @@ data class BookFolder(
     override val params: Map<String, String?> = emptyMap(),
     override val count: Int = 0,
     override val sortIndex: Int = -1,
-) : Book, IFolder {
-
-}
+) : Book, IFolder

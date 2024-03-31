@@ -11,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.android.billingclient.api.Purchase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,6 +41,7 @@ fun rememberDonationScreenState(
 private class DonationScreenStateImpl(
     private val context: Context,
     private val scope: CoroutineScope,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     override val snackbarHostState: SnackbarHostState,
 ) : DonationScreenState {
 
@@ -60,31 +62,32 @@ private class DonationScreenStateImpl(
             }
         }
         billingClient.startBillingConnection {
-            scope.launch(Dispatchers.IO) {
+            scope.launch(dispatcher) {
                 val list = billingClient.queryProductDetails(
                     ConsumableProduct.entries.map { it.productId }
                 )
                 uiState =
-                    uiState.copy(items = list.mapNotNull { productDetails ->
-                        Product.productIdOf(productDetails.productId)?.let {
-                            InAppItem(
-                                it,
-                                productDetails.name,
-                                productDetails.description,
-                                productDetails.oneTimePurchaseOfferDetails?.formattedPrice.orEmpty()
-                            )
+                    uiState.copy(
+                        items = list.mapNotNull { productDetails ->
+                            Product.productIdOf(productDetails.productId)?.let {
+                                InAppItem(
+                                    it,
+                                    productDetails.name,
+                                    productDetails.description,
+                                    productDetails.oneTimePurchaseOfferDetails?.formattedPrice.orEmpty()
+                                )
+                            }
                         }
-                    })
+                    )
                 billingClient.queryPurchases().also {
                     logcat { "queryPurchases ${it.billingResult} ${it.purchasesList}" }
                 }.purchasesList.forEach {
                     it.isAcknowledged
                     if (it.purchaseState == Purchase.PurchaseState.PURCHASED && !it.isAcknowledged) {
-                        withContext(Dispatchers.IO) {
+                        withContext(dispatcher) {
                             billingClient.acknowledgePurchase(it.purchaseToken)
                         }
                     }
-
                 }
                 billingClient.queryPurchaseHistory().also {
                     logcat { "queryPurchaseHistory ${it.billingResult}" }

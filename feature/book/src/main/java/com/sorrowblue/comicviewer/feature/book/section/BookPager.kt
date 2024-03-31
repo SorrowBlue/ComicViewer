@@ -76,7 +76,6 @@ private fun DefaultBookPage(
                                 .toDrawable(context.resources)
                         )
                     )
-
             }
         }
     )

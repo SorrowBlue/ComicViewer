@@ -16,12 +16,12 @@ enum class FileListType {
 @Composable
 fun <T : File> FileLazyGrid(
     fileListType: FileListType,
-    isThumbnailEnabled: Boolean = true,
     lazyPagingItems: LazyPagingItems<T>,
     contentPadding: PaddingValues,
     onFileClick: (T) -> Unit,
     onInfoClick: (T) -> Unit,
     modifier: Modifier = Modifier,
+    isThumbnailEnabled: Boolean = true,
     state: LazyGridState = rememberLazyGridState(),
 ) {
     when (fileListType) {

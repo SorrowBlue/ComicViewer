@@ -101,21 +101,27 @@ internal interface FileDao {
     @RawQuery(observedEntities = [FileEntity::class])
     fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileWithCountEntity>
 
-    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit")
+    @Query(
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit"
+    )
     suspend fun findCacheKeyOrderSortIndex(
         bookshelfId: Int,
         parent: String,
         limit: Int,
     ): List<String>
 
-    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit")
+    @Query(
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit"
+    )
     suspend fun findCacheKeyOrderLastModified(
         bookshelfId: Int,
         parent: String,
         limit: Int,
     ): List<String>
 
-    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit")
+    @Query(
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit"
+    )
     suspend fun findCacheKeysOrderLastRead(
         bookshelfId: Int,
         parent: String,

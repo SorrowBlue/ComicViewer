@@ -77,14 +77,14 @@ fun <T> rememberThreePaneScaffoldNavigatorContent(
 @Composable
 fun FileInfoSheet(
     file: File,
-    fileAttribute: FileAttribute? = null,
-    isReadLater: Boolean = false,
     onCloseClick: () -> Unit,
     onReadLaterClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     contentPadding: PaddingValues,
     scaffoldDirective: PaneScaffoldDirective,
     modifier: Modifier = Modifier,
+    isReadLater: Boolean = false,
+    fileAttribute: FileAttribute? = null,
     onOpenFolderClick: (() -> Unit)? = null,
 ) {
     FileInfoSheet(
@@ -97,7 +97,6 @@ fun FileInfoSheet(
         modifier = modifier,
         onOpenFolderClick = onOpenFolderClick
     )
-
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3AdaptiveApi::class)
@@ -293,7 +292,7 @@ fun FileInfoSheet(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Preview
 @Composable
-fun PreviewFileInfoSheet() {
+private fun PreviewFileInfoSheet() {
     PreviewTheme {
         FileInfoSheet(
             file = fakeBookFile(),
@@ -316,6 +315,5 @@ fun PreviewFileInfoSheet() {
             contentPadding = PaddingValues(),
             scaffoldDirective = rememberSupportingPaneScaffoldNavigator<Pair<File, FileAttribute?>>().scaffoldDirective
         )
-
     }
 }

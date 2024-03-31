@@ -111,7 +111,6 @@ private fun SearchScreen(
             lazyGridState.scrollToItem(0)
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)

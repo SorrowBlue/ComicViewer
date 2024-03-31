@@ -43,6 +43,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PasswordField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
@@ -199,7 +200,7 @@ private fun SmbEditContent(
             .drawVerticalScrollbar(scrollState)
             .verticalScroll(scrollState)
             .windowInsetsPadding(contentPadding.asWindowInsets())
-            .marginPadding(horizontal = true, bottom = true)
+            .marginPadding(dimension = ComicTheme.dimension, horizontal = true, bottom = true)
     ) {
         val dimension = LocalDimension.current
         DisplayNameField(

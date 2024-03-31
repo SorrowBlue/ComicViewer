@@ -178,7 +178,9 @@ internal class SmbFileClient @AssistedInject constructor(
     }
 
     private fun SmbFile.toFileModel(resolveImageFolder: Boolean = false): File {
-        if (resolveImageFolder && isDirectory && runCatching { listFiles(SmbFileFilter { it.isFile && it.name.extension in SUPPORTED_IMAGE }).isNotEmpty() }.getOrDefault(
+        if (resolveImageFolder && isDirectory && runCatching {
+                listFiles(SmbFileFilter { it.isFile && it.name.extension in SUPPORTED_IMAGE }).isNotEmpty()
+            }.getOrDefault(
                 false
             )
         ) {
@@ -241,8 +243,8 @@ internal class SmbFileClient @AssistedInject constructor(
                 }
             } ?: kotlin.run {
                 val smbFile = bookshelf.smbFile(path)
-                smbFile.share?.let {
-                    bookshelf.smbFile("/${smbFile.share}/").let {
+                smbFile.share?.let { share ->
+                    bookshelf.smbFile("/$share/").let {
                         rootSmbFile = it
                         val nPath = path.removePrefix("/${smbFile.share}/")
                         if (nPath.isEmpty() || nPath == "/") it else it.resolve(nPath) as SmbFile

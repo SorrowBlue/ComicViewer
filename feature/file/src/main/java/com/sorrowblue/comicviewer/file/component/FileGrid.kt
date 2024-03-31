@@ -39,10 +39,10 @@ import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 @Composable
 fun FileGrid(
     file: File,
-    isThumbnailEnabled: Boolean = true,
     onClick: () -> Unit,
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isThumbnailEnabled: Boolean = true,
 ) {
     ElevatedCard(onClick = onClick, modifier = modifier) {
         Box {

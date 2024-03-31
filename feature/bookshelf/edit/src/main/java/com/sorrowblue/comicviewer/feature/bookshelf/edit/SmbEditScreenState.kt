@@ -95,7 +95,6 @@ internal class SmbEditScreenState(
             port = uiState.port.value.toInt(),
         )
         scope.launch {
-
             registerBookshelfUseCase.execute(
                 RegisterBookshelfUseCase.Request(
                     smbServer,
