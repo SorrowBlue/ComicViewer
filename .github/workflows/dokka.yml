@@ -1,0 +1,33 @@
+name: Dokka
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dokka:
+    runs-on: ubuntu-latest
+    environment: android
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: dokkaHtmlMultiModule
+        run: ./gradlew :dokkaHtmlMultiModule --no-configuration-cache
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/dokka
+          destination_dir: dokka
+          keep_files: true
