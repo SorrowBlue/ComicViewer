@@ -1,0 +1,359 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>DatastoreDataSource</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            comicviewer
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":data:infrastructure:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="infrastructure::com.sorrowblue.comicviewer.data.infrastructure.datasource/DatastoreDataSource///PointingToDeclaration//924027794">
+  <div class="breadcrumbs"><a href="../../index.html">infrastructure</a><span class="delimiter">/</span><a href="../index.html">com.sorrowblue.comicviewer.data.infrastructure.datasource</a><span class="delimiter">/</span><span class="current">DatastoreDataSource</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Datastore</span><wbr><span>Data</span><wbr><span><span>Source</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">DatastoreDataSource</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-341762177%2FProperties%2F924027794" anchor-label="bookSettings" id="-341762177%2FProperties%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="book-settings.html"><span>book</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-341762177%2FProperties%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="book-settings.html">bookSettings</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-book-settings/index.html">BookSettings</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1921386198%2FProperties%2F924027794" anchor-label="displaySettings" id="-1921386198%2FProperties%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="display-settings.html"><span>display</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1921386198%2FProperties%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="display-settings.html">displaySettings</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-display-settings/index.html">DisplaySettings</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1104474568%2FProperties%2F924027794" anchor-label="folderDisplaySettings" id="-1104474568%2FProperties%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="folder-display-settings.html"><span>folder</span><wbr><span>Display</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1104474568%2FProperties%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="folder-display-settings.html">folderDisplaySettings</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-folder-display-settings/index.html">FolderDisplaySettings</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-376447206%2FProperties%2F924027794" anchor-label="folderSettings" id="-376447206%2FProperties%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="folder-settings.html"><span>folder</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-376447206%2FProperties%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="folder-settings.html">folderSettings</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-folder-settings/index.html">FolderSettings</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="910261776%2FProperties%2F924027794" anchor-label="oneTimeFlag" id="910261776%2FProperties%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="one-time-flag.html"><span>one</span><wbr><span>Time</span><wbr><span><span>Flag</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="910261776%2FProperties%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="one-time-flag.html">oneTimeFlag</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-one-time-flag/index.html">OneTimeFlag</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="700719880%2FProperties%2F924027794" anchor-label="securitySettings" id="700719880%2FProperties%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="security-settings.html"><span>security</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="700719880%2FProperties%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="security-settings.html">securitySettings</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-security-settings/index.html">SecuritySettings</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2106228632%2FProperties%2F924027794" anchor-label="settings" id="-2106228632%2FProperties%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="settings.html"><span><span>settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2106228632%2FProperties%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="settings.html">settings</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-settings/index.html">Settings</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-729543977%2FProperties%2F924027794" anchor-label="viewerOperationSettings" id="-729543977%2FProperties%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="viewer-operation-settings.html"><span>viewer</span><wbr><span>Operation</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-729543977%2FProperties%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="viewer-operation-settings.html">viewerOperationSettings</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-viewer-operation-settings/index.html">ViewerOperationSettings</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1221201398%2FProperties%2F924027794" anchor-label="viewerSettings" id="1221201398%2FProperties%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="viewer-settings.html"><span>viewer</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1221201398%2FProperties%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="viewer-settings.html">viewerSettings</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-viewer-settings/index.html">ViewerSettings</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-276489693%2FFunctions%2F924027794" anchor-label="updateBookSettings" id="-276489693%2FFunctions%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-book-settings.html"><span>update</span><wbr><span>Book</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-276489693%2FFunctions%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-book-settings.html"><span class="token function">updateBookSettings</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transform<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-book-settings/index.html">BookSettings</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-book-settings/index.html">BookSettings</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-book-settings/index.html">BookSettings</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1924499450%2FFunctions%2F924027794" anchor-label="updateDisplaySettings" id="-1924499450%2FFunctions%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-display-settings.html"><span>update</span><wbr><span>Display</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1924499450%2FFunctions%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-display-settings.html"><span class="token function">updateDisplaySettings</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transform<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-display-settings/index.html">DisplaySettings</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-display-settings/index.html">DisplaySettings</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-display-settings/index.html">DisplaySettings</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1874238216%2FFunctions%2F924027794" anchor-label="updateFolderDisplaySettings" id="-1874238216%2FFunctions%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-folder-display-settings.html"><span>update</span><wbr><span>Folder</span><wbr><span>Display</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1874238216%2FFunctions%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-folder-display-settings.html"><span class="token function">updateFolderDisplaySettings</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transform<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-folder-display-settings/index.html">FolderDisplaySettings</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-folder-display-settings/index.html">FolderDisplaySettings</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-folder-display-settings/index.html">FolderDisplaySettings</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1167853554%2FFunctions%2F924027794" anchor-label="updateFolderSettings" id="1167853554%2FFunctions%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-folder-settings.html"><span>update</span><wbr><span>Folder</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1167853554%2FFunctions%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-folder-settings.html"><span class="token function">updateFolderSettings</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transform<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-folder-settings/index.html">FolderSettings</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-folder-settings/index.html">FolderSettings</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-folder-settings/index.html">FolderSettings</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2131486752%2FFunctions%2F924027794" anchor-label="updateOneTimeFlag" id="2131486752%2FFunctions%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-one-time-flag.html"><span>update</span><wbr><span>One</span><wbr><span>Time</span><wbr><span><span>Flag</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2131486752%2FFunctions%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-one-time-flag.html"><span class="token function">updateOneTimeFlag</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transform<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-one-time-flag/index.html">OneTimeFlag</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-one-time-flag/index.html">OneTimeFlag</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-727540248%2FFunctions%2F924027794" anchor-label="updateSecuritySettings" id="-727540248%2FFunctions%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-security-settings.html"><span>update</span><wbr><span>Security</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-727540248%2FFunctions%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-security-settings.html"><span class="token function">updateSecuritySettings</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transform<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-security-settings/index.html">SecuritySettings</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-security-settings/index.html">SecuritySettings</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-security-settings/index.html">SecuritySettings</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1337898552%2FFunctions%2F924027794" anchor-label="updateSettings" id="-1337898552%2FFunctions%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-settings.html"><span>update</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1337898552%2FFunctions%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-settings.html"><span class="token function">updateSettings</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transform<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-settings/index.html">Settings</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-settings/index.html">Settings</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-settings/index.html">Settings</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="455790553%2FFunctions%2F924027794" anchor-label="updateViewerOperationSettings" id="455790553%2FFunctions%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-viewer-operation-settings.html"><span>update</span><wbr><span>Viewer</span><wbr><span>Operation</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="455790553%2FFunctions%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-viewer-operation-settings.html"><span class="token function">updateViewerOperationSettings</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transform<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-viewer-operation-settings/index.html">ViewerOperationSettings</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-viewer-operation-settings/index.html">ViewerOperationSettings</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-viewer-operation-settings/index.html">ViewerOperationSettings</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="954676958%2FFunctions%2F924027794" anchor-label="updateViewerSettings" id="954676958%2FFunctions%2F924027794" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":data:infrastructure:dokkaHtmlPartial/release" data-filterable-set=":data:infrastructure:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-viewer-settings.html"><span>update</span><wbr><span>Viewer</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="954676958%2FFunctions%2F924027794"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data:infrastructure:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-viewer-settings.html"><span class="token function">updateViewerSettings</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">transform<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token punctuation">(</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-viewer-settings/index.html">ViewerSettings</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-viewer-settings/index.html">ViewerSettings</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-viewer-settings/index.html">ViewerSettings</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

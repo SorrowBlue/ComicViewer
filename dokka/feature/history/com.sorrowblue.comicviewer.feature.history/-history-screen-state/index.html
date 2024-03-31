@@ -1,0 +1,299 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>HistoryScreenState</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            comicviewer
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":feature:history:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="history::com.sorrowblue.comicviewer.feature.history/HistoryScreenState///PointingToDeclaration//-1255717547">
+  <div class="breadcrumbs"><a href="../../index.html">history</a><span class="delimiter">/</span><a href="../index.html">com.sorrowblue.comicviewer.feature.history</a><span class="delimiter">/</span><span class="current">HistoryScreenState</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>History</span><wbr><span>Screen</span><wbr><span><span>State</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">HistoryScreenState</a> : <a href="../../../../framework/ui/com.sorrowblue.comicviewer.framework.ui/-saveable-screen-state/index.html">SaveableScreenState</a>, <a href="../../../../feature/file/com.sorrowblue.comicviewer.file/-file-info-sheet-state/index.html">FileInfoSheetState</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="134819007%2FProperties%2F-1255717547" anchor-label="addReadLaterUseCase" id="134819007%2FProperties%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#134819007%2FProperties%2F-1255717547"><span>add</span><wbr><span>Read</span><wbr><span>Later</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="134819007%2FProperties%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="index.html#134819007%2FProperties%2F-1255717547">addReadLaterUseCase</a><span class="token operator">: </span><a href="../../../../domain/usecase/com.sorrowblue.comicviewer.domain.usecase.file/-add-read-later-use-case/index.html">AddReadLaterUseCase</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="413264301%2FProperties%2F-1255717547" anchor-label="deleteReadLaterUseCase" id="413264301%2FProperties%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#413264301%2FProperties%2F-1255717547"><span>delete</span><wbr><span>Read</span><wbr><span>Later</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="413264301%2FProperties%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="index.html#413264301%2FProperties%2F-1255717547">deleteReadLaterUseCase</a><span class="token operator">: </span><a href="../../../../domain/usecase/com.sorrowblue.comicviewer.domain.usecase.file/-delete-read-later-use-case/index.html">DeleteReadLaterUseCase</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="126510652%2FProperties%2F-1255717547" anchor-label="existsReadlaterUseCase" id="126510652%2FProperties%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#126510652%2FProperties%2F-1255717547"><span>exists</span><wbr><span>Readlater</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="126510652%2FProperties%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="index.html#126510652%2FProperties%2F-1255717547">existsReadlaterUseCase</a><span class="token operator">: </span><a href="../../../../domain/usecase/com.sorrowblue.comicviewer.domain.usecase.file/-exists-readlater-use-case/index.html">ExistsReadlaterUseCase</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-63423634%2FProperties%2F-1255717547" anchor-label="fileInfoJob" id="-63423634%2FProperties%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-63423634%2FProperties%2F-1255717547"><span>file</span><wbr><span>Info</span><wbr><span><span>Job</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-63423634%2FProperties%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="index.html#-63423634%2FProperties%2F-1255717547">fileInfoJob</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/Job///PointingToDeclaration/">Job</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-78090092%2FProperties%2F-1255717547" anchor-label="getFileAttributeUseCase" id="-78090092%2FProperties%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-78090092%2FProperties%2F-1255717547"><span>get</span><wbr><span>File</span><wbr><span>Attribute</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-78090092%2FProperties%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="index.html#-78090092%2FProperties%2F-1255717547">getFileAttributeUseCase</a><span class="token operator">: </span><a href="../../../../domain/usecase/com.sorrowblue.comicviewer.domain.usecase.file/-get-file-attribute-use-case/index.html">GetFileAttributeUseCase</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="83436970%2FProperties%2F-1255717547" anchor-label="navigator" id="83436970%2FProperties%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#83436970%2FProperties%2F-1255717547"><span><span>navigator</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="83436970%2FProperties%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="index.html#83436970%2FProperties%2F-1255717547">navigator</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/material3/adaptive/navigation/ThreePaneScaffoldNavigator.html">ThreePaneScaffoldNavigator</a><span class="token operator">&lt;</span><a href="../../../../feature/file/com.sorrowblue.comicviewer.file/-file-info-ui-state/index.html">FileInfoUiState</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="556840850%2FProperties%2F-1255717547" anchor-label="pagingDataFlow" id="556840850%2FProperties%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="paging-data-flow.html"><span>paging</span><wbr><span>Data</span><wbr><span><span>Flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="556840850%2FProperties%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="paging-data-flow.html">pagingDataFlow</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/paging/PagingData.html">PagingData</a><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-book/index.html">Book</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2112022365%2FProperties%2F-1255717547" anchor-label="savedStateHandle" id="-2112022365%2FProperties%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-2112022365%2FProperties%2F-1255717547"><span>saved</span><wbr><span>State</span><wbr><span><span>Handle</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2112022365%2FProperties%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="index.html#-2112022365%2FProperties%2F-1255717547">savedStateHandle</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/SavedStateHandle.html">SavedStateHandle</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1082824115%2FProperties%2F-1255717547" anchor-label="scope" id="-1082824115%2FProperties%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1082824115%2FProperties%2F-1255717547"><span><span>scope</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1082824115%2FProperties%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="index.html#-1082824115%2FProperties%2F-1255717547">scope</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1056437155%2FProperties%2F-1255717547" anchor-label="snackbarHostState" id="-1056437155%2FProperties%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1056437155%2FProperties%2F-1255717547"><span>snackbar</span><wbr><span>Host</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1056437155%2FProperties%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="index.html#-1056437155%2FProperties%2F-1255717547">snackbarHostState</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/material3/SnackbarHostState.html">SnackbarHostState</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1732254653%2FFunctions%2F-1255717547" anchor-label="fetchFileInfo" id="-1732254653%2FFunctions%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1732254653%2FFunctions%2F-1255717547"><span>fetch</span><wbr><span>File</span><wbr><span><span>Info</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1732254653%2FFunctions%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-1732254653%2FFunctions%2F-1255717547"><span class="token function">fetchFileInfo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token punctuation">, </span></span><span class="parameter ">onGet<span class="token operator">: </span><span class="token punctuation">(</span><a href="../../../../feature/file/com.sorrowblue.comicviewer.file/-file-info-ui-state/index.html">FileInfoUiState</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1666227963%2FFunctions%2F-1255717547" anchor-label="onExtraPaneCloseClick" id="1666227963%2FFunctions%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-extra-pane-close-click.html"><span>on</span><wbr><span>Extra</span><wbr><span>Pane</span><wbr><span>Close</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1666227963%2FFunctions%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-extra-pane-close-click.html"><span class="token function">onExtraPaneCloseClick</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-449475878%2FFunctions%2F-1255717547" anchor-label="onFileInfoClick" id="-449475878%2FFunctions%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-file-info-click.html"><span>on</span><wbr><span>File</span><wbr><span>Info</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-449475878%2FFunctions%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-file-info-click.html"><span class="token function">onFileInfoClick</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-825743448%2FFunctions%2F-1255717547" anchor-label="onReadLaterClick" id="-825743448%2FFunctions%2F-1255717547" data-filterable-set=":feature:history:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":feature:history:dokkaHtmlPartial/release" data-filterable-set=":feature:history:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-825743448%2FFunctions%2F-1255717547"><span>on</span><wbr><span>Read</span><wbr><span>Later</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-825743448%2FFunctions%2F-1255717547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:history:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-825743448%2FFunctions%2F-1255717547"><span class="token function">onReadLaterClick</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
