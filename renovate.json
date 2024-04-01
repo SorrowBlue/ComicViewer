@@ -46,10 +46,12 @@
     {
       "matchPackagePrefixes": [
         "com.microsoft.graph:microsoft-graph",
+        "com.microsoft.identity.client",
+        "io.opentelemetry:opentelemetry-api",
         "com.fasterxml.jackson.core:jackson-core"
       ],
-      "groupName": "Microsoft graph",
-      "groupSlug": "microsoft_graph"
+      "groupName": "Microsoft Sdk",
+      "groupSlug": "microsoft_sdk"
     },
     {
       "matchPackagePrefixes": [
