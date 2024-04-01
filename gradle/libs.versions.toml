@@ -46,7 +46,7 @@ dokka = "org.jetbrains.dokka:1.9.20"
 [libraries]
 roborazzi = "io.github.takahirom.roborazzi:roborazzi:1.11.0"
 roborazzi-compose = "io.github.takahirom.roborazzi:roborazzi-compose:1.9.0"
-roborazzi-junitRule = "io.github.takahirom.roborazzi:roborazzi-junit-rule:1.9.0"
+roborazzi-junitRule = "io.github.takahirom.roborazzi:roborazzi-junit-rule:1.11.0"
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
 android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
