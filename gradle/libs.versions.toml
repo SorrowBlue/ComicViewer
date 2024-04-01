@@ -25,6 +25,7 @@ mikepenz-aboutlibraries = "11.1.1"
 koin = "3.5.3"
 compose-destinations = "1.10.2"
 junit = "1.1.5"
+roborazzi = "1.11.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
@@ -41,12 +42,12 @@ mikepenz-aboutlibraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", ve
 dependency-graph-generator = "com.vanniktech.dependency.graph.generator:0.8.0"
 arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 grgit = "org.ajoberstar.grgit.service:5.2.2"
-roborazzi = "io.github.takahirom.roborazzi:1.11.0"
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 dokka = "org.jetbrains.dokka:1.9.20"
 [libraries]
-roborazzi = "io.github.takahirom.roborazzi:roborazzi:1.11.0"
-roborazzi-compose = "io.github.takahirom.roborazzi:roborazzi-compose:1.9.0"
-roborazzi-junitRule = "io.github.takahirom.roborazzi:roborazzi-junit-rule:1.9.0"
+roborazzi = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "roborazzi" }
+roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose", version.ref = "roborazzi" }
+roborazzi-junitRule = { module = "io.github.takahirom.roborazzi:roborazzi-junit-rule", version.ref = "roborazzi" }
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
 android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }

@@ -74,6 +74,13 @@
       ],
       "groupName": "Hilt",
       "groupSlug": "androidx_hilt"
+    },
+    {
+      "matchPackagePrefixes": [
+        "io.github.takahirom.roborazzi"
+      ],
+      "groupName": "Roborazzi",
+      "groupSlug": "takahirom_roborazzi"
     }
   ]
 }
