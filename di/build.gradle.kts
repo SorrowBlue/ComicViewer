@@ -28,7 +28,7 @@ dependencies {
 
 
 //    implementation("com.google.android.gms:play-services-auth:21.0.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.2.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.2.2")
 //    implementation("com.google.android.gms:play-services-auth-api-phone:18.0.2")
 //    com.google.android.gms:play-services-auth:20.7.0
 //    └ com.google.android.gms:play-services-auth-base:18.0.4
