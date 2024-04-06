@@ -54,7 +54,7 @@ private class HistoryScreenStateImpl(
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val snackbarHostState: SnackbarHostState,
     override val scope: CoroutineScope,
-    private val viewModel: HistoryViewModel,
+    viewModel: HistoryViewModel,
 ) : HistoryScreenState {
     override val pagingDataFlow = viewModel.pagingDataFlow
 

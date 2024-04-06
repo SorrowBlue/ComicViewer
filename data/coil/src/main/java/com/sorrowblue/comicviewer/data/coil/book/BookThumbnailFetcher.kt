@@ -26,9 +26,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStream
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
+import logcat.asLog
+import logcat.logcat
 import okhttp3.internal.closeQuietly
-import okio.Buffer
 import okio.ByteString.Companion.encodeUtf8
+import okio.buffer
+import okio.source
 
 private const val MIME_IMAGE_WEBP = "image/webp"
 
@@ -56,7 +59,6 @@ internal class BookThumbnailFetcher(
                         dataSource = DataSource.DISK
                     )
                 }
-
                 // 候補が適格である場合、キャッシュから候補を返します。
                 if (snapshot.toBookThumbnailMetadata() == BookThumbnailMetadata(book)) {
                     return SourceResult(
@@ -66,100 +68,54 @@ internal class BookThumbnailFetcher(
                     )
                 }
             }
-            val bookshelfModel = bookshelfLocalDataSource.flow(book.bookshelfId).first()
+            val source = bookshelfLocalDataSource.flow(book.bookshelfId).first()
+                ?.let(remoteDataSourceFactory::create)
                 ?: throw CoilRuntimeException("本棚が取得できない")
-            val source = remoteDataSourceFactory.create(bookshelfModel)
             if (!source.exists(book.path)) {
                 throw CoilRuntimeException("ファイルがない(${book.path})")
             }
-            var fileReader = remoteDataSourceFactory.create(bookshelfModel).fileReader(book)
+            val fileReader = source.fileReader(book)
                 ?: throw CoilRuntimeException("FileReaderが取得できない")
-            val bitmap = fileReader.thumbnailBitmap(requestWidth.toInt(), requestHeight.toInt())
-                ?: throw CoilRuntimeException("画像を取得できない")
             try {
                 // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
-                snapshot =
-                    writeToDiskCache(snapshot = snapshot, fileReader = fileReader, bitmap = bitmap)
+                snapshot = fileReader.pageInputStream(0).use {
+                    writeToDiskCache(
+                        snapshot = snapshot,
+                        inputStream = it,
+                        metadata = BookThumbnailMetadata(book)
+                    )
+                }
                 if (snapshot != null) {
+                    // DISKキャッシュキーとページ数を更新する。
+                    fileModelLocalDataSource.updateAdditionalInfo(
+                        book.path,
+                        book.bookshelfId,
+                        diskCacheKey,
+                        fileReader.pageCount()
+                    )
                     return SourceResult(
                         source = snapshot.toImageSource(),
                         mimeType = null,
                         dataSource = DataSource.NETWORK
                     )
                 }
-                // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合は読み取ります。
-                var bytes = fileReader.pageInputStream(0).use(InputStream::readBytes)
-                if (bytes.isNotEmpty()) {
-                    return SourceResult(
-                        source = ImageSource(Buffer().apply { write(bytes) }, context),
-                        mimeType = null,
-                        dataSource = DataSource.NETWORK
-                    )
-                } else {
-                    fileReader.closeQuietly()
-                    fileReader = remoteDataSourceFactory.create(bookshelfModel).fileReader(book)
-                        ?: throw CoilRuntimeException("FileReaderが取得できない")
-                    bytes = fileReader.pageInputStream(0).use(InputStream::readBytes)
-                    return SourceResult(
-                        source = ImageSource(Buffer().apply { write(bytes) }, context),
+
+                // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
+                return fileReader.pageInputStream(0).use {
+                    SourceResult(
+                        source = it.toImageSource(),
                         mimeType = null,
                         dataSource = DataSource.NETWORK
                     )
                 }
             } catch (e: Exception) {
-                bitmap.recycle()
-                fileReader.closeQuietly()
+                logcat { e.asLog() }
                 throw e
             } finally {
-                bitmap.recycle()
                 fileReader.closeQuietly()
             }
         } catch (e: Exception) {
             snapshot?.closeQuietly()
-            throw e
-        }
-    }
-
-    private suspend fun writeToDiskCache(
-        snapshot: DiskCache.Snapshot?,
-        fileReader: FileReader,
-        bitmap: Bitmap,
-    ): DiskCache.Snapshot? {
-        // この応答をキャッシュすることが許可されていない場合は短絡します。
-        if (!isCacheable()) {
-            snapshot?.closeQuietly()
-            return null
-        }
-
-        // 新しいエディターを開きます。
-        val editor = if (snapshot != null) {
-            snapshot.closeAndOpenEditor()
-        } else {
-            diskCache?.openEditor(diskCacheKey)
-        }
-
-        // このエントリに書き込めない場合は「null」を返します。
-        if (editor == null) return null
-
-        try {
-            // 応答をディスク キャッシュに書き込みます。
-            // メタデータと画像データを更新します。
-            fileSystem.write(editor.metadata) {
-                BookThumbnailMetadata(book).writeTo(this)
-            }
-            fileSystem.write(editor.data) {
-                bitmap.compress(COMPRESS_FORMAT, 75, outputStream())
-            }
-            // DISKキャッシュキーとページ数を更新する。
-            fileModelLocalDataSource.updateAdditionalInfo(
-                book.path,
-                book.bookshelfId,
-                diskCacheKey,
-                fileReader.pageCount()
-            )
-            return editor.commitAndOpenSnapshot()
-        } catch (e: Exception) {
-            editor.abortQuietly()
             throw e
         }
     }
@@ -178,6 +134,49 @@ internal class BookThumbnailFetcher(
             // メタデータを解析できない場合は、このエントリを無視してください。
             null
         }
+    }
+
+    private fun writeToDiskCache(
+        snapshot: DiskCache.Snapshot?,
+        inputStream: InputStream,
+        metadata: BookThumbnailMetadata,
+    ): DiskCache.Snapshot? {
+        // この応答をキャッシュすることが許可されていない場合は短絡します。
+        if (!isCacheable()) {
+            snapshot?.closeQuietly()
+            return null
+        }
+
+        // 新しいエディターを開きます。
+        val editor = if (snapshot != null) {
+            snapshot.closeAndOpenEditor()
+        } else {
+            diskCache?.openEditor(diskCacheKey)
+        }
+
+        // このエントリに書き込めない場合は 'null' を返します。
+        if (editor == null) return null
+
+        try {
+            // 応答をディスク キャッシュに書き込みます。
+            // メタデータと画像データを更新します。
+            fileSystem.write(editor.metadata) {
+                metadata.writeTo(this)
+            }
+            inputStream.use {
+                fileSystem.write(editor.data) {
+                    it.source().buffer().readAll(this)
+                }
+            }
+            return editor.commitAndOpenSnapshot()
+        } catch (e: Exception) {
+            editor.abortQuietly()
+            throw e
+        }
+    }
+
+    private fun InputStream.toImageSource(): ImageSource {
+        return ImageSource(source().buffer(), context)
     }
 
     class Factory @Inject constructor(
