@@ -196,7 +196,6 @@ internal interface FileDao {
             }.let(::orderBy)
         }.create()
         logcat { query.sql.trimIndent().replace(Regex("""\r\n|\n|\r"""), "") }
-        @Suppress("DEPRECATION")
         return pagingSource(query)
     }
 

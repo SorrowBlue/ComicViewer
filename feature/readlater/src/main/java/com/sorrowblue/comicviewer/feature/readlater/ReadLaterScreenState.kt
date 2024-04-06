@@ -30,7 +30,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 internal interface ReadLaterScreenState : SaveableScreenState, FileInfoSheetState {
     val pagingDataFlow: Flow<PagingData<File>>
     val lazyGridState: LazyGridState
