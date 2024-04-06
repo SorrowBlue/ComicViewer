@@ -83,6 +83,13 @@
       ],
       "groupName": "Roborazzi",
       "groupSlug": "takahirom_roborazzi"
+    },
+    {
+      "matchPackagePrefixes": [
+        "androidx.compose.material3.adaptive"
+      ],
+      "groupName": "androidx.compose.material3.adaptive",
+      "groupSlug": "androidx.compose.material3.adaptive"
     }
   ]
 }
