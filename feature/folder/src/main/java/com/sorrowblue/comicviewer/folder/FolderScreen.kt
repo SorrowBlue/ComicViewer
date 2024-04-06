@@ -272,7 +272,7 @@ private fun FolderScreen(
     onReadLaterClick: () -> Unit,
     onFavoriteClick: (File) -> Unit,
     onExtraPaneCloseClick: () -> Unit,
-    navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator(),
+    navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },

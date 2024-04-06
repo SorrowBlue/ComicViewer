@@ -214,7 +214,7 @@ private fun PreviewBookshelfScreen() {
         val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
         BookshelfScreen(
             snackbarHostState = remember { SnackbarHostState() },
-            navigator = rememberSupportingPaneScaffoldNavigator(),
+            navigator = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>(),
             lazyPagingItems = lazyPagingItems,
             onFabClick = {},
             onSettingsClick = {},

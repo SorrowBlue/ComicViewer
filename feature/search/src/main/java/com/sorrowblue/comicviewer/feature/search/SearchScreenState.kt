@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.search
 
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
@@ -19,7 +18,6 @@ import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditionsUiState
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.flow.Flow
 
@@ -44,9 +42,7 @@ internal interface SearchScreenState : SaveableScreenState {
 internal fun rememberSearchScreenState(
     args: SearchArgs,
     viewModel: SearchViewModel = hiltViewModel(),
-    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator(
-        calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
-    ),
+    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator<File>(),
 ): SearchScreenState = rememberSaveableScreenState {
     SearchScreenStateImpl(
         savedStateHandle = it,

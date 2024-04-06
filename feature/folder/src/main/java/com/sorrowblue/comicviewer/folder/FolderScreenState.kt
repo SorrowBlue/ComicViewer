@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
@@ -41,7 +40,6 @@ import com.sorrowblue.comicviewer.folder.section.SortOrder
 import com.sorrowblue.comicviewer.folder.section.SortSheetState
 import com.sorrowblue.comicviewer.folder.section.SortSheetUiState
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -80,9 +78,7 @@ internal interface FolderScreenState : SaveableScreenState, FileInfoSheetState, 
 @Composable
 internal fun rememberFolderScreenState(
     args: FolderArgs,
-    navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator(
-        calculateStandardPaneScaffoldDirective(currentWindowAdaptiveInfo())
-    ),
+    navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: FolderViewModel = hiltViewModel(),
