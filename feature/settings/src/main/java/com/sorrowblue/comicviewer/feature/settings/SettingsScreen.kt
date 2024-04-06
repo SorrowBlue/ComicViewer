@@ -115,7 +115,6 @@ private fun SettingsScreen(
                 )
             }
         },
-        windowInsets = WindowInsets(0)
     )
 }
 

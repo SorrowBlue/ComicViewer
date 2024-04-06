@@ -19,7 +19,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.calculateStandardPaneScaffoldDirective
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -38,9 +37,7 @@ internal interface SettingsScreenState : SaveableScreenState {
 @Composable
 internal fun rememberSettingsScreenState(
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
-    navigator: ThreePaneScaffoldNavigator<Settings2> = rememberListDetailPaneScaffoldNavigator(
-        calculateStandardPaneScaffoldDirective(windowAdaptiveInfo)
-    ),
+    navigator: ThreePaneScaffoldNavigator<Settings2> = rememberListDetailPaneScaffoldNavigator<Settings2>(),
     navController: NavHostController = rememberNavController(),
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
