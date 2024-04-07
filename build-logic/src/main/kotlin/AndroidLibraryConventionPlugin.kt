@@ -7,6 +7,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 internal class AndroidLibraryConventionPlugin : Plugin<Project> {
 
@@ -21,6 +22,10 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
 
             kotlin {
                 jvmToolchain(17)
+                compilerOptions {
+                    freeCompilerArgs.add("-Xcontext-receivers")
+                    jvmTarget.set(JvmTarget.JVM_17)
+                }
             }
 
             extensions.configure<LibraryExtension> {

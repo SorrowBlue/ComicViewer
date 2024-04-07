@@ -22,7 +22,7 @@ android-gradle = "8.4.0-rc01"
 
 detekt = "1.23.6"
 mikepenz-aboutlibraries = "11.1.1"
-koin = "3.5.3"
+koin = "3.5.4"
 compose-destinations = "1.10.2"
 junit = "1.1.5"
 roborazzi = "1.11.0"
@@ -157,6 +157,7 @@ arturbosch-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-for
 arturbosch-detektGradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
 koin-androidxCompose = { group = "io.insert-koin", name = "koin-compose" }
 koin-androidxWorkmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager" }
 

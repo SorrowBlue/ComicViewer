@@ -14,11 +14,6 @@ internal fun Project.configureKotlinAndroid(
             targetCompatibility = JavaVersion.VERSION_17
         }
 
-        kotlinOptions {
-            freeCompilerArgs += "-Xcontext-receivers"
-            jvmTarget = "17"
-        }
-
         lint {
             baseline = file("lint-baseline.xml")
         }
