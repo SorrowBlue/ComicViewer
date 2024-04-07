@@ -16,6 +16,7 @@ internal class KoinConventionPlugin : Plugin<Project> {
                 implementation(platform(libs.findLibrary("koin-bom").get()))
                 implementation(libs.findLibrary("koin-androidxCompose").get())
                 implementation(libs.findLibrary("koin-androidxWorkmanager").get())
+                implementation(libs.findLibrary("koin-android").get())
             }
             extensions.configure<com.google.devtools.ksp.gradle.KspExtension> {
                 arg("KOIN_CONFIG_CHECK","false")

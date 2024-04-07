@@ -277,8 +277,7 @@ private fun FavoriteEditDialog(
                                             Icon(ComicIcons.Delete, null)
                                         }
                                     },
-                                    modifier = Modifier
-                                        .animateItemPlacement()
+                                    modifier = Modifier.animateItem()
                                 )
                             }
                         }

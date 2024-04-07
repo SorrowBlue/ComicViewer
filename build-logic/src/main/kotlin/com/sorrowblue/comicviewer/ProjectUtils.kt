@@ -1,20 +1,13 @@
 package com.sorrowblue.comicviewer
 
-import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
-import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
-
-internal fun CommonExtension<*, *, *, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
-    (this as ExtensionAware).extensions.configure("kotlinOptions", block)
-}
 
 fun DelegatingProjectDependency.projectString(): String {
     val n = ":" + dependencyProject.name

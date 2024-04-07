@@ -8,6 +8,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 @Suppress("unused")
 internal class AndroidApplicationConventionPlugin : Plugin<Project> {
@@ -23,6 +24,10 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
 
             kotlin {
                 jvmToolchain(17)
+                compilerOptions {
+                    freeCompilerArgs.add("-Xcontext-receivers")
+                    jvmTarget.set(JvmTarget.JVM_17)
+                }
             }
 
             extensions.configure<ApplicationExtension> {
