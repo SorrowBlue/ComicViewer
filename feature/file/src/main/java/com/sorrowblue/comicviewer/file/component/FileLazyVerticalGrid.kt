@@ -2,11 +2,16 @@ package com.sorrowblue.comicviewer.file.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +42,10 @@ fun <T : File> FileLazyVerticalGrid(
     isThumbnailEnabled: Boolean = true,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
+    val span = remember { GridItemSpan(1) }
+    var spanCount by remember {
+        mutableIntStateOf(1)
+    }
     LazyVerticalGrid(
         columns = contentType.columns,
         state = state,
@@ -60,10 +69,14 @@ fun <T : File> FileLazyVerticalGrid(
                 Arrangement.spacedBy(ComicTheme.dimension.padding, Alignment.Start)
         },
         modifier = modifier
-            .drawVerticalScrollbar(state, 1),
+            .drawVerticalScrollbar(state, spanCount),
     ) {
         items(
             count = lazyPagingItems.itemCount,
+            span = {
+                spanCount = maxLineSpan
+                GridItemSpan(1)
+            },
             key = lazyPagingItems.itemKey { it.path },
             contentType = { contentType }
         ) {

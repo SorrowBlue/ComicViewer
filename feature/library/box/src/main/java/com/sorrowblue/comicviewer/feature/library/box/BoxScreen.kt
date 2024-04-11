@@ -26,7 +26,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.box.component.BoxTopAppBar
 import com.sorrowblue.comicviewer.feature.library.box.component.FileListItem
-import com.sorrowblue.comicviewer.feature.library.box.component.FileListItemSh
 import com.sorrowblue.comicviewer.feature.library.box.data.boxModule
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxDialogUiState
@@ -149,8 +148,6 @@ private fun BoxScreen(
                         file = item,
                         onClick = { onFileClick(item) }
                     )
-                } else {
-                    FileListItemSh()
                 }
             }
         }
