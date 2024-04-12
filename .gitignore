@@ -131,3 +131,4 @@ google-services.json
 /docs/dokka
 
 *.dtmp
+.kotlin/*

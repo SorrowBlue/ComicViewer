@@ -14,4 +14,5 @@
     <string name="folder_message_scan">Please allow notifications to show the progress of the scan.</string>
     <string name="folder_text_nothing_in_folder">There is nothing in \"%1$s"</string>
     <string name="folder_title_request_notification_permission">Request Notification Permission</string>
+    <string name="folder_action_show_hidden">Show hidden files</string>
 </resources>

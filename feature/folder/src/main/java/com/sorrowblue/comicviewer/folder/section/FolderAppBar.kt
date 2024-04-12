@@ -15,21 +15,26 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.feature.folder.R
+import com.sorrowblue.comicviewer.file.component.ChangeGridSize
 import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.component.rememberFileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuScope
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 internal data class FolderAppBarUiState(
     val title: String = "",
-    val display: FileContentType = FileContentType.Grid(FileContentType.GridSize.Medium),
-    val fileContentType: FileContentType = FileContentType.Grid(FileContentType.GridSize.Medium),
+    val display: FolderDisplaySettings.Display = FolderDisplaySettings.Display.Grid,
+    val columnSize: FolderDisplaySettings.ColumnSize = FolderDisplaySettings.ColumnSize.Medium,
     val showHiddenFile: Boolean = false,
 ) : Parcelable
 
@@ -58,50 +63,14 @@ internal fun FolderAppBar(
             IconButton(onClick = onSortClick) {
                 Icon(ComicIcons.SortByAlpha, "sort")
             }
+            val fileContentType by rememberFileContentType(
+                display = uiState.display,
+                columnSize = uiState.columnSize
+            )
             OverflowMenu {
-                if (uiState.fileContentType is FileContentType.Grid) {
-                    OverflowMenuItem(
-                        text = stringResource(
-                            id = com.sorrowblue.comicviewer.feature.file.R.string.file_list_label_switch_list_view
-                        ),
-                        icon = ComicIcons.ViewList,
-                        onClick = onFileListChange
-                    )
-                } else {
-                    OverflowMenuItem(
-                        text = stringResource(
-                            id = com.sorrowblue.comicviewer.feature.file.R.string.file_list_label_switch_grid_view
-                        ),
-                        icon = ComicIcons.GridView,
-                        onClick = onFileListChange
-                    )
-                }
-                if (uiState.fileContentType is FileContentType.Grid) {
-                    OverflowMenuItem(
-                        text = stringResource(R.string.folder_action_change_grid_size),
-                        icon = ComicIcons.Grid4x4,
-                        onClick = onGridSizeChange
-                    )
-                }
-                DropdownMenuItem(
-                    text = { Text(text = "隠しファイルを表示") },
-                    leadingIcon = {
-                        Icon(imageVector = ComicIcons.FolderOff, contentDescription = null)
-                    },
-                    trailingIcon = {
-                        Checkbox(
-                            checked = uiState.showHiddenFile,
-                            onCheckedChange = {
-                                onHideFileClick()
-                                state.collapse()
-                            }
-                        )
-                    },
-                    onClick = {
-                        onHideFileClick()
-                        state.collapse()
-                    }
-                )
+                FileContentType(fileContentType = fileContentType, onClick = onFileListChange)
+                ChangeGridSize(fileContentType = fileContentType, onClick = onGridSizeChange)
+                ShowHiddenFIle(showHiddenFile = uiState.showHiddenFile, onClick = onHideFileClick)
                 OverflowMenuItem(
                     text = stringResource(R.string.folder_action_settings),
                     icon = ComicIcons.Settings,
@@ -111,5 +80,28 @@ internal fun FolderAppBar(
         },
         windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior,
+    )
+}
+
+@Composable
+private fun OverflowMenuScope.ShowHiddenFIle(showHiddenFile: Boolean, onClick: () -> Unit) {
+    DropdownMenuItem(
+        text = { Text(text = stringResource(R.string.folder_action_show_hidden)) },
+        leadingIcon = {
+            Icon(imageVector = ComicIcons.FolderOff, contentDescription = null)
+        },
+        trailingIcon = {
+            Checkbox(
+                checked = showHiddenFile,
+                onCheckedChange = {
+                    onClick()
+                    state.collapse()
+                }
+            )
+        },
+        onClick = {
+            onClick()
+            state.collapse()
+        }
     )
 }

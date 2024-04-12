@@ -34,13 +34,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -48,9 +45,9 @@ import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
 import com.sorrowblue.comicviewer.feature.file.R
-import com.sorrowblue.comicviewer.file.component.forwardingPainter
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
 import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffoldDefault
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
@@ -125,14 +122,17 @@ fun FileInfoSheet(
         scaffoldDirective = scaffoldDirective,
         modifier = modifier
     ) {
-        AsyncImage(
+        AsyncImage2(
             model = file,
             contentDescription = null,
             placeholder = rememberDebugPlaceholder(),
-            error = forwardingPainter(
-                rememberVectorPainter(if (file is Book) ComicIcons.Book else ComicIcons.Folder),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
-            ),
+            error = {
+                Icon(
+                    imageVector = if (file is Book) ComicIcons.Book else ComicIcons.Folder,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.surface
+                )
+            },
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .height(16.dp * 12)
