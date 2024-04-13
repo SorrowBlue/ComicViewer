@@ -10,7 +10,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
@@ -46,8 +48,10 @@ private fun BoxOauth2Screen(
     state: BoxOauth2ScreenState = rememberBoxOauth2ScreenState(args),
 ) {
     BoxOauth2Screen()
+
+    val onComplete1 by rememberUpdatedState(onComplete)
     LaunchedEffect(Unit) {
-        state.authenticate(onComplete)
+        state.authenticate(onComplete1)
     }
 }
 

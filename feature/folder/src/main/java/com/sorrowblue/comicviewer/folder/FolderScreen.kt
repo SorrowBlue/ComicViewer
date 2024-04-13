@@ -23,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -193,6 +194,7 @@ private fun FolderScreen(
             isManualOperation = false
         }
     }
+    val onRestoreComplete1 by rememberUpdatedState(newValue = onRestoreComplete)
     LaunchedEffect(lazyPagingItems.loadState) {
         if (0 < lazyPagingItems.itemCount && state.restorePath != null) {
             val index = lazyPagingItems.indexOf { it?.path == state.restorePath }
@@ -203,9 +205,9 @@ private fun FolderScreen(
                 }.onFailure {
                     logcat { it.asLog() }
                 }
-                onRestoreComplete()
+                onRestoreComplete1()
             } else if (!lazyPagingItems.loadState.isLoading) {
-                onRestoreComplete()
+                onRestoreComplete1()
             }
         }
         if (lazyPagingItems.isLoadedData && state.isScrollableTop) {
