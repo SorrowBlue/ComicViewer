@@ -53,6 +53,7 @@ fun OverflowMenuScope.ChangeGridSize(fileContentType: FileContentType2, onClick:
         )
     }
 }
+
 @Composable
 fun OverflowMenuScope.FileContentType(fileContentType: FileContentType2, onClick: () -> Unit) {
     if (fileContentType is FileContentType2.Grid) {
