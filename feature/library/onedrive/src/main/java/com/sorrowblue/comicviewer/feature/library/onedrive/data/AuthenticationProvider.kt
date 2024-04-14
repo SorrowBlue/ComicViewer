@@ -2,7 +2,10 @@ package com.sorrowblue.comicviewer.feature.library.onedrive.data
 
 import android.app.Activity
 import android.content.Context
-import com.microsoft.graph.authentication.BaseAuthenticationProvider
+import com.azure.core.credential.AccessToken
+import com.azure.core.credential.TokenCredential
+import com.azure.core.credential.TokenRequestContext
+import com.microsoft.identity.client.AcquireTokenSilentParameters
 import com.microsoft.identity.client.AuthenticationCallback
 import com.microsoft.identity.client.IAccount
 import com.microsoft.identity.client.IAuthenticationResult
@@ -13,21 +16,21 @@ import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.SignInParameters
 import com.microsoft.identity.client.exception.MsalException
 import com.sorrowblue.comicviewer.feature.library.onedrive.R
-import java.net.URL
+import java.time.ZoneOffset
 import java.util.concurrent.CompletableFuture
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
+import reactor.core.publisher.Mono
 
 internal class AuthenticationProvider(
     private val appContext: Context,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : BaseAuthenticationProvider() {
+) : TokenCredential {
 
     private var clientApplication: ISingleAccountPublicClientApplication? = null
     val account = MutableStateFlow<IAccount?>(null)
@@ -57,12 +60,12 @@ internal class AuthenticationProvider(
         }
     }
 
-    override fun getAuthorizationTokenAsync(requestUrl: URL): CompletableFuture<String> {
-        return if (shouldAuthenticateRequestWithUrl(requestUrl)) {
-            runBlocking { acquireTokenSilently() }.thenApply { obj: IAuthenticationResult -> obj.accessToken }
-        } else {
-            CompletableFuture.completedFuture(null)
-        }
+    override fun getToken(request: TokenRequestContext?): Mono<AccessToken> {
+        return acquireTokenSilently2()?.let {
+            AccessToken(it.accessToken, it.expiresOn.toInstant().atOffset(ZoneOffset.UTC))
+        }?.let {
+            Mono.just(it)
+        } ?: Mono.empty()
     }
 
     suspend fun signIn(activity: Activity): CompletableFuture<IAuthenticationResult> {
@@ -99,26 +102,21 @@ internal class AuthenticationProvider(
         }
     }
 
-    private suspend fun acquireTokenSilently(): CompletableFuture<IAuthenticationResult> {
-        val future = CompletableFuture<IAuthenticationResult>()
-        val authority =
-            clientApplication?.configuration?.defaultAuthority?.authorityURL?.toString()
-                ?: return future
-        // TODO(https://github.com/AzureAD/microsoft-authentication-library-for-android/issues/1742)
-        // val silentParameters = AcquireTokenSilentParameters.Builder().fromAuthority(authority).withCallback(getAuthenticationCallback(future)).withScopes(scopes).build()
-        // clientApplication.value?.acquireTokenSilentAsync(silentParameters)
-        withContext(dispatcher) {
-            @Suppress("DEPRECATION")
-            clientApplication?.acquireTokenSilentAsync(
-                scopes.toTypedArray(),
-                authority,
-                getAuthenticationCallback(future)
-            )
-        }
-        return future
+    private fun acquireTokenSilently2(): IAuthenticationResult? {
+        val authority = clientApplication?.configuration?.defaultAuthority?.authorityURL?.toString()
+            ?: return null
+        val silentParameters = AcquireTokenSilentParameters.Builder()
+            .fromAuthority(authority)
+            .forAccount(account.value)
+            .withScopes(scopes)
+            .build()
+        return clientApplication?.acquireTokenSilent(silentParameters)
     }
 
-    private fun getAuthenticationCallback(future: CompletableFuture<IAuthenticationResult>, onSuccess: () -> Unit = {}) =
+    private fun getAuthenticationCallback(
+        future: CompletableFuture<IAuthenticationResult>,
+        onSuccess: () -> Unit = {},
+    ) =
         object : AuthenticationCallback {
             override fun onCancel() {
                 logcat { "onCancel" }
@@ -126,7 +124,7 @@ internal class AuthenticationProvider(
             }
 
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
-                logcat { "onSuccess" }
+                authenticationResult.logcat { "onSuccess ${authenticationResult.account.id}" }
                 onSuccess()
                 future.complete(authenticationResult)
             }

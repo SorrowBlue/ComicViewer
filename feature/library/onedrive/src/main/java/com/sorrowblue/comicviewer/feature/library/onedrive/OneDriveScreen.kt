@@ -32,6 +32,7 @@ import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveDialo
 import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import java.io.InputStream
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.koin.core.context.loadKoinModules
 
@@ -104,7 +105,7 @@ internal data class OneDriveScreenUiState(
     val showDialog: Boolean = false,
     val oneDriveDialogUiState: OneDriveDialogUiState = OneDriveDialogUiState(),
     val path: String = "",
-    val profileUri: suspend () -> InputStream? = { null },
+    @IgnoredOnParcel val profileUri: suspend () -> InputStream? = { null },
 ) : Parcelable
 
 @ExperimentalMaterial3Api

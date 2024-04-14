@@ -1,9 +1,9 @@
 package com.sorrowblue.comicviewer.feature.library.onedrive.data
 
 import android.app.Activity
+import com.microsoft.graph.models.DriveItemCollectionResponse
 import com.microsoft.graph.models.User
-import com.microsoft.graph.requests.DriveItemCollectionPage
-import com.microsoft.graph.requests.GraphServiceClient
+import com.microsoft.graph.serviceclient.GraphServiceClient
 import com.microsoft.identity.client.IAccount
 import com.sorrowblue.comicviewer.app.IoDispatcher
 import java.io.InputStream
@@ -27,10 +27,10 @@ internal class OneDriveApiRepositoryImpl(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : OneDriveApiRepository {
 
-    private val graphClient = GraphServiceClient.builder()
-        .authenticationProvider(authenticationProvider)
-        .logger(LogcatLogger)
-        .buildClient()
+    private val graphClient: GraphServiceClient = GraphServiceClient(
+        authenticationProvider,
+        "https://graph.microsoft.com/.default",
+    )
 
     override suspend fun initialize() = authenticationProvider.initialize()
 
@@ -41,33 +41,28 @@ internal class OneDriveApiRepositoryImpl(
             if (!authenticationProvider.isSignIned) {
                 null
             } else {
-                graphClient.me().buildRequest().get()
+                graphClient.me().get()
             }
         }
     }
 
     override suspend fun profileImage(): InputStream {
         return withContext(dispatcher) {
-            graphClient.me().photo().content().buildRequest().get()!!
-        }
-    }
-
-    override suspend fun driveId(): String {
-        return withContext(dispatcher) {
-            graphClient.me().drive().buildRequest().get()!!.id!!
+            graphClient.me().photo().content().get()!!
         }
     }
 
     override suspend fun download(
-        driveId: String,
         itemId: String,
         outputStream: OutputStream,
         onProgress: (Double) -> Unit,
     ) {
         withContext(dispatcher) {
+            val driveId = graphClient.me().drive().get().id
             val size =
-                graphClient.drives(driveId).items(itemId).buildRequest().get()!!.size!!.toDouble()
-            graphClient.drives(driveId).items(itemId).content().buildRequest().get()!!
+                graphClient.drives().byDriveId(driveId).items().byDriveItemId(itemId)
+                    .get().size.toDouble()
+            graphClient.drives().byDriveId(driveId).items().byDriveItemId(itemId).content().get()
                 .copyTo(
                     ProgressOutputStream(outputStream) {
                         onProgress.invoke(it / size)
@@ -81,31 +76,27 @@ internal class OneDriveApiRepositoryImpl(
     }
 
     override suspend fun list(
-        driveId: String?,
         itemId: String,
         limit: Int,
         skipToken: String?,
-    ): DriveItemCollectionPage {
-        return if (driveId == null) {
-            withContext(dispatcher) {
-                kotlin.runCatching {
-                    graphClient.me().drive().root().children().buildRequest().apply {
-                        top(limit)
-                        expand("thumbnails")
-                        skipToken?.let(::skipToken)
-                    }.get()!!
-                }.getOrElse {
-                    throw it
-//                    list(driveId, itemId, limit, skipToken)
+    ): DriveItemCollectionResponse {
+        logcat { "list(itemId=$itemId, limit=$limit, skipToken=$skipToken)" }
+        val driveItemId = itemId.ifEmpty { "root" }
+        val driveId = graphClient.me().drive().get().id
+        val children = graphClient.drives().byDriveId(driveId).items().byDriveItemId(driveItemId)
+            .children().run {
+                if (skipToken != null) {
+                    withUrl(skipToken)
+                } else {
+                    this
                 }
             }
-        } else {
-            withContext(dispatcher) {
-                graphClient.drives(driveId).items(itemId).children().buildRequest().apply {
-                    top(limit)
-                    expand("thumbnails")
-                    skipToken?.let(::skipToken)
-                }.get()!!
+        return withContext(dispatcher) {
+            children.get {
+                it.queryParameters.apply {
+                    top = 7
+                    expand = arrayOf("thumbnails")
+                }
             }
         }
     }

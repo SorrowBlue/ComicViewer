@@ -106,7 +106,7 @@ internal class OneDriveScreenStateImpl(
 
     override val pagingDataFlow = repository.accountFlow.filterNotNull().flatMapLatest {
         Pager(PagingConfig(20)) {
-            OneDrivePagingSource(args.driveId, args.itemId.orEmpty(), repository)
+            OneDrivePagingSource(args.itemId.orEmpty(), repository)
         }.flow
     }.cachedIn(scope)
 
@@ -125,7 +125,7 @@ internal class OneDriveScreenStateImpl(
                     events += OneDriveScreenEvent.RequireAuthentication
                 } else {
                     uiState = uiState.copy(
-                        path = args.itemId.orEmpty(),
+                        path = args.name.orEmpty(),
                         profileUri = {
                             repository.profileImage()
                         }
@@ -200,7 +200,6 @@ internal class OneDriveScreenStateImpl(
             .setInputData(
                 workDataOf(
                     "outputUri" to outOut,
-                    "driveId" to file.params["driveId"],
                     "itemId" to file.path
                 )
             )

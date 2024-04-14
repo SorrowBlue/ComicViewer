@@ -14,7 +14,10 @@ import com.sorrowblue.comicviewer.feature.library.onedrive.destinations.TypedDes
 import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavGraph
 import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
 
-class OneDriveArgs(val driveId: String? = null, val itemId: String? = null)
+class OneDriveArgs(
+    val name: String? = null,
+    val itemId: String? = null,
+)
 
 internal object OneDriveNavGraphImpl : OneDriveNavGraph {
     override val route = "onedrive_graph"
@@ -71,7 +74,14 @@ private class OneDriveNavGraphNavigator(private val navController: NavController
     }
 
     override fun onFileClick(file: File) {
-        navController.navigateUp()
+        navController.navigate(
+            OneDriveScreenDestination(
+                OneDriveArgs(
+                    name = file.name,
+                    itemId = file.path
+                )
+            )
+        )
     }
 
     override fun requireAuthentication() {
