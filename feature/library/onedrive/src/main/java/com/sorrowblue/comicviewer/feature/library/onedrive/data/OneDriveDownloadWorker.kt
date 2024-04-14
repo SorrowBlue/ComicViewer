@@ -58,8 +58,6 @@ internal class OneDriveDownloadWorker(
     override suspend fun doWork(): Result {
         val outputUri = inputData.getString("outputUri")?.toUri()
             ?: return Result.failure(workDataOf("message" to "出力ファイルがない"))
-        val driveId = inputData.getString("driveId")
-            ?: return Result.failure(workDataOf("message" to "driveIdがない"))
         val itemId = inputData.getString("itemId")
             ?: return Result.failure(workDataOf("message" to "driveIdがない"))
         setForeground(getForegroundInfo())
@@ -67,7 +65,7 @@ internal class OneDriveDownloadWorker(
         delay(2000)
         withContext(dispatcher) {
             applicationContext.contentResolver.openOutputStream(outputUri)!!.use { stream ->
-                repository.download(driveId, itemId, stream) {
+                repository.download(itemId, stream) {
                     updateNotification(itemId, itemId, ceil(it * 100).toInt())
                 }
             }

@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.feature.library.onedrive.data
 
 import android.app.Activity
+import com.microsoft.graph.models.DriveItemCollectionResponse
 import com.microsoft.graph.models.User
-import com.microsoft.graph.requests.DriveItemCollectionPage
 import com.microsoft.identity.client.IAccount
 import java.io.InputStream
 import java.io.OutputStream
@@ -13,17 +13,14 @@ interface OneDriveApiRepository {
     val accountFlow: StateFlow<IAccount?>
 
     suspend fun list(
-        driveId: String?,
         itemId: String,
         limit: Int,
         skipToken: String?,
-    ): DriveItemCollectionPage
+    ): DriveItemCollectionResponse
 
     suspend fun getCurrentUser(): User?
-    suspend fun driveId(): String
     suspend fun profileImage(): InputStream
     suspend fun download(
-        driveId: String,
         itemId: String,
         outputStream: OutputStream,
         onProgress: (Double) -> Unit,
