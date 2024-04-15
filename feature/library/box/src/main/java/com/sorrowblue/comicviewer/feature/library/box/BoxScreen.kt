@@ -26,12 +26,10 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.box.component.BoxTopAppBar
 import com.sorrowblue.comicviewer.feature.library.box.component.FileListItem
-import com.sorrowblue.comicviewer.feature.library.box.data.boxModule
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxDialogUiState
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.parcelize.Parcelize
-import org.koin.core.context.loadKoinModules
 
 interface BoxScreenNavigator {
     fun navigateUp()
@@ -49,7 +47,6 @@ internal fun BoxScreen(
     navigator2: DestinationsNavigator,
     navigator: BoxScreenNavigator,
 ) {
-    loadKoinModules(boxModule)
     BoxScreen(
         args = args,
         savedStateHandle = navBackStackEntry.savedStateHandle,

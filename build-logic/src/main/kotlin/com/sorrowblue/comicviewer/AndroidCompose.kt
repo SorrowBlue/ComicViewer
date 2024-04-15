@@ -2,6 +2,8 @@ package com.sorrowblue.comicviewer
 
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 
 internal fun Project.configureAndroidCompose(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
@@ -10,10 +12,8 @@ internal fun Project.configureAndroidCompose(
         buildFeatures {
             compose = true
         }
-
-        composeOptions {
-            kotlinCompilerExtensionVersion =
-                libs.findVersion("androidx-compose-compiler").get().toString()
-        }
+    }
+    extensions.getByType<ComposeCompilerGradlePluginExtension>().apply {
+        suppressKotlinVersionCompatibilityCheck.set("2.0.0-RC1")
     }
 }

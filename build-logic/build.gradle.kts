@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.dokka.gradle.plugin)
     implementation(libs.arturbosch.detektGradlePlugin)
     implementation(libs.ksp.gradlePlugin)
+    implementation("org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.0.0-RC1")
 }
 
 gradlePlugin {

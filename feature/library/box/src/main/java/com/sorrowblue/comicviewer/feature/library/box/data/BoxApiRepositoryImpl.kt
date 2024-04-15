@@ -12,6 +12,7 @@ import com.box.sdk.BoxFolder
 import com.box.sdk.BoxItem
 import com.box.sdk.BoxUser
 import com.sorrowblue.comicviewer.app.IoDispatcher
+import com.sorrowblue.comicviewer.feature.library.box.BuildConfig
 import java.io.OutputStream
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -29,9 +30,6 @@ import logcat.asLog
 import logcat.logcat
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-
-private const val ClientId = "nihdm7dthg9lm7m3b41bpw7jp7b0lb9z"
-private const val ClientSecret = "znx5P0kuwJ5LNqF3UG8Yw8Xs05dw4zNq"
 
 @OptIn(ExperimentalSerializationApi::class)
 private val Context.boxConnectionStateDataStore: DataStore<BoxConnectionState> by dataStore(
@@ -57,9 +55,13 @@ internal class BoxApiRepositoryImpl(
 
     private val api = runBlocking { dropboxCredentialDataStore.data.first() }.let {
         if (it.state != null) {
-            BoxAPIConnection.restore(ClientId, ClientSecret, it.state)
+            BoxAPIConnection.restore(
+                BuildConfig.BOX_CLIENT_ID,
+                BuildConfig.BOX_CLIENT_SECRET,
+                it.state
+            )
         } else {
-            BoxAPIConnection(ClientId, ClientSecret)
+            BoxAPIConnection(BuildConfig.BOX_CLIENT_ID, BuildConfig.BOX_CLIENT_SECRET)
         }
     }
 

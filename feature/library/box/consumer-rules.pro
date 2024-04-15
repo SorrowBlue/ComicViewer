@@ -1,0 +1,1 @@
+-keep @com.box.sdk.BoxResourceType class *

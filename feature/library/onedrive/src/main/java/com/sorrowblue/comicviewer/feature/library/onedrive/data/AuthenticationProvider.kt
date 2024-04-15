@@ -61,9 +61,11 @@ internal class AuthenticationProvider(
     }
 
     override fun getToken(request: TokenRequestContext?): Mono<AccessToken> {
-        return acquireTokenSilently2()?.let {
-            AccessToken(it.accessToken, it.expiresOn.toInstant().atOffset(ZoneOffset.UTC))
-        }?.let {
+        return kotlin.runCatching {
+            acquireTokenSilently2()?.let {
+                AccessToken(it.accessToken, it.expiresOn.toInstant().atOffset(ZoneOffset.UTC))
+            }
+        }.getOrNull()?.let {
             Mono.just(it)
         } ?: Mono.empty()
     }

@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("comicviewer.android.feature.dynamic-feature")
     id("comicviewer.android.koin")
@@ -7,6 +9,20 @@ plugins {
 android {
     namespace = "com.sorrowblue.comicviewer.feature.library.box"
     resourcePrefix("box")
+
+    buildTypes {
+        all {
+            val localProperties = gradleLocalProperties(rootDir, providers)
+            val boxClientId = System.getenv("BOX_CLIENT_ID")
+                ?: localProperties.getProperty("BOX_CLIENT_ID").orEmpty()
+            val boxClientSecret = System.getenv("BOX_CLIENT_SECRET")
+                ?: localProperties.getProperty("BOX_CLIENT_SECRET").orEmpty()
+            buildConfigField("String", "BOX_CLIENT_ID", "\"$boxClientId\"")
+            buildConfigField("String", "BOX_CLIENT_SECRET", "\"$boxClientSecret\"")
+        }
+    }
+
+    buildFeatures.buildConfig = true
 }
 
 dependencies {

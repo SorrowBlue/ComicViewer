@@ -2,8 +2,8 @@
 
 targetSdk = "34"
 
-kotlin = "2.0.0-Beta5"
-google-ksp = "2.0.0-Beta5-1.0.20"
+kotlin = "2.0.0-RC1"
+google-ksp = "2.0.0-RC1-1.0.20"
 kotlinx-coroutines = "1.8.0"
 kotlinx-serialization = "1.6.3"
 

@@ -44,3 +44,5 @@ jobs:
           release_keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
           release_keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
           DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
+          BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
+          BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}

@@ -17,6 +17,8 @@ plugins {
     alias(libs.plugins.dependency.graph.generator)
     alias(libs.plugins.arturbosch.detekt)
     alias(libs.plugins.dokka)
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0-RC1" apply false
+
     id("androidx.room") version libs.versions.androidx.room.get() apply false
 }
 

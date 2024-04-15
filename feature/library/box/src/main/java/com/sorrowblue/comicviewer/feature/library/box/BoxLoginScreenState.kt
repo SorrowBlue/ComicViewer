@@ -45,7 +45,7 @@ private class BoxLoginScreenStateImpl(
     override fun onLoginClick() {
         val state = Random.nextInt(20).toString()
         val url = BoxAPIConnection.getAuthorizationURL(
-            "nihdm7dthg9lm7m3b41bpw7jp7b0lb9z",
+            BuildConfig.BOX_CLIENT_ID,
             URI.create("https://comicviewer.sorrowblue.com/box/oauth2"),
             state,
             null

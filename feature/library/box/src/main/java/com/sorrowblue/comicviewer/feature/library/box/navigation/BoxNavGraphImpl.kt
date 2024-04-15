@@ -8,12 +8,14 @@ import com.ramcosta.composedestinations.navigation.popUpTo
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.box.BoxOauth2RouteNavigator
 import com.sorrowblue.comicviewer.feature.library.box.BoxScreenNavigator
+import com.sorrowblue.comicviewer.feature.library.box.data.boxModule
 import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxLoginScreenDestination
 import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxOauth2ScreenDestination
 import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxScreenDestination
 import com.sorrowblue.comicviewer.feature.library.box.destinations.TypedDestination
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavGraph
 import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
+import org.koin.core.context.loadKoinModules
 
 internal object BoxNavGraphImpl : BoxNavGraph {
 
@@ -53,6 +55,7 @@ internal object BoxNavGraphImpl : BoxNavGraph {
     context(DependenciesContainerBuilder<*>)
     override fun dependency() {
         dependency(BoxNavGraphImpl) {
+            loadKoinModules(boxModule)
             BoxNavGraphNavigator(navController)
         }
     }

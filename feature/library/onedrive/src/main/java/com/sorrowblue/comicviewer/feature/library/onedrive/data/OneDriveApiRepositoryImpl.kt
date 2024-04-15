@@ -92,12 +92,14 @@ internal class OneDriveApiRepositoryImpl(
                 }
             }
         return withContext(dispatcher) {
-            children.get {
-                it.queryParameters.apply {
-                    top = 7
-                    expand = arrayOf("thumbnails")
+            runCatching {
+                children.get {
+                    it.queryParameters.apply {
+                        top = 7
+                        expand = arrayOf("thumbnails")
+                    }
                 }
-            }
+            }.getOrElse { DriveItemCollectionResponse() }
         }
     }
 

@@ -12,3 +12,7 @@
 -keepclassmembers class * {
   @com.google.api.client.util.Key <fields>;
 }
+
+-keep class com.google.api.services.drive.** {
+  *;
+}
