@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.framework.ui
 
-interface CoreNavigator {
+import androidx.navigation.NavController
 
+interface CoreNavigator {
+    val navController: NavController
     fun navigateUp()
 }
