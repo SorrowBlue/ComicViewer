@@ -37,7 +37,7 @@ jobs:
           encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
 
       - name: assemble
-        run: ./gradlew assembleRelease
+        run: ./gradlew bundleRelease
         env:
           release_storeFile: ${{ steps.android_keystore.outputs.filePath }}
           release_storePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
