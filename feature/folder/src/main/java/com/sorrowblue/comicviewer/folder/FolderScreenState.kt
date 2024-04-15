@@ -33,8 +33,6 @@ import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
 import com.sorrowblue.comicviewer.file.FileInfoUiState
-import com.sorrowblue.comicviewer.file.component.FileContentType
-import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.folder.section.SortItem
 import com.sorrowblue.comicviewer.folder.section.SortOrder
 import com.sorrowblue.comicviewer.folder.section.SortSheetState
@@ -154,7 +152,8 @@ private class FolderScreenStateImpl(
                 display = it.display,
                 columnSize = it.columnSize,
                 folderAppBarUiState = uiState.folderAppBarUiState.copy(
-                    fileContentType = it.toFileContentLayout(),
+                    display = it.display,
+                    columnSize = it.columnSize,
                     showHiddenFile = it.showHiddenFile
                 ),
                 isThumbnailEnabled = it.isEnabledThumbnail
@@ -181,9 +180,9 @@ private class FolderScreenStateImpl(
 
     override fun toggleFileListType() {
         viewModel.updateDisplay(
-            when (uiState.folderAppBarUiState.fileContentType) {
-                is FileContentType.Grid -> FolderDisplaySettings.Display.List
-                FileContentType.List -> FolderDisplaySettings.Display.Grid
+            when (uiState.folderAppBarUiState.display) {
+                FolderDisplaySettings.Display.Grid -> FolderDisplaySettings.Display.List
+                FolderDisplaySettings.Display.List -> FolderDisplaySettings.Display.Grid
             }
         )
     }
@@ -195,7 +194,7 @@ private class FolderScreenStateImpl(
     }
 
     override fun onGridSizeChange() {
-        if (uiState.folderAppBarUiState.fileContentType is FileContentType.Grid) {
+        if (uiState.folderAppBarUiState.display == FolderDisplaySettings.Display.Grid) {
             viewModel.updateGridSize()
         }
     }

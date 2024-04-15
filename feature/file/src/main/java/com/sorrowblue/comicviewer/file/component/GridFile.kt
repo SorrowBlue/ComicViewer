@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,6 +32,15 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
+/**
+ * ファイル情報をグリッドアイテムで表示する
+ *
+ * @param file ファイル
+ * @param onClick クリック時の処理
+ * @param onInfoClick インフォクリック時の処理
+ * @param modifier Modifier
+ * @param isThumbnailEnabled サムネイル表示を有効にするか
+ */
 @Composable
 fun GridFile(
     file: File,
@@ -68,6 +77,7 @@ fun GridFile(
                     letterSpacing = 0.sp
                 ),
                 textAlign = TextAlign.Start,
+                overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 minLines = 2,
                 modifier = Modifier
@@ -94,7 +104,7 @@ private fun GridFileThumbnail(
         contentDescription = null,
         contentScale = ContentScale.Crop,
         loading = {
-            CircularProgressIndicator()
+//            CircularProgressIndicator()
         },
         error = {
             if (file is Book) {
@@ -135,7 +145,7 @@ private fun GridFileIcon(file: File) {
 @Composable
 private fun PreviewFileGrid() {
     PreviewTheme {
-        FileGrid(
+        GridFile(
             file = fakeBookFile(),
             isThumbnailEnabled = false,
             onClick = {},

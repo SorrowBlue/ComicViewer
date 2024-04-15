@@ -42,10 +42,7 @@ fun <T : File> FileLazyVerticalGrid(
     isThumbnailEnabled: Boolean = true,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
-    val span = remember { GridItemSpan(1) }
-    var spanCount by remember {
-        mutableIntStateOf(1)
-    }
+    var spanCount by remember { mutableIntStateOf(1) }
     LazyVerticalGrid(
         columns = contentType.columns,
         state = state,

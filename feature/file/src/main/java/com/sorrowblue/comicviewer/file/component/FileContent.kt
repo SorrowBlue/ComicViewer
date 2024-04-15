@@ -88,18 +88,19 @@ private fun <T : File> FileGridContent(
             }
         ) {
             lazyPagingItems[it]?.let { item ->
-                FileGrid(
+                GridFile(
                     file = item,
-                    isThumbnailEnabled = isThumbnailEnabled,
                     onClick = { onClickItem(item) },
                     onInfoClick = { onLongClickItem(item) },
-                    modifier = Modifier.animateItemPlacement()
+                    modifier = Modifier.animateItemPlacement(),
+                    isThumbnailEnabled = isThumbnailEnabled
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T : File> FileListContent(
     state: LazyGridState,
@@ -126,18 +127,22 @@ fun <T : File> FileListContent(
     ) {
         items(count = lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.path }) {
             val item = lazyPagingItems[it]
-            if (isCompat) {
-                FileListContent(
-                    file = item,
-                    onClick = { onClickItem(item!!) },
-                    onLongClick = { onLongClickItem(item!!) },
-                )
-            } else {
-                FileListMedium(
-                    file = item,
-                    onClick = { onClickItem(item!!) },
-                    onLongClick = { onLongClickItem(item!!) }
-                )
+            if (item != null) {
+                if (isCompat) {
+                    ListFile(
+                        file = item,
+                        onClick = { onClickItem(item) },
+                        onLongClick = { onLongClickItem(item) },
+                        modifier = Modifier.animateItemPlacement(),
+                    )
+                } else {
+                    ListFileCard(
+                        file = item,
+                        onClick = { onClickItem(item) },
+                        onLongClick = { onLongClickItem(item) },
+                        modifier = Modifier.animateItemPlacement(),
+                    )
+                }
             }
         }
     }

@@ -22,6 +22,9 @@
       "matchPackagePrefixes": [
         "com.android."
       ],
+      "excludePackagePrefixes": [
+        "com.android.billingclient"
+      ],
       "groupName": "Android Gradle Plugin",
       "groupSlug": "android_gradle_plugin"
     },

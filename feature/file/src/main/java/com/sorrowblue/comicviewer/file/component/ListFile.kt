@@ -33,6 +33,15 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
+/**
+ * ファイル情報をリストアイテムで表示する
+ *
+ * @param file　ファイル
+ * @param onClick　クリック時の処理
+ * @param onLongClick　ロングクリック時の処理
+ * @param modifier  Modifier
+ * @param isThumbnailEnabled　サムネイル表示を有効にするか
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListFile(
@@ -106,6 +115,15 @@ fun ListFile(
     )
 }
 
+/**
+ * ファイル情報をカードで表示する
+ *
+ * @param file ファイル
+ * @param onClick　クリック時の処理
+ * @param onLongClick　ロングクリック時の処理
+ * @param modifier Modifier
+ * @param isThumbnailEnabled サムネイル表示を有効にするか
+ */
 @Composable
 fun ListFileCard(
     file: File,

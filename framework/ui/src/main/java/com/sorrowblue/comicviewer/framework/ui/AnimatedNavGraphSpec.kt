@@ -22,15 +22,11 @@ interface AnimatedNavGraphSpec : NavGraphSpec {
             }
             transition?.let {
                 when (transition.type) {
-                    TransitionsConfigure.Type.SharedAxisX -> materialSharedAxisXIn(
-                        true,
-                        slideDistance
-                    )
+                    TransitionsConfigure.Type.SharedAxisX ->
+                        materialSharedAxisXIn(true, slideDistance)
 
-                    TransitionsConfigure.Type.SharedAxisY -> materialSharedAxisYIn(
-                        true,
-                        slideDistance
-                    )
+                    TransitionsConfigure.Type.SharedAxisY ->
+                        materialSharedAxisYIn(true, slideDistance)
 
                     TransitionsConfigure.Type.FadeThrough -> materialFadeThroughIn()
                     TransitionsConfigure.Type.ContainerTransform -> materialContainerTransformIn()

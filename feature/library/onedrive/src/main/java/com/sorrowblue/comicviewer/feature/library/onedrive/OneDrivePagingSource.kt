@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.feature.library.onedrive
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.microsoft.graph.requests.DriveItemCollectionPage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -11,10 +10,8 @@ import com.sorrowblue.comicviewer.feature.library.onedrive.data.OneDriveApiRepos
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import logcat.logcat
 
 internal class OneDrivePagingSource(
-    private val driveId: String?,
     private val itemId: String,
     private val repository: OneDriveApiRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
@@ -27,12 +24,9 @@ internal class OneDrivePagingSource(
     }
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, File> {
-        logcat { "driveId=$driveId, itemId=$itemId" }
         return withContext(dispatcher) {
-            val collectionPage = repository.list(driveId, itemId, params.loadSize, params.key)
-            val driveId = driveId ?: repository.driveId()
-            logcat { "driveId=$driveId" }
-            val list = collectionPage.currentPage.mapNotNull {
+            val collectionPage = repository.list(itemId, params.loadSize, params.key)
+            val list = collectionPage.value.mapNotNull {
                 if (it.folder != null) {
                     Folder(
                         BookshelfId(0),
@@ -43,8 +37,7 @@ internal class OneDrivePagingSource(
                         it.lastModifiedDateTime?.toEpochSecond() ?: 0,
                         false,
                         mapOf(
-                            "driveId" to driveId,
-                            "thumbnail" to it.thumbnails?.currentPage?.firstOrNull()?.medium?.url.orEmpty()
+                            "thumbnail" to it.thumbnails?.firstOrNull()?.medium?.url.orEmpty()
                         )
                     )
                 } else if (it.file != null) {
@@ -61,8 +54,7 @@ internal class OneDrivePagingSource(
                         0,
                         0,
                         mapOf(
-                            "driveId" to driveId,
-                            "thumbnail" to it.thumbnails?.currentPage?.firstOrNull()?.medium?.url.orEmpty()
+                            "thumbnail" to it.thumbnails?.firstOrNull()?.medium?.url.orEmpty()
                         )
                     )
                 } else {
@@ -72,13 +64,8 @@ internal class OneDrivePagingSource(
             LoadResult.Page(
                 data = list,
                 prevKey = null,
-                nextKey = collectionPage.skiptoken
+                nextKey = collectionPage.odataNextLink
             )
         }
     }
-
-    private val DriveItemCollectionPage.skiptoken: String?
-        get() = nextPage?.buildRequest()?.options?.first {
-            it.name == "\$skiptoken"
-        }?.value?.toString()
 }
