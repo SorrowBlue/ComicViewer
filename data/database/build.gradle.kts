@@ -19,13 +19,6 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.paging.common)
 
-
-    modules {
-        module("com.google.guava:listenablefuture") {
-            replacedBy("com.google.guava:guava", "listenablefuture is part of guava")
-        }
-    }
-
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.ext.truth)
     androidTestImplementation(libs.kotlinx.coroutines.test)
