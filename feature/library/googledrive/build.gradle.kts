@@ -8,6 +8,7 @@ android {
     resourcePrefix("googledrive")
     packaging {
         resources.excludes += "META-INF/DEPENDENCIES"
+        resources.excludes += "META-INF/INDEX.LIST"
     }
 }
 
