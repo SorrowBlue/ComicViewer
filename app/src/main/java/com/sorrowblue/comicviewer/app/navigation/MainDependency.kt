@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.app.navigation
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
@@ -24,7 +23,6 @@ import com.sorrowblue.comicviewer.feature.tutorial.destinations.TutorialScreenDe
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.dependencyTutorialNavGraph
 import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 
-@Composable
 fun DependenciesContainerBuilder<*>.mainDependency(
     addOnList: SnapshotStateList<AddOn>,
     onRestoreComplete: () -> Unit,
@@ -33,6 +31,7 @@ fun DependenciesContainerBuilder<*>.mainDependency(
     dependency(object : CoreNavigator {
         override val navController: NavController
             get() = this@mainDependency.navController
+
         override fun navigateUp() {
             navController.navigateUp()
         }
