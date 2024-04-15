@@ -19,7 +19,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popUpTo
 import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
+import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxScreenDestination
+import com.sorrowblue.comicviewer.feature.library.box.navigation.BoxNavGraphImpl
+import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -36,7 +41,16 @@ interface BoxOauth2RouteNavigator {
 @Composable
 internal fun BoxOauth2Screen(
     args: BoxOauth2Args,
-    navigator: BoxOauth2RouteNavigator,
+    core: CoreNavigator,
+    navigator: BoxOauth2RouteNavigator = object : BoxOauth2RouteNavigator {
+        override fun onComplete() {
+            core.navController.navigate(BoxScreenDestination()) {
+                popUpTo(BoxNavGraphImpl) {
+                    inclusive = true
+                }
+            }
+        }
+    },
 ) {
     BoxOauth2Screen(args = args, navigator::onComplete)
 }
