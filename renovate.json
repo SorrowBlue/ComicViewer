@@ -89,10 +89,10 @@
     },
     {
       "matchPackagePrefixes": [
-        "androidx.compose.material3.adaptive"
+        "androidx.compose"
       ],
-      "groupName": "androidx.compose.material3.adaptive",
-      "groupSlug": "androidx.compose.material3.adaptive"
+      "groupName": "androidx.compose",
+      "groupSlug": "androidx_compose"
     }
   ]
 }
