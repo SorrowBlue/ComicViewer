@@ -18,7 +18,6 @@ internal class AndroidDynamicFeatureComposeConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.dynamic-feature")
                 apply("com.google.devtools.ksp")
-                apply("org.jetbrains.kotlin.plugin.compose")
             }
 
             val extension = extensions.getByType<DynamicFeatureExtension>()

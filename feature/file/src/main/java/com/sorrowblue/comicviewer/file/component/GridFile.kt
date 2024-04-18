@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -104,7 +105,7 @@ private fun GridFileThumbnail(
         contentDescription = null,
         contentScale = ContentScale.Crop,
         loading = {
-//            CircularProgressIndicator()
+            CircularProgressIndicator()
         },
         error = {
             if (file is Book) {

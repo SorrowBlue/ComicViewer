@@ -92,7 +92,7 @@ private fun <T : File> FileGridContent(
                     file = item,
                     onClick = { onClickItem(item) },
                     onInfoClick = { onLongClickItem(item) },
-                    modifier = Modifier.animateItemPlacement(),
+                    modifier = Modifier.animateItem(),
                     isThumbnailEnabled = isThumbnailEnabled
                 )
             }
@@ -133,14 +133,14 @@ fun <T : File> FileListContent(
                         file = item,
                         onClick = { onClickItem(item) },
                         onLongClick = { onLongClickItem(item) },
-                        modifier = Modifier.animateItemPlacement(),
+                        modifier = Modifier.animateItem(),
                     )
                 } else {
                     ListFileCard(
                         file = item,
                         onClick = { onClickItem(item) },
                         onLongClick = { onLongClickItem(item) },
-                        modifier = Modifier.animateItemPlacement(),
+                        modifier = Modifier.animateItem(),
                     )
                 }
             }
