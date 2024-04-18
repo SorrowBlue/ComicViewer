@@ -30,8 +30,10 @@ sealed interface Product {
                 .getOrNull()
                 ?: kotlin.runCatching { NonConsumableProduct.entries.firstOrNull { it.productId == productId } }
                     .getOrNull()
+                ?: kotlin.runCatching { TestProduct.entries.firstOrNull { it.productId == productId } }
+                    .getOrNull()
 
-        val entries = ConsumableProduct.entries + NonConsumableProduct.entries +
+        val entries: List<Product> = ConsumableProduct.entries + NonConsumableProduct.entries +
             if (BuildConfig.DEBUG) {
                 TestProduct.entries
             } else {

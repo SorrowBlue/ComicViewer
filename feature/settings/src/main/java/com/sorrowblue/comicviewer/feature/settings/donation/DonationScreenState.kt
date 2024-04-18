@@ -64,7 +64,7 @@ private class DonationScreenStateImpl(
         billingClient.startBillingConnection {
             scope.launch(dispatcher) {
                 val list = billingClient.queryProductDetails(
-                    ConsumableProduct.entries.map { it.productId }
+                    Product.entries.map { it.productId }
                 )
                 uiState =
                     uiState.copy(
@@ -81,18 +81,28 @@ private class DonationScreenStateImpl(
                     )
                 billingClient.queryPurchases().also {
                     logcat { "queryPurchases ${it.billingResult} ${it.purchasesList}" }
-                }.purchasesList.forEach {
-                    it.isAcknowledged
-                    if (it.purchaseState == Purchase.PurchaseState.PURCHASED && !it.isAcknowledged) {
+                }.purchasesList.forEach { purchase ->
+                    logcat { "${purchase.products.firstOrNull()}, purchaseState=${purchase.purchaseState}, isAcknowledged=${purchase.isAcknowledged}" }
+                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
                         withContext(dispatcher) {
-                            billingClient.acknowledgePurchase(it.purchaseToken)
+                            purchase.products.forEach {
+                                when (Product.productIdOf(it)) {
+                                    is ConsumableProduct -> billingClient.consume(purchase)
+                                    is NonConsumableProduct -> billingClient.acknowledgePurchase(
+                                        purchase.purchaseToken
+                                    )
+
+                                    is TestProduct -> billingClient.consume(purchase)
+                                    null -> Unit
+                                }
+                            }
                         }
                     }
                 }
                 billingClient.queryPurchaseHistory().also {
                     logcat { "queryPurchaseHistory ${it.billingResult}" }
                 }.purchaseHistoryRecordList?.forEach {
-                    logcat { "${it.originalJson}" }
+                    logcat { it.originalJson }
                 }
             }
         }
