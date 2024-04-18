@@ -102,9 +102,16 @@ class BillingClientWrapper(
         if (result.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
                 logcat { "onPurchasesUpdated result=$result, purchases=$purchases, json=${purchase.originalJson}" }
-                runBlocking {
-                    acknowledgePurchase(purchase.purchaseToken)
-//                    consume(purchase)
+                purchase.products.forEach {
+                    Product.productIdOf(it)?.let {
+                        runBlocking {
+                            when (it) {
+                                is ConsumableProduct -> consume(purchase)
+                                is NonConsumableProduct -> acknowledgePurchase(purchase.purchaseToken)
+                                is TestProduct -> consume(purchase)
+                            }
+                        }
+                    }
                 }
             }
         } else if (result.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
