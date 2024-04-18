@@ -82,7 +82,9 @@ private class DonationScreenStateImpl(
                 billingClient.queryPurchases().also {
                     logcat { "queryPurchases ${it.billingResult} ${it.purchasesList}" }
                 }.purchasesList.forEach { purchase ->
-                    logcat { "${purchase.products.firstOrNull()}, purchaseState=${purchase.purchaseState}, isAcknowledged=${purchase.isAcknowledged}" }
+                    logcat {
+                        "${purchase.products.firstOrNull()}, purchaseState=${purchase.purchaseState}, isAcknowledged=${purchase.isAcknowledged}"
+                    }
                     if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
                         withContext(dispatcher) {
                             purchase.products.forEach {
