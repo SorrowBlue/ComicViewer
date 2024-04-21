@@ -109,7 +109,7 @@ internal class FileScanWorker @AssistedInject constructor(
                 .setTicker(title)
                 .setContentText(progress)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.ic_twotone_downloading_24)
+                .setSmallIcon(R.drawable.ic_downloading_24)
                 .setOngoing(true)
                 // Add the cancel action to the notification which can
                 // be used to cancel the worker
