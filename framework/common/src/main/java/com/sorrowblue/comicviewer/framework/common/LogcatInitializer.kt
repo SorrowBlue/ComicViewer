@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.framework.common
 
+import android.app.Application
 import android.content.Context
 import androidx.startup.Initializer
 import logcat.AndroidLogcatLogger
@@ -9,8 +10,7 @@ import logcat.logcat
 
 class LogcatInitializer : Initializer<LogcatLogger.Companion> {
     override fun create(context: Context): LogcatLogger.Companion {
-//        AndroidLogcatLogger.installOnDebuggableApp(context as Application, LogPriority.VERBOSE)
-        LogcatLogger.install(AndroidLogcatLogger())
+        AndroidLogcatLogger.installOnDebuggableApp(context as Application, LogPriority.VERBOSE)
         logcat(LogPriority.INFO) { "Initialize logcat." }
         return LogcatLogger.Companion
     }
