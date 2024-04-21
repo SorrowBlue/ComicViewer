@@ -2,18 +2,18 @@ package com.sorrowblue.comicviewer.feature.library.googledrive
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.google.api.services.drive.Drive
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.feature.library.googledrive.data.GoogleDriveApiRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class GoogleDrivePagingSource(
-    private val driverService: Drive,
     private val parent: String,
+    private val repository: GoogleDriveApiRepository,
     private val dispatchers: CoroutineDispatcher = Dispatchers.IO,
 ) :
     PagingSource<String, File>() {
@@ -25,15 +25,8 @@ internal class GoogleDrivePagingSource(
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, File> {
         return withContext(dispatchers) {
-            val request = driverService.files().list()
-                .setQ(
-                    "'$parent' in parents and trashed = false and (mimeType = 'application/vnd.google-apps.folder' or mimeType contains 'zip' or mimeType contains 'pdf')"
-                )
-                .setSpaces("drive")
-                .setPageSize(params.loadSize)
-                .setPageToken(params.key)
-                .setFields("nextPageToken,files(id,name,parents,modifiedTime,size,mimeType,iconLink)")
-            val fileList = request.execute()
+            val fileList = repository.fileList(parent, params.loadSize, params.key)
+                ?: return@withContext LoadResult.Error(RuntimeException("DriveServiceが取得できませんでした"))
             val list = fileList.files?.map {
                 if (it.mimeType == "application/vnd.google-apps.folder") {
                     Folder(
@@ -65,7 +58,7 @@ internal class GoogleDrivePagingSource(
             }
             LoadResult.Page(
                 data = list.orEmpty(),
-                prevKey = null, // Only paging forward.
+                prevKey = null,
                 nextKey = fileList.nextPageToken
             )
         }

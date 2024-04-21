@@ -31,15 +31,17 @@ import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.feature.library.googledrive.data.AuthStatus
 import com.sorrowblue.comicviewer.feature.library.googledrive.data.DriveDownloadWorker
+import com.sorrowblue.comicviewer.feature.library.googledrive.data.GoogleAuthorizationRepository
 import com.sorrowblue.comicviewer.feature.library.googledrive.data.GoogleDriveApiRepository
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialogUiState
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 
@@ -50,13 +52,15 @@ internal fun rememberGoogleDriveScreenState(
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
     repository: GoogleDriveApiRepository = koinInject(),
+    authRepository: GoogleAuthorizationRepository = koinInject(),
 ) = remember {
     GoogleDriveScreenState(
         args = args,
         savedStateHandle = savedStateHandle,
         context = context,
         scope = scope,
-        repository = repository
+        repository = repository,
+        authRepository = authRepository
     )
 }
 
@@ -65,14 +69,15 @@ sealed interface GoogleDriveScreenEvent {
     data object RequireAuthentication : GoogleDriveScreenEvent
 }
 
-@OptIn(ExperimentalCoroutinesApi::class, SavedStateHandleSaveableApi::class)
+@OptIn(SavedStateHandleSaveableApi::class)
 @Stable
 internal class GoogleDriveScreenState(
     args: GoogleDriveArgs,
     savedStateHandle: SavedStateHandle,
     context: Context,
-    scope: CoroutineScope,
+    private val scope: CoroutineScope,
     private val repository: GoogleDriveApiRepository,
+    private val authRepository: GoogleAuthorizationRepository,
 ) : KoinComponent {
 
     private val path = args.path
@@ -92,9 +97,8 @@ internal class GoogleDriveScreenState(
         events.remove(event)
     }
 
-    val pagingDataFlow = repository.driverServiceFlow.flatMapLatest {
-        Pager(PagingConfig(20)) { GoogleDrivePagingSource(it, path) }.flow
-    }.cachedIn(scope)
+    val pagingDataFlow =
+        Pager(PagingConfig(20)) { GoogleDrivePagingSource(path, repository) }.flow.cachedIn(scope)
 
     fun onResult(activityResult: ActivityResult) {
         if (activityResult.resultCode == Activity.RESULT_OK && activityResult.data?.data != null) {
@@ -103,14 +107,8 @@ internal class GoogleDriveScreenState(
     }
 
     init {
-        repository.googleSignInAccount.onEach { account ->
-            if (account == null) {
-                events += GoogleDriveScreenEvent.RequireAuthentication
-            } else {
-                uiState = uiState.copy(
-                    profileUri = account.photoUrl?.toString().orEmpty()
-                )
-            }
+        authRepository.state.filter { it == AuthStatus.Uncertified }.onEach {
+            events += GoogleDriveScreenEvent.RequireAuthentication
         }.launchIn(scope)
 
         val notificationManager = NotificationManagerCompat.from(context)
@@ -135,21 +133,20 @@ internal class GoogleDriveScreenState(
     }
 
     fun onProfileImageClick() {
-        val account = repository.googleSignInAccount.value ?: return
-        uiState = uiState.copy(
-            googleAccountDialogUiState = GoogleAccountDialogUiState.Show(
-                photoUrl = account.photoUrl?.toString().orEmpty(),
-                name = account.displayName.orEmpty()
-            )
-        )
+        scope.launch {
+            repository.profile()?.let {
+                uiState = uiState.copy(
+                    googleAccountDialogUiState = GoogleAccountDialogUiState.Show(
+                        photoUrl = it.photos.firstOrNull()?.url.orEmpty(),
+                        name = it.names.firstOrNull()?.displayName.orEmpty()
+                    )
+                )
+            }
+        }
     }
 
     fun onDialogDismissRequest() {
         uiState = uiState.copy(googleAccountDialogUiState = GoogleAccountDialogUiState.Hide)
-    }
-
-    fun onStart() {
-        repository.updateAccount()
     }
 
     fun onFileClick(
@@ -171,10 +168,10 @@ internal class GoogleDriveScreenState(
         }
     }
 
-    fun onLogoutClick(activity: Activity) {
-        repository.logout(activity) {
+    fun onLogoutClick() {
+        scope.launch {
+            authRepository.signout()
             onDialogDismissRequest()
-            repository.updateAccount()
         }
     }
 }

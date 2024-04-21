@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.library.googledrive
 
-import android.app.Activity
 import android.os.Parcelable
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,8 +15,6 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
@@ -28,10 +25,10 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.googledrive.component.FileListItem
 import com.sorrowblue.comicviewer.feature.library.googledrive.component.GoogleDriveTopAppBar
+import com.sorrowblue.comicviewer.feature.library.googledrive.data.googleAuthModule
 import com.sorrowblue.comicviewer.feature.library.googledrive.data.googleDriveModule
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialog
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialogUiState
-import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.parcelize.Parcelize
 import org.koin.core.context.loadKoinModules
@@ -51,7 +48,7 @@ internal fun GoogleDriveScreen(
     navBackStackEntry: NavBackStackEntry,
     navigator: GoogleDriveScreenNavigator,
 ) {
-    loadKoinModules(googleDriveModule)
+    loadKoinModules(listOf(googleAuthModule, googleDriveModule))
     GoogleDriveScreen(
         args = args,
         savedStateHandle = navBackStackEntry.savedStateHandle,
@@ -82,7 +79,6 @@ private fun GoogleDriveScreen(
 
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     val uiState = state.uiState
-    val activity = LocalContext.current as Activity
     val createFileRequest =
         rememberLauncherForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -94,10 +90,9 @@ private fun GoogleDriveScreen(
         onProfileImageClick = state::onProfileImageClick,
         onFileClick = { file -> state.onFileClick(file, createFileRequest, onFolderClick) },
         onDialogDismissRequest = state::onDialogDismissRequest,
-        onLogoutClick = { state.onLogoutClick(activity) },
+        onLogoutClick = state::onLogoutClick,
         onBackClick = onBackClick,
     )
-    LifecycleEffect(targetEvent = Lifecycle.Event.ON_START, action = state::onStart)
 }
 
 @Parcelize

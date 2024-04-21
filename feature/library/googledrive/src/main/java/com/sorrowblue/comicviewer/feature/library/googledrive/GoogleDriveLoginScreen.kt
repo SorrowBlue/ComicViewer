@@ -64,7 +64,7 @@ private fun GoogleDriveLoginScreen(
     val uiState = state.uiState
 
     val activityResultLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = state::onLoginResult
     )
 

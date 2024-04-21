@@ -39,7 +39,7 @@ internal class DropBoxDownloadWorker(
     private val notificationManager = NotificationManagerCompat.from(applicationContext)
 
     private val notificationBuilder = NotificationCompat.Builder(appContext, ChannelID.DOWNLOAD.id)
-        .setSmallIcon(FrameworkDrawable.ic_twotone_downloading_24)
+        .setSmallIcon(FrameworkDrawable.ic_downloading_24)
 
     @Suppress("SpecifyForegroundServiceType")
     override suspend fun getForegroundInfo(): ForegroundInfo {
