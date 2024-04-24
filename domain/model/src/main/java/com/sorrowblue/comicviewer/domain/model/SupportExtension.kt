@@ -26,11 +26,4 @@ sealed interface SupportExtension {
         XPS("xps"),
         OPEN_XPS("oxps"),
     }
-
-    companion object {
-        fun valueOf(key: String): SupportExtension {
-            return Archive.entries.firstOrNull { it.name == key } ?: Document.entries
-                .firstOrNull { it.name == key } ?: throw IllegalArgumentException("")
-        }
-    }
 }

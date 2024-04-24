@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 internal class ReadLaterViewModel @Inject constructor(
     val addReadLaterUseCase: AddReadLaterUseCase,
     val deleteReadLaterUseCase: DeleteReadLaterUseCase,
-    val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
+    private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
     pagingReadLaterFileUseCase: PagingReadLaterFileUseCase,
     val existsReadlaterUseCase: ExistsReadlaterUseCase,
     val getFileAttributeUseCase: GetFileAttributeUseCase,

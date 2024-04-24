@@ -5,7 +5,6 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.Result
-import com.sorrowblue.comicviewer.domain.model.Scan
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -51,7 +50,7 @@ interface FileRepository {
     suspend fun get(bookshelfId: BookshelfId, path: String): Response<File?>
     fun getFile(bookshelfId: BookshelfId, path: String): Flow<Result<File, Unit>>
     suspend fun getBook(bookshelfId: BookshelfId, path: String): Response<Book?>
-    suspend fun scan(folder: IFolder, scan: Scan): String
+    suspend fun scan(bookshelfId: BookshelfId): String
 
     suspend fun get2(bookshelfId: BookshelfId, path: String): Result<File?, Unit>
     suspend fun getRoot(bookshelfId: BookshelfId): Result<File?, Unit>

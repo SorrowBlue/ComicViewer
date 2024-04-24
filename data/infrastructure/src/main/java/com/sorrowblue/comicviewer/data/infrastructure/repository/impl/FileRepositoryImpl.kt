@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.Result
-import com.sorrowblue.comicviewer.domain.model.Scan
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.model.Unknown
@@ -188,11 +187,10 @@ internal class FileRepositoryImpl @Inject constructor(
         return Response.Success(fileModelLocalDataSource.findBy(bookshelfId, path))
     }
 
-    override suspend fun scan(folder: IFolder, scan: Scan): String {
+    override suspend fun scan(bookshelfId: BookshelfId): String {
         val folderSettings = settingsCommonRepository.folderSettings.first()
         return fileScanService.enqueue(
-            folder,
-            scan,
+            bookshelfId,
             folderSettings.resolveImageFolder,
             folderSettings.supportExtension.map(SupportExtension::extension)
         )

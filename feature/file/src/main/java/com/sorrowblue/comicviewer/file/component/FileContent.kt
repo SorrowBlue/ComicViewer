@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.file.component
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -58,7 +57,6 @@ fun <T : File> FileContent(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun <T : File> FileGridContent(
     lazyPagingItems: LazyPagingItems<T>,
@@ -100,7 +98,6 @@ private fun <T : File> FileGridContent(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T : File> FileListContent(
     state: LazyGridState,

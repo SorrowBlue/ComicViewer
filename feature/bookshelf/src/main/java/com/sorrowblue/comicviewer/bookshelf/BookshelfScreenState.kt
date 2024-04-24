@@ -127,7 +127,7 @@ private class BookshelfScreenStateImpl(
     override fun onInfoSheetScanClick() {
         val bookshelfFolder = navigator.currentDestination?.content
         scope.launch {
-            viewModel.scan(bookshelfFolder!!.folder)
+            viewModel.scan(bookshelfFolder!!.bookshelf.id)
         }
     }
 

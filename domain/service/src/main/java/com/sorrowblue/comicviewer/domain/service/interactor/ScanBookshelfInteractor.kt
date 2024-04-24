@@ -9,6 +9,6 @@ internal class ScanBookshelfInteractor @Inject constructor(
     private val fileRepository: FileRepository,
 ) : ScanBookshelfUseCase() {
     override suspend fun run(request: Request): Result<String, Unit> {
-        return Result.Success(fileRepository.scan(request.folder, request.scan))
+        return Result.Success(fileRepository.scan(request.bookshelfId))
     }
 }

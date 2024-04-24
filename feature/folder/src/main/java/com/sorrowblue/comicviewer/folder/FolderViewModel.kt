@@ -44,7 +44,7 @@ internal class FolderViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     fun pagingDataFlow(bookshelfId: BookshelfId, path: String) =
         pagingFileUseCase.execute(
-            PagingFileUseCase.Request(PagingConfig(30), bookshelfId, path)
+            PagingFileUseCase.Request(PagingConfig(20), bookshelfId, path)
         ).filterSuccess().flattenConcat().cachedIn(viewModelScope)
 
     val displaySettings = displaySettingsUseCase.settings

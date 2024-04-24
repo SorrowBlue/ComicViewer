@@ -8,6 +8,7 @@ import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.Scan
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
@@ -27,9 +28,9 @@ internal class BookshelfViewModel @Inject constructor(
     private val scanBookshelfUseCase: ScanBookshelfUseCase,
 ) : ViewModel() {
 
-    fun scan(folder: IFolder) {
+    fun scan(bookshelfId: BookshelfId) {
         viewModelScope.launch {
-            scanBookshelfUseCase.execute(ScanBookshelfUseCase.Request(folder, Scan.ALL)).first()
+            scanBookshelfUseCase.execute(ScanBookshelfUseCase.Request(bookshelfId)).first()
         }
     }
 

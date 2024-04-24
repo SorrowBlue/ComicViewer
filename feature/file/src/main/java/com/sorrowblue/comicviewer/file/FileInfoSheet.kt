@@ -297,16 +297,16 @@ private fun PreviewFileInfoSheet() {
         FileInfoSheet(
             file = fakeBookFile(),
             fileAttribute = FileAttribute(
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true
+                archive = true,
+                compressed = true,
+                directory = true,
+                normal = true,
+                readonly = true,
+                system = true,
+                temporary = true,
+                sharedRead = true,
+                hidden = true,
+                volume = true
             ),
             onCloseClick = { /*TODO*/ },
             onReadLaterClick = { /*TODO*/ },

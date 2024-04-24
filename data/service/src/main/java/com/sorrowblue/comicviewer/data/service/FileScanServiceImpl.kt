@@ -2,13 +2,13 @@ package com.sorrowblue.comicviewer.data.service
 
 import android.content.Context
 import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import com.sorrowblue.comicviewer.data.infrastructure.repository.impl.FileScanService
-import com.sorrowblue.comicviewer.domain.model.Scan
-import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import logcat.logcat
@@ -16,9 +16,9 @@ import logcat.logcat
 internal class FileScanServiceImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : FileScanService {
+
     override suspend fun enqueue(
-        file: File,
-        scan: Scan,
+        bookshelfId: BookshelfId,
         resolveImageFolder: Boolean,
         supportExtensions: List<String>,
     ): String {
@@ -28,16 +28,14 @@ internal class FileScanServiceImpl @Inject constructor(
             // ユーザーのデバイスの保存容量が少なすぎる場合以外
             setRequiresStorageNotLow(true)
         }.build()
-        logcat { "OneTimeWorkRequest.Builder(FileScanWorker::class.java)" }
+
         val myWorkRequest = OneTimeWorkRequest.Builder(FileScanWorker::class.java)
             .setConstraints(constraints)
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .addTag("observable")
             .setInputData(
                 FileScanRequest(
-                    file.bookshelfId,
-                    file.path,
-                    scan,
+                    bookshelfId,
                     resolveImageFolder,
                     supportExtensions
                 ).toWorkData()
@@ -45,6 +43,7 @@ internal class FileScanServiceImpl @Inject constructor(
             .build()
         val id = myWorkRequest.id
         WorkManager.getInstance(context)
+//            .beginUniqueWork("scan", ExistingWorkPolicy.APPEND, myWorkRequest)
             .enqueue(myWorkRequest)
         return id.toString()
     }
