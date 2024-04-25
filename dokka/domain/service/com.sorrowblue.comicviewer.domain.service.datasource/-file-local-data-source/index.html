@@ -1,0 +1,400 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>FileLocalDataSource</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            comicviewer
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":domain:service:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="service::com.sorrowblue.comicviewer.domain.service.datasource/FileLocalDataSource///PointingToDeclaration//68924724">
+  <div class="breadcrumbs"><a href="../../index.html">service</a><span class="delimiter">/</span><a href="../index.html">com.sorrowblue.comicviewer.domain.service.datasource</a><span class="delimiter">/</span><span class="current">FileLocalDataSource</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>File</span><wbr><span>Local</span><wbr><span>Data</span><wbr><span><span>Source</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">FileLocalDataSource</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="2063857798%2FFunctions%2F68924724" anchor-label="addUpdate" id="2063857798%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-update.html"><span>add</span><wbr><span><span>Update</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2063857798%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="add-update.html"><span class="token function">addUpdate</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">fileModel<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add files. If it already exists, update it.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-524578212%2FFunctions%2F68924724" anchor-label="deleteAll" id="-524578212%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-all.html"><span>delete</span><wbr><span><span>All</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-524578212%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete-all.html"><span class="token function">deleteAll</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">list<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Delete all files.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-553436861%2FFunctions%2F68924724" anchor-label="deleteAll2" id="-553436861%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-all2.html"><span>delete</span><wbr><span><span>All2</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-553436861%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete-all2.html"><span class="token function">deleteAll2</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfModelId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-951610459%2FFunctions%2F68924724" anchor-label="deleteHistory" id="-951610459%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-history.html"><span>delete</span><wbr><span><span>History</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-951610459%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete-history.html"><span class="token function">deleteHistory</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">list<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-305653627%2FFunctions%2F68924724" anchor-label="deleteThumbnails" id="-305653627%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-thumbnails.html"><span>delete</span><wbr><span><span>Thumbnails</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-305653627%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="delete-thumbnails.html"><span class="token function">deleteThumbnails</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1923233464%2FFunctions%2F68924724" anchor-label="exists" id="-1923233464%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="exists.html"><span><span>exists</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1923233464%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="exists.html"><span class="token function">exists</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns true if the file exists.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1782747428%2FFunctions%2F68924724" anchor-label="findBy" id="-1782747428%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="find-by.html"><span>find</span><wbr><span><span>By</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1782747428%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="find-by.html"><span class="token function">findBy</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1927154022%2FFunctions%2F68924724" anchor-label="flow" id="-1927154022%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="flow.html"><span><span>flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1927154022%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="flow.html"><span class="token function">flow</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1522861524%2FFunctions%2F68924724" anchor-label="getCacheKeyList" id="-1522861524%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-cache-key-list.html"><span>get</span><wbr><span>Cache</span><wbr><span>Key</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1522861524%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="get-cache-key-list.html"><span class="token function">getCacheKeyList</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1267187639%2FFunctions%2F68924724" anchor-label="getCacheKeys" id="-1267187639%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-cache-keys.html"><span>get</span><wbr><span>Cache</span><wbr><span><span>Keys</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1267187639%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="get-cache-keys.html"><span class="token function">getCacheKeys</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">parent<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">limit<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="get-cache-keys.html"><span class="token function">getCacheKeys</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">parent<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">limit<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">folderThumbnailOrderModel<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-folder-thumbnail-order/index.html">FolderThumbnailOrder</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1022319995%2FFunctions%2F68924724" anchor-label="lastHistory" id="-1022319995%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="last-history.html"><span>last</span><wbr><span><span>History</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1022319995%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="last-history.html"><span class="token function">lastHistory</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="716936197%2FFunctions%2F68924724" anchor-label="nextFileModel" id="716936197%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="next-file-model.html"><span>next</span><wbr><span>File</span><wbr><span><span>Model</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="716936197%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="next-file-model.html"><span class="token function">nextFileModel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">sortType<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-sort-type/index.html">SortType</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2004844396%2FFunctions%2F68924724" anchor-label="pagingHistoryBookSource" id="2004844396%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="paging-history-book-source.html"><span>paging</span><wbr><span>History</span><wbr><span>Book</span><wbr><span><span>Source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2004844396%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="paging-history-book-source.html"><span class="token function">pagingHistoryBookSource</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pagingConfig<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/paging/PagingConfig.html">PagingConfig</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/paging/PagingData.html">PagingData</a><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-book/index.html">Book</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="783388723%2FFunctions%2F68924724" anchor-label="pagingSource" id="783388723%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="paging-source.html"><span>paging</span><wbr><span><span>Source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="783388723%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="paging-source.html"><span class="token function">pagingSource</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pagingConfig<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/paging/PagingConfig.html">PagingConfig</a><span class="token punctuation">, </span></span><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">searchCondition<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model/-search-condition/index.html">SearchCondition</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/paging/PagingData.html">PagingData</a><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="paging-source.html"><span class="token function">pagingSource</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pagingConfig<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/paging/PagingConfig.html">PagingConfig</a><span class="token punctuation">, </span></span><span class="parameter ">bookshelf<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf/index.html">Bookshelf</a><span class="token punctuation">, </span></span><span class="parameter ">file<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token punctuation">, </span></span><span class="parameter ">searchCondition<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model/-search-condition/index.html">SearchCondition</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/paging/PagingData.html">PagingData</a><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="787403973%2FFunctions%2F68924724" anchor-label="prevFileModel" id="787403973%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="prev-file-model.html"><span>prev</span><wbr><span>File</span><wbr><span><span>Model</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="787403973%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="prev-file-model.html"><span class="token function">prevFileModel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">sortType<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.settings/-sort-type/index.html">SortType</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1348033006%2FFunctions%2F68924724" anchor-label="removeCacheKey" id="1348033006%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-cache-key.html"><span>remove</span><wbr><span>Cache</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1348033006%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="remove-cache-key.html"><span class="token function">removeCacheKey</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">diskCacheKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1871452375%2FFunctions%2F68924724" anchor-label="root" id="-1871452375%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="root.html"><span><span>root</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1871452375%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="root.html"><span class="token function">root</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">id<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-folder/index.html">Folder</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1343058961%2FFunctions%2F68924724" anchor-label="selectByNotPaths" id="-1343058961%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="select-by-not-paths.html"><span>select</span><wbr><span>By</span><wbr><span>Not</span><wbr><span><span>Paths</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1343058961%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="select-by-not-paths.html"><span class="token function">selectByNotPaths</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">list<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="391299854%2FFunctions%2F68924724" anchor-label="updateAdditionalInfo" id="391299854%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-additional-info.html"><span>update</span><wbr><span>Additional</span><wbr><span><span>Info</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="391299854%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-additional-info.html"><span class="token function">updateAdditionalInfo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">cacheKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">totalPage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Update additional information in the file.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1383949999%2FFunctions%2F68924724" anchor-label="updateHistory" id="-1383949999%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-history.html"><span>update</span><wbr><span><span>History</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1383949999%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-history.html"><span class="token function">updateHistory</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token punctuation">, </span></span><span class="parameter ">files<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><br><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-history.html"><span class="token function">updateHistory</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">lastReadPage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">lastReading<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Update reading history.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="575016972%2FFunctions%2F68924724" anchor-label="updateSimpleAll" id="575016972%2FFunctions%2F68924724" data-filterable-set=":domain:service:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:service:dokkaHtmlPartial/release" data-filterable-set=":domain:service:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-simple-all.html"><span>update</span><wbr><span>Simple</span><wbr><span><span>All</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="575016972%2FFunctions%2F68924724"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:service:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="update-simple-all.html"><span class="token function">updateSimpleAll</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">list<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../../../domain/model/com.sorrowblue.comicviewer.domain.model.file/-file/index.html">File</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

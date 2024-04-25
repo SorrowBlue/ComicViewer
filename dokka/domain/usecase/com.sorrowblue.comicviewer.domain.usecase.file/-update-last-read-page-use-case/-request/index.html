@@ -62,7 +62,7 @@
   <div class="breadcrumbs"><a href="../../../index.html">usecase</a><span class="delimiter">/</span><a href="../../index.html">com.sorrowblue.comicviewer.domain.usecase.file</a><span class="delimiter">/</span><a href="../index.html">UpdateLastReadPageUseCase</a><span class="delimiter">/</span><span class="current">Request</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Request</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:usecase:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">Request</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>libraryId<span class="token operator">: </span><a href="../../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>lastReadPage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>timestamp<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalDateTime.html">LocalDateTime</a><span class="token operator"> = </span>LocalDateTime.now()</span></span><span class="token punctuation">)</span> : <a href="../../../com.sorrowblue.comicviewer.domain/-base-request/index.html">BaseRequest</a></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:usecase:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">Request</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>bookshelfId<span class="token operator">: </span><a href="../../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>lastReadPage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>timestamp<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalDateTime.html">LocalDateTime</a><span class="token operator"> = </span>LocalDateTime.now()</span></span><span class="token punctuation">)</span> : <a href="../../../com.sorrowblue.comicviewer.domain/-base-request/index.html">BaseRequest</a></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
@@ -79,7 +79,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:usecase:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">libraryId<span class="token operator">: </span><a href="../../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">lastReadPage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">timestamp<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalDateTime.html">LocalDateTime</a><span class="token operator"> = </span>LocalDateTime.now()</span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:usecase:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bookshelfId<span class="token operator">: </span><a href="../../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">lastReadPage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">timestamp<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/time/LocalDateTime.html">LocalDateTime</a><span class="token operator"> = </span>LocalDateTime.now()</span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -88,7 +88,22 @@
       </div>
       <div data-togglable="PROPERTY">
         <h2 class="">Properties</h2>
-        <div class="table"><a data-name="-947674127%2FProperties%2F-1614422670" anchor-label="lastReadPage" id="-947674127%2FProperties%2F-1614422670" data-filterable-set=":domain:usecase:dokkaHtmlPartial/release"></a>
+        <div class="table"><a data-name="528844210%2FProperties%2F-1614422670" anchor-label="bookshelfId" id="528844210%2FProperties%2F-1614422670" data-filterable-set=":domain:usecase:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:usecase:dokkaHtmlPartial/release" data-filterable-set=":domain:usecase:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="bookshelf-id.html"><span>bookshelf</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="528844210%2FProperties%2F-1614422670"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:usecase:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="bookshelf-id.html">bookshelfId</a><span class="token operator">: </span><a href="../../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-947674127%2FProperties%2F-1614422670" anchor-label="lastReadPage" id="-947674127%2FProperties%2F-1614422670" data-filterable-set=":domain:usecase:dokkaHtmlPartial/release"></a>
           <div class="table-row" data-filterable-current=":domain:usecase:dokkaHtmlPartial/release" data-filterable-set=":domain:usecase:dokkaHtmlPartial/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
@@ -99,21 +114,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:usecase:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="last-read-page.html">lastReadPage</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-884034088%2FProperties%2F-1614422670" anchor-label="libraryId" id="-884034088%2FProperties%2F-1614422670" data-filterable-set=":domain:usecase:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":domain:usecase:dokkaHtmlPartial/release" data-filterable-set=":domain:usecase:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="library-id.html"><span>library</span><wbr><span><span>Id</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-884034088%2FProperties%2F-1614422670"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:usecase:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="library-id.html">libraryId</a><span class="token operator">: </span><a href="../../../../../domain/model/com.sorrowblue.comicviewer.domain.model.bookshelf/-bookshelf-id/index.html">BookshelfId</a></div></div></div>
                 </div>
               </div>
             </div>

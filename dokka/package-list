@@ -9,11 +9,6 @@ com.sorrowblue.comicviewer.data.coil
 com.sorrowblue.comicviewer.data.coil.book
 module:database
 com.sorrowblue.comicviewer.data.database.entity
-module:infrastructure
-com.sorrowblue.comicviewer.data.infrastructure.datasource
-com.sorrowblue.comicviewer.data.infrastructure.di
-com.sorrowblue.comicviewer.data.infrastructure.exception
-com.sorrowblue.comicviewer.data.infrastructure.repository.impl
 module:reader
 com.sorrowblue.comicviewer.data.reader
 com.sorrowblue.comicviewer.data.reader.impl
@@ -27,8 +22,9 @@ com.sorrowblue.comicviewer.domain.model.favorite
 com.sorrowblue.comicviewer.domain.model.file
 com.sorrowblue.comicviewer.domain.model.settings
 module:service
-com.sorrowblue.comicviewer.domain.service.interactor
-com.sorrowblue.comicviewer.domain.service.repository
+com.sorrowblue.comicviewer.domain.service
+com.sorrowblue.comicviewer.domain.service.datasource
+com.sorrowblue.comicviewer.domain.service.di
 module:usecase
 com.sorrowblue.comicviewer.domain
 com.sorrowblue.comicviewer.domain.usecase
