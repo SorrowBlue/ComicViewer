@@ -9,7 +9,7 @@ android {
 
 dependencies {
     implementation(projects.framework.notification)
-    implementation(projects.data.infrastructure)
+    implementation(projects.domain.service)
 
     implementation(libs.androidx.hilt.work)
     ksp(libs.androidx.hilt.compiler)

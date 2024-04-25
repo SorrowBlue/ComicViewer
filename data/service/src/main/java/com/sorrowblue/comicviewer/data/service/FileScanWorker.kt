@@ -13,13 +13,13 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.model.SortUtil
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
+import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -34,7 +34,7 @@ internal class FileScanWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val factory: RemoteDataSource.Factory,
-    private val fileLocalDataSource: FileModelLocalDataSource,
+    private val fileLocalDataSource: FileLocalDataSource,
 ) : CoroutineWorker(appContext, workerParams) {
 
     private val notificationManager = NotificationManagerCompat.from(appContext)

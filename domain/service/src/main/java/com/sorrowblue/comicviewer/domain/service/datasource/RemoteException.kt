@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.infrastructure.exception
+package com.sorrowblue.comicviewer.domain.service.datasource
 
 sealed class RemoteException : RuntimeException() {
 

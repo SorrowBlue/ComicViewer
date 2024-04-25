@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.infrastructure.datasource
+package com.sorrowblue.comicviewer.domain.service.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
 import kotlinx.coroutines.flow.Flow
 
-interface FileModelLocalDataSource {
+interface FileLocalDataSource {
 
     fun pagingSource(
         pagingConfig: PagingConfig,

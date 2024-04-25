@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.infrastructure.datasource
+package com.sorrowblue.comicviewer.domain.service.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData

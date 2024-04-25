@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.datastore.di
 
 import com.sorrowblue.comicviewer.data.datastore.DatastoreDataSourceImpl
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

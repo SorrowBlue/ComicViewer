@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.infrastructure.datasource
+package com.sorrowblue.comicviewer.domain.service.datasource
 
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings

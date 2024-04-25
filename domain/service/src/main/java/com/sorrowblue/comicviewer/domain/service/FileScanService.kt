@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.infrastructure.repository.impl
+package com.sorrowblue.comicviewer.domain.service
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 

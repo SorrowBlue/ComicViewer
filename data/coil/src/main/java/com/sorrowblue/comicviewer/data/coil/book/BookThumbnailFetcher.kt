@@ -17,11 +17,11 @@ import coil.request.Options
 import coil.size.Scale
 import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.BookshelfLocalDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStream
 import javax.inject.Inject
@@ -43,7 +43,7 @@ internal class BookThumbnailFetcher(
     private val context: Context,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-    private val fileModelLocalDataSource: FileModelLocalDataSource,
+    private val fileModelLocalDataSource: FileLocalDataSource,
 ) : FileModelFetcher(options, diskCache) {
 
     override suspend fun fetch(): FetchResult {
@@ -184,7 +184,7 @@ internal class BookThumbnailFetcher(
         @ApplicationContext private val context: Context,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-        private val fileModelLocalDataSource: FileModelLocalDataSource,
+        private val fileModelLocalDataSource: FileLocalDataSource,
     ) : Fetcher.Factory<Book> {
 
         override fun create(

@@ -7,7 +7,7 @@ import androidx.paging.map
 import com.sorrowblue.comicviewer.data.database.dao.ReadLaterFileDao
 import com.sorrowblue.comicviewer.data.database.entity.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.ReadLaterFileEntity
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.ReadLaterFileModelLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileModelLocalDataSource
 import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.file.File

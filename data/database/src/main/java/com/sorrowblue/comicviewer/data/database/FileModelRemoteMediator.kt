@@ -5,16 +5,16 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.sorrowblue.comicviewer.data.database.entity.FileWithCountEntity
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.DatastoreDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.di.IoDispatcher
-import com.sorrowblue.comicviewer.data.infrastructure.exception.RemoteException
+import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.SortUtil
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -30,7 +30,7 @@ internal class FileModelRemoteMediator @AssistedInject constructor(
     @Assisted private val bookshelf: Bookshelf,
     @Assisted private val file: File,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-    private val fileModelLocalDataSource: FileModelLocalDataSource,
+    private val fileLocalDataSource: FileLocalDataSource,
 ) : RemoteMediator<Int, FileWithCountEntity>() {
 
     @AssistedFactory
@@ -61,7 +61,7 @@ internal class FileModelRemoteMediator @AssistedInject constructor(
                         SortUtil.filter(it, supportExtensions)
                     }
                 )
-                fileModelLocalDataSource.updateHistory(file, files)
+                fileLocalDataSource.updateHistory(file, files)
             }
         }.fold({
             return MediatorResult.Success(endOfPaginationReached = true)

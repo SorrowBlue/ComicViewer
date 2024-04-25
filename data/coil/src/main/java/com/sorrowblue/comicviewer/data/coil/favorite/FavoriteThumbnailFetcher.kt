@@ -17,9 +17,9 @@ import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteFileLocalDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import java.io.IOException
 import javax.inject.Inject
 import kotlin.math.floor
@@ -36,7 +36,7 @@ internal class FavoriteThumbnailFetcher(
     options: Options,
     diskCache: dagger.Lazy<DiskCache?>,
     private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
-    private val fileModelLocalDataSource: FileModelLocalDataSource,
+    private val fileModelLocalDataSource: FileLocalDataSource,
 ) : FileModelFetcher(options, diskCache) {
 
     override suspend fun fetch(): FetchResult {
@@ -201,7 +201,7 @@ internal class FavoriteThumbnailFetcher(
     class Factory @Inject constructor(
         @ThumbnailDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
         private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
-        private val fileModelLocalDataSource: FileModelLocalDataSource,
+        private val fileModelLocalDataSource: FileLocalDataSource,
     ) : Fetcher.Factory<Favorite> {
 
         override fun create(data: Favorite, options: Options, imageLoader: ImageLoader) =

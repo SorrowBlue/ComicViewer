@@ -9,7 +9,7 @@ abstract class UpdateLastReadPageUseCase :
     FlowUseCase<UpdateLastReadPageUseCase.Request, Unit, Unit>() {
 
     class Request(
-        val libraryId: BookshelfId,
+        val bookshelfId: BookshelfId,
         val path: String,
         val lastReadPage: Int,
         val timestamp: LocalDateTime = LocalDateTime.now(),

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.infrastructure.di
+package com.sorrowblue.comicviewer.domain.service.di
 
 import android.content.Context
 import com.google.android.play.core.splitinstall.SplitInstallManager

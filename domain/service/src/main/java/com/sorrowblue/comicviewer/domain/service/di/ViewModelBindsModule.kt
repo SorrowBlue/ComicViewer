@@ -16,7 +16,6 @@ import com.sorrowblue.comicviewer.domain.service.interactor.favorite.AddFavorite
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.CreateFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.DeleteFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.GetFavoriteInteractor
-import com.sorrowblue.comicviewer.domain.service.interactor.favorite.GetNextFavoriteBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.RemoveFavoriteFileInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.UpdateFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.DeleteThumbnailsInteractor
@@ -50,7 +49,6 @@ import com.sorrowblue.comicviewer.domain.usecase.favorite.AddFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.CreateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.favorite.GetNextFavoriteBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.RemoveFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.UpdateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
@@ -135,9 +133,6 @@ internal interface ViewModelBindsModule {
 
     @Binds
     fun bindGetNextBookUseCase(interactor: GetNextBookInteractor): GetNextBookUseCase
-
-    @Binds
-    fun bindGetNextFavoriteBookUseCase(interactor: GetNextFavoriteBookInteractor): GetNextFavoriteBookUseCase
 
     @Binds
     fun bindGetFileUseCase(interactor: GetFileInteractor): GetFileUseCase

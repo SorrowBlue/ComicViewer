@@ -17,10 +17,10 @@ import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.DatastoreDataSource
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
+import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import javax.inject.Inject
 import kotlin.math.floor
 import kotlinx.coroutines.NonCancellable
@@ -36,7 +36,7 @@ internal class FolderThumbnailFetcher(
     private val folder: Folder,
     options: Options,
     diskCache: dagger.Lazy<DiskCache?>,
-    private val fileModelLocalDataSource: FileModelLocalDataSource,
+    private val fileModelLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : FileModelFetcher(options, diskCache) {
 
@@ -249,7 +249,7 @@ internal class FolderThumbnailFetcher(
 
     class Factory @Inject constructor(
         @ThumbnailDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
-        private val fileModelLocalDataSource: FileModelLocalDataSource,
+        private val fileModelLocalDataSource: FileLocalDataSource,
         private val datastoreDataSource: DatastoreDataSource,
     ) : Fetcher.Factory<Folder> {
 

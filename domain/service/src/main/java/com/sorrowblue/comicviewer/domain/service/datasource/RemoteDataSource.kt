@@ -1,6 +1,5 @@
-package com.sorrowblue.comicviewer.data.infrastructure.datasource
+package com.sorrowblue.comicviewer.domain.service.datasource
 
-import com.sorrowblue.comicviewer.data.infrastructure.exception.RemoteException
 import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book

@@ -14,7 +14,6 @@ import com.sorrowblue.comicviewer.data.database.entity.FileWithCountEntity
 import com.sorrowblue.comicviewer.data.database.entity.SimpleFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistoryEntity
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfoEntity
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.FileModelLocalDataSource
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -23,6 +22,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.SortType
+import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -31,7 +31,7 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
     private val dao: FileDao,
     private val database: ComicViewerDatabase,
     private val factory: FileModelRemoteMediator.Factory,
-) : FileModelLocalDataSource {
+) : FileLocalDataSource {
 
     override fun pagingSource(
         pagingConfig: PagingConfig,

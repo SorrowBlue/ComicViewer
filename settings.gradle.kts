@@ -57,7 +57,6 @@ include(":domain:model")
 include(":domain:service")
 include(":domain:usecase")
 
-include(":data:infrastructure")
 include(":data:coil")
 include(":data:database")
 include(":data:datastore")

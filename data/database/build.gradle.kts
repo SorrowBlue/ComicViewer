@@ -13,7 +13,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.data.infrastructure)
+    implementation(projects.domain.service)
 
     implementation(libs.bundles.androidx.room)
     ksp(libs.androidx.room.compiler)

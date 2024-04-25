@@ -10,7 +10,7 @@ android {
 
 dependencies {
     implementation(projects.framework.common)
-    implementation(projects.data.infrastructure)
+    implementation(projects.domain.service)
     implementation(projects.data.reader)
 
     implementation(libs.androidx.startup.runtime)

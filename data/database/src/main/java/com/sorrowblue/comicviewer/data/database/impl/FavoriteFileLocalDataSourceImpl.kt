@@ -7,7 +7,7 @@ import androidx.paging.map
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteFileDao
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.FileEntity
-import com.sorrowblue.comicviewer.data.infrastructure.datasource.FavoriteFileLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File

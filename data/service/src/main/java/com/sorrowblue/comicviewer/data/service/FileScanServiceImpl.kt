@@ -2,16 +2,14 @@ package com.sorrowblue.comicviewer.data.service
 
 import android.content.Context
 import androidx.work.Constraints
-import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
-import com.sorrowblue.comicviewer.data.infrastructure.repository.impl.FileScanService
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.service.FileScanService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import logcat.logcat
 
 internal class FileScanServiceImpl @Inject constructor(
     @ApplicationContext private val context: Context,

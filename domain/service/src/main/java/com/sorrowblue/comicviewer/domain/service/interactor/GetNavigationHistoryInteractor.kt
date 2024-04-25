@@ -6,8 +6,8 @@ import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.service.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.repository.FileRepository
+import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
 import javax.inject.Inject
@@ -16,27 +16,23 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 internal class GetNavigationHistoryInteractor @Inject constructor(
-    private val bookshelfRepository: BookshelfRepository,
-    private val fileRepository: FileRepository,
+    private val fileLocalDataSource: FileLocalDataSource,
+    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : GetNavigationHistoryUseCase() {
     override fun run(request: EmptyRequest): Flow<Resource<NavigationHistory, Error>> {
-        return fileRepository.lastHistory().map { history ->
-            val library = bookshelfRepository.get(history.bookshelfId).first()
-            library.fold({ lib ->
-                val book = fileRepository.get(history.bookshelfId, history.path)
-                    .fold({ file -> file as? Book }, { null })
-                    ?: return@fold Resource.Error(Error.System)
-                val a = getFolderList(lib, book.parent).fold({
+        return fileLocalDataSource.lastHistory().map { file ->
+            val bookshelf = bookshelfLocalDataSource.flow(file.bookshelfId).first()
+            if (bookshelf != null) {
+                val book = fileLocalDataSource.findBy(file.bookshelfId, file.path) as? Book
+                    ?: return@map Resource.Error(Error.System)
+                getFolderList(bookshelf, book.parent).fold({
                     Resource.Success(NavigationHistory(it, book))
                 }, {
                     Resource.Error(Error.System)
                 })
-                return@fold a
-            }, {
+            } else {
                 Resource.Error(Error.System)
-            }, {
-                Resource.Error(Error.System)
-            })
+            }
         }
     }
 
@@ -59,11 +55,6 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
     }
 
     private suspend fun getFolder(bookshelf: Bookshelf, path: String): Folder? {
-        fileRepository.get(bookshelf.id, path).onSuccess {
-            return it as? Folder
-        }.onError {
-            return null
-        }
-        return null
+        return fileLocalDataSource.findBy(bookshelf.id, path) as? Folder
     }
 }
