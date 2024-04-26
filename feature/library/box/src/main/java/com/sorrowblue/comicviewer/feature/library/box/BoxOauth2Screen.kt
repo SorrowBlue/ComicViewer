@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,14 +25,20 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popUpTo
 import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
+import com.sorrowblue.comicviewer.feature.library.box.data.boxModule
+import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxLoginScreenDestination
 import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxScreenDestination
 import com.sorrowblue.comicviewer.feature.library.box.navigation.BoxNavGraphImpl
 import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import org.koin.core.context.loadKoinModules
 
 interface BoxOauth2RouteNavigator {
     fun onComplete()
+    fun onFail()
 }
 
 @Destination(
@@ -50,29 +59,45 @@ internal fun BoxOauth2Screen(
                 }
             }
         }
+
+        override fun onFail() {
+
+            core.navController.navigate(BoxLoginScreenDestination()) {
+                popUpTo(BoxNavGraphImpl) {
+                    inclusive = true
+                }
+            }
+        }
     },
 ) {
-    BoxOauth2Screen(args = args, navigator::onComplete)
+    loadKoinModules(boxModule)
+    BoxOauth2Screen(args = args, navigator::onComplete, navigator::onFail)
 }
 
 @Composable
 private fun BoxOauth2Screen(
     args: BoxOauth2Args,
     onComplete: () -> Unit,
+    fail: () -> Unit,
     state: BoxOauth2ScreenState = rememberBoxOauth2ScreenState(args),
 ) {
-    BoxOauth2Screen()
-
+    BoxOauth2Screen(state.snackbarHostState)
     val onComplete1 by rememberUpdatedState(onComplete)
+    val fail1 by rememberUpdatedState(fail)
     LaunchedEffect(Unit) {
-        state.authenticate(onComplete1)
+        state.authenticate(onComplete1, fail1)
     }
 }
 
 @Composable
-private fun BoxOauth2Screen() {
+private fun BoxOauth2Screen(
+    snackbarHostState: SnackbarHostState,
+) {
     Scaffold(
-        contentWindowInsets = WindowInsets.safeDrawing
+        contentWindowInsets = WindowInsets.safeDrawing,
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
     ) { contentPadding ->
         Box(
             modifier = Modifier
@@ -87,13 +112,22 @@ private fun BoxOauth2Screen() {
 
 @Stable
 internal class BoxOauth2ScreenState(
+    val snackbarHostState: SnackbarHostState,
     private val args: BoxOauth2Args,
+    private val scope: CoroutineScope,
     private val repository: BoxApiRepository,
 ) : ViewModel() {
 
-    fun authenticate(onSuccess: () -> Unit) {
+
+    fun authenticate(onSuccess: () -> Unit, fail: () -> Unit) {
         viewModelScope.launch {
-            repository.authenticate(args.state, args.code, onSuccess)
+            delay(3000)
+            repository.authenticate(args.state, args.code, onSuccess) {
+                scope.launch {
+                    snackbarHostState.showSnackbar("認証に失敗しました")
+                    fail()
+                }
+            }
         }
     }
 }
@@ -101,9 +135,11 @@ internal class BoxOauth2ScreenState(
 @Composable
 internal fun rememberBoxOauth2ScreenState(
     args: BoxOauth2Args,
+    scope: CoroutineScope = rememberCoroutineScope(),
     repository: BoxApiRepository = koinInject(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) = remember {
-    BoxOauth2ScreenState(args, repository)
+    BoxOauth2ScreenState(snackbarHostState, args, scope, repository)
 }
 
 class BoxOauth2Args(val state: String, val code: String)

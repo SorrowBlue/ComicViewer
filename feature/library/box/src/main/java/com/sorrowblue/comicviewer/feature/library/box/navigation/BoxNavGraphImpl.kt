@@ -6,7 +6,6 @@ import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popUpTo
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.library.box.BoxOauth2RouteNavigator
 import com.sorrowblue.comicviewer.feature.library.box.BoxScreenNavigator
 import com.sorrowblue.comicviewer.feature.library.box.data.boxModule
 import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxLoginScreenDestination
@@ -54,8 +53,8 @@ internal object BoxNavGraphImpl : BoxNavGraph {
 
     context(DependenciesContainerBuilder<*>)
     override fun dependency() {
+        loadKoinModules(boxModule)
         dependency(BoxNavGraphImpl) {
-            loadKoinModules(boxModule)
             BoxNavGraphNavigator(navController)
         }
     }
@@ -65,18 +64,7 @@ internal object BoxNavGraphImpl : BoxNavGraph {
     }
 }
 
-private class BoxNavGraphNavigator(private val navController: NavController) :
-    BoxScreenNavigator,
-    BoxOauth2RouteNavigator {
-
-    override fun onComplete() {
-        navController.navigate(BoxScreenDestination()) {
-            popUpTo(BoxNavGraphImpl) {
-                inclusive = true
-            }
-        }
-    }
-
+private class BoxNavGraphNavigator(private val navController: NavController) : BoxScreenNavigator {
     override fun requireLogin() {
         navController.navigate(BoxLoginScreenDestination) {
             popUpTo(BoxNavGraphImpl) {

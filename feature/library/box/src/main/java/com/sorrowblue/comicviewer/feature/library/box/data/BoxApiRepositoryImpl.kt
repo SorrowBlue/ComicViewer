@@ -14,6 +14,8 @@ import com.box.sdk.BoxUser
 import com.sorrowblue.comicviewer.app.IoDispatcher
 import com.sorrowblue.comicviewer.feature.library.box.BuildConfig
 import java.io.OutputStream
+import java.net.URI
+import kotlin.random.Random
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -87,7 +89,13 @@ internal class BoxApiRepositoryImpl(
         })
     }
 
-    override suspend fun authenticate(state: String, code: String, onSuccess: () -> Unit) {
+    override suspend fun authenticate(state: String, code: String, onSuccess: () -> Unit, fail: () -> Unit) {
+        if (this.state != state) {
+            logcat { "認証失敗" }
+            dropboxCredentialDataStore.updateData { connectionState -> connectionState.copy(state = null) }
+            fail()
+            return
+        }
         kotlin.runCatching {
             withContext(dispatcher) {
                 api.authenticate(code)
@@ -101,6 +109,7 @@ internal class BoxApiRepositoryImpl(
         }.onFailure {
             logcat { "認証失敗" }
             dropboxCredentialDataStore.updateData { connectionState -> connectionState.copy(state = null) }
+            fail()
         }
     }
 
@@ -176,6 +185,18 @@ internal class BoxApiRepositoryImpl(
         return withContext(dispatcher) {
             api.accessToken.orEmpty()
         }
+    }
+
+    private var state: String? = null
+
+    override fun getAuthorizationUrl(): String {
+        state = Random.nextInt(20).toString()
+        return BoxAPIConnection.getAuthorizationURL(
+            BuildConfig.BOX_CLIENT_ID,
+            URI.create("https://comicviewer.sorrowblue.com/box/oauth2"),
+            state,
+            null
+        ).toString()
     }
 
     override suspend fun download(

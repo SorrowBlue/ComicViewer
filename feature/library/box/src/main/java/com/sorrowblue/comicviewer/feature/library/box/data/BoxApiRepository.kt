@@ -15,7 +15,8 @@ interface BoxApiRepository {
     suspend fun signOut()
     suspend fun download(path: String, outputStream: OutputStream, progress: (Double) -> Unit)
     suspend fun list(path: String, limit: Long, offset: Long = 0): List<BoxItem.Info>?
-    suspend fun authenticate(state: String, code: String, onSuccess: () -> Unit)
+    suspend fun authenticate(state: String, code: String, onSuccess: () -> Unit, fail: () -> Unit)
     suspend fun fileThumbnail(id: String): String?
     suspend fun accessToken(): String
+    fun getAuthorizationUrl(): String
 }
