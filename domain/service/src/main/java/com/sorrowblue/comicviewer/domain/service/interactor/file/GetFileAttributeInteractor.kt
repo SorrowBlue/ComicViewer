@@ -24,7 +24,6 @@ internal class GetFileAttributeInteractor @Inject constructor(
                     } else {
                         Resource.Error(Error.NotFound)
                     }
-
                 }, {
                     Resource.Error(Error.System)
                 })

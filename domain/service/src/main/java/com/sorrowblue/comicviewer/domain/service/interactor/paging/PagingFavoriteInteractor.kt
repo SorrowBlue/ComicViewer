@@ -15,7 +15,6 @@ internal class PagingFavoriteInteractor @Inject constructor(
 ) : PagingFavoriteUseCase() {
 
     override fun run(request: Request): Flow<PagingData<Favorite>> {
-
         return favoriteLocalDataSource
             .pagingDataFlow(request.pagingConfig, request.bookshelfId, request.path)
             .map { pagingData ->

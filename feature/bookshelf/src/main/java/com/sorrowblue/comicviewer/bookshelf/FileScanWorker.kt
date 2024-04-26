@@ -45,8 +45,7 @@ internal class FileScanWorker @AssistedInject constructor(
         val bookshelfInfo =
             getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(request.bookshelfId))
                 .first().dataOrNull() ?: return Result.failure()
-        val bookshelf = bookshelfInfo.bookshelf
-        setForeground(createForegroundInfo(bookshelf.displayName, "", true))
+        setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, "", true))
         val useCaseRequest = ScanBookshelfUseCase.Request(request.bookshelfId) { bookshelf, file ->
             setProgress(workDataOf("path" to file.path))
             setForeground(createForegroundInfo(bookshelf.displayName, file.path))
@@ -55,7 +54,7 @@ internal class FileScanWorker @AssistedInject constructor(
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
                     .setContentTitle("本棚のスキャンが完了しました")
-                    .setSubText(bookshelf.displayName)
+                    .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(NotificationR.drawable.ic_sync_disabled_24)
                     .setOngoing(false)
                     .build()
@@ -72,7 +71,7 @@ internal class FileScanWorker @AssistedInject constructor(
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
                     .setContentTitle("本棚のスキャン")
                     .setContentText("スキャンはキャンセルされました。")
-                    .setSubText(bookshelf.displayName)
+                    .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(NotificationR.drawable.ic_sync_disabled_24)
                     .setOngoing(false)
                     .build()

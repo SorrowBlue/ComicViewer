@@ -31,12 +31,13 @@ internal class ScanBookshelfInteractor @Inject constructor(
                 if (rootFolder != null) {
                     val supportExtension = datastoreDataSource.folderSettings.first().supportExtension.map { it.extension }
                     val resolveImageFolder = datastoreDataSource.folderSettings.first().resolveImageFolder
-                    remoteDataSourceFactory.create(bookshelf).nestedListFiles(bookshelf, rootFolder, request.process, resolveImageFolder, supportExtension)
+                    remoteDataSourceFactory.create(
+                        bookshelf
+                    ).nestedListFiles(bookshelf, rootFolder, request.process, resolveImageFolder, supportExtension)
                 }
             }
         }
     }
-
 
     private suspend fun RemoteDataSource.nestedListFiles(
         bookshelf: Bookshelf,
@@ -65,6 +66,4 @@ internal class ScanBookshelfInteractor @Inject constructor(
                 )
             }
     }
-
-
 }

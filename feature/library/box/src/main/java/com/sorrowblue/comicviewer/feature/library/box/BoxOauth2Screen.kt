@@ -61,7 +61,6 @@ internal fun BoxOauth2Screen(
         }
 
         override fun onFail() {
-
             core.navController.navigate(BoxLoginScreenDestination()) {
                 popUpTo(BoxNavGraphImpl) {
                     inclusive = true
@@ -117,7 +116,6 @@ internal class BoxOauth2ScreenState(
     private val scope: CoroutineScope,
     private val repository: BoxApiRepository,
 ) : ViewModel() {
-
 
     fun authenticate(onSuccess: () -> Unit, fail: () -> Unit) {
         viewModelScope.launch {

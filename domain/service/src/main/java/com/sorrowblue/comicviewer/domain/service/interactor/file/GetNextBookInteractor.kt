@@ -60,9 +60,13 @@ internal class GetNextBookInteractor @Inject constructor(
             }
         }.fold({ modelFlow ->
             modelFlow.map {
-                if (it.dataOrNull != null) Result.Success(it.dataOrNull!!) else Result.Error(
-                    GetLibraryInfoError.NOT_FOUND
-                )
+                if (it.dataOrNull != null) {
+                    Result.Success(it.dataOrNull!!)
+                } else {
+                    Result.Error(
+                        GetLibraryInfoError.NOT_FOUND
+                    )
+                }
             }
         }, {
             flowOf(Result.Error(GetLibraryInfoError.SYSTEM_ERROR))
@@ -96,9 +100,13 @@ internal class GetNextBookInteractor @Inject constructor(
             }
         }.fold({ modelFlow ->
             modelFlow.map {
-                if (it.dataOrNull != null) Result.Success(it.dataOrNull!!) else Result.Error(
-                    GetLibraryInfoError.NOT_FOUND
-                )
+                if (it.dataOrNull != null) {
+                    Result.Success(it.dataOrNull!!)
+                } else {
+                    Result.Error(
+                        GetLibraryInfoError.NOT_FOUND
+                    )
+                }
             }
         }, {
             flowOf(Result.Error(GetLibraryInfoError.SYSTEM_ERROR))
