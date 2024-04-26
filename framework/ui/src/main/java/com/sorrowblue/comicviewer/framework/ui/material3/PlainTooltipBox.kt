@@ -5,7 +5,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.TooltipState
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,23 +29,5 @@ fun PlainTooltipBox(
         modifier = modifier
     ) {
         content()
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PlainTooltipBox2(
-    tooltipContent: @Composable () -> Unit,
-    content: @Composable (TooltipState) -> Unit,
-) {
-    val tooltipState: TooltipState = rememberTooltipState()
-    TooltipBox(
-        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
-        tooltip = {
-            PlainTooltip(content = tooltipContent)
-        },
-        state = tooltipState
-    ) {
-        content(tooltipState)
     }
 }
