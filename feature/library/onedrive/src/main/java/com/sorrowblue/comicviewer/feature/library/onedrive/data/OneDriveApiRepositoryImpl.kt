@@ -95,7 +95,7 @@ internal class OneDriveApiRepositoryImpl(
             runCatching {
                 children.get {
                     it.queryParameters.apply {
-                        top = 7
+                        top = limit
                         expand = arrayOf("thumbnails")
                     }
                 }
