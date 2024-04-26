@@ -8,10 +8,16 @@ android {
 }
 
 dependencies {
+    implementation(projects.framework.notification)
     implementation(projects.feature.bookshelf.edit)
     implementation(projects.feature.bookshelf.selection)
     implementation(projects.feature.folder)
-    implementation(libs.coil)
 
+    implementation(libs.androidx.work.runtime.ktx)
+
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
+
+    implementation(libs.coil)
     implementation(libs.jcifs.ng)
 }

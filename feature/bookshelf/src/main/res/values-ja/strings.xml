@@ -19,4 +19,5 @@
     <string name="bookshelf_desc_open_bookshelf_info">本棚情報を開く</string>
     <string name="bookshelf_desc_thumbnail">本棚のサムネイル</string>
     <string name="bookshelf_btn_add">新規</string>
+    <string name="bookshelf_title_bookshelf">本棚をスキャンしています</string>
 </resources>

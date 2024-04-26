@@ -66,7 +66,6 @@ include(":data:reader:document")
 include(":data:storage")
 include(":data:storage:device")
 include(":data:storage:smb")
-include(":data:service")
 include(":di")
 
 include(":feature:authentication")

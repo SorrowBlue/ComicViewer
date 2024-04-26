@@ -5,13 +5,13 @@ import com.sorrowblue.comicviewer.domain.service.interactor.DeleteAllReadLaterIn
 import com.sorrowblue.comicviewer.domain.service.interactor.DeleteReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.GetInstalledModulesInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.GetNavigationHistoryInteractor
-import com.sorrowblue.comicviewer.domain.service.interactor.ScanBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.DeleteHistoryInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfFileInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfInfoInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RegisterBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RemoveBookshelfInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.ScanBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.AddFavoriteFileInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.CreateFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.DeleteFavoriteInteractor
@@ -38,13 +38,13 @@ import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageOneTi
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageSecuritySettingsInteractor
 import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.DeleteHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.AddFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.CreateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
@@ -76,9 +76,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 internal interface ViewModelBindsModule {
 
     @Binds
@@ -88,13 +89,13 @@ internal interface ViewModelBindsModule {
     fun bindRegisterBookshelfUseCase(interactor: RegisterBookshelfInteractor): RegisterBookshelfUseCase
 
     @Binds
+    fun bindScanBookshelfUseCase(interactor: ScanBookshelfInteractor): ScanBookshelfUseCase
+
+    @Binds
     fun bindLoadSettingsUseCase(interactor: LoadSettingsInteractor): LoadSettingsUseCase
 
     @Binds
     fun bindRemoveBookshelfUseCase(interactor: RemoveBookshelfInteractor): RemoveBookshelfUseCase
-
-    @Binds
-    fun bindScanBookshelfUseCase(interactor: ScanBookshelfInteractor): ScanBookshelfUseCase
 
     @Binds
     fun bindGetBookshelfBookUseCase(interactor: GetBookshelfBookInteractor): GetBookshelfBookUseCase

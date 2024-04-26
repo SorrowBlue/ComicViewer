@@ -19,4 +19,5 @@
     <string name="bookshelf_desc_open_bookshelf_info">Open bookshelf information</string>
     <string name="bookshelf_desc_thumbnail">bookshelf thumbnail</string>
     <string name="bookshelf_btn_add">Add</string>
+    <string name="bookshelf_title_bookshelf">scanning bookshelf</string>
 </resources>
