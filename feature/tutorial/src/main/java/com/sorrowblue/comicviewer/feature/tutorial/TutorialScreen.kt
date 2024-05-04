@@ -11,8 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.feature.tutorial.component.TutorialBottomBar
+import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialGraph
+import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialGraphTransitions
 import com.sorrowblue.comicviewer.feature.tutorial.section.ArchiveSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheetUiState
@@ -41,11 +44,13 @@ interface TutorialScreenNavigator {
     fun onComplete()
 }
 
-@Destination
+@Destination<TutorialGraph>(
+    start = true,
+    style = TutorialGraphTransitions::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
-internal fun TutorialScreen(
-    navigator: TutorialScreenNavigator,
-) {
+internal fun TutorialScreen(navigator: TutorialScreenNavigator) {
     TutorialScreen(onComplete = navigator::onComplete)
 }
 

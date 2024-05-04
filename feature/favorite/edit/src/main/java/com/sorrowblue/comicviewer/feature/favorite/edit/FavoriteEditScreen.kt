@@ -49,6 +49,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -72,7 +73,7 @@ interface FavoriteEditScreenNavigator {
 
 class FavoriteEditArgs(val favoriteId: FavoriteId)
 
-@Destination(navArgsDelegate = FavoriteEditArgs::class)
+@Destination<ExternalModuleGraph>(navArgs = FavoriteEditArgs::class)
 @Composable
 internal fun FavoriteEditScreen(args: FavoriteEditArgs, navigator: FavoriteEditScreenNavigator) {
     FavoriteEditScreen(

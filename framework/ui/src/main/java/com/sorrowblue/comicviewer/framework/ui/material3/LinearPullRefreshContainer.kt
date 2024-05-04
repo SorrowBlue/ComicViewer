@@ -9,15 +9,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,22 +31,26 @@ fun LinearPullRefreshContainer(
     var progress by remember {
         mutableFloatStateOf(0f)
     }
-    LaunchedEffect(pullRefreshState.progress) {
-        if (pullRefreshState.progress == 0f) {
+    LaunchedEffect(pullRefreshState.distanceFraction) {
+        if (pullRefreshState.distanceFraction == 0f) {
             animate(progress, 0f) { value, _ ->
                 progress = value
             }
         } else {
-            progress = pullRefreshState.progress
+            progress = pullRefreshState.distanceFraction
         }
     }
     Box(
         modifier = modifier
             .fillMaxSize()
-            .nestedScroll(pullRefreshState.nestedScrollConnection)
+            .pullToRefresh(
+                state = pullRefreshState,
+                isRefreshing = pullRefreshState.isAnimating,
+                onRefresh = { /*TODO()*/ }
+            )
     ) {
         content()
-        if (pullRefreshState.isRefreshing) {
+        if (pullRefreshState.isAnimating) {
             LinearProgressIndicator(
                 trackColor = Color.Transparent,
                 modifier = Modifier
@@ -58,6 +63,47 @@ fun LinearPullRefreshContainer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(contentPadding)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LinearPullRefreshContainer(
+    pullRefreshState: PullToRefreshState,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    content: @Composable () -> Unit,
+) {
+    val progress by remember {
+        derivedStateOf { pullRefreshState.distanceFraction > 0 }
+    }
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .pullToRefresh(
+                state = pullRefreshState,
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh
+            )
+    ) {
+        content()
+        if (isRefreshing) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(contentPadding),
+                trackColor = Color.Transparent
+            )
+        } else if (progress) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(contentPadding),
+                progress = { pullRefreshState.distanceFraction }
             )
         }
     }

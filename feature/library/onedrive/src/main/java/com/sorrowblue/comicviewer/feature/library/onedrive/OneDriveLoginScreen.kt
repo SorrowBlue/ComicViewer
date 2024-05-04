@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
+import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveGraph
 import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
 import kotlinx.parcelize.Parcelize
@@ -34,7 +35,7 @@ internal interface OneDriveLoginScreenNavigator {
     fun onCompleted()
 }
 
-@Destination
+@Destination<OneDriveGraph>
 @Composable
 internal fun OneDriveLoginScreen(
     navBackStackEntry: NavBackStackEntry,

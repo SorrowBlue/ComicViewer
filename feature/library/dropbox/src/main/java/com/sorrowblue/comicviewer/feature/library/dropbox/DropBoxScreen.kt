@@ -27,6 +27,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.dropbox.component.DropBoxTopAppBar
 import com.sorrowblue.comicviewer.feature.library.dropbox.component.FileListItem
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.dropBoxModule
+import com.sorrowblue.comicviewer.feature.library.dropbox.navigation.DropBoxGraph
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxDialogUiState
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
@@ -42,7 +43,7 @@ internal interface DropBoxScreenNavigator {
 
 data class DropBoxArgs(val path: String = "")
 
-@Destination(navArgsDelegate = DropBoxArgs::class)
+@Destination<DropBoxGraph>(start = true, navArgs = DropBoxArgs::class)
 @Composable
 internal fun DropBoxScreen(
     args: DropBoxArgs,

@@ -132,6 +132,7 @@ private fun FolderScreen(
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     val uiState = state.uiState
+    var isRefreshing by remember { mutableStateOf(false) }
     FolderScreen(
         uiState = uiState,
         navigator = state.navigator,
@@ -151,6 +152,8 @@ private fun FolderScreen(
         onSortClick = state::openSortSheet,
         onReadLaterClick = state::onReadLaterClick,
         onFavoriteClick = onFavoriteClick,
+        onRefresh = lazyPagingItems::refresh,
+        isRefreshing = isRefreshing
     )
 
     SortSheet(
@@ -171,27 +174,12 @@ private fun FolderScreen(
         }
     }
 
-    var isManualOperation by remember { mutableStateOf(false) }
-
     LaunchedEffect(lazyPagingItems.loadState) {
         if (lazyPagingItems.loadState.isNotLoading) {
-            state.pullRefreshState.endRefresh()
+            isRefreshing = false
         }
         if (lazyPagingItems.loadState.isLoading) {
-            delay(300)
-            isManualOperation = true
-            state.pullRefreshState.startRefresh()
-        }
-    }
-    LaunchedEffect(state.pullRefreshState.isRefreshing) {
-        if (state.pullRefreshState.isRefreshing) {
-            if (isManualOperation) {
-                isManualOperation = false
-            } else {
-                lazyPagingItems.refresh()
-            }
-        } else {
-            isManualOperation = false
+            isRefreshing = true
         }
     }
     val onRestoreComplete1 by rememberUpdatedState(newValue = onRestoreComplete)
@@ -274,6 +262,8 @@ private fun FolderScreen(
     onReadLaterClick: () -> Unit,
     onFavoriteClick: (File) -> Unit,
     onExtraPaneCloseClick: () -> Unit,
+    onRefresh: () -> Unit,
+    isRefreshing: Boolean = false,
     navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
@@ -314,7 +304,9 @@ private fun FolderScreen(
     ) { contentPadding ->
         LinearPullRefreshContainer(
             pullRefreshState = pullRefreshState,
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh
         ) {
             if (lazyPagingItems.isEmptyData) {
                 EmptyContent(
@@ -371,7 +363,8 @@ private fun PreviewFolderScreen() {
             onBackClick = {},
             onSortClick = {},
             onReadLaterClick = {},
-            onFavoriteClick = {}
+            onFavoriteClick = {},
+            onRefresh = {},
         )
     }
 }
@@ -397,7 +390,8 @@ private fun PreviewFolderScreenEmpty() {
             onBackClick = {},
             onSortClick = {},
             onReadLaterClick = {},
-            onFavoriteClick = {}
+            onFavoriteClick = {},
+            onRefresh = {},
         )
     }
 }

@@ -103,7 +103,7 @@ fun SortSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
-        windowInsets = WindowInsets(0)
+        contentWindowInsets = { WindowInsets(0) }
     ) {
         LazyColumn {
             items(sortItems.size, key = { sortItems[it] }) {

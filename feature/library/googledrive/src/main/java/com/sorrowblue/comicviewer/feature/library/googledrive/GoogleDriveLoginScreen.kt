@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
+import com.sorrowblue.comicviewer.feature.library.googledrive.navigation.GoogleDriveGraph
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
 import kotlinx.parcelize.Parcelize
 
@@ -36,7 +37,7 @@ interface GoogleDriveLoginScreenNavigator {
     fun onComplete()
 }
 
-@Destination
+@Destination<GoogleDriveGraph>
 @Composable
 internal fun GoogleDriveLoginScreen(
     navBackStackEntry: NavBackStackEntry,

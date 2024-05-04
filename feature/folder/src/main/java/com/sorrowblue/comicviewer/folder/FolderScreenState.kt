@@ -189,7 +189,9 @@ private class FolderScreenStateImpl(
 
     override fun onHideFileClick() {
         isScrollableTop = true
-        pullRefreshState.startRefresh()
+        scope.launch {
+            pullRefreshState.animateToThreshold()
+        }
         viewModel.updateShowHide(!uiState.folderAppBarUiState.showHiddenFile)
     }
 
@@ -220,13 +222,17 @@ private class FolderScreenStateImpl(
     override fun onSortItemClick(sortItem: SortItem) {
         super.onSortItemClick(sortItem)
         isScrollableTop = true
-        pullRefreshState.startRefresh()
+        scope.launch {
+            pullRefreshState.animateToThreshold()
+        }
     }
 
     override fun onSortOrderClick(sortOrder: SortOrder) {
         super.onSortOrderClick(sortOrder)
         isScrollableTop = true
-        pullRefreshState.startRefresh()
+        scope.launch {
+            pullRefreshState.animateToThreshold()
+        }
     }
 
     override fun onNavClick() {

@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.section.HistoryAppBar
@@ -39,7 +40,7 @@ interface HistoryScreenNavigator {
     fun onFavoriteClick(file: File)
 }
 
-@Destination
+@Destination<ExternalModuleGraph>
 @Composable
 internal fun HistoryScreen(navigator: HistoryScreenNavigator) {
     HistoryScreen(

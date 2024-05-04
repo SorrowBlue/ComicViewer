@@ -15,9 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.info.BuildConfig
+import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 sealed interface Product {
@@ -69,7 +71,7 @@ data class DonationScreenUiState(
     val items: List<InAppItem> = emptyList(),
 )
 
-@Destination
+@Destination<SettingsDetailGraph>(visibility = CodeGenVisibility.INTERNAL)
 @Composable
 internal fun DonationScreen(
     contentPadding: PaddingValues,

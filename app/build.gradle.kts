@@ -33,7 +33,6 @@ android {
     androidResources {
         generateLocaleConfig = true
     }
-
     signingConfigs {
         val localProperties = gradleLocalProperties(rootDir, providers)
         fun propertyString(name: String) =

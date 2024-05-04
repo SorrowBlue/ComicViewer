@@ -19,8 +19,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraph
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphTransitions
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBarUiState
 import com.sorrowblue.comicviewer.feature.favorite.R
@@ -48,7 +51,11 @@ interface FavoriteScreenNavigator {
 
 class FavoriteArgs(val favoriteId: FavoriteId)
 
-@Destination(navArgsDelegate = FavoriteArgs::class)
+@Destination<FavoriteGraph>(
+    navArgs = FavoriteArgs::class,
+    style = FavoriteGraphTransitions::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
 internal fun FavoriteScreen(args: FavoriteArgs, navigator: FavoriteScreenNavigator) {
     FavoriteScreen(

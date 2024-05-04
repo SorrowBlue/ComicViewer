@@ -36,6 +36,9 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraph
+import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphTransitions
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfInfoSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfMainSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialog
@@ -62,7 +65,11 @@ interface BookshelfScreenNavigator {
     fun onEditClick(bookshelfId: BookshelfId)
 }
 
-@Destination
+@Destination<BookshelfGraph>(
+    start = true,
+    style = BookshelfGraphTransitions::class,
+    visibility = CodeGenVisibility.INTERNAL,
+)
 @Composable
 internal fun BookshelfScreen(navigator: BookshelfScreenNavigator) {
     BookshelfScreen(

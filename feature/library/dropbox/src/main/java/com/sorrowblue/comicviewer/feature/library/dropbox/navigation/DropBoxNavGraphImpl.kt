@@ -1,84 +1,28 @@
 package com.sorrowblue.comicviewer.feature.library.dropbox.navigation
 
-import androidx.navigation.NavController
+import androidx.compose.runtime.Composable
+import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
+import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
-import com.ramcosta.composedestinations.navigation.dependency
-import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popUpTo
-import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.library.dropbox.DropBoxLoginScreenNavigator
-import com.sorrowblue.comicviewer.feature.library.dropbox.DropBoxScreenNavigator
-import com.sorrowblue.comicviewer.feature.library.dropbox.destinations.DropBoxLoginScreenDestination
-import com.sorrowblue.comicviewer.feature.library.dropbox.destinations.DropBoxScreenDestination
-import com.sorrowblue.comicviewer.feature.library.dropbox.destinations.TypedDestination
+import com.sorrowblue.comicviewer.feature.library.dropbox.DropBoxArgs
+import com.sorrowblue.comicviewer.feature.library.dropbox.NavGraphs
 import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavGraph
-import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
+
+@NavGraph<ExternalModuleGraph>
+internal annotation class DropBoxGraph
 
 internal object DropBoxNavGraphImpl : DropBoxNavGraph {
 
-    override val route = "dropbox_graph"
+    override val navGraph get() = NavGraphs.dropBox
 
-    override val startRoute = DropBoxScreenDestination
+    override val direction get() = NavGraphs.dropBox(DropBoxArgs())
 
-    override val destinationsByRoute = listOf(
-        DropBoxScreenDestination,
-        DropBoxLoginScreenDestination
-    ).associateBy(TypedDestination<*>::route)
-
-    override val transitions = listOf(
-        TransitionsConfigure(
-            DropBoxScreenDestination.route,
-            DropBoxScreenDestination.route,
-            TransitionsConfigure.Type.SharedAxisX
-        ),
-        TransitionsConfigure(
-            DropBoxScreenDestination.route,
-            DropBoxLoginScreenDestination.route,
-            TransitionsConfigure.Type.SharedAxisY
-        ),
-        TransitionsConfigure(
-            route,
-            null,
-            TransitionsConfigure.Type.SharedAxisX
-        )
-    )
-
-    context(DependenciesContainerBuilder<*>)
-    override fun dependency() {
-        dependency(DropBoxNavGraphImpl) {
-            DropBoxNavGraphNavigator(navController)
-        }
+    @Composable
+    override fun DependenciesContainerBuilder<*>.Dependency() {
+        DropBoxGraphDependencies()
     }
 
     class ProviderImpl : DropBoxNavGraph.Provider {
         override fun get() = DropBoxNavGraphImpl
-    }
-}
-
-private class DropBoxNavGraphNavigator(private val navController: NavController) :
-    DropBoxScreenNavigator,
-    DropBoxLoginScreenNavigator {
-    override fun onLoginCompleted() {
-        navController.navigate(DropBoxScreenDestination()) {
-            popUpTo(DropBoxNavGraphImpl) {
-                inclusive = true
-            }
-        }
-    }
-
-    override fun navigateUp() {
-        navController.navigateUp()
-    }
-
-    override fun onFolderClick(folder: Folder) {
-        navController.navigate(DropBoxScreenDestination(folder.path))
-    }
-
-    override fun requireAuthentication() {
-        navController.navigate(DropBoxLoginScreenDestination) {
-            popUpTo(DropBoxNavGraphImpl) {
-                inclusive = true
-            }
-        }
     }
 }

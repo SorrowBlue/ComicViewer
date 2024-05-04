@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.folder
+package com.sorrowblue.comicviewer.feature.settings.folder.extension
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -12,15 +12,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.feature.settings.common.CheckboxSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraPane
+import com.sorrowblue.comicviewer.feature.settings.folder.R
+import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsGraph
+import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsGraphTransitions
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
-@Destination
+@Destination<FolderSettingsGraph>(
+    style = FolderSettingsGraphTransitions::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
 internal fun SupportExtensionScreen(
     contentPadding: PaddingValues,

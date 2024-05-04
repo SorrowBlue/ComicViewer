@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import kotlinx.coroutines.flow.filter
@@ -64,7 +65,7 @@ interface AuthenticationScreenNavigator {
 
 data class AuthenticationArgs(val mode: Mode)
 
-@Destination(navArgsDelegate = AuthenticationArgs::class)
+@Destination<ExternalModuleGraph>(navArgs = AuthenticationArgs::class)
 @Composable
 fun AuthenticationScreen(
     args: AuthenticationArgs,

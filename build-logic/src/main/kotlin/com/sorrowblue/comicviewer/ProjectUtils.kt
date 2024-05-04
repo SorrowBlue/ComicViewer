@@ -19,6 +19,10 @@ fun Project.projectString(a: String): String {
     return if (parent == null || parent!!.name == rootProject.name) n else parent!!.projectString(n)
 }
 
+fun Project.parentName(): String {
+    return parent?.let { it.parentName() + ".$name" } ?: name
+}
+
 internal fun Project.kotlin(configure: Action<KotlinAndroidProjectExtension>): Unit =
     extensions.configure("kotlin", configure)
 

@@ -96,7 +96,7 @@ fun FileInfoSheet(
     )
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FileInfoSheet(
     fileInfoUiState: FileInfoUiState,

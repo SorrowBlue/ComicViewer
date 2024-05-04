@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.section.BookshelfSourceList
 import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
@@ -26,7 +27,7 @@ interface BookshelfSelectionScreenNavigator {
     fun onSourceClick(bookshelfType: BookshelfType)
 }
 
-@Destination
+@Destination<ExternalModuleGraph>
 @Composable
 internal fun BookshelfSelectionScreen(navigator: BookshelfSelectionScreenNavigator) {
     BookshelfSelectionScreen(

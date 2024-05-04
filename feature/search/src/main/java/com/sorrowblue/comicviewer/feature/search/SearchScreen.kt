@@ -25,9 +25,14 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.ramcosta.composedestinations.navargs.DestinationsNavTypeSerializer
+import com.ramcosta.composedestinations.navargs.NavTypeSerializer
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.search.component.SearchAppBar
+import com.sorrowblue.comicviewer.feature.search.navigation.SearchGraph
+import com.sorrowblue.comicviewer.feature.search.navigation.SearchGraphTransitions
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditions
 import com.sorrowblue.comicviewer.feature.search.section.SearchConditionsUiState
 import com.sorrowblue.comicviewer.feature.search.section.SearchResultSheet
@@ -54,9 +59,20 @@ interface SearchScreenNavigator {
     fun onOpenFolderClick(file: File)
 }
 
+@NavTypeSerializer
+internal class BookshelfIdSerializer : DestinationsNavTypeSerializer<BookshelfId> {
+    override fun toRouteString(value: BookshelfId) = value.value.toString()
+    override fun fromRouteString(routeStr: String) = BookshelfId(routeStr.toInt())
+}
+
 class SearchArgs(val bookshelfId: BookshelfId, val path: String)
 
-@Destination(navArgsDelegate = SearchArgs::class)
+@Destination<SearchGraph>(
+    start = true,
+    navArgs = SearchArgs::class,
+    style = SearchGraphTransitions::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
 internal fun SearchScreen(args: SearchArgs, navigator: SearchScreenNavigator) {
     SearchScreen(

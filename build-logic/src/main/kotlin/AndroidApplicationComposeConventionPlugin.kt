@@ -4,6 +4,7 @@ import com.sorrowblue.comicviewer.configureAndroidCompose
 import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.ksp
 import com.sorrowblue.comicviewer.libs
+import com.sorrowblue.comicviewer.parentName
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -17,6 +18,7 @@ internal class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.android.application")
+                apply("org.jetbrains.kotlin.plugin.compose")
                 apply("com.google.devtools.ksp")
             }
 
@@ -29,7 +31,7 @@ internal class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
             }
 
             configure<KspExtension> {
-                arg("compose-destinations.mode", "destinations")
+                arg("compose-destinations.codeGenPackageName", "com.sorrowblue.${parentName()}")
             }
         }
     }

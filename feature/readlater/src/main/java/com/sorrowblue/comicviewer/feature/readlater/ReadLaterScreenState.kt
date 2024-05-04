@@ -13,7 +13,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
-import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
@@ -38,7 +37,6 @@ internal interface ReadLaterScreenState : SaveableScreenState, FileInfoSheetStat
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-@Destination
 @Composable
 internal fun rememberReadLaterScreenState(
     navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),

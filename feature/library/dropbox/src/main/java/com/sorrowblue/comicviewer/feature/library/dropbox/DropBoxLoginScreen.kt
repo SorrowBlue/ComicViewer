@@ -28,6 +28,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
+import com.sorrowblue.comicviewer.feature.library.dropbox.navigation.DropBoxGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import kotlinx.parcelize.Parcelize
@@ -37,7 +38,7 @@ internal interface DropBoxLoginScreenNavigator {
     fun onLoginCompleted()
 }
 
-@Destination
+@Destination<DropBoxGraph>
 @Composable
 internal fun DropBoxLoginScreen(
     navBackStackEntry: NavBackStackEntry,

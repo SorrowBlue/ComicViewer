@@ -27,6 +27,7 @@ import com.sorrowblue.comicviewer.feature.library.googledrive.component.FileList
 import com.sorrowblue.comicviewer.feature.library.googledrive.component.GoogleDriveTopAppBar
 import com.sorrowblue.comicviewer.feature.library.googledrive.data.googleAuthModule
 import com.sorrowblue.comicviewer.feature.library.googledrive.data.googleDriveModule
+import com.sorrowblue.comicviewer.feature.library.googledrive.navigation.GoogleDriveGraph
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialog
 import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialogUiState
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
@@ -41,7 +42,7 @@ interface GoogleDriveScreenNavigator {
 
 class GoogleDriveArgs(val path: String = "root")
 
-@Destination(navArgsDelegate = GoogleDriveArgs::class)
+@Destination<GoogleDriveGraph>(start = true, navArgs = GoogleDriveArgs::class)
 @Composable
 internal fun GoogleDriveScreen(
     args: GoogleDriveArgs,

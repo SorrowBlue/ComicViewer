@@ -1,17 +1,22 @@
 package com.sorrowblue.comicviewer.feature.library.serviceloader
 
+import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
-import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec
+import com.ramcosta.composedestinations.spec.Direction
+import com.ramcosta.composedestinations.spec.NavGraphSpec
 import java.util.ServiceLoader
 
-sealed interface AddOnNavGraph : AnimatedNavGraphSpec {
+sealed interface AddOnNavGraph {
+
+    val navGraph: NavGraphSpec
+    val direction: Direction
+
+    @Composable
+    fun DependenciesContainerBuilder<*>.Dependency()
 
     interface Provider {
         fun get(): AddOnNavGraph
     }
-
-    context(DependenciesContainerBuilder<*>)
-    fun dependency()
 }
 
 interface BoxNavGraph : AddOnNavGraph {

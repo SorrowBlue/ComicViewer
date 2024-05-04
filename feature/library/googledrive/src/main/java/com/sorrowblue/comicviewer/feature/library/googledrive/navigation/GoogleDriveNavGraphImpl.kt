@@ -1,82 +1,27 @@
 package com.sorrowblue.comicviewer.feature.library.googledrive.navigation
 
-import androidx.navigation.NavController
+import androidx.compose.runtime.Composable
+import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
+import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
-import com.ramcosta.composedestinations.navigation.dependency
-import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popUpTo
-import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.library.googledrive.GoogleDriveLoginScreenNavigator
-import com.sorrowblue.comicviewer.feature.library.googledrive.GoogleDriveScreenNavigator
-import com.sorrowblue.comicviewer.feature.library.googledrive.destinations.GoogleDriveLoginScreenDestination
-import com.sorrowblue.comicviewer.feature.library.googledrive.destinations.GoogleDriveScreenDestination
-import com.sorrowblue.comicviewer.feature.library.googledrive.destinations.TypedDestination
+import com.sorrowblue.comicviewer.feature.library.googledrive.GoogleDriveArgs
+import com.sorrowblue.comicviewer.feature.library.googledrive.NavGraphs
 import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavGraph
-import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
+
+@NavGraph<ExternalModuleGraph>
+internal annotation class GoogleDriveGraph
 
 internal object GoogleDriveNavGraphImpl : GoogleDriveNavGraph {
-    override val route = "googledrive_graph"
-    override val startRoute = GoogleDriveScreenDestination
-    override val destinationsByRoute = listOf(
-        GoogleDriveScreenDestination,
-        GoogleDriveLoginScreenDestination
-    ).associateBy(TypedDestination<*>::route)
 
-    override val transitions = listOf(
-        TransitionsConfigure(
-            GoogleDriveScreenDestination.route,
-            GoogleDriveScreenDestination.route,
-            TransitionsConfigure.Type.SharedAxisX
-        ),
-        TransitionsConfigure(
-            GoogleDriveScreenDestination.route,
-            GoogleDriveLoginScreenDestination.route,
-            TransitionsConfigure.Type.SharedAxisY
-        ),
-        TransitionsConfigure(
-            route,
-            null,
-            TransitionsConfigure.Type.SharedAxisX
-        )
-    )
+    override val navGraph get() = NavGraphs.googleDrive
+    override val direction get() = NavGraphs.googleDrive(GoogleDriveArgs())
 
-    context(DependenciesContainerBuilder<*>)
-    override fun dependency() {
-        dependency(GoogleDriveNavGraphImpl) {
-            GoogleDriveNavGraphNavigator(navController)
-        }
+    @Composable
+    override fun DependenciesContainerBuilder<*>.Dependency() {
+        GoogleDriveGraphDependencies()
     }
 
     internal class ProviderImpl : GoogleDriveNavGraph.Provider {
         override fun get() = GoogleDriveNavGraphImpl
-    }
-}
-
-private class GoogleDriveNavGraphNavigator(private val navController: NavController) :
-    GoogleDriveScreenNavigator,
-    GoogleDriveLoginScreenNavigator {
-
-    override fun onComplete() {
-        navController.navigate(GoogleDriveScreenDestination()) {
-            popUpTo(GoogleDriveNavGraphImpl) {
-                inclusive = true
-            }
-        }
-    }
-
-    override fun navigateUp() {
-        navController.navigateUp()
-    }
-
-    override fun onFolderClick(folder: Folder) {
-        navController.navigate(GoogleDriveScreenDestination(folder.path))
-    }
-
-    override fun requireAuthentication() {
-        navController.navigate(GoogleDriveLoginScreenDestination) {
-            popUpTo(GoogleDriveNavGraphImpl) {
-                inclusive = true
-            }
-        }
     }
 }

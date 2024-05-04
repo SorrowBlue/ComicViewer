@@ -15,7 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraph
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraphTransitions
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoUiState
@@ -38,7 +41,11 @@ interface ReadLaterScreenNavigator {
     fun onOpenFolderClick(file: File)
 }
 
-@Destination
+@Destination<ReadLaterGraph>(
+    start = true,
+    style = ReadLaterGraphTransitions::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
 internal fun ReadLaterScreen(navigator: ReadLaterScreenNavigator) {
     ReadLaterScreen(

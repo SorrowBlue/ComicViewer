@@ -5,5 +5,5 @@ import androidx.window.core.layout.WindowSizeClass
 
 val LocalWindowSize =
     staticCompositionLocalOf {
-        WindowSizeClass(0, 0)
+        WindowSizeClass.compute(0f, 0f)
     }

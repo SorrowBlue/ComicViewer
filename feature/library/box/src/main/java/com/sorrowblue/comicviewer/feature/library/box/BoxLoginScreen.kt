@@ -23,22 +23,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.sorrowblue.comicviewer.feature.library.box.navigation.BoxGraph
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 internal data class BoxLoginScreenUiState(val isRunning: Boolean = false) : Parcelable
 
-@Destination
+@Destination<BoxGraph>
 @Composable
 internal fun BoxLoginScreen(
     navBackStackEntry: NavBackStackEntry,
-    navigator: CoreNavigator,
+    destinationsNavigator: DestinationsNavigator,
 ) {
     BoxLoginScreen(
         savedStateHandle = navBackStackEntry.savedStateHandle,
-        onCloseClick = navigator::navigateUp,
+        onCloseClick = destinationsNavigator::navigateUp,
     )
 }
 
