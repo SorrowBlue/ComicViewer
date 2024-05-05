@@ -21,6 +21,6 @@ internal fun BookshelfFolderScreen(
     FolderScreen(
         args = args,
         navigator = navigator,
-        onRestoreComplete = navigator::onRestoreComplete
+        onRestoreComplete = navigator::onRestoreComplete,
     )
 }

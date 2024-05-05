@@ -66,7 +66,6 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isNotLoading
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.flowEmptyData
 import kotlin.math.min
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.parcelize.Parcelize
 import logcat.asLog

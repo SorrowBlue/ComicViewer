@@ -1,35 +1,21 @@
 package com.sorrowblue.comicviewer.bookshelf
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
@@ -37,8 +23,10 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.sorrowblue.comicviewer.bookshelf.component.BookshelfFab
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraph
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphTransitions
+import com.sorrowblue.comicviewer.bookshelf.section.BookshelfAppBar
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfInfoSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfMainSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialog
@@ -46,14 +34,11 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.file.fakeFolder
-import com.sorrowblue.comicviewer.feature.bookshelf.R
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.SettingsButton
 import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -133,40 +118,18 @@ private fun BookshelfScreen(
     onInfoSheetCloseClick: () -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
+    val expanded by remember(lazyGridState) {
+        derivedStateOf { !lazyGridState.canScrollForward || !lazyGridState.canScrollBackward }
+    }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     CanonicalScaffold(
         navigator = navigator,
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.bookshelf_list_title))
-                },
-                actions = {
-                    SettingsButton(onClick = onSettingsClick)
-                },
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
-                scrollBehavior = scrollBehavior,
-            )
+            BookshelfAppBar(onSettingsClick = onSettingsClick, scrollBehavior = scrollBehavior)
         },
-        floatingActionButton = {
-            val expanded by remember(lazyGridState) {
-                derivedStateOf { !lazyGridState.canScrollForward || !lazyGridState.canScrollBackward }
-            }
-            ExtendedFloatingActionButton(
-                expanded = expanded,
-                onClick = onFabClick,
-                text = { Text(text = stringResource(R.string.bookshelf_btn_add)) },
-                icon = { Icon(imageVector = ComicIcons.Add, contentDescription = null) },
-                modifier = Modifier
-                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.End))
-            )
-        },
+        floatingActionButton = { BookshelfFab(expanded = expanded, onClick = onFabClick) },
         extraPane = { innerPadding ->
-            var bookshelfFolder by rememberSaveable { mutableStateOf<BookshelfFolder?>(null) }
-            LaunchedEffect(key1 = navigator.currentDestination) {
-                navigator.currentDestination?.content?.let { bookshelfFolder = it }
-            }
-            bookshelfFolder?.let {
+            navigator.currentDestination?.content?.let {
                 BookshelfInfoSheet(
                     contentPadding = innerPadding,
                     scaffoldDirective = navigator.scaffoldDirective,

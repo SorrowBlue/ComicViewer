@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.app
 import com.ramcosta.composedestinations.annotation.ExternalDestination
 import com.ramcosta.composedestinations.annotation.ExternalNavGraph
 import com.ramcosta.composedestinations.annotation.NavHostGraph
-import com.sorrowblue.comicviewer.feature.authentication.destinations.AuthenticationScreenDestination
 import com.sorrowblue.comicviewer.feature.book.navgraphs.BookNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraphs.BookshelfNavGraph
 import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddScreenDestination

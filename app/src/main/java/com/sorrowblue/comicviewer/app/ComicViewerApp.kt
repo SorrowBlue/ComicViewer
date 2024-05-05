@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.app
 
 import androidx.activity.ComponentActivity
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -33,7 +34,7 @@ import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
+import com.ramcosta.composedestinations.spec.NavGraphSpec
 import com.sorrowblue.comicviewer.app.component.BuildTypeStatusBar
 import com.sorrowblue.comicviewer.app.navigation.MainDependencies
 import com.sorrowblue.comicviewer.app.section.LockScreen
@@ -55,6 +56,7 @@ import com.sorrowblue.comicviewer.framework.ui.LocalWindowSize
 import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
 import kotlinx.coroutines.flow.filter
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun ComicViewerApp(
     onTutorial: () -> Unit,
@@ -86,13 +88,17 @@ internal fun ComicViewerApp(
                 uiState = state.uiState,
                 onTabSelected = { tab -> state.onTabSelected(navController, tab) },
             ) {
-                AppNavHost(navController = state.navController) {
-                    MainDependencies(
-                        addOnList = addOnList,
-                        onRestoreComplete = state::completeRestoreHistory,
-                        onTutorialExit = state::onCompleteTutorial
-                    )
-                }
+                DestinationsNavHost(
+                    navGraph = NavGraphs.main,
+                    navController = state.navController,
+                    dependenciesContainerBuilder = {
+                        MainDependencies(
+                            addOnList = addOnList,
+                            onRestoreComplete = state::completeRestoreHistory,
+                            onTutorialExit = state::onCompleteTutorial
+                        )
+                    },
+                )
             }
 
             BuildTypeStatusBar(BuildConfig.BUILD_TYPE)
@@ -170,6 +176,9 @@ private fun ComicViewerApp(
     )
 }
 
+val NavGraphSpec.allNestedNavGraphs: List<NavGraphSpec>
+    get() = nestedNavGraphs + nestedNavGraphs.flatMap(NavGraphSpec::allNestedNavGraphs)
+
 fun AddOn.findNavGraph(): AddOnNavGraph? {
     return when (this) {
         AddOn.Document -> null
@@ -178,16 +187,4 @@ fun AddOn.findNavGraph(): AddOnNavGraph? {
         AddOn.Dropbox -> DropBoxNavGraph()
         AddOn.Box -> BoxNavGraph()
     }
-}
-
-@Composable
-fun AppNavHost(
-    navController: NavHostController,
-    dependenciesContainerBuilder: @Composable (DependenciesContainerBuilder<*>.() -> Unit),
-) {
-    DestinationsNavHost(
-        navGraph = NavGraphs.main,
-        navController = navController,
-        dependenciesContainerBuilder = { dependenciesContainerBuilder() },
-    )
 }

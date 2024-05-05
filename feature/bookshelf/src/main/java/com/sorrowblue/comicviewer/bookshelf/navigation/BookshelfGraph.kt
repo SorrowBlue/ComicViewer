@@ -13,4 +13,3 @@ internal annotation class BookshelfGraph {
     @ExternalDestination<BookshelfEditScreenDestination>(style = BookshelfGraphTransitions::class)
     companion object Includes
 }
-

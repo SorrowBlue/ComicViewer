@@ -12,7 +12,7 @@ import com.ramcosta.composedestinations.spec.RouteOrDirection
 import com.ramcosta.composedestinations.utils.destination
 
 @Immutable
-class TransitionsConfigure(
+data class TransitionsConfigure(
     val enterRoute: RouteOrDirection,
     val exitRoute: RouteOrDirection?,
     val type: Type,
@@ -34,8 +34,7 @@ abstract class DestinationTransitions : DestinationStyle.Animated() {
 
     open val directionToDisplayNavigation: List<DestinationSpec> get() = emptyList()
 
-    open val transitions: List<TransitionsConfigure> get() = emptyList()
-
+    abstract val transitions: List<TransitionsConfigure>
 
     override val enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? =
         {

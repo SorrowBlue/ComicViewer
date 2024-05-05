@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.feature.library.box.NavGraphs
 import com.sorrowblue.comicviewer.feature.library.box.data.boxModule
 import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxLoginScreenDestination
 import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxScreenDestination
-import logcat.logcat
 import org.koin.core.context.loadKoinModules
 
 @Composable
