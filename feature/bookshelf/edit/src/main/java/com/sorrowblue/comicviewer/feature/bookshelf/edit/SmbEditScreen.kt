@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -173,7 +172,7 @@ private fun SmbEditScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(ComicTheme.colorScheme.scrim.copy(alpha = 0.5f))
-                .clickable {  }
+                .clickable { }
                 .safeDrawingPadding(),
             contentAlignment = Alignment.Center
         ) {
