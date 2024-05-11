@@ -111,11 +111,11 @@ internal class SmbEditScreenState(
                         scope.launch {
                             when (it.error) {
                                 RegisterBookshelfUseCase.Error.Auth -> snackbarHostState.showSnackbar(
-                                    "認証エラー"
+                                    "Authentication method is incorrect."
                                 )
 
                                 RegisterBookshelfUseCase.Error.Host -> snackbarHostState.showSnackbar(
-                                    "サーバー名、またはIPアドレスが見つかりませんでした。"
+                                    "サーバーに接続できません。\nサーバー名/IPアドレス、ポート番号を確認してください"
                                 )
 
                                 RegisterBookshelfUseCase.Error.Network -> snackbarHostState.showSnackbar(

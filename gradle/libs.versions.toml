@@ -22,7 +22,7 @@ android-gradle = "8.4.0"
 detekt = "1.23.6"
 mikepenz-aboutlibraries = "11.1.4"
 koin = "3.5.6"
-compose-destinations = "2.1.0-beta03"
+compose-destinations = "2.1.0-beta05"
 junit = "1.1.5"
 roborazzi = "1.13.0"
 
