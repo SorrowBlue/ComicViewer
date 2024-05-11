@@ -117,9 +117,9 @@ google-android-play-feature-delivery-ktx = "com.google.android.play:feature-deli
 google-android-play-review-ktx = "com.google.android.play:review-ktx:2.0.1"
 google-android-billingclient-BillingKtx = "com.android.billingclient:billing-ktx:6.2.1"
 google-code-gson = "com.google.code.gson:gson:2.10.1"
-google-guava = "com.google.guava:guava:33.1.0-jre"
+google-guava = "com.google.guava:guava:33.2.0-jre"
 google-android-gms-play-services-auth = "com.google.android.gms:play-services-auth:21.1.1"
-google-api-client-android = "com.google.api-client:google-api-client-android:2.4.1"
+google-api-client-android = "com.google.api-client:google-api-client-android:2.5.0"
 google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev20240327-2.0.0"
 
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.14"
