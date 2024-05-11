@@ -11,12 +11,18 @@ android {
     resourcePrefix("box")
 
     buildTypes {
+        val localProperties = gradleLocalProperties(rootDir, providers)
+        val boxClientId = System.getenv("BOX_CLIENT_ID")
+            ?: localProperties.getProperty("BOX_CLIENT_ID")
+        if (boxClientId.isNullOrEmpty()) {
+            logger.warn("BOX_CLIENT_ID is not set.")
+        }
+        val boxClientSecret = System.getenv("BOX_CLIENT_SECRET")
+            ?: localProperties.getProperty("BOX_CLIENT_SECRET")
+        if (boxClientSecret.isNullOrEmpty()) {
+            logger.warn("BOX_CLIENT_SECRET is not set.")
+        }
         all {
-            val localProperties = gradleLocalProperties(rootDir, providers)
-            val boxClientId = System.getenv("BOX_CLIENT_ID")
-                ?: localProperties.getProperty("BOX_CLIENT_ID").orEmpty()
-            val boxClientSecret = System.getenv("BOX_CLIENT_SECRET")
-                ?: localProperties.getProperty("BOX_CLIENT_SECRET").orEmpty()
             buildConfigField("String", "BOX_CLIENT_ID", "\"$boxClientId\"")
             buildConfigField("String", "BOX_CLIENT_SECRET", "\"$boxClientSecret\"")
         }

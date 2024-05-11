@@ -38,7 +38,9 @@ android {
         fun propertyString(name: String) =
             System.getenv(name) ?: localProperties.propertyString(name)
 
-        val debugStoreFile = propertyString("debug_storeFile")?.let { file(it) }
+        val debugStoreFile = propertyString("debug_storeFile")?.let {
+            if (it.isNotEmpty()) file(it) else null
+        }
         if (debugStoreFile?.exists() == true) {
             getByName("debug") {
                 storeFile = debugStoreFile
@@ -46,9 +48,11 @@ android {
                 keyAlias = propertyString("debug_keyAlias")
                 keyPassword = propertyString("debug_keyPassword")
             }
+        } else {
+            logger.warn("debugStoreFile not found")
         }
 
-        val releaseStoreFile = propertyString("release_storeFile")?.let { file(it) }
+        val releaseStoreFile = propertyString("release_storeFile")?.let { if (it.isNotEmpty()) file(it) else null }
         if (releaseStoreFile?.exists() == true) {
             val release = create("release") {
                 storeFile = releaseStoreFile

@@ -1,5 +1,6 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
+
 plugins {
     id("comicviewer.android.feature.dynamic-feature")
     id("comicviewer.android.koin")
@@ -11,16 +12,14 @@ android {
     resourcePrefix("dropbox")
 
     buildTypes {
-        all {
-            manifestPlaceholders += mapOf(
-                "dropbox_api_key" to (
-                        System.getenv("DROP_BOX_API_KEY")
-                            ?: gradleLocalProperties(
-                                rootDir,
-                                providers
-                            ).getProperty("DROP_BOX_API_KEY").orEmpty()
-                )
-            )
+        val dropboxApiKey = System.getenv("DROP_BOX_API_KEY")
+            ?: gradleLocalProperties(rootDir, providers).getProperty("DROP_BOX_API_KEY")
+        if (dropboxApiKey.isNullOrEmpty()) {
+            logger.warn("DROP_BOX_API_KEY is not set.")
+        } else {
+            all {
+                manifestPlaceholders += mapOf("dropbox_api_key" to dropboxApiKey)
+            }
         }
     }
 }
