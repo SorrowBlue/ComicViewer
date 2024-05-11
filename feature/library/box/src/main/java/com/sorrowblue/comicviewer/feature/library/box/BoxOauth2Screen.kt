@@ -20,29 +20,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popUpTo
+import com.ramcosta.composedestinations.annotation.parameters.DeepLink
 import com.sorrowblue.comicviewer.feature.library.box.data.BoxApiRepository
-import com.sorrowblue.comicviewer.feature.library.box.data.boxModule
-import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxLoginScreenDestination
-import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxScreenDestination
-import com.sorrowblue.comicviewer.feature.library.box.navigation.BoxNavGraphImpl
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
+import com.sorrowblue.comicviewer.feature.library.box.navigation.BoxGraph
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import org.koin.core.context.loadKoinModules
 
 interface BoxOauth2RouteNavigator {
     fun onComplete()
     fun onFail()
 }
 
-@Destination(
-    navArgsDelegate = BoxOauth2Args::class,
+@Destination<BoxGraph>(
+    navArgs = BoxOauth2Args::class,
     deepLinks = [
         DeepLink(uriPattern = "https://comicviewer.sorrowblue.com/box/oauth2?state={state}&code={code}")
     ]
@@ -50,26 +43,8 @@ interface BoxOauth2RouteNavigator {
 @Composable
 internal fun BoxOauth2Screen(
     args: BoxOauth2Args,
-    core: CoreNavigator,
-    navigator: BoxOauth2RouteNavigator = object : BoxOauth2RouteNavigator {
-        override fun onComplete() {
-            core.navController.navigate(BoxScreenDestination()) {
-                popUpTo(BoxNavGraphImpl) {
-                    inclusive = true
-                }
-            }
-        }
-
-        override fun onFail() {
-            core.navController.navigate(BoxLoginScreenDestination()) {
-                popUpTo(BoxNavGraphImpl) {
-                    inclusive = true
-                }
-            }
-        }
-    },
+    navigator: BoxOauth2RouteNavigator,
 ) {
-    loadKoinModules(boxModule)
     BoxOauth2Screen(args = args, navigator::onComplete, navigator::onFail)
 }
 

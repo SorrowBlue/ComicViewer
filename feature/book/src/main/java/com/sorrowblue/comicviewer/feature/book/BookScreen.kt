@@ -32,9 +32,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.ramcosta.composedestinations.navargs.DestinationsNavTypeSerializer
+import com.ramcosta.composedestinations.navargs.NavTypeSerializer
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.feature.book.navigation.BookGraph
+import com.sorrowblue.comicviewer.feature.book.navigation.BookGraphTransitions
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
 import com.sorrowblue.comicviewer.feature.book.section.BookSheet
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
@@ -48,6 +53,12 @@ import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 import com.sorrowblue.comicviewer.framework.ui.material3.ExposedDropdownMenu
 import kotlinx.collections.immutable.toPersistentList
+
+@NavTypeSerializer
+internal class BookshelfIdSerializer : DestinationsNavTypeSerializer<BookshelfId> {
+    override fun toRouteString(value: BookshelfId) = value.value.toString()
+    override fun fromRouteString(routeStr: String) = BookshelfId(routeStr.toInt())
+}
 
 internal sealed interface BookScreenUiState {
 
@@ -76,7 +87,12 @@ class BookArgs(
     val favoriteId: FavoriteId = FavoriteId.Default,
 )
 
-@Destination(navArgsDelegate = BookArgs::class)
+@Destination<BookGraph>(
+    start = true,
+    navArgs = BookArgs::class,
+    style = BookGraphTransitions::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
 internal fun BookScreen(
     args: BookArgs,
@@ -232,7 +248,7 @@ internal fun BookMenuSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
-        windowInsets = PaddingValues().asWindowInsets()
+        contentWindowInsets = { PaddingValues().asWindowInsets() }
     ) {
         ExposedDropdownMenu(
             label = stringResource(id = R.string.book_label_display_format),

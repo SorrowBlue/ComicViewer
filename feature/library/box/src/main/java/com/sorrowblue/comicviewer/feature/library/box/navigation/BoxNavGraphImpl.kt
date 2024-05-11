@@ -1,83 +1,28 @@
 package com.sorrowblue.comicviewer.feature.library.box.navigation
 
-import androidx.navigation.NavController
+import androidx.compose.runtime.Composable
+import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
+import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
-import com.ramcosta.composedestinations.navigation.dependency
-import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popUpTo
-import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.library.box.BoxScreenNavigator
-import com.sorrowblue.comicviewer.feature.library.box.data.boxModule
-import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxLoginScreenDestination
-import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxOauth2ScreenDestination
-import com.sorrowblue.comicviewer.feature.library.box.destinations.BoxScreenDestination
-import com.sorrowblue.comicviewer.feature.library.box.destinations.TypedDestination
+import com.sorrowblue.comicviewer.feature.library.box.BoxArgs
+import com.sorrowblue.comicviewer.feature.library.box.NavGraphs
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavGraph
-import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
-import org.koin.core.context.loadKoinModules
+
+@NavGraph<ExternalModuleGraph>
+internal annotation class BoxGraph
 
 internal object BoxNavGraphImpl : BoxNavGraph {
 
-    override val route = "box_graph"
+    override val navGraph get() = NavGraphs.box
 
-    override val startRoute = BoxScreenDestination
+    override val direction get() = NavGraphs.box(BoxArgs())
 
-    override val destinationsByRoute = listOf(
-        BoxScreenDestination,
-        BoxLoginScreenDestination,
-        BoxOauth2ScreenDestination
-    ).associateBy(TypedDestination<*>::route)
-
-    override val transitions = listOf(
-        TransitionsConfigure(
-            BoxScreenDestination.route,
-            BoxScreenDestination.route,
-            TransitionsConfigure.Type.SharedAxisX
-        ),
-        TransitionsConfigure(
-            BoxScreenDestination.route,
-            BoxLoginScreenDestination.route,
-            TransitionsConfigure.Type.SharedAxisY
-        ),
-        TransitionsConfigure(
-            BoxScreenDestination.route,
-            BoxOauth2ScreenDestination.route,
-            TransitionsConfigure.Type.FadeThrough
-        ),
-        TransitionsConfigure(
-            route,
-            null,
-            TransitionsConfigure.Type.SharedAxisX
-        ),
-    )
-
-    context(DependenciesContainerBuilder<*>)
-    override fun dependency() {
-        loadKoinModules(boxModule)
-        dependency(BoxNavGraphImpl) {
-            BoxNavGraphNavigator(navController)
-        }
+    @Composable
+    override fun DependenciesContainerBuilder<*>.Dependency() {
+        BoxGraphDependencies()
     }
 
     internal class ProviderImpl : BoxNavGraph.Provider {
         override fun get() = BoxNavGraphImpl
-    }
-}
-
-private class BoxNavGraphNavigator(private val navController: NavController) : BoxScreenNavigator {
-    override fun requireLogin() {
-        navController.navigate(BoxLoginScreenDestination) {
-            popUpTo(BoxNavGraphImpl) {
-                inclusive = true
-            }
-        }
-    }
-
-    override fun onFolderClick(folder: Folder) {
-        navController.navigate(BoxScreenDestination(folder.path))
-    }
-
-    override fun navigateUp() {
-        navController.navigateUp()
     }
 }

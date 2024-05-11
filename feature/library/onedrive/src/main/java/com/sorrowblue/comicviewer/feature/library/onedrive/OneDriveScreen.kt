@@ -21,12 +21,13 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.onedrive.component.FileListItem
 import com.sorrowblue.comicviewer.feature.library.onedrive.component.OneDriveTopAppBar
 import com.sorrowblue.comicviewer.feature.library.onedrive.data.oneDriveModule
-import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveArgs
+import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveGraph
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveAccountDialog
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveDialogUiState
 import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
@@ -42,7 +43,16 @@ internal interface OneDriveScreenNavigator {
     fun requireAuthentication()
 }
 
-@Destination(navArgsDelegate = OneDriveArgs::class)
+data class OneDriveArgs(
+    val name: String? = null,
+    val itemId: String? = null,
+)
+
+@Destination<OneDriveGraph>(
+    start = true,
+    navArgs = OneDriveArgs::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
 internal fun OneDriveScreen(
     args: OneDriveArgs,

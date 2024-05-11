@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.folder
+package com.sorrowblue.comicviewer.feature.settings.folder.extension
 
 import android.content.Context
 import androidx.compose.runtime.Composable

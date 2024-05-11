@@ -14,14 +14,18 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
+import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 internal class RemoteDataSourceImpl @AssistedInject constructor(
     fileClientFactory: FileClientFactory,
     private val fileReaderFactory: FileReaderFactory,
     @Assisted private val bookshelf: Bookshelf,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : RemoteDataSource {
 
     @AssistedFactory
@@ -50,7 +54,9 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
 
     override suspend fun connect(path: String) {
         kotlin.runCatching {
-            fileClient.connect(path)
+            withContext(dispatcher) {
+                fileClient.connect(path)
+            }
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {
@@ -88,7 +94,9 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
 
     override suspend fun file(path: String): File {
         return runCatching {
-            fileClient.current(path)
+            withContext(dispatcher) {
+                fileClient.current(path)
+            }
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {

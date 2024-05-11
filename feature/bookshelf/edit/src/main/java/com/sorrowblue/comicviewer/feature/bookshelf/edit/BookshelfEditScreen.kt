@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 
@@ -21,7 +22,7 @@ data class BookshelfEditArgs(
     val bookshelfType: BookshelfType = BookshelfType.DEVICE,
 )
 
-@Destination(navArgsDelegate = BookshelfEditArgs::class)
+@Destination<ExternalModuleGraph>(navArgs = BookshelfEditArgs::class)
 @Composable
 internal fun BookshelfEditScreen(
     args: BookshelfEditArgs,

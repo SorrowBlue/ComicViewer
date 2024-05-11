@@ -24,17 +24,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popUpTo
-import com.sorrowblue.comicviewer.app.navigation.RootNavGraph
-import com.sorrowblue.comicviewer.bookshelf.destinations.BookshelfFolderScreenDestination
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.spec.Direction
+import com.ramcosta.composedestinations.utils.findDestination
+import com.ramcosta.composedestinations.utils.toDestinationsNavigator
+import com.sorrowblue.comicviewer.app.navgraphs.MainNavGraph
 import com.sorrowblue.comicviewer.domain.model.AddOn
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraph
-import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavGraph
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
-import com.sorrowblue.comicviewer.feature.tutorial.destinations.TutorialScreenDestination
-import com.sorrowblue.comicviewer.framework.ui.AnimatedNavGraphSpec
+import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfFolderScreenDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.navgraphs.BookshelfNavGraph
+import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
+import com.sorrowblue.comicviewer.framework.ui.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
@@ -46,6 +45,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.parcelize.Parcelize
 import logcat.LogPriority
 import logcat.logcat
@@ -102,6 +102,7 @@ private class ComicViewerAppStateImpl(
     private val viewModel: ComicViewerAppViewModel,
     private val navTabHandler: NavTabHandler,
     private val scope: CoroutineScope,
+    private val destinationTransitions: DestinationsNavigator = navController.toDestinationsNavigator(),
 ) : ComicViewerAppState {
 
     private var isInitialized by savedStateHandle.saveable { mutableStateOf(false) }
@@ -117,13 +118,17 @@ private class ComicViewerAppStateImpl(
     override val addOnList = mutableStateListOf<AddOn>()
 
     init {
+        refreshAddOnList()
         val backStackEntryFlow = navController.currentBackStackEntryFlow
         backStackEntryFlow
             .filter { it.destination is ComposeNavigator.Destination }
             .onEach { backStackEntry ->
                 val currentTab = MainScreenTab.entries.find { tab ->
-                    tab.navGraph is AnimatedNavGraphSpec && backStackEntry.destination.hierarchy.any {
-                        tab.navGraph.showNavigation.contains(it.route)
+                    backStackEntry.destination.hierarchy.any { destination ->
+                        val findDestination =
+                            tab.navGraph.findDestination(destination.route.orEmpty())
+                        (findDestination?.style as? DestinationTransitions)?.directionToDisplayNavigation?.any { destination.route == it.route }
+                            ?: false
                     }
                 }
                 uiState = uiState.copy(currentTab = currentTab)
@@ -163,18 +168,7 @@ private class ComicViewerAppStateImpl(
     }
 
     override fun onStart() {
-        scope.launch {
-            val installedModules = viewModel.installedModules.first()
-            addOnList.removeAll { !installedModules.contains(it.moduleName) }
-            addOnList.addAll(
-                installedModules
-                    .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }
-                    .filter { module -> !addOnList.any { it == module } }
-            )
-        }
-
-        logcat { "addOnList=${addOnList.joinToString(",") { it.moduleName }}" }
-
+        refreshAddOnList()
         if (isInitialized) {
             scope.launch {
                 if (viewModel.lockOnBackground()) {
@@ -215,10 +209,10 @@ private class ComicViewerAppStateImpl(
                 viewModel.onTutorialComplete()
             }
             if (isTutorial) {
-                navController.navigate(
-                    BookshelfNavGraph.route,
+                destinationTransitions.navigate(
+                    BookshelfNavGraph,
                     navOptions {
-                        popUpTo(TutorialScreenDestination.route) {
+                        popUpTo(TutorialNavGraph.route) {
                             inclusive = true
                         }
                     }
@@ -239,34 +233,28 @@ private class ComicViewerAppStateImpl(
         navController: NavController,
         tab: MainScreenTab,
     ) {
-        when (tab) {
-            MainScreenTab.Bookshelf -> BookshelfNavGraph.route
-            MainScreenTab.Favorite -> FavoriteNavGraph.route
-            MainScreenTab.Readlater -> ReadLaterNavGraph.route
-            MainScreenTab.Library -> LibraryNavGraph.route
-        }.let { route ->
-            if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.route == route } == true) {
-                navTabHandler.click.tryEmit(Unit)
-            } else {
-                navController.navigate(
-                    route,
-                    navOptions {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
+        val navGraph = tab.navGraph
+        if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.route == navGraph.route } == true) {
+            navTabHandler.click.tryEmit(Unit)
+        } else if (navGraph is Direction) {
+            destinationTransitions.navigate(
+                navGraph,
+                navOptions {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
                     }
-                )
-            }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            )
         }
     }
 
     private fun restoreNavigation(): Job {
         return scope.launch {
             val history = viewModel.history()
-            navController.navigate(BookshelfNavGraph) {
-                popUpTo(RootNavGraph) {
+            destinationTransitions.navigate(BookshelfNavGraph) {
+                popUpTo(MainNavGraph) {
                     inclusive = true
                 }
             }
@@ -277,7 +265,7 @@ private class ComicViewerAppStateImpl(
                 val (folderList, book) = history!!.value
                 val bookshelfId = folderList.first().bookshelfId
                 if (folderList.size == 1) {
-                    navController.navigate(
+                    destinationTransitions.navigate(
                         BookshelfFolderScreenDestination(
                             bookshelfId,
                             folderList.first().path,
@@ -288,14 +276,14 @@ private class ComicViewerAppStateImpl(
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                 } else {
-                    navController.navigate(
+                    destinationTransitions.navigate(
                         BookshelfFolderScreenDestination(bookshelfId, folderList.first().path, null)
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                     folderList.drop(1).dropLast(1).forEach { folder ->
-                        navController.navigate(
+                        destinationTransitions.navigate(
                             BookshelfFolderScreenDestination(
                                 bookshelfId,
                                 folder.path,
@@ -306,7 +294,7 @@ private class ComicViewerAppStateImpl(
                             "-> folder(${folder.path})"
                         }
                     }
-                    navController.navigate(
+                    destinationTransitions.navigate(
                         BookshelfFolderScreenDestination(
                             bookshelfId,
                             folderList.last().path,
@@ -319,6 +307,19 @@ private class ComicViewerAppStateImpl(
                 }
             }
         }
+    }
+
+    private fun refreshAddOnList() {
+        runBlocking {
+            val installedModules = viewModel.installedModules.first()
+            addOnList.removeAll { !installedModules.contains(it.moduleName) }
+            addOnList.addAll(
+                installedModules
+                    .mapNotNull { module -> AddOn.entries.find { it.moduleName == module } }
+                    .filter { module -> !addOnList.any { it == module } }
+            )
+        }
+        logcat { "addOnList=${addOnList.joinToString(",") { it.moduleName }}" }
     }
 }
 

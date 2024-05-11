@@ -22,8 +22,11 @@ import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraph
+import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphTransitions
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListEmptySheet
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListSheet
@@ -39,7 +42,11 @@ interface FavoriteListNavigator {
     fun onFavoriteClick(favoriteId: FavoriteId)
 }
 
-@Destination
+@Destination<FavoriteGraph>(
+    start = true,
+    style = FavoriteGraphTransitions::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
 internal fun FavoriteListScreen(
     navBackStackEntry: NavBackStackEntry,

@@ -14,10 +14,9 @@ import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.navigation.compose.rememberNavController
-import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popUpTo
-import com.sorrowblue.comicviewer.app.navigation.RootNavGraph
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
+import com.ramcosta.composedestinations.utils.toDestinationsNavigator
+import com.sorrowblue.comicviewer.app.navgraphs.MainNavGraph
+import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,8 +38,8 @@ internal class MainActivity : AppCompatActivity() {
             val navController = rememberNavController()
             ComicViewerApp(
                 onTutorial = {
-                    navController.navigate(TutorialNavGraph) {
-                        popUpTo(RootNavGraph) {
+                    navController.toDestinationsNavigator().navigate(TutorialNavGraph) {
+                        popUpTo(MainNavGraph) {
                             inclusive = true
                         }
                     }

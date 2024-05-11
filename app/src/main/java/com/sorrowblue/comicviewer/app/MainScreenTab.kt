@@ -2,10 +2,10 @@ package com.sorrowblue.comicviewer.app
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.ramcosta.composedestinations.spec.NavGraphSpec
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfNavGraph
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraph
-import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavGraph
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
+import com.sorrowblue.comicviewer.feature.bookshelf.navgraphs.BookshelfNavGraph
+import com.sorrowblue.comicviewer.feature.favorite.navgraphs.FavoriteNavGraph
+import com.sorrowblue.comicviewer.feature.library.navgraphs.LibraryNavGraph
+import com.sorrowblue.comicviewer.feature.readlater.navgraphs.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 enum class MainScreenTab(

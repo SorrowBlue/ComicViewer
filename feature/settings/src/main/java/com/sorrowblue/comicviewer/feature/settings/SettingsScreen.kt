@@ -19,16 +19,22 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.spec.Route
 import com.sorrowblue.comicviewer.feature.settings.destinations.DonationScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
-import com.sorrowblue.comicviewer.feature.settings.folder.destinations.FolderSettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.folder.navgraphs.FolderSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.info.destinations.AppInfoSettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.navgraphs.SettingsDetailNavGraph
+import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailGraphDependencies
+import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraph
+import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraphTransitions
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPaneUiState
 import com.sorrowblue.comicviewer.feature.settings.security.destinations.SecuritySettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.viewer.destinations.ViewerSettingsScreenDestination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.copy
 import kotlinx.parcelize.Parcelize
@@ -40,7 +46,11 @@ internal interface SettingsScreenNavigator {
     fun onPasswordChange()
 }
 
-@Destination
+@Destination<SettingsGraph>(
+    start = true,
+    style = SettingsGraphTransitions::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
 internal fun SettingsScreen(navigator: SettingsScreenNavigator) {
     SettingsScreen(settingsScreenNavigator = navigator)
@@ -63,12 +73,12 @@ private fun SettingsScreen(
         },
     ) { contentPadding ->
         DestinationsNavHost(
-            navGraph = SettingsDetailNavGraph,
+            navGraph = NavGraphs.settingsDetail,
             startRoute = navigator.currentDestination?.content?.route
                 ?: SettingsDetailNavGraph.startRoute,
             dependenciesContainerBuilder = {
                 dependency(contentPadding)
-                dependency(innerSettingsNavigator(navigator, settingsScreenNavigator))
+                SettingsDetailGraphDependencies(navigator, settingsScreenNavigator)
             }
         )
     }
@@ -131,9 +141,9 @@ enum class Settings2(
     FOLDER(
         R.string.settings_label_folder,
         ComicIcons.FolderOpen,
-        FolderSettingsScreenDestination
+        FolderSettingsNavGraph
     ),
-    VIEWER(R.string.settings_label_viewer, ComicIcons.Image),
+    VIEWER(R.string.settings_label_viewer, ComicIcons.Image, ViewerSettingsScreenDestination),
     SECURITY(
         R.string.settings_label_security,
         ComicIcons.Lock,

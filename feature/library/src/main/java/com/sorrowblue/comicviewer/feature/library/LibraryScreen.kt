@@ -20,8 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.feature.library.component.AddOnItemState
 import com.sorrowblue.comicviewer.feature.library.component.LibraryTopAppBar
+import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGraph
+import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGraphTransitions
 import com.sorrowblue.comicviewer.feature.library.section.Feature
 import com.sorrowblue.comicviewer.feature.library.section.FeatureListSheet
 import com.sorrowblue.comicviewer.feature.library.section.LibraryCloudStorageDialog
@@ -58,7 +61,11 @@ interface LibraryScreenNavigator {
     fun onFeatureClick(feature: Feature)
 }
 
-@Destination
+@Destination<LibraryGraph>(
+    start = true,
+    style = LibraryGraphTransitions::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
 internal fun LibraryScreen(navigator: LibraryScreenNavigator) {
     LibraryScreen(onFeatureClick = navigator::onFeatureClick)

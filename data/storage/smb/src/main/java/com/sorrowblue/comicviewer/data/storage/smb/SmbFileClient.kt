@@ -16,10 +16,9 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import java.io.InputStream
-import java.net.ConnectException
 import java.net.URI
+import java.net.URISyntaxException
 import java.net.URLDecoder
-import java.net.UnknownHostException
 import java.util.Properties
 import jcifs.CIFSContext
 import jcifs.DialectVersion
@@ -28,10 +27,10 @@ import jcifs.config.PropertyConfiguration
 import jcifs.context.BaseContext
 import jcifs.smb.NtStatus
 import jcifs.smb.NtlmPasswordAuthenticator
-import jcifs.smb.SmbAuthException
 import jcifs.smb.SmbException
 import jcifs.smb.SmbFile
 import jcifs.smb.SmbFileFilter
+import jcifs.util.transport.ConnectionTimeoutException
 import jcifs.util.transport.TransportException
 import kotlin.io.path.Path
 import kotlinx.coroutines.sync.Mutex
@@ -71,29 +70,30 @@ internal class SmbFileClient @AssistedInject constructor(
                 throw FileClientException.InvalidPath
             }
         }) {
-            it.printStackTrace()
             when (it) {
-                is SmbAuthException -> {
-                    logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
-                    throw FileClientException.InvalidAuth
-                }
-
                 is SmbException -> {
-                    if (it.cause is UnknownHostException) {
-                        throw FileClientException.NoNetwork
-                    } else if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
-                        throw FileClientException.NoNetwork
-                    } else {
-                        logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)}" }
-                        when (it.ntStatus) {
-                            NtStatus.NT_STATUS_BAD_NETWORK_NAME -> throw FileClientException.InvalidPath
-                            NtStatus.NT_STATUS_UNSUCCESSFUL -> throw FileClientException.InvalidServer
-                            else -> throw it
+                    logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
+                    when (it.ntStatus) {
+                        NtStatus.NT_STATUS_BAD_NETWORK_NAME -> throw FileClientException.InvalidPath
+                        NtStatus.NT_STATUS_LOGON_FAILURE -> throw FileClientException.InvalidAuth
+                        NtStatus.NT_STATUS_INVALID_PARAMETER -> throw FileClientException.InvalidPath
+                        NtStatus.NT_STATUS_UNSUCCESSFUL -> {
+                            if (it.cause is ConnectionTimeoutException || it.cause is TransportException) {
+                                throw FileClientException.InvalidServer
+                            } else if (it.message == "IPC signing is enforced, but no signing is available") {
+                                throw FileClientException.InvalidAuth
+                            }
                         }
+
+                        else -> throw it
                     }
                 }
+                is URISyntaxException -> throw FileClientException.InvalidPath
 
-                else -> throw it
+                else -> {
+                    logcat(LogPriority.INFO) { it.asLog() }
+                    throw it
+                }
             }
         }
     }
@@ -150,29 +150,36 @@ internal class SmbFileClient @AssistedInject constructor(
     }
 
     private inline fun <R> runCommand(action: () -> R): R {
-        return kotlin.runCatching {
+        return runCatching {
             action()
         }.getOrElse {
             throw when (it) {
-                is SmbAuthException -> {
-                    logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
-                    FileClientException.InvalidAuth
-                }
-
                 is SmbException -> {
-                    if (it.cause is TransportException && it.cause!!.cause is ConnectException) {
-                        FileClientException.NoNetwork
-                    } else {
-                        logcat(LogPriority.ERROR) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
-                        when (it.ntStatus) {
-                            NtStatus.NT_STATUS_BAD_NETWORK_NAME -> FileClientException.InvalidPath
-                            NtStatus.NT_STATUS_UNSUCCESSFUL -> FileClientException.InvalidServer
-                            else -> it
+                    logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
+                    when (it.ntStatus) {
+                        NtStatus.NT_STATUS_BAD_NETWORK_NAME -> FileClientException.InvalidPath
+                        NtStatus.NT_STATUS_LOGON_FAILURE -> FileClientException.InvalidAuth
+                        NtStatus.NT_STATUS_INVALID_PARAMETER -> FileClientException.InvalidPath
+                        NtStatus.NT_STATUS_UNSUCCESSFUL -> {
+                            if (it.cause is ConnectionTimeoutException || it.cause is TransportException) {
+                                FileClientException.InvalidServer
+                            } else if (it.message == "IPC signing is enforced, but no signing is available") {
+                                FileClientException.InvalidAuth
+                            } else {
+                                it
+                            }
                         }
+
+                        else -> it
                     }
                 }
 
-                else -> it
+                is URISyntaxException -> FileClientException.InvalidPath
+
+                else -> {
+                    logcat(LogPriority.INFO) { it.asLog() }
+                    it
+                }
             }
         }
     }
@@ -232,16 +239,36 @@ internal class SmbFileClient @AssistedInject constructor(
         )
     }
 
+    private fun SmbFile.isSame(path: String): Boolean {
+        val credentials = context.credentials
+        val bookshelfAuth = bookshelf.auth
+        val sameAuth = if (credentials !is NtlmPasswordAuthenticator) {
+            false
+        } else {
+            when (bookshelfAuth) {
+                SmbServer.Auth.Guest -> credentials.isGuest()
+                is SmbServer.Auth.UsernamePassword -> {
+                    NtlmPasswordAuthenticator(
+                        bookshelfAuth.domain,
+                        bookshelfAuth.username,
+                        bookshelfAuth.password
+                    ) == credentials
+                }
+            }
+        }
+        return sameAuth && server == bookshelf.host && share == bookshelf.smbFile(path).share
+    }
+
     private suspend fun smbFile(path: String): SmbFile {
         return mutex.withLock {
             rootSmbFile?.let { smbFile ->
-                if (smbFile.server == bookshelf.host && smbFile.share == bookshelf.smbFile(path).share) {
+                if (smbFile.isSame(path)) {
                     val nPath = path.removePrefix("/${smbFile.share}/")
                     if (nPath.isEmpty() || nPath == "/") smbFile else smbFile.resolve(nPath) as SmbFile
                 } else {
                     null
                 }
-            } ?: kotlin.run {
+            } ?: run {
                 val smbFile = bookshelf.smbFile(path)
                 smbFile.share?.let { share ->
                     bookshelf.smbFile("/$share/").let {
@@ -263,12 +290,14 @@ internal class SmbFileClient @AssistedInject constructor(
             setProperty("jcifs.smb.client.minVersion", DialectVersion.SMB202.name)
             setProperty("jcifs.smb.client.maxVersion", DialectVersion.SMB311.name)
             setProperty("jcifs.smb.client.dfs.disabled", "true")
+            setProperty("jcifs.smb.client.connTimeout", "5000")
         }
         val context = BaseContext(PropertyConfiguration(prop))
         return when (val auth = bookshelf.auth) {
             SmbServer.Auth.Guest -> context.withGuestCrendentials()
-            is SmbServer.Auth.UsernamePassword ->
-                context.withCredentials(NtlmPasswordAuthenticator(auth.username, auth.password))
+            is SmbServer.Auth.UsernamePassword -> context.withCredentials(
+                NtlmPasswordAuthenticator(auth.domain, auth.username, auth.password)
+            )
         }
     }
 }

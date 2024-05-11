@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
@@ -16,7 +17,7 @@ import com.sorrowblue.comicviewer.feature.settings.display.section.AppearanceDia
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import kotlinx.parcelize.Parcelize
 
-@Destination
+@Destination<ExternalModuleGraph>
 @Composable
 internal fun DisplaySettingsScreen(
     contentPadding: PaddingValues,

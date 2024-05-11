@@ -40,6 +40,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.feature.favorite.add.component.FavoriteAddFab
@@ -49,7 +51,6 @@ import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCrea
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.CoreNavigator
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
@@ -60,11 +61,11 @@ class FavoriteAddArgs(
     val path: String,
 )
 
-@Destination(navArgsDelegate = FavoriteAddArgs::class)
+@Destination<ExternalModuleGraph>(navArgs = FavoriteAddArgs::class)
 @Composable
-internal fun FavoriteAddScreen(navigator: CoreNavigator) {
+internal fun FavoriteAddScreen(destinationsNavigator: DestinationsNavigator) {
     FavoriteAddScreen(
-        onBackClick = navigator::navigateUp
+        onBackClick = destinationsNavigator::navigateUp
     )
 }
 

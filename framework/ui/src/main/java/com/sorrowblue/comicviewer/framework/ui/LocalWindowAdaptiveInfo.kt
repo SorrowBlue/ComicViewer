@@ -10,7 +10,7 @@ import androidx.window.core.layout.WindowSizeClass
 val LocalWindowAdaptiveInfo =
     compositionLocalOf {
         WindowAdaptiveInfo(
-            WindowSizeClass(0, 0),
+            WindowSizeClass.compute(0f, 0f),
             calculatePosture(emptyList())
         )
     }

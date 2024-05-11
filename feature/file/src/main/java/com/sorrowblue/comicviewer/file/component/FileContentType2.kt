@@ -17,6 +17,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuScope
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import logcat.logcat
 
 sealed class FileContentType2 : Parcelable {
 
@@ -79,6 +80,7 @@ fun rememberFileContentType(
     val widthSizeClass = LocalWindowSize.current.windowWidthSizeClass
     val isCompact = widthSizeClass == WindowWidthSizeClass.COMPACT
     return remember(display, columnSize) {
+        logcat("APPAPP") { "rememberFileContentType" }
         mutableStateOf(
             when (display) {
                 FolderDisplaySettings.Display.List -> if (isCompact) FileContentType2.List else FileContentType2.ListMedium

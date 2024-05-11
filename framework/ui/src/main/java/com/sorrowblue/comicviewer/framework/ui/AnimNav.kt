@@ -15,7 +15,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.platform.LocalDensity
@@ -147,20 +146,5 @@ fun rememberSlideDistance(): Int {
     val density = LocalDensity.current
     return remember(density, slideDistance) {
         with(density) { slideDistance.roundToPx() }
-    }
-}
-
-@Immutable
-class TransitionsConfigure(
-    val enterRoute: String,
-    val exitRoute: String?,
-    val type: Type,
-) {
-
-    enum class Type {
-        SharedAxisX,
-        SharedAxisY,
-        FadeThrough,
-        ContainerTransform,
     }
 }

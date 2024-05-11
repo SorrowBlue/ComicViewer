@@ -16,7 +16,10 @@ import com.sorrowblue.comicviewer.framework.ui.LocalWindowSize
 @Composable
 fun PreviewTheme(content: @Composable () -> Unit) {
     val configuration = LocalConfiguration.current
-    val windowSizeClass = WindowSizeClass(configuration.screenWidthDp, configuration.screenHeightDp)
+    val windowSizeClass = WindowSizeClass.compute(
+        configuration.screenWidthDp.toFloat(),
+        configuration.screenHeightDp.toFloat()
+    )
     CompositionLocalProvider(
         LocalWindowSize provides windowSizeClass,
         LocalWindowAdaptiveInfo provides WindowAdaptiveInfo(

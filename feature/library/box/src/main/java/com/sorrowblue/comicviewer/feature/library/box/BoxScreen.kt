@@ -26,6 +26,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.box.component.BoxTopAppBar
 import com.sorrowblue.comicviewer.feature.library.box.component.FileListItem
+import com.sorrowblue.comicviewer.feature.library.box.navigation.BoxGraph
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.box.section.BoxDialogUiState
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
@@ -39,7 +40,7 @@ interface BoxScreenNavigator {
 
 class BoxArgs(val path: String = "")
 
-@Destination(navArgsDelegate = BoxArgs::class)
+@Destination<BoxGraph>(start = true, navArgs = BoxArgs::class)
 @Composable
 internal fun BoxScreen(
     args: BoxArgs,

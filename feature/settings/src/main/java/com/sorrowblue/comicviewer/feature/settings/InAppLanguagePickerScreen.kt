@@ -9,15 +9,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.core.os.LocaleListCompat
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.feature.settings.common.CheckedSetting
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
+import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailGraph
 import java.util.Locale
 import kotlinx.collections.immutable.toPersistentList
 
-@Destination
+@Destination<SettingsDetailGraph>(visibility = CodeGenVisibility.INTERNAL)
 @Composable
 internal fun InAppLanguagePickerScreen(
     contentPadding: PaddingValues,
