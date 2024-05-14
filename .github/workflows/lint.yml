@@ -20,6 +20,8 @@ jobs:
       - name: lint
         run: ./gradlew app:lintRelease
         env:
+          BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
+          BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
           DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
 
       - name: reviewdog report
