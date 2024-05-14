@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.widthIn
@@ -45,7 +44,6 @@ internal fun DirectionSheet(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .safeDrawingPadding()
             .padding(contentPadding)
             .padding(ComicTheme.dimension.margin),
         horizontalAlignment = Alignment.CenterHorizontally

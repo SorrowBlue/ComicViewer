@@ -3,17 +3,17 @@ package com.sorrowblue.comicviewer.feature.tutorial.section
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
@@ -21,9 +21,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.movableContentWithReceiverOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.feature.tutorial.R
@@ -35,60 +39,96 @@ import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun ArchiveSheet(
-    contentPadding: PaddingValues,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .safeDrawingPadding()
-            .padding(contentPadding)
-            .padding(ComicTheme.dimension.margin),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            imageVector = ComicIcons.UndrawFileBundle,
-            contentDescription = null,
+internal fun ArchiveSheet(contentPadding: PaddingValues) {
+    val screenHeight = LocalConfiguration.current.screenHeightDp
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val icon = remember {
+        movableContentWithReceiverOf<ColumnScope> {
+            Image(
+                imageVector = ComicIcons.UndrawFileBundle,
+                contentDescription = null,
+                modifier = Modifier.size(160.dp)
+            )
+            Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
+            Text(
+                text = stringResource(R.string.tutorial_text_archive),
+                style = MaterialTheme.typography.titleLarge,
+            )
+        }
+    }
+    val message = remember {
+        movableContentWithReceiverOf<ColumnScope> {
+            Text(
+                text = stringResource(R.string.tutorial_text_archive_description),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(
+                    ComicTheme.dimension.padding,
+                    alignment = Alignment.CenterHorizontally
+                ),
+                verticalArrangement = Arrangement.spacedBy(
+                    0.dp,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                SupportExtension.Archive.entries.forEach {
+                    AssistChip(onClick = {}, label = { Text(text = ".${it.extension}") })
+                }
+            }
+        }
+    }
+    if (screenWidth < screenHeight) {
+        Column(
             modifier = Modifier
-                .sizeIn(maxHeight = 400.dp, maxWidth = 400.dp)
-                .fillMaxSize(0.5f),
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-
-        Text(
-            text = stringResource(R.string.tutorial_text_archive),
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier
-                .widthIn(max = 400.dp)
-                .fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.size(16.dp))
-
-        Text(
-            text = stringResource(R.string.tutorial_text_archive_description),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .widthIn(max = 400.dp)
-                .fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.size(16.dp))
-
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .widthIn(max = 400.dp)
-                .fillMaxWidth()
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(contentPadding)
+                .padding(ComicTheme.dimension.margin),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SupportExtension.Archive.entries.forEach {
-                AssistChip(
-                    onClick = {},
-                    label = {
-                        Text(text = ".${it.extension}")
-                    }
-                )
+            Spacer(modifier = Modifier.weight(1f))
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                icon()
+            }
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                message()
+            }
+        }
+    } else {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+                .padding(ComicTheme.dimension.margin),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                icon()
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.weight(0.8f))
+                message()
+                Spacer(modifier = Modifier.weight(0.2f))
             }
         }
     }

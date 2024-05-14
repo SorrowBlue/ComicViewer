@@ -3,26 +3,22 @@
     xmlns:aapt="http://schemas.android.com/aapt">
     <aapt:attr name="android:drawable">
         <vector
-            android:name="vector"
-            android:width="108dp"
-            android:height="108dp"
-            android:viewportWidth="108"
-            android:viewportHeight="108">
+            android:width="200dp"
+            android:height="200dp"
+            android:viewportWidth="288"
+            android:viewportHeight="288">
             <path
                 android:name="path_3"
-                android:fillAlpha="0.25"
-                android:fillColor="@color/md_theme_light_primary"
-                android:pathData="M 23.92 70 L 51.74 70 L 45.91 86 L 23.92 86 Z M 83.92 70 L 83.92 86 L 50.17 86 L 55.99 70 Z" />
+                android:pathData="M80,177L139.35,177L126.92,208L80,208zM208,177L208,208L136,208L148.43,177z"
+                android:fillColor="@color/md_theme_source" />
             <path
                 android:name="path_2"
-                android:fillAlpha="0.25"
-                android:fillColor="@color/md_theme_light_primary"
-                android:pathData="M 24.08 46 L 67.13 46 L 67.13 62 L 24.08 62 Z M 83.92 46 L 83.92 62 L 71.13 62 L 71.13 46 Z" />
+                android:pathData="M80,128.5L172.09,128.5L172.09,159.5L80,159.5zM208,128.5L208,159.5L180.64,159.5L180.64,128.5z"
+                android:fillColor="@color/md_theme_source" />
             <path
                 android:name="path_5"
-                android:fillAlpha="0.25"
-                android:fillColor="@color/md_theme_light_primary"
-                android:pathData="M 23.92 22 L 44.46 22 L 33.26 38 L 23.92 38 Z M 83.92 22 L 83.92 38 L 38.14 38 L 49.35 22 Z" />
+                android:pathData="M80,80L123.83,80L99.93,111L80,111zM208,80L208,111L110.34,111L134.24,80z"
+                android:fillColor="@color/md_theme_source" />
         </vector>
     </aapt:attr>
     <target android:name="path_3">
@@ -33,6 +29,7 @@
                 android:repeatMode="reverse"
                 android:interpolator="@android:interpolator/fast_out_slow_in"
                 android:propertyName="fillAlpha"
+                android:startOffset="1"
                 android:valueFrom="0.25"
                 android:valueTo="1"
                 android:valueType="floatType" />
@@ -46,7 +43,7 @@
                 android:repeatMode="reverse"
                 android:interpolator="@android:interpolator/fast_out_slow_in"
                 android:propertyName="fillAlpha"
-                android:startOffset="300"
+                android:startOffset="299"
                 android:valueFrom="0.25"
                 android:valueTo="1"
                 android:valueType="floatType" />
@@ -60,7 +57,7 @@
                 android:repeatMode="reverse"
                 android:interpolator="@android:interpolator/fast_out_slow_in"
                 android:propertyName="fillAlpha"
-                android:startOffset="600"
+                android:startOffset="599"
                 android:valueFrom="0.25"
                 android:valueTo="1"
                 android:valueType="floatType" />

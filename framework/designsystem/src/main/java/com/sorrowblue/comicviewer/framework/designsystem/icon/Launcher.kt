@@ -2,15 +2,12 @@ package com.sorrowblue.comicviewer.framework.designsystem.icon
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sorrowblue.comicviewer.framework.designsystem.theme.source
 
 val ComicIcons.Launcher: ImageVector
     get() {
@@ -19,71 +16,49 @@ val ComicIcons.Launcher: ImageVector
         }
         _launcher = ImageVector.Builder(
             name = "Launcher",
-            defaultWidth = 108.0.dp,
-            defaultHeight = 108.0.dp,
-            viewportWidth = 108.0F,
-            viewportHeight = 108.0F,
-        ).path(
-            fill = SolidColor(Color(0xFF77DB98)),
-            fillAlpha = 1.0F,
-            strokeAlpha = 1.0F,
-            strokeLineWidth = 0.0F,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 4.0F,
-            pathFillType = PathFillType.NonZero,
-        ) {
-            moveTo(23.92F, 70.0F)
-            lineTo(51.74F, 70.0F)
-            lineTo(45.91F, 86.0F)
-            lineTo(23.92F, 86.0F)
-
-            moveTo(83.92F, 70.0F)
-            lineTo(83.92F, 86.0F)
-            lineTo(50.17F, 86.0F)
-            lineTo(55.99F, 70.0F)
-            close()
-        }.path(
-            fill = SolidColor(Color(0xFF77DB98)),
-            fillAlpha = 1.0F,
-            strokeAlpha = 1.0F,
-            strokeLineWidth = 0.0F,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 4.0F,
-            pathFillType = PathFillType.NonZero,
-        ) {
-            moveTo(24.16F, 46.0F)
-            lineTo(67.21F, 46.0F)
-            lineTo(67.21F, 62.0F)
-            lineTo(24.16F, 62.0F)
-
-            moveTo(84.0F, 46.0F)
-            lineTo(84.0F, 62.0F)
-            lineTo(71.21F, 62.0F)
-            lineTo(71.21F, 46.0F)
-            close()
-        }.path(
-            fill = SolidColor(Color(0xFF77DB98)),
-            fillAlpha = 1.0F,
-            strokeAlpha = 1.0F,
-            strokeLineWidth = 0.0F,
-            strokeLineCap = StrokeCap.Butt,
-            strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 4.0F,
-            pathFillType = PathFillType.NonZero,
-        ) {
-            moveTo(23.92F, 22.0F)
-            lineTo(44.46F, 22.0F)
-            lineTo(33.26F, 38.0F)
-            lineTo(23.92F, 38.0F)
-
-            moveTo(83.92F, 22.0F)
-            lineTo(83.92F, 38.0F)
-            lineTo(38.14F, 38.0F)
-            lineTo(49.35F, 22.0F)
-            close()
-        }.build()
+            defaultWidth = 128.0.dp,
+            defaultHeight = 128.0.dp,
+            viewportWidth = 128.0f,
+            viewportHeight = 128.0f
+        ).apply {
+            path(fill = SolidColor(source)) {
+                moveTo(-0.0f, 97.0f)
+                lineTo(59.345f, 97.0f)
+                lineTo(46.922f, 128.0f)
+                lineTo(0.0f, 128.0f)
+                close()
+                moveTo(128.0f, 97.0f)
+                lineTo(128.0f, 128.0f)
+                lineTo(56.003f, 128.0f)
+                lineTo(68.426f, 97.0f)
+                close()
+            }
+            path(fill = SolidColor(source)) {
+                moveTo(0.0f, 48.5f)
+                lineTo(92.086f, 48.5f)
+                lineTo(92.086f, 79.5f)
+                lineTo(0.0f, 79.5f)
+                close()
+                moveTo(128.0f, 48.5f)
+                lineTo(128.0f, 79.5f)
+                lineTo(100.642f, 79.5f)
+                lineTo(100.642f, 48.5f)
+                close()
+            }
+            path(fill = SolidColor(source)) {
+                moveTo(-0.0f, 0.0f)
+                lineTo(43.827f, 0.0f)
+                lineTo(19.927f, 31.0f)
+                lineTo(-0.0f, 31.0f)
+                close()
+                moveTo(128.0f, 0.0f)
+                lineTo(128.0f, 31.0f)
+                lineTo(30.344f, 31.0f)
+                lineTo(54.245f, 0.0f)
+                close()
+            }
+        }
+            .build()
         return _launcher!!
     }
 private var _launcher: ImageVector? = null

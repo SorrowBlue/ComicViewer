@@ -27,7 +27,7 @@ fun PreviewTheme(content: @Composable () -> Unit) {
             calculatePosture(collectFoldingFeaturesAsState().value)
         )
     ) {
-        ComicTheme(useDynamicColor = true) {
+        ComicTheme {
             content()
         }
     }

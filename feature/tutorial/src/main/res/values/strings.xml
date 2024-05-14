@@ -7,4 +7,6 @@
     <string name="tutorial_text_direction">Reading direction</string>
     <string name="tutorial_text_document">Document Support</string>
     <string name="tutorial_text_document_description">You can read documents (.pdf, .epub, .xps, .oxps) by downloading additional functions.</string>
+    <string name="tutorial_title_welcome">Welcome, dear user!</string>
+    <string name="tutorial_message_welcome">See what you can do with this app.</string>
 </resources>
