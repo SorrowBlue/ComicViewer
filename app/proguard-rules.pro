@@ -25,6 +25,7 @@
 -dontwarn com.google.crypto.tink.subtle.Ed25519Sign
 -dontwarn com.google.crypto.tink.subtle.Ed25519Verify
 -dontwarn com.google.crypto.tink.subtle.X25519
+-dontwarn com.google.crypto.tink.subtle.XChaCha20Poly1305
 -dontwarn java.beans.ConstructorProperties
 -dontwarn java.beans.Transient
 -dontwarn javax.xml.stream.FactoryConfigurationError
