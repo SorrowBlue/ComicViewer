@@ -9,6 +9,7 @@ import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.ConsumeResult
+import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchaseHistoryResult
@@ -43,7 +44,10 @@ class BillingClientWrapper(
     // Initialize the BillingClient.
     private val billingClient = BillingClient.newBuilder(context)
         .setListener(this)
-        .enablePendingPurchases()
+        .enablePendingPurchases(
+            PendingPurchasesParams.newBuilder()
+                .build()
+        )
         .build()
 
     /** Google Playへの接続を確立します。 */
@@ -297,11 +301,13 @@ class BillingClientWrapper(
     }
 
     suspend fun consume(purchase: Purchase): ConsumeResult {
-        val consumeParams =
-            ConsumeParams.newBuilder()
-                .setPurchaseToken(purchase.purchaseToken)
-                .build()
-        return billingClient.consumePurchase(consumeParams)
+        return withContext(dispatcher) {
+            val consumeParams =
+                ConsumeParams.newBuilder()
+                    .setPurchaseToken(purchase.purchaseToken)
+                    .build()
+            billingClient.consumePurchase(consumeParams)
+        }
     }
 
     suspend fun queryPurchases(): PurchasesResult {

@@ -70,7 +70,6 @@ fun <T> rememberThreePaneScaffoldNavigatorContent(
     mutableStateOf(navigator.currentDestination?.content)
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun FileInfoSheet(
     file: File,

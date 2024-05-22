@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.selection
 
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,7 +11,6 @@ internal interface BookshelfSelectionScreenState {
     val windowSizeClass: WindowSizeClass
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberBookshelfSelectionScreenState(
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,

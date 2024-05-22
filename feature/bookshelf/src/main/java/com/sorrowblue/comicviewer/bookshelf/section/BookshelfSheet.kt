@@ -48,7 +48,7 @@ import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffoldDefault
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BookshelfInfoSheet(
     contentPadding: PaddingValues,

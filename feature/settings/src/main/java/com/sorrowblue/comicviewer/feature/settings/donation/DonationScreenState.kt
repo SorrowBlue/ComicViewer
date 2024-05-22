@@ -15,7 +15,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import logcat.logcat
 
 interface DonationScreenState {
@@ -85,20 +84,9 @@ private class DonationScreenStateImpl(
                     logcat {
                         "${purchase.products.firstOrNull()}, purchaseState=${purchase.purchaseState}, isAcknowledged=${purchase.isAcknowledged}"
                     }
+                    // 購入海、かつ未承認の場合
                     if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
-                        withContext(dispatcher) {
-                            purchase.products.forEach {
-                                when (Product.productIdOf(it)) {
-                                    is ConsumableProduct -> billingClient.consume(purchase)
-                                    is NonConsumableProduct -> billingClient.acknowledgePurchase(
-                                        purchase.purchaseToken
-                                    )
-
-                                    is TestProduct -> billingClient.consume(purchase)
-                                    null -> Unit
-                                }
-                            }
-                        }
+                        execPurchased(purchase)
                     }
                 }
                 billingClient.queryPurchaseHistory().also {
@@ -106,6 +94,20 @@ private class DonationScreenStateImpl(
                 }.purchaseHistoryRecordList?.forEach {
                     logcat { it.originalJson }
                 }
+            }
+        }
+    }
+
+    private suspend fun execPurchased(purchase: Purchase) {
+        purchase.products.forEach {
+            when (Product.productIdOf(it)) {
+                is ConsumableProduct -> billingClient.consume(purchase)
+                is NonConsumableProduct -> billingClient.acknowledgePurchase(
+                    purchase.purchaseToken
+                )
+
+                is TestProduct -> billingClient.consume(purchase)
+                null -> Unit
             }
         }
     }
