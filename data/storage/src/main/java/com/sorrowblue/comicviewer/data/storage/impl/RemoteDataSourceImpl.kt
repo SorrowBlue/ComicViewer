@@ -37,7 +37,9 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
 
     override suspend fun getAttribute(path: String): FileAttribute? {
         return kotlin.runCatching {
-            fileClient.getAttribute(path = path)
+            withContext(dispatcher) {
+                fileClient.getAttribute(path = path)
+            }
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {
@@ -77,7 +79,9 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         filter: (File) -> Boolean,
     ): List<File> {
         return runCatching {
-            fileClient.listFiles(file, resolveImageFolder).filter(filter)
+            withContext(dispatcher) {
+                fileClient.listFiles(file, resolveImageFolder).filter(filter)
+            }
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {
@@ -113,7 +117,9 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
 
     override suspend fun exists(path: String): Boolean {
         return runCatching {
-            fileClient.exists(path)
+            withContext(dispatcher) {
+                fileClient.exists(path)
+            }
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {
@@ -130,13 +136,15 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
 
     override suspend fun fileReader(book: Book): FileReader? {
         return runCatching {
-            when (book) {
-                is BookFile -> fileReaderFactory.create(
-                    book.extension,
-                    fileClient.seekableInputStream(book)
-                )
+            withContext(dispatcher) {
+                when (book) {
+                    is BookFile -> fileReaderFactory.create(
+                        book.extension,
+                        fileClient.seekableInputStream(book)
+                    )
 
-                is BookFolder -> ImageFolderFileReader(fileClient, book)
+                    is BookFolder -> ImageFolderFileReader(fileClient, book)
+                }
             }
         }.getOrElse {
             throw when (it) {

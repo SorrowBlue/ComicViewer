@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.favorite.add
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -7,10 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -21,6 +24,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -50,9 +54,11 @@ import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCrea
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialogUiState
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFaq
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
+import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import com.sorrowblue.comicviewer.feature.favorite.common.R as FavoriteCommonR
 
@@ -254,24 +260,46 @@ private fun FavoriteAddContent(
     onFavoriteClick: (Favorite) -> Unit,
     lazyContent: (LazyListScope.() -> Unit)? = null,
 ) {
-    LazyColumn(
-        state = lazyListState,
-        contentPadding = innerPadding,
-        modifier = Modifier.drawVerticalScrollbar(lazyListState)
-    ) {
-        if (lazyContent != null) {
-            lazyContent(this)
-        }
-        items(
-            count = lazyPagingItems.itemCount,
-            key = lazyPagingItems.itemKey { it.id.value }
+    if (lazyPagingItems.isEmptyData) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            val item = lazyPagingItems[it]
-            if (item != null) {
-                FavoriteItem(
-                    favorite = item,
-                    onClick = { onFavoriteClick(item) }
-                )
+            Image(
+                imageVector = ComicIcons.UndrawFaq,
+                contentDescription = null,
+                modifier = Modifier
+                    .sizeIn(maxWidth = 300.dp, maxHeight = 300.dp)
+                    .fillMaxSize(0.5f)
+            )
+            Text(
+                text = "There are no favorite books yet. \nLet's add it!",
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+    } else {
+        LazyColumn(
+            state = lazyListState,
+            contentPadding = innerPadding,
+            modifier = Modifier.drawVerticalScrollbar(lazyListState)
+        ) {
+            if (lazyContent != null) {
+                lazyContent(this)
+            }
+            items(
+                count = lazyPagingItems.itemCount,
+                key = lazyPagingItems.itemKey { it.id.value }
+            ) {
+                val item = lazyPagingItems[it]
+                if (item != null) {
+                    FavoriteItem(
+                        favorite = item,
+                        onClick = { onFavoriteClick(item) }
+                    )
+                }
             }
         }
     }
