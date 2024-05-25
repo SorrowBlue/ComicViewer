@@ -221,7 +221,10 @@ private class FolderScreenStateImpl(
 
     override fun onSortItemClick(sortItem: SortItem) {
         super.onSortItemClick(sortItem)
-        isScrollableTop = true
+//        isScrollableTop = true
+        if (isSkipFirstRefresh) {
+            isSkipFirstRefresh = false
+        }
         scope.launch {
             pullRefreshState.animateToThreshold()
         }
@@ -229,7 +232,11 @@ private class FolderScreenStateImpl(
 
     override fun onSortOrderClick(sortOrder: SortOrder) {
         super.onSortOrderClick(sortOrder)
-        isScrollableTop = true
+//        isScrollableTop = true
+        if (isSkipFirstRefresh) {
+            isSkipFirstRefresh = false
+        }
+
         scope.launch {
             pullRefreshState.animateToThreshold()
         }

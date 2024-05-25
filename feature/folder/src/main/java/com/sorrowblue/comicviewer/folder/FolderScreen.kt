@@ -162,17 +162,6 @@ private fun FolderScreen(
         onDismissRequest = state::onSortSheetDismissRequest
     )
 
-    if (state.isScrollableTop) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(ComicTheme.colorScheme.scrim.copy(alpha = 0.75f)),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-    }
-
     LaunchedEffect(lazyPagingItems.loadState) {
         if (lazyPagingItems.loadState.isNotLoading) {
             isRefreshing = false
