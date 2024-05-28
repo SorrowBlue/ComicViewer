@@ -5,14 +5,14 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import androidx.core.graphics.scale
-import coil.ImageLoader
-import coil.annotation.ExperimentalCoilApi
-import coil.decode.DataSource
-import coil.disk.DiskCache
-import coil.fetch.FetchResult
-import coil.fetch.Fetcher
-import coil.fetch.SourceResult
-import coil.request.Options
+import coil3.ImageLoader
+import coil3.annotation.ExperimentalCoilApi
+import coil3.decode.DataSource
+import coil3.disk.DiskCache
+import coil3.fetch.FetchResult
+import coil3.fetch.Fetcher
+import coil3.fetch.SourceFetchResult
+import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
@@ -28,10 +28,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import logcat.asLog
 import logcat.logcat
-import okhttp3.internal.closeQuietly
 import okio.ByteString.Companion.encodeUtf8
 
-@OptIn(ExperimentalCoilApi::class)
 internal class FolderThumbnailFetcher(
     private val folder: Folder,
     options: Options,
@@ -49,7 +47,7 @@ internal class FolderThumbnailFetcher(
             if (snapshot != null) {
                 // キャッシュされた画像は手動で追加された可能性が高いため、常にメタデータが空の状態で返されます。
                 if (fileSystem.metadata(snapshot.metadata).size == 0L) {
-                    return SourceResult(
+                    return SourceFetchResult(
                         source = snapshot.toImageSource(),
                         mimeType = null,
                         dataSource = DataSource.DISK
@@ -67,7 +65,7 @@ internal class FolderThumbnailFetcher(
                         folder.path, folder.bookshelfId.value, folder.lastModifier, thumbnails
                     )
                 ) {
-                    return SourceResult(
+                    return SourceFetchResult(
                         source = snapshot.toImageSource(),
                         mimeType = null,
                         dataSource = DataSource.DISK
@@ -109,13 +107,13 @@ internal class FolderThumbnailFetcher(
                     // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
                     snapshot = writeToDiskCache(snapshot = snapshot, list = thumbnails)
                     return if (snapshot != null) {
-                        SourceResult(
+                        SourceFetchResult(
                             source = snapshot.toImageSource(),
                             mimeType = null,
                             dataSource = DataSource.DISK
                         )
                     } else {
-                        SourceResult(
+                        SourceFetchResult(
                             source = readFromDiskCache()!!.toImageSource(),
                             mimeType = null,
                             dataSource = DataSource.DISK
@@ -266,5 +264,11 @@ internal class FolderThumbnailFetcher(
                 datastoreDataSource
             )
         }
+    }
+}
+
+fun AutoCloseable.closeQuietly() {
+    kotlin.runCatching {
+        close()
     }
 }

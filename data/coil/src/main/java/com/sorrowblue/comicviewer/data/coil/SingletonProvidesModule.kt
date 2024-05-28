@@ -1,7 +1,8 @@
 package com.sorrowblue.comicviewer.data.coil
 
 import android.content.Context
-import coil.disk.DiskCache
+import coil3.disk.DiskCache
+import coil3.disk.directory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

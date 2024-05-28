@@ -22,12 +22,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.CachePolicy
-import coil.request.ImageRequest
+import coil3.annotation.ExperimentalCoilApi
+import coil3.compose.AsyncImage
+import coil3.network.NetworkHeaders
+import coil3.network.httpHeaders
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.toUri
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import logcat.logcat
 
+@OptIn(ExperimentalCoilApi::class)
 @ExperimentalMaterial3Api
 @Composable
 internal fun BoxTopAppBar(
@@ -57,21 +64,28 @@ internal fun BoxTopAppBar(
             }
         },
         actions = {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(profileUri)
-                    .addHeader("Authorization", "Bearer $token")
-                    .crossfade(true)
-                    .diskCachePolicy(CachePolicy.ENABLED)
-                    .build(),
-                placeholder = rememberDebugPlaceholder(),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .padding(9.dp)
-                    .clip(CircleShape)
-                    .clickable(onClick = onProfileImageClick)
-            )
+            if (profileUri.isNotEmpty()) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data("https://avatars.githubusercontent.com/u/25735189?v=4".toUri())
+                        .httpHeaders(
+                            NetworkHeaders.Builder().add("Authorization", "Bearer $token").build()
+                        )
+                        .crossfade(true)
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .listener { request, result ->
+                            logcat { "request=$request, result=$result" }
+                        }
+                        .build(),
+                    placeholder = rememberDebugPlaceholder(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .padding(9.dp)
+                        .clip(CircleShape)
+                        .clickable(onClick = onProfileImageClick)
+                )
+            }
         },
         windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior

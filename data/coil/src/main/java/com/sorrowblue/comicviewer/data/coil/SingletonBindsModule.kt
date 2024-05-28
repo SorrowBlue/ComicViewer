@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.coil
 
-import coil.fetch.Fetcher
+import coil3.fetch.Fetcher
 import com.sorrowblue.comicviewer.data.coil.book.BookThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.favorite.FavoriteThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.folder.FolderThumbnailFetcher
