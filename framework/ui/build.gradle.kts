@@ -23,7 +23,8 @@ dependencies {
     api(libs.androidx.lifecycle.viewmodelKtx)
     api(libs.androidx.paging.compose)
 
-    api(libs.coil.compose)
+    api(libs.coil3.compose)
+    api(libs.coil3.networkKtor)
 
     api(libs.androidx.compose.ui.toolingPreview)
     debugApi(libs.androidx.compose.ui.tooling)

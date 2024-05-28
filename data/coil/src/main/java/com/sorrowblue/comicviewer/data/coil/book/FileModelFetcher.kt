@@ -1,15 +1,13 @@
 package com.sorrowblue.comicviewer.data.coil.book
 
 import android.graphics.Bitmap
-import coil.annotation.ExperimentalCoilApi
-import coil.decode.ImageSource
-import coil.disk.DiskCache
-import coil.fetch.Fetcher
-import coil.request.Options
-import coil.size.pxOrElse
+import coil3.decode.ImageSource
+import coil3.disk.DiskCache
+import coil3.fetch.Fetcher
+import coil3.request.Options
+import coil3.size.pxOrElse
 import com.sorrowblue.comicviewer.data.coil.getValue
 
-@OptIn(ExperimentalCoilApi::class)
 internal abstract class FileModelFetcher(
     val options: Options,
     diskCacheLazy: dagger.Lazy<DiskCache?>,

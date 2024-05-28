@@ -5,7 +5,7 @@ enum class ComicBuildType(
     val isShrinkResources: Boolean,
     val applicationIdSuffix: String? = null,
 ) {
-    DEBUG(false, false),
+    DEBUG(false, false, ".debug"),
     RELEASE(true, true),
     INTERNAL(true, true),
     PRERELEASE(true, true, ".prerelease")

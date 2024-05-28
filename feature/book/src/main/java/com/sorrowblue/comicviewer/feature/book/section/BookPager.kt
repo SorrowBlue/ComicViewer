@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book.section
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.compose.foundation.layout.Arrangement
@@ -15,9 +16,10 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.drawable.toDrawable
-import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
+import coil3.annotation.ExperimentalCoilApi
+import coil3.asCoilImage
+import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.book.trimBorders
@@ -70,10 +72,13 @@ private fun DefaultBookPage(
                 is AsyncImagePainter.State.Error -> it
                 is AsyncImagePainter.State.Loading -> it
                 is AsyncImagePainter.State.Success ->
+                    @OptIn(ExperimentalCoilApi::class)
                     it.copy(
                         result = it.result.copy(
-                            it.result.drawable.toBitmap().trimBorders(Color.WHITE)
-                                .toDrawable(context.resources)
+                            image = it.result.image.asDrawable(context.resources).toBitmap()
+                                .trimBorders(Color.WHITE).asCoilImage(),
+                            request = it.result.request,
+                            dataSource = it.result.dataSource
                         )
                     )
             }
@@ -89,17 +94,18 @@ private fun SplitBookPage(
     onPageLoaded: (UnratedPage, Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     AsyncImage(
         model = BookPageRequest(book to bookPage.index),
         contentDescription = null,
         transform = when (bookPage) {
-            is BookPage.Split.Unrated -> SpreadSplitTransformation.unrated {
+            is BookPage.Split.Unrated -> SpreadSplitTransformation.unrated(context) {
                 onPageLoaded(bookPage, it)
             }
 
             is BookPage.Split.Single -> SpreadSplitTransformation.Single
-            is BookPage.Split.Left -> SpreadSplitTransformation.Left
-            is BookPage.Split.Right -> SpreadSplitTransformation.Right
+            is BookPage.Split.Left -> SpreadSplitTransformation.left(context)
+            is BookPage.Split.Right -> SpreadSplitTransformation.right(context)
         },
         contentScale = pageScale.contentScale,
         modifier = Modifier
@@ -116,6 +122,7 @@ private fun SpreadBookPage(
     onPageLoaded: (UnratedPage, Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     if (bookPage is BookPage.Spread.Combine) {
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -153,7 +160,7 @@ private fun SpreadBookPage(
             transform = when (bookPage) {
                 is BookPage.Spread.Single -> SpreadCombineTransformation.Single
                 is BookPage.Spread.Spread2 -> SpreadCombineTransformation.Spread2
-                is BookPage.Spread.Unrated -> SpreadCombineTransformation.unrated {
+                is BookPage.Spread.Unrated -> SpreadCombineTransformation.unrated(context) {
                     onPageLoaded(bookPage, it)
                 }
 
@@ -167,9 +174,10 @@ private fun SpreadBookPage(
 }
 
 object SpreadCombineTransformation {
-    fun unrated(change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->
+    @OptIn(ExperimentalCoilApi::class)
+    fun unrated(context: Context, change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->
         if (state is AsyncImagePainter.State.Success) {
-            change(state.result.drawable.toBitmap())
+            change(state.result.image.asDrawable(context.resources).toBitmap())
             state
         } else {
             state
@@ -180,13 +188,12 @@ object SpreadCombineTransformation {
     val Spread2 = AsyncImagePainter.DefaultTransform
 }
 
+@OptIn(ExperimentalCoilApi::class)
 object SpreadSplitTransformation {
 
-    fun unrated(
-        change: (Bitmap) -> Unit,
-    ) = { state: AsyncImagePainter.State ->
+    fun unrated(context: Context, change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->
         if (state is AsyncImagePainter.State.Success) {
-            change(state.result.drawable.toBitmap())
+            change(state.result.image.asDrawable(context.resources).toBitmap())
             state
         } else {
             state
@@ -194,22 +201,26 @@ object SpreadSplitTransformation {
     }
 
     val Single = AsyncImagePainter.DefaultTransform
-    val Left = { state: AsyncImagePainter.State ->
+
+    fun left(context: Context) = { state: AsyncImagePainter.State ->
         if (state is AsyncImagePainter.State.Success) {
             state.copy(
                 painter = BitmapPainter(
-                    state.result.drawable.toBitmap().createSplitBitmap(true).asImageBitmap()
+                    state.result.image.asDrawable(context.resources).toBitmap()
+                        .createSplitBitmap(true).asImageBitmap()
                 )
             )
         } else {
             state
         }
     }
-    val Right = { state: AsyncImagePainter.State ->
+
+    fun right(context: Context) = { state: AsyncImagePainter.State ->
         if (state is AsyncImagePainter.State.Success) {
             state.copy(
                 painter = BitmapPainter(
-                    state.result.drawable.toBitmap().createSplitBitmap(false).asImageBitmap()
+                    state.result.image.asDrawable(context.resources).toBitmap()
+                        .createSplitBitmap(false).asImageBitmap()
                 )
             )
         } else {

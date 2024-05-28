@@ -18,6 +18,5 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     ksp(libs.androidx.hilt.compiler)
 
-    implementation(libs.coil)
     implementation(libs.jcifs.ng)
 }

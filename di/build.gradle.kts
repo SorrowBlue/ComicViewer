@@ -15,6 +15,8 @@ dependencies {
     implementation(projects.data.storage.device)
     implementation(projects.data.storage.smb)
 
+    // :feature:library:box :feature:library:onedrive
+    implementation(libs.squareup.okhttp3)
     // :feature:library:dropbox :feature:library:onedrive
     implementation(libs.fasterxml.jackson.core)
     // :feature:library:googledrive :feature:library:onedrive

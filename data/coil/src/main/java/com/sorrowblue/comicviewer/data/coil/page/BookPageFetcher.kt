@@ -1,19 +1,19 @@
 package com.sorrowblue.comicviewer.data.coil.page
 
 import android.content.Context
-import coil.ImageLoader
-import coil.annotation.ExperimentalCoilApi
-import coil.decode.DataSource
-import coil.decode.ImageSource
-import coil.disk.DiskCache
-import coil.fetch.FetchResult
-import coil.fetch.Fetcher
-import coil.fetch.SourceResult
-import coil.request.Options
+import coil3.ImageLoader
+import coil3.decode.DataSource
+import coil3.decode.ImageSource
+import coil3.disk.DiskCache
+import coil3.fetch.FetchResult
+import coil3.fetch.Fetcher
+import coil3.fetch.SourceFetchResult
+import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.PageDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
+import com.sorrowblue.comicviewer.data.coil.folder.closeQuietly
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
@@ -25,12 +25,10 @@ import kotlin.use
 import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
-import okhttp3.internal.closeQuietly
 import okio.ByteString.Companion.encodeUtf8
 import okio.buffer
 import okio.source
 
-@OptIn(ExperimentalCoilApi::class)
 internal class BookPageFetcher(
     private val data: BookPageRequest,
     options: Options,
@@ -47,7 +45,7 @@ internal class BookPageFetcher(
             if (snapshot != null) {
                 // キャッシュされた画像は手動で追加された可能性が高いため、常にメタデータが空の状態で返されます。
                 if (fileSystem.metadata(snapshot.metadata).size == 0L) {
-                    return SourceResult(
+                    return SourceFetchResult(
                         source = snapshot.toImageSource(),
                         mimeType = null,
                         dataSource = DataSource.DISK
@@ -55,7 +53,7 @@ internal class BookPageFetcher(
                 }
                 // 候補が適格である場合、キャッシュから候補を返します。
                 if (snapshot.toBookPageMetaData() != null) {
-                    return SourceResult(
+                    return SourceFetchResult(
                         source = snapshot.toImageSource(),
                         mimeType = null,
                         dataSource = DataSource.DISK
@@ -82,7 +80,7 @@ internal class BookPageFetcher(
                     writeToDiskCache(snapshot = snapshot, inputStream = it, metaData = metaData)
                 }
                 if (snapshot != null) {
-                    return SourceResult(
+                    return SourceFetchResult(
                         source = snapshot.toImageSource(),
                         mimeType = null,
                         dataSource = DataSource.NETWORK
@@ -90,7 +88,7 @@ internal class BookPageFetcher(
                 }
                 // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
                 return fileReader.pageInputStream(data.pageIndex).use {
-                    SourceResult(
+                    SourceFetchResult(
                         source = it.toImageSource(),
                         mimeType = null,
                         dataSource = DataSource.NETWORK
@@ -154,7 +152,7 @@ internal class BookPageFetcher(
     }
 
     private fun InputStream.toImageSource(): ImageSource {
-        return ImageSource(source().buffer(), context)
+        return ImageSource(source().buffer(), options.fileSystem)
     }
 
     class Factory @Inject constructor(
