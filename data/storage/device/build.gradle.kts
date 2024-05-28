@@ -8,7 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.data.storage)
+    implementation(projects.data.storage.client)
 
     implementation(libs.androidx.documentfile)
 }

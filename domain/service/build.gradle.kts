@@ -10,7 +10,7 @@ android {
 dependencies {
     api(projects.domain.model)
     implementation(projects.domain.usecase)
-    implementation(projects.data.reader)
+    implementation(projects.data.file.reader)
 
     implementation(libs.androidx.paging.common)
     implementation(libs.google.android.play.feature.delivery.ktx)

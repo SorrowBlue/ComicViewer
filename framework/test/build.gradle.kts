@@ -8,4 +8,5 @@ android {
 }
 
 dependencies {
+    debugImplementation(libs.androidx.compose.ui.testManifest)
 }

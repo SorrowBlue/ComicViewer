@@ -43,6 +43,26 @@ internal fun DependencyHandlerScope.testImplementation(dependencyNotation: Any) 
     add("testImplementation", dependencyNotation)
 }
 
+internal fun DependencyHandlerScope.debugImplementation(dependencyNotation: Any) {
+    add("debugImplementation", dependencyNotation)
+}
+
+internal fun DependencyHandlerScope.testDebugImplementation(dependencyNotation: Any) {
+    add("testDebugImplementation", dependencyNotation)
+}
+
+internal fun DependencyHandlerScope.testPrereleaseImplementation(dependencyNotation: Any) {
+    add("testPrereleaseImplementation", dependencyNotation)
+}
+
+internal fun DependencyHandlerScope.testInternalImplementation(dependencyNotation: Any) {
+    add("testInternalImplementation", dependencyNotation)
+}
+
+internal fun DependencyHandlerScope.testReleaseImplementation(dependencyNotation: Any) {
+    add("testReleaseImplementation", dependencyNotation)
+}
+
 internal fun DependencyHandlerScope.androidTestImplementation(dependencyNotation: Any) {
     add("androidTestImplementation", dependencyNotation)
 }

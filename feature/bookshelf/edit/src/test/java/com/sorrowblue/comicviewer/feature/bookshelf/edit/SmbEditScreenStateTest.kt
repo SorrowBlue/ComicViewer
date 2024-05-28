@@ -42,7 +42,6 @@ internal class SmbEditScreenStateTest {
                 override fun show() {
                     TODO("Not yet implemented")
                 }
-
             }
         )
     }

@@ -10,8 +10,8 @@ dependencies {
     implementation(projects.data.coil)
     implementation(projects.data.database)
     implementation(projects.data.datastore)
-    implementation(projects.data.reader)
-    implementation(projects.data.reader.zip)
+    implementation(projects.data.file.reader)
+    implementation(projects.data.file.zip)
     implementation(projects.data.storage.device)
     implementation(projects.data.storage.smb)
 

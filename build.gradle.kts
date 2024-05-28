@@ -14,11 +14,13 @@ plugins {
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
     alias(libs.plugins.roborazzi) apply false
-    alias(libs.plugins.dependency.graph.generator)
     alias(libs.plugins.arturbosch.detekt)
     alias(libs.plugins.dokka)
 
     id("androidx.room") version libs.versions.androidx.room.get() apply false
+
+    id("dev.iurysouza.modulegraph") version "0.10.0"
+    id("org.jetbrains.kotlinx.kover") version "0.8.0"
 }
 
 tasks.register("clean", Delete::class) {
@@ -70,4 +72,25 @@ plugins.withId("org.jetbrains.dokka") {
         notCompatibleWithConfigurationCache("https://github.com/Kotlin/dokka/issues/1217")
         outputDirectory.set(layout.projectDirectory.dir("docs/dokka"))
     }
+}
+afterEvaluate {
+    val task = tasks.named("createModuleGraph")
+    task.configure {
+        doNotTrackState("See https://github.com/springdoc/springdoc-openapi-gradle-plugin/issues/102")
+    }
+}
+moduleGraphConfig {
+    graph("${rootDir}/README2.md", "## Domain") {
+        focusedModulesRegex = ".*(domain).*"
+        rootModulesRegex = ".*(domain).*"
+        excludedModulesRegex = ".*(feature).*"
+    }
+    graph("${rootDir}/README2.md", "## Data") {
+        focusedModulesRegex = ".*(data).*"
+         rootModulesRegex = ".*(data).*"
+        excludedModulesRegex = ".*(feature|di).*"
+    }
+//    focusedModulesRegex.set(".*(domain).*")
+//    this.rootModulesRegex.set(".*(data).*")
+//    setStyleByModuleType.set(true)
 }

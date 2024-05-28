@@ -12,11 +12,6 @@ internal fun Project.configureAndroidCompose(
         buildFeatures {
             compose = true
         }
-
-        composeOptions {
-//            logger.lifecycle("kotlinCompilerExtensionVersion=$kotlinCompilerExtensionVersion")
-//            kotlinCompilerExtensionVersion = "1.5.13-dev-k2.0.0-RC1-50f08dfa4b4"
-        }
     }
 
     configure<ComposeCompilerGradlePluginExtension> {

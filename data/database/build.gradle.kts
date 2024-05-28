@@ -6,10 +6,6 @@ plugins {
 
 android {
     namespace = "com.sorrowblue.comicviewer.data.database"
-
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
 }
 
 dependencies {
@@ -18,11 +14,6 @@ dependencies {
     implementation(libs.bundles.androidx.room)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.paging.common)
-
-    androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.test.ext.truth)
-    androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.androidx.room.testing)
 }
 
 ksp {

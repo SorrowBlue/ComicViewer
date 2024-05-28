@@ -13,7 +13,7 @@ android {
 
 dependencies {
     implementation(projects.app)
-    implementation(projects.data.reader)
+    implementation(projects.data.file.reader)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.artifex.mupdf.fitz)

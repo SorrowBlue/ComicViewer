@@ -14,7 +14,7 @@ android {
 
 dependencies {
     implementation(projects.framework.common)
-    implementation(projects.data.reader)
+    implementation(projects.data.file.reader)
 
     implementation(libs.androidx.startup.runtime)
     implementation(libs.github.omicronapps.sevenZipJBinding4Android)

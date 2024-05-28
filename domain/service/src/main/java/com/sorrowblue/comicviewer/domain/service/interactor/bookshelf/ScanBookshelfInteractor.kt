@@ -46,7 +46,6 @@ internal class ScanBookshelfInteractor @Inject constructor(
         resolveImageFolder: Boolean,
         supportExtensions: List<String>,
     ) {
-        delay(2000)
         process(bookshelf, file)
 
         val fileModelList = SortUtil.sortedIndex(

@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.dokka.gradle.plugin)
     implementation(libs.arturbosch.detektGradlePlugin)
     implementation(libs.ksp.gradlePlugin)
+    implementation("org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:0.8.0")
 }
 
 gradlePlugin {
@@ -31,6 +32,10 @@ gradlePlugin {
         register("comicviewer.android.library") {
             id = name
             implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register("comicviewer.android.library.test") {
+            id = name
+            implementationClass = "AndroidLibraryTestConventionPlugin"
         }
         register("comicviewer.android.library.compose") {
             id = name

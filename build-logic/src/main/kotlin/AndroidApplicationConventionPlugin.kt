@@ -20,6 +20,7 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.android")
                 apply("comicviewer.android.lint")
                 apply("comicviewer.android.dokka")
+                apply("org.jetbrains.kotlinx.kover")
             }
 
             kotlin {
