@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.storage.smb
 
-import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.domain.model.Result
@@ -12,6 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -44,6 +45,7 @@ val mutex = Mutex()
 
 internal class SmbFileClient @AssistedInject constructor(
     @Assisted override val bookshelf: SmbServer,
+    override val fileReaderFactory: FileReaderFactory,
 ) : FileClient {
 
     @AssistedFactory
@@ -88,6 +90,7 @@ internal class SmbFileClient @AssistedInject constructor(
                         else -> throw it
                     }
                 }
+
                 is URISyntaxException -> throw FileClientException.InvalidPath
 
                 else -> {

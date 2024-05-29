@@ -1,9 +1,12 @@
 package com.sorrowblue.comicviewer.data.storage.client
 
-import com.sorrowblue.comicviewer.data.reader.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import com.sorrowblue.comicviewer.domain.reader.FileReader
 import java.io.InputStream
 
 interface FileClient {
@@ -29,4 +32,13 @@ interface FileClient {
 
     suspend fun connect(path: String)
     suspend fun getAttribute(path: String): FileAttribute?
+
+    suspend fun fileReader(book: Book): FileReader? {
+        return when (book) {
+            is BookFile -> fileReaderFactory.create(book.extension, seekableInputStream(book))
+            is BookFolder -> ImageFolderFileReader(this, book)
+        }
+    }
+
+    val fileReaderFactory: FileReaderFactory
 }

@@ -20,6 +20,8 @@ import coil3.annotation.ExperimentalCoilApi
 import coil3.asCoilImage
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.bitmapConfig
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.book.trimBorders
@@ -58,8 +60,12 @@ private fun DefaultBookPage(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val request = ImageRequest.Builder(context)
+        .data(BookPageRequest(book to bookPage.index))
+        .bitmapConfig(Bitmap.Config.RGB_565)
+        .build()
     AsyncImage(
-        model = BookPageRequest(book to bookPage.index),
+        model = request,
         contentScale = pageScale.contentScale,
         contentDescription = null,
         filterQuality = FilterQuality.None,

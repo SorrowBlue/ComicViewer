@@ -45,10 +45,6 @@ internal class CoilInitializer : Initializer<Unit> {
             .logger(DebugLogger())
             .build()
 
-        imageLoader.components.fetcherFactories.forEach {
-            logcat(LogPriority.INFO) { "Add fetcher: ${it.first}, ${it.second}" }
-        }
-
         @OptIn(DelicateCoilApi::class)
         SingletonImageLoader.setUnsafe(imageLoader)
         logcat(LogPriority.INFO) { "Initialize coil." }
