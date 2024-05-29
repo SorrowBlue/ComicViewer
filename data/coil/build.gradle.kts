@@ -11,7 +11,7 @@ android {
 dependencies {
     implementation(projects.framework.common)
     implementation(projects.domain.service)
-    implementation(projects.data.file.reader)
+    implementation(projects.domain.reader)
 
     implementation(libs.androidx.startup.runtime)
     implementation(libs.androidx.exifinterface)

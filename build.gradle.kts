@@ -1,3 +1,5 @@
+import dev.iurysouza.modulegraph.Orientation
+import io.netty.handler.codec.http2.Http2FrameLogger.Direction
 import java.util.Locale
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
@@ -87,8 +89,10 @@ moduleGraphConfig {
     }
     graph("${rootDir}/README2.md", "## Data") {
         focusedModulesRegex = ".*(data).*"
-         rootModulesRegex = ".*(data).*"
-        excludedModulesRegex = ".*(feature|di).*"
+        rootModulesRegex = ".*(data).*"
+        orientation = Orientation.RIGHT_TO_LEFT
+        excludedModulesRegex = ".*(feature|di|model|app|framework).*"
+        excludedConfigurationsRegex = "api"
     }
 //    focusedModulesRegex.set(".*(domain).*")
 //    this.rootModulesRegex.set(".*(data).*")

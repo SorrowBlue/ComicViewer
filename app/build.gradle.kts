@@ -97,7 +97,7 @@ android {
     }
 
     dynamicFeatures += setOf(
-        projects.data.file.document.projectString(),
+        projects.data.reader.document.projectString(),
         projects.feature.library.box.projectString(),
         projects.feature.library.dropbox.projectString(),
         projects.feature.library.googledrive.projectString(),

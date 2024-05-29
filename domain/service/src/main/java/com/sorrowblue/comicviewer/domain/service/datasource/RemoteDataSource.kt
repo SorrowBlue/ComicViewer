@@ -1,10 +1,10 @@
 package com.sorrowblue.comicviewer.domain.service.datasource
 
-import com.sorrowblue.comicviewer.data.reader.FileReader
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import com.sorrowblue.comicviewer.domain.reader.FileReader
 
 interface RemoteDataSource {
 

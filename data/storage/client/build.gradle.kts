@@ -11,5 +11,5 @@ android {
 dependencies {
     implementation(projects.domain.service)
     api(projects.domain.model)
-    api(projects.data.file.reader)
+    api(projects.domain.reader)
 }

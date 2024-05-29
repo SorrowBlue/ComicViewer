@@ -17,7 +17,7 @@ import coil3.size.Scale
 import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
 import com.sorrowblue.comicviewer.data.coil.folder.closeQuietly
-import com.sorrowblue.comicviewer.data.reader.FileReader
+import com.sorrowblue.comicviewer.domain.reader.FileReader
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
