@@ -62,24 +62,39 @@
   <div class="breadcrumbs"><a href="../../index.html">reader</a><span class="delimiter">/</span><a href="../index.html">com.sorrowblue.comicviewer.domain.reader</a><span class="delimiter">/</span><span class="current">FileReader</span></div>
   <div class="cover ">
     <h1 class="cover"><span>File</span><wbr><span><span>Reader</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:reader:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">FileReader</a> : <a href="https://developer.android.com/reference/kotlin/java/io/Closeable.html">Closeable</a></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:reader:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">FileReader</a> : <a href="https://developer.android.com/reference/kotlin/java/lang/AutoCloseable.html">AutoCloseable</a></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="FUNCTION">
         <h2 class="">Functions</h2>
-        <div class="table"><a data-name="358956095%2FFunctions%2F1085055436" anchor-label="close" id="358956095%2FFunctions%2F1085055436" data-filterable-set=":domain:reader:dokkaHtmlPartial/release"></a>
+        <div class="table"><a data-name="-1117130810%2FFunctions%2F1085055436" anchor-label="close" id="-1117130810%2FFunctions%2F1085055436" data-filterable-set=":domain:reader:dokkaHtmlPartial/release"></a>
           <div class="table-row" data-filterable-current=":domain:reader:dokkaHtmlPartial/release" data-filterable-set=":domain:reader:dokkaHtmlPartial/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="index.html#358956095%2FFunctions%2F1085055436"><span><span>close</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="358956095%2FFunctions%2F1085055436"></span>
+                  <div><a href="index.html#-1117130810%2FFunctions%2F1085055436"><span><span>close</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1117130810%2FFunctions%2F1085055436"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:reader:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#358956095%2FFunctions%2F1085055436"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:reader:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="index.html#-1117130810%2FFunctions%2F1085055436"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1614022203%2FFunctions%2F1085055436" anchor-label="copyTo" id="-1614022203%2FFunctions%2F1085055436" data-filterable-set=":domain:reader:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":domain:reader:dokkaHtmlPartial/release" data-filterable-set=":domain:reader:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="copy-to.html"><span>copy</span><wbr><span><span>To</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1614022203%2FFunctions%2F1085055436"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:reader:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="copy-to.html"><span class="token function">copyTo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pageIndex<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">sink<span class="token operator">: </span><span data-unresolved-link="okio/Sink///PointingToDeclaration/">Sink</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -125,21 +140,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:reader:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="page-count.html"><span class="token function">pageCount</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1317130954%2FFunctions%2F1085055436" anchor-label="pageInputStream" id="1317130954%2FFunctions%2F1085055436" data-filterable-set=":domain:reader:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":domain:reader:dokkaHtmlPartial/release" data-filterable-set=":domain:reader:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="page-input-stream.html"><span>page</span><wbr><span>Input</span><wbr><span><span>Stream</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1317130954%2FFunctions%2F1085055436"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":domain:reader:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="page-input-stream.html"><span class="token function">pageInputStream</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pageIndex<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/io/InputStream.html">InputStream</a></div></div></div>
                 </div>
               </div>
             </div>
