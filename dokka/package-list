@@ -5,8 +5,7 @@ module:app
 com.sorrowblue.comicviewer.app
 module:coil
 com.sorrowblue.comicviewer.data.coil
-com.sorrowblue.comicviewer.data.coil.book
-com.sorrowblue.comicviewer.data.coil.folder
+com.sorrowblue.comicviewer.data.coil.di
 module:database
 com.sorrowblue.comicviewer.data.database.entity
 module:model
