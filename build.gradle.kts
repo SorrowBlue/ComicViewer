@@ -1,5 +1,4 @@
 import dev.iurysouza.modulegraph.Orientation
-import io.netty.handler.codec.http2.Http2FrameLogger.Direction
 import java.util.Locale
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
@@ -97,4 +96,9 @@ moduleGraphConfig {
 //    focusedModulesRegex.set(".*(domain).*")
 //    this.rootModulesRegex.set(".*(data).*")
 //    setStyleByModuleType.set(true)
+}
+
+tasks.updateDaemonJvm {
+    @Suppress("UnstableApiUsage")
+    jvmVersion = JavaVersion.VERSION_17
 }
