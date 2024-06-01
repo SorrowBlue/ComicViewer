@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.data.storage.client
 
-import java.io.Closeable
-
-interface SeekableInputStream : Closeable {
+interface SeekableInputStream : AutoCloseable {
     interface Factory<T> {
 
         fun create(bookshelfModel: T, path: String): SeekableInputStream

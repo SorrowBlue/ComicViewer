@@ -1,13 +1,13 @@
 package com.sorrowblue.comicviewer.domain.reader
 
-import java.io.Closeable
-import java.io.InputStream
+import okio.Sink
 
-interface FileReader : Closeable {
+interface FileReader : AutoCloseable {
 
     suspend fun pageCount(): Int
 
-    suspend fun pageInputStream(pageIndex: Int): InputStream
+    suspend fun copyTo(pageIndex: Int, sink: Sink)
+
     suspend fun fileSize(pageIndex: Int): Long
     suspend fun fileName(pageIndex: Int): String
 }

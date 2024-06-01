@@ -55,7 +55,7 @@ private fun FolderSettingsScreen(
         onBackClick = onBackClick,
         onExtensionClick = onExtensionClick,
         onChangeOpenImageFolder = state::onChangeOpenImageFolder,
-        onChangeThumbnailEnabled = state::onChangeThumbnailEnabled,
+        onChangeThumbnailEnable = state::onChangeThumbnailEnabled,
         onDeleteThumbnailClick = state::onDeleteThumbnailClick,
         contentPadding = contentPadding
     )
@@ -68,7 +68,7 @@ private fun FolderSettingsScreen(
     onBackClick: () -> Unit,
     onExtensionClick: () -> Unit,
     onChangeOpenImageFolder: (Boolean) -> Unit,
-    onChangeThumbnailEnabled: (Boolean) -> Unit,
+    onChangeThumbnailEnable: (Boolean) -> Unit,
     onDeleteThumbnailClick: () -> Unit,
     contentPadding: PaddingValues,
 ) {
@@ -90,7 +90,7 @@ private fun FolderSettingsScreen(
             SwitchSetting(
                 title = R.string.settings_folder_label_show_thumbnail,
                 checked = uiState.isThumbnailEnabled,
-                onCheckedChange = onChangeThumbnailEnabled
+                onCheckedChange = onChangeThumbnailEnable
             )
             Setting(
                 title = R.string.settings_folder_label_delete_thumbnail,

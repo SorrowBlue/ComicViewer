@@ -140,7 +140,7 @@ private fun BookScreen(
                 onContainerLongClick = state2::onContainerLongClick,
                 onPageChange = state2::onPageChange,
                 onSettingsClick = onSettingsClick,
-                onPageLoaded = state2::onPageLoaded,
+                onPageLoad = state2::onPageLoaded,
             )
             if (uiState2.isShowBookMenu) {
                 BookMenuSheet(
@@ -171,7 +171,7 @@ private fun BookScreen(
     onContainerLongClick: () -> Unit,
     onPageChange: (Int) -> Unit,
     onSettingsClick: () -> Unit,
-    onPageLoaded: (UnratedPage, Bitmap) -> Unit,
+    onPageLoad: (UnratedPage, Bitmap) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -228,7 +228,7 @@ private fun BookScreen(
             onClick = onContainerClick,
             onLongClick = onContainerLongClick,
             onNextBookClick = onNextBookClick,
-            onPageLoaded = onPageLoaded
+            onPageLoad = onPageLoad
         )
     }
 }

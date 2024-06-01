@@ -1,10 +1,21 @@
 package com.sorrowblue.comicviewer.data.storage.client.impl
 
+import android.content.Context
+import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
-import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderException
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderProvider
+import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.DeviceFileClientFactory
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClientFactory
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReaderFactory
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.reader.FileReader
@@ -14,13 +25,18 @@ import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.ServiceLoader
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 internal class RemoteDataSourceImpl @AssistedInject constructor(
-    fileClientFactory: FileClientFactory,
     @Assisted private val bookshelf: Bookshelf,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    @ApplicationContext private val context: Context,
+    @DeviceFileClientFactory private val deviceFileClientFactory: FileClient.Factory<InternalStorage>,
+    @SmbFileClientFactory private val smbFileClientFactory: FileClient.Factory<SmbServer>,
+    @ZipFileReaderFactory private val zipFileReaderFactory: FileReaderFactory,
 ) : RemoteDataSource {
 
     @AssistedFactory
@@ -28,7 +44,10 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         override fun create(bookshelf: Bookshelf): RemoteDataSourceImpl
     }
 
-    private val fileClient = fileClientFactory.create(bookshelf)
+    private val fileClient = when (bookshelf) {
+        is InternalStorage -> deviceFileClientFactory.create(bookshelf)
+        is SmbServer -> smbFileClientFactory.create(bookshelf)
+    }
 
     override suspend fun getAttribute(path: String): FileAttribute? {
         return kotlin.runCatching {
@@ -132,7 +151,18 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
     override suspend fun fileReader(book: Book): FileReader? {
         return runCatching {
             withContext(dispatcher) {
-                fileClient.fileReader(book)
+                when (book) {
+                    is BookFile -> {
+                        when (book.extension) {
+                            "pdf", "epub", "xps", "oxps", "mobi", "fb2" ->
+                                documentReader(book.extension, fileClient.seekableInputStream(book))
+
+                            else -> zipFileReaderFactory.create(fileClient.seekableInputStream(book))
+                        }
+                    }
+
+                    is BookFolder -> ImageFolderFileReader(fileClient, book)
+                }
             }
         }.getOrElse {
             throw when (it) {
@@ -151,4 +181,10 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
             }
         }
     }
+
+    private fun documentReader(extension: String, seekableInputStream: SeekableInputStream) =
+        ServiceLoader.load(
+            FileReaderProvider::class.java,
+            FileReaderProvider::class.java.classLoader
+        ).firstOrNull { it.extension == extension }?.get(context, seekableInputStream)
 }

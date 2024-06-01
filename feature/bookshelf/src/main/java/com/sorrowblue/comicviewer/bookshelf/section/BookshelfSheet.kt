@@ -57,6 +57,7 @@ fun BookshelfInfoSheet(
     onRemoveClick: () -> Unit,
     onEditClick: () -> Unit,
     onScanClick: () -> Unit,
+    onReThumbnailsClick: () -> Unit,
     onCloseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -106,7 +107,7 @@ fun BookshelfInfoSheet(
                 leadingIcon = { Icon(imageVector = ComicIcons.Refresh, contentDescription = null) }
             )
             AssistChip(
-                onClick = onScanClick,
+                onClick = onReThumbnailsClick,
                 label = { Text(text = stringResource(id = R.string.bookshelf_action_scan) + "サムネイル") },
                 leadingIcon = { Icon(imageVector = ComicIcons.Refresh, contentDescription = null) }
             )
@@ -192,7 +193,8 @@ private fun PreviewBookshelfInfoSheet() {
             onCloseClick = {},
             onEditClick = {},
             onRemoveClick = {},
-            onScanClick = {}
+            onScanClick = {},
+            onReThumbnailsClick = {}
         )
     }
 }

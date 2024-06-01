@@ -1,6 +1,7 @@
-package com.sorrowblue.comicviewer.data.coil
+package com.sorrowblue.comicviewer.data.coil.impl
 
 import coil3.disk.DiskCache
+import com.sorrowblue.comicviewer.data.coil.di.ThumbnailDiskCache
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import javax.inject.Inject
 

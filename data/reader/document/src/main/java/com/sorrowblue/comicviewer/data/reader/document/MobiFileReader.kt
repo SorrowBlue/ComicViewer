@@ -8,14 +8,14 @@ import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 
 @Suppress("unused")
 @Keep
-internal class PdfFileReader(context: Context, seekableInputStream: SeekableInputStream) :
-    DocumentFileReader(context, "pdf", seekableInputStream) {
+internal class MobiFileReader(context: Context, seekableInputStream: SeekableInputStream) :
+    DocumentFileReader(context, "mobi", seekableInputStream) {
 
     @AutoService(FileReaderProvider::class)
     class Provider : FileReaderProvider {
         override fun get(context: Context, seekableInputStream: SeekableInputStream) =
-            PdfFileReader(context, seekableInputStream)
+            MobiFileReader(context, seekableInputStream)
 
-        override val extension = "pdf"
+        override val extension = "mobi"
     }
 }

@@ -9,7 +9,7 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="com.sorrowblue.comicviewer.data.coil.CoilInitializer"
+                android:name="com.sorrowblue.comicviewer.data.coil.startup.CoilInitializer"
                 android:value="androidx.startup" />
         </provider>
     </application>

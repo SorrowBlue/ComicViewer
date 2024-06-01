@@ -10,9 +10,11 @@ import com.artifex.mupdf.fitz.Document
 import com.artifex.mupdf.fitz.android.AndroidDrawDevice
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.reader.FileReader
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
 import kotlin.math.min
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import okio.Sink
+import okio.buffer
 
 private val COMPRESS_FORMAT = Bitmap.CompressFormat.WEBP_LOSSY
 
@@ -39,6 +41,7 @@ open class DocumentFileReader(
 
     private val document =
         Document.openDocument(SeekableInputStreamImpl(seekableInputStream), mimeType)
+    private val mutex = Mutex()
 
     override suspend fun pageCount(): Int {
         return document.countPages()
@@ -52,11 +55,13 @@ open class DocumentFileReader(
         return 0
     }
 
-    override suspend fun pageInputStream(pageIndex: Int): InputStream {
-        return ByteArrayOutputStream().also {
-            AndroidDrawDevice.drawPageFitWidth(document.loadPage(pageIndex), width)
-                .compress(COMPRESS_FORMAT, 50, it)
-        }.toByteArray().inputStream()
+    override suspend fun copyTo(pageIndex: Int, sink: Sink) {
+        mutex.withLock {
+            sink.buffer().outputStream().use {
+                AndroidDrawDevice.drawPageFitWidth(document.loadPage(pageIndex), width)
+                    .compress(COMPRESS_FORMAT, 75, it)
+            }
+        }
     }
 
     override fun close() {

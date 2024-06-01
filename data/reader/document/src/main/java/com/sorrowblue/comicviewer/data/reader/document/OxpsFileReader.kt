@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.data.reader.document
 import android.content.Context
 import androidx.annotation.Keep
 import com.google.auto.service.AutoService
-import com.sorrowblue.comicviewer.data.storage.client.FileReader_Provider
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderProvider
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 
 @Suppress("unused")
@@ -11,10 +11,10 @@ import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 internal class OxpsFileReader(
     context: Context,
     seekableInputStream: SeekableInputStream,
-) : DocumentFileReader(context, "application/oxps", seekableInputStream) {
+) : DocumentFileReader(context, "oxps", seekableInputStream) {
 
-    @AutoService(FileReader_Provider::class)
-    class Provider : FileReader_Provider {
+    @AutoService(FileReaderProvider::class)
+    class Provider : FileReaderProvider {
         override fun get(context: Context, seekableInputStream: SeekableInputStream) =
             OxpsFileReader(context, seekableInputStream)
 

@@ -2,21 +2,20 @@ package com.sorrowblue.comicviewer.data.reader.zip
 
 import android.icu.text.Collator
 import android.icu.text.RuleBasedCollator
-import com.sorrowblue.comicviewer.data.storage.client.FileReader_Factory
-import com.sorrowblue.comicviewer.domain.reader.FileReader
-import com.sorrowblue.comicviewer.data.storage.client.ImageExtension
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
+import com.sorrowblue.comicviewer.domain.reader.FileReader
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
 import java.util.Locale
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
+import okio.Sink
+import okio.buffer
 
 internal class ZipFileReader @AssistedInject constructor(
     @Assisted private val seekableInputStream: SeekableInputStream,
@@ -24,7 +23,7 @@ internal class ZipFileReader @AssistedInject constructor(
 ) : FileReader {
 
     @AssistedFactory
-    interface Factory : FileReader_Factory {
+    interface Factory : FileReaderFactory {
 
         override fun create(seekableInputStream: SeekableInputStream): ZipFileReader
     }
@@ -47,14 +46,14 @@ internal class ZipFileReader @AssistedInject constructor(
 
     override suspend fun fileName(pageIndex: Int): String = entries[pageIndex].path.orEmpty()
 
-    override suspend fun pageInputStream(pageIndex: Int): InputStream {
-        return mutex.withLock {
-            val outputStream = ByteArrayOutputStream()
-            entries[pageIndex].extractSlow2 {
-                outputStream.write(it)
-                it.size
+    override suspend fun copyTo(pageIndex: Int, sink: Sink) {
+        mutex.withLock {
+            sink.buffer().use { buffer ->
+                entries[pageIndex].extractSlow2 {
+                    buffer.write(it)
+                    it.size
+                }
             }
-            ByteArrayInputStream(outputStream.use(ByteArrayOutputStream::toByteArray))
         }
     }
 

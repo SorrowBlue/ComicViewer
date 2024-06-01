@@ -86,7 +86,7 @@ internal fun ComicViewerApp(
             }
             ComicViewerApp(
                 uiState = state.uiState,
-                onTabSelected = { tab -> state.onTabSelected(navController, tab) },
+                onTabSelect = { tab -> state.onTabSelected(navController, tab) },
             ) {
                 DestinationsNavHost(
                     navGraph = NavGraphs.main,
@@ -106,7 +106,7 @@ internal fun ComicViewerApp(
             LockScreen(
                 uiState = state.uiState,
                 onBack = { ActivityCompat.finishAffinity(activity) },
-                onCompleted = state::onAuthCompleted,
+                onComplete = state::onAuthCompleted,
             )
         }
     }
@@ -128,7 +128,7 @@ internal fun ComicViewerApp(
 @Composable
 private fun ComicViewerApp(
     uiState: MainScreenUiState,
-    onTabSelected: (MainScreenTab) -> Unit,
+    onTabSelect: (MainScreenTab) -> Unit,
     content: @Composable () -> Unit,
 ) {
     val navSuiteType: NavigationSuiteType = if (uiState.currentTab != null) {
@@ -148,7 +148,7 @@ private fun ComicViewerApp(
             uiState.tabs.forEach {
                 item(
                     selected = it == uiState.currentTab,
-                    onClick = { onTabSelected(it) },
+                    onClick = { onTabSelect(it) },
                     icon = {
                         Icon(
                             imageVector = it.icon,

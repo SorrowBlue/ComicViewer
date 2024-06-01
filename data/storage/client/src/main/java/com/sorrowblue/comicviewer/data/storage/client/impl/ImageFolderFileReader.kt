@@ -1,10 +1,12 @@
-package com.sorrowblue.comicviewer.data.storage.client
+package com.sorrowblue.comicviewer.data.storage.client.impl
 
+import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.reader.FileReader
-import java.io.InputStream
+import okio.Sink
+import okio.buffer
 
 internal class ImageFolderFileReader(
     private val fileClient: FileClient,
@@ -19,8 +21,10 @@ internal class ImageFolderFileReader(
             .sortedWith(compareBy<File> { it.name.length }.thenBy { it.name }).also { list = it }
     }
 
-    override suspend fun pageInputStream(pageIndex: Int): InputStream {
-        return fileClient.inputStream(list()[pageIndex])
+    override suspend fun copyTo(pageIndex: Int, sink: Sink) {
+        sink.buffer().outputStream().use {
+            fileClient.inputStream(list()[pageIndex]).copyTo(it)
+        }
     }
 
     override suspend fun fileName(pageIndex: Int): String {

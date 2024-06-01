@@ -4,9 +4,9 @@ import android.content.Context
 import android.os.ParcelFileDescriptor
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
-import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
+import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.extension
@@ -15,7 +15,6 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -25,7 +24,6 @@ import java.io.InputStream
 internal class DeviceFileClient @AssistedInject constructor(
     @Assisted override val bookshelf: InternalStorage,
     @ApplicationContext private val context: Context,
-    override val fileReaderFactory: FileReaderFactory,
 ) : FileClient {
 
     @AssistedFactory

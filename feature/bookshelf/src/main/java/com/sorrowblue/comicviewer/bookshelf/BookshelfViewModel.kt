@@ -29,7 +29,7 @@ internal class BookshelfViewModel @Inject constructor(
     val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
 ) : ViewModel() {
 
-    fun scan(bookshelfId: BookshelfId, context: Context) {
+    fun scan(bookshelfId: BookshelfId, withThumbnails: Boolean, context: Context) {
         val constraints = Constraints.Builder().apply {
             // 有効なネットワーク接続が必要
             setRequiredNetworkType(NetworkType.CONNECTED)
@@ -41,10 +41,9 @@ internal class BookshelfViewModel @Inject constructor(
             .setConstraints(constraints)
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .addTag("observable")
-            .setInputData(FileScanRequest(bookshelfId).toWorkData())
+            .setInputData(FileScanRequest(bookshelfId, withThumbnails).toWorkData())
             .build()
         WorkManager.getInstance(context)
-//            .beginUniqueWork("scan", ExistingWorkPolicy.APPEND, myWorkRequest)
             .enqueue(myWorkRequest)
     }
 

@@ -57,28 +57,28 @@ internal fun SearchConditions(
     ) {
         DropdownMenuChip(
             text = uiState.range.name,
-            onChangeSelected = onChangeSearchCondition,
+            onChangeSelect = onChangeSearchCondition,
             menus = remember { SearchConditionsUiState.Range.entries.toPersistentList() },
             menu = SearchConditionsUiState.Range::name,
             scrollBehavior = scrollBehavior
         )
         DropdownMenuChip(
             text = uiState.period.name,
-            onChangeSelected = onChangeSearchCondition,
+            onChangeSelect = onChangeSearchCondition,
             menus = remember { SearchConditionsUiState.Period.entries.toPersistentList() },
             menu = SearchConditionsUiState.Period::name,
             scrollBehavior = scrollBehavior
         )
         DropdownMenuChip(
             text = uiState.order.name,
-            onChangeSelected = onChangeSearchCondition,
+            onChangeSelect = onChangeSearchCondition,
             menus = remember { SearchConditionsUiState.Order.entries.toPersistentList() },
             menu = SearchConditionsUiState.Order::name,
             scrollBehavior = scrollBehavior
         )
         DropdownMenuChip(
             text = uiState.sort.name,
-            onChangeSelected = onChangeSearchCondition,
+            onChangeSelect = onChangeSearchCondition,
             menus = remember { SearchConditionsUiState.Sort.entries.toPersistentList() },
             menu = SearchConditionsUiState.Sort::name,
             scrollBehavior = scrollBehavior

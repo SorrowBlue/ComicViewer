@@ -29,12 +29,12 @@ internal fun BookSheet(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onNextBookClick: (Book) -> Unit,
-    onPageLoaded: (UnratedPage, Bitmap) -> Unit,
+    onPageLoad: (UnratedPage, Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     HorizontalPager(
         state = pagerState,
-        beyondViewportPageCount = 2,
+        beyondViewportPageCount = 3,
         pageSize = object : PageSize {
             override fun Density.calculateMainAxisPageSize(
                 availableSpace: Int,
@@ -65,7 +65,7 @@ internal fun BookSheet(
                 book = uiState.book,
                 page = item,
                 pageScale = uiState.pageScale,
-                onPageLoaded = onPageLoaded,
+                onPageLoad = onPageLoad,
             )
         }
     }
