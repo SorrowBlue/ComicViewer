@@ -6,17 +6,19 @@ import android.graphics.Canvas
 import android.graphics.Color
 import androidx.core.graphics.scale
 import coil3.ImageLoader
-import coil3.annotation.ExperimentalCoilApi
 import coil3.decode.DataSource
 import coil3.disk.DiskCache
 import coil3.fetch.FetchResult
 import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
-import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
+import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
+import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
-import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
-import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
+import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher.Companion.COMPRESS_FORMAT
+import com.sorrowblue.comicviewer.data.coil.closeQuietly
+import com.sorrowblue.comicviewer.data.coil.di.ThumbnailDiskCache
+import com.sorrowblue.comicviewer.data.coil.from
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
@@ -26,8 +28,7 @@ import kotlin.math.floor
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import logcat.asLog
-import logcat.logcat
+import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
 
 internal class FolderThumbnailFetcher(
@@ -36,99 +37,54 @@ internal class FolderThumbnailFetcher(
     diskCache: dagger.Lazy<DiskCache?>,
     private val fileModelLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
-) : FileModelFetcher(options, diskCache) {
+) : FileFetcher<FolderThumbnailMetadata>(options, diskCache) {
 
-    override suspend fun fetch(): FetchResult {
+    override suspend fun fetchRemote(snapshot: DiskCache.Snapshot?): FetchResult {
         val size = (requestWidth / (requestHeight / 11).toInt()).toInt() - 6
         val folderThumbnailOrder =
             datastoreDataSource.displaySettings.first().folderThumbnailOrder
-        var snapshot = readFromDiskCache()
-        try {
-            if (snapshot != null) {
-                // キャッシュされた画像は手動で追加された可能性が高いため、常にメタデータが空の状態で返されます。
-                if (fileSystem.metadata(snapshot.metadata).size == 0L) {
-                    return SourceFetchResult(
-                        source = snapshot.toImageSource(),
-                        mimeType = null,
-                        dataSource = DataSource.DISK
-                    )
-                }
-                // サムネイル候補キャッシュを取得
-                val thumbnails = fileModelLocalDataSource.getCacheKeys(
-                    folder.bookshelfId,
-                    folder.path,
-                    size,
-                    FolderThumbnailOrder.valueOf(folderThumbnailOrder.name)
+        val thumbnails = cacheList(size, folderThumbnailOrder)
+        if (thumbnails.isEmpty()) {
+            throw CoilRuntimeException("フォルダにファイルなし。")
+        } else {
+            // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
+            return writeToDiskCache(snapshot = snapshot, list = thumbnails)?.use { snapshot1 ->
+                SourceFetchResult(
+                    source = snapshot1.toImageSource(),
+                    mimeType = null,
+                    dataSource = DataSource.DISK
                 )
-                // 候補が適格である場合、キャッシュから候補を返します。
-                if (snapshot.toFolderThumbnailMetadata() == FolderThumbnailMetadata(
-                        folder.path, folder.bookshelfId.value, folder.lastModifier, thumbnails
-                    )
-                ) {
-                    return SourceFetchResult(
-                        source = snapshot.toImageSource(),
-                        mimeType = null,
-                        dataSource = DataSource.DISK
-                    )
-                }
+            } ?: run {
+                throw CoilRuntimeException("フォルダのサムネイル生成失敗。")
             }
-            try {
-                val thumbnails = cacheList(size, folderThumbnailOrder)
-                if (thumbnails.isEmpty()) {
-                    throw CoilRuntimeException("フォルダにファイルなし。")
-                    // キャッシュがない場合、取得する。
-//                    val bookshelfModel =
-//                        bookshelfLocalDataSource.flow(folder.bookshelfId).first()!!
-//                    val supportExtensions =
-//                        datastoreDataSource.folderSettings.first().supportExtension.map(
-//                            SupportExtension::extension
-//                        )
-//                    snapshot = remoteDataSourceFactory.create(bookshelfModel)
-//                        .listFiles(folder, false) { SortUtil.filter(it, supportExtensions) }.let {
-//                            SortUtil.sortedIndex(it)
-//                        }.firstOrNull { it is BookFile }?.let {
-//                            val fileReader =
-//                                remoteDataSourceFactory.create(bookshelfModel)
-//                                    .fileReader(it as BookFile)
-//                                    ?: throw CoilRuntimeException("FileReaderが取得できない")
-//                            val bitmap = fileReader.thumbnailBitmap(
-//                                requestWidth.toInt(), requestHeight.toInt()
-//                            ) ?: throw CoilRuntimeException("画像を取得できない")
-//                            writeToDiskCache(
-//                                snapshot = snapshot, fileReader = fileReader, bitmap = bitmap
-//                            )
-//                        } ?: throw CoilRuntimeException("フォルダにファイルなし。")
-//                    return SourceResult(
-//                        source = snapshot.toImageSource(),
-//                        mimeType = null,
-//                        dataSource = DataSource.DISK
-//                    )
-                } else {
-                    // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
-                    snapshot = writeToDiskCache(snapshot = snapshot, list = thumbnails)
-                    return if (snapshot != null) {
-                        SourceFetchResult(
-                            source = snapshot.toImageSource(),
-                            mimeType = null,
-                            dataSource = DataSource.DISK
-                        )
-                    } else {
-                        SourceFetchResult(
-                            source = readFromDiskCache()!!.toImageSource(),
-                            mimeType = null,
-                            dataSource = DataSource.DISK
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                logcat { e.asLog() }
-                throw e
-            }
-        } catch (e: Exception) {
-            snapshot?.closeQuietly()
-            throw e
         }
     }
+
+    override val diskCacheKey
+        get() = options.diskCacheKey
+            ?: "${folder.path}:${folder.bookshelfId.value}:${folder.lastModifier}".encodeUtf8()
+                .sha256().hex()
+
+    override suspend fun metadata(): FolderThumbnailMetadata {
+        val size = (requestWidth / (requestHeight / 11).toInt()).toInt() - 6
+        val folderThumbnailOrder =
+            datastoreDataSource.displaySettings.first().folderThumbnailOrder
+        val thumbnails = fileModelLocalDataSource.getCacheKeys(
+            folder.bookshelfId,
+            folder.path,
+            size,
+            FolderThumbnailOrder.valueOf(folderThumbnailOrder.name)
+        )
+        return FolderThumbnailMetadata(
+            folder.path,
+            folder.bookshelfId.value,
+            folder.lastModifier,
+            thumbnails
+        )
+    }
+
+    override fun BufferedSource.metadata() =
+        FolderThumbnailMetadata.from<FolderThumbnailMetadata>(this)
 
     private suspend fun cacheList(
         size: Int,
@@ -161,7 +117,7 @@ internal class FolderThumbnailFetcher(
         list: List<Pair<String, DiskCache.Snapshot>>,
     ): DiskCache.Snapshot? {
         // この応答をキャッシュすることが許可されていない場合は短絡します。
-        if (!isCacheable()) {
+        if (!isCacheable) {
             snapshot?.closeQuietly()
             return null
         }
@@ -229,33 +185,13 @@ internal class FolderThumbnailFetcher(
         scale.recycle()
     }
 
-    override val diskCacheKey
-        get() = options.diskCacheKey
-            ?: "${folder.path}:${folder.bookshelfId.value}:${folder.lastModifier}".encodeUtf8()
-                .sha256().hex()
-
-    private fun DiskCache.Snapshot.toFolderThumbnailMetadata(): FolderThumbnailMetadata? {
-        return try {
-            fileSystem.read(metadata) {
-                FolderThumbnailMetadata.from(this)
-            }
-        } catch (_: Exception) {
-            // メタデータを解析できない場合は、このエントリを無視してください。
-            null
-        }
-    }
-
     class Factory @Inject constructor(
         @ThumbnailDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
         private val fileModelLocalDataSource: FileLocalDataSource,
         private val datastoreDataSource: DatastoreDataSource,
     ) : Fetcher.Factory<Folder> {
 
-        override fun create(
-            data: Folder,
-            options: Options,
-            imageLoader: ImageLoader,
-        ): Fetcher {
+        override fun create(data: Folder, options: Options, imageLoader: ImageLoader): Fetcher {
             return FolderThumbnailFetcher(
                 data,
                 options,
@@ -264,11 +200,5 @@ internal class FolderThumbnailFetcher(
                 datastoreDataSource
             )
         }
-    }
-}
-
-fun AutoCloseable.closeQuietly() {
-    kotlin.runCatching {
-        close()
     }
 }

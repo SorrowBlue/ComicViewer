@@ -12,7 +12,7 @@ internal class SevenZipInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
         SevenZip.initSevenZipFromPlatformJAR()
-        logcat(LogPriority.INFO) { "Initialized SevenZip. Version is ${SevenZip.getSevenZipJBindingVersion()}." }
+        logcat(LogPriority.INFO) { "Initialized SevenZip. ${SevenZip.getSevenZipJBindingVersion()}." }
     }
 
     override fun dependencies() = listOf(LogcatInitializer::class.java)

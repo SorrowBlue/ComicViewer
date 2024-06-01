@@ -4,10 +4,16 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
@@ -16,12 +22,14 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import coil3.annotation.ExperimentalCoilApi
-import coil3.asCoilImage
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.request.ImageRequest
-import coil3.request.bitmapConfig
+import coil3.request.transformations
+import coil3.size.Size
+import coil3.transform.Transformation
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.book.trimBorders
@@ -32,7 +40,7 @@ internal fun BookPage(
     book: Book,
     page: BookPage,
     pageScale: PageScale,
-    onPageLoaded: (UnratedPage, Bitmap) -> Unit,
+    onPageLoad: (UnratedPage, Bitmap) -> Unit,
 ) {
     when (page) {
         is BookPage.Default -> DefaultBookPage(book = book, bookPage = page, pageScale = pageScale)
@@ -40,14 +48,14 @@ internal fun BookPage(
             book = book,
             bookPage = page,
             pageScale = pageScale,
-            onPageLoaded = onPageLoaded
+            onPageLoad = onPageLoad
         )
 
         is BookPage.Split -> SplitBookPage(
             book = book,
             bookPage = page,
             pageScale = pageScale,
-            onPageLoaded = onPageLoaded
+            onPageLoad = onPageLoad
         )
     }
 }
@@ -62,34 +70,34 @@ private fun DefaultBookPage(
     val context = LocalContext.current
     val request = ImageRequest.Builder(context)
         .data(BookPageRequest(book to bookPage.index))
-        .bitmapConfig(Bitmap.Config.RGB_565)
+        .transformations(object : Transformation() {
+            override val cacheKey = "${this::class.qualifiedName}"
+            override suspend fun transform(input: Bitmap, size: Size) =
+                input.toDrawable(context.resources).toBitmap().trimBorders(Color.WHITE)
+        })
         .build()
-    AsyncImage(
-        model = request,
-        contentScale = pageScale.contentScale,
-        contentDescription = null,
-        filterQuality = FilterQuality.None,
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .then(modifier),
-        transform = {
-            when (it) {
-                AsyncImagePainter.State.Empty -> it
-                is AsyncImagePainter.State.Error -> it
-                is AsyncImagePainter.State.Loading -> it
-                is AsyncImagePainter.State.Success ->
-                    @OptIn(ExperimentalCoilApi::class)
-                    it.copy(
-                        result = it.result.copy(
-                            image = it.result.image.asDrawable(context.resources).toBitmap()
-                                .trimBorders(Color.WHITE).asCoilImage(),
-                            request = it.result.request,
-                            dataSource = it.result.dataSource
-                        )
-                    )
-            }
+    ) {
+        var isLoading by remember { mutableStateOf(false) }
+        AsyncImage(
+            model = request,
+            contentDescription = null,
+            contentScale = pageScale.contentScale,
+            filterQuality = FilterQuality.None,
+            fallback = rememberVectorPainter(image = ComicIcons.BrokenImage),
+            modifier = Modifier
+                .fillMaxSize(),
+            onSuccess = { isLoading = false },
+            onError = { isLoading = false },
+            onLoading = { isLoading = true }
+        )
+        if (isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
-    )
+    }
 }
 
 @Composable
@@ -97,7 +105,7 @@ private fun SplitBookPage(
     book: Book,
     bookPage: BookPage.Split,
     pageScale: PageScale,
-    onPageLoaded: (UnratedPage, Bitmap) -> Unit,
+    onPageLoad: (UnratedPage, Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -106,7 +114,7 @@ private fun SplitBookPage(
         contentDescription = null,
         transform = when (bookPage) {
             is BookPage.Split.Unrated -> SpreadSplitTransformation.unrated(context) {
-                onPageLoaded(bookPage, it)
+                onPageLoad(bookPage, it)
             }
 
             is BookPage.Split.Single -> SpreadSplitTransformation.Single
@@ -125,7 +133,7 @@ private fun SpreadBookPage(
     book: Book,
     bookPage: BookPage.Spread,
     pageScale: PageScale,
-    onPageLoaded: (UnratedPage, Bitmap) -> Unit,
+    onPageLoad: (UnratedPage, Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -167,7 +175,7 @@ private fun SpreadBookPage(
                 is BookPage.Spread.Single -> SpreadCombineTransformation.Single
                 is BookPage.Spread.Spread2 -> SpreadCombineTransformation.Spread2
                 is BookPage.Spread.Unrated -> SpreadCombineTransformation.unrated(context) {
-                    onPageLoaded(bookPage, it)
+                    onPageLoad(bookPage, it)
                 }
 
                 else -> SpreadCombineTransformation.Spread2

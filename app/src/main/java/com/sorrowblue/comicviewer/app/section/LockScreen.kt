@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.feature.authentication.Mode
 internal fun LockScreen(
     uiState: MainScreenUiState,
     onBack: () -> Unit,
-    onCompleted: () -> Unit,
+    onComplete: () -> Unit,
 ) {
     AnimatedVisibility(
         visible = uiState.isAuthenticating,
@@ -25,7 +25,7 @@ internal fun LockScreen(
             args = AuthenticationArgs(Mode.Authentication),
             navigator = object : AuthenticationScreenNavigator {
                 override fun navigateUp() = onBack()
-                override fun onCompleted() = onCompleted()
+                override fun onCompleted() = onComplete()
             }
         )
     }

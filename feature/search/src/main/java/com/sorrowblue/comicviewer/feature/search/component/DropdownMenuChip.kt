@@ -43,7 +43,7 @@ internal fun containerColor(colorTransitionFraction: Float): Color {
 @Composable
 fun <T> DropdownMenuChip(
     text: String,
-    onChangeSelected: (T) -> Unit,
+    onChangeSelect: (T) -> Unit,
     menus: PersistentList<T>,
     menu: (T) -> String,
     scrollBehavior: TopAppBarScrollBehavior,
@@ -78,7 +78,7 @@ fun <T> DropdownMenuChip(
                 DropdownMenuItem(
                     text = { Text(text = menu(it)) },
                     onClick = {
-                        onChangeSelected(it)
+                        onChangeSelect(it)
                         expanded = false
                     }
                 )

@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import javax.inject.Inject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -36,6 +35,7 @@ internal class ScanBookshelfInteractor @Inject constructor(
                     ).nestedListFiles(bookshelf, rootFolder, request.process, resolveImageFolder, supportExtension)
                 }
             }
+            emit(Resource.Success(emptyList()))
         }
     }
 
@@ -46,14 +46,15 @@ internal class ScanBookshelfInteractor @Inject constructor(
         resolveImageFolder: Boolean,
         supportExtensions: List<String>,
     ) {
-        process(bookshelf, file)
-
         val fileModelList = SortUtil.sortedIndex(
             listFiles(file, resolveImageFolder) {
                 SortUtil.filter(it, supportExtensions)
             }
         )
         fileLocalDataSource.updateHistory(file, fileModelList)
+        fileModelList.forEach {
+            process(bookshelf, it)
+        }
         fileModelList.filterIsInstance<IFolder>()
             .forEach {
                 nestedListFiles(

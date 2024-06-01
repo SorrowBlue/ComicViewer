@@ -25,5 +25,7 @@ sealed interface SupportExtension {
         EPUB("epub"),
         XPS("xps"),
         OPEN_XPS("oxps"),
+        MOBI("mobi"),
+        FB2("fb2"),
     }
 }

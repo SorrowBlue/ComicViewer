@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.coil
+package com.sorrowblue.comicviewer.data.coil.di
 
 import android.content.Context
 import coil3.disk.DiskCache

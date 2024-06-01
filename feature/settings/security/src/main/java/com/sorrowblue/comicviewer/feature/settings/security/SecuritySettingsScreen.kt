@@ -30,7 +30,7 @@ internal fun SecuritySettingsScreen(
     SecuritySettingsScreen(
         contentPadding = contentPadding,
         onBackClick = navigator::navigateBack,
-        onChangeAuthEnabled = navigator::navigateToChangeAuth,
+        onChangeAuthEnable = navigator::navigateToChangeAuth,
         onPasswordChangeClick = navigator::navigateToPasswordChange
     )
 }
@@ -39,7 +39,7 @@ internal fun SecuritySettingsScreen(
 private fun SecuritySettingsScreen(
     onBackClick: () -> Unit,
     contentPadding: PaddingValues,
-    onChangeAuthEnabled: (Boolean) -> Unit,
+    onChangeAuthEnable: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
     state: SecuritySettingsScreenState = rememberSecuritySettingsScreenState(),
 ) {
@@ -48,10 +48,10 @@ private fun SecuritySettingsScreen(
     SecuritySettingsScreen(
         uiState = uiState,
         onBackClick = onBackClick,
-        onChangeAuthEnabled = onChangeAuthEnabled,
+        onChangeAuthEnable = onChangeAuthEnable,
         onPasswordChangeClick = onPasswordChangeClick,
-        onChangeBiometricEnabled = state::onChangeBiometricEnabled,
-        onChangeBackgroundLockEnabled = state::onChangeBackgroundLockEnabled,
+        onChangeBiometricEnable = state::onChangeBiometricEnabled,
+        onChangeBackgroundLockEnable = state::onChangeBackgroundLockEnabled,
         contentPadding = contentPadding
     )
 
@@ -81,10 +81,10 @@ internal data class SecuritySettingsScreenUiState(
 private fun SecuritySettingsScreen(
     uiState: SecuritySettingsScreenUiState,
     onBackClick: () -> Unit,
-    onChangeAuthEnabled: (Boolean) -> Unit,
+    onChangeAuthEnable: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
-    onChangeBiometricEnabled: (Boolean) -> Unit,
-    onChangeBackgroundLockEnabled: (Boolean) -> Unit,
+    onChangeBiometricEnable: (Boolean) -> Unit,
+    onChangeBackgroundLockEnable: (Boolean) -> Unit,
     contentPadding: PaddingValues,
 ) {
     SettingsDetailPane(
@@ -95,7 +95,7 @@ private fun SecuritySettingsScreen(
         SwitchSetting(
             title = R.string.settings_security_title_password_lock,
             checked = uiState.isAuthEnabled,
-            onCheckedChange = onChangeAuthEnabled,
+            onCheckedChange = onChangeAuthEnable,
             summary = R.string.settings_security_summary_password_lock,
         )
         Setting(
@@ -106,14 +106,14 @@ private fun SecuritySettingsScreen(
         SwitchSetting(
             title = R.string.settings_security_title_use_biometric_auth,
             checked = uiState.isBiometricEnabled,
-            onCheckedChange = onChangeBiometricEnabled,
+            onCheckedChange = onChangeBiometricEnable,
             summary = R.string.settings_security_summary_use_biometric_auth,
             enabled = uiState.isAuthEnabled,
         )
         SwitchSetting(
             title = R.string.settings_security_label_background_lock,
             checked = uiState.isBackgroundLockEnabled,
-            onCheckedChange = onChangeBackgroundLockEnabled,
+            onCheckedChange = onChangeBackgroundLockEnable,
             enabled = uiState.isAuthEnabled,
         )
     }

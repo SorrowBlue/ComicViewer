@@ -47,7 +47,7 @@ internal fun DropBoxLoginScreen(
     DropBoxLoginScreen(
         savedStateHandle = navBackStackEntry.savedStateHandle,
         onCloseClick = navigator::navigateUp,
-        onLoginCompleted = navigator::onLoginCompleted,
+        onLoginComplete = navigator::onLoginCompleted,
     )
 }
 
@@ -55,14 +55,14 @@ internal fun DropBoxLoginScreen(
 private fun DropBoxLoginScreen(
     savedStateHandle: SavedStateHandle,
     onCloseClick: () -> Unit,
-    onLoginCompleted: () -> Unit,
+    onLoginComplete: () -> Unit,
     state: DropBoxLoginScreenState = rememberDropBoxLoginScreenState(savedStateHandle = savedStateHandle),
 ) {
     state.events.forEach { event ->
         when (event) {
             is DropBoxLoginScreenEvent.Authenticated -> {
                 state.consumeEvent(event)
-                onLoginCompleted()
+                onLoginComplete()
             }
         }
     }

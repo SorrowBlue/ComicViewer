@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.reader.zip.di
 
 import com.sorrowblue.comicviewer.data.reader.zip.ZipFileReader
-import com.sorrowblue.comicviewer.data.storage.client.FileReader_Factory
-import com.sorrowblue.comicviewer.data.storage.client.ZipFileReaderFactory
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReaderFactory
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ internal interface SingletonBindsModule {
 
     @ZipFileReaderFactory
     @Binds
-    fun bindFileReaderFactory(factory: ZipFileReader.Factory): FileReader_Factory
+    fun bindFileReaderFactory(factory: ZipFileReader.Factory): FileReaderFactory
 }

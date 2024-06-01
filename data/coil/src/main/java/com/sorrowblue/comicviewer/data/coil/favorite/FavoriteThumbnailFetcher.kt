@@ -12,88 +12,62 @@ import coil3.fetch.FetchResult
 import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
-import com.sorrowblue.comicviewer.data.coil.ThumbnailDiskCache
+import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
+import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.abortQuietly
-import com.sorrowblue.comicviewer.data.coil.book.CoilRuntimeException
-import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher
-import com.sorrowblue.comicviewer.data.coil.folder.closeQuietly
+import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher.Companion.COMPRESS_FORMAT
+import com.sorrowblue.comicviewer.data.coil.closeQuietly
+import com.sorrowblue.comicviewer.data.coil.di.ThumbnailDiskCache
+import com.sorrowblue.comicviewer.data.coil.from
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
-import java.io.IOException
+import dagger.Lazy
 import javax.inject.Inject
 import kotlin.math.floor
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
-import logcat.asLog
-import logcat.logcat
+import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
 
 internal class FavoriteThumbnailFetcher(
-    private val data: Favorite,
     options: Options,
-    diskCache: dagger.Lazy<DiskCache?>,
+    diskCache: Lazy<DiskCache?>,
+    private val data: Favorite,
     private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
     private val fileModelLocalDataSource: FileLocalDataSource,
-) : FileModelFetcher(options, diskCache) {
+) : FileFetcher<FavoriteThumbnailMetadata>(options, diskCache) {
 
-    override suspend fun fetch(): FetchResult {
+    override suspend fun fetchRemote(snapshot: DiskCache.Snapshot?): FetchResult {
         val size = (requestWidth / (requestHeight / 11).toInt()).toInt() - 6
-        var snapshot = readFromDiskCache()
-        try {
-            if (snapshot != null) {
-                // キャッシュされた画像は手動で追加された可能性が高いため、常にメタデータが空の状態で返されます。
-                if (fileSystem.metadata(snapshot.metadata).size == 0L) {
-                    return SourceFetchResult(
-                        source = snapshot.toImageSource(),
-                        mimeType = null,
-                        dataSource = DataSource.DISK
-                    )
-                }
-                // サムネイル候補キャッシュを取得
-                val thumbnails = favoriteFileLocalDataSource.getCacheKeyList(data.id, size)
-                // 候補が適格である場合、キャッシュから候補を返します。
-                if (snapshot.toFavoriteThumbnailMetadata() == FavoriteThumbnailMetadata(
-                        data.id.value, thumbnails
-                    )
-                ) {
-                    return SourceFetchResult(
-                        source = snapshot.toImageSource(),
-                        mimeType = null,
-                        dataSource = DataSource.DISK
-                    )
-                }
+        val thumbnails = cacheList(size)
+        if (thumbnails.isEmpty()) {
+            // キャッシュがない場合、取得しない。
+            throw CoilRuntimeException("ファイルのサムネイルがないので、サムネイルを生成しない。")
+        } else {
+            // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
+            return writeToDiskCache(snapshot = snapshot, list = thumbnails)?.use {
+                SourceFetchResult(
+                    source = it.toImageSource(),
+                    mimeType = null,
+                    dataSource = DataSource.DISK
+                )
+            } ?: run {
+                throw CoilRuntimeException("フォルダのサムネイル生成失敗。")
             }
-            try {
-                val thumbnails = cacheList(size)
-                if (thumbnails.isEmpty()) {
-                    // キャッシュがない場合、取得しない。
-                    throw CoilRuntimeException("ファイルのサムネイルがないので、サムネイルを生成しない。")
-                } else {
-                    // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
-                    snapshot = writeToDiskCache(snapshot = snapshot, list = thumbnails)
-                    return if (snapshot != null) {
-                        SourceFetchResult(
-                            source = snapshot.toImageSource(),
-                            mimeType = null,
-                            dataSource = DataSource.DISK
-                        )
-                    } else {
-                        SourceFetchResult(
-                            source = readFromDiskCache()!!.toImageSource(),
-                            mimeType = null,
-                            dataSource = DataSource.DISK
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                logcat { e.asLog() }
-                throw e
-            }
-        } catch (e: Exception) {
-            snapshot?.closeQuietly()
-            throw e
         }
+    }
+
+    override val diskCacheKey
+        get() = options.diskCacheKey ?: "${data.id.value}".encodeUtf8().sha256().hex()
+
+    override fun BufferedSource.metadata() =
+        FavoriteThumbnailMetadata.from<FavoriteThumbnailMetadata>(this)
+
+    override suspend fun metadata(): FavoriteThumbnailMetadata {
+        val size = (requestWidth / (requestHeight / 11).toInt()).toInt() - 6
+        val thumbnails = favoriteFileLocalDataSource.getCacheKeyList(data.id, size)
+        return FavoriteThumbnailMetadata(data.id.value, thumbnails)
     }
 
     private suspend fun cacheList(size: Int): List<Pair<String, DiskCache.Snapshot>> {
@@ -119,7 +93,7 @@ internal class FavoriteThumbnailFetcher(
         list: List<Pair<String, DiskCache.Snapshot>>,
     ): DiskCache.Snapshot? {
         // この応答をキャッシュすることが許可されていない場合は短絡します。
-        if (!isCacheable()) {
+        if (!isCacheable) {
             snapshot?.closeQuietly()
             return null
         }
@@ -182,31 +156,17 @@ internal class FavoriteThumbnailFetcher(
         scale.recycle()
     }
 
-    override val diskCacheKey
-        get() = options.diskCacheKey ?: "${data.id.value}".encodeUtf8().sha256().hex()
-
-    private fun DiskCache.Snapshot.toFavoriteThumbnailMetadata(): FavoriteThumbnailMetadata? {
-        return try {
-            fileSystem.read(metadata) {
-                use(FavoriteThumbnailMetadata::from)
-            }
-        } catch (_: IOException) {
-            // If we can't parse the metadata, ignore this entry.
-            null
-        }
-    }
-
     class Factory @Inject constructor(
-        @ThumbnailDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
+        @ThumbnailDiskCache private val diskCache: Lazy<DiskCache?>,
         private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
         private val fileModelLocalDataSource: FileLocalDataSource,
     ) : Fetcher.Factory<Favorite> {
 
         override fun create(data: Favorite, options: Options, imageLoader: ImageLoader) =
             FavoriteThumbnailFetcher(
-                data,
                 options,
                 diskCache,
+                data,
                 favoriteFileLocalDataSource,
                 fileModelLocalDataSource
             )

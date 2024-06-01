@@ -55,7 +55,7 @@ fun CustomSlider(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
-    onValueChangeFinished: (() -> Unit)? = null,
+    onValueChangeFinish: (() -> Unit)? = null,
     colors: SliderColors = CustomSliderDefaults.colors(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     showIndicator: Boolean = false,
@@ -117,7 +117,7 @@ fun CustomSlider(
                         .layoutId(CustomSliderComponents.SLIDER),
                     enabled = enabled,
                     valueRange = valueRange,
-                    onValueChangeFinished = onValueChangeFinished,
+                    onValueChangeFinished = onValueChangeFinish,
                     colors = colors.toOriginal(),
                     steps = steps,
                     thumb = {

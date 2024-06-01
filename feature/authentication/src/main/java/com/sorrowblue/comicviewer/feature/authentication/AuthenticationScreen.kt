@@ -74,7 +74,7 @@ fun AuthenticationScreen(
     AuthenticationScreen(
         args = args,
         onBackClick = navigator::navigateUp,
-        onCompleted = navigator::onCompleted
+        onComplete = navigator::onCompleted
     )
 }
 
@@ -86,11 +86,11 @@ internal data class AuthenticationEvent(
 private fun AuthenticationScreen(
     args: AuthenticationArgs,
     onBackClick: () -> Unit,
-    onCompleted: () -> Unit,
+    onComplete: () -> Unit,
     state: AuthenticationScreenState = rememberAuthenticationScreenState(args = args),
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val currentOnCompleted by rememberUpdatedState(onCompleted)
+    val currentOnCompleted by rememberUpdatedState(onComplete)
     LaunchedEffect(state, lifecycle) {
         snapshotFlow { state.event }
             .filter { it.completed }

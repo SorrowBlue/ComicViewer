@@ -43,6 +43,7 @@ internal interface BookshelfScreenState : SaveableScreenState {
     fun onRemoveClick()
     fun onInfoSheetCloseClick()
     fun onInfoSheetScanClick()
+    fun onReThumbnailsClick()
     fun onDismissRequest()
     fun onConfirmClick()
     fun onNavClick()
@@ -127,7 +128,14 @@ private class BookshelfScreenStateImpl(
     override fun onInfoSheetScanClick() {
         val bookshelfFolder = navigator.currentDestination?.content
         scope.launch {
-            viewModel.scan(bookshelfFolder!!.bookshelf.id, context)
+            viewModel.scan(bookshelfFolder!!.bookshelf.id, false, context)
+        }
+    }
+
+    override fun onReThumbnailsClick() {
+        val bookshelfFolder = navigator.currentDestination?.content
+        scope.launch {
+            viewModel.scan(bookshelfFolder!!.bookshelf.id, true, context)
         }
     }
 

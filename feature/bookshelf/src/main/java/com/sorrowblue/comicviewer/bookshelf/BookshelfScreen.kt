@@ -87,6 +87,7 @@ private fun BookshelfScreen(
         onInfoSheetEditClick = { onEditClick(state.bookshelfId) },
         onInfoSheetCloseClick = state::onInfoSheetCloseClick,
         onInfoSheetScanClick = state::onInfoSheetScanClick,
+        onReThumbnailsClick = state::onReThumbnailsClick,
     )
     val removeDialogController = state.removeDialogController
     if (removeDialogController.isShow) {
@@ -115,6 +116,7 @@ private fun BookshelfScreen(
     onInfoSheetRemoveClick: () -> Unit,
     onInfoSheetEditClick: () -> Unit,
     onInfoSheetScanClick: () -> Unit,
+    onReThumbnailsClick: () -> Unit,
     onInfoSheetCloseClick: () -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
@@ -137,6 +139,7 @@ private fun BookshelfScreen(
                     onRemoveClick = onInfoSheetRemoveClick,
                     onEditClick = onInfoSheetEditClick,
                     onScanClick = onInfoSheetScanClick,
+                    onReThumbnailsClick = onReThumbnailsClick,
                     onCloseClick = onInfoSheetCloseClick
                 )
             }
@@ -193,6 +196,7 @@ private fun PreviewBookshelfScreen() {
             onInfoSheetRemoveClick = {},
             onInfoSheetEditClick = {},
             onInfoSheetScanClick = {},
+            onReThumbnailsClick = {},
             onInfoSheetCloseClick = {},
         )
     }

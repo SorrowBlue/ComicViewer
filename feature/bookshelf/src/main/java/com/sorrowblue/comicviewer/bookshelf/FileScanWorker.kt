@@ -13,7 +13,10 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import coil3.SingletonImageLoader
+import coil3.request.ImageRequest
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
@@ -23,6 +26,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlin.random.Random
 import kotlinx.coroutines.flow.first
+import logcat.asLog
+import logcat.logcat
 import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 
 @HiltWorker
@@ -47,6 +52,14 @@ internal class FileScanWorker @AssistedInject constructor(
                 .first().dataOrNull() ?: return Result.failure()
         setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, "", true))
         val useCaseRequest = ScanBookshelfUseCase.Request(request.bookshelfId) { bookshelf, file ->
+            kotlin.runCatching {
+                if (request.withThumbnails && file is Book) {
+                    val imageRequest = ImageRequest.Builder(applicationContext).data(file).build()
+                    SingletonImageLoader.get(applicationContext).enqueue(imageRequest)
+                }
+            }.onFailure {
+                logcat { it.asLog() }
+            }
             setProgress(workDataOf("path" to file.path))
             setForeground(createForegroundInfo(bookshelf.displayName, file.path))
         }
