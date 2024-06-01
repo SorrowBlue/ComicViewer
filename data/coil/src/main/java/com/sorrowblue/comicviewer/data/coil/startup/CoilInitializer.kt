@@ -36,7 +36,7 @@ internal class CoilInitializer : Initializer<Unit> {
     lateinit var favoriteThumbnailFetcher: Fetcher.Factory<Favorite>
 
     override fun create(context: Context) {
-        InitializerEntryPoint.resolve<Any?>(context).inject(this)
+        InitializerEntryPoint.resolve<CoilInitializer>(context).inject(this)
         val imageLoader = ImageLoader(context).newBuilder()
             .components {
                 add(folderThumbnailFetcher)
@@ -56,6 +56,5 @@ internal class CoilInitializer : Initializer<Unit> {
         logcat(LogPriority.INFO) { "Initialized coil." }
     }
 
-    override fun dependencies() =
-        listOf(LogcatInitializer::class.java)
+    override fun dependencies() = listOf(LogcatInitializer::class.java)
 }
