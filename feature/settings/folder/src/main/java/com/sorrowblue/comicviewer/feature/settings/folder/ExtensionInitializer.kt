@@ -18,7 +18,7 @@ internal class ExtensionInitializer : Initializer<Unit> {
     lateinit var manageFolderSettingsUseCase: ManageFolderSettingsUseCase
 
     override fun create(context: Context) {
-        InitializerEntryPoint.resolve<ExtensionInitializer>(context).inject(this)
+        InitializerEntryPoint.resolve(context).inject(this)
         if (!SplitInstallManagerFactory.create(context).installedModules.contains("document")) {
             // If document is not installed
             runBlocking {

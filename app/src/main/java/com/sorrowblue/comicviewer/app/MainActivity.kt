@@ -5,11 +5,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnticipateInterpolator
-import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
@@ -20,7 +20,7 @@ import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-internal class MainActivity : ComponentActivity() {
+internal class MainActivity : AppCompatActivity() {
 
     private val viewModel: ComicViewerAppViewModel by viewModels()
 

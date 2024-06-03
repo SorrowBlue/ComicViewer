@@ -29,6 +29,7 @@ android {
         }?.toVersion() ?: "0.1.4-SNAPSHOT"
         logger.lifecycle("versionName=$versionName")
         proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     androidResources {
         generateLocaleConfig = true
@@ -110,11 +111,23 @@ android {
     lint {
         checkDependencies = true
         htmlReport = true
-        htmlOutput = file( "$rootDir/build/reports/lint/lint-result.html")
+        htmlOutput = file("$rootDir/build/reports/lint/lint-result.html")
         sarifReport = true
-        sarifOutput = file( "$rootDir/build/reports/lint/lint-result.sarif")
+        sarifOutput = file("$rootDir/build/reports/lint/lint-result.sarif")
         textReport = false
         xmlReport = false
+    }
+
+    testOptions {
+        managedDevices {
+            localDevices {
+                create("pixel8api34") {
+                    device = "Pixel 8"
+                    apiLevel = 34
+                    systemImageSource = "aosp-atd"
+                }
+            }
+        }
     }
 }
 
@@ -151,6 +164,13 @@ dependencies {
     implementation(libs.google.android.billingclient.billingKtx)
 
     debugImplementation(libs.squareup.leakcanary.android)
+
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    androidTestImplementation(libs.androidx.test.ext.truth)
+    androidTestImplementation(libs.androidx.test.ext.junitKtx)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.espresso.core)
 }
 
 /*
