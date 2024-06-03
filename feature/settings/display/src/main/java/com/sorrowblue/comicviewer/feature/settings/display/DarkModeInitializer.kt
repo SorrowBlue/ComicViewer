@@ -19,7 +19,7 @@ internal class DarkModeInitializer : Initializer<Unit> {
     lateinit var displaySettingsUseCase: ManageDisplaySettingsUseCase
 
     override fun create(context: Context) {
-        InitializerEntryPoint.resolve<DarkModeInitializer>(context).inject(this)
+        InitializerEntryPoint.resolve(context).inject(this)
         val darkMode = runBlocking { displaySettingsUseCase.settings.first() }.darkMode
         when (darkMode) {
             DarkMode.DEVICE -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
