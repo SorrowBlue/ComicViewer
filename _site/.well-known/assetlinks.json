@@ -1,0 +1,50 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sorrowblue.comicviewer",
+      "sha256_cert_fingerprints": [
+        "10:7B:FD:3E:88:AE:CC:DE:60:15:8A:D7:6F:3C:26:3D:87:C4:79:8A:34:BE:47:0B:F6:EE:DC:2F:27:08:4D:FB"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sorrowblue.comicviewer",
+      "sha256_cert_fingerprints": [
+        "D6:C1:EA:7C:E1:B8:C5:1F:11:A4:25:30:4E:C4:77:4B:D8:6F:9D:CA:0C:A9:7F:5C:31:62:4D:2C:B2:28:F4:61"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sorrowblue.comicviewer",
+      "sha256_cert_fingerprints": [
+        "82:7D:61:A4:9F:AF:21:FD:10:97:9E:10:F4:E9:08:B9:28:E8:D2:00:45:A6:54:7E:83:7B:8C:33:69:EF:27:8D"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sorrowblue.comicviewer.debug",
+      "sha256_cert_fingerprints": [
+        "F6:AE:99:A2:09:1D:DF:0A:1B:A7:1F:8A:28:0B:7A:E2:9E:7D:AE:CD:4B:B3:AA:6D:AC:0A:E2:FE:C9:5B:88:04"
+      ]
+    }
+  }
+]
