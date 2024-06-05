@@ -1,13 +1,8 @@
-keep_files:
-  - .well-known
-  - assetlinks.json
-  - .well-known/assetlinks.json
-include:
-  - .well-known
-  - assetlinks.json
-  - .well-known/assetlinks.json
-
 title: ComicViewer
 description: Manga/e-book/image viewer compatible with Material You.
 show_downloads: true
 theme: jekyll-theme-cayman
+keep_files:
+  - .well-known/assetlinks.json
+include:
+  - .well-known/assetlinks.json
