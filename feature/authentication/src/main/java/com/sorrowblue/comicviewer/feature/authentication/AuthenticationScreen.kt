@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.authentication
 
+import android.os.Parcelable
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
@@ -57,6 +58,7 @@ import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import kotlinx.coroutines.flow.filter
+import kotlinx.parcelize.Parcelize
 
 interface AuthenticationScreenNavigator {
     fun navigateUp()
@@ -125,11 +127,12 @@ internal sealed interface AuthenticationScreenUiState {
         }
     }
 
+    @Parcelize
     data class Authentication(
         override val pinCount: Int,
         override val error: Int,
         val loading: Boolean = false,
-    ) : AuthenticationScreenUiState {
+    ) : AuthenticationScreenUiState, Parcelable {
         override fun copyPinCount(count: Int) = copy(pinCount = count)
     }
 
@@ -289,7 +292,7 @@ private fun NumberPad(
         columns = GridCells.Fixed(3),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.sizeIn(maxWidth = 60.dp * 3 + 16.dp, maxHeight = 60.dp * 4 + 24.dp)
+        modifier = modifier.sizeIn(maxWidth = 60.dp * 3 + 16.dp, maxHeight = 60.dp * 4 + 32.dp)
     ) {
         items(Button.listList) {
             FilledTonalButton(

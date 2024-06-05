@@ -34,7 +34,7 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.file.fakeFolder
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.add
@@ -148,7 +148,7 @@ private fun BookshelfScreen(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
-        val dimension = LocalDimension.current
+        val dimension = ComicTheme.dimension
         val innerPadding = contentPadding.add(
             PaddingValues(
                 start = dimension.margin,

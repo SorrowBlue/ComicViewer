@@ -2,11 +2,8 @@ package com.sorrowblue.comicviewer.app.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
-import com.sorrowblue.comicviewer.app.findNavGraph
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphDependencies
-import com.sorrowblue.comicviewer.domain.model.AddOn
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -24,13 +21,10 @@ import com.sorrowblue.comicviewer.feature.search.navigation.SearchGraphDependenc
 import com.sorrowblue.comicviewer.feature.settings.navgraphs.SettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraphDependencies
 import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialGraphDependencies
 
 @Composable
 internal fun DependenciesContainerBuilder<*>.MainDependencies(
-    addOnList: SnapshotStateList<AddOn>,
     onRestoreComplete: () -> Unit,
-    onTutorialExit: () -> Unit,
 ) {
     val onSettingsClick =
         remember(destinationsNavigator) { { destinationsNavigator.navigate(SettingsNavGraph) } }
@@ -108,19 +102,9 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
         }
     )
 
-    TutorialGraphDependencies(onComplete = onTutorialExit)
-
     LibraryGraphDependencies(
         navigateToBook = { onBookClick(it, null) },
         onFavoriteClick = onFavoriteClick,
         onSettingsClick = onSettingsClick
     )
-
-    addOnList.forEach { addOn ->
-        addOn.findNavGraph()?.let { navGraph ->
-            with(navGraph) {
-                Dependency()
-            }
-        }
-    }
 }

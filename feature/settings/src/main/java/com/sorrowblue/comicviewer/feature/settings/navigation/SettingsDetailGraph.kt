@@ -6,7 +6,7 @@ import com.ramcosta.composedestinations.annotation.NavHostGraph
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.folder.navgraphs.FolderSettingsNavGraph
-import com.sorrowblue.comicviewer.feature.settings.info.destinations.AppInfoSettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.info.navgraphs.AppInfoSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.security.destinations.SecuritySettingsScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.viewer.destinations.ViewerSettingsScreenDestination
 
@@ -17,6 +17,6 @@ internal annotation class SettingsDetailGraph {
     @ExternalNavGraph<FolderSettingsNavGraph>
     @ExternalDestination<ViewerSettingsScreenDestination>
     @ExternalDestination<SecuritySettingsScreenDestination>
-    @ExternalDestination<AppInfoSettingsScreenDestination>
+    @ExternalNavGraph<AppInfoSettingsNavGraph>
     companion object Includes
 }

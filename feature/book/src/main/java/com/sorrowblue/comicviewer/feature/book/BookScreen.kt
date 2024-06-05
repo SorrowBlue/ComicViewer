@@ -153,6 +153,7 @@ private fun BookScreen(
             DisposableEffect(Unit) {
                 onDispose(state2::onScreenDispose)
             }
+            LifecycleEffect(targetEvent = Lifecycle.Event.ON_PAUSE, action = state2::onStop)
             LifecycleEffect(targetEvent = Lifecycle.Event.ON_STOP, action = state2::onStop)
         }
     }

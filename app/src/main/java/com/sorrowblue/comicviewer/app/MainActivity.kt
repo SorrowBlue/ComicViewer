@@ -13,16 +13,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import androidx.navigation.compose.rememberNavController
-import com.ramcosta.composedestinations.utils.toDestinationsNavigator
-import com.sorrowblue.comicviewer.app.navgraphs.MainNavGraph
-import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 internal class MainActivity : AppCompatActivity() {
 
-    private val viewModel: ComicViewerAppViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
@@ -30,33 +28,31 @@ internal class MainActivity : AppCompatActivity() {
                 navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
             )
             super.onCreate(savedInstanceState)
-            setKeepOnScreenCondition(viewModel::shouldKeepSplash)
-            setOnExitAnimationListener(SplashScreenViewProvider::startSlideUpAnime)
+            setOnExitAnimationListener(SplashScreenViewProvider::startShrinkingAnimation)
+            setKeepOnScreenCondition(viewModel.shouldKeepSplash::value)
         }
 
         setContent {
-            val navController = rememberNavController()
-            ComicViewerApp(
-                onTutorial = {
-                    navController.toDestinationsNavigator().navigate(TutorialNavGraph) {
-                        popUpTo(MainNavGraph) {
-                            inclusive = true
-                        }
-                    }
-                },
-                navController = navController
-            )
+            ComicTheme {
+                DestinationsNavHost(navGraph = NavGraphs.root)
+            }
         }
     }
 }
 
-private fun SplashScreenViewProvider.startSlideUpAnime() {
+private fun SplashScreenViewProvider.startShrinkingAnimation() {
     kotlin.runCatching {
-        val slideUp = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0f, -iconView.height * 2f)
-        slideUp.interpolator = AnticipateInterpolator()
-        slideUp.doOnEnd { remove() }
-        slideUp.duration =
-            if (iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis < 0) 300 else iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis
-        slideUp.start()
+        ObjectAnimator.ofFloat(view, View.SCALE_X, 1f, 0f).apply {
+            interpolator = AnticipateInterpolator()
+            doOnEnd { remove() }
+            duration =
+                if (iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis < 0) 300 else iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis
+        }.start()
+        ObjectAnimator.ofFloat(view, View.SCALE_Y, 1f, 0f).apply {
+            interpolator = AnticipateInterpolator()
+            doOnEnd { remove() }
+            duration =
+                if (iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis < 0) 300 else iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis
+        }.start()
     }.onFailure { remove() }
 }

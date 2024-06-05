@@ -1,7 +1,8 @@
-package com.sorrowblue.comicviewer.app
+package com.sorrowblue.comicviewer.app.component
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.ramcosta.composedestinations.spec.NavGraphSpec
+import com.sorrowblue.comicviewer.app.R
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraphs.BookshelfNavGraph
 import com.sorrowblue.comicviewer.feature.favorite.navgraphs.FavoriteNavGraph
 import com.sorrowblue.comicviewer.feature.library.navgraphs.LibraryNavGraph

@@ -19,6 +19,5 @@ internal interface InitializerEntryPoint {
         }
     }
 
-
     fun inject(initializer: CoilInitializer)
 }

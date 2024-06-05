@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -33,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DisplayNameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectField
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
@@ -52,6 +49,7 @@ internal data class StorageEditScreenUiState(
     val isProgress: Boolean = false,
 ) : BookshelfEditScreenUiState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun StorageEditRoute(
     state: StorageEditScreenState,
@@ -122,7 +120,7 @@ private fun StorageEditContent(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
-    val dimension = LocalDimension.current
+    val dimension = ComicTheme.dimension
     Column(
         modifier
             .fillMaxSize()

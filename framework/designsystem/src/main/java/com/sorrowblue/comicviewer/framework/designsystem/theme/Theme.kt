@@ -6,13 +6,19 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.window.core.layout.WindowWidthSizeClass
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -106,11 +112,24 @@ fun ComicTheme(
         darkTheme -> darkScheme
         else -> lightScheme
     }
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        content = content
-    )
+    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
+    val dimension by remember(windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
+        mutableStateOf(
+            when (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
+                WindowWidthSizeClass.COMPACT -> compactDimension
+                WindowWidthSizeClass.MEDIUM -> mediumDimension
+                WindowWidthSizeClass.EXPANDED -> expandedDimension
+                else -> compactDimension
+            }
+        )
+    }
+    CompositionLocalProvider(LocalDimension provides dimension) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            content = content
+        )
+    }
 }
 
 val AppTypography = Typography()
@@ -120,7 +139,9 @@ object ComicTheme {
     val dimension: Dimension
         @Composable
         @ReadOnlyComposable
-        get() = LocalDimension.current
+        get() {
+            return LocalDimension.current
+        }
 
     val colorScheme: ColorScheme
         @Composable

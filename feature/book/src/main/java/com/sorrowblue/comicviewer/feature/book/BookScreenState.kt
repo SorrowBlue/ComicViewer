@@ -235,6 +235,14 @@ internal class BookScreenState2(
                 )
             )
         }.launchIn(scope)
+        scope.launch {
+            val request = UpdateLastReadPageUseCase.Request(
+                args.bookshelfId,
+                args.path,
+                pagerState.currentPage - 1
+            )
+            viewModel.updateLastReadPageUseCase.execute(request)
+        }
     }
 
     fun toggleTooltip() {
