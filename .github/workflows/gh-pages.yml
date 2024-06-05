@@ -32,14 +32,14 @@ jobs:
           BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
           BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
           DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
-      - run: mkdir ./_site/dokka/
+      - run: mkdir -p _site/dokka
       - name: Copy Dokka
         run: cp -r ./docs/dokka _site/dokka
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: "./docs"
-      - run: mkdir ./_site/.well-known/
+      - run: mkdir -p _site/.well-known
       - name: Copy .well-known/assetlinks.json
         run: cp -r ./config/.well-known/assetlinks.json _site/.well-known/assetlinks.json
       - name: Upload artifact
