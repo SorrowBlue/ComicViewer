@@ -39,9 +39,6 @@ jobs:
         uses: actions/jekyll-build-pages@v1
         with:
           source: "./docs"
-      - run: mkdir -p _site/.well-known
-      - name: Copy .well-known/assetlinks.json
-        run: cp -r ./config/.well-known/assetlinks.json _site/.well-known/assetlinks.json
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
