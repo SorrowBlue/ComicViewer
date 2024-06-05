@@ -10,8 +10,6 @@ import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenNavigator
 @Composable
 fun DependenciesContainerBuilder<*>.TutorialGraphDependencies(onComplete: () -> Unit) {
     navGraph(NavGraphs.tutorial) {
-        dependency(object : TutorialScreenNavigator {
-            override fun onComplete() = onComplete()
-        })
+        dependency(TutorialScreenNavigator(onComplete))
     }
 }
