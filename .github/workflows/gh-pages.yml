@@ -26,14 +26,16 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Setup Java
         uses: ./.github/actions/setup-java-gradle
+      - run: |
+          cd _site
+          pwd
+          ls -l
       - name: Generage Dokka
         run: ./gradlew :dokkaHtmlMultiModule --no-configuration-cache
         env:
           BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
           BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
           DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
-      - run: ls -l _site/.*
-      - run: pwd _site/.*
       - run: mkdir -p _site/dokka
       - name: Copy Dokka
         run: cp -r ./docs/dokka _site/dokka
