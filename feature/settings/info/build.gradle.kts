@@ -17,5 +17,5 @@ dependencies {
     implementation(projects.feature.settings.common)
 
     implementation(libs.androidx.browser)
-    implementation(libs.mikepenz.aboutlibraries)
+    implementation(libs.mikepenz.aboutlibrariesComposeM3)
 }

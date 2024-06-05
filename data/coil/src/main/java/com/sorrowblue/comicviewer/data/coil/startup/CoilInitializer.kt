@@ -11,7 +11,6 @@ import coil3.request.allowRgb565
 import coil3.request.bitmapConfig
 import coil3.request.crossfade
 import coil3.size.Precision
-import coil3.util.DebugLogger
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -48,7 +47,7 @@ internal class CoilInitializer : Initializer<Unit> {
             .crossfade(true)
             .bitmapConfig(Bitmap.Config.RGB_565)
             .precision(Precision.INEXACT)
-            .logger(DebugLogger())
+//            .logger(DebugLogger())
             .build()
 
         @OptIn(DelicateCoilApi::class)

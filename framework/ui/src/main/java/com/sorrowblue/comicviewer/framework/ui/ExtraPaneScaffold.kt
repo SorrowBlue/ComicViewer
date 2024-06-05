@@ -24,7 +24,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -41,7 +40,7 @@ fun ExtraPaneScaffold(
         modifier = if (scaffoldDirective.maxHorizontalPartitions == 1) {
             modifier
         } else {
-            val dimension = LocalDimension.current
+            val dimension = ComicTheme.dimension
             Modifier
                 .padding(contentPadding)
                 .padding(dimension.margin)

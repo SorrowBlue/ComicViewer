@@ -46,7 +46,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
 import com.sorrowblue.comicviewer.framework.ui.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
@@ -206,7 +205,7 @@ private fun SmbEditContent(
             .windowInsetsPadding(contentPadding.asWindowInsets())
             .marginPadding(dimension = ComicTheme.dimension, horizontal = true, bottom = true)
     ) {
-        val dimension = LocalDimension.current
+        val dimension = ComicTheme.dimension
         DisplayNameField(
             input = uiState.displayName,
             onValueChange = onDisplayNameChange,

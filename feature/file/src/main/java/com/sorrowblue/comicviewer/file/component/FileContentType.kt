@@ -6,6 +6,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -13,7 +14,7 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.LocalWindowSize
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
 import kotlinx.parcelize.Parcelize
 
@@ -33,7 +34,8 @@ sealed interface FileContentType : Parcelable {
 
         override val columns: GridCells
             @Composable get() {
-                val widthSizeClass = LocalWindowSize.current.windowWidthSizeClass
+                val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
+                val widthSizeClass = windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass
                 return when (widthSizeClass) {
                     WindowWidthSizeClass.COMPACT -> {
                         when (size) {

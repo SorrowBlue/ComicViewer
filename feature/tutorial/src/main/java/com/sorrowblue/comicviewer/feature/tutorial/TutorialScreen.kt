@@ -40,7 +40,7 @@ internal data class TutorialScreenUiState(
     val directionSheetUiState: DirectionSheetUiState = DirectionSheetUiState(),
 )
 
-interface TutorialScreenNavigator {
+fun interface TutorialScreenNavigator {
     fun onComplete()
 }
 
@@ -50,7 +50,7 @@ interface TutorialScreenNavigator {
     visibility = CodeGenVisibility.INTERNAL
 )
 @Composable
-internal fun TutorialScreen(navigator: TutorialScreenNavigator) {
+fun TutorialScreen(navigator: TutorialScreenNavigator) {
     TutorialScreen(onComplete = navigator::onComplete)
 }
 

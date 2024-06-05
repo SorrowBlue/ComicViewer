@@ -22,7 +22,7 @@ import com.sorrowblue.comicviewer.bookshelf.component.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.LocalWindowSize
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
 @Composable
@@ -33,8 +33,9 @@ internal fun BookshelfListContents(
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
     contentPadding: PaddingValues,
 ) {
+    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
     val gridCells =
-        if (LocalWindowSize.current.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+        if (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
             GridCells.Fixed(1)
         } else {
             GridCells.Adaptive(200.dp)

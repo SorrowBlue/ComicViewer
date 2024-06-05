@@ -1,19 +1,20 @@
 package com.sorrowblue.comicviewer.framework.ui.preview
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.sorrowblue.comicviewer.framework.ui.LocalWindowSize
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun rememberMobile(): Boolean {
-    val windowSize = LocalWindowSize.current
-    return remember(windowSize) {
-        windowSize.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
+    return remember(windowAdaptiveInfo.windowSizeClass) {
+        windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
     }
 }
 

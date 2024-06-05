@@ -158,7 +158,6 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     implementation(libs.google.android.play.review.ktx)
     implementation(libs.google.android.play.feature.delivery.ktx)
-    implementation(libs.mikepenz.aboutlibraries)
     implementation(libs.androidx.appcompat)
 
     implementation(libs.google.android.billingclient.billingKtx)

@@ -6,37 +6,43 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
+import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
-@Destination<ExternalModuleGraph>
+internal interface AppInfoSettingsScreenNavigator : SettingsDetailNavigator {
+
+    fun navigateToLicense()
+}
+
+@Destination<AppInfoSettingsGraph>(start = true, visibility = CodeGenVisibility.INTERNAL)
 @Composable
 internal fun AppInfoSettingsScreen(
     contentPadding: PaddingValues,
-    navigator: SettingsDetailNavigator,
+    navigator: AppInfoSettingsScreenNavigator,
 ) {
     AppInfoSettingsScreen(
         contentPadding = contentPadding,
-        onBackClick = navigator::navigateBack
+        onBackClick = navigator::navigateBack,
+        onLicenceClick = navigator::navigateToLicense
     )
 }
 
 @Composable
 private fun AppInfoSettingsScreen(
     onBackClick: () -> Unit,
+    onLicenceClick: () -> Unit,
     contentPadding: PaddingValues,
     state: AppInfoSettingsScreenState = rememberAppInfoSettingsScreenState(),
 ) {
     AppInfoSettingsScreen(
         state.uiState,
         onBackClick = onBackClick,
-        onLicenceClick = state::launchLicence,
-        onRateAppClick = {
-            state.launchReview()
-        },
+        onLicenceClick = onLicenceClick,
+        onRateAppClick = state::launchReview,
         contentPadding = contentPadding
     )
 }

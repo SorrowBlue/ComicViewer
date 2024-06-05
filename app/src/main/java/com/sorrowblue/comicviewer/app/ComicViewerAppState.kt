@@ -1,9 +1,7 @@
 package com.sorrowblue.comicviewer.app
 
-import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -11,28 +9,32 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.Direction
 import com.ramcosta.composedestinations.utils.findDestination
 import com.ramcosta.composedestinations.utils.toDestinationsNavigator
+import com.sorrowblue.comicviewer.app.component.ComicViewerScaffoldUiState
+import com.sorrowblue.comicviewer.app.component.MainScreenTab
 import com.sorrowblue.comicviewer.app.navgraphs.MainNavGraph
+import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.AddOn
+import com.sorrowblue.comicviewer.domain.model.fold
+import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
+import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfFolderScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraphs.BookshelfNavGraph
-import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
 import com.sorrowblue.comicviewer.framework.ui.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
@@ -46,79 +48,61 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.parcelize.Parcelize
 import logcat.LogPriority
 import logcat.logcat
 
 internal interface ComicViewerAppState : SaveableScreenState {
 
-    val appEvent: ComicViewerAppEvent
-    val uiState: MainScreenUiState
     val navController: NavHostController
+    val uiState: ComicViewerScaffoldUiState
     val addOnList: SnapshotStateList<AddOn>
 
-    fun onCreate()
-    fun onStart()
-    fun onCompleteTutorial()
-    fun completeRestoreHistory()
-    fun onTabSelected(
-        navController: NavController,
-        tab: MainScreenTab,
-    )
-
-    fun onAuthCompleted()
+    fun onTabSelect(tab: MainScreenTab)
+    fun onNavigationHistoryRestore()
+    fun refreshAddOnList()
 }
-
-@Parcelize
-internal data class ComicViewerAppEvent(
-    val navigateToTutorial: Boolean = false,
-    val navigateToAuth: Boolean? = null,
-) : Parcelable
 
 @Composable
 internal fun rememberComicViewerAppState(
-    viewModel: ComicViewerAppViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
-    navTabHandler: NavTabHandler = hiltViewModel(LocalContext.current as ComponentActivity),
-    navController: NavHostController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope(),
-    lifecycle: LifecycleOwner = LocalLifecycleOwner.current,
+    lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
+    navController: NavHostController = rememberNavController(),
+    mainViewModel: MainViewModel = viewModel(LocalContext.current as ComponentActivity),
+    navTabHandler: NavTabHandler = viewModel(LocalContext.current as ComponentActivity),
+    viewModel: ComicViewerAppViewModel = hiltViewModel(),
 ): ComicViewerAppState = rememberSaveableScreenState {
     ComicViewerAppStateImpl(
+        lifecycle = lifecycle,
         savedStateHandle = it,
-        lifecycle = lifecycle.lifecycle,
         navController = navController,
-        viewModel = viewModel,
+        scope = scope,
+        mainViewModel = mainViewModel,
         navTabHandler = navTabHandler,
-        scope = scope
+        getNavigationHistoryUseCase = viewModel.getNavigationHistoryUseCase,
+        manageDisplaySettingsUseCase = viewModel.manageDisplaySettingsUseCase,
+        getInstalledModulesUseCase = viewModel.getInstalledModulesUseCase,
     )
 }
 
 @OptIn(SavedStateHandleSaveableApi::class)
-@Stable
 private class ComicViewerAppStateImpl(
     lifecycle: Lifecycle,
     override val savedStateHandle: SavedStateHandle,
     override val navController: NavHostController,
-    private val viewModel: ComicViewerAppViewModel,
-    private val navTabHandler: NavTabHandler,
     private val scope: CoroutineScope,
-    private val destinationTransitions: DestinationsNavigator = navController.toDestinationsNavigator(),
+    private val mainViewModel: MainViewModel,
+    private val navTabHandler: NavTabHandler,
+    private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
+    private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
+    private val getInstalledModulesUseCase: GetInstalledModulesUseCase,
 ) : ComicViewerAppState {
 
+    override var uiState by savedStateHandle.saveable { mutableStateOf(ComicViewerScaffoldUiState()) }
+        private set
+    override val addOnList = mutableStateListOf<AddOn>()
     private var isInitialized by savedStateHandle.saveable { mutableStateOf(false) }
 
-    private var isRestoredNavHistory = false
-
-    override var uiState by savedStateHandle.saveable { mutableStateOf(MainScreenUiState()) }
-        private set
-
-    override var appEvent by savedStateHandle.saveable { mutableStateOf(ComicViewerAppEvent()) }
-        private set
-
-    override val addOnList = mutableStateListOf<AddOn>()
-
     init {
-        refreshAddOnList()
         val backStackEntryFlow = navController.currentBackStackEntryFlow
         backStackEntryFlow
             .filter { it.destination is ComposeNavigator.Destination }
@@ -141,103 +125,23 @@ private class ComicViewerAppStateImpl(
                 }
             }.flowWithLifecycle(lifecycle)
             .launchIn(scope)
-    }
-
-    override fun onCreate() {
-        if (isInitialized) return
-        scope.launch {
-            if (viewModel.isTutorial()) {
-                appEvent = appEvent.copy(navigateToTutorial = true)
-                closeSplashScreen()
-                isInitialized = true
-            } else if (viewModel.isAuth()) {
-                uiState = uiState.copy(isAuthenticating = true)
-                closeSplashScreen()
-            } else if (viewModel.isNeedToRestore()) {
-                cancelJob(
-                    scope = scope,
-                    waitTimeMillis = 3000,
-                    onCancel = ::completeRestoreHistory,
-                    action = ::restoreNavigation
-                )
-            } else {
-                closeSplashScreen()
-                isInitialized = true
-            }
-        }
-    }
-
-    override fun onStart() {
-        refreshAddOnList()
-        if (isInitialized) {
+        if (!isInitialized) {
             scope.launch {
-                if (viewModel.lockOnBackground()) {
-                    appEvent = appEvent.copy(navigateToAuth = true)
-                }
-                closeSplashScreen()
-            }
-        }
-    }
-
-    override fun onAuthCompleted() {
-        if (isInitialized) {
-            // 初期化済み = 履歴復元する必要がない ので何もしない
-        } else {
-            scope.launch {
-                if (viewModel.isNeedToRestore()) {
-                    cancelJob(
-                        scope = scope,
-                        waitTimeMillis = 3000,
-                        onCancel = ::completeRestoreHistory,
-                        action = ::restoreNavigation
-                    )
+                if (manageDisplaySettingsUseCase.settings.first().restoreOnLaunch) {
+                    cancelJob(scope, 3000, ::completeRestoreHistory, ::restoreNavigation)
                 } else {
-                    uiState = uiState.copy(isAuthenticating = false)
+                    completeRestoreHistory()
                 }
             }
         }
     }
 
-    fun closeSplashScreen() {
-        viewModel.shouldKeepSplash = false
-    }
-
-    override fun onCompleteTutorial() {
-        scope.launch {
-            val isTutorial = viewModel.isTutorial()
-            if (isTutorial) {
-                viewModel.onTutorialComplete()
-            }
-            if (isTutorial) {
-                destinationTransitions.navigate(
-                    BookshelfNavGraph,
-                    navOptions {
-                        popUpTo(TutorialNavGraph.route) {
-                            inclusive = true
-                        }
-                    }
-                )
-            } else {
-                navController.popBackStack()
-            }
-        }
-    }
-
-    override fun completeRestoreHistory() {
-        uiState = uiState.copy(isAuthenticating = false)
-        closeSplashScreen()
-        isInitialized = true
-    }
-
-    override fun onTabSelected(
-        navController: NavController,
-        tab: MainScreenTab,
-    ) {
+    override fun onTabSelect(tab: MainScreenTab) {
         val navGraph = tab.navGraph
         if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.route == navGraph.route } == true) {
             navTabHandler.click.tryEmit(Unit)
         } else if (navGraph is Direction) {
-            destinationTransitions.navigate(
+            navController.toDestinationsNavigator().navigate(
                 navGraph,
                 navOptions {
                     popUpTo(navController.graph.findStartDestination().id) {
@@ -250,9 +154,22 @@ private class ComicViewerAppStateImpl(
         }
     }
 
+    override fun onNavigationHistoryRestore() {
+        logcat { "onNavigationHistoryRestore" }
+        completeRestoreHistory()
+    }
+
+    private fun completeRestoreHistory() {
+        mainViewModel.shouldKeepSplash.value = false
+        mainViewModel.isInitialized.value = true
+        isInitialized = true
+    }
+
     private fun restoreNavigation(): Job {
+        val destinationTransitions = navController.toDestinationsNavigator()
         return scope.launch {
-            val history = viewModel.history()
+            val history =
+                getNavigationHistoryUseCase.execute(EmptyRequest).first().fold({ it }, { null })
             destinationTransitions.navigate(BookshelfNavGraph) {
                 popUpTo(MainNavGraph) {
                     inclusive = true
@@ -261,7 +178,6 @@ private class ComicViewerAppStateImpl(
             if (history?.folderList.isNullOrEmpty()) {
                 completeRestoreHistory()
             } else {
-                isRestoredNavHistory = true
                 val (folderList, book) = history!!.value
                 val bookshelfId = folderList.first().bookshelfId
                 if (folderList.size == 1) {
@@ -309,9 +225,11 @@ private class ComicViewerAppStateImpl(
         }
     }
 
-    private fun refreshAddOnList() {
+    override fun refreshAddOnList() {
         runBlocking {
-            val installedModules = viewModel.installedModules.first()
+            val installedModules =
+                getInstalledModulesUseCase.execute(GetInstalledModulesUseCase.Request)
+                    .first().dataOrNull!!
             addOnList.removeAll { !installedModules.contains(it.moduleName) }
             addOnList.addAll(
                 installedModules

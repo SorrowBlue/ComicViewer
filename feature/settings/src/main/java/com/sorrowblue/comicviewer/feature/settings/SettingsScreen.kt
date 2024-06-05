@@ -26,7 +26,7 @@ import com.sorrowblue.comicviewer.feature.settings.destinations.DonationScreenDe
 import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.folder.navgraphs.FolderSettingsNavGraph
-import com.sorrowblue.comicviewer.feature.settings.info.destinations.AppInfoSettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.info.navgraphs.AppInfoSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navgraphs.SettingsDetailNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailGraphDependencies
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraph
@@ -152,7 +152,7 @@ enum class Settings2(
     APP(
         R.string.settings_label_app,
         ComicIcons.Info,
-        AppInfoSettingsScreenDestination
+        AppInfoSettingsNavGraph
     ),
     TUTORIAL(R.string.settings_label_tutorial, ComicIcons.Start),
     Donation(R.string.settings_label_donation, ComicIcons.Money, DonationScreenDestination),

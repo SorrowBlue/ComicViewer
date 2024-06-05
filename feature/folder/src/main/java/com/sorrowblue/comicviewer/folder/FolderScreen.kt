@@ -167,15 +167,18 @@ private fun FolderScreen(
     }
     val onRestoreComplete1 by rememberUpdatedState(newValue = onRestoreComplete)
     LaunchedEffect(lazyPagingItems.loadState) {
+        logcat { "state.restorePath=${state.restorePath}" }
         if (0 < lazyPagingItems.itemCount && state.restorePath != null) {
             val index = lazyPagingItems.indexOf { it?.path == state.restorePath }
             if (0 <= index) {
                 state.restorePath = null
                 runCatching {
+                    logcat { "scroll" }
                     state.lazyGridState.scrollToItem(min(index, lazyPagingItems.itemCount - 1))
                 }.onFailure {
                     logcat { it.asLog() }
                 }
+                logcat { "onRestoreComplete1" }
                 onRestoreComplete1()
             } else if (!lazyPagingItems.loadState.isLoading) {
                 onRestoreComplete1()
