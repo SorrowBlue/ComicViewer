@@ -128,7 +128,7 @@ google-services.json
 !.idea/inspectionProfiles/
 *.aab
 /docs/*.bkp
-/docs/dokka
+/_site/dokka
 
 *.dtmp
 .kotlin/*
