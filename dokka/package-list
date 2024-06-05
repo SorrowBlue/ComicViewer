@@ -3,6 +3,7 @@ $dokka.linkExtension:html
 
 module:app
 com.sorrowblue.comicviewer.app
+com.sorrowblue.comicviewer.app.component
 module:coil
 com.sorrowblue.comicviewer.data.coil
 com.sorrowblue.comicviewer.data.coil.di
@@ -84,6 +85,7 @@ module:notification
 com.sorrowblue.comicviewer.framework.notification
 module:ui
 com.sorrowblue.comicviewer.framework.ui
+com.sorrowblue.comicviewer.framework.ui.adaptive
 com.sorrowblue.comicviewer.framework.ui.autofill
 com.sorrowblue.comicviewer.framework.ui.component
 com.sorrowblue.comicviewer.framework.ui.material3
@@ -121,5 +123,7 @@ com.sorrowblue.comicviewer.feature.library.onedrive.component
 com.sorrowblue.comicviewer.feature.library.onedrive.data
 module:display
 com.sorrowblue.comicviewer.feature.settings.display.section
+module:info
+com.sorrowblue.comicviewer.feature.settings.info.navigation
 module:security
 com.sorrowblue.comicviewer.feature.settings.security
