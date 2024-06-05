@@ -27,6 +27,7 @@ jobs:
       - name: Setup Java
         uses: ./.github/actions/setup-java-gradle
 
+      - run: mkdir -p _site/.well-known
       - run: cp -r docs/static/assetlinks.json _site/.well-known/assetlinks.json
 
       - name: Build with Jekyll
