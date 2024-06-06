@@ -3,10 +3,10 @@ description: Manga/e-book/image viewer compatible with Material You.
 show_downloads: true
 theme: jekyll-theme-cayman
 keep_files:
-  - .well-known/
+  - .well-known
   - assetlinks.json
   - .well-known/assetlinks.json
 include:
-  - .well-known/
+  - .well-known
   - assetlinks.json
   - .well-known/assetlinks.json
