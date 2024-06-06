@@ -38,7 +38,7 @@ jobs:
           BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
           BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
           DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
-      - run: cp -r ./docs/dokka _site/dokka
+      - run: cp -r build/dokka _site/dokka
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
