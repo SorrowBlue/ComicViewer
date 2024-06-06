@@ -4,5 +4,7 @@ show_downloads: true
 theme: jekyll-theme-cayman
 keep_files:
   - .well-known/assetlinks.json
+  - dokka/
 include:
+  - .well-known/assetlinks.json
   - dokka/
