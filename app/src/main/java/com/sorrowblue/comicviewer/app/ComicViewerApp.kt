@@ -7,7 +7,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -45,6 +45,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import logcat.logcat
 
 @Destination<RootGraph>(
     start = true,
@@ -111,7 +112,13 @@ internal object RootScreenWrapper : DestinationWrapper {
         val viewModel = hiltViewModel<RootScreenWrapperViewModel>()
         val mainViewModel = hiltViewModel<MainViewModel>(LocalContext.current as ComponentActivity)
         val isTutorial by viewModel.requireTutorial.collectAsState()
+        val requireAuth by viewModel.requireAuth.collectAsState()
+        var authed by rememberSaveable { mutableStateOf(false) }
+        val isInitialized by mainViewModel.isInitialized.collectAsState()
 
+        logcat(
+            "DEBUG"
+        ) { "isTutorial=$isTutorial, requireAuth=$requireAuth, authed=$authed, isInitialized=$isInitialized" }
         if (isTutorial) {
             TutorialScreen(navigator = {
                 viewModel.tutorialComplete()
@@ -120,10 +127,6 @@ internal object RootScreenWrapper : DestinationWrapper {
                 mainViewModel.shouldKeepSplash.value = false
             }
         } else {
-            val requireAuth by viewModel.requireAuth.collectAsState()
-            var authed by remember { mutableStateOf(false) }
-            val isInitialized by mainViewModel.isInitialized.collectAsState()
-
             if (!requireAuth || isInitialized || authed) {
                 screenContent()
             }

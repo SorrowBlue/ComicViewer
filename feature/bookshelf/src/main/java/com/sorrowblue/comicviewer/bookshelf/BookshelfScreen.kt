@@ -23,17 +23,23 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import com.ramcosta.composedestinations.result.EmptyResultRecipient
+import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.bookshelf.component.BookshelfFab
+import com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoSheet
+import com.sorrowblue.comicviewer.bookshelf.info.NotificationRequestResult
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraph
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphTransitions
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfAppBar
-import com.sorrowblue.comicviewer.bookshelf.section.BookshelfInfoSheet
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfMainSheet
-import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialog
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.file.fakeFolder
+import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfRemoveDialogDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.destinations.NotificationRequestDialogDestination
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
@@ -56,8 +62,16 @@ interface BookshelfScreenNavigator {
     visibility = CodeGenVisibility.INTERNAL,
 )
 @Composable
-internal fun BookshelfScreen(navigator: BookshelfScreenNavigator) {
+internal fun BookshelfScreen(
+    navigator: BookshelfScreenNavigator,
+    removeDialogResultRecipient: ResultRecipient<BookshelfRemoveDialogDestination, Boolean>,
+    notificationResultRecipient: ResultRecipient<NotificationRequestDialogDestination, NotificationRequestResult>,
+    destinationsNavigator: DestinationsNavigator,
+) {
     BookshelfScreen(
+        removeDialogResultRecipient = removeDialogResultRecipient,
+        notificationResultRecipient = notificationResultRecipient,
+        destinationsNavigator = destinationsNavigator,
         onSettingsClick = navigator::onSettingsClick,
         onFabClick = navigator::onFabClick,
         onBookshelfClick = navigator::onBookshelfClick,
@@ -68,6 +82,9 @@ internal fun BookshelfScreen(navigator: BookshelfScreenNavigator) {
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun BookshelfScreen(
+    removeDialogResultRecipient: ResultRecipient<BookshelfRemoveDialogDestination, Boolean>,
+    notificationResultRecipient: ResultRecipient<NotificationRequestDialogDestination, NotificationRequestResult>,
+    destinationsNavigator: DestinationsNavigator,
     onSettingsClick: () -> Unit,
     onFabClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
@@ -75,6 +92,9 @@ private fun BookshelfScreen(
     state: BookshelfScreenState = rememberBookshelfScreenState(),
 ) {
     BookshelfScreen(
+        removeDialogResultRecipient = removeDialogResultRecipient,
+        notificationResultRecipient = notificationResultRecipient,
+        destinationsNavigator = destinationsNavigator,
         navigator = state.navigator,
         lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
         lazyGridState = state.lazyGridState,
@@ -83,20 +103,8 @@ private fun BookshelfScreen(
         onSettingsClick = onSettingsClick,
         onBookshelfClick = onBookshelfClick,
         onBookshelfInfoClick = state::onBookshelfInfoClick,
-        onInfoSheetRemoveClick = state::onRemoveClick,
         onInfoSheetEditClick = { onEditClick(state.bookshelfId) },
-        onInfoSheetCloseClick = state::onInfoSheetCloseClick,
-        onInfoSheetScanClick = state::onInfoSheetScanClick,
-        onReThumbnailsClick = state::onReThumbnailsClick,
     )
-    val removeDialogController = state.removeDialogController
-    if (removeDialogController.isShow) {
-        BookshelfRemoveDialog(
-            title = removeDialogController.value!!.bookshelf.displayName,
-            onDismissRequest = state::onDismissRequest,
-            onConfirmClick = state::onConfirmClick,
-        )
-    }
 
     BackHandlerForNavigator(navigator = state.navigator)
 
@@ -106,6 +114,9 @@ private fun BookshelfScreen(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun BookshelfScreen(
+    removeDialogResultRecipient: ResultRecipient<BookshelfRemoveDialogDestination, Boolean>,
+    notificationResultRecipient: ResultRecipient<NotificationRequestDialogDestination, NotificationRequestResult>,
+    destinationsNavigator: DestinationsNavigator,
     navigator: ThreePaneScaffoldNavigator<BookshelfFolder>,
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
     snackbarHostState: SnackbarHostState,
@@ -113,11 +124,7 @@ private fun BookshelfScreen(
     onSettingsClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
-    onInfoSheetRemoveClick: () -> Unit,
-    onInfoSheetEditClick: () -> Unit,
-    onInfoSheetScanClick: () -> Unit,
-    onReThumbnailsClick: () -> Unit,
-    onInfoSheetCloseClick: () -> Unit,
+    onInfoSheetEditClick: (BookshelfId) -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
     val expanded by remember(lazyGridState) {
@@ -133,14 +140,13 @@ private fun BookshelfScreen(
         extraPane = { innerPadding ->
             navigator.currentDestination?.content?.let {
                 BookshelfInfoSheet(
+                    removeDialogResultRecipient = removeDialogResultRecipient,
+                    notificationResultRecipient = notificationResultRecipient,
+                    destinationsNavigator = destinationsNavigator,
+                    navigator = navigator,
                     contentPadding = innerPadding,
-                    scaffoldDirective = navigator.scaffoldDirective,
-                    bookshelfFolder = it,
-                    onRemoveClick = onInfoSheetRemoveClick,
+                    snackbarHostState = snackbarHostState,
                     onEditClick = onInfoSheetEditClick,
-                    onScanClick = onInfoSheetScanClick,
-                    onReThumbnailsClick = onReThumbnailsClick,
-                    onCloseClick = onInfoSheetCloseClick
                 )
             }
         },
@@ -186,6 +192,9 @@ private fun PreviewBookshelfScreen() {
         }
         val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
         BookshelfScreen(
+            removeDialogResultRecipient = EmptyResultRecipient(),
+            notificationResultRecipient = EmptyResultRecipient(),
+            destinationsNavigator = EmptyDestinationsNavigator,
             snackbarHostState = remember { SnackbarHostState() },
             navigator = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>(),
             lazyPagingItems = lazyPagingItems,
@@ -193,11 +202,7 @@ private fun PreviewBookshelfScreen() {
             onSettingsClick = {},
             onBookshelfClick = { _, _ -> },
             onBookshelfInfoClick = {},
-            onInfoSheetRemoveClick = {},
             onInfoSheetEditClick = {},
-            onInfoSheetScanClick = {},
-            onReThumbnailsClick = {},
-            onInfoSheetCloseClick = {},
         )
     }
 }
