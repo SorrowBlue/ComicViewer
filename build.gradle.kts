@@ -71,7 +71,7 @@ subprojects {
 plugins.withId("org.jetbrains.dokka") {
     tasks.withType<DokkaMultiModuleTask>().configureEach {
         notCompatibleWithConfigurationCache("https://github.com/Kotlin/dokka/issues/1217")
-        outputDirectory.set(layout.projectDirectory.dir("build/dokka"))
+        outputDirectory.set(layout.projectDirectory.dir("docs/dokka"))
     }
 }
 afterEvaluate {

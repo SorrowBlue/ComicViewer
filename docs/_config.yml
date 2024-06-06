@@ -4,5 +4,7 @@ show_downloads: true
 theme: jekyll-theme-cayman
 include:
   - .well-known
+  - dokka
 keep_files:
   - .well-known
+  - dokka
