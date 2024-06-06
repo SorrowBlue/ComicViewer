@@ -27,11 +27,6 @@ jobs:
       - name: Setup Java
         uses: ./.github/actions/setup-java-gradle
 
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: docs
-
       - name: Generage Dokka
         run: ./gradlew :dokkaHtmlMultiModule --no-configuration-cache
         env:
@@ -39,6 +34,11 @@ jobs:
           BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
           DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
       - run: cp -r build/dokka _site/dokka
+
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: docs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
