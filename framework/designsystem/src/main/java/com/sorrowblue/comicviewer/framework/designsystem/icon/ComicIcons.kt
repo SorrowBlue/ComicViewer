@@ -41,6 +41,7 @@ import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Money
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MusicNote
+import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.PermDeviceInformation
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.RestartAlt
@@ -111,4 +112,5 @@ object ComicIcons {
     val Book = Icons.Rounded.Book
     val BrokenImage = Icons.Rounded.BrokenImage
     val Folder = Icons.Rounded.Folder
+    val Notifications = Icons.Rounded.Notifications
 }

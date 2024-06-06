@@ -125,6 +125,7 @@ private class ComicViewerAppStateImpl(
                 }
             }.flowWithLifecycle(lifecycle)
             .launchIn(scope)
+        logcat { "init. isInitialized=$isInitialized" }
         if (!isInitialized) {
             scope.launch {
                 if (manageDisplaySettingsUseCase.settings.first().restoreOnLaunch) {
@@ -133,6 +134,8 @@ private class ComicViewerAppStateImpl(
                     completeRestoreHistory()
                 }
             }
+        } else {
+            completeRestoreHistory()
         }
     }
 

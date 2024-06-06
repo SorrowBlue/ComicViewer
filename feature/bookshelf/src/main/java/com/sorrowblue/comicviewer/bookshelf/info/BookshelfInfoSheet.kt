@@ -1,5 +1,7 @@
-package com.sorrowblue.comicviewer.bookshelf.section
+package com.sorrowblue.comicviewer.bookshelf.info
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -19,10 +21,12 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,12 +37,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.bookshelf.component.BookshelfConverter.source
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.fakeFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
+import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfRemoveDialogDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.destinations.NotificationRequestDialogDestination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -48,12 +57,57 @@ import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffoldDefault
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@Composable
+internal fun BookshelfInfoSheet(
+    removeDialogResultRecipient: ResultRecipient<BookshelfRemoveDialogDestination, Boolean>,
+    notificationResultRecipient: ResultRecipient<NotificationRequestDialogDestination, NotificationRequestResult>,
+    destinationsNavigator: DestinationsNavigator,
+    navigator: ThreePaneScaffoldNavigator<BookshelfFolder>,
+    snackbarHostState: SnackbarHostState,
+    contentPadding: PaddingValues,
+    onEditClick: (BookshelfId) -> Unit,
+    modifier: Modifier = Modifier,
+    state: BookshelfInfoSheetState = rememberBookshelfInfoSheetState(
+        destinationsNavigator = destinationsNavigator,
+        navigator = navigator,
+        snackbarHostState = snackbarHostState
+    ),
+) {
+    val permissionResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = state::onPermissionResult
+    )
+
+    removeDialogResultRecipient.onNavResult {
+        state.onNavResult(it)
+    }
+
+    notificationResultRecipient.onNavResult {
+        state.onNavResult(permissionResultLauncher, it)
+    }
+
+    navigator.currentDestination?.content?.let { bookshelfFolder ->
+        BookshelfInfoSheet(
+            bookshelfFolder = bookshelfFolder,
+            scaffoldDirective = navigator.scaffoldDirective,
+            contentPadding = contentPadding,
+            onRemoveClick = state::onRemoveClick,
+            onEditClick = { onEditClick(bookshelfFolder.bookshelf.id) },
+            onScanClick = { state.onScanClick(permissionResultLauncher) },
+            onReThumbnailsClick = { state.onReThumbnailsClick(permissionResultLauncher) },
+            onCloseClick = state::onCloseClick,
+            modifier = modifier
+        )
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun BookshelfInfoSheet(
-    contentPadding: PaddingValues,
-    scaffoldDirective: PaneScaffoldDirective,
+private fun BookshelfInfoSheet(
     bookshelfFolder: BookshelfFolder,
+    scaffoldDirective: PaneScaffoldDirective,
+    contentPadding: PaddingValues,
     onRemoveClick: () -> Unit,
     onEditClick: () -> Unit,
     onScanClick: () -> Unit,
@@ -184,17 +238,17 @@ fun BookshelfInfoSheet(
 private fun PreviewBookshelfInfoSheet() {
     PreviewTheme {
         BookshelfInfoSheet(
-            contentPadding = PaddingValues(),
             bookshelfFolder = BookshelfFolder(
                 SmbServer("DisplayName", "127.0.0.1", 455, SmbServer.Auth.Guest),
                 fakeFolder()
             ),
             scaffoldDirective = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>().scaffoldDirective,
-            onCloseClick = {},
-            onEditClick = {},
+            contentPadding = PaddingValues(),
             onRemoveClick = {},
+            onEditClick = {},
             onScanClick = {},
-            onReThumbnailsClick = {}
+            onReThumbnailsClick = {},
+            onCloseClick = {}
         )
     }
 }

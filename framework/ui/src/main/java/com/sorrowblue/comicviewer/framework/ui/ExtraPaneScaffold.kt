@@ -26,7 +26,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun ExtraPaneScaffold(
     topBar: @Composable () -> Unit,

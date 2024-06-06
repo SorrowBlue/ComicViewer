@@ -19,16 +19,13 @@ import androidx.window.core.layout.WindowSizeClass
 fun rememberWindowAdaptiveInfo(): State<WindowAdaptiveInfo> {
     val windowAdaptiveInfo = if (LocalInspectionMode.current) {
         val configuration = LocalConfiguration.current
-        val screenHeight: Float
-        val screenWidth: Float
-        with(LocalDensity.current) {
-            screenHeight = configuration.screenHeightDp.dp.toPx()
-            screenWidth = configuration.screenWidthDp.dp.toPx()
+        val windowSizeClass = with(LocalDensity.current) {
+            WindowSizeClass.compute(
+                configuration.screenWidthDp.dp.toPx(),
+                configuration.screenHeightDp.dp.toPx()
+            )
         }
-        WindowAdaptiveInfo(
-            windowSizeClass = WindowSizeClass.compute(screenWidth, screenHeight),
-            windowPosture = calculatePosture(emptyList())
-        )
+        WindowAdaptiveInfo(windowSizeClass, calculatePosture(emptyList()))
     } else {
         currentWindowAdaptiveInfo()
     }
