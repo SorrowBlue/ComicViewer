@@ -24,22 +24,23 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Setup Java
-        uses: ./.github/actions/setup-java-gradle
-
-      - name: Generage Dokka
-        run: ./gradlew :dokkaHtmlMultiModule --no-configuration-cache
-        env:
-          BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
-          BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
-          DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
-#      - run: cp -r build/dokka _site/dokka
-
+      - run: |
+          ls- la ./docs/.*
+          ls- la ./docs/.well-known/.*
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: docs
-
+          source: ./docs
+      #      - name: Setup Java
+      #        uses: ./.github/actions/setup-java-gradle
+      #      - name: Generage Dokka
+      #        run: ./gradlew :dokkaHtmlMultiModule --no-configuration-cache
+      #        env:
+      #          BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
+      #          BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
+      #          DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
+      #      - run: cp -r build/dokka _site/dokka
+      #      - run: cp -r build/dokka _site/dokka
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
