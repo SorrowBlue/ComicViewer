@@ -36,7 +36,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import logcat.logcat
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 internal interface BookshelfInfoSheetState {
+    val navigator: ThreePaneScaffoldNavigator<BookshelfFolder>
+
     fun onRemoveClick()
     fun onCloseClick()
     fun onPermissionResult(isGranted: Boolean)
@@ -72,10 +75,10 @@ internal fun rememberBookshelfInfoSheetState(
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private class BookshelfInfoSheetStateImpl(
+    override val navigator: ThreePaneScaffoldNavigator<BookshelfFolder>,
     private val destinationsNavigator: DestinationsNavigator,
     private val context: Context,
     private val scope: CoroutineScope,
-    private val navigator: ThreePaneScaffoldNavigator<BookshelfFolder>,
     private val snackbarHostState: SnackbarHostState,
     private val removeBookshelfUseCase: RemoveBookshelfUseCase,
 ) : BookshelfInfoSheetState {

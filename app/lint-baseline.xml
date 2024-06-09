@@ -1,26 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues name="AGP (8.4.0-rc02)" by="lint 8.4.0-rc02" client="gradle" dependencies="true" format="6"
-    type="baseline" variant="all" version="8.4.0-rc02">
-
-    <issue
-        id="TrustAllX509TrustManager"
-        message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
-        <location
-            file="../../../../../.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk18on/1.77/ed953791ba0229747dd0fd9911e3d76a462acfd3/bcpkix-jdk18on-1.77.jar" />
-    </issue>
-
-    <issue
-        id="TrustAllX509TrustManager"
-        message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
-        <location
-            file="../../../../../.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client/1.44.1/d8956bacb8a4011365fa15a690482c49a70c78c5/google-http-client-1.44.1.jar" />
-    </issue>
-
-    <issue
-        id="TrustAllX509TrustManager"
-        message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
-        <location
-            file="../../../../../.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client/1.44.1/d8956bacb8a4011365fa15a690482c49a70c78c5/google-http-client-1.44.1.jar" />
-    </issue>
-
+<issues format="6" by="lint 8.4.1" type="baseline" client="gradle" dependencies="true" name="AGP (8.4.1)" variant="all" version="8.4.1">
 </issues>
