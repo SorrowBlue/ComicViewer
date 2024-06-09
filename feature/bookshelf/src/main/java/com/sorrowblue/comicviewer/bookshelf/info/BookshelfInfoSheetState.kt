@@ -221,5 +221,4 @@ private class BookshelfInfoSheetStateImpl(
                 .enqueue(myWorkRequest)
         }
     }
-
 }

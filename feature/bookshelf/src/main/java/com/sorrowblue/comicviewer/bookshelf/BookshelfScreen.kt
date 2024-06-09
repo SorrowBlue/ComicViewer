@@ -115,7 +115,6 @@ private fun BookshelfScreen(
     BackHandlerForNavigator(navigator = state.navigator)
 
     NavTabHandler(onClick = state::onNavClick)
-
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
@@ -195,7 +194,6 @@ private fun PreviewBookshelfScreen() {
             onBookshelfClick = { _, _ -> },
             onBookshelfInfoClick = {},
         ) {
-
         }
     }
 }

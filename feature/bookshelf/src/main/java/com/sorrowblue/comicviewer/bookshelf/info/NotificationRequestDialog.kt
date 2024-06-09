@@ -24,7 +24,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 enum class NotificationRequestResult {
     Ok,
     Cancel,
-    NotAllowed
+    NotAllowed,
 }
 
 @Destination<BookshelfGraph>(
