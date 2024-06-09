@@ -25,7 +25,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
+import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
@@ -87,146 +87,155 @@ internal fun BookshelfInfoSheet(
         state.onNavResult(permissionResultLauncher, it)
     }
 
-    navigator.currentDestination?.content?.let { bookshelfFolder ->
-        BookshelfInfoSheet(
-            bookshelfFolder = bookshelfFolder,
-            scaffoldDirective = navigator.scaffoldDirective,
-            contentPadding = contentPadding,
-            onRemoveClick = state::onRemoveClick,
-            onEditClick = { onEditClick(bookshelfFolder.bookshelf.id) },
-            onScanClick = { state.onScanClick(permissionResultLauncher) },
-            onReThumbnailsClick = { state.onReThumbnailsClick(permissionResultLauncher) },
-            onCloseClick = state::onCloseClick,
-            modifier = modifier
-        )
-    }
+    BookshelfInfoSheet(
+        navigator = state.navigator,
+        contentPadding = contentPadding,
+        onRemoveClick = state::onRemoveClick,
+        onEditClick = { onEditClick(it.bookshelf.id) },
+        onScanClick = { state.onScanClick(permissionResultLauncher) },
+        onReThumbnailsClick = { state.onReThumbnailsClick(permissionResultLauncher) },
+        onCloseClick = state::onCloseClick,
+        modifier = modifier
+    )
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun BookshelfInfoSheet(
-    bookshelfFolder: BookshelfFolder,
-    scaffoldDirective: PaneScaffoldDirective,
+    navigator: ThreePaneScaffoldNavigator<BookshelfFolder>,
     contentPadding: PaddingValues,
     onRemoveClick: () -> Unit,
-    onEditClick: () -> Unit,
+    onEditClick: (BookshelfFolder) -> Unit,
     onScanClick: () -> Unit,
     onReThumbnailsClick: () -> Unit,
     onCloseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ExtraPaneScaffold(
-        topBar = {
-            ExtraPaneScaffoldDefault.TopAppBar(
-                title = { Text(text = stringResource(id = R.string.bookshelf_info_title)) },
-                onCloseClick = onCloseClick,
-                scaffoldDirective = scaffoldDirective
-            )
-        },
-        modifier = modifier,
-        contentPadding = contentPadding,
-        scaffoldDirective = scaffoldDirective
-    ) {
-        val bookshelf = bookshelfFolder.bookshelf
-        val folder = bookshelfFolder.folder
-        val colors = ListItemDefaults.colors(containerColor = Color.Transparent)
-        AsyncImage2(
-            model = folder,
-            contentDescription = stringResource(id = R.string.bookshelf_desc_thumbnail),
-            placeholder = rememberDebugPlaceholder(),
-            modifier = Modifier
-                .padding(horizontal = ComicTheme.dimension.margin)
-                .height(120.dp)
-                .align(Alignment.CenterHorizontally)
-                .clip(RoundedCornerShape(16.dp))
-                .background(ComicTheme.colorScheme.surfaceContainerHighest),
-            contentScale = ContentScale.Fit,
-            error = {
-                Icon(imageVector = ComicIcons.Image, contentDescription = null)
+    val bookshelfFolder = navigator.currentDestination?.content
+    if (bookshelfFolder != null) {
+        ExtraPaneScaffold(
+            topBar = {
+                ExtraPaneScaffoldDefault.TopAppBar(
+                    title = { Text(text = stringResource(id = R.string.bookshelf_info_title)) },
+                    onCloseClick = onCloseClick,
+                    scaffoldDirective = navigator.scaffoldDirective
+                )
             },
-            loading = {
-                Icon(imageVector = ComicIcons.DocumentUnknown, contentDescription = null)
-            }
-        )
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-                .padding(horizontal = 8.dp)
+            modifier = modifier,
+            contentPadding = contentPadding,
+            scaffoldDirective = navigator.scaffoldDirective
         ) {
-            AssistChip(
-                onClick = onScanClick,
-                label = { Text(text = stringResource(id = R.string.bookshelf_action_scan)) },
-                leadingIcon = { Icon(imageVector = ComicIcons.Refresh, contentDescription = null) }
+            val bookshelf = bookshelfFolder.bookshelf
+            val folder = bookshelfFolder.folder
+            val colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+            AsyncImage2(
+                model = folder,
+                contentDescription = stringResource(id = R.string.bookshelf_desc_thumbnail),
+                placeholder = rememberDebugPlaceholder(),
+                modifier = Modifier
+                    .padding(horizontal = ComicTheme.dimension.margin)
+                    .height(120.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(ComicTheme.colorScheme.surfaceContainerHighest),
+                contentScale = ContentScale.Fit,
+                error = {
+                    Icon(imageVector = ComicIcons.Image, contentDescription = null)
+                },
+                loading = {
+                    Icon(imageVector = ComicIcons.DocumentUnknown, contentDescription = null)
+                }
             )
-            AssistChip(
-                onClick = onReThumbnailsClick,
-                label = { Text(text = stringResource(id = R.string.bookshelf_action_scan) + "サムネイル") },
-                leadingIcon = { Icon(imageVector = ComicIcons.Refresh, contentDescription = null) }
-            )
-        }
-        ListItem(
-            colors = colors,
-            modifier = Modifier.height(56.dp),
-            overlineContent = { Text(text = "種類") },
-            headlineContent = { Text(text = stringResource(id = bookshelf.source())) },
-        )
-        ListItem(
-            modifier = Modifier.height(56.dp),
-            colors = colors,
-            overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_display_name)) },
-            headlineContent = { Text(text = bookshelf.displayName) },
-        )
-
-        when (bookshelf) {
-            is InternalStorage -> {
-                ListItem(
-                    modifier = Modifier.height(56.dp),
-                    colors = colors,
-                    overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
-                    headlineContent = { Text(text = folder.path) },
-                )
-            }
-
-            is SmbServer -> {
-                ListItem(
-                    modifier = Modifier.height(56.dp),
-                    colors = colors,
-                    overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_host)) },
-                    headlineContent = { Text(text = bookshelf.host) },
-                )
-                ListItem(
-                    modifier = Modifier.height(56.dp),
-                    colors = colors,
-                    overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_port)) },
-                    headlineContent = { Text(text = bookshelf.port.toString()) },
-                )
-                ListItem(
-                    modifier = Modifier.height(56.dp),
-                    colors = colors,
-                    overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
-                    headlineContent = { Text(text = folder.path) },
-                )
-            }
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = ComicTheme.dimension.margin)
-        ) {
-            TextButton(onClick = onRemoveClick) {
-                Text(text = stringResource(id = R.string.bookshelf_action_delete))
-            }
-            FilledTonalButton(
-                onClick = onEditClick,
-                contentPadding = ButtonWithIconContentPadding
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .padding(horizontal = 8.dp)
             ) {
-                Icon(imageVector = ComicIcons.Edit, contentDescription = null)
-                Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text = stringResource(id = R.string.bookshelf_action_edit))
+                AssistChip(
+                    onClick = onScanClick,
+                    label = { Text(text = stringResource(id = R.string.bookshelf_action_scan)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = ComicIcons.Refresh,
+                            contentDescription = null
+                        )
+                    }
+                )
+                AssistChip(
+                    onClick = onReThumbnailsClick,
+                    label = { Text(text = stringResource(id = R.string.bookshelf_action_scan) + "サムネイル") },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = ComicIcons.Refresh,
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
+            ListItem(
+                colors = colors,
+                modifier = Modifier.height(56.dp),
+                overlineContent = { Text(text = "種類") },
+                headlineContent = { Text(text = stringResource(id = bookshelf.source())) },
+            )
+            ListItem(
+                modifier = Modifier.height(56.dp),
+                colors = colors,
+                overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_display_name)) },
+                headlineContent = { Text(text = bookshelf.displayName) },
+            )
+
+            when (bookshelf) {
+                is InternalStorage -> {
+                    ListItem(
+                        modifier = Modifier.height(56.dp),
+                        colors = colors,
+                        overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
+                        headlineContent = { Text(text = folder.path) },
+                    )
+                }
+
+                is SmbServer -> {
+                    ListItem(
+                        modifier = Modifier.height(56.dp),
+                        colors = colors,
+                        overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_host)) },
+                        headlineContent = { Text(text = bookshelf.host) },
+                    )
+                    ListItem(
+                        modifier = Modifier.height(56.dp),
+                        colors = colors,
+                        overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_port)) },
+                        headlineContent = { Text(text = bookshelf.port.toString()) },
+                    )
+                    ListItem(
+                        modifier = Modifier.height(56.dp),
+                        colors = colors,
+                        overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
+                        headlineContent = { Text(text = folder.path) },
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = ComicTheme.dimension.margin)
+            ) {
+                TextButton(onClick = onRemoveClick) {
+                    Text(text = stringResource(id = R.string.bookshelf_action_delete))
+                }
+                FilledTonalButton(
+                    onClick = { onEditClick(bookshelfFolder) },
+                    contentPadding = ButtonWithIconContentPadding
+                ) {
+                    Icon(imageVector = ComicIcons.Edit, contentDescription = null)
+                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(text = stringResource(id = R.string.bookshelf_action_edit))
+                }
             }
         }
     }
@@ -237,12 +246,14 @@ private fun BookshelfInfoSheet(
 @Preview
 private fun PreviewBookshelfInfoSheet() {
     PreviewTheme {
+        val navigator = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>()
+        val bookshelfFolder = BookshelfFolder(
+            SmbServer("DisplayName", "127.0.0.1", 455, SmbServer.Auth.Guest),
+            fakeFolder()
+        )
+        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, bookshelfFolder)
         BookshelfInfoSheet(
-            bookshelfFolder = BookshelfFolder(
-                SmbServer("DisplayName", "127.0.0.1", 455, SmbServer.Auth.Guest),
-                fakeFolder()
-            ),
-            scaffoldDirective = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>().scaffoldDirective,
+            navigator = navigator,
             contentPadding = PaddingValues(),
             onRemoveClick = {},
             onEditClick = {},

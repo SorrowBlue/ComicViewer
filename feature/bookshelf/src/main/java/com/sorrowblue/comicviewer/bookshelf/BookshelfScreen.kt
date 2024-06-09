@@ -24,8 +24,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import com.ramcosta.composedestinations.result.EmptyResultRecipient
 import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.bookshelf.component.BookshelfFab
 import com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoSheet
@@ -92,9 +90,6 @@ private fun BookshelfScreen(
     state: BookshelfScreenState = rememberBookshelfScreenState(),
 ) {
     BookshelfScreen(
-        removeDialogResultRecipient = removeDialogResultRecipient,
-        notificationResultRecipient = notificationResultRecipient,
-        destinationsNavigator = destinationsNavigator,
         navigator = state.navigator,
         lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
         lazyGridState = state.lazyGridState,
@@ -103,20 +98,29 @@ private fun BookshelfScreen(
         onSettingsClick = onSettingsClick,
         onBookshelfClick = onBookshelfClick,
         onBookshelfInfoClick = state::onBookshelfInfoClick,
-        onInfoSheetEditClick = { onEditClick(state.bookshelfId) },
-    )
+    ) { contentPadding ->
+        state.navigator.currentDestination?.content?.let {
+            BookshelfInfoSheet(
+                removeDialogResultRecipient = removeDialogResultRecipient,
+                notificationResultRecipient = notificationResultRecipient,
+                destinationsNavigator = destinationsNavigator,
+                navigator = state.navigator,
+                contentPadding = contentPadding,
+                snackbarHostState = state.snackbarHostState,
+                onEditClick = onEditClick,
+            )
+        }
+    }
 
     BackHandlerForNavigator(navigator = state.navigator)
 
     NavTabHandler(onClick = state::onNavClick)
+
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun BookshelfScreen(
-    removeDialogResultRecipient: ResultRecipient<BookshelfRemoveDialogDestination, Boolean>,
-    notificationResultRecipient: ResultRecipient<NotificationRequestDialogDestination, NotificationRequestResult>,
-    destinationsNavigator: DestinationsNavigator,
     navigator: ThreePaneScaffoldNavigator<BookshelfFolder>,
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
     snackbarHostState: SnackbarHostState,
@@ -124,8 +128,9 @@ private fun BookshelfScreen(
     onSettingsClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
-    onInfoSheetEditClick: (BookshelfId) -> Unit,
+    modifier: Modifier = Modifier,
     lazyGridState: LazyGridState = rememberLazyGridState(),
+    extraPane: @Composable (PaddingValues) -> Unit,
 ) {
     val expanded by remember(lazyGridState) {
         derivedStateOf { !lazyGridState.canScrollForward || !lazyGridState.canScrollBackward }
@@ -138,20 +143,10 @@ private fun BookshelfScreen(
         },
         floatingActionButton = { BookshelfFab(expanded = expanded, onClick = onFabClick) },
         extraPane = { innerPadding ->
-            navigator.currentDestination?.content?.let {
-                BookshelfInfoSheet(
-                    removeDialogResultRecipient = removeDialogResultRecipient,
-                    notificationResultRecipient = notificationResultRecipient,
-                    destinationsNavigator = destinationsNavigator,
-                    navigator = navigator,
-                    contentPadding = innerPadding,
-                    snackbarHostState = snackbarHostState,
-                    onEditClick = onInfoSheetEditClick,
-                )
-            }
+            extraPane(innerPadding)
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        modifier = Modifier
+        modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         val dimension = ComicTheme.dimension
@@ -192,9 +187,6 @@ private fun PreviewBookshelfScreen() {
         }
         val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
         BookshelfScreen(
-            removeDialogResultRecipient = EmptyResultRecipient(),
-            notificationResultRecipient = EmptyResultRecipient(),
-            destinationsNavigator = EmptyDestinationsNavigator,
             snackbarHostState = remember { SnackbarHostState() },
             navigator = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>(),
             lazyPagingItems = lazyPagingItems,
@@ -202,7 +194,8 @@ private fun PreviewBookshelfScreen() {
             onSettingsClick = {},
             onBookshelfClick = { _, _ -> },
             onBookshelfInfoClick = {},
-            onInfoSheetEditClick = {},
-        )
+        ) {
+
+        }
     }
 }
