@@ -11,41 +11,34 @@ Use [detekt](https://github.com/detekt/detekt) as a static code analysis tool.
 
 ## Plugin configuration
 
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  rel="stylesheet"
+/>
+
 ```mermaid
-classDiagram
-    class DaggerHilt
-    class Koin
-    class Detekt
-
-    class AndroidApplication
-    class AndroidLibrary
-    class AndroidDynamicFeature
-
-    class AndroidApplicationCompose
-    class AndroidLibraryCompose
-    class AndroidDynamicFeatureCompose
-
-    class AndroidApp
-    class AndroidFeature
-    class AndroidFeatureDynamicFeature
-
-    AndroidApplication ..> Detekt
-    AndroidLibrary ..> Detekt
-    AndroidDynamicFeature ..> Detekt
-
-    AndroidApp ..> AndroidApplication
-    AndroidApp ..> AndroidApplicationCompose
-    AndroidApp ..> DaggerHilt
-    AndroidApp ..> Koin
-
-    AndroidFeature ..> AndroidLibrary
-    AndroidFeature ..> AndroidLibraryCompose
-    AndroidFeature ..> DaggerHilt
-
-    AndroidFeatureDynamicFeature ..> AndroidDynamicFeature
-    AndroidFeatureDynamicFeature ..> AndroidDynamicFeatureCompose
-    AndroidFeatureDynamicFeature ..> DaggerHilt
-    AndroidFeatureDynamicFeature ..> Koin
+flowchart LR
+    app["<i class='fa-brands fa-android'></i> app"]
+    feature["<i class='fa-brands fa-android'></i> feature"]
+    feature-dynamic["<i class='fa-brands fa-android'></i> feature-dynamic"]
+    app --> application
+    app --> compose
+    app ---> dagger-hilt
+    app ---> koin
+    feature --> library
+    feature --> compose
+    feature ---> dagger-hilt
+    feature-dynamic --> dynamic-feature
+    feature-dynamic --> compose
+    feature-dynamic ---> koin
+    dynamic-feature
+    library
+    kotlin-multiplatform
+    compose
+    dagger-hilt
+    koin
+    detekt["detekt: <i class='fa-duotone fa-k'></i>"]
+    dokka
 
 ```
 

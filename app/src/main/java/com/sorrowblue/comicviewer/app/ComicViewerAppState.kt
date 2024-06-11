@@ -39,6 +39,7 @@ import com.sorrowblue.comicviewer.framework.ui.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
+import com.sorrowblue.comicviewer.multi.MultiUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -81,6 +82,7 @@ internal fun rememberComicViewerAppState(
         getNavigationHistoryUseCase = viewModel.getNavigationHistoryUseCase,
         manageDisplaySettingsUseCase = viewModel.manageDisplaySettingsUseCase,
         getInstalledModulesUseCase = viewModel.getInstalledModulesUseCase,
+        multiUseCase = viewModel.multiUseCase
     )
 }
 
@@ -95,6 +97,7 @@ private class ComicViewerAppStateImpl(
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     private val getInstalledModulesUseCase: GetInstalledModulesUseCase,
+    private val multiUseCase: MultiUseCase
 ) : ComicViewerAppState {
 
     override var uiState by savedStateHandle.saveable { mutableStateOf(ComicViewerScaffoldUiState()) }
@@ -166,6 +169,7 @@ private class ComicViewerAppStateImpl(
         mainViewModel.shouldKeepSplash.value = false
         mainViewModel.isInitialized.value = true
         isInitialized = true
+        logcat { "UUID=${multiUseCase.getUuid()}, ${multiUseCase.hashCode()}" }
     }
 
     private fun restoreNavigation(): Job {

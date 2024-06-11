@@ -7,7 +7,7 @@ internal class DokkaConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
-                apply(libs.findPlugin("dokka").get().get().pluginId)
+                apply(libs.plugins.dokka.get().pluginId)
             }
         }
     }

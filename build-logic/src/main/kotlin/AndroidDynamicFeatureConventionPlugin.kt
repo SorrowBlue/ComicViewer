@@ -36,7 +36,7 @@ internal class AndroidDynamicFeatureConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                implementation(libs.findLibrary("squareup.logcat").get())
+                implementation(libs.squareup.logcat)
             }
         }
     }

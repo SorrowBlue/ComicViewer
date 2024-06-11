@@ -1,6 +1,5 @@
 import com.android.build.api.dsl.LibraryExtension
 import com.sorrowblue.comicviewer.configureKotlinAndroid
-import com.sorrowblue.comicviewer.debugImplementation
 import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.kotlin
 import com.sorrowblue.comicviewer.libs
@@ -44,26 +43,27 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
 
 
             dependencies {
-                implementation(libs.findLibrary("squareup.logcat").get())
+                implementation(libs.squareup.logcat)
             }
         }
     }
 }
+
 internal class AndroidLibraryTestConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
 
             dependencies {
-                testDebugImplementation(libs.findLibrary("androidx-compose-ui-testManifest").get())
-                testPrereleaseImplementation(libs.findLibrary("androidx-compose-ui-testManifest").get())
-                testInternalImplementation(libs.findLibrary("androidx-compose-ui-testManifest").get())
-                testReleaseImplementation(libs.findLibrary("androidx-compose-ui-testManifest").get())
-                testImplementation(libs.findLibrary("androidx-compose-ui-testJunit4").get())
-                testImplementation(libs.findLibrary("kotlinx-coroutines-test").get())
-                testImplementation(libs.findLibrary("androidx-test-ext-junitKtx").get())
-                testImplementation(libs.findLibrary("androidx-test-ext-truth").get())
-                testImplementation(libs.findLibrary("robolectric").get())
+                testDebugImplementation(libs.androidx.compose.ui.testManifest)
+                testPrereleaseImplementation(libs.androidx.compose.ui.testManifest)
+                testInternalImplementation(libs.androidx.compose.ui.testManifest)
+                testReleaseImplementation(libs.androidx.compose.ui.testManifest)
+                testImplementation(libs.androidx.compose.ui.testManifest)
+                testImplementation(libs.kotlinx.coroutines.test)
+                testImplementation(libs.androidx.test.ext.junitKtx)
+                testImplementation(libs.androidx.test.ext.truth)
+                testImplementation(libs.robolectric)
             }
         }
     }

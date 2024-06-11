@@ -138,6 +138,7 @@ dependencies {
 
     implementation(projects.di)
     implementation(projects.domain.usecase)
+    implementation(projects.domain.multi)
     implementation(projects.feature.authentication)
     implementation(projects.feature.book)
     implementation(projects.feature.bookshelf)

@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.dokka.gradle.plugin)
     implementation(libs.arturbosch.detektGradlePlugin)
     implementation(libs.ksp.gradlePlugin)
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
     implementation("org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:0.8.0")
 }
 

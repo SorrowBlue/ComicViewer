@@ -1,3 +1,4 @@
+import com.sorrowblue.comicviewer.detektPlugins
 import com.sorrowblue.comicviewer.libs
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.Plugin
@@ -13,8 +14,8 @@ internal class DetektConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                add("detektPlugins", libs.findLibrary("nlopez.compose.rules.detekt").get())
-                add("detektPlugins", libs.findLibrary("arturbosch.detektFormatting").get())
+                detektPlugins(libs.nlopez.compose.rules.detekt)
+                detektPlugins(libs.arturbosch.detektFormatting)
             }
             extensions.configure<DetektExtension>("detekt") {
                 buildUponDefaultConfig = true

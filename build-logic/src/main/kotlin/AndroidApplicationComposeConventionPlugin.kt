@@ -26,8 +26,8 @@ internal class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
             configureAndroidCompose(extension)
 
             dependencies {
-                implementation(libs.findLibrary("compose-destinations-core").get())
-                ksp(libs.findLibrary("compose-destinations-ksp").get())
+                implementation(libs.compose.destinations.core)
+                ksp(libs.compose.destinations.ksp)
             }
 
             configure<KspExtension> {

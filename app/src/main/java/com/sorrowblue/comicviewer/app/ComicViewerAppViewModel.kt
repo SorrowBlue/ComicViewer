@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.multi.MultiUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -12,4 +13,5 @@ internal class ComicViewerAppViewModel @Inject constructor(
     val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     val getInstalledModulesUseCase: GetInstalledModulesUseCase,
+    val multiUseCase: MultiUseCase
 ) : ViewModel()

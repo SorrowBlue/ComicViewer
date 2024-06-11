@@ -13,9 +13,9 @@ internal class DaggerHiltConventionPlugin : Plugin<Project> {
             pluginManager.apply("dagger.hilt.android.plugin")
 
             dependencies {
-                implementation(libs.findLibrary("google-dagger-hilt-android").get())
-                ksp(libs.findLibrary("google.dagger-compiler").get())
-                ksp(libs.findLibrary("google.dagger-hilt-compiler").get())
+                implementation(libs.google.dagger.hilt.android)
+                ksp(libs.google.dagger.compiler)
+                ksp(libs.google.dagger.hilt.compiler)
             }
         }
     }
