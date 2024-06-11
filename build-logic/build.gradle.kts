@@ -24,7 +24,7 @@ dependencies {
     implementation(libs.dokka.gradle.plugin)
     implementation(libs.arturbosch.detektGradlePlugin)
     implementation(libs.ksp.gradlePlugin)
-    implementation("org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:0.8.0")
+    implementation("org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:0.8.1")
 }
 
 gradlePlugin {
