@@ -21,7 +21,7 @@ plugins {
     id("androidx.room") version libs.versions.androidx.room.get() apply false
 
     id("dev.iurysouza.modulegraph") version "0.10.0"
-    id("org.jetbrains.kotlinx.kover") version "0.8.0"
+    id("org.jetbrains.kotlinx.kover") version "0.8.1"
 }
 
 tasks.register("clean", Delete::class) {
