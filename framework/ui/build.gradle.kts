@@ -1,7 +1,7 @@
 plugins {
-    id("comicviewer.android.library")
-    id("comicviewer.android.library.compose")
-    id("org.jetbrains.kotlin.plugin.parcelize")
+    alias(libs.plugins.comicviewer.android.library)
+    alias(libs.plugins.comicviewer.android.compose)
+    alias(libs.plugins.kotlin.plugin.parcelize)
 }
 
 android {

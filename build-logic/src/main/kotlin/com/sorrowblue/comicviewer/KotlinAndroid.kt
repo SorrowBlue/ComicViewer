@@ -1,18 +1,27 @@
 package com.sorrowblue.comicviewer
 
 import com.android.build.api.dsl.CommonExtension
-import org.gradle.api.JavaVersion
 import org.gradle.api.Project
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JvmVendorSpec
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+
+internal fun Project.configureKotlin(extension: KotlinAndroidProjectExtension) {
+    with(extension) {
+        jvmToolchain {
+            vendor.set(JvmVendorSpec.ADOPTIUM)
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+        compilerOptions {
+            freeCompilerArgs.add("-Xcontext-receivers")
+        }
+    }
+}
 
 internal fun Project.configureKotlinAndroid(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
 ) {
-    commonExtension.apply {
-
-        compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
-        }
+    with(commonExtension) {
 
         lint {
             baseline = file("lint-baseline.xml")

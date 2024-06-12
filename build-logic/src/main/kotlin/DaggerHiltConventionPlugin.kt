@@ -1,3 +1,4 @@
+import com.sorrowblue.comicviewer.apply
 import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.ksp
 import com.sorrowblue.comicviewer.libs
@@ -9,13 +10,15 @@ internal class DaggerHiltConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            pluginManager.apply("com.google.devtools.ksp")
-            pluginManager.apply("dagger.hilt.android.plugin")
+            with(pluginManager) {
+                apply(libs.plugins.google.ksp)
+                apply(libs.plugins.dagger.hilt.android)
+            }
 
             dependencies {
-                implementation(libs.findLibrary("google-dagger-hilt-android").get())
-                ksp(libs.findLibrary("google.dagger-compiler").get())
-                ksp(libs.findLibrary("google.dagger-hilt-compiler").get())
+                implementation(libs.google.dagger.hilt.android)
+                ksp(libs.google.dagger.compiler)
+                ksp(libs.google.dagger.hilt.compiler)
             }
         }
     }

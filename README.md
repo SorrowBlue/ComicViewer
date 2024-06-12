@@ -11,41 +11,54 @@ Use [detekt](https://github.com/detekt/detekt) as a static code analysis tool.
 
 ## Plugin configuration
 
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  rel="stylesheet"
+/>
+
 ```mermaid
-classDiagram
-    class DaggerHilt
-    class Koin
-    class Detekt
+flowchart LR
+    app["<i class='fa-brands fa-android'></i> app"]
+    feature["<i class='fa-brands fa-android'></i> feature"]
+    feature-dynamic["<i class='fa-brands fa-android'></i> feature-dynamic"]
+    app --> application
+    app --> compose
+    app ---> dagger-hilt
+    app ---> koin
+    feature-dynamic --> dynamic-feature
+    feature-dynamic --> compose
+    feature-dynamic ---> koin
+    feature --> library
+    feature --> compose
+    feature ---> dagger-hilt
 
-    class AndroidApplication
-    class AndroidLibrary
-    class AndroidDynamicFeature
+    library --> com.android.library
+    library --> org.jetbrains.kotlin.android
+    library --> lint
+    library --> dokka
+    application --> com.android.application
+    application --> org.jetbrains.kotlin.android
+    application --> lint
+    application --> dokka
+    dynamic-feature --> com.android.dynamic-feature
+    dynamic-feature --> org.jetbrains.kotlin.android
+    dynamic-feature --> lint
+    dynamic-feature --> dokka
+    
+    lint --> io.gitlab.arturbosch.detekt
+    dokka --> org.jetbrains.dokka
 
-    class AndroidApplicationCompose
-    class AndroidLibraryCompose
-    class AndroidDynamicFeatureCompose
-
-    class AndroidApp
-    class AndroidFeature
-    class AndroidFeatureDynamicFeature
-
-    AndroidApplication ..> Detekt
-    AndroidLibrary ..> Detekt
-    AndroidDynamicFeature ..> Detekt
-
-    AndroidApp ..> AndroidApplication
-    AndroidApp ..> AndroidApplicationCompose
-    AndroidApp ..> DaggerHilt
-    AndroidApp ..> Koin
-
-    AndroidFeature ..> AndroidLibrary
-    AndroidFeature ..> AndroidLibraryCompose
-    AndroidFeature ..> DaggerHilt
-
-    AndroidFeatureDynamicFeature ..> AndroidDynamicFeature
-    AndroidFeatureDynamicFeature ..> AndroidDynamicFeatureCompose
-    AndroidFeatureDynamicFeature ..> DaggerHilt
-    AndroidFeatureDynamicFeature ..> Koin
+    dagger-hilt --> dagger.hilt.android.plugin
+    dagger-hilt --> com.google.devtools.ksp
+    
+    application
+    dynamic-feature
+    library
+    compose
+    dagger-hilt
+    koin
+    lint
+    dokka
 
 ```
 

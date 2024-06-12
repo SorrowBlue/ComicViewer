@@ -4,16 +4,9 @@ plugins {
 
 group = "com.sorrowblue.comicviewer.buildlogic"
 
-// Configure the build-logic plugins to target JDK 17
-// This matches the JDK used to build the project, and is not related to what is running on device.
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
@@ -21,68 +14,58 @@ dependencies {
     implementation(libs.android.tools.build.gradle)
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.kotlin.compose.plugin)
+    implementation(libs.kotlinx.kover)
     implementation(libs.dokka.gradle.plugin)
     implementation(libs.arturbosch.detektGradlePlugin)
     implementation(libs.ksp.gradlePlugin)
-    implementation("org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:0.8.0")
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
 gradlePlugin {
     plugins {
-        register("comicviewer.android.library") {
-            id = name
-            implementationClass = "AndroidLibraryConventionPlugin"
-        }
-        register("comicviewer.android.library.test") {
-            id = name
-            implementationClass = "AndroidLibraryTestConventionPlugin"
-        }
-        register("comicviewer.android.library.compose") {
-            id = name
-            implementationClass = "AndroidLibraryComposeConventionPlugin"
-        }
-
-        register("comicviewer.android.application") {
-            id = name
+        register(libs.plugins.comicviewer.android.application) {
             implementationClass = "AndroidApplicationConventionPlugin"
         }
-        register("comicviewer.android.application.compose") {
-            id = name
-            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        register(libs.plugins.comicviewer.android.library) {
+            implementationClass = "AndroidLibraryConventionPlugin"
         }
-
-        register("comicviewer.android.dynamic-feature") {
-            id = name
+        register(libs.plugins.comicviewer.android.dynamicFeature) {
             implementationClass = "AndroidDynamicFeatureConventionPlugin"
         }
-        register("comicviewer.android.dynamic-feature.compose") {
-            id = name
-            implementationClass = "AndroidDynamicFeatureComposeConventionPlugin"
-        }
 
-        register("comicviewer.android.feature") {
-            id = name
-            implementationClass = "AndroidFeatureConventionPlugin"
+        register(libs.plugins.comicviewer.android.compose) {
+            implementationClass = "ComposeConventionPlugin"
         }
-        register("comicviewer.android.feature.dynamic-feature") {
-            id = name
-            implementationClass = "AndroidFeatureDynamicFeatureConventionPlugin"
-        }
-        register("comicviewer.android.hilt") {
-            id = name
+        register(libs.plugins.comicviewer.android.hilt) {
             implementationClass = "DaggerHiltConventionPlugin"
         }
-        register("comicviewer.android.lint") {
-            id = name
+        register(libs.plugins.comicviewer.android.lint) {
             implementationClass = "DetektConventionPlugin"
         }
-        register("comicviewer.android.koin") {
-            id = name
+        register(libs.plugins.comicviewer.koin) {
             implementationClass = "KoinConventionPlugin"
         }
-        register("comicviewer.android.dokka") {
-            id = name
+
+        register(libs.plugins.comicviewer.android.feature) {
+            implementationClass = "AndroidFeatureConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.android.featureDynamicFeature) {
+            implementationClass = "AndroidFeatureDynamicFeatureConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.dokka) {
             implementationClass = "DokkaConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.android.test) {
+            implementationClass = "AndroidTestConventionPlugin"
         }
     }
 }
+
+fun NamedDomainObjectContainer<PluginDeclaration>.register(
+    provider: Provider<PluginDependency>,
+    function: PluginDeclaration.() -> Unit,
+) =
+    register(provider.get().pluginId) {
+        id = name
+        function()
+    }

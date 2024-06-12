@@ -1,6 +1,6 @@
 plugins {
-    id("comicviewer.android.library")
-    id("comicviewer.android.hilt")
+    alias(libs.plugins.comicviewer.android.library)
+    alias(libs.plugins.comicviewer.android.hilt)
 }
 
 android {

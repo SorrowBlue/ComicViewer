@@ -1,6 +1,5 @@
 plugins {
-    id("comicviewer.android.feature")
-    id("comicviewer.android.library.test")
+    alias(libs.plugins.comicviewer.android.feature)
 }
 
 android {

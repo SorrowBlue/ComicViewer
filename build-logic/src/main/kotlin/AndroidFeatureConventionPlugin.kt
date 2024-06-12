@@ -1,4 +1,6 @@
+import com.sorrowblue.comicviewer.apply
 import com.sorrowblue.comicviewer.implementation
+import com.sorrowblue.comicviewer.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
@@ -8,10 +10,11 @@ internal class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
-                apply("comicviewer.android.library")
-                apply("comicviewer.android.library.compose")
-                apply("comicviewer.android.hilt")
-                apply("org.jetbrains.kotlin.plugin.parcelize")
+                apply(libs.plugins.comicviewer.android.library)
+                apply(libs.plugins.comicviewer.android.compose)
+                apply(libs.plugins.comicviewer.android.hilt)
+                apply(libs.plugins.comicviewer.android.test)
+                apply(libs.plugins.kotlin.plugin.parcelize)
             }
 
             dependencies {

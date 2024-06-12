@@ -1,11 +1,16 @@
 plugins {
-    id("comicviewer.android.library")
-    id("comicviewer.android.hilt")
-    id("androidx.room")
+    alias(libs.plugins.comicviewer.android.library)
+    alias(libs.plugins.comicviewer.android.hilt)
+    alias(libs.plugins.comicviewer.android.test)
+    alias(libs.plugins.androidx.room)
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer.data.database"
+    testOptions.unitTests.isIncludeAndroidResources = true
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {
