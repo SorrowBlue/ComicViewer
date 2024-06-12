@@ -6,10 +6,10 @@ import com.sorrowblue.comicviewer.projectString
 import org.jetbrains.kotlin.konan.properties.propertyString
 
 plugins {
-    id("comicviewer.android.application")
-    id("comicviewer.android.application.compose")
-    id("comicviewer.android.hilt")
-    id("comicviewer.android.koin")
+    alias(libs.plugins.comicviewer.android.application)
+    alias(libs.plugins.comicviewer.android.compose)
+    alias(libs.plugins.comicviewer.android.hilt)
+    alias(libs.plugins.comicviewer.koin)
     alias(libs.plugins.mikepenz.aboutlibraries.plugin)
     alias(libs.plugins.arturbosch.detekt)
     alias(libs.plugins.grgit)
@@ -159,6 +159,7 @@ dependencies {
     implementation(libs.google.android.play.review.ktx)
     implementation(libs.google.android.play.feature.delivery.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(platform(libs.koin.bom))
 
     implementation(libs.google.android.billingclient.billingKtx)
 

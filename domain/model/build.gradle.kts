@@ -1,6 +1,6 @@
 plugins {
-    id("comicviewer.android.library")
-    id("org.jetbrains.kotlin.plugin.parcelize")
+    alias(libs.plugins.comicviewer.android.library)
+    alias(libs.plugins.kotlin.plugin.parcelize)
     alias(libs.plugins.kotlin.plugin.serialization)
 }
 

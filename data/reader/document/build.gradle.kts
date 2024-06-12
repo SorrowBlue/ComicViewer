@@ -1,5 +1,5 @@
 plugins {
-    id("comicviewer.android.dynamic-feature")
+    alias(libs.plugins.comicviewer.android.dynamicFeature)
     alias(libs.plugins.google.ksp)
 }
 

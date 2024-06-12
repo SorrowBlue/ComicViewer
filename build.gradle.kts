@@ -3,25 +3,23 @@ import java.util.Locale
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 plugins {
+    alias(libs.plugins.arturbosch.detekt)
     alias(libs.plugins.ben.manes.versions)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.iurysouza.modulegraph)
+    alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin) apply false
+    alias(libs.plugins.androidx.room) apply false
+    alias(libs.plugins.dagger.hilt.android) apply false
+    alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
-    alias(libs.plugins.dagger.hilt.android) apply false
     alias(libs.plugins.kotlin.plugin.parcelize) apply false
     alias(libs.plugins.kotlin.plugin.serialization) apply false
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin) apply false
-    alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
     alias(libs.plugins.roborazzi) apply false
-    alias(libs.plugins.arturbosch.detekt)
-    alias(libs.plugins.dokka)
-
-    id("androidx.room") version libs.versions.androidx.room.get() apply false
-
-    id("dev.iurysouza.modulegraph") version "0.10.0"
-    id("org.jetbrains.kotlinx.kover") version "0.8.0"
 }
 
 tasks.register("clean", Delete::class) {

@@ -1,6 +1,6 @@
 plugins {
-    id("comicviewer.android.feature.dynamic-feature")
-    id("comicviewer.android.koin")
+    alias(libs.plugins.comicviewer.android.featureDynamicFeature)
+    alias(libs.plugins.comicviewer.koin)
 }
 
 android {

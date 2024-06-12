@@ -6,6 +6,7 @@ kotlin = "2.0.0"
 google-ksp = "2.0.0-1.0.22"
 kotlinx-coroutines = "1.8.1"
 kotlinx-serialization = "1.7.0"
+kotlinx-kover = "0.8.0"
 
 androidx-activity = "1.9.0"
 androidx-credentials = "1.2.2"
@@ -29,20 +30,38 @@ roborazzi = "1.20.0"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
+android-dynamicFeature = { id = "com.android.dynamic-feature", version.ref = "android-gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+androidx-room = { id = "androidx.room", version.ref = "androidx-room" }
 kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
+
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
 ben-manes-versions = "com.github.ben-manes.versions:0.51.0"
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
 mikepenz-aboutlibraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "mikepenz-aboutlibraries" }
-dependency-graph-generator = "com.vanniktech.dependency.graph.generator:0.8.0"
 arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 grgit = "org.ajoberstar.grgit.service:5.2.2"
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
+iurysouza-modulegraph = { id = "dev.iurysouza.modulegraph", version = "0.10.0" }
 dokka = "org.jetbrains.dokka:1.9.20"
+
+comicviewer-android-application = { id = "comicviewer.android.application" }
+comicviewer-android-library = { id = "comicviewer.android.library" }
+comicviewer-android-dynamicFeature = { id = "comicviewer.android.dynamic-feature" }
+comicviewer-android-compose = { id = "comicviewer.android.compose" }
+comicviewer-android-hilt = { id = "comicviewer.android.hilt" }
+comicviewer-koin = { id = "comicviewer.koin" }
+comicviewer-android-test = { id = "comicviewer.android.test" }
+comicviewer-android-lint = { id = "comicviewer.android.lint" }
+comicviewer-android-feature = { id = "comicviewer.android.feature" }
+comicviewer-android-featureDynamicFeature = { id = "comicviewer.android.feature-dynamic-feature" }
+comicviewer-dokka = { id = "comicviewer.android.dokka" }
+
+
 [libraries]
 roborazzi = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "roborazzi" }
 roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose", version.ref = "roborazzi" }
@@ -59,6 +78,7 @@ kotlinx-coroutines-jdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-j
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
+kotlinx-kover = { module = "org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kotlinx-kover" }
 
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity" }
 
@@ -162,9 +182,8 @@ arturbosch-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-for
 arturbosch-detektGradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
+koin-compose = { group = "io.insert-koin", name = "koin-compose" }
 koin-android = { group = "io.insert-koin", name = "koin-android" }
-koin-androidxCompose = { group = "io.insert-koin", name = "koin-compose" }
-koin-androidxWorkmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager" }
 
 compose-destinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "compose-destinations" }
 compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "compose-destinations" }

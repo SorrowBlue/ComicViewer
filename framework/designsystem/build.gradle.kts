@@ -1,6 +1,6 @@
 plugins {
-    id("comicviewer.android.library")
-    id("comicviewer.android.library.compose")
+    alias(libs.plugins.comicviewer.android.library)
+    alias(libs.plugins.comicviewer.android.compose)
 }
 
 android {

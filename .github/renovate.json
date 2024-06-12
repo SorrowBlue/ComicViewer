@@ -92,6 +92,13 @@
       ],
       "groupName": "androidx.compose",
       "groupSlug": "androidx_compose"
+    },
+    {
+      "matchPackagePrefixes": [
+        "org.jetbrains.kotlinx.kover"
+      ],
+      "groupName": "kotlinx.kover",
+      "groupSlug": "kotlinx_kover"
     }
   ]
 }
