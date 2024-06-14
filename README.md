@@ -1,6 +1,8 @@
 # ComicViewer
 
 [![Qodana](https://github.com/SorrowBlue/ComicViewer/actions/workflows/qodana.yml/badge.svg?branch=main)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/qodana.yml)
+[![Detekt & Lint & Build](https://github.com/SorrowBlue/ComicViewer/actions/workflows/detekt-lint-build.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/detekt-lint-build.yml)
+[![Deploy Dokka and static content to Pages](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml)
 
 ## Coding rules
 
@@ -17,182 +19,158 @@ Use [detekt](https://github.com/detekt/detekt) as a static code analysis tool.
 />
 
 ```mermaid
-flowchart LR
-    app["<i class='fa-brands fa-android'></i> app"]
-    feature["<i class='fa-brands fa-android'></i> feature"]
-    feature-dynamic["<i class='fa-brands fa-android'></i> feature-dynamic"]
-    app --> application
-    app --> compose
-    app ---> dagger-hilt
-    app ---> koin
-    feature-dynamic --> dynamic-feature
-    feature-dynamic --> compose
-    feature-dynamic ---> koin
+---
+title: Plugin configuration
+---
+graph LR
+    application ---> detekt
+    application ---> dokka
+    feature-dynamicFeature ---> dynamic-feature
+    feature-dynamicFeature ---> compose
+    feature-dynamicFeature ---> koin
+    library ---> detekt
+    library ---> dokka
     feature --> library
     feature --> compose
-    feature ---> dagger-hilt
-
-    library --> com.android.library
-    library --> org.jetbrains.kotlin.android
-    library --> lint
-    library --> dokka
-    application --> com.android.application
-    application --> org.jetbrains.kotlin.android
-    application --> lint
-    application --> dokka
-    dynamic-feature --> com.android.dynamic-feature
-    dynamic-feature --> org.jetbrains.kotlin.android
-    dynamic-feature --> lint
+    feature ---> hilt
+    dynamic-feature --> detekt
     dynamic-feature --> dokka
-    
-    lint --> io.gitlab.arturbosch.detekt
-    dokka --> org.jetbrains.dokka
-
-    dagger-hilt --> dagger.hilt.android.plugin
-    dagger-hilt --> com.google.devtools.ksp
-    
-    application
-    dynamic-feature
-    library
-    compose
-    dagger-hilt
-    koin
-    lint
+    hilt
     dokka
-
+    detekt
+    compose
+    koin
 ```
 
 ## Module configuration
 
-    :app  # Application
-    :data:database         # Room Database
-    :data:datastore        # DataStore
-    :data:infrastructure   # Infrastructure
-    :data:reader           # ファイル読み込みのインターフェース
-    :data:reader:document  # pdf, epub, cbz, cbr .etc の実装
-    :data:reader:zip       # zip, rar, 7z .etc の実装
-    :data:service          # WorkManagerの実装
-    :data:storage          # 様々なプロトコルの抽象クラス
-    :data:storage:device   # Androidのストレージの実装クラス
-    :data:storage:smb      # SMBの実装クラス
-    :di                    # Daggerの依存関係解決用のモジュール
-                             appモジュールからdataへ直接的に依存させないため
-    :domain:model          # ドメインモデル
-    :domain:service        # ドメインサービス
-    :domain:usecase        # ユースケース
-    :feature:authentication  # 認証機能
-    :feature:book          # 読書機能
-    :feature:bookshelf     # 本棚機能
-    :feature:bookshelf:edit  # 本棚編集機能
-    :feature:bookshelf:selection  # 登録可能本棚リスト機能
-    :feature:favorite      # お気に入り機能
-    :feature:favorite:add  # お気に入り追加機能
-    :feature:favorite:common  # お気に入り共通機能
-    :feature:favorite:create  # お気に入り作成機能
-    :feature:favorite:edit  # お気に入り編集機能
-    :feature:file          # ファイルリスト
-    :feature:folder        # フォルダ画面
-    :feature:history       # 閲覧履歴機能
-    :feature:library       # ライブラリ機能
-    :feature:library:box   # Boxライブラリ機能
-    :feature:library:dropbox  # Dropboxライブラリ機能
-    :feature:library:googledrive  # GoogleDriveライブラリ機能
-    :feature:library:onedrive  # OneDriveライブラリ機能
-    :feature:readlater     # 後で読む機能
-    :feature:search        # 検索機能
-    :feature:settings      # 設定機能
-    :feature:settings:common  # 設定共通機能
-    :feature:settings:display  # 表示設定機能
-    :feature:settings:folder  # フォルダ設定機能
-    :feature:settings:info  # 情報設定機能
-    :feature:settings:security  # セキュリティ設定機能
-    :feature:settings:viewer  # ビューア設定機能
-    :feature:tutorial      # チュートリアル機能
-    :feature:framework:common  # 共通機能
-    :feature:framework:designsystem  # デザインシステム
-    :feature:framework:notificaiton  # 通知機能
-    :feature:framework:ui  # UI機能
+| Module  |                |              | Overview               |
+|---------|----------------|--------------|------------------------|
+| app     |                |              | Application            |
+| data    | coil           |              | サムネイル処理の実装             |
+| data    | database       |              | データベースの実装              |
+| data    | reader         | document     | ファイルリーダーのドキュメント形式実装    |
+| data    | reader         | zip          | ファイルリーダーのアーカイブ形式実装     |
+| data    | storage        | client       | ファイルクライアント             |
+| data    | storage        | device       | ファイルクライアントのローカルストレージ実装 |
+| data    | storage        | smb          | ファイルクライアントのSMBサーバー実装   |
+| di      |                |              |                        |
+| domain  | model          |              | ドメインモデル                |
+| domain  | reader         |              | ページリーダー                |
+| domain  | service        |              | ドメインサービス               |
+| domain  | usecase        |              | ドメインサービス               |
+| feature | authentication |              | 認証画面                   |
+| feature | book           |              | ビューワー画面                |
+| feature | bookshelf      |              | 本棚画面                   |
+| feature | bookshelf      | edit         | 本棚編集画面                 |
+| feature | bookshelf      | selection    | 登録可能本棚画面               |
+| feature | favorite       |              | お気に入り画面                |
+| feature | favorite       | add          | お気に入り追加画面              |
+| feature | favorite       | common       | お気に入り共通機能              |
+| feature | favorite       | create       | お気に入り作成画面              |
+| feature | favorite       | edit         | お気に入り編集画面              |
+| feature | file           |              | ファイル共通機能               |
+| feature | folder         |              | フォルダ画面                 |
+| feature | history        |              | 履歴機能                   |
+| feature | library        |              | ライブラリ機能                |
+| feature | library        | box          | Boxライブラリ機能             |
+| feature | library        | dropbox      | Dropboxライブラリ機能         |
+| feature | library        | googledrive  | GoogleDriveライブラリ機能     |
+| feature | library        | onedrive     | OneDriveライブラリ機能        |
+| feature | readlater      |              | 後で読む画面                 |
+| feature | search         |              | 検索画面                   |
+| feature | settings       |              | 設定画面                   |
+| feature | settings       | common       | 設定共通機能                 |
+| feature | settings       | display      | 画面設定画面                 |
+| feature | settings       | folder       | フォルダ設定画面               |
+| feature | settings       | info         | アプリ情報画面                |
+| feature | settings       | security     | セキュリティ設定画面             |
+| feature | settings       | viewer       | ビューワー設定画面              |
+| feature | tutorial       |              | チュートリアル画面              |
+| feature | framework      | common       | フレームワーク共通              |
+| feature | framework      | designsystem | デザインシステム               |
+| feature | framework      | notificaiton | 通知機能                   |
+| feature | framework      | ui           | UI共通機能                 |
 
 ## Module dependencies
 
 ```mermaid
 graph LR
+    :app --> :usecase
+    :app --> :authentication
+    :app --> :book
+    :app --> :bookshelf
+    :app --> :favorite
+    :app --> :favorite:add
+    :app --> :readlater
+    :app --> :search
+    :app --> settings
+    :app --> :settings:security
+    :app --> :tutorial
+    :app --> library
     subgraph feature
         direction LR
+        :authentication
+        :authentication
+        :book
         :bookshelf --> :bookshelf:edit
         :bookshelf --> :bookshelf:selection
         :bookshelf --> :folder
         :favorite --> :file
         :favorite --> :folder
-        :favorite --> :favorite:common
         :favorite --> :favorite:edit
+        :favorite --> :favorite:common
         :favorite:add --> :favorite:common
-        :search --> :file
-        :search --> :folder
-        :readlater --> :file
-        :readlater --> :folder
+        :favorite:edit --> :favorite:common
         :folder --> :file
         :history --> :file
-        :library --> :history
-        :library:googledrive --> :library
-        :library:onedrive --> :library
-        :library:dropbox --> :library
-        :library:box --> :library
-        :settings --> :settings:display
-        :settings --> :settings:folder
-        :settings --> :settings:info
-        :settings --> :settings:security
-        :settings --> :settings:viewer
-        :settings:display --> :settings:common
-        :settings:folder --> :settings:common
-        :settings:info --> :settings:common
-        :settings:security --> :settings:common
-        :settings:viewer --> :settings:common
-        :settings:security --> :authentication
-        :settings --> :tutorial
+
+        subgraph library
+            direction RL
+            :library:box --> :library
+            :library:dropbox --> :library
+            :library:googledrive --> :library
+            :library:onedrive --> :library
+        end
+        :readlater --> :file
+        :readlater --> :folder
+        :search --> :file
+        :search --> :folder
+        subgraph settings
+            direction LR
+            :settings --> :settings:common
+            :settings --> :settings:display
+            :settings --> :settings:folder
+            :settings --> :settings:info
+            :settings --> :settings:security
+            :settings --> :settings:viewer
+            :settings:display --> :settings:common
+            :settings:folder --> :settings:common
+            :settings:info --> :settings:common
+            :settings:security --> :settings:common
+            :settings:viewer --> :settings:common
+        end
     end
-    subgraph app
-        direction LR
-        :app --> :bookshelf
-        :app --> :favorite
-        :app --> :library
-        :app --> :readlater
-        :app --> :search
-        :app --> :authentication
-        :app --> :tutorial
-    end
-    feature --> domain
     subgraph domain
         direction LR
-        :service --> :usecase
         :usecase --> :model
-    end
-    subgraph feature
-        direction LR
-        :tutorial
-        :library:googledrive --> :app
-        :library:onedrive --> :app
-        :library:dropbox --> :app
-        :library:box --> :app
+        :service --> :model
+        :service --> :usecase
+        :service --> :reader
     end
     subgraph data
         direction LR
-        :infrastructure --> :usecase
-        :infrastructure --> :model
-        :service --> :infrastructure
-        :coil --> :infrastructure
+        :coil --> :service
         :coil --> :reader
-        :document --> :reader
-        :document --> :app
-        :zip --> :reader
-        :device --> :infrastructure
-        :device --> :reader
-        :storage --> :device
-        :smb --> :device
-        :datastore --> :infrastructure
-        :database --> :infrastructure
-        :paging --> :infrastructure
-        :paging --> :database
+        base --> :service
+        source --> :service
+        :reader:document --> :storage:client
+        :reader:zip --> :storage:client
+        :storage:client --> :service
+        :storage:client --> :model
+        :storage:client --> :reader
+        :storage:device --> :storage:client
+        :storage:smb --> :storage:client
     end
 ```
 

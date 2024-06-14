@@ -10,26 +10,21 @@ plugins {
     alias(libs.plugins.comicviewer.android.compose)
     alias(libs.plugins.comicviewer.android.hilt)
     alias(libs.plugins.comicviewer.koin)
-    alias(libs.plugins.mikepenz.aboutlibraries.plugin)
-    alias(libs.plugins.arturbosch.detekt)
-    alias(libs.plugins.grgit)
-    alias(libs.plugins.kotlin.plugin.parcelize)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.aboutlibraries)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.semver)
 }
 
-fun String.toVersion() = this + if (matches(".*-[0-9]+-g[0-9a-f]{7}".toRegex())) "-SNAPSHOT" else ""
 android {
     namespace = "com.sorrowblue.comicviewer.app"
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 15
-        versionName = grgitService.service.get().grgit.describe {
-            longDescr = false
-            isTags = true
-        }?.toVersion() ?: "0.1.4-SNAPSHOT"
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = semver.gitDescribed.toString()
         logger.lifecycle("versionName=$versionName")
         proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     androidResources {
         generateLocaleConfig = true
@@ -53,7 +48,8 @@ android {
             logger.warn("debugStoreFile not found")
         }
 
-        val releaseStoreFile = propertyString("release_storeFile")?.let { if (it.isNotEmpty()) file(it) else null }
+        val releaseStoreFile =
+            propertyString("release_storeFile")?.let { if (it.isNotEmpty()) file(it) else null }
         if (releaseStoreFile?.exists() == true) {
             val release = create("release") {
                 storeFile = releaseStoreFile
@@ -117,18 +113,6 @@ android {
         textReport = false
         xmlReport = false
     }
-
-    testOptions {
-        managedDevices {
-            localDevices {
-                create("pixel8api34") {
-                    device = "Pixel 8"
-                    apiLevel = 34
-                    systemImageSource = "aosp-atd"
-                }
-            }
-        }
-    }
 }
 
 dependencies {
@@ -159,18 +143,10 @@ dependencies {
     implementation(libs.google.android.play.review.ktx)
     implementation(libs.google.android.play.feature.delivery.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(platform(libs.koin.bom))
 
     implementation(libs.google.android.billingclient.billingKtx)
 
     debugImplementation(libs.squareup.leakcanary.android)
-
-    androidTestImplementation(libs.androidx.test.core.ktx)
-    androidTestImplementation(libs.androidx.test.ext.truth)
-    androidTestImplementation(libs.androidx.test.ext.junitKtx)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.test.espresso.core)
 }
 
 /*

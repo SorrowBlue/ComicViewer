@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.comicviewer.android.library)
     alias(libs.plugins.comicviewer.android.compose)
-    alias(libs.plugins.kotlin.plugin.parcelize)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -13,8 +13,8 @@ dependencies {
     implementation(projects.framework.designsystem)
 
     api(libs.androidx.window)
-    api(libs.androidx.compose.material3.adaptiveLayout)
-    api(libs.androidx.compose.material3.adaptiveNavigation)
+    api(libs.androidx.compose.material3.adaptive.layout)
+    api(libs.androidx.compose.material3.adaptive.navigation)
     implementation(libs.androidx.compose.ui.util)
 
     api(libs.kotlinx.collections.immutable)

@@ -5,12 +5,12 @@ import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.ksp
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.parentName
+import com.sorrowblue.comicviewer.testImplementation
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 
-@Suppress("unused")
 internal class ComposeConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
@@ -25,6 +25,10 @@ internal class ComposeConventionPlugin : Plugin<Project> {
             dependencies {
                 implementation(libs.compose.destinations.core)
                 ksp(libs.compose.destinations.ksp)
+
+                testImplementation(platform(libs.androidx.compose.bom))
+                testImplementation(libs.androidx.compose.ui.testManifest)
+                testImplementation(libs.androidx.compose.ui.testJunit4)
             }
 
             extensions.configure<KspExtension> {

@@ -1,5 +1,5 @@
 [versions]
-
+versionCode = "15"
 targetSdk = "34"
 
 kotlin = "2.0.0"
@@ -27,27 +27,31 @@ compose-destinations = "2.1.0-beta09"
 junit = "1.1.5"
 roborazzi = "1.20.0"
 
+dokka = "1.9.20"
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
 android-dynamicFeature = { id = "com.android.dynamic-feature", version.ref = "android-gradle" }
+androidx-room = { id = "androidx.room", version.ref = "androidx-room" }
+androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
+
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-androidx-room = { id = "androidx.room", version.ref = "androidx-room" }
-kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
 
-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
-ben-manes-versions = "com.github.ben-manes.versions:0.51.0"
-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
-mikepenz-aboutlibraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "mikepenz-aboutlibraries" }
-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-grgit = "org.ajoberstar.grgit.service:5.2.2"
+google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
+
+aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "mikepenz-aboutlibraries" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+modulegraph = { id = "dev.iurysouza.modulegraph", version = "0.10.0" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
-iurysouza-modulegraph = { id = "dev.iurysouza.modulegraph", version = "0.10.0" }
-dokka = "org.jetbrains.dokka:1.9.20"
+semver = { id = "com.xenoterracide.gradle.semver", version = "0.11.1" }
+versions = "com.github.ben-manes.versions:0.51.0"
 
 comicviewer-android-application = { id = "comicviewer.android.application" }
 comicviewer-android-library = { id = "comicviewer.android.library" }
@@ -55,22 +59,19 @@ comicviewer-android-dynamicFeature = { id = "comicviewer.android.dynamic-feature
 comicviewer-android-compose = { id = "comicviewer.android.compose" }
 comicviewer-android-hilt = { id = "comicviewer.android.hilt" }
 comicviewer-koin = { id = "comicviewer.koin" }
-comicviewer-android-test = { id = "comicviewer.android.test" }
-comicviewer-android-lint = { id = "comicviewer.android.lint" }
+comicviewer-detekt = { id = "comicviewer.android.detekt" }
 comicviewer-android-feature = { id = "comicviewer.android.feature" }
 comicviewer-android-featureDynamicFeature = { id = "comicviewer.android.feature-dynamic-feature" }
 comicviewer-dokka = { id = "comicviewer.android.dokka" }
 
-
 [libraries]
-roborazzi = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "roborazzi" }
-roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose", version.ref = "roborazzi" }
-roborazzi-junitRule = { module = "io.github.takahirom.roborazzi:roborazzi-junit-rule", version.ref = "roborazzi" }
-ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
-android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
-kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-kotlin-compose-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
-dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "1.9.20" }
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-compose-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+kotlinx-kover-gradlePlugin = { module = "org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kotlinx-kover" }
+dokka-gradlePlugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+google-ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
+detekt-gradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version = "0.3.7" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
@@ -78,63 +79,47 @@ kotlinx-coroutines-jdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-j
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
-kotlinx-kover = { module = "org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kotlinx-kover" }
 
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity" }
-
 androidx-appcompat = "androidx.appcompat:appcompat:1.7.0"
-
 androidx-biometric = "androidx.biometric:biometric:1.2.0-alpha05"
-
 androidx-browser = "androidx.browser:browser:1.8.0"
-
 androidx-core-ktx = "androidx.core:core-ktx:1.13.1"
 androidx-core-splashscreen = "androidx.core:core-splashscreen:1.0.1"
-
 androidx-compose-bom = "androidx.compose:compose-bom:2024.06.00"
-androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
-androidx-compose-ui-toolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
-androidx-compose-ui-testJunit4 = { module = "androidx.compose.ui:ui-test-junit4" }
-androidx-compose-ui-testManifest = { module = "androidx.compose.ui:ui-test-manifest" }
-androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util" }
-androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-compose-ui-testJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-compose-ui-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
+androidx-compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.3.0-beta03" }
-androidx-compose-material3-adaptiveNavigationSuite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite" }
-androidx-compose-material3-adaptiveLayout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout", version = "1.0.0-beta03" }
-androidx-compose-material3-adaptiveNavigation = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation", version = "1.0.0-beta03" }
-
+androidx-compose-material3-adaptiveNavigationSuite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version = "1.3.0-beta03" }
+androidx-compose-material3-adaptive-layout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout", version = "1.0.0-beta03" }
+androidx-compose-material3-adaptive-navigation = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation", version = "1.0.0-beta03" }
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "androidx-credentials" }
 androidx-credentials-playServicesAuth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "androidx-credentials" }
-
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "androidx-datastore" }
-
 androidx-documentfile = "androidx.documentfile:documentfile:1.0.1"
-
 androidx-exifinterface = "androidx.exifinterface:exifinterface:1.3.7"
-
 androidx-hilt-compiler = "androidx.hilt:hilt-compiler:1.2.0"
 androidx-hilt-navigationCompose = "androidx.hilt:hilt-navigation-compose:1.2.0"
 androidx-hilt-work = "androidx.hilt:hilt-work:1.2.0"
-
 androidx-lifecycle-viewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
-
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
-androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
-
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "androidx-room" }
-androidx-window = { module = "androidx.window:window-core", version = "1.3.0" }
-
 androidx-startup-runtime = "androidx.startup:startup-runtime:1.1.1"
-
+androidx-window = { module = "androidx.window:window-core", version = "1.3.0" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+
 google-android-play-feature-delivery-ktx = "com.google.android.play:feature-delivery-ktx:2.1.0"
 google-android-play-review-ktx = "com.google.android.play:review-ktx:2.0.1"
-google-android-billingclient-BillingKtx = "com.android.billingclient:billing-ktx:7.0.0"
+google-android-billingclient-billingKtx = "com.android.billingclient:billing-ktx:7.0.0"
 google-code-gson = "com.google.code.gson:gson:2.11.0"
 google-guava = "com.google.guava:guava:33.2.1-jre"
 google-android-gms-play-services-auth = "com.google.android.gms:play-services-auth:21.2.0"
@@ -155,6 +140,7 @@ github-omicronapps-SevenZipJBinding4Android = "com.github.omicronapps:7-Zip-JBin
 artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.24.0"
 squareup-logcat = "com.squareup.logcat:logcat:0.1"
 fasterxml-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.17.1"
+squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.9.0" }
 
 google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "google-dagger" }
 google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "google-dagger" }
@@ -179,7 +165,6 @@ robolectric = "org.robolectric:robolectric:4.12.2"
 mikepenz-aboutlibrariesComposeM3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "mikepenz-aboutlibraries" }
 nlopez-compose-rules-detekt = "io.nlopez.compose.rules:detekt:0.4.4"
 arturbosch-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
-arturbosch-detektGradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose" }
@@ -188,6 +173,9 @@ koin-android = { group = "io.insert-koin", name = "koin-android" }
 compose-destinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "compose-destinations" }
 compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "compose-destinations" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
+roborazzi = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "roborazzi" }
+roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose", version.ref = "roborazzi" }
+roborazzi-junitRule = { module = "io.github.takahirom.roborazzi:roborazzi-junit-rule", version.ref = "roborazzi" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx", "androidx-room-paging"]

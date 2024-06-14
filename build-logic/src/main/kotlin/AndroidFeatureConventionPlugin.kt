@@ -13,8 +13,7 @@ internal class AndroidFeatureConventionPlugin : Plugin<Project> {
                 apply(libs.plugins.comicviewer.android.library)
                 apply(libs.plugins.comicviewer.android.compose)
                 apply(libs.plugins.comicviewer.android.hilt)
-                apply(libs.plugins.comicviewer.android.test)
-                apply(libs.plugins.kotlin.plugin.parcelize)
+                apply(libs.plugins.kotlin.parcelize)
             }
 
             dependencies {

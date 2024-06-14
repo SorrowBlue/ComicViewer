@@ -12,7 +12,7 @@ internal class DetektConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
-                apply(libs.plugins.arturbosch.detekt)
+                apply(libs.plugins.detekt)
             }
 
             dependencies {
