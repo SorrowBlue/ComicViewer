@@ -4,7 +4,7 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 plugins {
     alias(libs.plugins.comicviewer.android.featureDynamicFeature)
     alias(libs.plugins.comicviewer.koin)
-    alias(libs.plugins.kotlin.plugin.serialization)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {

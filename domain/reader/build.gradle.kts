@@ -7,5 +7,5 @@ android {
 }
 
 dependencies {
-    api("com.squareup.okio:okio:3.9.0")
+    api(libs.squareup.okio)
 }

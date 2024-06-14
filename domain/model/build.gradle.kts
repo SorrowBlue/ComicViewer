@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.comicviewer.android.library)
-    alias(libs.plugins.kotlin.plugin.parcelize)
-    alias(libs.plugins.kotlin.plugin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {

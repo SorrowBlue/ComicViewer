@@ -12,7 +12,7 @@ internal class AndroidFeatureDynamicFeatureConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply(libs.plugins.comicviewer.android.dynamicFeature)
                 apply(libs.plugins.comicviewer.android.compose)
-                apply(libs.plugins.kotlin.plugin.parcelize)
+                apply(libs.plugins.kotlin.parcelize)
             }
 
             dependencies {

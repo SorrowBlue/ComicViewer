@@ -4,20 +4,24 @@ plugins {
 
 group = "com.sorrowblue.comicviewer.buildlogic"
 
-java {
-    toolchain {
+kotlin {
+    jvmToolchain {
+        vendor = JvmVendorSpec.ADOPTIUM
         languageVersion = JavaLanguageVersion.of(17)
+    }
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-receivers")
     }
 }
 
 dependencies {
-    implementation(libs.android.tools.build.gradle)
-    implementation(libs.kotlin.gradle.plugin)
-    implementation(libs.kotlin.compose.plugin)
-    implementation(libs.kotlinx.kover)
-    implementation(libs.dokka.gradle.plugin)
-    implementation(libs.arturbosch.detektGradlePlugin)
-    implementation(libs.ksp.gradlePlugin)
+    implementation(libs.android.gradlePlugin)
+    implementation(libs.kotlin.gradlePlugin)
+    implementation(libs.kotlin.compose.gradlePlugin)
+    implementation(libs.kotlinx.kover.gradlePlugin)
+    implementation(libs.google.ksp.gradlePlugin)
+    implementation(libs.detekt.gradlePlugin)
+    implementation(libs.dokka.gradlePlugin)
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
@@ -39,13 +43,12 @@ gradlePlugin {
         register(libs.plugins.comicviewer.android.hilt) {
             implementationClass = "DaggerHiltConventionPlugin"
         }
-        register(libs.plugins.comicviewer.android.lint) {
+        register(libs.plugins.comicviewer.detekt) {
             implementationClass = "DetektConventionPlugin"
         }
         register(libs.plugins.comicviewer.koin) {
             implementationClass = "KoinConventionPlugin"
         }
-
         register(libs.plugins.comicviewer.android.feature) {
             implementationClass = "AndroidFeatureConventionPlugin"
         }
@@ -55,13 +58,10 @@ gradlePlugin {
         register(libs.plugins.comicviewer.dokka) {
             implementationClass = "DokkaConventionPlugin"
         }
-        register(libs.plugins.comicviewer.android.test) {
-            implementationClass = "AndroidTestConventionPlugin"
-        }
     }
 }
 
-fun NamedDomainObjectContainer<PluginDeclaration>.register(
+private fun NamedDomainObjectContainer<PluginDeclaration>.register(
     provider: Provider<PluginDependency>,
     function: PluginDeclaration.() -> Unit,
 ) =

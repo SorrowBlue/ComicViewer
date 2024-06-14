@@ -3,22 +3,23 @@ import java.util.Locale
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 plugins {
-    alias(libs.plugins.arturbosch.detekt)
-    alias(libs.plugins.ben.manes.versions)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.versions)
     alias(libs.plugins.dokka)
-    alias(libs.plugins.iurysouza.modulegraph)
+    alias(libs.plugins.modulegraph)
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.android.dynamicFeature) apply false
     alias(libs.plugins.androidx.navigation.safeargs.kotlin) apply false
     alias(libs.plugins.androidx.room) apply false
-    alias(libs.plugins.dagger.hilt.android) apply false
+    alias(libs.plugins.google.dagger.hilt) apply false
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
-    alias(libs.plugins.kotlin.plugin.parcelize) apply false
-    alias(libs.plugins.kotlin.plugin.serialization) apply false
-    alias(libs.plugins.mikepenz.aboutlibraries.plugin) apply false
+    alias(libs.plugins.kotlin.parcelize) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.aboutlibraries) apply false
     alias(libs.plugins.roborazzi) apply false
 }
 
@@ -75,7 +76,7 @@ plugins.withId("org.jetbrains.dokka") {
 afterEvaluate {
     val task = tasks.named("createModuleGraph")
     task.configure {
-        doNotTrackState("See https://github.com/springdoc/springdoc-openapi-gradle-plugin/issues/102")
+        doNotTrackState("Failed to create MD5 hash for file content.")
     }
 }
 moduleGraphConfig {

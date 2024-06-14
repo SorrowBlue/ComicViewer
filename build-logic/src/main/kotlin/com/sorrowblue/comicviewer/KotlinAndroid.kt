@@ -6,7 +6,7 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
-internal fun Project.configureKotlin(extension: KotlinAndroidProjectExtension) {
+internal fun configureKotlin(extension: KotlinAndroidProjectExtension) {
     with(extension) {
         jvmToolchain {
             vendor.set(JvmVendorSpec.ADOPTIUM)
@@ -23,6 +23,17 @@ internal fun Project.configureKotlinAndroid(
 ) {
     with(commonExtension) {
 
+        defaultConfig {
+            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        }
+
+        @Suppress("UnstableApiUsage")
+        testOptions {
+            unitTests {
+                isIncludeAndroidResources = true
+            }
+        }
+
         lint {
             baseline = file("lint-baseline.xml")
         }
@@ -35,5 +46,6 @@ internal fun Project.configureKotlinAndroid(
                 initWith(getByName("release"))
             }
         }
+
     }
 }

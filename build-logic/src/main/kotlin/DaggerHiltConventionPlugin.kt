@@ -11,8 +11,8 @@ internal class DaggerHiltConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
+                apply(libs.plugins.google.dagger.hilt)
                 apply(libs.plugins.google.ksp)
-                apply(libs.plugins.dagger.hilt.android)
             }
 
             dependencies {

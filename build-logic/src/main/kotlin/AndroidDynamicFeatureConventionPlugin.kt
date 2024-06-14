@@ -1,5 +1,6 @@
 import com.android.build.api.dsl.DynamicFeatureExtension
 import com.sorrowblue.comicviewer.apply
+import com.sorrowblue.comicviewer.applyTestImplementation
 import com.sorrowblue.comicviewer.configureKotlin
 import com.sorrowblue.comicviewer.configureKotlinAndroid
 import com.sorrowblue.comicviewer.implementation
@@ -17,7 +18,7 @@ internal class AndroidDynamicFeatureConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply(libs.plugins.android.dynamicFeature)
                 apply(libs.plugins.kotlin.android)
-                apply(libs.plugins.comicviewer.android.lint)
+                apply(libs.plugins.comicviewer.detekt)
                 apply(libs.plugins.comicviewer.dokka)
             }
 
@@ -34,6 +35,7 @@ internal class AndroidDynamicFeatureConventionPlugin : Plugin<Project> {
 
             dependencies {
                 implementation(libs.squareup.logcat)
+                applyTestImplementation()
             }
         }
     }
