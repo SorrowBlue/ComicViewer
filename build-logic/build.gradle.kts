@@ -64,8 +64,7 @@ gradlePlugin {
 private fun NamedDomainObjectContainer<PluginDeclaration>.register(
     provider: Provider<PluginDependency>,
     function: PluginDeclaration.() -> Unit,
-) =
-    register(provider.get().pluginId) {
-        id = name
-        function()
-    }
+) = register(provider.get().pluginId) {
+    id = name
+    function()
+}
