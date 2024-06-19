@@ -14,7 +14,6 @@ sealed interface Feature {
 
     enum class Basic(val label: Int, val icon: ImageVector) : Feature {
         History(R.string.library_label_history, ComicIcons.History),
-        Download(R.string.library_label_download, ComicIcons.Download),
     }
 
     sealed interface AddOn : Feature {
