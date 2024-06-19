@@ -50,7 +50,6 @@ fun DependenciesContainerBuilder<*>.LibraryGraphDependencies(
                         }
 
                         Feature.Basic.History -> destinationsNavigator.navigate(HistoryScreenDestination())
-                        Feature.Basic.Download -> TODO()
                     }
                 }
             }
