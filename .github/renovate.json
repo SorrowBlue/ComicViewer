@@ -99,6 +99,13 @@
       ],
       "groupName": "kotlinx.kover",
       "groupSlug": "kotlinx_kover"
+    },
+    {
+      "matchPackagePrefixes": [
+        "androidx.test"
+      ],
+      "groupName": "androidx.test",
+      "groupSlug": "androidx_test"
     }
   ]
 }
