@@ -106,6 +106,13 @@
       ],
       "groupName": "androidx.test",
       "groupSlug": "androidx_test"
+    },
+    {
+      "matchPackagePrefixes": [
+        "io.coil-kt.coil3"
+      ],
+      "groupName": "io.coil-kt.coil3",
+      "groupSlug": "io_coil-kt_coil3"
     }
   ]
 }
