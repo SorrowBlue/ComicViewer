@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import logcat.LogPriority
@@ -161,13 +162,19 @@ internal class DropBoxApiRepositoryImpl(
     override suspend fun download(
         path: String,
         outputStream: OutputStream,
-        progress: (Double) -> Unit,
+        progress: suspend (Double) -> Unit,
     ) {
         val dbxDownloader = client().files().download(path)
         val size = dbxDownloader.result.size.toDouble()
         dbxDownloader.download(outputStream) {
-            progress(it / size)
+            runBlocking {
+                progress(it / size)
+            }
         }
+    }
+
+    override suspend fun downloadLink(path: String): String {
+        return client().files().getTemporaryLink(path).link
     }
 
     private suspend fun readCredential(): DbxCredential? {

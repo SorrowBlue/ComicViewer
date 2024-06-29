@@ -7,6 +7,7 @@ import androidx.room.TypeConverter
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 
@@ -74,10 +75,21 @@ internal data class BookshelfEntity(
                     is SmbServer.Auth.UsernamePassword -> DecryptedPasswordEntity(auth.password)
                 }
             )
+
+            ShareContents -> BookshelfEntity(
+                id = model.id,
+                displayName = model.displayName,
+                type = Type.SHARE_CONTENTS,
+                host = "",
+                port = 0,
+                domain = "",
+                username = "",
+                password = DecryptedPasswordEntity("")
+            )
         }
     }
 
-    enum class Type { INTERNAL, SMB }
+    enum class Type { INTERNAL, SMB, SHARE_CONTENTS }
 
     fun toModel(fileCount: Int): Bookshelf = when (type) {
         Type.INTERNAL -> InternalStorage(
@@ -98,5 +110,7 @@ internal data class BookshelfEntity(
             },
             fileCount = fileCount
         )
+
+        Type.SHARE_CONTENTS -> ShareContents
     }
 }

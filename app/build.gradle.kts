@@ -146,7 +146,7 @@ dependencies {
 
     implementation(libs.google.android.billingclient.billingKtx)
 
-    debugImplementation(libs.squareup.leakcanary.android)
+//    debugImplementation(libs.squareup.leakcanary.android)
 }
 
 /*

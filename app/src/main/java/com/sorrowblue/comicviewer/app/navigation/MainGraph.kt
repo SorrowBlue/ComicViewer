@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.app.navigation
 import com.ramcosta.composedestinations.annotation.ExternalDestination
 import com.ramcosta.composedestinations.annotation.ExternalNavGraph
 import com.ramcosta.composedestinations.annotation.NavHostGraph
+import com.sorrowblue.comicviewer.feature.book.destinations.ReceiveBookScreenDestination
 import com.sorrowblue.comicviewer.feature.book.navgraphs.BookNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraphs.BookshelfNavGraph
 import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddScreenDestination
@@ -25,5 +26,6 @@ internal annotation class MainGraph {
     @ExternalNavGraph<LibraryNavGraph>
     @ExternalNavGraph<TutorialNavGraph>
     @ExternalDestination<FavoriteAddScreenDestination>
+    @ExternalDestination<ReceiveBookScreenDestination>
     companion object Includes
 }

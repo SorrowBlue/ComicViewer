@@ -8,10 +8,12 @@ import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderProvider
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.DeviceFileClientFactory
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.ShareFileClientFactory
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClientFactory
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReaderFactory
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
@@ -35,6 +37,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
     @DeviceFileClientFactory private val deviceFileClientFactory: FileClient.Factory<InternalStorage>,
+    @ShareFileClientFactory private val shareFileClientFactory: FileClient.Factory<ShareContents>,
     @SmbFileClientFactory private val smbFileClientFactory: FileClient.Factory<SmbServer>,
     @ZipFileReaderFactory private val zipFileReaderFactory: FileReaderFactory,
 ) : RemoteDataSource {
@@ -47,6 +50,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
     private val fileClient = when (bookshelf) {
         is InternalStorage -> deviceFileClientFactory.create(bookshelf)
         is SmbServer -> smbFileClientFactory.create(bookshelf)
+        ShareContents -> shareFileClientFactory.create(bookshelf as ShareContents)
     }
 
     override suspend fun getAttribute(path: String): FileAttribute? {
@@ -151,17 +155,28 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
     override suspend fun fileReader(book: Book): FileReader? {
         return runCatching {
             withContext(dispatcher) {
-                when (book) {
-                    is BookFile -> {
-                        when (book.extension) {
-                            "pdf", "epub", "xps", "oxps", "mobi", "fb2" ->
-                                documentReader(book.extension, fileClient.seekableInputStream(book))
+                kotlin.runCatching {
+                    when (book) {
+                        is BookFile -> {
+                            when (book.extension) {
+                                "pdf", "epub", "xps", "oxps", "mobi", "fb2" ->
+                                    documentReader(
+                                        book.extension,
+                                        fileClient.seekableInputStream(book)
+                                    )
 
-                            else -> zipFileReaderFactory.create(fileClient.seekableInputStream(book))
+                                else -> zipFileReaderFactory.create(
+                                    fileClient.seekableInputStream(
+                                        book
+                                    )
+                                )
+                            }
                         }
-                    }
 
-                    is BookFolder -> ImageFolderFileReader(fileClient, book)
+                        is BookFolder -> ImageFolderFileReader(fileClient, book)
+                    }
+                }.getOrElse {
+                    documentReader("pdf", fileClient.seekableInputStream(book))
                 }
             }
         }.getOrElse {

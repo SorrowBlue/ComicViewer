@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.book.BookScreenNavigator
 import com.sorrowblue.comicviewer.feature.book.NavGraphs
+import com.sorrowblue.comicviewer.feature.book.destinations.BookMenuScreenDestination
 import com.sorrowblue.comicviewer.feature.book.destinations.BookScreenDestination
 
 @Composable
@@ -35,6 +36,10 @@ fun DependenciesContainerBuilder<*>.BookGraphDependencies(
 
             override fun navigateUp() {
                 destinationsNavigator.navigateUp()
+            }
+
+            override fun onContainerLongClick() {
+                destinationsNavigator.navigate(BookMenuScreenDestination)
             }
         })
     }

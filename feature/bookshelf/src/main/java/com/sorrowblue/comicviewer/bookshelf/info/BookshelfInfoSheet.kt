@@ -43,6 +43,7 @@ import com.sorrowblue.comicviewer.bookshelf.component.BookshelfConverter.source
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.fakeFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
@@ -216,6 +217,9 @@ private fun BookshelfInfoSheet(
                         overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
                         headlineContent = { Text(text = folder.path) },
                     )
+                }
+
+                ShareContents -> {
                 }
             }
             Spacer(modifier = Modifier.weight(1f))

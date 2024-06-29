@@ -9,10 +9,12 @@ import com.sorrowblue.comicviewer.data.database.entity.BookshelfEntity
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 internal class BookshelfLocalDataSourceImpl @Inject constructor(
@@ -35,7 +37,11 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
     }
 
     override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> {
-        return dao.flow(bookshelfId.value).map { it?.toModel(0) }
+        return if (bookshelfId == ShareContents.id) {
+            flowOf(ShareContents)
+        } else {
+            dao.flow(bookshelfId.value).map { it?.toModel(0) }
+        }
     }
 
     override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>> {

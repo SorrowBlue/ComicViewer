@@ -15,10 +15,15 @@ internal interface DropBoxApiRepository {
     suspend fun currentAccount(): FullAccount?
     suspend fun signOut()
     suspend fun list(path: String, limit: Long, cursor: String?): ListFolderResult?
-    suspend fun download(path: String, outputStream: OutputStream, progress: (Double) -> Unit)
+    suspend fun download(
+        path: String,
+        outputStream: OutputStream,
+        progress: suspend (Double) -> Unit,
+    )
     fun startSignIn()
     suspend fun dbxCredential(): Boolean
 
     val isAuthenticated: Flow<Boolean>
     suspend fun refresh()
+    suspend fun downloadLink(path: String): String
 }

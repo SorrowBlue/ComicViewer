@@ -26,6 +26,7 @@ android {
 
 dependencies {
     implementation(projects.framework.notification)
+    implementation(projects.feature.library.common)
     implementation(projects.domain.model)
     implementation(projects.feature.library)
 
