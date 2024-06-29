@@ -27,7 +27,7 @@ internal class NotificationInitializer : Initializer<Unit> {
             createNotificationChannel(
                 context,
                 ChannelID.DOWNLOAD,
-                NotificationManager.IMPORTANCE_LOW,
+                NotificationManager.IMPORTANCE_DEFAULT,
                 R.string.framework_notification_name_download,
                 R.string.framework_notification_description_download
             )

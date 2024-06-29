@@ -17,6 +17,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
@@ -155,6 +156,8 @@ private class BookshelfEditScreenStateImpl(
                                     viewModel.registerBookshelfUseCase,
                                 )
                             }
+
+                            ShareContents -> throw RuntimeException("ShareContentsは編集できません")
                         }
                     } ?: kotlin.run {
                         snackbarHostState.showSnackbar(context.getString(R.string.bookshelf_edit_msg_could_not_load_bookshelf))

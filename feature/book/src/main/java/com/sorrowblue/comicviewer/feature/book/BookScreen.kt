@@ -5,31 +5,15 @@ import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
@@ -40,19 +24,15 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.book.navigation.BookGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.BookGraphTransitions
+import com.sorrowblue.comicviewer.feature.book.section.BookAppBar
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
 import com.sorrowblue.comicviewer.feature.book.section.BookSheet
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
-import com.sorrowblue.comicviewer.feature.book.section.PageFormat2
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
-import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
-import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
-import com.sorrowblue.comicviewer.framework.ui.material3.ExposedDropdownMenu
-import kotlinx.collections.immutable.toPersistentList
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import logcat.logcat
 
 @NavTypeSerializer
 internal class BookshelfIdSerializer : DestinationsNavTypeSerializer<BookshelfId> {
@@ -70,7 +50,6 @@ internal sealed interface BookScreenUiState {
         val book: Book,
         val bookSheetUiState: BookSheetUiState,
         val isVisibleTooltip: Boolean = true,
-        val isShowBookMenu: Boolean = false,
     ) : BookScreenUiState
 }
 
@@ -78,6 +57,7 @@ interface BookScreenNavigator {
     fun navigateUp()
     fun onSettingsClick()
     fun onNextBookClick(book: Book, favoriteId: FavoriteId)
+    fun onContainerLongClick()
 }
 
 class BookArgs(
@@ -102,7 +82,8 @@ internal fun BookScreen(
         args = args,
         onBackClick = navigator::navigateUp,
         onSettingsClick = navigator::onSettingsClick,
-        onNextBookClick = navigator::onNextBookClick
+        onNextBookClick = navigator::onNextBookClick,
+        onContainerLongClick = navigator::onContainerLongClick,
     )
 }
 
@@ -112,6 +93,7 @@ private fun BookScreen(
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onNextBookClick: (Book, FavoriteId) -> Unit,
+    onContainerLongClick: () -> Unit,
     state: BookScreenState = rememberBookScreenState(args = args),
 ) {
     when (val uiState = state.uiState) {
@@ -137,19 +119,11 @@ private fun BookScreen(
                 onBackClick = onBackClick,
                 onNextBookClick = { onNextBookClick(it, args.favoriteId) },
                 onContainerClick = state2::toggleTooltip,
-                onContainerLongClick = state2::onContainerLongClick,
+                onContainerLongClick = onContainerLongClick,
                 onPageChange = state2::onPageChange,
                 onSettingsClick = onSettingsClick,
                 onPageLoad = state2::onPageLoaded,
             )
-            if (uiState2.isShowBookMenu) {
-                BookMenuSheet(
-                    uiState = state2.bookMenuSheetUiState,
-                    onDismissRequest = state2::hideBookMenu,
-                    onChangeValue = state2::onChangePageDisplayFormat,
-                    onChangeValue2 = state2::onChangePageScale
-                )
-            }
             DisposableEffect(Unit) {
                 onDispose(state2::onScreenDispose)
             }
@@ -160,9 +134,8 @@ private fun BookScreen(
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BookScreen(
+internal fun BookScreen(
     uiState: BookScreenUiState.Loaded,
     pagerState: PagerState,
     currentList: SnapshotStateList<PageItem>,
@@ -174,6 +147,27 @@ private fun BookScreen(
     onSettingsClick: () -> Unit,
     onPageLoad: (UnratedPage, Bitmap) -> Unit,
 ) {
+    val adaptiveInfo by rememberWindowAdaptiveInfo()
+    LaunchedEffect(adaptiveInfo) {
+        logcat {
+            """
+            windowWidthSizeClass=${adaptiveInfo.windowSizeClass.windowWidthSizeClass}
+            windowHeightSizeClass=${adaptiveInfo.windowSizeClass.windowHeightSizeClass}
+            isTabletop = ${adaptiveInfo.windowPosture.isTabletop}
+            ${
+                adaptiveInfo.windowPosture.hingeList.joinToString(",\n") {
+                    """
+                    bounds=${it.bounds}
+                    isFlat=${it.isFlat}
+                    isVertical=${it.isVertical}
+                    isOccluding=${it.isOccluding}
+                    isSeparating=${it.isSeparating}
+                """.trimIndent()
+                }
+            }
+        """.trimIndent()
+        }
+    }
     Scaffold(
         topBar = {
             AnimatedVisibility(
@@ -181,29 +175,10 @@ private fun BookScreen(
                 enter = slideInVertically { -it },
                 exit = slideOutVertically { -it }
             ) {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = uiState.book.name,
-                            modifier = Modifier.basicMarquee()
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = onSettingsClick) {
-                            Icon(imageVector = ComicIcons.Settings, contentDescription = null)
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                            elevation = ElevationTokens.Level2
-                        )
-                    ),
-                    windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+                BookAppBar(
+                    title = uiState.book.name,
+                    onBackClick = onBackClick,
+                    onSettingsClick = onSettingsClick
                 )
             }
         },
@@ -231,38 +206,5 @@ private fun BookScreen(
             onNextBookClick = onNextBookClick,
             onPageLoad = onPageLoad
         )
-    }
-}
-
-data class BookMenuSheetUiState(
-    val pageFormat2: PageFormat2 = PageFormat2.Default,
-    val pageScale: PageScale = PageScale.Fit,
-)
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-internal fun BookMenuSheet(
-    uiState: BookMenuSheetUiState,
-    onDismissRequest: () -> Unit,
-    onChangeValue: (PageFormat2) -> Unit,
-    onChangeValue2: (PageScale) -> Unit,
-) {
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        contentWindowInsets = { PaddingValues().asWindowInsets() }
-    ) {
-        ExposedDropdownMenu(
-            label = stringResource(id = R.string.book_label_display_format),
-            value = stringResource(id = uiState.pageFormat2.label),
-            onChangeValue = onChangeValue,
-            menus = remember(PageFormat2.entries::toPersistentList),
-        )
-        ExposedDropdownMenu(
-            label = stringResource(id = R.string.book_label_scale),
-            value = stringResource(id = uiState.pageScale.label),
-            onChangeValue = onChangeValue2,
-            menus = remember(PageScale.entries::toPersistentList),
-        )
-        Spacer(modifier = Modifier.navigationBarsPadding())
     }
 }

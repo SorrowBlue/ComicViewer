@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.feature.library.dropbox
 
 import android.os.Parcelable
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
@@ -84,16 +82,12 @@ private fun DropBoxScreen(
 
     val uiState = state.uiState
     val lazPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
-    val createFileRequest = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-        state::onResult
-    )
     DropBoxScreen(
         lazyPagingItems = lazPagingItems,
         uiState = uiState,
         onBackClick = onBackClick,
         onProfileImageClick = state::onProfileImageClick,
-        onFileClick = { state.onFileClick(it, createFileRequest, onFolderClick) },
+        onFileClick = { state.onFileClick(it, onFolderClick) },
         onDialogDismissRequest = state::onDialogDismissRequest,
         onLogoutClick = state::onLogoutClick,
     )

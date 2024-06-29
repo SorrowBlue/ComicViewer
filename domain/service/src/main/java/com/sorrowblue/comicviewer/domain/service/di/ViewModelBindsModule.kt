@@ -23,6 +23,7 @@ import com.sorrowblue.comicviewer.domain.service.interactor.file.ExistsReadlater
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetFileAttributeInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetFileInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.file.GetIntentBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetNextBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.UpdateLastReadPageInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingBookshelfFolderInteractor
@@ -59,6 +60,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
@@ -160,6 +162,9 @@ internal interface ViewModelBindsModule {
 
     @Binds
     fun bindUpdateFavoriteUseCase(interactor: UpdateFavoriteInteractor): UpdateFavoriteUseCase
+
+    @Binds
+    fun bindGetIntentBookUseCase(interactor: GetIntentBookInteractor): GetIntentBookUseCase
 
     // Paging
 
