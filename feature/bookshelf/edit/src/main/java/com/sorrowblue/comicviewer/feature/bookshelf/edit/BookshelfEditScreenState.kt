@@ -157,7 +157,7 @@ private class BookshelfEditScreenStateImpl(
                                 )
                             }
 
-                            ShareContents -> throw RuntimeException("ShareContentsは編集できません")
+                            ShareContents -> BookshelfEditLoading
                         }
                     } ?: kotlin.run {
                         snackbarHostState.showSnackbar(context.getString(R.string.bookshelf_edit_msg_could_not_load_bookshelf))

@@ -6,6 +6,8 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -25,13 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
-import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
 /**
  * ファイル情報をリストアイテムで表示する
@@ -39,7 +40,7 @@ import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
  * @param file　ファイル
  * @param onClick　クリック時の処理
  * @param onLongClick　ロングクリック時の処理
- * @param modifier  Modifier
+ * @param modifier Modifier
  * @param isThumbnailEnabled　サムネイル表示を有効にするか
  */
 @OptIn(ExperimentalFoundationApi::class)
@@ -71,32 +72,31 @@ fun ListFile(
         },
         leadingContent = {
             if (isThumbnailEnabled) {
-                AsyncImage2(
+                SubcomposeAsyncImage(
                     model = file,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    loading = {
-                        CircularProgressIndicator()
-                    },
+                    loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
                     error = {
-                        if (file is Book) {
-                            Icon(imageVector = ComicIcons.Image, contentDescription = null)
-                        } else {
-                            Icon(imageVector = ComicIcons.Folder, contentDescription = null)
-                        }
+                        Icon(
+                            imageVector = if (file is Book) ComicIcons.Image else ComicIcons.Folder,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
+                        )
                     },
                     modifier = Modifier
                         .size(80.dp)
                         .clip(CardDefaults.shape)
-                        .background(ComicTheme.colorScheme.surfaceVariant),
-                    placeholder = rememberDebugPlaceholder()
+                        .background(ComicTheme.colorScheme.surfaceContainer),
                 )
             } else {
                 Box(
                     modifier = Modifier
                         .size(56.dp)
                         .clip(CardDefaults.shape)
-                        .background(ComicTheme.colorScheme.surfaceVariant),
+                        .background(ComicTheme.colorScheme.surfaceContainer),
                     contentAlignment = Alignment.Center
                 ) {
                     if (file is Book) {
@@ -147,14 +147,23 @@ fun ListFileCard(
             },
             leadingContent = {
                 if (isThumbnailEnabled) {
-                    AsyncImage2(
+                    SubcomposeAsyncImage(
                         model = file,
                         modifier = Modifier
                             .size(80.dp)
                             .clip(CardDefaults.shape)
-                            .background(ComicTheme.colorScheme.surfaceVariant),
+                            .background(ComicTheme.colorScheme.surfaceContainer),
                         contentDescription = null,
-                        placeholder = rememberDebugPlaceholder()
+                        loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
+                        error = {
+                            Icon(
+                                imageVector = if (file is Book) ComicIcons.Image else ComicIcons.Folder,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .wrapContentSize()
+                                    .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
+                            )
+                        },
                     )
                 } else {
                     Box(

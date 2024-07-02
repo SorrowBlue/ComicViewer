@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
@@ -23,7 +24,6 @@ import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.WelcomeSheet
-import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -71,8 +71,8 @@ private fun TutorialScreen(
 
     BackHandler(state.enabledBack, state::onBack)
 
-    LifecycleEffect(targetEvent = Lifecycle.Event.ON_START, action = state::onStart)
-    LifecycleEffect(targetEvent = Lifecycle.Event.ON_STOP, action = state::onStop)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_START, onEvent = state::onStart)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_STOP, onEvent = state::onStop)
 }
 
 @Composable

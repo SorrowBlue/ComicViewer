@@ -2,37 +2,31 @@ package com.sorrowblue.comicviewer.feature.book.section
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.drawable.toDrawable
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
 import coil3.request.ImageRequest
 import coil3.request.transformations
-import coil3.size.Size
-import coil3.transform.Transformation
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.feature.book.trimBorders
+import com.sorrowblue.comicviewer.feature.book.WhiteTrimTransformation
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @Composable
@@ -70,34 +64,26 @@ private fun DefaultBookPage(
     val context = LocalContext.current
     val request = ImageRequest.Builder(context)
         .data(BookPageRequest(book to bookPage.index))
-        .transformations(object : Transformation() {
-            override val cacheKey = "${this::class.qualifiedName}"
-            override suspend fun transform(input: Bitmap, size: Size) =
-                input.toDrawable(context.resources).toBitmap().trimBorders(Color.WHITE)
-        })
+        .transformations(WhiteTrimTransformation)
         .build()
-    Box(
+    SubcomposeAsyncImage(
+        model = request,
+        contentDescription = null,
+        contentScale = pageScale.contentScale,
+        filterQuality = FilterQuality.None,
         modifier = Modifier
             .fillMaxSize()
             .then(modifier),
-    ) {
-        var isLoading by remember { mutableStateOf(false) }
-        AsyncImage(
-            model = request,
-            contentDescription = null,
-            contentScale = pageScale.contentScale,
-            filterQuality = FilterQuality.None,
-            fallback = rememberVectorPainter(image = ComicIcons.BrokenImage),
-            modifier = Modifier
-                .fillMaxSize(),
-            onSuccess = { isLoading = false },
-            onError = { isLoading = false },
-            onLoading = { isLoading = true }
-        )
-        if (isLoading) {
+        loading = {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        },
+        error = {
+            SubcomposeAsyncImageContent(
+                painter = rememberVectorPainter(image = ComicIcons.BrokenImage),
+                contentScale = ContentScale.None
+            )
         }
-    }
+    )
 }
 
 @Composable

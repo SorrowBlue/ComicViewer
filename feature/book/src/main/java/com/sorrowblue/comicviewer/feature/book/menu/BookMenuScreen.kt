@@ -30,7 +30,6 @@ internal data class BookMenuScreenUiState(
     val pageScale: PageScale = PageScale.Fit,
 )
 
-
 @HiltViewModel
 internal class BookMenuViewModel @Inject constructor(
     val manageBookSettingsUseCase: ManageBookSettingsUseCase,

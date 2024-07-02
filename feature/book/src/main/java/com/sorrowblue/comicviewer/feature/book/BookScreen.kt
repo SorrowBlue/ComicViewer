@@ -11,10 +11,9 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.ramcosta.composedestinations.navargs.DestinationsNavTypeSerializer
@@ -30,9 +29,6 @@ import com.sorrowblue.comicviewer.feature.book.section.BookSheet
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
-import logcat.logcat
 
 @NavTypeSerializer
 internal class BookshelfIdSerializer : DestinationsNavTypeSerializer<BookshelfId> {
@@ -48,6 +44,7 @@ internal sealed interface BookScreenUiState {
 
     data class Loaded(
         val book: Book,
+        val favoriteId: FavoriteId,
         val bookSheetUiState: BookSheetUiState,
         val isVisibleTooltip: Boolean = true,
     ) : BookScreenUiState
@@ -94,41 +91,33 @@ private fun BookScreen(
     onSettingsClick: () -> Unit,
     onNextBookClick: (Book, FavoriteId) -> Unit,
     onContainerLongClick: () -> Unit,
-    state: BookScreenState = rememberBookScreenState(args = args),
+    loadingState: BookLoadingScreenState = rememberBookLoadingScreenState(args = args),
 ) {
-    when (val uiState = state.uiState) {
+    when (val uiState = loadingState.uiState) {
         is BookScreenUiState.Loading ->
-            BookLoadingScreen(
-                uiState = uiState,
-                onBackClick = onBackClick
-            )
+            BookLoadingScreen(uiState = uiState, onBackClick = onBackClick)
 
         is BookScreenUiState.Error ->
-            BookErrorScreen(
-                uiState = uiState,
-                onBackClick = onBackClick
-            )
+            BookErrorScreen(uiState = uiState, onBackClick = onBackClick)
 
         is BookScreenUiState.Loaded -> {
-            val state2 = rememberBookScreenState2(args, uiState)
-            val uiState2 = state2.uiState
+            val state = rememberBookScreenState(uiState)
             BookScreen(
-                uiState = uiState2,
-                pagerState = state2.pagerState,
-                currentList = state2.currentList,
+                uiState = state.uiState,
+                pagerState = state.pagerState,
+                currentList = state.currentList,
                 onBackClick = onBackClick,
                 onNextBookClick = { onNextBookClick(it, args.favoriteId) },
-                onContainerClick = state2::toggleTooltip,
+                onContainerClick = state::toggleTooltip,
                 onContainerLongClick = onContainerLongClick,
-                onPageChange = state2::onPageChange,
+                onPageChange = state::onPageChange,
                 onSettingsClick = onSettingsClick,
-                onPageLoad = state2::onPageLoaded,
+                onPageLoad = state::onPageLoad,
             )
             DisposableEffect(Unit) {
-                onDispose(state2::onScreenDispose)
+                onDispose(state::onScreenDispose)
             }
-            LifecycleEffect(targetEvent = Lifecycle.Event.ON_PAUSE, action = state2::onStop)
-            LifecycleEffect(targetEvent = Lifecycle.Event.ON_STOP, action = state2::onStop)
+            LifecycleEventEffect(event = Lifecycle.Event.ON_PAUSE, onEvent = state::onStop)
         }
     }
 }
@@ -147,27 +136,6 @@ internal fun BookScreen(
     onSettingsClick: () -> Unit,
     onPageLoad: (UnratedPage, Bitmap) -> Unit,
 ) {
-    val adaptiveInfo by rememberWindowAdaptiveInfo()
-    LaunchedEffect(adaptiveInfo) {
-        logcat {
-            """
-            windowWidthSizeClass=${adaptiveInfo.windowSizeClass.windowWidthSizeClass}
-            windowHeightSizeClass=${adaptiveInfo.windowSizeClass.windowHeightSizeClass}
-            isTabletop = ${adaptiveInfo.windowPosture.isTabletop}
-            ${
-                adaptiveInfo.windowPosture.hingeList.joinToString(",\n") {
-                    """
-                    bounds=${it.bounds}
-                    isFlat=${it.isFlat}
-                    isVertical=${it.isVertical}
-                    isOccluding=${it.isOccluding}
-                    isSeparating=${it.isSeparating}
-                """.trimIndent()
-                }
-            }
-        """.trimIndent()
-        }
-    }
     Scaffold(
         topBar = {
             AnimatedVisibility(
