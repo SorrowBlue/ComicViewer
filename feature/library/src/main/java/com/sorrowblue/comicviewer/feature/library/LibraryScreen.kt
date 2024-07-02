@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.feature.library.component.AddOnItemState
@@ -29,7 +30,6 @@ import com.sorrowblue.comicviewer.feature.library.section.Feature
 import com.sorrowblue.comicviewer.feature.library.section.FeatureListSheet
 import com.sorrowblue.comicviewer.feature.library.section.LibraryCloudStorageDialog
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -99,9 +99,9 @@ private fun LibraryScreen(
         onInstallClick = state::onInstallClick,
         onCancelClick = state::onCancelClick,
     )
-    LifecycleEffect(targetEvent = Lifecycle.Event.ON_START, action = state::onStart)
-    LifecycleEffect(targetEvent = Lifecycle.Event.ON_RESUME, action = state::onResume)
-    LifecycleEffect(targetEvent = Lifecycle.Event.ON_STOP, action = state::onStop)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_START, onEvent = state::onStart)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME, onEvent = state::onResume)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_STOP, onEvent = state::onStop)
 }
 
 internal data class LibraryScreenUiState(

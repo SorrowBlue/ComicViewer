@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -28,7 +29,6 @@ import com.sorrowblue.comicviewer.feature.library.dropbox.data.dropBoxModule
 import com.sorrowblue.comicviewer.feature.library.dropbox.navigation.DropBoxGraph
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxAccountDialog
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxDialogUiState
-import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.parcelize.Parcelize
 import org.koin.core.context.loadKoinModules
@@ -68,7 +68,7 @@ private fun DropBoxScreen(
     requireAuthentication: () -> Unit,
     state: DropBoxScreenState = rememberDropBoxScreenState(
         args = args,
-        savedStateHandle = savedStateHandle
+        savedStateHandle = savedStateHandle,
     ),
 ) {
     state.events.forEach { event ->
@@ -91,7 +91,7 @@ private fun DropBoxScreen(
         onDialogDismissRequest = state::onDialogDismissRequest,
         onLogoutClick = state::onLogoutClick,
     )
-    LifecycleEffect(targetEvent = Lifecycle.Event.ON_RESUME, action = state::onResume)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME, onEvent = state::onResume)
 }
 
 @Parcelize

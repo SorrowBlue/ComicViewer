@@ -15,7 +15,9 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -30,7 +32,6 @@ import com.sorrowblue.comicviewer.feature.library.onedrive.data.oneDriveModule
 import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveGraph
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveAccountDialog
 import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveDialogUiState
-import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import java.io.InputStream
 import kotlinx.parcelize.IgnoredOnParcel
@@ -107,7 +108,7 @@ private fun OneDriveScreen(
         onLogoutClick = state::onLogoutClick,
     )
 
-    LifecycleResumeEffect(action = state::onResume)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME, onEvent = state::onResume)
 }
 
 @Parcelize

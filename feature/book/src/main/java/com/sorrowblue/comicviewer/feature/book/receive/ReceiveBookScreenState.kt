@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
 import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
 import com.sorrowblue.comicviewer.feature.book.section.BookPage
@@ -41,7 +42,6 @@ internal interface ReceiveBookScreenState : SaveableScreenState {
     val currentList: SnapshotStateList<PageItem>
     val pagerState: PagerState
     val systemUiController: SystemUiController
-
 
     fun toggleTooltip()
     fun onPageChange(page: Int)
@@ -95,7 +95,11 @@ private class ReceiveBookScreenStateImpl(
                         is Resource.Error -> TODO()
                         is Resource.Success -> {
                             logcat { "book=${it.data}" }
-                            uiState = BookScreenUiState.Loaded(it.data, BookSheetUiState(it.data))
+                            uiState = BookScreenUiState.Loaded(
+                                it.data,
+                                FavoriteId.Default,
+                                BookSheetUiState(it.data)
+                            )
                             currentList.clear()
                             currentList.addAll(
                                 buildList {
@@ -106,7 +110,6 @@ private class ReceiveBookScreenStateImpl(
                                     )
                                 }
                             )
-
                         }
                     }
                 }
@@ -116,7 +119,6 @@ private class ReceiveBookScreenStateImpl(
 
     override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(""))
         private set
-
 
     override fun toggleTooltip() {
         if (uiState !is BookScreenUiState.Loaded) return
@@ -141,7 +143,6 @@ private class ReceiveBookScreenStateImpl(
             }
         }
     }
-
 
     private fun onPageLoaded2(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(spread)
@@ -192,5 +193,4 @@ private class ReceiveBookScreenStateImpl(
         currentList.clear()
         currentList.addAll(newList)
     }
-
 }

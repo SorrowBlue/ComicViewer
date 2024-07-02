@@ -1,3 +1,6 @@
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.DynamicFeatureExtension
+import com.android.build.api.dsl.LibraryExtension
 import com.google.devtools.ksp.gradle.KspExtension
 import com.sorrowblue.comicviewer.apply
 import com.sorrowblue.comicviewer.configureAndroidCompose
@@ -10,6 +13,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.findByType
 
 internal class ComposeConventionPlugin : Plugin<Project> {
 
@@ -20,7 +24,13 @@ internal class ComposeConventionPlugin : Plugin<Project> {
                 apply(libs.plugins.google.ksp)
             }
 
-            configureAndroidCompose()
+            extensions.findByType<ApplicationExtension>()?.let {
+                configureAndroidCompose(it)
+            } ?: extensions.findByType<DynamicFeatureExtension>()?.let {
+                configureAndroidCompose(it)
+            } ?: extensions.findByType<LibraryExtension>()?.let {
+                configureAndroidCompose(it)
+            }
 
             dependencies {
                 implementation(libs.compose.destinations.core)

@@ -20,10 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveGraph
-import com.sorrowblue.comicviewer.framework.ui.LifecycleResumeEffect
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
 import kotlinx.parcelize.Parcelize
 
@@ -59,7 +60,7 @@ internal fun OneDriveLoginScreen(
         onLoginClick = state::onLoginClick
     )
 
-    LifecycleResumeEffect(action = state::onResume)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME, onEvent = state::onResume)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

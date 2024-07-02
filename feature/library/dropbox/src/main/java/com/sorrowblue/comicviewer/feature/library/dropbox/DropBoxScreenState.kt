@@ -20,13 +20,14 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.sorrowblue.comicviewer.app.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.dropbox.data.DropBoxApiRepository
 import com.sorrowblue.comicviewer.feature.library.dropbox.section.DropBoxDialogUiState
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
+import org.koin.core.qualifier.named
 
 internal sealed interface DropBoxScreenEvent {
     data object RequireAuthentication : DropBoxScreenEvent
@@ -63,6 +65,7 @@ internal fun rememberDropBoxScreenState(
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
     repository: DropBoxApiRepository = koinInject(),
+    dispatcher: CoroutineDispatcher = koinInject(named<IoDispatcher>()),
 ): DropBoxScreenState {
     return remember {
         DropBoxScreenStateImpl(
@@ -70,7 +73,8 @@ internal fun rememberDropBoxScreenState(
             savedStateHandle = savedStateHandle,
             context = context,
             scope = scope,
-            repository = repository
+            repository = repository,
+            dispatcher = dispatcher
         )
     }
 }
@@ -82,6 +86,7 @@ private class DropBoxScreenStateImpl(
     private val context: Context,
     private val scope: CoroutineScope,
     private val repository: DropBoxApiRepository,
+    private val dispatcher: CoroutineDispatcher,
 ) : DropBoxScreenState, KoinComponent {
 
     init {
@@ -144,7 +149,7 @@ private class DropBoxScreenStateImpl(
 
     override fun enqueueDownload(file: File) {
         val manager = context.getSystemService<DownloadManager>()!!
-        scope.launch(Dispatchers.IO) {
+        scope.launch(dispatcher) {
             val link = repository.downloadLink(file.path)
             val request = DownloadManager.Request(link.toUri())
             request.setTitle(file.name)

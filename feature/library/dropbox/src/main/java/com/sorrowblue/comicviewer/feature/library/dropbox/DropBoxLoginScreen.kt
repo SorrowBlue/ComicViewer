@@ -26,11 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.library.dropbox.navigation.DropBoxGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.LifecycleEffect
 import kotlinx.parcelize.Parcelize
 
 internal interface DropBoxLoginScreenNavigator {
@@ -73,7 +73,7 @@ private fun DropBoxLoginScreen(
         onCloseClick = onCloseClick,
         onLoginClick = state::onLoginClick,
     )
-    LifecycleEffect(targetEvent = Lifecycle.Event.ON_RESUME, action = state::onResume)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME, onEvent = state::onResume)
 }
 
 @Parcelize

@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -24,13 +26,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
 /**
@@ -100,25 +102,25 @@ fun GridFile(
 private fun GridFileThumbnail(
     file: File,
 ) {
-    AsyncImage2(
+    SubcomposeAsyncImage(
         model = file,
         contentDescription = null,
         contentScale = ContentScale.Crop,
-        loading = {
-            CircularProgressIndicator()
-        },
+        loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
         error = {
-            if (file is Book) {
-                Icon(imageVector = ComicIcons.Image, contentDescription = null)
-            } else {
-                Icon(imageVector = ComicIcons.Folder, contentDescription = null)
-            }
+            Icon(
+                imageVector = if (file is Book) ComicIcons.Image else ComicIcons.Folder,
+                contentDescription = null,
+                modifier = Modifier
+                    .wrapContentSize()
+                    .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
+            )
         },
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1f)
             .clip(CardDefaults.shape)
-            .background(ComicTheme.colorScheme.surfaceVariant)
+            .background(ComicTheme.colorScheme.surfaceVariant),
     )
 }
 
