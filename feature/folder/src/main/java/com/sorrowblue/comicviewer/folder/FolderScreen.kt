@@ -17,11 +17,10 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -57,7 +56,6 @@ import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
-import com.sorrowblue.comicviewer.framework.ui.paging.isNotLoading
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.flowEmptyData
 import kotlin.math.min
@@ -126,7 +124,7 @@ private fun FolderScreen(
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     val uiState = state.uiState
-    var isRefreshing by remember { mutableStateOf(false) }
+    val isRefreshing by remember(lazyPagingItems.loadState) { derivedStateOf { lazyPagingItems.loadState.isLoading } }
     FolderScreen(
         uiState = uiState,
         navigator = state.navigator,
@@ -157,14 +155,6 @@ private fun FolderScreen(
         onDismissRequest = state::onSortSheetDismissRequest
     )
 
-    LaunchedEffect(lazyPagingItems.loadState) {
-        if (lazyPagingItems.loadState.isNotLoading) {
-            isRefreshing = false
-        }
-        if (lazyPagingItems.loadState.isLoading) {
-            isRefreshing = true
-        }
-    }
     val onRestoreComplete1 by rememberUpdatedState(newValue = onRestoreComplete)
     LaunchedEffect(lazyPagingItems.loadState) {
         logcat { "state.restorePath=${state.restorePath}" }
@@ -173,12 +163,10 @@ private fun FolderScreen(
             if (0 <= index) {
                 state.restorePath = null
                 runCatching {
-                    logcat { "scroll" }
                     state.lazyGridState.scrollToItem(min(index, lazyPagingItems.itemCount - 1))
                 }.onFailure {
                     logcat { it.asLog() }
                 }
-                logcat { "onRestoreComplete1" }
                 onRestoreComplete1()
             } else if (!lazyPagingItems.loadState.isLoading) {
                 onRestoreComplete1()
@@ -188,7 +176,6 @@ private fun FolderScreen(
             state.lazyGridState.scrollToItem(0)
             state.isScrollableTop = false
         }
-
         if (lazyPagingItems.loadState.refresh is LoadState.Error) {
             ((lazyPagingItems.loadState.refresh as LoadState.Error).error as? PagingException)?.let {
                 when (it) {

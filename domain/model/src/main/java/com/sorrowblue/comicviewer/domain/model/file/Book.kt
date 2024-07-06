@@ -12,7 +12,7 @@ sealed interface Book : File {
 fun fakeBookFile(bookshelfId: BookshelfId = BookshelfId(0)) =
     BookFile(
         bookshelfId,
-        "Qiitaから通知を受け取りませんか？",
+        "ブラックジャックによろしく 第01巻",
         "parent",
         "path${bookshelfId.value}",
         100,

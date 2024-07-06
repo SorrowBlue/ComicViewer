@@ -167,7 +167,7 @@ private fun BookshelfScreen(
     }
 }
 
-private val FabSpace get() = 72.dp
+internal val FabSpace get() = 72.dp
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @PreviewScreenSizes

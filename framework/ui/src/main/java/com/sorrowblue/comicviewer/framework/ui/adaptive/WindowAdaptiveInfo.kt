@@ -9,9 +9,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -19,12 +17,10 @@ import androidx.window.core.layout.WindowSizeClass
 fun rememberWindowAdaptiveInfo(): State<WindowAdaptiveInfo> {
     val windowAdaptiveInfo = if (LocalInspectionMode.current) {
         val configuration = LocalConfiguration.current
-        val windowSizeClass = with(LocalDensity.current) {
-            WindowSizeClass.compute(
-                configuration.screenWidthDp.dp.toPx(),
-                configuration.screenHeightDp.dp.toPx()
-            )
-        }
+        val windowSizeClass = WindowSizeClass.compute(
+            configuration.screenWidthDp.toFloat(),
+            configuration.screenHeightDp.toFloat()
+        )
         WindowAdaptiveInfo(windowSizeClass, calculatePosture(emptyList()))
     } else {
         currentWindowAdaptiveInfo()

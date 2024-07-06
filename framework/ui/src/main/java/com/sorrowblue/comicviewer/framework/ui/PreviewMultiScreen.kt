@@ -8,12 +8,13 @@ import androidx.compose.ui.tooling.preview.Preview
     AnnotationTarget.ANNOTATION_CLASS,
     AnnotationTarget.FUNCTION
 )
-@Preview(name = "Phone", device = Devices.PHONE)
+@Preview(name = "Phone", device = Devices.PHONE, showBackground = true)
 @Preview(
     name = "Phone - Landscape",
     device = "spec:width=411dp,height=891dp,orientation=landscape,dpi=420",
+    showBackground = true
 )
-@Preview(name = "Unfolded Foldable", device = Devices.FOLDABLE)
-@Preview(name = "Tablet", device = Devices.TABLET)
-@Preview(name = "Desktop", device = Devices.DESKTOP)
+@Preview(name = "Unfolded Foldable", device = Devices.FOLDABLE, showBackground = true)
+@Preview(name = "Tablet", device = Devices.TABLET, showBackground = true)
+@Preview(name = "Desktop", device = Devices.DESKTOP, showBackground = true)
 annotation class PreviewMultiScreen

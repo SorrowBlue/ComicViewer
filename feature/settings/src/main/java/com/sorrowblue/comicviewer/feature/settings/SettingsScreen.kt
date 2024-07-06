@@ -23,6 +23,7 @@ import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.spec.Route
 import com.sorrowblue.comicviewer.feature.settings.destinations.DonationScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.destinations.ImageCacheScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.folder.navgraphs.FolderSettingsNavGraph
@@ -156,6 +157,7 @@ enum class Settings2(
     ),
     TUTORIAL(R.string.settings_label_tutorial, ComicIcons.Start),
     Donation(R.string.settings_label_donation, ComicIcons.Money, DonationScreenDestination),
+    Thumbnail(R.string.settings_label_image_cache, ComicIcons.Money, ImageCacheScreenDestination),
     LANGUAGE(
         R.string.settings_label_language,
         ComicIcons.Language,

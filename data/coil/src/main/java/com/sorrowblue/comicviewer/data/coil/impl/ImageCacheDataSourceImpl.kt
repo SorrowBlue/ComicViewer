@@ -1,11 +1,21 @@
 package com.sorrowblue.comicviewer.data.coil.impl
 
+import android.content.Context
 import coil3.disk.DiskCache
 import com.sorrowblue.comicviewer.data.coil.di.ThumbnailDiskCache
+import com.sorrowblue.comicviewer.data.coil.folder.CoilDiskCache
+import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
+import com.sorrowblue.comicviewer.domain.model.FavoriteImageCacheInfo
+import com.sorrowblue.comicviewer.domain.model.ImageCacheInfo
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 internal class ImageCacheDataSourceImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     @ThumbnailDiskCache private val thumbnailDiskCache: dagger.Lazy<DiskCache>,
 ) : ImageCacheDataSource {
 
@@ -17,6 +27,48 @@ internal class ImageCacheDataSourceImpl @Inject constructor(
             list.forEach {
                 diskCache.remove(it)
             }
+        }
+    }
+
+    override suspend fun clearImageCache(
+        bookshelfId: BookshelfId,
+        type: BookshelfImageCacheInfo.Type,
+    ) {
+        when (type) {
+            BookshelfImageCacheInfo.Type.Thumbnail ->
+                CoilDiskCache.thumbnailDiskCache(context, bookshelfId)
+
+            BookshelfImageCacheInfo.Type.Page ->
+                CoilDiskCache.pageDiskCache(context, bookshelfId)
+        }.clear()
+    }
+
+    override suspend fun clearImageCache() {
+        thumbnailDiskCache.get().clear()
+    }
+
+    override suspend fun getImageCacheInfo(): List<ImageCacheInfo> {
+        return bookshelfLocalDataSource.allBookshelf().flatMap {
+            listOf(
+                CoilDiskCache.thumbnailDiskCache(context, it.id).let { diskCache ->
+                    BookshelfImageCacheInfo(
+                        it,
+                        BookshelfImageCacheInfo.Type.Thumbnail,
+                        diskCache.size,
+                        diskCache.maxSize
+                    )
+                },
+                CoilDiskCache.pageDiskCache(context, it.id).let { diskCache ->
+                    BookshelfImageCacheInfo(
+                        it,
+                        BookshelfImageCacheInfo.Type.Page,
+                        diskCache.size,
+                        diskCache.maxSize
+                    )
+                }
+            )
+        } + thumbnailDiskCache.get().let {
+            FavoriteImageCacheInfo(it.size, it.maxSize)
         }
     }
 }

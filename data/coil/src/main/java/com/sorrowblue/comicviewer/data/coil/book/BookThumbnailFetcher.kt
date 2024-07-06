@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.data.coil.book
 
+import android.content.Context
 import coil3.ImageLoader
 import coil3.decode.DataSource
 import coil3.disk.DiskCache
@@ -9,14 +10,14 @@ import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
-import com.sorrowblue.comicviewer.data.coil.di.ThumbnailDiskCache
+import com.sorrowblue.comicviewer.data.coil.folder.CoilDiskCache
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
-import logcat.logcat
 import okio.Buffer
 import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
@@ -30,7 +31,8 @@ internal class BookThumbnailFetcher(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileModelLocalDataSource: FileLocalDataSource,
 ) : FileFetcher<BookThumbnailMetadata>(options, diskCacheLazy) {
-    override suspend fun fetchRemote(snapshot: DiskCache.Snapshot?): FetchResult {
+
+    override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val source = bookshelfLocalDataSource.flow(book.bookshelfId).first()
             ?.let(remoteDataSourceFactory::create)
             ?: throw CoilRuntimeException("本棚が取得できない")
@@ -45,7 +47,6 @@ internal class BookThumbnailFetcher(
             fileReader.copyTo(0, it)
         }?.use {
             // DISKキャッシュキーとページ数を更新する。
-            logcat { "DISKキャッシュキーとページ数を更新する。$book" }
             fileModelLocalDataSource.updateAdditionalInfo(
                 book.path,
                 book.bookshelfId,
@@ -59,7 +60,6 @@ internal class BookThumbnailFetcher(
             )
         } ?: run {
             // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
-            logcat { "新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。$book" }
             Buffer().use { buffer ->
                 fileReader.copyTo(0, buffer)
                 SourceFetchResult(
@@ -73,7 +73,7 @@ internal class BookThumbnailFetcher(
 
     override suspend fun metadata() = BookThumbnailMetadata(book)
 
-    override fun BufferedSource.metadata() = BookThumbnailMetadata.from(this)
+    override fun BufferedSource.readMetadata() = BookThumbnailMetadata.from(this)
 
     override val diskCacheKey
         get() = options.diskCacheKey
@@ -81,7 +81,7 @@ internal class BookThumbnailFetcher(
                 .sha256().hex()
 
     class Factory @Inject constructor(
-        @ThumbnailDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
+        @ApplicationContext private val context: Context,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
         private val fileModelLocalDataSource: FileLocalDataSource,
@@ -90,7 +90,7 @@ internal class BookThumbnailFetcher(
         override fun create(data: Book, options: Options, imageLoader: ImageLoader): Fetcher {
             return BookThumbnailFetcher(
                 options,
-                diskCache,
+                { CoilDiskCache.thumbnailDiskCache(context, data.bookshelfId) },
                 data,
                 remoteDataSourceFactory,
                 bookshelfLocalDataSource,

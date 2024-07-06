@@ -100,7 +100,9 @@ fun <T : File> FileLazyVerticalGrid(
                     is FileContentType2.Grid -> GridFile(
                         file = item,
                         onClick = { onItemClick(item) },
-                        onInfoClick = { onItemInfoClick(item) }
+                        onInfoClick = { onItemInfoClick(item) },
+                        modifier = Modifier.animateItem(),
+                        isThumbnailEnabled = isThumbnailEnabled,
                     )
                 }
             }

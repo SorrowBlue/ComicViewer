@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.bookshelf.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,8 +17,11 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,10 +36,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
@@ -43,10 +49,9 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.fakeFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
@@ -58,15 +63,30 @@ fun Bookshelf(
 ) {
     val thumbnail = remember {
         movableContentOf {
-            AsyncImage2(
+            SubcomposeAsyncImage(
                 model = bookshelfFolder.folder,
                 contentDescription = stringResource(R.string.bookshelf_desc_thumbnail),
                 contentScale = ContentScale.Crop,
                 loading = {
-                    Icon(imageVector = ComicIcons.DocumentUnknown, contentDescription = null)
+                    if (LocalInspectionMode.current) {
+                        Image(painter = rememberDebugPlaceholder()!!, contentDescription = null)
+                    } else {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .align(Alignment.Center)
+                        )
+                    }
                 },
                 error = {
-                    Icon(imageVector = ComicIcons.Image, contentDescription = null)
+                    Icon(
+                        imageVector = ComicIcons.FolderOff,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
+                            .align(Alignment.Center)
+                    )
                 },
                 modifier = Modifier
                     .aspectRatio(1f)
