@@ -11,7 +11,7 @@ kotlinx-kover = "0.8.2"
 androidx-activity = "1.9.0"
 androidx-credentials = "1.2.2"
 androidx-datastore = "1.1.1"
-androidx-lifecycle = "2.8.2"
+androidx-lifecycle = "2.8.3"
 androidx-navigation = "2.7.7"
 androidx-paging = "3.3.0"
 androidx-room = "2.6.1"
@@ -25,7 +25,7 @@ mikepenz-aboutlibraries = "11.2.2"
 koin = "3.5.6"
 compose-destinations = "2.1.0-beta09"
 junit = "1.2.1"
-roborazzi = "1.20.0"
+roborazzi = "1.21.0"
 
 dokka = "1.9.20"
 
@@ -50,7 +50,7 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 modulegraph = { id = "dev.iurysouza.modulegraph", version = "0.10.0" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
-semver = { id = "com.xenoterracide.gradle.semver", version = "0.11.1" }
+semver = { id = "com.xenoterracide.gradle.semver", version = "0.11.3" }
 versions = "com.github.ben-manes.versions:0.51.0"
 
 comicviewer-android-application = { id = "comicviewer.android.application" }
@@ -163,7 +163,7 @@ androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.6.1"
 robolectric = "org.robolectric:robolectric:4.12.2"
 
 mikepenz-aboutlibrariesComposeM3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "mikepenz-aboutlibraries" }
-nlopez-compose-rules-detekt = "io.nlopez.compose.rules:detekt:0.4.4"
+nlopez-compose-rules-detekt = "io.nlopez.compose.rules:detekt:0.4.5"
 arturbosch-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
