@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.file.component
 
 import android.os.Parcelable
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -24,17 +25,24 @@ sealed class FileContentType2 : Parcelable {
 
     @IgnoredOnParcel
     abstract val columns: GridCells
+    abstract val staggeredGridCells: StaggeredGridCells
 
     @Parcelize
     data object List : FileContentType2() {
         @IgnoredOnParcel
         override val columns = GridCells.Fixed(1)
+
+        @IgnoredOnParcel
+        override val staggeredGridCells = StaggeredGridCells.Fixed(1)
     }
 
     @Parcelize
     data object ListMedium : FileContentType2() {
         @IgnoredOnParcel
         override val columns = GridCells.Fixed(1)
+
+        @IgnoredOnParcel
+        override val staggeredGridCells = StaggeredGridCells.Fixed(1)
     }
 
     @Parcelize
@@ -42,6 +50,9 @@ sealed class FileContentType2 : Parcelable {
 
         override val columns: GridCells
             get() = GridCells.Adaptive(minSize.dp)
+
+        override val staggeredGridCells
+            get() = StaggeredGridCells.Adaptive(minSize.dp)
     }
 }
 

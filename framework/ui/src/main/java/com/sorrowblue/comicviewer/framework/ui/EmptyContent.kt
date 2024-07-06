@@ -3,10 +3,13 @@ package com.sorrowblue.comicviewer.framework.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,8 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookshelves
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
 @Composable
 fun EmptyContent(
@@ -26,9 +32,7 @@ fun EmptyContent(
     modifier: Modifier = Modifier,
 ) {
     val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
-    val isCompact =
-        windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
-    if (isCompact) {
+    if (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
         Column(
             modifier = modifier,
             verticalArrangement = Arrangement.Center,
@@ -48,27 +52,42 @@ fun EmptyContent(
         }
     } else {
         Surface(
-            modifier = modifier
-                .padding(top = ComicTheme.dimension.margin)
-                .fillMaxSize(),
+            modifier = modifier,
             shape = ComicTheme.shapes.large
         ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     imageVector = imageVector,
                     contentDescription = null,
                     modifier = Modifier
                         .sizeIn(maxWidth = 300.dp, maxHeight = 300.dp)
-                        .fillMaxSize(0.5f)
+                        .fillMaxWidth(0.8f)
                 )
                 Text(
                     text = text,
                     style = MaterialTheme.typography.titleLarge
                 )
             }
+        }
+    }
+}
+
+
+@PreviewMultiScreen
+@Composable
+private fun PreviewBookshelfEmptyContents() {
+    PreviewTheme {
+        Scaffold {
+            EmptyContent(
+                imageVector = ComicIcons.UndrawBookshelves,
+                "No Bookshelves added yet",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            )
         }
     }
 }

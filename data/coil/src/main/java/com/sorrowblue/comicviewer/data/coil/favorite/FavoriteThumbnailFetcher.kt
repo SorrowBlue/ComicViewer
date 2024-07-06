@@ -38,7 +38,7 @@ internal class FavoriteThumbnailFetcher(
     private val fileModelLocalDataSource: FileLocalDataSource,
 ) : FileFetcher<FavoriteThumbnailMetadata>(options, diskCache) {
 
-    override suspend fun fetchRemote(snapshot: DiskCache.Snapshot?): FetchResult {
+    override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val size = (requestWidth / (requestHeight / 11).toInt()).toInt() - 6
         val thumbnails = cacheList(size)
         if (thumbnails.isEmpty()) {
@@ -61,7 +61,7 @@ internal class FavoriteThumbnailFetcher(
     override val diskCacheKey
         get() = options.diskCacheKey ?: "${data.id.value}".encodeUtf8().sha256().hex()
 
-    override fun BufferedSource.metadata() =
+    override fun BufferedSource.readMetadata() =
         FavoriteThumbnailMetadata.from<FavoriteThumbnailMetadata>(this)
 
     override suspend fun metadata(): FavoriteThumbnailMetadata {

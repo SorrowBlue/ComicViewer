@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.data.coil.page
 
+import android.content.Context
 import coil3.ImageLoader
 import coil3.decode.DataSource
 import coil3.disk.DiskCache
@@ -10,7 +11,7 @@ import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
-import com.sorrowblue.comicviewer.data.coil.di.PageDiskCache
+import com.sorrowblue.comicviewer.data.coil.folder.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.from
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -19,6 +20,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.reader.FileReader
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
@@ -46,9 +48,9 @@ internal class BookPageFetcher(
         return BookPageMetaData(data.pageIndex, data.book.name, data.book.size)
     }
 
-    override fun BufferedSource.metadata() = BookPageMetaData.from<BookPageMetaData>(this)
+    override fun BufferedSource.readMetadata() = BookPageMetaData.from<BookPageMetaData>(this)
 
-    override suspend fun fetchRemote(snapshot: DiskCache.Snapshot?): FetchResult {
+    override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val remoteDataSource = bookshelfLocalDataSource.flow(data.book.bookshelfId).first()
             ?.let(remoteDataSourceFactory::create)
             ?: remoteDataSourceFactory.create(InternalStorage(BookshelfId(0), "intent"))
@@ -101,7 +103,7 @@ internal class BookPageFetcher(
                 .sha256().hex()
 
     class Factory @Inject constructor(
-        @PageDiskCache private val diskCache: dagger.Lazy<DiskCache?>,
+        @ApplicationContext private val context: Context,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     ) : Fetcher.Factory<BookPageRequest> {
@@ -109,7 +111,7 @@ internal class BookPageFetcher(
         override fun create(data: BookPageRequest, options: Options, imageLoader: ImageLoader) =
             BookPageFetcher(
                 options,
-                diskCache,
+                { CoilDiskCache.pageDiskCache(context, data.book.bookshelfId) },
                 data,
                 remoteDataSourceFactory,
                 bookshelfLocalDataSource

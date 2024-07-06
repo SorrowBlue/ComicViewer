@@ -18,6 +18,7 @@ data class FolderDisplaySettings(
     val sortType: SortType = SortType.NAME(true),
     val showHiddenFile: Boolean = false,
     val isEnabledThumbnail: Boolean = true,
+    val fontSize: Int = 16,
 ) {
 
     enum class ColumnSize {

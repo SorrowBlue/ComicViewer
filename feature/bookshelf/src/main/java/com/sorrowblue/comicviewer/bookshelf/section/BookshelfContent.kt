@@ -1,20 +1,15 @@
 package com.sorrowblue.comicviewer.bookshelf.section
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -35,6 +30,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookshelves
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
 import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
@@ -50,7 +46,7 @@ internal fun BookshelfMainSheet(
     innerPadding: PaddingValues,
 ) {
     if (lazyPagingItems.isEmptyData) {
-        BookshelfEmptyContents(innerPadding = innerPadding)
+        BookshelfEmptyContents(contentPadding = innerPadding)
     } else {
         BookshelfListContents(
             lazyGridState = lazyGridState,
@@ -70,28 +66,14 @@ internal fun BookshelfMainSheet(
 }
 
 @Composable
-private fun BookshelfEmptyContents(innerPadding: PaddingValues) {
-    Column(
+private fun BookshelfEmptyContents(contentPadding: PaddingValues) {
+    EmptyContent(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            imageVector = ComicIcons.UndrawBookshelves,
-            contentDescription = null,
-            modifier = Modifier
-                .sizeIn(maxWidth = 300.dp, maxHeight = 300.dp)
-                .fillMaxSize(0.5f)
-        )
-        Text(
-            text = stringResource(
-                id = R.string.bookshelf_list_message_no_bookshelves_added_yet
-            ),
-            style = MaterialTheme.typography.titleLarge
-        )
-    }
+            .padding(contentPadding),
+        imageVector = ComicIcons.UndrawBookshelves,
+        text = stringResource(id = R.string.bookshelf_list_message_no_bookshelves_added_yet)
+    )
 }
 
 @Composable

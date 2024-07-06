@@ -22,13 +22,6 @@ internal object SingletonProvidesModule {
         return context.newDiskCache("thumbnail_cache")
     }
 
-    @Singleton
-    @PageDiskCache
-    @Provides
-    fun providePageDiskCache(@ApplicationContext context: Context): DiskCache {
-        return context.newDiskCache("page_cache")
-    }
-
     private fun Context.newDiskCache(folder: String) =
         DiskCache.Builder().directory(cacheDir.resolve(folder).apply { mkdirs() }).build()
 }
@@ -36,7 +29,3 @@ internal object SingletonProvidesModule {
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class ThumbnailDiskCache
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class PageDiskCache

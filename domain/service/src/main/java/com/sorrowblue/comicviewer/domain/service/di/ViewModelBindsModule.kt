@@ -1,8 +1,10 @@
 package com.sorrowblue.comicviewer.domain.service.di
 
 import com.sorrowblue.comicviewer.domain.service.interactor.AddReadLaterInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.ClearImageCacheInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.DeleteAllReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.DeleteReadLaterInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.GetImageCacheInfoInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.GetInstalledModulesInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.GetNavigationHistoryInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.DeleteHistoryInteractor
@@ -37,6 +39,8 @@ import com.sorrowblue.comicviewer.domain.service.interactor.settings.LoadSetting
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageFolderDisplaySettingsInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageOneTimeFlagInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageSecuritySettingsInteractor
+import com.sorrowblue.comicviewer.domain.usecase.ClearImageCacheUseCase
+import com.sorrowblue.comicviewer.domain.usecase.GetImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.DeleteHistoryUseCase
@@ -165,6 +169,12 @@ internal interface ViewModelBindsModule {
 
     @Binds
     fun bindGetIntentBookUseCase(interactor: GetIntentBookInteractor): GetIntentBookUseCase
+
+    @Binds
+    fun bindGetImageCacheInfoUseCase(interactor: GetImageCacheInfoInteractor): GetImageCacheInfoUseCase
+
+    @Binds
+    fun bindClearImageCacheUseCase(interactor: ClearImageCacheInteractor): ClearImageCacheUseCase
 
     // Paging
 

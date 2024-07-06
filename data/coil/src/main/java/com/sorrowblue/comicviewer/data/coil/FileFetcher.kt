@@ -14,38 +14,67 @@ import okio.BufferedSource
 import okio.Sink
 import okio.buffer
 
+/**
+ * File fetcher
+ *
+ * @param T メタデータ
+ * @param diskCacheLazy
+ * @constructor
+ * @property options
+ */
 internal abstract class FileFetcher<T : CoilMetaData>(
     val options: Options,
     diskCacheLazy: dagger.Lazy<DiskCache?>,
 ) : Fetcher {
 
-    abstract suspend fun fetchRemote(snapshot: DiskCache.Snapshot?): FetchResult?
+    /** Disk cache key */
     abstract val diskCacheKey: String
+
+    /**
+     * Metadata
+     *
+     * @return
+     */
     abstract suspend fun metadata(): T
-    abstract fun BufferedSource.metadata(): T?
+
+    /**
+     * BufferedSourceからメタデータを読み取る
+     *
+     * @return メタデータ
+     */
+    abstract fun BufferedSource.readMetadata(): T?
+
+    /**
+     * Inner fetch
+     *
+     * @param snapshot
+     * @return
+     */
+    abstract suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult?
 
     final override suspend fun fetch(): FetchResult? {
-        readFromDiskCache().use { snapshot ->
+        return readFromDiskCache()?.use { snapshot ->
             // 高速パス: ネットワーク要求を実行せずに、ディスク キャッシュからイメージをフェッチする。
-            if (snapshot != null) {
-                // キャッシュされた画像は手動で追加された可能性が高いため、常にメタデータが空の状態で返されます。
-                if (fileSystem.metadata(snapshot.metadata).size == 0L) {
-                    return SourceFetchResult(
-                        source = snapshot.toImageSource(),
-                        mimeType = null,
-                        dataSource = DataSource.DISK
-                    )
-                }
-                // 候補が適格である場合、キャッシュから候補を返します。
-                if (snapshot.metadata() == metadata()) {
-                    return SourceFetchResult(
-                        source = snapshot.toImageSource(),
-                        mimeType = null,
-                        dataSource = DataSource.DISK
-                    )
-                }
+            // キャッシュされた画像は手動で追加された可能性が高いため、常にメタデータが空の状態で返されます。
+            if (fileSystem.metadata(snapshot.metadata).size == 0L) {
+                return SourceFetchResult(
+                    source = snapshot.toImageSource(),
+                    mimeType = null,
+                    dataSource = DataSource.DISK
+                )
             }
-            return fetchRemote(snapshot)
+            // 候補が適格である場合、キャッシュから候補を返します。
+            if (snapshot.readMetadata() == metadata()) {
+                return SourceFetchResult(
+                    source = snapshot.toImageSource(),
+                    mimeType = null,
+                    dataSource = DataSource.DISK
+                )
+            }
+            diskCache?.remove(diskCacheKey)
+            innerFetch(snapshot)
+        } ?: run {
+            innerFetch(null)
         }
     }
 
@@ -107,10 +136,15 @@ internal abstract class FileFetcher<T : CoilMetaData>(
         }
     }
 
-    private fun DiskCache.Snapshot.metadata(): T? {
+    /**
+     * Snapshotからメタデータを読み取ります
+     *
+     * @return Snapshotから読み取ったメタデータ
+     */
+    private fun DiskCache.Snapshot.readMetadata(): T? {
         return try {
             fileSystem.read(metadata) {
-                metadata()
+                readMetadata()
             }
         } catch (_: IOException) {
             // If we can't parse the metadata, ignore this entry.

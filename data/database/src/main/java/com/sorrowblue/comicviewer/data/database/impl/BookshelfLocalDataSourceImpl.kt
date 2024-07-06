@@ -12,12 +12,16 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 internal class BookshelfLocalDataSourceImpl @Inject constructor(
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val dao: BookshelfDao,
 ) : BookshelfLocalDataSource {
 
@@ -49,6 +53,12 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
             pagingData.map {
                 BookshelfFolder(it.entity.toModel(it.fileCount), it.fileEntity.toModel() as Folder)
             }
+        }
+    }
+
+    override suspend fun allBookshelf(): List<Bookshelf> {
+        return withContext(dispatcher) {
+            dao.allBookshelf().map { it.toModel(0) }
         }
     }
 }

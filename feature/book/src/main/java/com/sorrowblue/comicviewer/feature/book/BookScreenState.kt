@@ -82,24 +82,24 @@ internal interface BookScreenState {
 }
 
 private class BookScreenStateImpl(
-    windowWidthSizeClass: WindowWidthSizeClass,
-    uiState: BookScreenUiState.Loaded,
-    override val currentList: SnapshotStateList<PageItem>,
-    override val pagerState: PagerState,
     val scope: CoroutineScope,
     val systemUiController: SystemUiController,
-    private val getNextBookUseCase: GetNextBookUseCase,
-    private val manageBookSettingsUseCase: ManageBookSettingsUseCase,
+    uiState: BookScreenUiState.Loaded,
+    windowWidthSizeClass: WindowWidthSizeClass,
+    override val currentList: SnapshotStateList<PageItem>,
+    override val pagerState: PagerState,
+    getNextBookUseCase: GetNextBookUseCase,
+    manageBookSettingsUseCase: ManageBookSettingsUseCase,
     private val updateLastReadPageUseCase: UpdateLastReadPageUseCase,
 ) : BookScreenState {
 
     override var uiState by mutableStateOf(uiState)
         private set
 
-    private suspend fun getNextPage(isNext: Boolean): NextPage {
+    private suspend fun GetNextBookUseCase.execute(isNext: Boolean): NextPage {
         val nextBookList = mutableListOf<NextBook>()
         if (uiState.favoriteId != FavoriteId.Default) {
-            getNextBookUseCase.execute(
+            execute(
                 GetNextBookUseCase.Request(
                     uiState.book.bookshelfId,
                     uiState.book.path,
@@ -110,7 +110,7 @@ private class BookScreenStateImpl(
                 nextBookList.add(NextBook.Favorite(it))
             }
         }
-        getNextBookUseCase.execute(
+        execute(
             GetNextBookUseCase.Request(
                 uiState.book.bookshelfId,
                 uiState.book.path,
@@ -128,7 +128,7 @@ private class BookScreenStateImpl(
             .onEach { pageFormat ->
                 currentList.addAll(
                     buildList {
-                        add(getNextPage(false))
+                        add(getNextBookUseCase.execute(false))
                         addAll(
                             when (pageFormat) {
                                 BookSettings.PageFormat.Default -> (1..uiState.book.totalPageCount).map {
@@ -156,7 +156,7 @@ private class BookScreenStateImpl(
                                     }
                             }
                         )
-                        add(getNextPage(true))
+                        add(getNextBookUseCase.execute(true))
                     }
                 )
             }.launchIn(scope)

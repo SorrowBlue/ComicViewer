@@ -3,10 +3,17 @@ package com.sorrowblue.comicviewer.feature.book.section
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,20 +21,22 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
 import coil3.request.ImageRequest
 import coil3.request.transformations
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.feature.book.R
 import com.sorrowblue.comicviewer.feature.book.WhiteTrimTransformation
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
 internal fun BookPage(
@@ -75,13 +84,30 @@ private fun DefaultBookPage(
             .fillMaxSize()
             .then(modifier),
         loading = {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.TopStart)
+                    .padding(ComicTheme.dimension.margin)
+            )
+            Spacer(modifier = Modifier.fillMaxSize())
         },
         error = {
-            SubcomposeAsyncImageContent(
-                painter = rememberVectorPainter(image = ComicIcons.BrokenImage),
-                contentScale = ContentScale.None
-            )
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    modifier = Modifier.size(96.dp),
+                    painter = rememberVectorPainter(image = ComicIcons.BrokenImage),
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
+                Text(
+                    text = stringResource(R.string.book_msg_page_not_loaded),
+                    style = ComicTheme.typography.bodyLarge
+                )
+            }
         }
     )
 }

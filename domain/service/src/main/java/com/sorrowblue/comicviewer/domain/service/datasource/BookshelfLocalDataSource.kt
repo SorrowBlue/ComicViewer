@@ -16,4 +16,6 @@ interface BookshelfLocalDataSource {
     fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?>
 
     fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>>
+
+    suspend fun allBookshelf(): List<Bookshelf>
 }
