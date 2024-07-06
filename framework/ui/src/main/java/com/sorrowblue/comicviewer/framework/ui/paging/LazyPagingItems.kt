@@ -23,6 +23,3 @@ fun <T : Any> LazyPagingItems<T>.indexOf(op: (T?) -> Boolean): Int {
 
 val CombinedLoadStates.isLoading
     get() = refresh is LoadState.Loading
-
-val CombinedLoadStates.isNotLoading
-    get() = source.refresh is LoadState.NotLoading && (mediator?.refresh is LoadState.NotLoading)

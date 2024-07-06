@@ -11,7 +11,7 @@ import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
-import com.sorrowblue.comicviewer.data.coil.folder.CoilDiskCache
+import com.sorrowblue.comicviewer.data.coil.di.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.from
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId

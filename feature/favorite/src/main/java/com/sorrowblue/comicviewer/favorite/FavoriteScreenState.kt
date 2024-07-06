@@ -21,8 +21,6 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.file.FileInfoUiState
-import com.sorrowblue.comicviewer.file.component.FileContentType
-import com.sorrowblue.comicviewer.file.component.toFileContentLayout
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +29,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -87,13 +84,18 @@ private class FavoriteScreenStateImpl(
         private set
 
     init {
-        viewModel.displaySettings.map(FolderDisplaySettings::toFileContentLayout)
-            .distinctUntilChanged().onEach {
-                uiState = uiState.copy(
-                    favoriteAppBarUiState = uiState.favoriteAppBarUiState.copy(fileContentType = it),
-                    fileContentType = it
-                )
-            }.launchIn(scope)
+
+        viewModel.displaySettings.distinctUntilChanged().onEach {
+            uiState = uiState.copy(
+                display = it.display,
+                columnSize = it.columnSize,
+                favoriteAppBarUiState = uiState.favoriteAppBarUiState.copy(
+                    display = it.display,
+                    columnSize = it.columnSize,
+                ),
+                isThumbnailEnabled = it.isEnabledThumbnail
+            )
+        }.launchIn(scope)
         scope.launch {
             viewModel.getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
                 .collectLatest {
@@ -112,7 +114,7 @@ private class FavoriteScreenStateImpl(
     }
 
     override fun toggleGridSize() {
-        if (uiState.fileContentType is FileContentType.Grid) {
+        if (uiState.favoriteAppBarUiState.display == FolderDisplaySettings.Display.Grid) {
             viewModel.updateGridSize()
         }
     }
@@ -133,9 +135,9 @@ private class FavoriteScreenStateImpl(
 
     override fun toggleFileListType() {
         viewModel.updateDisplay(
-            when (uiState.fileContentType) {
-                is FileContentType.Grid -> FolderDisplaySettings.Display.List
-                FileContentType.List -> FolderDisplaySettings.Display.Grid
+            when (uiState.favoriteAppBarUiState.display) {
+                FolderDisplaySettings.Display.Grid -> FolderDisplaySettings.Display.List
+                FolderDisplaySettings.Display.List -> FolderDisplaySettings.Display.Grid
             }
         )
     }

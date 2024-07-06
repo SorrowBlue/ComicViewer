@@ -22,6 +22,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraph
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphTransitions
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
@@ -29,8 +30,8 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBarUiState
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoUiState
-import com.sorrowblue.comicviewer.file.component.FileContent
-import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
+import com.sorrowblue.comicviewer.file.component.rememberFileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
@@ -91,7 +92,7 @@ private fun FavoriteScreen(
         lazyPagingItems = lazyPagingItems,
         onBackClick = onBackClick,
         onEditClick = { onEditClick(state.favoriteId) },
-        onFileListTypeChange = state::toggleFileListType,
+        onFileListChange = state::toggleFileListType,
         onGridSizeChange = state::toggleGridSize,
         onDeleteClick = { state.delete(onBackClick) },
         onSettingsClick = onSettingsClick,
@@ -110,7 +111,9 @@ private fun FavoriteScreen(
 @Parcelize
 internal data class FavoriteScreenUiState(
     val favoriteAppBarUiState: FavoriteAppBarUiState = FavoriteAppBarUiState(),
-    val fileContentType: FileContentType = FileContentType.List,
+    val display: FolderDisplaySettings.Display = FolderDisplaySettings.Display.List,
+    val columnSize: FolderDisplaySettings.ColumnSize = FolderDisplaySettings.ColumnSize.Medium,
+    val isThumbnailEnabled: Boolean = true,
 ) : Parcelable
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
@@ -121,7 +124,7 @@ private fun FavoriteScreen(
     lazyPagingItems: LazyPagingItems<File>,
     onBackClick: () -> Unit,
     onEditClick: () -> Unit,
-    onFileListTypeChange: () -> Unit,
+    onFileListChange: () -> Unit,
     onExtraPaneCloseClick: () -> Unit,
     onReadLaterClick: (File) -> Unit,
     onFavoriteClick: (File) -> Unit,
@@ -140,7 +143,7 @@ private fun FavoriteScreen(
                 uiState = uiState.favoriteAppBarUiState,
                 onBackClick = onBackClick,
                 onEditClick = onEditClick,
-                onFileListTypeChange = onFileListTypeChange,
+                onFileListChange = onFileListChange,
                 onGridSizeChange = onGridSizeChange,
                 onDeleteClick = onDeleteClick,
                 onSettingsClick = onSettingsClick,
@@ -175,17 +178,19 @@ private fun FavoriteScreen(
                     .padding(contentPadding)
             )
         } else {
+            val contentType by rememberFileContentType(uiState.display, uiState.columnSize)
             val (paddings, margins) = calculatePaddingMargins(contentPadding)
-            FileContent(
-                type = uiState.fileContentType,
-                lazyPagingItems = lazyPagingItems,
-                contentPadding = paddings,
-                onFileClick = onFileClick,
-                onInfoClick = onFileInfoClick,
-                state = lazyGridState,
+            FileLazyVerticalGrid(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(margins)
+                    .padding(margins),
+                isThumbnailEnabled = uiState.isThumbnailEnabled,
+                contentType = contentType,
+                lazyPagingItems = lazyPagingItems,
+                contentPadding = paddings,
+                onItemClick = onFileClick,
+                onItemInfoClick = onFileInfoClick,
+                state = lazyGridState
             )
         }
     }

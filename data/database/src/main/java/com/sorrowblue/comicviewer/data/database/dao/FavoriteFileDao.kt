@@ -10,6 +10,7 @@ import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.sorrowblue.comicviewer.data.database.entity.BookshelfIdCacheKey
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.FileEntity
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -62,9 +63,9 @@ internal interface FavoriteFileDao {
     }
 
     @Query(
-        "SELECT cache_key FROM favorite_file INNER JOIN file ON favorite_file.favorite_id = :favoriteId AND favorite_file.bookshelf_id == file.bookshelf_id AND favorite_file.file_path == file.path WHERE file_type != 'FOLDER' AND cache_key != '' LIMIT :limit"
+        "SELECT file.bookshelf_id, file.cache_key FROM favorite_file INNER JOIN file ON favorite_file.favorite_id = :favoriteId AND favorite_file.bookshelf_id == file.bookshelf_id AND favorite_file.file_path == file.path WHERE file_type != 'FOLDER' AND cache_key != '' LIMIT :limit"
     )
-    suspend fun findCacheKey(favoriteId: Int, limit: Int): List<String>
+    suspend fun findCacheKey(favoriteId: Int, limit: Int): List<BookshelfIdCacheKey>
 
     @RawQuery(observedEntities = [FileEntity::class])
     fun flowPrevNext(supportSQLiteQuery: SupportSQLiteQuery): Flow<List<FileEntity>>

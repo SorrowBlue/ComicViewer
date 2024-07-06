@@ -1,11 +1,11 @@
-package com.sorrowblue.comicviewer.data.coil.folder
+package com.sorrowblue.comicviewer.data.coil.di
 
 import android.content.Context
 import coil3.disk.DiskCache
 import coil3.disk.directory
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 
-object CoilDiskCache {
+internal object CoilDiskCache {
 
     fun thumbnailDiskCache(context: Context, bookshelfId: BookshelfId) =
         diskCaches.getOrPut("thumbnail_cache_${bookshelfId.value}") {

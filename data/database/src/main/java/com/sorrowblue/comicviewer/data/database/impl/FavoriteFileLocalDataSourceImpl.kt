@@ -7,6 +7,7 @@ import androidx.paging.map
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteFileDao
 import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.FileEntity
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -15,6 +16,7 @@ import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDat
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import logcat.logcat
 
 internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
     private val favoriteFileDao: FavoriteFileDao,
@@ -33,8 +35,10 @@ internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
     override suspend fun getCacheKeyList(
         favoriteModelId: FavoriteId,
         limit: Int,
-    ): List<String> {
+    ): List<Pair<BookshelfId, String>> {
+        logcat { "favoriteModelId=$favoriteModelId, limit=$limit" }
         return favoriteFileDao.findCacheKey(favoriteModelId.value, limit)
+            .map { BookshelfId(it.bookshelfId) to it.cacheKey }
     }
 
     override suspend fun add(favoriteFileModel: FavoriteFile) {
