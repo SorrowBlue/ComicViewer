@@ -2,8 +2,8 @@ package com.sorrowblue.comicviewer.data.coil.impl
 
 import android.content.Context
 import coil3.disk.DiskCache
-import com.sorrowblue.comicviewer.data.coil.di.ThumbnailDiskCache
-import com.sorrowblue.comicviewer.data.coil.folder.CoilDiskCache
+import com.sorrowblue.comicviewer.data.coil.di.CoilDiskCache
+import com.sorrowblue.comicviewer.data.coil.di.FavoriteThumbnailDiskCache
 import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.FavoriteImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.ImageCacheInfo
@@ -16,11 +16,11 @@ import javax.inject.Inject
 internal class ImageCacheDataSourceImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-    @ThumbnailDiskCache private val thumbnailDiskCache: dagger.Lazy<DiskCache>,
+    @FavoriteThumbnailDiskCache private val favoriteThumbnailDiskCache: dagger.Lazy<DiskCache>,
 ) : ImageCacheDataSource {
 
     override suspend fun deleteThumbnails(list: List<String>) {
-        val diskCache = thumbnailDiskCache.get() ?: return
+        val diskCache = favoriteThumbnailDiskCache.get() ?: return
         if (list.isEmpty()) {
             diskCache.clear()
         } else {
@@ -44,7 +44,7 @@ internal class ImageCacheDataSourceImpl @Inject constructor(
     }
 
     override suspend fun clearImageCache() {
-        thumbnailDiskCache.get().clear()
+        favoriteThumbnailDiskCache.get().clear()
     }
 
     override suspend fun getImageCacheInfo(): List<ImageCacheInfo> {
@@ -67,7 +67,7 @@ internal class ImageCacheDataSourceImpl @Inject constructor(
                     )
                 }
             )
-        } + thumbnailDiskCache.get().let {
+        } + favoriteThumbnailDiskCache.get().let {
             FavoriteImageCacheInfo(it.size, it.maxSize)
         }
     }

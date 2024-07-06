@@ -12,10 +12,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.feature.favorite.R
-import com.sorrowblue.comicviewer.file.component.FileContentLayoutButton
+import com.sorrowblue.comicviewer.file.component.ChangeGridSize
 import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.component.rememberFileContentType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
@@ -26,7 +29,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 internal data class FavoriteAppBarUiState(
     val title: String = "",
-    val fileContentType: FileContentType = FileContentType.Grid(),
+    val display: FolderDisplaySettings.Display = FolderDisplaySettings.Display.Grid,
+    val columnSize: FolderDisplaySettings.ColumnSize = FolderDisplaySettings.ColumnSize.Medium,
 ) : Parcelable
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +39,7 @@ internal fun FavoriteAppBar(
     uiState: FavoriteAppBarUiState,
     onBackClick: () -> Unit,
     onEditClick: () -> Unit,
-    onFileListTypeChange: () -> Unit,
+    onFileListChange: () -> Unit,
     onGridSizeChange: () -> Unit,
     onDeleteClick: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -55,21 +59,13 @@ internal fun FavoriteAppBar(
                 }
             }
 
-            FileContentLayoutButton(
-                fileContentType = uiState.fileContentType,
-                onFileListTypeChange
+            val fileContentType by rememberFileContentType(
+                display = uiState.display,
+                columnSize = uiState.columnSize
             )
-
             OverflowMenu(state = rememberOverflowMenuState()) {
-                if (uiState.fileContentType is FileContentType.Grid) {
-                    OverflowMenuItem(
-                        text = stringResource(
-                            id = com.sorrowblue.comicviewer.feature.folder.R.string.folder_action_change_grid_size
-                        ),
-                        icon = ComicIcons.Grid4x4,
-                        onClick = onGridSizeChange
-                    )
-                }
+                FileContentType(fileContentType = fileContentType, onClick = onFileListChange)
+                ChangeGridSize(fileContentType = fileContentType, onClick = onGridSizeChange)
                 OverflowMenuItem(
                     text = stringResource(R.string.favorite_action_delete),
                     icon = ComicIcons.Delete,

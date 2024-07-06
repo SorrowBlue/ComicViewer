@@ -10,7 +10,7 @@ import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
-import com.sorrowblue.comicviewer.data.coil.folder.CoilDiskCache
+import com.sorrowblue.comicviewer.data.coil.di.CoilDiskCache
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
