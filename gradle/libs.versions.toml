@@ -160,7 +160,7 @@ androidx-test-ext-junitKtx = "androidx.test.ext:junit-ktx:1.2.1"
 androidx-test-ext-truth = "androidx.test.ext:truth:1.6.0"
 
 androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.6.1"
-robolectric = "org.robolectric:robolectric:4.12.2"
+robolectric = "org.robolectric:robolectric:4.13"
 
 mikepenz-aboutlibrariesComposeM3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "mikepenz-aboutlibraries" }
 nlopez-compose-rules-detekt = "io.nlopez.compose.rules:detekt:0.4.5"
