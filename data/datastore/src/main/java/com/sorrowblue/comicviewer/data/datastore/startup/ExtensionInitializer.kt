@@ -20,7 +20,6 @@ internal class ExtensionInitializer : Initializer<Unit> {
     @Inject
     lateinit var splitInstallManager: SplitInstallManager
 
-
     override fun create(context: Context) {
         InitializerEntryPoint.resolve(context).inject(this)
         val extensions = if (splitInstallManager.installedModules.contains("document")) {

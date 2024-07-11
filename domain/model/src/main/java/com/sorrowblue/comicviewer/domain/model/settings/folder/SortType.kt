@@ -12,30 +12,33 @@ sealed interface SortType : Parcelable {
 
     fun copy2(isAsc: Boolean): SortType {
         return when (this) {
-            is DATE -> copy(isAsc)
-            is NAME -> copy(isAsc)
-            is SIZE -> copy(isAsc)
+            is Date -> copy(isAsc)
+            is Name -> copy(isAsc)
+            is Size -> copy(isAsc)
         }
     }
 
+    @Parcelize
     @Serializable
-    data class NAME(override val isAsc: Boolean) : SortType
+    data class Name(override val isAsc: Boolean) : SortType
 
+    @Parcelize
     @Serializable
-    data class DATE(override val isAsc: Boolean) : SortType
+    data class Date(override val isAsc: Boolean) : SortType
 
+    @Parcelize
     @Serializable
-    data class SIZE(override val isAsc: Boolean) : SortType
+    data class Size(override val isAsc: Boolean) : SortType
 
     companion object {
         val entries
             get() = listOf(
-                NAME(true),
-                NAME(false),
-                DATE(true),
-                DATE(false),
-                SIZE(true),
-                SIZE(false)
+                Name(true),
+                Name(false),
+                Date(true),
+                Date(false),
+                Size(true),
+                Size(false)
             )
     }
 }

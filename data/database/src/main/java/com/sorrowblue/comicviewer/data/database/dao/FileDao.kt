@@ -61,9 +61,9 @@ internal interface FileDao {
         sortType: SortType,
     ): Flow<List<FileEntity>> {
         val column = when (sortType) {
-            is SortType.NAME -> "sort_index"
-            is SortType.DATE -> "last_modified"
-            is SortType.SIZE -> "size"
+            is SortType.Name -> "sort_index"
+            is SortType.Date -> "last_modified"
+            is SortType.Size -> "size"
         }
         val (comparison, order) = if (isNext && sortType.isAsc) ">=" to "ASC" else "<=" to "DESC"
 

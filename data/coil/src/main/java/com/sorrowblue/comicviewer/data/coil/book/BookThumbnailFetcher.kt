@@ -57,7 +57,7 @@ internal class BookThumbnailFetcher(
             ?: throw CoilRuntimeException("FileReaderが取得できない")
 
         // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
-        return writeToDiskCache(snapshot, BookThumbnailMetadata(book)) {
+        return writeToDiskCache(snapshot, BookThumbnailMetadata(book)) { sink ->
             val displaySettings = datastoreDataSource.folderDisplaySettings.first()
             val quality = displaySettings.thumbnailQuality
             val compressFormat = displaySettings.imageFormat.toCompressFormat()
@@ -65,7 +65,7 @@ internal class BookThumbnailFetcher(
                 fileReader.copyTo(0, it)
                 BitmapFactory.decodeStream(it.inputStream())
             }.let { bitmap ->
-                bitmap.compress(compressFormat, quality, it.outputStream())
+                bitmap.compress(compressFormat, quality, sink.outputStream())
                 bitmap.recycle()
             }
         }?.use {

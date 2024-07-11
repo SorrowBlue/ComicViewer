@@ -11,17 +11,19 @@ internal object CoilDiskCache {
         diskCaches.getOrPut("thumbnail_cache_${bookshelfId.value}") {
             DiskCache.Builder().directory(
                 context.cacheDir.resolve("thumbnail_cache_${bookshelfId.value}")
-                    .apply { mkdirs() })
+                    .apply { mkdirs() }
+            )
                 .build()
         }
 
     fun pageDiskCache(context: Context, bookshelfId: BookshelfId) =
         diskCaches.getOrPut("page_cache_${bookshelfId.value}") {
             DiskCache.Builder().directory(
-                context.cacheDir.resolve("page_cache_${bookshelfId.value}").apply { mkdirs() })
+                context.cacheDir.resolve("page_cache_${bookshelfId.value}").apply { mkdirs() }
+            )
                 .build()
         }
 
     @get:Synchronized
-    private var diskCaches = mutableMapOf<String, DiskCache>()
+    private val diskCaches = mutableMapOf<String, DiskCache>()
 }

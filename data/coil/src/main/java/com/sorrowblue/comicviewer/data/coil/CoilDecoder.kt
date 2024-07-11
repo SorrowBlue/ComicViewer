@@ -12,7 +12,6 @@ import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 import logcat.logcat
-import okio.use
 
 typealias PxSize = Pair<Int, Int>
 typealias CacheKeySnapshot = Pair<String, DiskCache.Snapshot>
@@ -142,5 +141,4 @@ object CoilDecoder {
         options.inJustDecodeBounds = false
         return BitmapFactory.decodeFile(snapshot.data.toString(), options)
     }
-
 }
