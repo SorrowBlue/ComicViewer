@@ -71,16 +71,16 @@ private fun FileSortDialog(
 
 internal val SortType.displayText
     get() = when (this) {
-        is SortType.NAME -> if (isAsc) R.string.settings_folder_filesort_label_file_sort_name_asc else R.string.settings_folder_filesort_label_file_sort_name_desc
-        is SortType.DATE -> if (isAsc) R.string.settings_folder_filesort_label_file_sort_date_asc else R.string.settings_folder_filesort_label_file_sort_date_desc
-        is SortType.SIZE -> if (isAsc) R.string.settings_folder_filesort_label_file_sort_size_asc else R.string.settings_folder_filesort_label_file_sort_size_desc
+        is SortType.Name -> if (isAsc) R.string.settings_folder_filesort_label_file_sort_name_asc else R.string.settings_folder_filesort_label_file_sort_name_desc
+        is SortType.Date -> if (isAsc) R.string.settings_folder_filesort_label_file_sort_date_asc else R.string.settings_folder_filesort_label_file_sort_date_desc
+        is SortType.Size -> if (isAsc) R.string.settings_folder_filesort_label_file_sort_size_asc else R.string.settings_folder_filesort_label_file_sort_size_desc
     }
 
 @Composable
 @Preview
 private fun FileSortDialogPreview() {
     PreviewTheme {
-        var imageFormat by remember { mutableStateOf<SortType>(SortType.NAME(true)) }
+        var imageFormat by remember { mutableStateOf<SortType>(SortType.Name(true)) }
         FileSortDialog(
             currentFileSort = imageFormat,
             onFileSortChange = { imageFormat = it },
