@@ -26,8 +26,8 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.onSuccess
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.SortType
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
@@ -149,14 +149,19 @@ private class FolderScreenStateImpl(
             }
             val sortOrder = if (it.sortType.isAsc) SortOrder.Asc else SortOrder.Desc
             uiState = uiState.copy(
-                display = it.display,
-                columnSize = it.columnSize,
                 folderAppBarUiState = uiState.folderAppBarUiState.copy(
-                    display = it.display,
-                    columnSize = it.columnSize,
-                    showHiddenFile = it.showHiddenFile
+                    fileListDisplay = it.fileListDisplay,
+                    gridColumnSize = it.gridColumnSize,
+                    showHiddenFile = it.showHiddenFiles
                 ),
-                isThumbnailEnabled = it.isEnabledThumbnail
+                fileLazyVerticalGridUiState = uiState.fileLazyVerticalGridUiState.copy(
+                    fileListDisplay = it.fileListDisplay,
+                    columnSize = it.gridColumnSize,
+                    imageScale = it.imageScale,
+                    imageFilterQuality = it.imageFilterQuality,
+                    fontSize = it.fontSize,
+                    showThumbnails = it.showThumbnails
+                )
             )
             sortSheetUiState =
                 sortSheetUiState.copy(currentSortItem = sortItem, currentSortOrder = sortOrder)
@@ -180,9 +185,9 @@ private class FolderScreenStateImpl(
 
     override fun toggleFileListType() {
         viewModel.updateDisplay(
-            when (uiState.folderAppBarUiState.display) {
-                FolderDisplaySettings.Display.Grid -> FolderDisplaySettings.Display.List
-                FolderDisplaySettings.Display.List -> FolderDisplaySettings.Display.Grid
+            when (uiState.folderAppBarUiState.fileListDisplay) {
+                FileListDisplay.Grid -> FileListDisplay.List
+                FileListDisplay.List -> FileListDisplay.Grid
             }
         )
     }
@@ -196,7 +201,7 @@ private class FolderScreenStateImpl(
     }
 
     override fun onGridSizeChange() {
-        if (uiState.folderAppBarUiState.display == FolderDisplaySettings.Display.Grid) {
+        if (uiState.folderAppBarUiState.fileListDisplay == FileListDisplay.Grid) {
             viewModel.updateGridSize()
         }
     }

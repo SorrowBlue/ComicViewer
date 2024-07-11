@@ -2,129 +2,122 @@ package com.sorrowblue.comicviewer.file.component
 
 import android.os.Parcelable
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
-import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
+import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuScope
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
-sealed interface FileContentType : Parcelable {
+sealed class FileContentType : Parcelable {
 
-    val columns: GridCells
-        @Composable get
-
-    @Parcelize
-    data object List : FileContentType {
-        override val columns: GridCells
-            @Composable get() = GridCells.Fixed(1)
-    }
+    @IgnoredOnParcel
+    abstract val columns: GridCells
+    abstract val staggeredGridCells: StaggeredGridCells
 
     @Parcelize
-    data class Grid(val size: GridSize = GridSize.Medium) : FileContentType {
+    data object List : FileContentType() {
+        @IgnoredOnParcel
+        override val columns = GridCells.Fixed(1)
+
+        @IgnoredOnParcel
+        override val staggeredGridCells = StaggeredGridCells.Fixed(1)
+    }
+
+    @Parcelize
+    data object ListMedium : FileContentType() {
+        @IgnoredOnParcel
+        override val columns = GridCells.Fixed(1)
+
+        @IgnoredOnParcel
+        override val staggeredGridCells = StaggeredGridCells.Fixed(1)
+    }
+
+    @Parcelize
+    data class Grid(val minSize: Int) : FileContentType() {
 
         override val columns: GridCells
-            @Composable get() {
-                val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
-                val widthSizeClass = windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass
-                return when (widthSizeClass) {
-                    WindowWidthSizeClass.COMPACT -> {
-                        when (size) {
-                            GridSize.Medium -> 120.dp
-                            GridSize.Large -> 180.dp
-                        }
-                    }
+            get() = GridCells.Adaptive(minSize.dp)
 
-                    WindowWidthSizeClass.MEDIUM -> {
-                        when (size) {
-                            GridSize.Medium -> 160.dp
-                            GridSize.Large -> 200.dp
-                        }
-                    }
-
-                    WindowWidthSizeClass.EXPANDED -> {
-                        when (size) {
-                            GridSize.Medium -> 160.dp
-                            GridSize.Large -> 200.dp
-                        }
-                    }
-
-                    else -> {
-                        when (size) {
-                            GridSize.Medium -> 120.dp
-                            GridSize.Large -> 180.dp
-                        }
-                    }
-                }.let {
-                    GridCells.Adaptive(it)
-                }
-            }
-    }
-
-    enum class GridSize {
-        Medium, Large
-    }
-}
-
-fun FolderDisplaySettings.toFileContentLayout(): FileContentType {
-    return when (display) {
-        FolderDisplaySettings.Display.Grid -> FileContentType.Grid(
-            when (columnSize) {
-                FolderDisplaySettings.ColumnSize.Medium -> FileContentType.GridSize.Medium
-                FolderDisplaySettings.ColumnSize.Large -> FileContentType.GridSize.Large
-            }
-        )
-
-        FolderDisplaySettings.Display.List -> FileContentType.List
+        override val staggeredGridCells
+            get() = StaggeredGridCells.Adaptive(minSize.dp)
     }
 }
 
 @Composable
-fun FileContentLayoutButton(
-    fileContentType: FileContentType,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    when (fileContentType) {
-        is FileContentType.Grid -> {
-            PlainTooltipBox(
-                tooltipContent = {
-                    Text(stringResource(id = R.string.file_list_label_switch_list_view))
-                },
-                modifier = modifier
-            ) {
-                IconButton(onClick) {
-                    Icon(
-                        ComicIcons.ViewList,
-                        stringResource(id = R.string.file_list_label_switch_list_view)
-                    )
-                }
-            }
-        }
+fun OverflowMenuScope.ChangeGridSize(fileContentType: FileContentType, onClick: () -> Unit) {
+    if (fileContentType is FileContentType.Grid) {
+        OverflowMenuItem(
+            text = stringResource(R.string.file_action_change_grid_size),
+            icon = ComicIcons.Grid4x4,
+            onClick = onClick
+        )
+    }
+}
 
-        FileContentType.List -> {
-            PlainTooltipBox(
-                tooltipContent = {
-                    Text(stringResource(id = R.string.file_list_label_switch_grid_view))
-                },
-                modifier = modifier
-            ) {
-                IconButton(onClick) {
-                    Icon(
-                        ComicIcons.GridView,
-                        stringResource(id = R.string.file_list_label_switch_grid_view)
-                    )
-                }
+@Composable
+fun OverflowMenuScope.FileContentType(fileContentType: FileContentType, onClick: () -> Unit) {
+    if (fileContentType is FileContentType.Grid) {
+        OverflowMenuItem(
+            text = stringResource(id = R.string.file_list_label_switch_list_view),
+            icon = ComicIcons.ViewList,
+            onClick = onClick
+        )
+    } else {
+        OverflowMenuItem(
+            text = stringResource(id = R.string.file_list_label_switch_grid_view),
+            icon = ComicIcons.GridView,
+            onClick = onClick
+        )
+    }
+}
+
+@Composable
+fun rememberFileContentType(
+    fileListDisplay: FileListDisplay,
+    gridColumnSize: GridColumnSize,
+): State<FileContentType> {
+    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
+    val widthSizeClass = windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass
+    val isCompact = widthSizeClass == WindowWidthSizeClass.COMPACT
+    return remember(fileListDisplay, gridColumnSize) {
+        mutableStateOf(
+            when (fileListDisplay) {
+                FileListDisplay.List -> if (isCompact) FileContentType.List else FileContentType.ListMedium
+                FileListDisplay.Grid -> when (widthSizeClass) {
+                    WindowWidthSizeClass.COMPACT -> when (gridColumnSize) {
+                        GridColumnSize.Medium -> 120
+                        GridColumnSize.Large -> 180
+                    }
+
+                    WindowWidthSizeClass.MEDIUM -> when (gridColumnSize) {
+                        GridColumnSize.Medium -> 160
+                        GridColumnSize.Large -> 200
+                    }
+
+                    WindowWidthSizeClass.EXPANDED -> when (gridColumnSize) {
+                        GridColumnSize.Medium -> 160
+                        GridColumnSize.Large -> 200
+                    }
+
+                    else -> when (gridColumnSize) {
+                        GridColumnSize.Medium -> 120
+                        GridColumnSize.Large -> 180
+                    }
+                }.let(FileContentType::Grid)
             }
-        }
+        )
     }
 }

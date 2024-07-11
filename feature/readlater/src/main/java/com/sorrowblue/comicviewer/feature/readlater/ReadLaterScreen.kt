@@ -17,13 +17,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraphTransitions
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterAppBar
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoUiState
-import com.sorrowblue.comicviewer.file.component.FileContent
-import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.file.rememberThreePaneScaffoldNavigatorContent
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
@@ -136,12 +137,12 @@ private fun ReadLaterScreen(
             )
         } else {
             val (paddings, margins) = calculatePaddingMargins(contentPadding)
-            FileContent(
-                type = FileContentType.List,
+            FileLazyVerticalGrid(
+                uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = paddings,
-                onFileClick = onFileClick,
-                onInfoClick = onFileInfoClick,
+                onItemClick = onFileClick,
+                onItemInfoClick = onFileInfoClick,
                 state = lazyGridState,
                 modifier = Modifier
                     .fillMaxSize()

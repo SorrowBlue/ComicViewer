@@ -17,7 +17,9 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
+import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.file.component.ChangeGridSize
 import com.sorrowblue.comicviewer.file.component.FileContentType
@@ -33,8 +35,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 internal data class FolderAppBarUiState(
     val title: String = "",
-    val display: FolderDisplaySettings.Display = FolderDisplaySettings.Display.Grid,
-    val columnSize: FolderDisplaySettings.ColumnSize = FolderDisplaySettings.ColumnSize.Medium,
+    val fileListDisplay: FileListDisplay = FolderDisplaySettingsDefaults.fileListDisplay,
+    val gridColumnSize: GridColumnSize = FolderDisplaySettingsDefaults.gridColumnSize,
     val showHiddenFile: Boolean = false,
 ) : Parcelable
 
@@ -64,11 +66,14 @@ internal fun FolderAppBar(
                 Icon(ComicIcons.SortByAlpha, "sort")
             }
             val fileContentType by rememberFileContentType(
-                display = uiState.display,
-                columnSize = uiState.columnSize
+                fileListDisplay = uiState.fileListDisplay,
+                gridColumnSize = uiState.gridColumnSize
             )
             OverflowMenu {
-                FileContentType(fileContentType = fileContentType, onClick = onFileListChange)
+                FileContentType(
+                    fileContentType = fileContentType,
+                    onClick = onFileListChange
+                )
                 ChangeGridSize(fileContentType = fileContentType, onClick = onGridSizeChange)
                 ShowHiddenFIle(showHiddenFile = uiState.showHiddenFile, onClick = onHideFileClick)
                 OverflowMenuItem(

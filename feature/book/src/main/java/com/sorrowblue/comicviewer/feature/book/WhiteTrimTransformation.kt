@@ -61,5 +61,9 @@ fun Bitmap.trimBorders(color: Int, maxMargin: Int = 0): Bitmap {
         }
     }
 
-    return Bitmap.createBitmap(this, maxLeft, maxTop, maxRight - maxLeft, maxBottom - maxTop)
+    return if (maxLeft == 0 && maxTop == 0 && maxRight == 0 && maxBottom == 0) {
+        Bitmap.createBitmap(this, maxLeft, maxTop, 1, 1)
+    } else {
+        Bitmap.createBitmap(this, maxLeft, maxTop, maxRight - maxLeft, maxBottom - maxTop)
+    }
 }

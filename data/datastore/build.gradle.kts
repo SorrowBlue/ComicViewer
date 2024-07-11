@@ -8,8 +8,12 @@ android {
 }
 
 dependencies {
+    implementation(projects.framework.common)
     implementation(projects.domain.service)
 
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.datastore)
+    implementation(libs.androidx.startup.runtime)
+    implementation(libs.google.android.play.feature.delivery.ktx)
     implementation(libs.kotlinx.serialization.protobuf)
 }

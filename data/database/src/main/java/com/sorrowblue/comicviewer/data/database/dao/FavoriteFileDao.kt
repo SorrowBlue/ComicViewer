@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.FileEntity
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
-import com.sorrowblue.comicviewer.domain.model.settings.SortType
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import kotlinx.coroutines.flow.Flow
 
 @Dao

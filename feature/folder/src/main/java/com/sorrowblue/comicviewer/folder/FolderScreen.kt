@@ -33,12 +33,11 @@ import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
-import com.sorrowblue.comicviewer.file.component.rememberFileContentType
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.file.rememberThreePaneScaffoldNavigatorContent
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
@@ -67,9 +66,7 @@ import logcat.logcat
 @Parcelize
 internal data class FolderScreenUiState(
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
-    val display: FolderDisplaySettings.Display = FolderDisplaySettings.Display.List,
-    val columnSize: FolderDisplaySettings.ColumnSize = FolderDisplaySettings.ColumnSize.Medium,
-    val isThumbnailEnabled: Boolean = true,
+    val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
 ) : Parcelable
 
 @Composable
@@ -293,14 +290,12 @@ private fun FolderScreen(
                     )
                 )
             } else {
-                val contentType by rememberFileContentType(uiState.display, uiState.columnSize)
                 val (paddings, margins) = calculatePaddingMargins(contentPadding)
                 FileLazyVerticalGrid(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(margins),
-                    isThumbnailEnabled = uiState.isThumbnailEnabled,
-                    contentType = contentType,
+                    uiState = uiState.fileLazyVerticalGridUiState,
                     lazyPagingItems = lazyPagingItems,
                     contentPadding = paddings,
                     onItemClick = onFileClick,

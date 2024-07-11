@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.datastore.serializer
 
 import androidx.datastore.core.Serializer
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import java.io.InputStream
 import java.io.OutputStream
 import kotlinx.coroutines.CoroutineDispatcher
