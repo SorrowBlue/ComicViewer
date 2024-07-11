@@ -143,9 +143,9 @@ private class FolderScreenStateImpl(
     init {
         viewModel.displaySettings.distinctUntilChanged().onEach {
             val sortItem = when (it.sortType) {
-                is SortType.DATE -> SortItem.Date
-                is SortType.NAME -> SortItem.Name
-                is SortType.SIZE -> SortItem.Size
+                is SortType.Date -> SortItem.Date
+                is SortType.Name -> SortItem.Name
+                is SortType.Size -> SortItem.Size
             }
             val sortOrder = if (it.sortType.isAsc) SortOrder.Asc else SortOrder.Desc
             uiState = uiState.copy(

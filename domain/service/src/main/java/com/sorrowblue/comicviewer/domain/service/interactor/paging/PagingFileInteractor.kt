@@ -39,9 +39,9 @@ internal class PagingFileInteractor @Inject constructor(
                                 SearchCondition.Range.InFolder(file.path),
                                 SearchCondition.Period.NONE,
                                 when (settings.sortType) {
-                                    is SortType.DATE -> SearchCondition.Order.DATE
-                                    is SortType.NAME -> SearchCondition.Order.NAME
-                                    is SortType.SIZE -> SearchCondition.Order.SIZE
+                                    is SortType.Date -> SearchCondition.Order.DATE
+                                    is SortType.Name -> SearchCondition.Order.NAME
+                                    is SortType.Size -> SearchCondition.Order.SIZE
                                 },
                                 if (settings.sortType.isAsc) SearchCondition.Sort.ASC else SearchCondition.Sort.DESC,
                                 settings.showHiddenFiles,

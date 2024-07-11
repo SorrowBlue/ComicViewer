@@ -31,7 +31,7 @@ data class FolderDisplaySettings(
 object FolderDisplaySettingsDefaults {
 
     /** ソートタイプ */
-    val sortType = SortType.NAME(true)
+    val sortType = SortType.Name(true)
 
     /** ファイル一覧の表示方法 */
     val fileListDisplay = FileListDisplay.Grid
