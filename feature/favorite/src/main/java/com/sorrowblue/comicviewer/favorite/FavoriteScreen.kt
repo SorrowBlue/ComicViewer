@@ -22,7 +22,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraph
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphTransitions
 import com.sorrowblue.comicviewer.favorite.section.FavoriteAppBar
@@ -31,7 +30,7 @@ import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
-import com.sorrowblue.comicviewer.file.component.rememberFileContentType
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
@@ -111,9 +110,7 @@ private fun FavoriteScreen(
 @Parcelize
 internal data class FavoriteScreenUiState(
     val favoriteAppBarUiState: FavoriteAppBarUiState = FavoriteAppBarUiState(),
-    val display: FolderDisplaySettings.Display = FolderDisplaySettings.Display.List,
-    val columnSize: FolderDisplaySettings.ColumnSize = FolderDisplaySettings.ColumnSize.Medium,
-    val isThumbnailEnabled: Boolean = true,
+    val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
 ) : Parcelable
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
@@ -178,14 +175,12 @@ private fun FavoriteScreen(
                     .padding(contentPadding)
             )
         } else {
-            val contentType by rememberFileContentType(uiState.display, uiState.columnSize)
             val (paddings, margins) = calculatePaddingMargins(contentPadding)
             FileLazyVerticalGrid(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(margins),
-                isThumbnailEnabled = uiState.isThumbnailEnabled,
-                contentType = contentType,
+                uiState = uiState.fileLazyVerticalGridUiState,
                 lazyPagingItems = lazyPagingItems,
                 contentPadding = paddings,
                 onItemClick = onFileClick,

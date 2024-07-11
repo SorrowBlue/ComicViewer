@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -28,10 +29,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -45,7 +48,7 @@ import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
  * @param onClick クリック時の処理
  * @param onInfoClick インフォクリック時の処理
  * @param modifier Modifier
- * @param isThumbnailEnabled サムネイル表示を有効にするか
+ * @param showThumbnail サムネイル表示を有効にするか
  */
 @Composable
 fun GridFile(
@@ -53,12 +56,19 @@ fun GridFile(
     onClick: () -> Unit,
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isThumbnailEnabled: Boolean = true,
+    showThumbnail: Boolean,
+    fontSize: Int,
+    contentScale: ContentScale,
+    filterQuality: FilterQuality,
 ) {
     ElevatedCard(onClick = onClick, modifier = modifier) {
         Box {
-            if (isThumbnailEnabled) {
-                GridFileThumbnail(file = file)
+            if (showThumbnail) {
+                GridFileThumbnail(
+                    file = file,
+                    contentScale = contentScale,
+                    filterQuality = filterQuality
+                )
             } else {
                 GridFileIcon(file = file)
             }
@@ -79,7 +89,10 @@ fun GridFile(
         Box {
             Text(
                 text = file.name,
-                style = ComicTheme.typography.bodyLarge,
+                style = ComicTheme.typography.bodyLarge.copy(
+                    fontSize = fontSize.sp,
+                    lineHeight = (fontSize + 4).sp,
+                ),
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
@@ -102,12 +115,15 @@ fun GridFile(
 @Composable
 private fun GridFileThumbnail(
     file: File,
+    contentScale: ContentScale,
+    filterQuality: FilterQuality,
 ) {
     SubcomposeAsyncImage(
         model = file,
         contentDescription = null,
         alignment = Alignment.TopCenter,
-        contentScale = ContentScale.Fit,
+        contentScale = contentScale,
+        filterQuality = filterQuality,
         loading = {
             if (LocalInspectionMode.current) {
                 Image(painter = rememberDebugPlaceholder()!!, contentDescription = null)
@@ -175,9 +191,12 @@ private fun PreviewFileGrid() {
     PreviewTheme {
         GridFile(
             file = fakeBookFile(),
-            isThumbnailEnabled = true,
+            showThumbnail = true,
             onClick = {},
-            onInfoClick = {}
+            onInfoClick = {},
+            contentScale = ContentScale.Fit,
+            filterQuality = FilterQuality.None,
+            fontSize = FolderDisplaySettingsDefaults.fontSize
         )
     }
 }

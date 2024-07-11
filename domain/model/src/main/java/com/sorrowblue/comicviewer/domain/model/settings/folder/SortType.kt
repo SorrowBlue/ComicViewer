@@ -1,9 +1,12 @@
-package com.sorrowblue.comicviewer.domain.model.settings
+package com.sorrowblue.comicviewer.domain.model.settings.folder
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+@Parcelize
 @Serializable
-sealed interface SortType {
+sealed interface SortType : Parcelable {
 
     val isAsc: Boolean
 
@@ -23,4 +26,16 @@ sealed interface SortType {
 
     @Serializable
     data class SIZE(override val isAsc: Boolean) : SortType
+
+    companion object {
+        val entries
+            get() = listOf(
+                NAME(true),
+                NAME(false),
+                DATE(true),
+                DATE(false),
+                SIZE(true),
+                SIZE(false)
+            )
+    }
 }

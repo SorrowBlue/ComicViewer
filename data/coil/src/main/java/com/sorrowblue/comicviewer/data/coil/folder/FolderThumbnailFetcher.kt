@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.di.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.from
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.model.settings.FolderThumbnailOrder
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -42,7 +42,7 @@ internal class FolderThumbnailFetcher(
 
     override suspend fun metadata(): FolderThumbnailMetadata {
         val folderThumbnailOrder =
-            datastoreDataSource.displaySettings.first().folderThumbnailOrder
+            datastoreDataSource.folderDisplaySettings.first().folderThumbnailOrder
         val thumbnails = getThumbnailCacheList(5, folderThumbnailOrder)
         thumbnails.forEach { it.second.closeQuietly() }
         return FolderThumbnailMetadata(
@@ -58,7 +58,7 @@ internal class FolderThumbnailFetcher(
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val folderThumbnailOrder =
-            datastoreDataSource.displaySettings.first().folderThumbnailOrder
+            datastoreDataSource.folderDisplaySettings.first().folderThumbnailOrder
         val thumbnails = getThumbnailCacheList(5, folderThumbnailOrder)
         if (thumbnails.isEmpty()) {
             throw CoilRuntimeException("There are no book thumbnails in this folder.")

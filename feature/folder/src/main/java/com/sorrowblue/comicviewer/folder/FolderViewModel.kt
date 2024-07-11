@@ -6,9 +6,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.SortType
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
@@ -58,37 +58,17 @@ internal class FolderViewModel @Inject constructor(
             )
 
     val showHidden: StateFlow<Boolean> =
-        displaySettingsUseCase.settings.map { it.showHiddenFile }
+        displaySettingsUseCase.settings.map { it.showHiddenFiles }
             .stateIn(
                 viewModelScope,
                 SharingStarted.Eagerly,
-                runBlocking { displaySettingsUseCase.settings.first().showHiddenFile }
+                runBlocking { displaySettingsUseCase.settings.first().showHiddenFiles }
             )
 
-    fun readLater(file: File, isAdd: Boolean) {
-        viewModelScope.launch {
-            if (isAdd) {
-                addReadLaterUseCase(
-                    AddReadLaterUseCase.Request(
-                        file.bookshelfId,
-                        file.path
-                    )
-                ).first()
-            } else {
-                deleteReadLaterUseCase(
-                    DeleteReadLaterUseCase.Request(
-                        file.bookshelfId,
-                        file.path
-                    )
-                ).first()
-            }
-        }
-    }
-
-    fun updateDisplay(display: FolderDisplaySettings.Display) {
+    fun updateDisplay(fileListDisplay: FileListDisplay) {
         viewModelScope.launch {
             displaySettingsUseCase.edit {
-                it.copy(display = display)
+                it.copy(fileListDisplay = fileListDisplay)
             }
         }
     }
@@ -97,9 +77,9 @@ internal class FolderViewModel @Inject constructor(
         viewModelScope.launch {
             displaySettingsUseCase.edit {
                 it.copy(
-                    columnSize = when (it.columnSize) {
-                        FolderDisplaySettings.ColumnSize.Medium -> FolderDisplaySettings.ColumnSize.Large
-                        FolderDisplaySettings.ColumnSize.Large -> FolderDisplaySettings.ColumnSize.Medium
+                    gridColumnSize = when (it.gridColumnSize) {
+                        GridColumnSize.Medium -> GridColumnSize.Large
+                        GridColumnSize.Large -> GridColumnSize.Medium
                     }
                 )
             }
@@ -109,7 +89,7 @@ internal class FolderViewModel @Inject constructor(
     fun updateShowHide(value: Boolean) {
         viewModelScope.launch {
             displaySettingsUseCase.edit {
-                it.copy(showHiddenFile = value)
+                it.copy(showHiddenFiles = value)
             }
         }
     }

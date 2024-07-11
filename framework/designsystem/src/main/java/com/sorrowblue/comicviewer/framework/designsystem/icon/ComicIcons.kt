@@ -21,8 +21,6 @@ import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DisplaySettings
 import androidx.compose.material.icons.rounded.Dns
-import androidx.compose.material.icons.rounded.Done
-import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.Favorite
@@ -53,6 +51,7 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.SortByAlpha
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Start
+import androidx.compose.material.icons.rounded.Storage
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.WatchLater
@@ -64,7 +63,6 @@ object ComicIcons {
     val WatchLater = Icons.Rounded.WatchLater
     val Favorite = Icons.Rounded.Favorite
     val RocketLaunch = Icons.Rounded.RocketLaunch
-    val Download = Icons.Rounded.Download
     val History = Icons.Rounded.History
     val Visibility = Icons.Rounded.Visibility
     val VisibilityOff = Icons.Rounded.VisibilityOff
@@ -103,7 +101,6 @@ object ComicIcons {
     val FolderOpen = Icons.Rounded.FolderOpen
     val DisplaySettings = Icons.Rounded.DisplaySettings
     val InstallMobile = Icons.Rounded.InstallMobile
-    val Done = Icons.Rounded.Done
     val ArrowRight = Icons.AutoMirrored.Rounded.ArrowRight
     val Settings = Icons.Rounded.Settings
     val MoreVert = Icons.Rounded.MoreVert
@@ -112,5 +109,6 @@ object ComicIcons {
     val Book = Icons.Rounded.Book
     val BrokenImage = Icons.Rounded.BrokenImage
     val Folder = Icons.Rounded.Folder
+    val Storage = Icons.Rounded.Storage
     val Notifications = Icons.Rounded.Notifications
 }

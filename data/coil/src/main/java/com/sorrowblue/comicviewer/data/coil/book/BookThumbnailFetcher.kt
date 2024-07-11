@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.data.coil.book
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import coil3.ImageLoader
 import coil3.decode.DataSource
 import coil3.disk.DiskCache
@@ -12,7 +14,9 @@ import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.di.CoilDiskCache
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -30,7 +34,17 @@ internal class BookThumbnailFetcher(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileModelLocalDataSource: FileLocalDataSource,
+    private val datastoreDataSource: DatastoreDataSource,
 ) : FileFetcher<BookThumbnailMetadata>(options, diskCacheLazy) {
+
+    override val diskCacheKey
+        get() = options.diskCacheKey
+            ?: "${book.path}:${book.bookshelfId.value}:${book.lastModifier}".encodeUtf8().sha256()
+                .hex()
+
+    override suspend fun metadata() = BookThumbnailMetadata(book)
+
+    override fun BufferedSource.readMetadata() = BookThumbnailMetadata.from(this)
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val source = bookshelfLocalDataSource.flow(book.bookshelfId).first()
@@ -44,7 +58,16 @@ internal class BookThumbnailFetcher(
 
         // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
         return writeToDiskCache(snapshot, BookThumbnailMetadata(book)) {
-            fileReader.copyTo(0, it)
+            val displaySettings = datastoreDataSource.folderDisplaySettings.first()
+            val quality = displaySettings.thumbnailQuality
+            val compressFormat = displaySettings.imageFormat.toCompressFormat()
+            Buffer().use {
+                fileReader.copyTo(0, it)
+                BitmapFactory.decodeStream(it.inputStream())
+            }.let { bitmap ->
+                bitmap.compress(compressFormat, quality, it.outputStream())
+                bitmap.recycle()
+            }
         }?.use {
             // DISKキャッシュキーとページ数を更新する。
             fileModelLocalDataSource.updateAdditionalInfo(
@@ -71,30 +94,29 @@ internal class BookThumbnailFetcher(
         }
     }
 
-    override suspend fun metadata() = BookThumbnailMetadata(book)
-
-    override fun BufferedSource.readMetadata() = BookThumbnailMetadata.from(this)
-
-    override val diskCacheKey
-        get() = options.diskCacheKey
-            ?: "${book.path}:${book.bookshelfId.value}:${book.lastModifier}".encodeUtf8()
-                .sha256().hex()
+    private fun ImageFormat.toCompressFormat() = when (this) {
+        ImageFormat.WEBP -> Bitmap.CompressFormat.WEBP_LOSSY
+        ImageFormat.JPEG -> Bitmap.CompressFormat.JPEG
+        ImageFormat.PNG -> Bitmap.CompressFormat.PNG
+    }
 
     class Factory @Inject constructor(
         @ApplicationContext private val context: Context,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
         private val fileModelLocalDataSource: FileLocalDataSource,
+        private val datastoreDataSource: DatastoreDataSource,
     ) : Fetcher.Factory<Book> {
 
         override fun create(data: Book, options: Options, imageLoader: ImageLoader): Fetcher {
             return BookThumbnailFetcher(
-                options,
-                { CoilDiskCache.thumbnailDiskCache(context, data.bookshelfId) },
-                data,
-                remoteDataSourceFactory,
-                bookshelfLocalDataSource,
-                fileModelLocalDataSource
+                options = options,
+                diskCacheLazy = { CoilDiskCache.thumbnailDiskCache(context, data.bookshelfId) },
+                book = data,
+                remoteDataSourceFactory = remoteDataSourceFactory,
+                bookshelfLocalDataSource = bookshelfLocalDataSource,
+                fileModelLocalDataSource = fileModelLocalDataSource,
+                datastoreDataSource = datastoreDataSource
             )
         }
     }

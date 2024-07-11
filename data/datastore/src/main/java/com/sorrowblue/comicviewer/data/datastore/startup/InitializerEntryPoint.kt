@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.folder
+package com.sorrowblue.comicviewer.data.datastore.startup
 
 import android.content.Context
 import dagger.hilt.EntryPoint
@@ -20,5 +20,6 @@ internal interface InitializerEntryPoint {
         }
     }
 
+    fun inject(initializer: DarkModeInitializer)
     fun inject(initializer: ExtensionInitializer)
 }

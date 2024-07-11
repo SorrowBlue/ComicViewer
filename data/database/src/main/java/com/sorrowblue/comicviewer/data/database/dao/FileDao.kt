@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.data.database.entity.SimpleFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistoryEntity
 import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfoEntity
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
-import com.sorrowblue.comicviewer.domain.model.settings.SortType
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import kotlinx.coroutines.flow.Flow
 import logcat.logcat
 

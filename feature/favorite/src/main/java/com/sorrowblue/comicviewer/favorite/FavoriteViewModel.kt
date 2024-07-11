@@ -8,7 +8,8 @@ import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
@@ -61,9 +62,9 @@ internal class FavoriteViewModel @Inject constructor(
         viewModelScope.launch {
             displaySettingsUseCase.edit {
                 it.copy(
-                    columnSize = when (it.columnSize) {
-                        FolderDisplaySettings.ColumnSize.Medium -> FolderDisplaySettings.ColumnSize.Large
-                        FolderDisplaySettings.ColumnSize.Large -> FolderDisplaySettings.ColumnSize.Medium
+                    gridColumnSize = when (it.gridColumnSize) {
+                        GridColumnSize.Medium -> GridColumnSize.Large
+                        GridColumnSize.Large -> GridColumnSize.Medium
                     }
                 )
             }
@@ -83,10 +84,11 @@ internal class FavoriteViewModel @Inject constructor(
                 }
             }
     }
-    fun updateDisplay(display: FolderDisplaySettings.Display) {
+
+    fun updateDisplay(display: FileListDisplay) {
         viewModelScope.launch {
             displaySettingsUseCase.edit {
-                it.copy(display = display)
+                it.copy(fileListDisplay = display)
             }
         }
     }

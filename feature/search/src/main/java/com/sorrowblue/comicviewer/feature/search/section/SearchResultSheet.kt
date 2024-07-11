@@ -19,8 +19,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.feature.search.R
-import com.sorrowblue.comicviewer.file.component.FileListContent
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileSearching
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
@@ -43,12 +45,13 @@ internal fun SearchResultSheet(
                 .imePadding()
         )
     } else {
-        FileListContent(
+        FileLazyVerticalGrid(
+            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
             state = lazyListState,
             contentPadding = contentPadding,
             lazyPagingItems = lazyPagingItems,
-            onClickItem = onFileClick,
-            onLongClickItem = onFileLongClick
+            onItemClick = onFileClick,
+            onItemInfoClick = onFileLongClick
         )
     }
 }

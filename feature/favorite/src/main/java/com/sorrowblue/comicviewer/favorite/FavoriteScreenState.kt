@@ -18,7 +18,7 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.fold
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
@@ -87,13 +87,18 @@ private class FavoriteScreenStateImpl(
 
         viewModel.displaySettings.distinctUntilChanged().onEach {
             uiState = uiState.copy(
-                display = it.display,
-                columnSize = it.columnSize,
                 favoriteAppBarUiState = uiState.favoriteAppBarUiState.copy(
-                    display = it.display,
-                    columnSize = it.columnSize,
+                    fileListDisplay = it.fileListDisplay,
+                    gridColumnSize = it.gridColumnSize,
                 ),
-                isThumbnailEnabled = it.isEnabledThumbnail
+                fileLazyVerticalGridUiState = uiState.fileLazyVerticalGridUiState.copy(
+                    fileListDisplay = it.fileListDisplay,
+                    columnSize = it.gridColumnSize,
+                    imageScale = it.imageScale,
+                    imageFilterQuality = it.imageFilterQuality,
+                    fontSize = it.fontSize,
+                    showThumbnails = it.showThumbnails
+                )
             )
         }.launchIn(scope)
         scope.launch {
@@ -114,7 +119,7 @@ private class FavoriteScreenStateImpl(
     }
 
     override fun toggleGridSize() {
-        if (uiState.favoriteAppBarUiState.display == FolderDisplaySettings.Display.Grid) {
+        if (uiState.favoriteAppBarUiState.fileListDisplay == FileListDisplay.Grid) {
             viewModel.updateGridSize()
         }
     }
@@ -135,9 +140,9 @@ private class FavoriteScreenStateImpl(
 
     override fun toggleFileListType() {
         viewModel.updateDisplay(
-            when (uiState.favoriteAppBarUiState.display) {
-                FolderDisplaySettings.Display.Grid -> FolderDisplaySettings.Display.List
-                FolderDisplaySettings.Display.List -> FolderDisplaySettings.Display.Grid
+            when (uiState.favoriteAppBarUiState.fileListDisplay) {
+                FileListDisplay.Grid -> FileListDisplay.List
+                FileListDisplay.List -> FileListDisplay.Grid
             }
         )
     }

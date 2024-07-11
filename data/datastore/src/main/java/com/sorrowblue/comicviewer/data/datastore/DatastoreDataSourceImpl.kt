@@ -3,13 +3,13 @@ package com.sorrowblue.comicviewer.data.datastore
 import androidx.datastore.core.DataStore
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.model.settings.OneTimeFlag
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

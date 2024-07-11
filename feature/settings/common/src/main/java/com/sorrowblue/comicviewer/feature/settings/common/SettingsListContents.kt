@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.CustomSlider
@@ -345,6 +344,39 @@ fun SliderSetting(
                 onValueChange = onValueChange,
                 valueRange = valueRange,
                 steps = steps,
+                thumbLabel = { it.toString() },
+                enabled = enabled,
+            )
+        },
+        enabled = enabled,
+        icon = icon,
+        widget = widget,
+        onClick = {},
+        modifier = modifier,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SliderSetting(
+    title: @Composable () -> Unit,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    valueRange: kotlin.ranges.IntRange = 0..100,
+    @IntRange(from = 0) steps: Int = 0,
+    widget: @Composable (() -> Unit)? = null,
+    icon: @Composable (() -> Unit)? = null,
+    enabled: Boolean = true,
+) {
+    Setting(
+        title = title,
+        summary = {
+            CustomSlider(
+                value = value.toFloat(),
+                onValueChange = { onValueChange(it.toInt()) },
+                valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
+                steps = steps,
                 thumbLabel = { it.toInt().toString() },
                 enabled = enabled,
             )
@@ -383,6 +415,31 @@ fun SliderSetting(
 }
 
 @Composable
+fun SliderSetting(
+    title: Int,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    valueRange: kotlin.ranges.IntRange = 0..100,
+    @IntRange(from = 0) steps: Int = 0,
+    widget: @Composable (() -> Unit)? = null,
+    icon: @Composable (() -> Unit)? = null,
+    enabled: Boolean = true,
+) {
+    SliderSetting(
+        title = { Text(text = stringResource(id = title)) },
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        valueRange = valueRange,
+        steps = steps,
+        widget = widget,
+        icon = icon,
+        enabled = enabled
+    )
+}
+
+@Composable
 fun SettingsCategory(
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
@@ -390,9 +447,14 @@ fun SettingsCategory(
 ) {
     Column(modifier = modifier.background(ComicTheme.colorScheme.surface)) {
         Box(
-            Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
+            Modifier.padding(
+                start = ComicTheme.dimension.padding * 2,
+                top = ComicTheme.dimension.padding * 3,
+                end = ComicTheme.dimension.padding * 2,
+                bottom = ComicTheme.dimension.padding
+            )
         ) {
-            ProvideTextStyle(MaterialTheme.typography.labelMedium.copy(color = MaterialTheme.colorScheme.primary)) {
+            ProvideTextStyle(MaterialTheme.typography.titleSmall.copy(color = MaterialTheme.colorScheme.primary)) {
                 title()
             }
         }
@@ -402,25 +464,12 @@ fun SettingsCategory(
 
 @Composable
 fun SettingsCategory(
-    title: String,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
-) {
-    SettingsCategory(
-        title = { Text(text = title) },
-        modifier = modifier,
-        content = content
-    )
-}
-
-@Composable
-fun SettingsCategory(
     title: Int,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     SettingsCategory(
-        title = stringResource(id = title),
+        title = { Text(text = stringResource(id = title)) },
         modifier = modifier,
         content = content
     )
@@ -443,7 +492,7 @@ private fun PreviewSettingsScreen() {
                     title = "音とバイブレーション",
                     onClick = {},
                 )
-                var media by remember { mutableFloatStateOf(0f) }
+                var media by remember { mutableFloatStateOf(0.5f) }
                 SliderSetting(
                     title = { Text("メディアの音量") },
                     value = media,

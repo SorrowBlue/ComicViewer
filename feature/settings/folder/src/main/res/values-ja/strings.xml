@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings_folder_label_image_cache">画像キャッシュ</string>
     <string name="settings_folder_desc_image_folder">リストを取得するのに時間がかかります</string>
     <string name="settings_folder_label_archives">アーカイブ</string>
     <string name="settings_folder_label_delete_thumbnail">サムネイルを削除する</string>
@@ -11,4 +12,40 @@
     <string name="settings_folder_label_thumbnail">サムネイル</string>
     <string name="settings_folder_title">フォルダ</string>
     <string name="settings_folder_title_extension">拡張子</string>
+    <string name="settings_folder_label_image_format">サムネイルの画像形式</string>
+    <string name="settings_folder_label_font_size">フォントサイズ</string>
+    <string name="settings_folder_label_image_quality">画像の品質</string>
+    <string name="settings_folder_imageformat_label_webp_explanation">推奨画質：高、圧縮率：高 (推奨)</string>
+    <string name="settings_folder_imageformat_label_jpeg_explanation">画質：中、圧縮率：中</string>
+    <string name="settings_folder_imageformat_label_png_explanation">画質：高、圧縮率：低</string>
+    <string name="settings_folder_label_webp_summary">WebP (推奨)</string>
+    <string name="settings_folder_label_jpeg_summary">JPEG</string>
+    <string name="settings_folder_label_png_summary">PNG</string>
+    <string name="settings_folder_filesort_label_file_sort_name_asc">名前 (昇順)</string>
+    <string name="settings_folder_filesort_label_file_sort_name_desc">名前 (降順)</string>
+    <string name="settings_folder_filesort_label_file_sort_date_asc">更新日時 (昇順)</string>
+    <string name="settings_folder_filesort_label_file_sort_date_desc">更新日時 (降順)</string>
+    <string name="settings_folder_filesort_label_file_sort_size_asc">ファイルサイズ (昇順)</string>
+    <string name="settings_folder_filesort_label_file_sort_size_desc">ファイルサイズ (降順)</string>
+    <string name="settings_folder_label_show_hidden_files">隠しファイルを表示 </string>
+    <string name="settings_folder_imageformat_title">画像形式</string>
+    <string name="settings_folder_label_folder_thumbnail_order">フォルダーのサムネイル順序</string>
+    <string name="settings_folder_folderthumbnail_title">フォルダーのサムネイル順序</string>
+    <string name="settings_folder_folderthumbnail_label_name">ファイル名</string>
+    <string name="settings_folder_folderthumbnail_label_modified">最新の本</string>
+    <string name="settings_folder_folderthumbnail_label_last_read">最後に読んだ本</string>
+    <string name="settings_folder_filesort_title">ファイルのソート</string>
+    <string name="settings_folder_label_show_files_extension">ファイルの拡張子</string>
+    <string name="settings_folder_label_file_sort">ファイルのソート</string>
+    <string name="settings_folder_label_image_scale">画像の縮尺</string>
+    <string name="settings_folder_label_image_filter_quality">画像フィルター品質</string>
+    <string name="settings_folder_imagescale_title">画像の縮尺</string>
+    <string name="settings_folder_imagescale_label_fit">全体を表示する</string>
+    <string name="settings_folder_imagescale_label_crop">トリミングして表示する</string>
+    <string name="settings_folder_imagefilterquality_title">画像フィルター品質</string>
+    <string name="settings_folder_imagefilterquality_label_none">無し</string>
+    <string name="settings_folder_imagefilterquality_label_low">低</string>
+    <string name="settings_folder_imagefilterquality_label_medium">中</string>
+    <string name="settings_folder_imagefilterquality_label_high">高</string>
+    <string name="settings_folder_label_save_thumbnail">サムネイルを保存する</string>
 </resources>

@@ -19,11 +19,12 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.feature.history.section.HistoryAppBar
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoUiState
-import com.sorrowblue.comicviewer.file.component.FileContent
-import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.file.rememberThreePaneScaffoldNavigatorContent
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
@@ -80,7 +81,7 @@ private fun HistoryScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-internal fun HistoryScreen(
+private fun HistoryScreen(
     lazyPagingItems: LazyPagingItems<Book>,
     navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     onFileClick: (Book) -> Unit,
@@ -127,13 +128,13 @@ internal fun HistoryScreen(
             )
         } else {
             val (paddings, margins) = calculatePaddingMargins(contentPadding)
-            FileContent(
-                type = FileContentType.List,
-                lazyPagingItems = lazyPagingItems,
-                contentPadding = paddings,
-                onFileClick = onFileClick,
-                onInfoClick = onFileInfoClick,
+            FileLazyVerticalGrid(
+                uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
                 state = lazyGridState,
+                lazyPagingItems = lazyPagingItems,
+                onItemClick = onFileClick,
+                onItemInfoClick = onFileInfoClick,
+                contentPadding = paddings,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(margins)

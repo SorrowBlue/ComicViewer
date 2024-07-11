@@ -5,7 +5,7 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
-import com.sorrowblue.comicviewer.domain.model.settings.SortType
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
@@ -44,7 +44,7 @@ internal class PagingFileInteractor @Inject constructor(
                                     is SortType.SIZE -> SearchCondition.Order.SIZE
                                 },
                                 if (settings.sortType.isAsc) SearchCondition.Sort.ASC else SearchCondition.Sort.DESC,
-                                settings.showHiddenFile,
+                                settings.showHiddenFiles,
                             )
                         }
                     )

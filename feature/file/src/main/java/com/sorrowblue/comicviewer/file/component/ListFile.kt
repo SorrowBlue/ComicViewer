@@ -24,9 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -50,7 +52,10 @@ fun ListFile(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isThumbnailEnabled: Boolean = true,
+    showThumbnail: Boolean = true,
+    fontSize: Int,
+    contentScale: ContentScale,
+    filterQuality: FilterQuality,
 ) {
     ListItem(
         modifier = modifier.combinedClickable(
@@ -71,11 +76,12 @@ fun ListFile(
             }
         },
         leadingContent = {
-            if (isThumbnailEnabled) {
+            if (showThumbnail) {
                 SubcomposeAsyncImage(
                     model = file,
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
+                    contentScale = contentScale,
+                    filterQuality = filterQuality,
                     loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
                     error = {
                         Icon(
@@ -109,7 +115,7 @@ fun ListFile(
         },
         trailingContent = {
             if (file is Book && 0 < file.totalPageCount) {
-                Text("${file.totalPageCount}")
+                Text("${file.totalPageCount}", fontSize = fontSize.sp)
             }
         }
     )
@@ -130,12 +136,15 @@ fun ListFileCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isThumbnailEnabled: Boolean = true,
+    showThumbnail: Boolean,
+    fontSize: Int,
+    contentScale: ContentScale,
+    filterQuality: FilterQuality,
 ) {
     Card(onClick = onClick, modifier = modifier) {
         ListItem(
             headlineContent = {
-                Text(file.name)
+                Text(file.name, fontSize = fontSize.sp)
             },
             colors = ListItemDefaults.colors(containerColor = Color.Transparent),
             supportingContent = {
@@ -146,7 +155,7 @@ fun ListFileCard(
                 }
             },
             leadingContent = {
-                if (isThumbnailEnabled) {
+                if (showThumbnail) {
                     SubcomposeAsyncImage(
                         model = file,
                         modifier = Modifier
@@ -154,6 +163,8 @@ fun ListFileCard(
                             .clip(CardDefaults.shape)
                             .background(ComicTheme.colorScheme.surfaceContainer),
                         contentDescription = null,
+                        contentScale = contentScale,
+                        filterQuality = filterQuality,
                         loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
                         error = {
                             Icon(

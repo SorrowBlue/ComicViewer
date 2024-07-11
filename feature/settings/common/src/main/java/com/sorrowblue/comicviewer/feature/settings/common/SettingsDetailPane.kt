@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
@@ -45,7 +46,7 @@ fun SettingsDetailPane(
     modifier: Modifier = Modifier,
     snackbarHost: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
-    widthSizeClass: WindowWidthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass,
+    widthSizeClass: WindowWidthSizeClass = rememberWindowAdaptiveInfo().value.windowSizeClass.windowWidthSizeClass,
     scrollBehavior: TopAppBarScrollBehavior =
         if (widthSizeClass == WindowWidthSizeClass.COMPACT || widthSizeClass == WindowWidthSizeClass.MEDIUM) {
             TopAppBarDefaults.pinnedScrollBehavior()
@@ -62,7 +63,10 @@ fun SettingsDetailPane(
                     title = title,
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
-                            Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
+                            Icon(
+                                imageVector = ComicIcons.ArrowBack,
+                                contentDescription = "上へ移動"
+                            )
                         }
                     },
                     actions = actions,
