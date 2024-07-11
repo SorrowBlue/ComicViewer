@@ -58,9 +58,9 @@ interface SortSheetState {
             manageFolderDisplaySettingsUseCase.edit {
                 it.copy(
                     sortType = when (sortItem) {
-                        SortItem.Date -> SortType.DATE(sortSheetUiState.currentSortOrder == SortOrder.Asc)
-                        SortItem.Name -> SortType.NAME(sortSheetUiState.currentSortOrder == SortOrder.Asc)
-                        SortItem.Size -> SortType.SIZE(sortSheetUiState.currentSortOrder == SortOrder.Asc)
+                        SortItem.Date -> SortType.Date(sortSheetUiState.currentSortOrder == SortOrder.Asc)
+                        SortItem.Name -> SortType.Name(sortSheetUiState.currentSortOrder == SortOrder.Asc)
+                        SortItem.Size -> SortType.Size(sortSheetUiState.currentSortOrder == SortOrder.Asc)
                     }
                 )
             }

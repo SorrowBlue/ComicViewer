@@ -25,7 +25,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
-import okio.use
 
 internal class FavoriteThumbnailFetcher(
     options: Options,
@@ -114,4 +113,3 @@ internal class FavoriteThumbnailFetcher(
             )
     }
 }
-

@@ -129,9 +129,9 @@ google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev202
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.14"
 dropbox-androidSdk = "com.dropbox.core:dropbox-android-sdk:7.0.0"
 
-coil3 = "io.coil-kt.coil3:coil:3.0.0-alpha06"
-coil3-compose = "io.coil-kt.coil3:coil-compose:3.0.0-alpha06"
-coil3-networkKtor = "io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha06"
+coil3 = "io.coil-kt.coil3:coil:3.0.0-alpha08"
+coil3-compose = "io.coil-kt.coil3:coil-compose:3.0.0-alpha08"
+coil3-networkKtor = "io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha08"
 ktor-client-android = "io.ktor:ktor-client-android:2.3.12"
 squareup-okhttp3 = "com.squareup.okhttp3:okhttp:4.12.0"
 jcifs-ng = "eu.agno3.jcifs:jcifs-ng:2.1.10"

@@ -55,11 +55,11 @@ fun GridFile(
     file: File,
     onClick: () -> Unit,
     onInfoClick: () -> Unit,
-    modifier: Modifier = Modifier,
     showThumbnail: Boolean,
     fontSize: Int,
     contentScale: ContentScale,
     filterQuality: FilterQuality,
+    modifier: Modifier = Modifier,
 ) {
     ElevatedCard(onClick = onClick, modifier = modifier) {
         Box {
@@ -191,12 +191,12 @@ private fun PreviewFileGrid() {
     PreviewTheme {
         GridFile(
             file = fakeBookFile(),
-            showThumbnail = true,
             onClick = {},
             onInfoClick = {},
+            showThumbnail = true,
+            fontSize = FolderDisplaySettingsDefaults.fontSize,
             contentScale = ContentScale.Fit,
-            filterQuality = FilterQuality.None,
-            fontSize = FolderDisplaySettingsDefaults.fontSize
+            filterQuality = FilterQuality.None
         )
     }
 }

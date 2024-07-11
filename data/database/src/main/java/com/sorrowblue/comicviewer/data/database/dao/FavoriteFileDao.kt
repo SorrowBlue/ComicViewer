@@ -32,9 +32,9 @@ internal interface FavoriteFileDao {
 
     fun pagingSource(favoriteId: Int, sortType: SortType): PagingSource<Int, FileEntity> {
         val orderBy = when (sortType) {
-            is SortType.NAME -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
-            is SortType.DATE -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
-            is SortType.SIZE -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
+            is SortType.Name -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
+            is SortType.Date -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
+            is SortType.Size -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
         }
         return pagingSource(
             object : SupportSQLiteQuery {
@@ -78,9 +78,9 @@ internal interface FavoriteFileDao {
         sortType: SortType,
     ): Flow<List<FileEntity>> {
         val column = when (sortType) {
-            is SortType.NAME -> "sort_index"
-            is SortType.DATE -> "last_modified"
-            is SortType.SIZE -> "size"
+            is SortType.Name -> "sort_index"
+            is SortType.Date -> "last_modified"
+            is SortType.Size -> "size"
         }
         val comparison = if (isNext && sortType.isAsc) ">=" else "<="
         val order = if (isNext && sortType.isAsc) "ASC" else "DESC"

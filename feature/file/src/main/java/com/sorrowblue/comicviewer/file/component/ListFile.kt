@@ -39,11 +39,14 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 /**
  * ファイル情報をリストアイテムで表示する
  *
- * @param file　ファイル
- * @param onClick　クリック時の処理
- * @param onLongClick　ロングクリック時の処理
+ * @param file ファイル
+ * @param onClick クリック時の処理
+ * @param onLongClick ロングクリック時の処理
+ * @param showThumbnail サムネイル表示するか
+ * @param fontSize
+ * @param contentScale
+ * @param filterQuality
  * @param modifier Modifier
- * @param isThumbnailEnabled　サムネイル表示を有効にするか
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -51,11 +54,11 @@ fun ListFile(
     file: File,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    showThumbnail: Boolean = true,
+    showThumbnail: Boolean,
     fontSize: Int,
     contentScale: ContentScale,
     filterQuality: FilterQuality,
+    modifier: Modifier = Modifier,
 ) {
     ListItem(
         modifier = modifier.combinedClickable(
@@ -122,24 +125,27 @@ fun ListFile(
 }
 
 /**
- * ファイル情報をカードで表示する
+ * ファイル情報をカードで表示する ファイル情報をリストアイテムで表示する
  *
  * @param file ファイル
- * @param onClick　クリック時の処理
- * @param onLongClick　ロングクリック時の処理
+ * @param onClick クリック時の処理
+ * @param onLongClick ロングクリック時の処理
+ * @param showThumbnail サムネイル表示するか
+ * @param fontSize
+ * @param contentScale
+ * @param filterQuality
  * @param modifier Modifier
- * @param isThumbnailEnabled サムネイル表示を有効にするか
  */
 @Composable
 fun ListFileCard(
     file: File,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    modifier: Modifier = Modifier,
     showThumbnail: Boolean,
     fontSize: Int,
     contentScale: ContentScale,
     filterQuality: FilterQuality,
+    modifier: Modifier = Modifier,
 ) {
     Card(onClick = onClick, modifier = modifier) {
         ListItem(
