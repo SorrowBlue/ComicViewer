@@ -12,4 +12,3 @@ abstract class GetImageCacheInfoUseCase :
         System,
     }
 }
-

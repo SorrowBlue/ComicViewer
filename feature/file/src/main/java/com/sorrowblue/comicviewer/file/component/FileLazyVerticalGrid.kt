@@ -18,8 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -123,24 +121,24 @@ fun <T : File> FileLazyVerticalGrid(
                     FileContentType.List -> {
                         ListFile(
                             file = item,
-                            showThumbnail = uiState.showThumbnails,
-                            filterQuality = filterQuality,
-                            contentScale = contentScale,
                             onClick = { onItemClick(item) },
                             onLongClick = { onItemInfoClick(item) },
-                            fontSize = uiState.fontSize
+                            showThumbnail = uiState.showThumbnails,
+                            fontSize = uiState.fontSize,
+                            contentScale = contentScale,
+                            filterQuality = filterQuality
                         )
                     }
 
                     FileContentType.ListMedium -> {
                         ListFileCard(
                             file = item,
-                            showThumbnail = uiState.showThumbnails,
-                            filterQuality = filterQuality,
-                            contentScale = contentScale,
                             onClick = { onItemClick(item) },
                             onLongClick = { onItemInfoClick(item) },
+                            showThumbnail = uiState.showThumbnails,
                             fontSize = uiState.fontSize,
+                            contentScale = contentScale,
+                            filterQuality = filterQuality,
                         )
                     }
 
@@ -148,11 +146,11 @@ fun <T : File> FileLazyVerticalGrid(
                         file = item,
                         onClick = { onItemClick(item) },
                         onInfoClick = { onItemInfoClick(item) },
-                        modifier = Modifier.animateItem(),
                         showThumbnail = uiState.showThumbnails,
                         fontSize = uiState.fontSize,
                         contentScale = contentScale,
-                        filterQuality = filterQuality
+                        filterQuality = filterQuality,
+                        modifier = Modifier.animateItem()
                     )
                 }
             }
@@ -162,9 +160,7 @@ fun <T : File> FileLazyVerticalGrid(
 
 @PreviewMultiScreen
 @Composable
-private fun PreviewGridFileLazyGrid(
-    @PreviewParameter(FileContentTypePreviewParameterProvider::class) fileContentType: FileContentType,
-) {
+private fun PreviewGridFileLazyGrid() {
     val files = List(20) {
         fakeBookFile(BookshelfId(it))
     }
@@ -180,14 +176,4 @@ private fun PreviewGridFileLazyGrid(
             )
         }
     }
-}
-
-private class FileContentTypePreviewParameterProvider : PreviewParameterProvider<FileContentType> {
-    override val values: Sequence<FileContentType>
-        get() = sequenceOf(
-            FileContentType.List,
-            FileContentType.ListMedium,
-            FileContentType.Grid(180),
-            FileContentType.Grid(200)
-        )
 }

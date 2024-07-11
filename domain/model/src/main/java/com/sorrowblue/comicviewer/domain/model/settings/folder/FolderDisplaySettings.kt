@@ -42,22 +42,22 @@ object FolderDisplaySettingsDefaults {
     const val fontSize = 16
 
     /** 拡張子を表示するか */
-    val isDisplayFileExtension = true
+    const val isDisplayFileExtension = true
 
     /** 隠しファイルを表示するか */
-    val isDisplayHiddenFile = false
+    const val isDisplayHiddenFile = false
 
     /** サムネイルを表示するか */
-    val isDisplayThumbnail = true
+    const val isDisplayThumbnail = true
 
     /** サムネイルを保存するか */
-    val isSavedThumbnail = true
+    const val isSavedThumbnail = true
 
     /** 画像フォーマット */
     val imageFormat = ImageFormat.WEBP
 
     /** サムネイル品質 */
-    val thumbnailQuality = 75
+    const val thumbnailQuality = 75
 
     /** サムネイルの拡大縮小 */
     val imageScale = ImageScale.Fit
@@ -67,5 +67,4 @@ object FolderDisplaySettingsDefaults {
 
     /** フォルダーサムネイルの順序 */
     val folderThumbnailOrder = FolderThumbnailOrder.NAME
-
 }
