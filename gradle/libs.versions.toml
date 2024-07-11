@@ -18,7 +18,7 @@ androidx-room = "2.6.1"
 androidx-work = "2.9.0"
 
 google-dagger = "2.51.1"
-android-gradle = "8.5.0"
+android-gradle = "8.5.1"
 
 detekt = "1.23.6"
 mikepenz-aboutlibraries = "11.2.2"
