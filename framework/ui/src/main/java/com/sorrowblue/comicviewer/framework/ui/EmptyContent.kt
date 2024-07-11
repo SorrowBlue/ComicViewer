@@ -75,7 +75,6 @@ fun EmptyContent(
     }
 }
 
-
 @PreviewMultiScreen
 @Composable
 private fun PreviewBookshelfEmptyContents() {

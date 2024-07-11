@@ -25,7 +25,6 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
-import okio.use
 
 internal class FolderThumbnailFetcher(
     options: Options,
@@ -130,6 +129,5 @@ internal class FolderThumbnailFetcher(
                 datastoreDataSource
             )
         }
-
     }
 }
