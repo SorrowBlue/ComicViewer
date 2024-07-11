@@ -26,11 +26,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil3.annotation.ExperimentalCoilApi
+import coil3.asDrawable
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.transformations
+import coil3.toBitmap
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.book.R
@@ -120,18 +122,17 @@ private fun SplitBookPage(
     onPageLoad: (UnratedPage, Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     AsyncImage(
         model = BookPageRequest(book to bookPage.index),
         contentDescription = null,
         transform = when (bookPage) {
-            is BookPage.Split.Unrated -> SpreadSplitTransformation.unrated(context) {
+            is BookPage.Split.Unrated -> SpreadSplitTransformation.unrated {
                 onPageLoad(bookPage, it)
             }
 
             is BookPage.Split.Single -> SpreadSplitTransformation.Single
-            is BookPage.Split.Left -> SpreadSplitTransformation.left(context)
-            is BookPage.Split.Right -> SpreadSplitTransformation.right(context)
+            is BookPage.Split.Left -> SpreadSplitTransformation.left()
+            is BookPage.Split.Right -> SpreadSplitTransformation.right()
         },
         contentScale = pageScale.contentScale,
         modifier = Modifier
@@ -217,9 +218,9 @@ object SpreadCombineTransformation {
 @OptIn(ExperimentalCoilApi::class)
 object SpreadSplitTransformation {
 
-    fun unrated(context: Context, change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->
+    fun unrated(change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->
         if (state is AsyncImagePainter.State.Success) {
-            change(state.result.image.asDrawable(context.resources).toBitmap())
+            change(state.result.image.toBitmap())
             state
         } else {
             state
@@ -228,11 +229,11 @@ object SpreadSplitTransformation {
 
     val Single = AsyncImagePainter.DefaultTransform
 
-    fun left(context: Context) = { state: AsyncImagePainter.State ->
+    fun left() = { state: AsyncImagePainter.State ->
         if (state is AsyncImagePainter.State.Success) {
             state.copy(
                 painter = BitmapPainter(
-                    state.result.image.asDrawable(context.resources).toBitmap()
+                    state.result.image.toBitmap()
                         .createSplitBitmap(true).asImageBitmap()
                 )
             )
@@ -241,11 +242,11 @@ object SpreadSplitTransformation {
         }
     }
 
-    fun right(context: Context) = { state: AsyncImagePainter.State ->
+    fun right() = { state: AsyncImagePainter.State ->
         if (state is AsyncImagePainter.State.Success) {
             state.copy(
                 painter = BitmapPainter(
-                    state.result.image.asDrawable(context.resources).toBitmap()
+                    state.result.image.toBitmap()
                         .createSplitBitmap(false).asImageBitmap()
                 )
             )
