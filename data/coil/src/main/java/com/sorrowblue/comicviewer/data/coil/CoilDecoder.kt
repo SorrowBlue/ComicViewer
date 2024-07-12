@@ -11,7 +11,6 @@ import coil3.size.Scale
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
-import logcat.logcat
 
 typealias PxSize = Pair<Int, Int>
 typealias CacheKeySnapshot = Pair<String, DiskCache.Snapshot>
@@ -67,8 +66,7 @@ object CoilDecoder {
         outSize: PxSize,
         shiftSize: Int = floor(outSize.first / 12f).toInt(),
     ): Bitmap? {
-        logcat { "createShiftedBitmapFromSnapshots($thumbnailSnapshots, $outSize, $shiftSize)" }
-        val outBitmap = Bitmap.createBitmap(outSize.first, outSize.second, Bitmap.Config.RGB_565)
+        val outBitmap = Bitmap.createBitmap(outSize.first, outSize.second, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(outBitmap)
         canvas.drawColor(Color.TRANSPARENT)
         thumbnailSnapshots.forEachIndexed { index, snapshot ->

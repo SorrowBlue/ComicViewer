@@ -22,6 +22,7 @@ fun DependenciesContainerBuilder<*>.ReadLaterGraphDependencies(
 ) {
     navGraph(NavGraphs.readLater) {
         dependency(object : ReadLaterScreenNavigator, FolderScreenNavigator {
+            override val navigator get() = destinationsNavigator
 
             override fun onFavoriteClick(file: File) {
                 onFavoriteClick(file)
@@ -38,20 +39,20 @@ fun DependenciesContainerBuilder<*>.ReadLaterGraphDependencies(
             override fun onFileClick(file: File) {
                 when (file) {
                     is Book -> onBookClick(file)
-                    is Folder -> destinationsNavigator.navigate(
+                    is Folder -> navigator.navigate(
                         ReadLaterFolderScreenDestination(file.bookshelfId, file.path, null)
                     )
                 }
             }
 
             override fun onOpenFolderClick(file: File) {
-                destinationsNavigator.navigate(
+                navigator.navigate(
                     ReadLaterFolderScreenDestination(file.bookshelfId, file.parent, null)
                 )
             }
 
             override fun navigateUp() {
-                destinationsNavigator.navigateUp()
+                navigator.navigateUp()
             }
         })
     }

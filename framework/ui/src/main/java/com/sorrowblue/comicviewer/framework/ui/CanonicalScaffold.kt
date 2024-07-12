@@ -25,8 +25,9 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 @Composable
 fun <T> CanonicalScaffold(
     navigator: ThreePaneScaffoldNavigator<T>,
-    extraPane: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
+    extraPane: @Composable (PaddingValues) -> Unit = {},
+    extraPaneVisible: (@Composable (PaddingValues, T) -> Unit)? = null,
     topBar: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
@@ -60,7 +61,15 @@ fun <T> CanonicalScaffold(
     ) { innerPadding ->
         AnimatedExtraPaneScaffold(
             navigator = navigator,
-            extraPane = { extraPane(innerPadding) }
+            extraPane = {
+                if (extraPaneVisible != null) {
+                    navigator.currentDestination?.content?.let {
+                        extraPaneVisible(innerPadding, it)
+                    }
+                } else {
+                    extraPane(innerPadding)
+                }
+            }
         ) {
             val end by animateDpAsState(
                 targetValue = if (navigator.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {

@@ -22,6 +22,7 @@ fun DependenciesContainerBuilder<*>.SearchGraphDependencies(
 ) {
     navGraph(NavGraphs.search) {
         dependency(object : SearchScreenNavigator, FolderScreenNavigator {
+            override val navigator get() = destinationsNavigator
             override fun onFavoriteClick(file: File) {
                 onFavoriteClick(file)
             }
@@ -37,20 +38,20 @@ fun DependenciesContainerBuilder<*>.SearchGraphDependencies(
             override fun onFileClick(file: File) {
                 when (file) {
                     is Book -> onBookClick(file)
-                    is Folder -> destinationsNavigator.navigate(
+                    is Folder -> navigator.navigate(
                         SearchFolderScreenDestination(file.bookshelfId, file.path, null)
                     )
                 }
             }
 
             override fun onOpenFolderClick(file: File) {
-                destinationsNavigator.navigate(
+                navigator.navigate(
                     SearchFolderScreenDestination(file.bookshelfId, file.parent, null)
                 )
             }
 
             override fun navigateUp() {
-                destinationsNavigator.navigateUp()
+                navigator.navigateUp()
             }
         })
     }

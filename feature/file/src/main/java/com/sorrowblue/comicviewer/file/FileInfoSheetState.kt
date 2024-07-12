@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.file
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -23,10 +24,16 @@ interface FileInfoSheetState {
     @OptIn(ExperimentalMaterial3AdaptiveApi::class)
     val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>
 
-    fun fetchFileInfo(file: File, onGet: (FileInfoUiState) -> Unit) {
+    @OptIn(ExperimentalMaterial3AdaptiveApi::class)
+    fun fetchFileInfo(file: File, onGet: (FileInfoUiState) -> Unit = {}) {
         val getRequest = GetFileAttributeUseCase.Request(file.bookshelfId, file.path)
         val isRequest = ExistsReadlaterUseCase.Request(file.bookshelfId, file.path)
-        onGet(FileInfoUiState(file, null, false))
+        onGet(
+            FileInfoUiState(file, null, false).also {
+                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
+            }
+        )
+
         fileInfoJob?.cancel()
         fileInfoJob = scope.launch {
             getFileAttributeUseCase(getRequest)
@@ -38,7 +45,9 @@ interface FileInfoSheetState {
                                 fileAttribute.data,
                                 existsReadLater.data,
                                 false
-                            )
+                            ).also {
+                                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
+                            }
                         )
                     } else {
                         Resource.Error(GetFileAttributeUseCase.Error.NotFound)

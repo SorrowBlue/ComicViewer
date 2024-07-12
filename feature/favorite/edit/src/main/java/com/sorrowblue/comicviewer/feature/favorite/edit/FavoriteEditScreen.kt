@@ -1,10 +1,5 @@
 package com.sorrowblue.comicviewer.feature.favorite.edit
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -26,19 +21,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +49,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
+import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarBottom
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
@@ -133,13 +123,7 @@ private fun FavoriteEditScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         topBar = {
-            val colorTransitionFraction = scrollBehavior.state.overlappedFraction
-            val appBarContainerColor by animateColorAsState(
-                targetValue = containerColor(if (colorTransitionFraction > 0.01f) 1f else 0f),
-                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                label = "DropdownMenuChipColorAnimation"
-            )
-            Column(Modifier.background(appBarContainerColor)) {
+            Column {
                 TopAppBar(
                     modifier = Modifier.wrapContentHeight(),
                     title = { Text(stringResource(R.string.favorite_edit_title)) },
@@ -156,14 +140,16 @@ private fun FavoriteEditScreen(
                     windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
                     scrollBehavior = scrollBehavior
                 )
-                FavoriteNameTextField(
-                    value = uiState.name,
-                    onValueChange = onNameChange,
-                    isError = uiState.nameError,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = ComicTheme.dimension.margin),
-                )
+                TopAppBarBottom(scrollBehavior = scrollBehavior) {
+                    FavoriteNameTextField(
+                        value = uiState.name,
+                        onValueChange = onNameChange,
+                        isError = uiState.nameError,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = ComicTheme.dimension.margin),
+                    )
+                }
             }
         },
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -286,15 +272,6 @@ private fun FavoriteEditDialog(
                 }
             }
         }
-    )
-}
-
-@Composable
-private fun containerColor(colorTransitionFraction: Float): Color {
-    return lerp(
-        ComicTheme.colorScheme.surface,
-        MaterialTheme.colorScheme.surfaceColorAtElevation(ElevationTokens.Level2),
-        FastOutLinearInEasing.transform(colorTransitionFraction)
     )
 }
 

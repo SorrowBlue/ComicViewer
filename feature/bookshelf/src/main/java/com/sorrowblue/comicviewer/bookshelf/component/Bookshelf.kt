@@ -90,8 +90,8 @@ fun Bookshelf(
                 },
                 modifier = Modifier
                     .aspectRatio(1f)
-                    .background(ComicTheme.colorScheme.surfaceVariant, CardDefaults.shape)
-                    .clip(CardDefaults.shape),
+                    .clip(CardDefaults.shape)
+                    .background(ComicTheme.colorScheme.surfaceVariant, CardDefaults.shape),
             )
         }
     }

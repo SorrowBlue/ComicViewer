@@ -11,6 +11,7 @@ import androidx.compose.material.icons.automirrored.rounded.ViewList
 import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.icons.rounded.Book
 import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.material.icons.rounded.Check
@@ -83,6 +84,7 @@ object ComicIcons {
     val Save = Icons.Rounded.Save
     val Backspace = Icons.AutoMirrored.Rounded.Backspace
     val ArrowDropDown = Icons.Rounded.ArrowDropDown
+    val ArrowDropUp = Icons.Rounded.ArrowDropUp
     val Circle = Icons.Rounded.Circle
     val Key = Icons.Rounded.Key
     val DarkMode = Icons.Rounded.DarkMode
