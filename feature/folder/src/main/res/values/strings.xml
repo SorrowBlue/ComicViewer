@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="folder_action_change_grid_size">Change Grid size</string>
-    <string name="folder_action_continue">Continue</string>
     <string name="folder_action_search">Search</string>
     <string name="folder_action_settings">Settings</string>
-    <string name="folder_label_name">Name</string>
-    <string name="folder_label_date">Date</string>
-    <string name="folder_label_size">Size</string>
-    <string name="folder_label_asc">Ascending</string>
-    <string name="folder_label_desc">Descending</string>
-    <string name="folder_label_no_file">folder is empty</string>
-    <string name="folder_message_info_scan">Bookshelf scans are performed even if you do not have notification permissions.</string>
-    <string name="folder_message_scan">Please allow notifications to show the progress of the scan.</string>
-    <string name="folder_text_nothing_in_folder">There is nothing in \"%1$s"</string>
-    <string name="folder_title_request_notification_permission">Request Notification Permission</string>
+    <string name="folder_text_nothing_in_folder">There is nothing in \'%1$s\'</string>
     <string name="folder_action_show_hidden">Show hidden files</string>
+
+    <!--SortTypeDialog-->
+    <string name="folder_sorttype_title_sort_by">Sort by</string>
+    <string name="folder_sorttype_label_name_asc">File name (ascending)</string>
+    <string name="folder_sorttype_label_name_desc">File name (descending)</string>
+    <string name="folder_sorttype_label_date_asc">Timestamp (ascending)</string>
+    <string name="folder_sorttype_label_date_desc">Timestamp (descending)</string>
+    <string name="folder_sorttype_label_size_asc">File size (ascending)</string>
+    <string name="folder_sorttype_label_size_desc">File size (descending)</string>
 </resources>

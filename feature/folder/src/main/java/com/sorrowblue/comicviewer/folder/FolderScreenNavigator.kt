@@ -1,16 +1,17 @@
 package com.sorrowblue.comicviewer.folder
 
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.feature.folder.destinations.SortTypeDialogDestination
 
-/**
- * フォルダ画面のナビゲータ
- */
+/** フォルダ画面のナビゲータ */
 interface FolderScreenNavigator {
 
-    /**
-     * ナビゲートを行う
-     */
+    val navigator: DestinationsNavigator
+
+    /** ナビゲートを行う */
     fun navigateUp()
 
     /**
@@ -21,9 +22,7 @@ interface FolderScreenNavigator {
      */
     fun onSearchClick(bookshelfId: BookshelfId, path: String)
 
-    /**
-     * 設定ボタンが押されたとき
-     */
+    /** 設定ボタンが押されたとき */
     fun onSettingsClick()
 
     /**
@@ -39,4 +38,11 @@ interface FolderScreenNavigator {
      * @param file　お気に入りにするファイル
      */
     fun onFavoriteClick(file: File)
+
+    fun onSortClick(sortType: SortType) {
+        navigator.navigate(SortTypeDialogDestination(sortType))
+    }
+
+    fun onRestoreComplete() {
+    }
 }

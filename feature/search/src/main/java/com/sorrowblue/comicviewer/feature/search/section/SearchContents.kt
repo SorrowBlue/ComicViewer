@@ -1,22 +1,13 @@
 package com.sorrowblue.comicviewer.feature.search.section
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -25,20 +16,29 @@ import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileSearching
+import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
+internal sealed interface SearchContentsAction {
+    data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
+        SearchContentsAction
+
+    data class FileInfo(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
+        SearchContentsAction
+}
+
 @Composable
-internal fun SearchResultSheet(
+internal fun SearchContents(
     query: String,
     lazyPagingItems: LazyPagingItems<File>,
+    lazyListState: LazyGridState,
+    onAction: (SearchContentsAction) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
-    lazyListState: LazyGridState = rememberLazyGridState(),
-    onFileClick: (File) -> Unit = {},
-    onFileLongClick: (File) -> Unit = {},
 ) {
     if (lazyPagingItems.isEmptyData) {
-        EmptyContents(
-            query = query,
+        EmptyContent(
+            imageVector = ComicIcons.UndrawFileSearching,
+            text = stringResource(id = R.string.search_label_not_found, query),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
@@ -50,30 +50,8 @@ internal fun SearchResultSheet(
             state = lazyListState,
             contentPadding = contentPadding,
             lazyPagingItems = lazyPagingItems,
-            onItemClick = onFileClick,
-            onItemInfoClick = onFileLongClick
-        )
-    }
-}
-
-@Composable
-private fun EmptyContents(
-    query: String,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            imageVector = ComicIcons.UndrawFileSearching,
-            contentDescription = null,
-            modifier = Modifier.size(200.dp)
-        )
-        Text(
-            text = stringResource(id = R.string.search_label_not_found, query),
-            modifier = Modifier.width(200.dp)
+            onItemClick = { onAction(SearchContentsAction.File(it)) },
+            onItemInfoClick = { onAction(SearchContentsAction.FileInfo(it)) }
         )
     }
 }

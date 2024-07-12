@@ -150,7 +150,6 @@ fun <T : File> FileLazyVerticalGrid(
                         fontSize = uiState.fontSize,
                         contentScale = contentScale,
                         filterQuality = filterQuality,
-                        modifier = Modifier.animateItem()
                     )
                 }
             }

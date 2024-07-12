@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
+import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -84,6 +85,7 @@ internal fun rememberComicViewerAppState(
     )
 }
 
+@SuppressLint("RestrictedApi")
 @OptIn(SavedStateHandleSaveableApi::class)
 private class ComicViewerAppStateImpl(
     lifecycle: Lifecycle,
@@ -119,7 +121,7 @@ private class ComicViewerAppStateImpl(
                 logcat {
                     "destination.hierarchy=${
                         backStackEntry.destination.hierarchy.joinToString(",") {
-                            it.route.orEmpty().ifEmpty { "null" }
+                            it.route?.split('/')?.firstOrNull().orEmpty().ifEmpty { "null" }
                         }
                     }"
                 }

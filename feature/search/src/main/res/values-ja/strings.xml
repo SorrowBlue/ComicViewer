@@ -2,4 +2,12 @@
 <resources>
     <string name="search_label_not_found">「%1$s」に一致する結果は見つかりませんでした。</string>
     <string name="search_label_search">検索</string>
+    <string name="search_label_bookshelf">本棚全体</string>
+    <string name="search_label_in_folder">フォルダ内</string>
+    <string name="search_label_sub_folder">サブフォルダを含む</string>
+    <string name="search_label_none">期間指定なし</string>
+    <string name="search_label_hour24">24時間以内</string>
+    <string name="search_label_week1">1週間以内</string>
+    <string name="search_label_month1">1ヶ月以内</string>
+    <string name="search_label_show_hidden_files">隠しファイルを表示</string>
 </resources>

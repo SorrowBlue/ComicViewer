@@ -46,7 +46,7 @@ internal class CoilInitializer : Initializer<Unit> {
             }
             .allowRgb565(true)
             .crossfade(true)
-            .bitmapConfig(Bitmap.Config.RGB_565)
+            .bitmapConfig(Bitmap.Config.ARGB_8888)
             .precision(Precision.INEXACT)
             .logger(DebugLogger())
             .build()

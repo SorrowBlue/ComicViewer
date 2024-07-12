@@ -155,6 +155,7 @@ internal interface FileDao {
 
             if (!searchCondition.showHidden) {
                 selectionStr += " AND hidden = :hidden"
+                selectionStr += " AND name NOT LIKE '.%'"
                 bindArgs += false
             }
 
@@ -169,7 +170,7 @@ internal interface FileDao {
                     bindArgs += "${range.parent}%"
                 }
 
-                SearchCondition.Range.BOOKSHELF -> Unit
+                SearchCondition.Range.Bookshelf -> Unit
             }
 
             if (searchCondition.query.isNotEmpty()) {
@@ -178,21 +179,18 @@ internal interface FileDao {
             }
 
             selectionStr += when (searchCondition.period) {
-                SearchCondition.Period.NONE -> ""
-                SearchCondition.Period.HOUR_24 -> " AND last_modified > strftime('%s000', datetime('now', '-24 hours'))"
-                SearchCondition.Period.WEEK_1 -> " AND last_modified > strftime('%s000', datetime('now', '-7 days'))"
-                SearchCondition.Period.MONTH_1 -> " AND last_modified > strftime('%s000', datetime('now', '-1 months'))"
+                SearchCondition.Period.None -> ""
+                SearchCondition.Period.Hour24 -> " AND last_modified > strftime('%s000', datetime('now', '-24 hours'))"
+                SearchCondition.Period.Week1 -> " AND last_modified > strftime('%s000', datetime('now', '-7 days'))"
+                SearchCondition.Period.Month1 -> " AND last_modified > strftime('%s000', datetime('now', '-1 months'))"
             }
 
             selection(selectionStr, bindArgs.toTypedArray())
-            val sortStr = when (searchCondition.sort) {
-                SearchCondition.Sort.ASC -> "ASC"
-                SearchCondition.Sort.DESC -> "DESC"
-            }
-            when (searchCondition.order) {
-                SearchCondition.Order.NAME -> "file_type_order $sortStr, sort_index $sortStr"
-                SearchCondition.Order.DATE -> "file_type_order $sortStr, last_modified $sortStr, sort_index $sortStr"
-                SearchCondition.Order.SIZE -> "file_type_order $sortStr, size $sortStr, sort_index $sortStr"
+            val sortStr = if (searchCondition.sortType.isAsc) "ASC" else "DESC"
+            when (searchCondition.sortType) {
+                is SortType.Name -> "file_type_order $sortStr, sort_index $sortStr"
+                is SortType.Date -> "file_type_order $sortStr, last_modified $sortStr, sort_index $sortStr"
+                is SortType.Size -> "file_type_order $sortStr, size $sortStr, sort_index $sortStr"
             }.let(::orderBy)
         }.create()
         logcat { query.sql.trimIndent().replace(Regex("""\r\n|\n|\r"""), "") }

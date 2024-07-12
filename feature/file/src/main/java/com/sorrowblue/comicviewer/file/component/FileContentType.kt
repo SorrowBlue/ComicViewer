@@ -85,6 +85,34 @@ fun OverflowMenuScope.FileContentType(fileContentType: FileContentType, onClick:
 }
 
 @Composable
+fun OverflowMenuScope.FileListDisplayItem(fileListDisplay: FileListDisplay, onClick: () -> Unit) {
+    if (fileListDisplay == FileListDisplay.Grid) {
+        OverflowMenuItem(
+            text = stringResource(id = R.string.file_list_label_switch_list_view),
+            icon = ComicIcons.ViewList,
+            onClick = onClick
+        )
+    } else {
+        OverflowMenuItem(
+            text = stringResource(id = R.string.file_list_label_switch_grid_view),
+            icon = ComicIcons.GridView,
+            onClick = onClick
+        )
+    }
+}
+
+@Composable
+fun OverflowMenuScope.GridSizeItem(fileListDisplay: FileListDisplay, onClick: () -> Unit) {
+    if (fileListDisplay == FileListDisplay.Grid) {
+        OverflowMenuItem(
+            text = stringResource(R.string.file_action_change_grid_size),
+            icon = ComicIcons.Grid4x4,
+            onClick = onClick
+        )
+    }
+}
+
+@Composable
 fun rememberFileContentType(
     fileListDisplay: FileListDisplay,
     gridColumnSize: GridColumnSize,

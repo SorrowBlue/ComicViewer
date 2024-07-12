@@ -2,4 +2,13 @@
 <resources>
     <string name="search_label_not_found">No results were found for "%1$s".</string>
     <string name="search_label_search">Search</string>
+
+    <string name="search_label_bookshelf">whole bookshelf</string>
+    <string name="search_label_in_folder">in folder</string>
+    <string name="search_label_sub_folder">sub folder</string>
+    <string name="search_label_none">none</string>
+    <string name="search_label_hour24">24hours</string>
+    <string name="search_label_week1">one week</string>
+    <string name="search_label_month1">one month</string>
+    <string name="search_label_show_hidden_files">Show hidden files</string>
 </resources>

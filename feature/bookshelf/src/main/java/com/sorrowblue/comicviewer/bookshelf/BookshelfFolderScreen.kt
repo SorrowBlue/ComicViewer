@@ -2,25 +2,25 @@ package com.sorrowblue.comicviewer.bookshelf
 
 import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraph
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphTransitions
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.feature.folder.destinations.SortTypeDialogDestination
 import com.sorrowblue.comicviewer.folder.FolderArgs
 import com.sorrowblue.comicviewer.folder.FolderScreen
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
-
-interface BookshelfFolderScreenNavigator : FolderScreenNavigator {
-    fun onRestoreComplete()
-}
 
 @Destination<BookshelfGraph>(navArgs = FolderArgs::class, style = BookshelfGraphTransitions::class)
 @Composable
 internal fun BookshelfFolderScreen(
     args: FolderArgs,
-    navigator: BookshelfFolderScreenNavigator,
+    navigator: FolderScreenNavigator,
+    sortTypeResultRecipient: ResultRecipient<SortTypeDialogDestination, SortType>,
 ) {
     FolderScreen(
         args = args,
         navigator = navigator,
-        onRestoreComplete = navigator::onRestoreComplete,
+        sortTypeResultRecipient = sortTypeResultRecipient
     )
 }

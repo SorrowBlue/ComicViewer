@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="folder_action_change_grid_size">グリッドサイズ</string>
-    <string name="folder_action_continue">続ける</string>
     <string name="folder_action_search">Search</string>
     <string name="folder_action_settings">設定</string>
-    <string name="folder_label_name">名前</string>
-    <string name="folder_label_date">最終更新</string>
-    <string name="folder_label_size">サイズ</string>
-    <string name="folder_label_asc">昇順</string>
-    <string name="folder_label_desc">降順</string>
-    <string name="folder_label_no_file">フォルダは空です</string>
-    <string name="folder_message_info_scan">本棚のスキャンは、通知権限がない場合でも実行されます。</string>
-    <string name="folder_message_scan">スキャンの進行状況を通知で表示できるようにしてください。</string>
-    <string name="folder_text_nothing_in_folder">There is nothing in \\\"%1$s\\\"</string>
-    <string name="folder_title_request_notification_permission">通知許可のリクエスト</string>
+    <string name="folder_text_nothing_in_folder">「%1$s」には何もありません</string>
     <string name="folder_action_show_hidden">隠しファイルを表示</string>
+
+    <!--SortTypeDialog-->
+    <string name="folder_sorttype_title_sort_by">並べ替え</string>
+    <string name="folder_sorttype_label_name_asc">ファイル名 (昇順)</string>
+    <string name="folder_sorttype_label_name_desc">ファイル名 (降順)</string>
+    <string name="folder_sorttype_label_date_asc">更新日時 (昇順)</string>
+    <string name="folder_sorttype_label_date_desc">更新日時 (降順)</string>
+    <string name="folder_sorttype_label_size_asc">ファイルサイズ (昇順)</string>
+    <string name="folder_sorttype_label_size_desc">ファイルサイズ (降順)</string>
 </resources>

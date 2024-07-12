@@ -31,6 +31,7 @@ fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
             FavoriteScreenNavigator,
             FolderScreenNavigator,
             FavoriteEditScreenNavigator {
+            override val navigator get() = destinationsNavigator
 
             override fun onFavoriteClick(file: File) = onFavoriteClick(file)
 
@@ -40,15 +41,15 @@ fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
             override fun onSettingsClick() = onSettingsClick()
 
             override fun navigateUp() {
-                destinationsNavigator.navigateUp()
+                navigator.navigateUp()
             }
 
             override fun onFavoriteClick(favoriteId: FavoriteId) {
-                destinationsNavigator.navigate(FavoriteScreenDestination(favoriteId))
+                navigator.navigate(FavoriteScreenDestination(favoriteId))
             }
 
             override fun onOpenFolderClick(file: File) {
-                destinationsNavigator.navigate(
+                navigator.navigate(
                     FavoriteFolderScreenDestination(
                         file.bookshelfId,
                         file.parent,
@@ -58,13 +59,13 @@ fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
             }
 
             override fun onEditClick(favoriteId: FavoriteId) {
-                destinationsNavigator.navigate(FavoriteEditScreenDestination(favoriteId))
+                navigator.navigate(FavoriteEditScreenDestination(favoriteId))
             }
 
             override fun onFileClick(file: File, favoriteId: FavoriteId) {
                 when (file) {
                     is Book -> onBookClick(file, favoriteId)
-                    is Folder -> destinationsNavigator.navigate(
+                    is Folder -> navigator.navigate(
                         FavoriteFolderScreenDestination(file.bookshelfId, file.path, null)
                     )
                 }
@@ -77,7 +78,7 @@ fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
             override fun onFileClick(file: File) {
                 when (file) {
                     is Book -> onBookClick(file, null)
-                    is Folder -> destinationsNavigator.navigate(
+                    is Folder -> navigator.navigate(
                         FavoriteFolderScreenDestination(file.bookshelfId, file.path, null)
                     )
                 }

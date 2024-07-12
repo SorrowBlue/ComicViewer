@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
-import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
@@ -37,13 +36,8 @@ internal class PagingFileInteractor @Inject constructor(
                             SearchCondition(
                                 "",
                                 SearchCondition.Range.InFolder(file.path),
-                                SearchCondition.Period.NONE,
-                                when (settings.sortType) {
-                                    is SortType.Date -> SearchCondition.Order.DATE
-                                    is SortType.Name -> SearchCondition.Order.NAME
-                                    is SortType.Size -> SearchCondition.Order.SIZE
-                                },
-                                if (settings.sortType.isAsc) SearchCondition.Sort.ASC else SearchCondition.Sort.DESC,
+                                SearchCondition.Period.None,
+                                settings.sortType,
                                 settings.showHiddenFiles,
                             )
                         }
