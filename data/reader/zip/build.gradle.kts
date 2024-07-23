@@ -17,5 +17,5 @@ dependencies {
     implementation(projects.data.storage.client)
 
     implementation(libs.androidx.startup.runtime)
-    implementation(libs.github.omicronapps.sevenZipJBinding4Android)
+    implementation(libs.com.sorrowblue.sevenzipjbinding)
 }

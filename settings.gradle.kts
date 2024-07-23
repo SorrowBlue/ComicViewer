@@ -30,8 +30,6 @@ dependencyResolutionManagement {
         mavenCentral()
         // com.artifex.mupdf:fitz
         maven { url = uri("https://maven.ghostscript.com/") }
-        // com.github.omicronapps:7-Zip-JBinding-4Android
-        maven { url = uri("https://jitpack.io/") }
 
         maven { url = uri("https://androidx.dev/storage/compose-compiler/repository/") }
 
