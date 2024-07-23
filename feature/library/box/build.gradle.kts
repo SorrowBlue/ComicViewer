@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
 plugins {
     alias(libs.plugins.comicviewer.android.featureDynamicFeature)
     alias(libs.plugins.comicviewer.koin)
@@ -11,20 +9,17 @@ android {
     resourcePrefix("box")
 
     buildTypes {
-        val localProperties = gradleLocalProperties(rootDir, providers)
-        val boxClientId = System.getenv("BOX_CLIENT_ID")
-            ?: localProperties.getProperty("BOX_CLIENT_ID")
-        if (boxClientId.isNullOrEmpty()) {
-            logger.warn("BOX_CLIENT_ID is not set.")
+        val comicviewerBoxClientId: String? by project
+        val comicviewerBoxClientSecret: String? by project
+        if (comicviewerBoxClientId.isNullOrEmpty()) {
+            logger.warn("comicviewerBoxClientId is not set.")
         }
-        val boxClientSecret = System.getenv("BOX_CLIENT_SECRET")
-            ?: localProperties.getProperty("BOX_CLIENT_SECRET")
-        if (boxClientSecret.isNullOrEmpty()) {
-            logger.warn("BOX_CLIENT_SECRET is not set.")
+        if (comicviewerBoxClientSecret.isNullOrEmpty()) {
+            logger.warn("comicviewerBoxClientSecret is not set.")
         }
         all {
-            buildConfigField("String", "BOX_CLIENT_ID", "\"$boxClientId\"")
-            buildConfigField("String", "BOX_CLIENT_SECRET", "\"$boxClientSecret\"")
+            buildConfigField("String", "BOX_CLIENT_ID", "\"$comicviewerBoxClientId\"")
+            buildConfigField("String", "BOX_CLIENT_SECRET", "\"$comicviewerBoxClientSecret\"")
         }
     }
 
