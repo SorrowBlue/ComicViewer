@@ -1,9 +1,7 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import com.sorrowblue.comicviewer.ComicBuildType
 import com.sorrowblue.comicviewer.projectString
-import org.jetbrains.kotlin.konan.properties.propertyString
 
 plugins {
     alias(libs.plugins.comicviewer.android.application)
@@ -30,32 +28,34 @@ android {
         generateLocaleConfig = true
     }
     signingConfigs {
-        val localProperties = gradleLocalProperties(rootDir, providers)
-        fun propertyString(name: String) =
-            System.getenv(name) ?: localProperties.propertyString(name)
-
-        val debugStoreFile = propertyString("debug_storeFile")?.let {
-            if (it.isNotEmpty()) file(it) else null
-        }
-        if (debugStoreFile?.exists() == true) {
+        val androidSigningDebugStoreFile: String? by project
+        if (androidSigningDebugStoreFile?.isNotEmpty() == true && file(androidSigningDebugStoreFile!!).exists()) {
             getByName("debug") {
-                storeFile = debugStoreFile
-                storePassword = propertyString("debug_storePassword")
-                keyAlias = propertyString("debug_keyAlias")
-                keyPassword = propertyString("debug_keyPassword")
+                val androidSigningDebugStorePassword: String? by project
+                val androidSigningDebugKeyAlias: String? by project
+                val androidSigningDebugKeyPassword: String? by project
+                storeFile = file(androidSigningDebugStoreFile!!)
+                storePassword = androidSigningDebugStorePassword
+                keyAlias = androidSigningDebugKeyAlias
+                keyPassword = androidSigningDebugKeyPassword
             }
         } else {
             logger.warn("debugStoreFile not found")
         }
 
-        val releaseStoreFile =
-            propertyString("release_storeFile")?.let { if (it.isNotEmpty()) file(it) else null }
-        if (releaseStoreFile?.exists() == true) {
+        val androidSigningReleaseStoreFile: String? by project
+        if (androidSigningReleaseStoreFile?.isNotEmpty() == true && file(
+                androidSigningReleaseStoreFile!!
+            ).exists()
+        ) {
             val release = create("release") {
-                storeFile = releaseStoreFile
-                storePassword = propertyString("release_storePassword")
-                keyAlias = propertyString("release_keyAlias")
-                keyPassword = propertyString("release_keyPassword")
+                val androidSigningReleaseStorePassword: String? by project
+                val androidSigningReleaseKeyAlias: String? by project
+                val androidSigningReleaseKeyPassword: String? by project
+                storeFile = file(androidSigningReleaseStoreFile!!)
+                storePassword = androidSigningReleaseStorePassword
+                keyAlias = androidSigningReleaseKeyAlias
+                keyPassword = androidSigningReleaseKeyPassword
             }
             create("prerelease") {
                 initWith(release)
