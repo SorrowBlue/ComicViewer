@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.sorrowblue.comicviewer.di"
+    namespace = "com.sorrowblue.comicviewer.data.di"
 }
 
 dependencies {

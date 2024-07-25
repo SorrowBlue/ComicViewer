@@ -28,7 +28,7 @@ import com.sorrowblue.comicviewer.feature.settings.folder.destinations.ImageForm
 import com.sorrowblue.comicviewer.feature.settings.folder.destinations.ImageScaleDialogDestination
 import com.sorrowblue.comicviewer.feature.settings.folder.dialog.displayText
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsGraph
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 
 internal data class FolderSettingsScreenUiState(
     val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.isDisplayHiddenFile,

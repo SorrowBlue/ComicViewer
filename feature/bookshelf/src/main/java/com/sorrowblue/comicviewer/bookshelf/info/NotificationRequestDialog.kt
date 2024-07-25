@@ -18,8 +18,8 @@ import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 
 enum class NotificationRequestResult {
     Ok,

@@ -17,8 +17,8 @@ plugins {
 }
 
 extensions.configure<SettingsExtension> {
-    buildToolsVersion = "34.0.0"
-    compileSdk = 34
+    buildToolsVersion = "35.0.0"
+    compileSdk = 35
     minSdk = 30
 }
 
@@ -47,6 +47,7 @@ include(":app")
 include(":framework:common")
 include(":framework:notification")
 include(":framework:designsystem")
+include(":framework:preview")
 include(":framework:ui")
 
 include(":domain:model")
@@ -62,7 +63,7 @@ include(":data:reader:document")
 include(":data:storage:client")
 include(":data:storage:device")
 include(":data:storage:smb")
-include(":di")
+include(":data:di")
 
 include(":feature:authentication")
 include(":feature:book")

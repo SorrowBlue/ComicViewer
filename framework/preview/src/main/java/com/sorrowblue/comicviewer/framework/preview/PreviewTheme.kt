@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui.material3
+package com.sorrowblue.comicviewer.framework.preview
 
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo

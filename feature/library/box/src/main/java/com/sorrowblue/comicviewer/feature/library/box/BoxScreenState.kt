@@ -125,7 +125,7 @@ private class BoxScreenStateImpl(
     }
 
     override val pagingDataFlow = repository.userInfoFlow.filterNotNull().flatMapLatest {
-        Pager(PagingConfig(20)) { BoxPagingSource(args.path, repository) }.flow
+        Pager(PagingConfig(10)) { BoxPagingSource(args.path, repository) }.flow
             .cachedIn(scope)
     }
 

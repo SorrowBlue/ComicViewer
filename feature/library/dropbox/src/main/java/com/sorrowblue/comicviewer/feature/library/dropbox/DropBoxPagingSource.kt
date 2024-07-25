@@ -40,7 +40,6 @@ internal class DropBoxPagingSource(
                         0,
                         0,
                         false,
-                        mapOf("preview_url" to it.previewUrl)
                     )
                 }
 
@@ -57,7 +56,6 @@ internal class DropBoxPagingSource(
                         0,
                         0,
                         0,
-                        mapOf("preview_url" to it.previewUrl)
                     )
                 }
 

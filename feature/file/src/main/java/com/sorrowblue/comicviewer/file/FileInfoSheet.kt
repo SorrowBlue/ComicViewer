@@ -48,15 +48,14 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
-import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.preview.previewPainter
 import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffoldDefault
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -102,16 +101,19 @@ fun FileInfoSheet(
         scaffoldDirective = scaffoldDirective,
         modifier = modifier
     ) {
-        AsyncImage2(
+        SubcomposeAsyncImage(
             model = file,
             contentDescription = null,
-            placeholder = rememberDebugPlaceholder(),
             error = {
-                Icon(
-                    imageVector = if (file is Book) ComicIcons.Book else ComicIcons.Folder,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.surface
-                )
+                if (LocalInspectionMode.current) {
+                    Image(painter = previewPainter(), contentDescription = null)
+                } else {
+                    Icon(
+                        imageVector = if (file is Book) ComicIcons.Book else ComicIcons.Folder,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.surface
+                    )
+                }
             },
             contentScale = ContentScale.Fit,
             modifier = Modifier
@@ -303,26 +305,30 @@ fun FileInfoSheet(
             model = file,
             contentDescription = null,
             loading = {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.Center)
+                )
+            },
+            error = {
                 if (LocalInspectionMode.current) {
-                    Image(painter = rememberDebugPlaceholder()!!, contentDescription = null)
+                    Image(
+                        painter = previewPainter(),
+                        contentDescription = null,
+                        contentScale = contentScale
+                    )
                 } else {
-                    CircularProgressIndicator(
+                    Icon(
+                        imageVector = if (file is Book) ComicIcons.BrokenImage else ComicIcons.FolderOff,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.surface,
                         modifier = Modifier
                             .wrapContentSize()
+                            .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
                             .align(Alignment.Center)
                     )
                 }
-            },
-            error = {
-                Icon(
-                    imageVector = if (file is Book) ComicIcons.BrokenImage else ComicIcons.FolderOff,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.surface,
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
-                        .align(Alignment.Center)
-                )
             },
             contentScale = ContentScale.Fit,
             modifier = Modifier

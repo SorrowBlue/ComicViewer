@@ -34,8 +34,8 @@ import com.sorrowblue.comicviewer.feature.tutorial.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileBundle
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.PreviewComic
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -134,7 +134,7 @@ internal fun ArchiveSheet(contentPadding: PaddingValues) {
     }
 }
 
-@PreviewComic
+@PreviewMultiScreen
 @Composable
 private fun PreviewArchiveSheet() {
     PreviewTheme {

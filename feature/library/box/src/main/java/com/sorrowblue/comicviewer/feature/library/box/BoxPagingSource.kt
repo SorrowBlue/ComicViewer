@@ -54,10 +54,6 @@ internal class BoxPagingSource(
                         0,
                         0,
                         0,
-                        mapOf(
-                            "thumbnail" to repository.fileThumbnail(it.id).orEmpty(),
-                            "access_token" to repository.accessToken()
-                        )
                     )
                 }
 
@@ -67,7 +63,7 @@ internal class BoxPagingSource(
         return LoadResult.Page(
             data = list,
             prevKey = null,
-            nextKey = null
+            nextKey = if (list.isEmpty()) null else (params.key ?: 0) + list.size
         )
     }
 }

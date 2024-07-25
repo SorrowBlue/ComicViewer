@@ -19,6 +19,7 @@ internal class AndroidFeatureDynamicFeatureConventionPlugin : Plugin<Project> {
                 implementation(project(":app"))
                 implementation(project(":framework:designsystem"))
                 implementation(project(":framework:ui"))
+                implementation(project(":framework:preview"))
             }
         }
     }

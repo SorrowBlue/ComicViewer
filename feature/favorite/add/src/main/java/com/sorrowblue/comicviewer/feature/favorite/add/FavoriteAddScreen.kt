@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -56,10 +58,10 @@ import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFaq
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import com.sorrowblue.comicviewer.feature.favorite.common.R as FavoriteCommonR
 
 class FavoriteAddArgs(
@@ -83,7 +85,8 @@ private fun FavoriteAddScreen(
 ) {
     val dialogUiState = state.dialogUiState
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
-    if (rememberMobile()) {
+    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
+    if (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
         FavoriteAddScreen(
             lazyPagingItems = lazyPagingItems,
             onBackClick = onBackClick,

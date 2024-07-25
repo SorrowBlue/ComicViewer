@@ -26,7 +26,7 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 
 @Composable
 internal fun BookshelfImageCacheInfoItem(

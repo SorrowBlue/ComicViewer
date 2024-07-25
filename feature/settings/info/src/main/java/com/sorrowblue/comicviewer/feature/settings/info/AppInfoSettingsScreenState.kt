@@ -37,7 +37,7 @@ private class AppInfoSettingsScreenStateImpl(
 
     override var uiState: SettingsAppInfoScreenUiState by mutableStateOf(
         SettingsAppInfoScreenUiState(
-            versionName = context.packageInfo.versionName,
+            versionName = context.packageInfo.versionName.orEmpty(),
             buildAt = Instant.ofEpochMilli(BuildConfig.TIMESTAMP)
                 .atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)

@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,11 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookshelves
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
 @Composable
 fun EmptyContent(
@@ -71,22 +66,6 @@ fun EmptyContent(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-        }
-    }
-}
-
-@PreviewMultiScreen
-@Composable
-private fun PreviewBookshelfEmptyContents() {
-    PreviewTheme {
-        Scaffold {
-            EmptyContent(
-                imageVector = ComicIcons.UndrawBookshelves,
-                "No Bookshelves added yet",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-            )
         }
     }
 }

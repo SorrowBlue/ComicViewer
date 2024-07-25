@@ -31,7 +31,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.toUri
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import com.sorrowblue.comicviewer.framework.preview.previewPlaceholder
 import logcat.logcat
 
 @OptIn(ExperimentalCoilApi::class)
@@ -77,7 +77,7 @@ internal fun BoxTopAppBar(
                             logcat { "request=$request, result=$result" }
                         }
                         .build(),
-                    placeholder = rememberDebugPlaceholder(),
+                    error = previewPlaceholder(),
                     contentDescription = null,
                     modifier = Modifier
                         .size(48.dp)

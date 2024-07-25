@@ -120,7 +120,7 @@ dependencies {
     implementation(projects.framework.notification)
     implementation(projects.framework.designsystem)
 
-    implementation(projects.di)
+    implementation(projects.data.di)
     implementation(projects.domain.usecase)
     implementation(projects.feature.authentication)
     implementation(projects.feature.book)

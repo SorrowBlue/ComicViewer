@@ -170,7 +170,9 @@ internal interface FileDao {
                     bindArgs += "${range.parent}%"
                 }
 
-                SearchCondition.Range.Bookshelf -> Unit
+                SearchCondition.Range.Bookshelf -> {
+                    selectionStr += " AND parent != ''"
+                }
             }
 
             if (searchCondition.query.isNotEmpty()) {

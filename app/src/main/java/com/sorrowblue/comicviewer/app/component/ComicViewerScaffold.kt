@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.app.component
 
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,33 +19,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
-import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 internal data class ComicViewerScaffoldUiState(
     val isAuthenticating: Boolean = false,
     val currentTab: MainScreenTab? = null,
-    val tabs: PersistentList<MainScreenTab> = MainScreenTab.entries.toPersistentList(),
-) : Parcelable {
-
-    companion object : Parceler<ComicViewerScaffoldUiState> {
-        override fun ComicViewerScaffoldUiState.write(parcel: Parcel, flags: Int) {
-            parcel.writeBoolean(isAuthenticating)
-            parcel.writeString(currentTab?.name)
-            parcel.writeStringList(tabs.map(MainScreenTab::name))
-        }
-
-        override fun create(parcel: Parcel) = ComicViewerScaffoldUiState(
-            parcel.readBoolean(),
-            parcel.readString()?.let(MainScreenTab::valueOf),
-            mutableListOf<String>().also(parcel::readStringList)
-                .map(MainScreenTab::valueOf).toPersistentList()
-        )
-    }
-}
+    val tabs: List<MainScreenTab> = MainScreenTab.entries,
+) : Parcelable
 
 @Composable
 internal fun ComicViewerScaffold(

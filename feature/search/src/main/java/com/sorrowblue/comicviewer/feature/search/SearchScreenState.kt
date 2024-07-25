@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.feature.search
 
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
@@ -16,13 +18,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBarAction
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
@@ -35,9 +42,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal sealed interface SearchScreenEvent {
     data object Back : SearchScreenEvent
+    data object Settings : SearchScreenEvent
 
     data class Favorite(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
         SearchScreenEvent
@@ -53,6 +63,7 @@ internal interface SearchScreenState :
     SaveableScreenState,
     FileInfoSheetState,
     ScreenStateEvent<SearchScreenEvent> {
+    val lazyGridState: LazyGridState
     val uiState: SearchScreenUiState
     val lazyPagingItems: Flow<PagingData<File>>
     var isSkipFirstRefresh: Boolean
@@ -69,34 +80,39 @@ internal fun rememberSearchScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: SearchViewModel = hiltViewModel(),
+    lazyGridState: LazyGridState = rememberLazyGridState(),
     navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
 ): SearchScreenState = rememberSaveableScreenState {
     SearchScreenStateImpl(
-        savedStateHandle = it,
+        pagingQueryFileUseCase = viewModel.pagingQueryFileUseCase,
+        manageFolderDisplaySettingsUseCase = viewModel.manageFolderDisplaySettingsUseCase,
         args = args,
+        savedStateHandle = it,
         navigator = navigator,
-        viewModel = viewModel,
         getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
-        addReadLaterUseCase = viewModel.addReadLaterUseCase,
         existsReadlaterUseCase = viewModel.existsReadlaterUseCase,
         deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase,
-        scope = scope,
+        addReadLaterUseCase = viewModel.addReadLaterUseCase,
         snackbarHostState = snackbarHostState,
+        scope = scope,
+        lazyGridState = lazyGridState
     )
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 private class SearchScreenStateImpl(
+    pagingQueryFileUseCase: PagingQueryFileUseCase,
+    manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
+    private val args: SearchArgs,
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
-    private val args: SearchArgs,
-    private val viewModel: SearchViewModel,
     override val getFileAttributeUseCase: GetFileAttributeUseCase,
     override val existsReadlaterUseCase: ExistsReadlaterUseCase,
     override val deleteReadLaterUseCase: DeleteReadLaterUseCase,
     override val addReadLaterUseCase: AddReadLaterUseCase,
     override val snackbarHostState: SnackbarHostState,
     override val scope: CoroutineScope,
+    override val lazyGridState: LazyGridState,
 ) : SearchScreenState {
 
     override val event = MutableSharedFlow<SearchScreenEvent>()
@@ -104,12 +120,8 @@ private class SearchScreenStateImpl(
     override var fileInfoJob: Job? = null
     override var uiState by savedStateHandle.saveable { mutableStateOf(SearchScreenUiState()) }
         private set
-    override val lazyPagingItems = viewModel.pagingDataFlow
-    override var isScrollableTop by mutableStateOf(false)
-    override var isSkipFirstRefresh by mutableStateOf(true)
-
-    init {
-        viewModel.searchCondition = {
+    override val lazyPagingItems = pagingQueryFileUseCase.execute(
+        PagingQueryFileUseCase.Request(PagingConfig(100), args.bookshelfId) {
             uiState.searchTopAppBarUiState.searchCondition.copy(
                 range = when (val range = uiState.searchTopAppBarUiState.searchCondition.range) {
                     SearchCondition.Range.Bookshelf -> range
@@ -117,7 +129,39 @@ private class SearchScreenStateImpl(
                     is SearchCondition.Range.SubFolder -> range.copy(args.path)
                 },
             )
+        }).cachedIn(scope)
+
+    init {
+        navigator.currentDestination?.content?.let {
+            fetchFileInfo(it.file) {
+                navigator.navigateTo(
+                    SupportingPaneScaffoldRole.Extra,
+                    it.copy(isOpenFolderEnabled = true)
+                )
+            }
         }
+    }
+
+    override var isScrollableTop by mutableStateOf(false)
+    override var isSkipFirstRefresh by mutableStateOf(true)
+
+    init {
+        navigator.currentDestination?.content?.let {
+            navigateToFileInfo(it.file)
+        }
+        manageFolderDisplaySettingsUseCase.settings.onEach {
+            uiState = uiState.copy(
+                searchContentsUiState = uiState.searchContentsUiState.copy(
+                    fileLazyVerticalGridUiState = uiState.searchContentsUiState.fileLazyVerticalGridUiState.copy(
+                        fileListDisplay = FileListDisplay.List,
+                        showThumbnails = it.showThumbnails,
+                        fontSize = it.fontSize,
+                        imageScale = it.imageScale,
+                        imageFilterQuality = it.imageFilterQuality,
+                    )
+                )
+            )
+        }.launchIn(scope)
     }
 
     private fun update() {
@@ -144,6 +188,8 @@ private class SearchScreenStateImpl(
 
             is SearchTopAppBarAction.ShowHiddenClick ->
                 uiState = copySearchCondition { it.copy(showHidden = action.value) }
+
+            SearchTopAppBarAction.Settings -> sendEvent(SearchScreenEvent.Settings)
         }
         update()
     }
@@ -166,6 +212,7 @@ private class SearchScreenStateImpl(
             FileInfoSheetAction.OpenFolder -> sendEvent(
                 SearchScreenEvent.OpenFolder(navigator.currentDestination!!.content!!.file)
             )
+
             FileInfoSheetAction.ReadLater -> onReadLaterClick()
         }
     }
@@ -173,14 +220,16 @@ private class SearchScreenStateImpl(
     override fun onSearchContentsAction(action: SearchContentsAction) {
         when (action) {
             is SearchContentsAction.File -> sendEvent(SearchScreenEvent.File(action.file))
-            is SearchContentsAction.FileInfo -> {
-                fetchFileInfo(action.file) {
-                    navigator.navigateTo(
-                        SupportingPaneScaffoldRole.Extra,
-                        it.copy(isOpenFolderEnabled = true)
-                    )
-                }
-            }
+            is SearchContentsAction.FileInfo -> navigateToFileInfo(action.file)
+        }
+    }
+
+    private fun navigateToFileInfo(file: File) {
+        fetchFileInfo(file) {
+            navigator.navigateTo(
+                SupportingPaneScaffoldRole.Extra,
+                it.copy(isOpenFolderEnabled = true)
+            )
         }
     }
 }

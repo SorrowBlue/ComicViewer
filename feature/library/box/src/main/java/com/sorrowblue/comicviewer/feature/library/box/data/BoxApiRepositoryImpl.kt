@@ -154,9 +154,9 @@ internal class BoxApiRepositoryImpl(
     override suspend fun list(path: String, limit: Long, offset: Long): List<BoxItem.Info> {
         val folder = try {
             if (path.isEmpty()) {
-                BoxFolder.getRootFolder(api)
+                BoxFolder.getRootFolder(api).getChildrenRange(offset, limit, "name,size")
             } else {
-                BoxFolder(api, path)
+                BoxFolder(api, path).getChildrenRange(offset, limit, "name,size")
             }
         } catch (e: Exception) {
             logcat { e.asLog() }

@@ -50,6 +50,10 @@ fun DependenciesContainerBuilder<*>.SearchGraphDependencies(
                 )
             }
 
+            override fun onNavigateSettings() {
+                onSettingsClick()
+            }
+
             override fun navigateUp() {
                 navigator.navigateUp()
             }
