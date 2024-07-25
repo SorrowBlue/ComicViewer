@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.bookshelf.info
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -34,9 +35,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.SubcomposeAsyncImage
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.bookshelf.component.BookshelfConverter.source
@@ -45,18 +48,17 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.domain.model.file.fakeFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfRemoveDialogDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.NotificationRequestDialogDestination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.fakeFolder
+import com.sorrowblue.comicviewer.framework.preview.previewPainter
 import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.ExtraPaneScaffoldDefault
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -129,10 +131,9 @@ private fun BookshelfInfoSheet(
             val bookshelf = bookshelfFolder.bookshelf
             val folder = bookshelfFolder.folder
             val colors = ListItemDefaults.colors(containerColor = Color.Transparent)
-            AsyncImage2(
+            SubcomposeAsyncImage(
                 model = folder,
                 contentDescription = stringResource(id = R.string.bookshelf_desc_thumbnail),
-                placeholder = rememberDebugPlaceholder(),
                 modifier = Modifier
                     .padding(horizontal = ComicTheme.dimension.margin)
                     .height(120.dp)
@@ -141,7 +142,11 @@ private fun BookshelfInfoSheet(
                     .background(ComicTheme.colorScheme.surfaceContainerHighest),
                 contentScale = ContentScale.Fit,
                 error = {
-                    Icon(imageVector = ComicIcons.Image, contentDescription = null)
+                    if (LocalInspectionMode.current) {
+                        Image(painter = previewPainter(), contentDescription = null)
+                    } else {
+                        Icon(imageVector = ComicIcons.Image, contentDescription = null)
+                    }
                 },
                 loading = {
                     Icon(imageVector = ComicIcons.DocumentUnknown, contentDescription = null)

@@ -31,8 +31,8 @@ import com.sorrowblue.comicviewer.feature.tutorial.SplitInstallError
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.PreviewComic
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 
 internal sealed interface DocumentSheetUiState {
 
@@ -179,7 +179,7 @@ internal fun DocumentSheet(
     }
 }
 
-@PreviewComic
+@PreviewMultiScreen
 @Composable
 private fun PreviewDocumentSheet() {
     PreviewTheme {

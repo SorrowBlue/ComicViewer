@@ -27,6 +27,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -37,22 +38,23 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil3.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameTextField
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarBottom
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import com.sorrowblue.comicviewer.framework.ui.preview.rememberMobile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -82,8 +84,8 @@ private fun FavoriteEditScreen(
 ) {
     val uiState = state.uiState
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
-    val isCompact = rememberMobile()
-    if (isCompact) {
+    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
+    if (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
         FavoriteEditScreen(
             uiState = uiState,
             lazyPagingItems = lazyPagingItems,

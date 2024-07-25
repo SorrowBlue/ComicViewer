@@ -24,7 +24,7 @@ import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.WelcomeSheet
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 

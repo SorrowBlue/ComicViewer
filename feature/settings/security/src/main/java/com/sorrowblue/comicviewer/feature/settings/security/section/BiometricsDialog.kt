@@ -4,11 +4,15 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.feature.settings.security.R
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
 @Composable
 internal fun BiometricsDialog(
@@ -38,6 +42,12 @@ internal fun BiometricsDialog(
 @Composable
 internal fun PreviewBiometricsRequestDialog() {
     PreviewTheme {
-        BiometricsDialog(onConfirmClick = {}, onDismissRequest = {})
+        var isShow by remember { mutableStateOf(true) }
+        if (isShow) {
+            BiometricsDialog(
+                onConfirmClick = { isShow = false },
+                onDismissRequest = { isShow = false }
+            )
+        }
     }
 }

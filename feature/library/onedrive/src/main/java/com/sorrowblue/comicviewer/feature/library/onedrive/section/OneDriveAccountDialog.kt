@@ -21,7 +21,7 @@ import coil3.compose.AsyncImage
 import com.sorrowblue.comicviewer.feature.library.onedrive.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import com.sorrowblue.comicviewer.framework.preview.previewPlaceholder
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -49,7 +49,7 @@ internal fun OneDriveAccountDialog(
             AsyncImage(
                 model = uiState.photoUrl,
                 contentDescription = null,
-                placeholder = rememberDebugPlaceholder(),
+                placeholder = previewPlaceholder(),
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)

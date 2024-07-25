@@ -46,12 +46,12 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.marginPadding
 import com.sorrowblue.comicviewer.framework.ui.material3.Input
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.parcelize.Parcelize
 

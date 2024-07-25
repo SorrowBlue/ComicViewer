@@ -19,6 +19,7 @@ internal class AndroidFeatureConventionPlugin : Plugin<Project> {
             dependencies {
                 implementation(project(":framework:designsystem"))
                 implementation(project(":framework:ui"))
+                implementation(project(":framework:preview"))
                 implementation(project(":domain:usecase"))
             }
         }

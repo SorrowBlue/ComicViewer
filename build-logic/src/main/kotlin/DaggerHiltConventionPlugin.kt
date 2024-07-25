@@ -17,7 +17,6 @@ internal class DaggerHiltConventionPlugin : Plugin<Project> {
 
             dependencies {
                 implementation(libs.google.dagger.hilt.android)
-                ksp(libs.google.dagger.compiler)
                 ksp(libs.google.dagger.hilt.compiler)
             }
         }

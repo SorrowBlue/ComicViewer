@@ -31,9 +31,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookshelves
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
@@ -125,13 +123,5 @@ private fun BookshelfListContents(
                 )
             }
         }
-    }
-}
-
-@PreviewMultiScreen
-@Composable
-private fun PreviewBookshelfEmptyContents() {
-    PreviewTheme {
-        BookshelfEmptyContents(PaddingValues())
     }
 }

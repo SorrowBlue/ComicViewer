@@ -34,8 +34,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.CustomSlider
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 
 @Composable
 fun Setting(

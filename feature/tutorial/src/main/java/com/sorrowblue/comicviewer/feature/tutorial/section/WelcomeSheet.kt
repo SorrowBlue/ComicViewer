@@ -26,8 +26,8 @@ import com.sorrowblue.comicviewer.feature.tutorial.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.PreviewComic
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 
 @Composable
 internal fun WelcomeSheet(contentPadding: PaddingValues) {
@@ -112,7 +112,7 @@ internal fun WelcomeSheet(contentPadding: PaddingValues) {
     }
 }
 
-@PreviewComic
+@PreviewMultiScreen
 @Composable
 private fun PreviewWelcomeSheet() {
     PreviewTheme {

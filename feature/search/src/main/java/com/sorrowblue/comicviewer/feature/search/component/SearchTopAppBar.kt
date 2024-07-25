@@ -1,11 +1,11 @@
 package com.sorrowblue.comicviewer.feature.search.component
 
 import android.os.Parcelable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.FlowRowOverflow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,6 +38,7 @@ import com.sorrowblue.comicviewer.feature.search.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
+import com.sorrowblue.comicviewer.framework.ui.material3.SettingsButton
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarBottom
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.parcelize.Parcelize
@@ -46,6 +48,9 @@ internal sealed interface SearchTopAppBarAction {
 
     /** 戻るボタン */
     data object BackClick : SearchTopAppBarAction
+
+    /** 設定 */
+    data object Settings : SearchTopAppBarAction
 
     /**
      * 検索クエリ
@@ -119,16 +124,19 @@ internal fun SearchTopAppBar(
             navigationIcon = {
                 BackButton(onClick = { onAction(SearchTopAppBarAction.BackClick) })
             },
+            actions = {
+                SettingsButton(onClick = { onAction(SearchTopAppBarAction.Settings) })
+            },
             windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
             scrollBehavior = scrollBehavior
         )
         TopAppBarBottom(scrollBehavior = scrollBehavior) {
-            FlowRow(
-                Modifier
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
                     .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
                     .padding(horizontal = ComicTheme.dimension.margin),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                overflow = FlowRowOverflow.Visible
             ) {
                 DropdownMenuChip(
                     text = stringResource(uiState.searchCondition.range.displayText),

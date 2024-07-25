@@ -31,9 +31,9 @@ import com.sorrowblue.comicviewer.feature.book.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawTaken
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.PreviewMobile
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.previewPlaceholder
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -93,7 +93,7 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
         )
         AsyncImage(
             model = nextBook.book,
-            placeholder = rememberDebugPlaceholder(),
+            error = previewPlaceholder(),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -121,7 +121,7 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
     }
 }
 
-@PreviewMobile
+@PreviewMultiScreen
 @Composable
 private fun PreviewNextBookSheet() {
     PreviewTheme {

@@ -11,7 +11,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.sorrowblue.comicviewer.feature.library.R
 import com.sorrowblue.comicviewer.feature.library.component.AddOnItemState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 
 @Composable
 internal fun LibraryCloudStorageDialog(

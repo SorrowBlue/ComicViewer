@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui
+package com.sorrowblue.comicviewer.framework.preview
 
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview

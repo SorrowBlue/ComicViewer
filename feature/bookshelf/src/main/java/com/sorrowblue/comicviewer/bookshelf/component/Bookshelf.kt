@@ -46,12 +46,12 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.domain.model.file.fakeFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.fakeFolder
+import com.sorrowblue.comicviewer.framework.preview.previewPainter
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
@@ -68,25 +68,25 @@ fun Bookshelf(
                 contentDescription = stringResource(R.string.bookshelf_desc_thumbnail),
                 contentScale = ContentScale.Crop,
                 loading = {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.Center)
+                    )
+                },
+                error = {
                     if (LocalInspectionMode.current) {
-                        Image(painter = rememberDebugPlaceholder()!!, contentDescription = null)
+                        Image(painter = previewPainter(), contentDescription = null)
                     } else {
-                        CircularProgressIndicator(
+                        Icon(
+                            imageVector = ComicIcons.FolderOff,
+                            contentDescription = null,
                             modifier = Modifier
                                 .wrapContentSize()
+                                .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
                                 .align(Alignment.Center)
                         )
                     }
-                },
-                error = {
-                    Icon(
-                        imageVector = ComicIcons.FolderOff,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
-                            .align(Alignment.Center)
-                    )
                 },
                 modifier = Modifier
                     .aspectRatio(1f)

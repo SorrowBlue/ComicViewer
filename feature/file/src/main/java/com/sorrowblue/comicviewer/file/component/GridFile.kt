@@ -3,10 +3,13 @@ package com.sorrowblue.comicviewer.file.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CardDefaults
@@ -33,13 +36,14 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.preview.previewPainter
 
 /**
  * ファイル情報をグリッドアイテムで表示する
@@ -47,8 +51,8 @@ import com.sorrowblue.comicviewer.framework.ui.rememberDebugPlaceholder
  * @param file ファイル
  * @param onClick クリック時の処理
  * @param onInfoClick インフォクリック時の処理
- * @param modifier Modifier
  * @param showThumbnail サムネイル表示を有効にするか
+ * @param modifier Modifier
  */
 @Composable
 fun GridFile(
@@ -86,27 +90,35 @@ fun GridFile(
                 )
             }
         }
-        Box {
-            Text(
-                text = file.name,
-                style = ComicTheme.typography.bodyLarge.copy(
-                    fontSize = fontSize.sp,
-                    lineHeight = (fontSize + 4).sp,
-                ),
-                textAlign = TextAlign.Start,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 2,
-                minLines = 2,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-            if (file is Book && 0 < file.lastPageRead) {
-                LinearProgressIndicator(
-                    progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (file is Folder) {
+                Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
+                Icon(imageVector = ComicIcons.Folder, contentDescription = null)
+            }
+            Box {
+                Text(
+                    text = file.name,
+                    style = ComicTheme.typography.bodyLarge.copy(
+                        fontSize = fontSize.sp,
+                        lineHeight = (fontSize + 4).sp,
+                    ),
+                    textAlign = TextAlign.Start,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                    minLines = 2,
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(ComicTheme.dimension.padding)
                 )
+                if (file is Book && 0 < file.lastPageRead) {
+                    LinearProgressIndicator(
+                        progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    )
+                }
             }
         }
     }
@@ -125,25 +137,25 @@ private fun GridFileThumbnail(
         contentScale = contentScale,
         filterQuality = filterQuality,
         loading = {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.Center)
+            )
+        },
+        error = {
             if (LocalInspectionMode.current) {
-                Image(painter = rememberDebugPlaceholder()!!, contentDescription = null)
+                Image(painter = previewPainter(), contentDescription = null)
             } else {
-                CircularProgressIndicator(
+                Icon(
+                    imageVector = if (file is Book) ComicIcons.BrokenImage else ComicIcons.FolderOff,
+                    contentDescription = null,
                     modifier = Modifier
                         .wrapContentSize()
+                        .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
                         .align(Alignment.Center)
                 )
             }
-        },
-        error = {
-            Icon(
-                imageVector = if (file is Book) ComicIcons.BrokenImage else ComicIcons.FolderOff,
-                contentDescription = null,
-                modifier = Modifier
-                    .wrapContentSize()
-                    .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
-                    .align(Alignment.Center)
-            )
         },
         modifier = Modifier
             .fillMaxWidth()

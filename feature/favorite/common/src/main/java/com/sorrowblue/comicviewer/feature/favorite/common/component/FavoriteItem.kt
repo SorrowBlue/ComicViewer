@@ -15,12 +15,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.feature.favorite.common.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUnknown
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.AsyncImage2
 
 @Composable
 fun FavoriteItem(favorite: Favorite, onClick: () -> Unit, modifier: Modifier = Modifier) {
@@ -41,7 +41,7 @@ fun FavoriteItem(favorite: Favorite, onClick: () -> Unit, modifier: Modifier = M
             )
         },
         leadingContent = {
-            AsyncImage2(
+            SubcomposeAsyncImage(
                 model = favorite,
                 contentDescription = null,
                 alignment = Alignment.Center,

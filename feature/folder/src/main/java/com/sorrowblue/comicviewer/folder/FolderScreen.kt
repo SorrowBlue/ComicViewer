@@ -35,7 +35,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.file.fakeBookFile
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.folder.R
@@ -50,18 +49,18 @@ import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.preview.flowData
+import com.sorrowblue.comicviewer.framework.preview.flowEmptyData
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
-import com.sorrowblue.comicviewer.framework.ui.preview.flowEmptyData
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.parcelize.Parcelize
@@ -229,10 +228,9 @@ fun FolderContents(
 @Preview
 @Composable
 private fun PreviewFolderScreen() {
-    val files = List<File>(30) {
+    val pagingDataFlow = PagingData.flowData<File> {
         fakeBookFile(BookshelfId(it))
     }
-    val pagingDataFlow = PagingData.flowData(files)
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {
         FolderScreen(
@@ -250,7 +248,7 @@ private fun PreviewFolderScreen() {
 @Preview
 @Composable
 private fun PreviewFolderScreenEmpty() {
-    val pagingDataFlow: Flow<PagingData<File>> = PagingData.flowEmptyData()
+    val pagingDataFlow = PagingData.flowEmptyData<File>()
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {
         FolderScreen(

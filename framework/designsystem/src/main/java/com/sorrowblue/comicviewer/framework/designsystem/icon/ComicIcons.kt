@@ -5,6 +5,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.automirrored.rounded.ArrowRight
 import androidx.compose.material.icons.automirrored.rounded.Backspace
+import androidx.compose.material.icons.automirrored.rounded.InsertDriveFile
 import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
 import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.automirrored.rounded.ViewList
@@ -111,6 +112,7 @@ object ComicIcons {
     val Book = Icons.Rounded.Book
     val BrokenImage = Icons.Rounded.BrokenImage
     val Folder = Icons.Rounded.Folder
+    val InsertDriveFile = Icons.AutoMirrored.Rounded.InsertDriveFile
     val Storage = Icons.Rounded.Storage
     val Notifications = Icons.Rounded.Notifications
 }

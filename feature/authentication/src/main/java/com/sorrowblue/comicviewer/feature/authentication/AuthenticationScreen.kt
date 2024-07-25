@@ -56,7 +56,7 @@ import androidx.lifecycle.flowWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.material3.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import kotlinx.coroutines.flow.filter
 import kotlinx.parcelize.Parcelize
 

@@ -105,6 +105,7 @@ private class ComicViewerAppStateImpl(
     private var isInitialized by savedStateHandle.saveable { mutableStateOf(false) }
 
     init {
+        refreshAddOnList()
         val backStackEntryFlow = navController.currentBackStackEntryFlow
         backStackEntryFlow
             .filter { it.destination is ComposeNavigator.Destination }
