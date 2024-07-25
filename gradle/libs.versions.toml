@@ -13,7 +13,7 @@ androidx-credentials = "1.2.2"
 androidx-datastore = "1.1.1"
 androidx-lifecycle = "2.8.3"
 androidx-navigation = "2.7.7"
-androidx-paging = "3.3.0"
+androidx-paging = "3.3.1"
 androidx-room = "2.6.1"
 androidx-work = "2.9.0"
 
