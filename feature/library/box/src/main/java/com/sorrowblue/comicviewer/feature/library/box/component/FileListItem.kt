@@ -35,7 +35,6 @@ import org.koin.compose.koinInject
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun FileListItem(file: File, onClick: () -> Unit, modifier: Modifier = Modifier) {
-
     val repository: BoxApiRepository = koinInject()
     ListItem(
         headlineContent = { Text(text = file.name) },

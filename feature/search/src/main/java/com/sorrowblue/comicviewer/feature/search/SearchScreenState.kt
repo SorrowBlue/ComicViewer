@@ -129,11 +129,12 @@ private class SearchScreenStateImpl(
                     is SearchCondition.Range.SubFolder -> range.copy(args.path)
                 },
             )
-        }).cachedIn(scope)
+        }
+    ).cachedIn(scope)
 
     init {
-        navigator.currentDestination?.content?.let {
-            fetchFileInfo(it.file) {
+        navigator.currentDestination?.content?.let { fileInfoUiState ->
+            fetchFileInfo(fileInfoUiState.file) {
                 navigator.navigateTo(
                     SupportingPaneScaffoldRole.Extra,
                     it.copy(isOpenFolderEnabled = true)

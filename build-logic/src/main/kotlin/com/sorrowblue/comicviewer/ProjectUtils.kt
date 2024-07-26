@@ -73,3 +73,7 @@ internal fun DependencyHandlerScope.androidTestImplementation(dependencyNotation
 internal fun DependencyHandlerScope.ksp(dependencyNotation: Any) {
     add("ksp", dependencyNotation)
 }
+
+internal fun DependencyHandlerScope.kspDebug(dependencyNotation: Any) {
+    add("kspDebug", dependencyNotation)
+}

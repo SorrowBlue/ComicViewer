@@ -26,7 +26,7 @@ import logcat.LogcatLogger
 
 @Preview(widthDp = 400, heightDp = 400, showBackground = true)
 @Composable
-internal fun ScrollbarPreview() {
+private fun ScrollbarPreview() {
     val state = rememberScrollState()
     Column(
         modifier = Modifier
@@ -46,7 +46,7 @@ internal fun ScrollbarPreview() {
 
 @Preview(widthDp = 400, heightDp = 400, showBackground = true)
 @Composable
-internal fun LazyListScrollbarPreview() {
+private fun LazyListScrollbarPreview() {
     LogcatLogger.install(AndroidLogcatLogger())
     val state = rememberLazyGridState()
     LazyVerticalGrid(
@@ -73,7 +73,7 @@ internal fun LazyListScrollbarPreview() {
 
 @Preview(widthDp = 400, showBackground = true)
 @Composable
-internal fun HorizontalScrollbarPreview() {
+private fun HorizontalScrollbarPreview() {
     val state = rememberScrollState()
     Row(
         modifier = Modifier
@@ -92,7 +92,7 @@ internal fun HorizontalScrollbarPreview() {
 
 @Preview(widthDp = 400, showBackground = true)
 @Composable
-internal fun LazyListHorizontalScrollbarPreview() {
+private fun LazyListHorizontalScrollbarPreview() {
     val state = rememberLazyListState()
     LazyRow(
         modifier = Modifier.drawHorizontalScrollbar(state),
