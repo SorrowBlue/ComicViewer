@@ -8,6 +8,7 @@ context(Project)
 fun DependencyHandlerScope.applyTestImplementation() {
     testImplementation(libs.androidx.test.ext.junitKtx)
     testImplementation(libs.androidx.test.ext.truth)
+    testImplementation(libs.robolectric)
 
     androidTestImplementation(libs.androidx.test.core.ktx)
     androidTestImplementation(libs.androidx.test.ext.junitKtx)

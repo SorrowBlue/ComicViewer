@@ -60,6 +60,7 @@ style:
       - 'PreviewTablet'
       - 'PreviewScreenSizes'
       - 'PreviewMultiScreen'
+      - 'PreviewLightDark'
 
 # https://mrmans0n.github.io/compose-rules/detekt/
 Compose:

@@ -4,8 +4,10 @@ import com.android.build.api.dsl.LibraryExtension
 import com.google.devtools.ksp.gradle.KspExtension
 import com.sorrowblue.comicviewer.apply
 import com.sorrowblue.comicviewer.configureAndroidCompose
+import com.sorrowblue.comicviewer.debugImplementation
 import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.ksp
+import com.sorrowblue.comicviewer.kspDebug
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.parentName
 import com.sorrowblue.comicviewer.testImplementation
@@ -36,6 +38,10 @@ internal class ComposeConventionPlugin : Plugin<Project> {
                 implementation(libs.compose.destinations.core)
                 ksp(libs.compose.destinations.ksp)
 
+                debugImplementation(libs.airbnb.android.showkase)
+                implementation(libs.airbnb.android.showkase.annotation)
+                kspDebug(libs.airbnb.android.showkase.processor)
+
                 testImplementation(platform(libs.androidx.compose.bom))
                 testImplementation(libs.androidx.compose.ui.testManifest)
                 testImplementation(libs.androidx.compose.ui.testJunit4)
@@ -43,6 +49,7 @@ internal class ComposeConventionPlugin : Plugin<Project> {
 
             extensions.configure<KspExtension> {
                 arg("compose-destinations.codeGenPackageName", "com.sorrowblue.${parentName()}")
+                arg("skipPrivatePreviews", "true")
             }
         }
     }
