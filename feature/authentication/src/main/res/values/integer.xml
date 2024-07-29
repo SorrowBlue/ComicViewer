@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="authentication_pin_transform_startOffset">150</integer>
+    <integer name="authentication_pin_transform_duration">300</integer>
+</resources>

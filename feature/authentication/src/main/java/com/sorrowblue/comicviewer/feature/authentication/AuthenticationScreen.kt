@@ -1,61 +1,48 @@
 package com.sorrowblue.comicviewer.feature.authentication
 
+import android.content.res.Configuration
 import android.os.Parcelable
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
+import androidx.window.core.layout.WindowHeightSizeClass
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
+import com.sorrowblue.comicviewer.feature.authentication.section.HeaderContents
+import com.sorrowblue.comicviewer.feature.authentication.section.InputContents
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filter
 import kotlinx.parcelize.Parcelize
 
@@ -97,241 +84,144 @@ private fun AuthenticationScreen(
             .filter { it.completed }
             .flowWithLifecycle(lifecycle)
             .collect {
+                delay(2000)
                 currentOnCompleted()
             }
     }
     AuthenticationScreen(
         uiState = state.uiState,
         onBackClick = onBackClick,
-        onPinClick = state::onPinClick,
-        onBackspaceClick = state::onBackspaceClick,
+        onPinChange = state::onPinChange,
         onNextClick = state::onNextClick,
         snackbarHostState = state.snackbarHostState
     )
 }
 
 internal sealed interface AuthenticationScreenUiState {
-    val pinCount: Int
+    val pin: String
     val error: Int
 
-    fun copyPinCount(count: Int): AuthenticationScreenUiState
+    fun copyPin(pin: String): AuthenticationScreenUiState
 
     sealed interface Register : AuthenticationScreenUiState {
-        data class Input(override val pinCount: Int, override val error: Int) : Register {
-            override fun copyPinCount(count: Int) = copy(pinCount = count)
+        data class Input(override val pin: String, override val error: Int) : Register {
+            override fun copyPin(pin: String) = copy(pin = pin)
         }
 
-        data class Confirm(override val pinCount: Int, override val error: Int) : Register {
-            override fun copyPinCount(count: Int) = copy(pinCount = count)
+        data class Confirm(override val pin: String, override val error: Int) : Register {
+            override fun copyPin(pin: String) = copy(pin = pin)
         }
     }
 
     @Parcelize
     data class Authentication(
-        override val pinCount: Int,
+        override val pin: String,
         override val error: Int,
         val loading: Boolean = false,
     ) : AuthenticationScreenUiState, Parcelable {
-        override fun copyPinCount(count: Int) = copy(pinCount = count)
+        override fun copyPin(pin: String) = copy(pin = pin)
     }
 
     sealed interface Change : AuthenticationScreenUiState {
-        data class ConfirmOld(override val pinCount: Int, override val error: Int) : Change {
-            override fun copyPinCount(count: Int) = copy(pinCount = count)
+        data class ConfirmOld(override val pin: String, override val error: Int) : Change {
+            override fun copyPin(pin: String) = copy(pin = pin)
         }
 
-        data class Input(override val pinCount: Int, override val error: Int) : Change {
-            override fun copyPinCount(count: Int) = copy(pinCount = count)
+        data class Input(override val pin: String, override val error: Int) : Change {
+            override fun copyPin(pin: String) = copy(pin = pin)
         }
 
-        data class Confirm(override val pinCount: Int, override val error: Int) : Change {
-            override fun copyPinCount(count: Int) = copy(pinCount = count)
+        data class Confirm(override val pin: String, override val error: Int) : Change {
+            override fun copyPin(pin: String) = copy(pin = pin)
         }
     }
 
-    data class Erase(override val pinCount: Int, override val error: Int) :
+    data class Erase(override val pin: String, override val error: Int) :
         AuthenticationScreenUiState {
-        override fun copyPinCount(count: Int) = copy(pinCount = count)
+        override fun copyPin(pin: String) = copy(pin = pin)
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AuthenticationScreen(
     uiState: AuthenticationScreenUiState,
     onBackClick: () -> Unit,
-    onPinClick: (String) -> Unit,
-    onBackspaceClick: () -> Unit,
+    onPinChange: (String) -> Unit,
     onNextClick: () -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
-                    }
-                },
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-            )
+            val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
+            if (LocalConfiguration.current.orientation != Configuration.ORIENTATION_LANDSCAPE
+                || windowAdaptiveInfo.windowSizeClass.windowHeightSizeClass != WindowHeightSizeClass.COMPACT
+            ) {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            if (uiState is AuthenticationScreenUiState.Authentication) {
+                                Icon(imageVector = ComicIcons.Close, contentDescription = null)
+                            } else {
+                                Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
+                            }
+                        }
+                    },
+                    windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+                )
+            }
         },
         snackbarHost = {
             SnackbarHost(snackbarHostState)
         },
         contentWindowInsets = WindowInsets.safeDrawing
     ) { contentPadding ->
-        FlowColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalArrangement = Arrangement.SpaceEvenly,
+        val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
+        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+            && windowAdaptiveInfo.windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT
         ) {
-            TopContent(
-                uiState = uiState,
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .align(alignment = Alignment.CenterHorizontally)
-            )
-
-            NumberPad(
-                onPinClick = onPinClick,
-                onBackspaceClick = onBackspaceClick,
-                onNextClick = onNextClick,
-                modifier = Modifier.padding(bottom = 32.dp)
-            )
-        }
-    }
-}
-
-@Composable
-private fun TopContent(
-    uiState: AuthenticationScreenUiState,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-        Icon(
-            imageVector = ComicIcons.Key,
-            contentDescription = null,
-            modifier = Modifier.size(48.dp)
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        AnimatedVisibility(visible = 0 < uiState.error) {
-            if (0 < uiState.error) {
-                Text(
-                    text = stringResource(id = uiState.error),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium
+                    .fillMaxSize()
+                    .padding(contentPadding)
+                    .padding(ComicTheme.dimension.margin)
+            ) {
+                IconButton(onClick = onBackClick) {
+                    if (uiState is AuthenticationScreenUiState.Authentication) {
+                        Icon(imageVector = ComicIcons.Close, contentDescription = null)
+                    } else {
+                        Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
+                    }
+                }
+                HeaderContents(modifier = Modifier.weight(1f))
+                InputContents(
+                    uiState = uiState,
+                    onPinChange = onPinChange,
+                    onNextClick = onNextClick,
+                    modifier = Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)
                 )
             }
-        }
-
-        Text(
-            text = stringResource(
-                id = when (uiState) {
-                    is AuthenticationScreenUiState.Authentication -> R.string.authentication_text_enter_pin
-
-                    is AuthenticationScreenUiState.Register.Input -> R.string.authentication_text_enter_new_pin
-                    is AuthenticationScreenUiState.Register.Confirm -> R.string.authentication_text_reenter_pin
-
-                    is AuthenticationScreenUiState.Change.ConfirmOld -> R.string.authentication_text_enter_pin
-                    is AuthenticationScreenUiState.Change.Input -> R.string.authentication_text_enter_new_pin
-                    is AuthenticationScreenUiState.Change.Confirm -> R.string.authentication_text_reenter_pin
-
-                    is AuthenticationScreenUiState.Erase -> R.string.authentication_text_enter_pin
-                }
-            ),
-            style = MaterialTheme.typography.titleSmall
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-
-        Row {
-            repeat(uiState.pinCount + 1) {
-                key(it) {
-                    AnimatedContent(
-                        targetState = it < uiState.pinCount,
-                        transitionSpec = {
-                            fadeIn() + slideInVertically { height -> height } togetherWith
-                                fadeOut() + slideOutVertically { height -> height } using
-                                SizeTransform(false)
-                        },
-                        label = "test"
-                    ) { isVisible ->
-                        if (isVisible) {
-                            Icon(imageVector = ComicIcons.Circle, contentDescription = null)
-                        }
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.size(16.dp))
-
-        if (uiState is AuthenticationScreenUiState.Authentication && uiState.loading) {
-            CircularProgressIndicator()
-        }
-        Spacer(modifier = Modifier.weight(1f))
-    }
-}
-
-@Composable
-private fun NumberPad(
-    onPinClick: (String) -> Unit,
-    onBackspaceClick: () -> Unit,
-    onNextClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.sizeIn(maxWidth = 60.dp * 3 + 16.dp, maxHeight = 60.dp * 4 + 32.dp)
-    ) {
-        items(Button.listList) {
-            FilledTonalButton(
-                onClick = {
-                    when (it) {
-                        Button.Delete -> onBackspaceClick()
-                        Button.Next -> onNextClick()
-                        is Button.Number -> onPinClick(it.value.toString())
-                    }
-                },
-                modifier = Modifier.aspectRatio(1f)
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding)
+                    .padding(ComicTheme.dimension.margin),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                when (it) {
-                    Button.Delete -> {
-                        Icon(imageVector = ComicIcons.Backspace, contentDescription = null)
-                    }
-
-                    Button.Next -> {
-                        Icon(
-                            imageVector = ComicIcons.ArrowForward,
-                            contentDescription = null
-                        )
-                    }
-
-                    is Button.Number -> {
-                        Text(text = it.value.toString())
-                    }
-                }
+                HeaderContents(modifier = Modifier.fillMaxWidth())
+                Spacer(modifier = Modifier.weight(1f))
+                InputContents(
+                    uiState = uiState,
+                    onPinChange = onPinChange,
+                    onNextClick = onNextClick,
+                )
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
-    }
-}
-
-sealed interface Button {
-    data class Number(val value: Int) : Button
-    data object Delete : Button
-    data object Next : Button
-
-    companion object {
-        val listList = List(9) { Number(it + 1) } + Delete + Number(0) + Next
     }
 }
 
@@ -339,11 +229,15 @@ sealed interface Button {
 @Composable
 private fun PreviewAuthenticationScreen() {
     PreviewTheme {
+        var pin by remember { mutableStateOf("1111") }
         AuthenticationScreen(
-            uiState = AuthenticationScreenUiState.Authentication(4, 0, false),
+            uiState = AuthenticationScreenUiState.Authentication(
+                pin,
+                R.string.authentication_error_Invalid_pin,
+                true
+            ),
             onBackClick = { /*TODO*/ },
-            onPinClick = {},
-            onBackspaceClick = { /*TODO*/ },
+            onPinChange = { pin = it },
             onNextClick = { /*TODO*/ },
             snackbarHostState = remember { SnackbarHostState() }
         )

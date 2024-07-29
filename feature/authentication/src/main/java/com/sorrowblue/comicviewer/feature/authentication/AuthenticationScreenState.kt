@@ -27,8 +27,7 @@ internal interface AuthenticationScreenState : SaveableScreenState {
     val event: AuthenticationEvent
     val uiState: AuthenticationScreenUiState
     val snackbarHostState: SnackbarHostState
-    fun onPinClick(pin: String)
-    fun onBackspaceClick()
+    fun onPinChange(pin: String)
     fun onNextClick()
 }
 
@@ -99,42 +98,34 @@ private class AuthenticationScreenStateImpl(
     override var uiState by savedStateHandle.saveable {
         mutableStateOf(
             when (args.mode) {
-                Mode.Register -> AuthenticationScreenUiState.Register.Input(0, View.NO_ID)
-                Mode.Change -> AuthenticationScreenUiState.Change.ConfirmOld(0, View.NO_ID)
-                Mode.Erase -> AuthenticationScreenUiState.Erase(0, View.NO_ID)
-                Mode.Authentication -> AuthenticationScreenUiState.Authentication(0, View.NO_ID)
+                Mode.Register -> AuthenticationScreenUiState.Register.Input("", View.NO_ID)
+                Mode.Change -> AuthenticationScreenUiState.Change.ConfirmOld("", View.NO_ID)
+                Mode.Erase -> AuthenticationScreenUiState.Erase("", View.NO_ID)
+                Mode.Authentication -> AuthenticationScreenUiState.Authentication("", View.NO_ID)
             }
         )
     }
         private set
 
-    private var pin by savedStateHandle.saveable { mutableStateOf("") }
     private var pinHistory by savedStateHandle.saveable { mutableStateOf("") }
 
-    override fun onPinClick(pin: String) {
-        this.pin += pin
-        uiState = uiState.copyPinCount(this.pin.count())
-    }
-
-    override fun onBackspaceClick() {
-        pin = pin.dropLast(1)
-        uiState = uiState.copyPinCount(pin.count())
+    override fun onPinChange(pin: String) {
+        uiState = uiState.copyPin(if (pin.all { it.digitToIntOrNull() != null }) pin else "")
     }
 
     override fun onNextClick() {
         when (uiState) {
             is AuthenticationScreenUiState.Authentication -> {
                 viewModel.check(
-                    pin,
+                    uiState.pin,
                     onSuccess = {
                         uiState =
                             (uiState as AuthenticationScreenUiState.Authentication).copy(loading = true)
                         event = event.copy(completed = true)
                     },
                     onError = {
-                        pin = ""
                         uiState = AuthenticationScreenUiState.Authentication(
-                            pinCount = 0,
+                            pin = "",
                             error = R.string.authentication_error_Invalid_pin
                         )
                     }
@@ -143,15 +134,13 @@ private class AuthenticationScreenStateImpl(
 
             is AuthenticationScreenUiState.Change.ConfirmOld -> {
                 viewModel.check(
-                    pin,
+                    uiState.pin,
                     onSuccess = {
-                        pin = ""
-                        uiState = AuthenticationScreenUiState.Change.Input(pin.count(), View.NO_ID)
+                        uiState = AuthenticationScreenUiState.Change.Input("", View.NO_ID)
                     },
                     onError = {
-                        pin = ""
                         uiState = AuthenticationScreenUiState.Change.ConfirmOld(
-                            pinCount = pin.count(),
+                            pin = "",
                             error = R.string.authentication_error_Invalid_pin
                         )
                     }
@@ -159,28 +148,25 @@ private class AuthenticationScreenStateImpl(
             }
 
             is AuthenticationScreenUiState.Change.Input -> {
-                if (4 <= pin.count()) {
-                    pinHistory = pin
-                    pin = ""
-                    uiState = AuthenticationScreenUiState.Change.Confirm(pin.count(), View.NO_ID)
+                if (4 <= uiState.pin.count()) {
+                    pinHistory = uiState.pin
+                    uiState = AuthenticationScreenUiState.Change.Confirm("", View.NO_ID)
                 } else {
-                    pin = ""
                     uiState = AuthenticationScreenUiState.Change.Input(
-                        pinCount = pin.count(),
+                        pin = "",
                         error = R.string.authentication_error_pin_4_more
                     )
                 }
             }
 
             is AuthenticationScreenUiState.Change.Confirm -> {
-                if (pin == pinHistory) {
-                    viewModel.change(pin) {
+                if (uiState.pin == pinHistory) {
+                    viewModel.change(uiState.pin) {
                         event = event.copy(completed = true)
                     }
                 } else {
-                    pin = ""
                     uiState = AuthenticationScreenUiState.Change.Input(
-                        pinCount = pin.count(),
+                        pin = "",
                         error = R.string.authentication_error_Invalid_pin
                     )
                 }
@@ -188,14 +174,13 @@ private class AuthenticationScreenStateImpl(
 
             is AuthenticationScreenUiState.Erase -> {
                 viewModel.remove(
-                    pin,
+                    uiState.pin,
                     onSuccess = {
                         event = event.copy(completed = true)
                     },
                     onError = {
-                        pin = ""
                         uiState = AuthenticationScreenUiState.Erase(
-                            pinCount = 0,
+                            pin = "",
                             error = R.string.authentication_error_Invalid_pin
                         )
                     }
@@ -203,29 +188,26 @@ private class AuthenticationScreenStateImpl(
             }
 
             is AuthenticationScreenUiState.Register.Input -> {
-                if (4 <= pin.count()) {
-                    pinHistory = pin
-                    pin = ""
+                if (4 <= uiState.pin.count()) {
+                    pinHistory = uiState.pin
                     uiState =
-                        AuthenticationScreenUiState.Register.Confirm(pin.count(), View.NO_ID)
+                        AuthenticationScreenUiState.Register.Confirm("", View.NO_ID)
                 } else {
-                    pin = ""
                     uiState = AuthenticationScreenUiState.Register.Input(
-                        pinCount = pin.count(),
+                        pin = "",
                         error = R.string.authentication_error_pin_4_more
                     )
                 }
             }
 
             is AuthenticationScreenUiState.Register.Confirm -> {
-                if (pin == pinHistory) {
-                    viewModel.register(pin)
+                if (uiState.pin == pinHistory) {
+                    viewModel.register(uiState.pin)
                     event = event.copy(completed = true)
                 } else {
-                    pin = ""
                     pinHistory = ""
                     uiState = AuthenticationScreenUiState.Register.Input(
-                        pinCount = pin.count(),
+                        pin = "",
                         error = R.string.authentication_error_pin_not_match
                     )
                 }
