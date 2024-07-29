@@ -1,0 +1,37 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+
+            <group
+                android:name="path_group"
+                android:pivotX="12"
+                android:pivotY="12">
+                <path
+                    android:name="path"
+                    android:pathData="M 8 6.82 L 8 17.18 C 8 17.97 8.87 18.45 9.54 18.02 L 17.68 12.84 C 18.3 12.45 18.3 11.55 17.68 11.15 L 9.54 5.98 C 8.87 5.55 8 6.03 8 6.82 Z"
+                    android:fillColor="#000000" />
+            </group>
+        </vector>
+    </aapt:attr>
+    <target
+        android:name="path_group"
+        android:animation="@animator/authentication_pin_scale" />
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:startOffset="@integer/authentication_pin_transform_startOffset"
+                android:duration="@integer/authentication_pin_transform_duration"
+                android:valueFrom="M 8 6.82 L 8 6.82 C 8 10.273 8 13.727 8 17.18 C 8 17.97 8.87 18.45 9.54 18.02 C 12.253 16.293 14.967 14.567 17.68 12.84 C 18.3 12.45 18.3 11.55 17.68 11.15 C 14.967 9.427 12.253 7.703 9.54 5.98 C 8.87 5.55 8 6.03 8 6.82"
+                android:valueTo="M 12 2 L 12 2 C 9.235 2 6.735 3.118 4.926 4.926 C 3.118 6.735 2 9.235 2 12 C 2 17.53 6.47 22 12 22 C 17.53 22 22 17.53 22 12 C 22 9.235 20.883 6.735 19.074 4.926 C 17.265 3.118 14.765 2 12 2"
+                android:valueType="pathType"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </aapt:attr>
+    </target>
+</animated-vector>

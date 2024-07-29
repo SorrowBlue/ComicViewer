@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
+import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -131,11 +132,12 @@ internal object RootScreenWrapper : DestinationWrapper {
                 screenContent()
             }
             if ((requireAuth && !authed) || (authed && !isInitialized)) {
+                val activity = LocalContext.current as Activity
                 AuthenticationScreen(
                     args = AuthenticationArgs(Mode.Authentication),
                     navigator = object : AuthenticationScreenNavigator {
                         override fun navigateUp() {
-                            destinationsNavigator.popBackStack()
+                            activity.finish()
                         }
 
                         override fun onCompleted() {
