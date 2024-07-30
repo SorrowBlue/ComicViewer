@@ -154,8 +154,8 @@ private fun AuthenticationScreen(
     Scaffold(
         topBar = {
             val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
-            if (LocalConfiguration.current.orientation != Configuration.ORIENTATION_LANDSCAPE
-                || windowAdaptiveInfo.windowSizeClass.windowHeightSizeClass != WindowHeightSizeClass.COMPACT
+            if (LocalConfiguration.current.orientation != Configuration.ORIENTATION_LANDSCAPE ||
+                windowAdaptiveInfo.windowSizeClass.windowHeightSizeClass != WindowHeightSizeClass.COMPACT
             ) {
                 TopAppBar(
                     title = {},
@@ -178,8 +178,8 @@ private fun AuthenticationScreen(
         contentWindowInsets = WindowInsets.safeDrawing
     ) { contentPadding ->
         val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
-        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-            && windowAdaptiveInfo.windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT
+        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE &&
+            windowAdaptiveInfo.windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT
         ) {
             Row(
                 modifier = Modifier

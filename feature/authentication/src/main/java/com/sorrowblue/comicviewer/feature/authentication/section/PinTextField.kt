@@ -67,9 +67,13 @@ internal fun PinTextField(
                 .fillMaxSize()
                 .border(
                     width = 2.dp,
-                    color = if (enabled) ComicTheme.colorScheme.onSurfaceVariant else ComicTheme.colorScheme.onSurface.copy(
-                        alpha = 0.38f
-                    ),
+                    color = if (enabled) {
+                        ComicTheme.colorScheme.onSurfaceVariant
+                    } else {
+                        ComicTheme.colorScheme.onSurface.copy(
+                            alpha = 0.38f
+                        )
+                    },
                     shape = ComicTheme.shapes.small
                 )
                 .clickable(enabled = enabled) {

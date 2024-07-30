@@ -40,9 +40,13 @@ fun PinDrawable(
         contentScale = ContentScale.Crop,
         modifier = modifier.graphicsLayer(clip = false),
         colorFilter = ColorFilter.tint(
-            if (enabled) ComicTheme.colorScheme.onSurfaceVariant else ComicTheme.colorScheme.onSurface.copy(
-                alpha = 0.38f
-            )
+            if (enabled) {
+                ComicTheme.colorScheme.onSurfaceVariant
+            } else {
+                ComicTheme.colorScheme.onSurface.copy(
+                    alpha = 0.38f
+                )
+            }
         )
     )
     LaunchedEffect(Unit) {
