@@ -49,7 +49,9 @@ internal fun InputContents(
             style = MaterialTheme.typography.titleSmall
         )
 
-        val enabled by remember(uiState) { derivedStateOf { !(uiState is AuthenticationScreenUiState.Authentication && uiState.loading) } }
+        val enabled by remember(
+            uiState
+        ) { derivedStateOf { !(uiState is AuthenticationScreenUiState.Authentication && uiState.loading) } }
         PinTextField(
             pin = uiState.pin,
             onPinChange = onPinChange,
