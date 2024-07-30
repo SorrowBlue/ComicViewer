@@ -131,51 +131,52 @@ private fun SmbEditScreen(
     onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSaveClick: () -> Unit,
-    modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(id = uiState.editType.title)) },
-                navigationIcon = { CloseIconButton(onClick = onBackClick) },
-                actions = {
-                    TextButton(onClick = onSaveClick) {
-                        Text(text = stringResource(id = R.string.bookshelf_edit_label_save))
-                    }
-                },
-                scrollBehavior = scrollBehavior
+    Box {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = stringResource(id = uiState.editType.title)) },
+                    navigationIcon = { CloseIconButton(onClick = onBackClick) },
+                    actions = {
+                        TextButton(onClick = onSaveClick) {
+                            Text(text = stringResource(id = R.string.bookshelf_edit_label_save))
+                        }
+                    },
+                    scrollBehavior = scrollBehavior
+                )
+            },
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            contentWindowInsets = WindowInsets.safeDrawing,
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        ) { contentPadding ->
+            SmbEditContent(
+                uiState = uiState,
+                onDisplayNameChange = onDisplayNameChange,
+                onHostChange = onHostChange,
+                onPortChange = onPortChange,
+                onPathChange = onPathChange,
+                onAuthChange = onAuthChange,
+                onDomainChange = onDomainChange,
+                onUsernameChange = onUsernameChange,
+                onPasswordChange = onPasswordChange,
+                scrollState = scrollState,
+                contentPadding = contentPadding
             )
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentWindowInsets = WindowInsets.safeDrawing,
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) { contentPadding ->
-        SmbEditContent(
-            uiState = uiState,
-            onDisplayNameChange = onDisplayNameChange,
-            onHostChange = onHostChange,
-            onPortChange = onPortChange,
-            onPathChange = onPathChange,
-            onAuthChange = onAuthChange,
-            onDomainChange = onDomainChange,
-            onUsernameChange = onUsernameChange,
-            onPasswordChange = onPasswordChange,
-            scrollState = scrollState,
-            contentPadding = contentPadding
-        )
-    }
-    if (uiState.isProgress) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(ComicTheme.colorScheme.scrim.copy(alpha = 0.5f))
-                .clickable { }
-                .safeDrawingPadding(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+        }
+        if (uiState.isProgress) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(ComicTheme.colorScheme.scrim.copy(alpha = 0.5f))
+                    .clickable { }
+                    .safeDrawingPadding(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
     }
 }
