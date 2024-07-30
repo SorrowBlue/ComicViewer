@@ -6,7 +6,11 @@
     <string name="file_label_modified_date">modified date</string>
     <string name="file_list_label_switch_grid_view">Switch to grid view</string>
     <string name="file_list_label_switch_list_view">Switch to list view</string>
-    <string name="file_text_page_count">%1$d/%2$d pages</string>
+
+    <plurals name="file_text_page_count">
+        <item quantity="one">one page</item>
+        <item quantity="other">%1$d pages</item>
+    </plurals>
     <string name="file_desc_open_file_info">Open file information</string>
     <string name="file_action_change_grid_size">Change Grid size</string>
 

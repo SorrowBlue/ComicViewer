@@ -2,7 +2,6 @@
 <resources>
     <string name="library_action_Install">インストール</string>
     <string name="library_label_box">Box</string>
-    <string name="library_label_download">ダウンロード</string>
     <string name="library_label_dropbox">Dropbox</string>
     <string name="library_label_googledrive">Google ドライブ</string>
     <string name="library_label_history">履歴</string>

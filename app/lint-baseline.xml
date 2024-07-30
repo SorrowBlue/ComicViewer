@@ -1,3 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 8.4.1" type="baseline" client="gradle" dependencies="true" name="AGP (8.4.1)" variant="all" version="8.4.1">
+<issues name="AGP (8.5.1)" by="lint 8.5.1" client="gradle" dependencies="true" format="6"
+    type="baseline" variant="all" version="8.5.1">
+
+    <issue id="InvalidPackage"
+        message="Invalid package reference in library; not included in Android: `javax.naming.directory`. Referenced from `org.bouncycastle.jce.provider.CrlCache`.">
+        <location
+            file="F:/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk18on/1.76/3a785d0b41806865ad7e311162bfa3fa60b3965b/bcprov-jdk18on-1.76.jar" />
+    </issue>
+
+    <issue id="InvalidPackage"
+        message="Invalid package reference in library; not included in Android: `javax.naming`. Referenced from `org.bouncycastle.jce.provider.X509LDAPCertStoreSpi`.">
+        <location
+            file="F:/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk18on/1.76/3a785d0b41806865ad7e311162bfa3fa60b3965b/bcprov-jdk18on-1.76.jar" />
+    </issue>
+
+    <issue id="InvalidPackage"
+        message="Invalid package reference in library; not included in Android: `javax.security.auth.kerberos`. Referenced from `jcifs.pac.PacMac`.">
+        <location
+            file="F:/.gradle/caches/modules-2/files-2.1/eu.agno3.jcifs/jcifs-ng/2.1.10/94b4c0b173540ae98c379ea278713665fd8ab3eb/jcifs-ng-2.1.10.jar" />
+    </issue>
+
+    <issue id="InvalidPackage"
+        message="Invalid package reference in library; not included in Android: `javax.servlet.http`. Referenced from `jcifs.http.NetworkExplorer`.">
+        <location
+            file="F:/.gradle/caches/modules-2/files-2.1/eu.agno3.jcifs/jcifs-ng/2.1.10/94b4c0b173540ae98c379ea278713665fd8ab3eb/jcifs-ng-2.1.10.jar" />
+    </issue>
+
+    <issue id="InvalidPackage"
+        message="Invalid package reference in library; not included in Android: `javax.servlet`. Referenced from `jcifs.http.NetworkExplorer`.">
+        <location
+            file="F:/.gradle/caches/modules-2/files-2.1/eu.agno3.jcifs/jcifs-ng/2.1.10/94b4c0b173540ae98c379ea278713665fd8ab3eb/jcifs-ng-2.1.10.jar" />
+    </issue>
+
+    <issue id="InvalidPackage"
+        message="Invalid package reference in io.ktor:ktor-utils-jvm; not included in Android: `java.lang.management`. Referenced from `io.ktor.util.debug.IntellijIdeaDebugDetector.isDebuggerConnected.2`.">
+        <location
+            file="F:/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-utils-jvm/2.3.12/7cb89952751d184b60f9c312b70842e75c01bf44/ktor-utils-jvm-2.3.12.jar" />
+    </issue>
+
+    <issue errorLine1="                    android:host=&quot;comicviewer.sorrowblue.com&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        id="AppLinksAutoVerify"
+        message="This host does not support app links to your app. Checks the Digital Asset Links JSON file: https://comicviewer.sorrowblue.com/.well-known/assetlinks.json">
+        <location column="21" file="src/main/AndroidManifest.xml" line="33" />
+    </issue>
+
+    <issue errorLine1="    override fun &lt;T> DestinationScope&lt;T>.Wrap(screenContent: @Composable () -> Unit) {"
+        errorLine2="                                              ~~~~~~~~~~~~~"
+        id="ComposableLambdaParameterNaming"
+        message="Composable lambda parameter should be named `content`">
+        <location column="47" file="src/main/java/com/sorrowblue/comicviewer/app/ComicViewerApp.kt"
+            line="112" />
+    </issue>
+
+    <issue id="TrustAllX509TrustManager"
+        message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
+        <location
+            file="F:/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk18on/1.77/ed953791ba0229747dd0fd9911e3d76a462acfd3/bcpkix-jdk18on-1.77.jar" />
+    </issue>
+
+    <issue id="TrustAllX509TrustManager"
+        message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
+        <location
+            file="F:/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client/1.44.2/12f55ba06332c2b6f5456091b0786e1d7b8987e9/google-http-client-1.44.2.jar" />
+    </issue>
+
+    <issue id="TrustAllX509TrustManager"
+        message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
+        <location
+            file="F:/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client/1.44.2/12f55ba06332c2b6f5456091b0786e1d7b8987e9/google-http-client-1.44.2.jar" />
+    </issue>
 </issues>

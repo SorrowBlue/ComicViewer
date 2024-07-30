@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_folder_label_image_cache">画像キャッシュ</string>
     <string name="settings_folder_desc_image_folder">リストを取得するのに時間がかかります</string>
-    <string name="settings_folder_label_archives">アーカイブ</string>
-    <string name="settings_folder_label_delete_thumbnail">サムネイルを削除する</string>
-    <string name="settings_folder_label_document">ドキュメント</string>
     <string name="settings_folder_label_image_folder">画像フォルダーをブックとして扱う</string>
-    <string name="settings_folder_label_install">インストール</string>
-    <string name="settings_folder_label_require_document">ドキュメント ファイルを読むには、拡張機能をインストールする必要があります。</string>
     <string name="settings_folder_label_show_thumbnail">サムネイルを表示する</string>
     <string name="settings_folder_label_thumbnail">サムネイル</string>
     <string name="settings_folder_title">フォルダ</string>
-    <string name="settings_folder_title_extension">拡張子</string>
     <string name="settings_folder_label_image_format">サムネイルの画像形式</string>
     <string name="settings_folder_label_font_size">フォントサイズ</string>
     <string name="settings_folder_label_image_quality">画像の品質</string>

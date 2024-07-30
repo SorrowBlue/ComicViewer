@@ -6,7 +6,10 @@
     <string name="file_label_modified_date">変更日時</string>
     <string name="file_list_label_switch_grid_view">グリッド表示に切り替え</string>
     <string name="file_list_label_switch_list_view">リスト表示に切り替え</string>
-    <string name="file_text_page_count">%1$d/%2$d ページ</string>
+
+    <plurals name="file_text_page_count">
+        <item quantity="other">%1$d ページ</item>
+    </plurals>
     <string name="file_desc_open_file_info">ファイル情報を見る</string>
     <string name="file_action_change_grid_size">グリッドサイズ</string>
 </resources>
