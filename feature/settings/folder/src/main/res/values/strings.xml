@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_folder_label_image_cache">Image cache</string>
     <string name="settings_folder_desc_image_folder">It takes time to get the list</string>
-    <string name="settings_folder_label_archives">Archives</string>
-    <string name="settings_folder_label_delete_thumbnail">Delete thumbnail</string>
-    <string name="settings_folder_label_document">Documents</string>
     <string name="settings_folder_label_image_folder">Treat image folders as books</string>
-    <string name="settings_folder_label_install">Install</string>
-    <string name="settings_folder_label_require_document">To read documentation files, you need to install an extension.</string>
     <string name="settings_folder_label_show_thumbnail">Show thumbnails</string>
     <string name="settings_folder_label_thumbnail">Thumbnail</string>
     <string name="settings_folder_title">Folder</string>
-    <string name="settings_folder_title_extension">Extension</string>
     <string name="settings_folder_label_image_format">Thumbnail image format</string>
     <string name="settings_folder_label_font_size">Font size</string>
     <string name="settings_folder_label_image_quality">Image quality</string>

@@ -5,6 +5,5 @@
     <string name="settings_info_label_rate">アプリを評価する</string>
     <string name="settings_info_label_version">バージョン</string>
     <string name="settings_info_title">アプリ情報</string>
-    <string name="settings_info_title_licence">ライセンス</string>
     <string name="settings_info_rate_app_summary">ComicViewerが好きなら☆5評価をお願いします！</string>
 </resources>

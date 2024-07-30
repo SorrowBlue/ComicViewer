@@ -2,7 +2,6 @@
 <resources>
     <string name="library_action_Install">Install</string>
     <string name="library_label_box">Box</string>
-    <string name="library_label_download">Download</string>
     <string name="library_label_dropbox">Dropbox</string>
     <string name="library_label_googledrive">Google Drive</string>
     <string name="library_label_history">History</string>

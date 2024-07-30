@@ -105,6 +105,8 @@ android {
     }
 
     lint {
+        this.checkAllWarnings = true
+        this.
         checkDependencies = true
         htmlReport = true
         htmlOutput = file("$rootDir/build/reports/lint/lint-result.html")

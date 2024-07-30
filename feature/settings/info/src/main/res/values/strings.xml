@@ -5,6 +5,5 @@
     <string name="settings_info_label_rate">Rate the app</string>
     <string name="settings_info_label_version">Version</string>
     <string name="settings_info_title">App Info</string>
-    <string name="settings_info_title_licence">Licence</string>
     <string name="settings_info_rate_app_summary">If you like Comic Viewer, please give us a ☆5 rating!</string>
 </resources>
