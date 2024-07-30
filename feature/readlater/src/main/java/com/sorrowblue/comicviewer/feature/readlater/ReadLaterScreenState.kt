@@ -12,28 +12,51 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
+import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAction
+import com.sorrowblue.comicviewer.file.FileInfoSheetAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
 import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-internal interface ReadLaterScreenState : SaveableScreenState, FileInfoSheetState {
+internal sealed interface ReadLaterScreenEvent {
+
+    data class Favorite(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
+        ReadLaterScreenEvent
+
+    data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
+        ReadLaterScreenEvent
+
+    data object Settings : ReadLaterScreenEvent
+}
+
+internal interface ReadLaterScreenState :
+    SaveableScreenState,
+    FileInfoSheetState,
+    ScreenStateEvent<ReadLaterScreenEvent> {
     val pagingDataFlow: Flow<PagingData<File>>
     val lazyGridState: LazyGridState
-    fun onFileInfoClick(file: File)
-    fun onExtraPaneCloseClick()
-    fun onClearAllClick()
     fun onNavClick()
+    fun onTopAppBarAction(action: ReadLaterTopAppBarAction)
+    fun onFileInfoSheetAction(action: FileInfoSheetAction)
+    fun onContentsAction(action: ReadLaterContentsAction)
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -51,43 +74,69 @@ internal fun rememberReadLaterScreenState(
         navigator = navigator,
         lazyGridState = lazyGridState,
         scope = scope,
-        viewModel = viewModel
+        pagingReadLaterFileUseCase = viewModel.pagingReadLaterFileUseCase,
+        addReadLaterUseCase = viewModel.addReadLaterUseCase,
+        deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase,
+        deleteAllReadLaterUseCase = viewModel.deleteAllReadLaterUseCase,
+        existsReadlaterUseCase = viewModel.existsReadlaterUseCase,
+        getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
     )
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private class ReadLaterScreenStateImpl(
+    pagingReadLaterFileUseCase: PagingReadLaterFileUseCase,
     override val savedStateHandle: SavedStateHandle,
     override val snackbarHostState: SnackbarHostState,
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val lazyGridState: LazyGridState,
     override val scope: CoroutineScope,
-    private val viewModel: ReadLaterViewModel,
+    override val getFileAttributeUseCase: GetFileAttributeUseCase,
+    override val existsReadlaterUseCase: ExistsReadlaterUseCase,
+    override val deleteReadLaterUseCase: DeleteReadLaterUseCase,
+    override val addReadLaterUseCase: AddReadLaterUseCase,
+    private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
 ) : ReadLaterScreenState {
 
-    override val addReadLaterUseCase: AddReadLaterUseCase = viewModel.addReadLaterUseCase
-    override val deleteReadLaterUseCase: DeleteReadLaterUseCase = viewModel.deleteReadLaterUseCase
-    override val pagingDataFlow = viewModel.pagingDataFlow
-
-    override val existsReadlaterUseCase: ExistsReadlaterUseCase = viewModel.existsReadlaterUseCase
-
-    override val getFileAttributeUseCase: GetFileAttributeUseCase =
-        viewModel.getFileAttributeUseCase
-
+    override val event = MutableSharedFlow<ReadLaterScreenEvent>()
+    override val pagingDataFlow = pagingReadLaterFileUseCase
+        .execute(PagingReadLaterFileUseCase.Request(PagingConfig(20)))
+        .cachedIn(scope)
     override var fileInfoJob: Job? = null
 
-    override fun onFileInfoClick(file: File) {
-        fetchFileInfo(file) {
-            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
+    init {
+        navigator.currentDestination?.content?.let {
+            navigateToFileInfo(it.file)
         }
     }
 
-    override fun onExtraPaneCloseClick() {
-        navigator.navigateBack()
+    override fun onTopAppBarAction(action: ReadLaterTopAppBarAction) {
+        when (action) {
+            ReadLaterTopAppBarAction.ClearAll -> scope.launch {
+                deleteAllReadLaterUseCase.execute(DeleteAllReadLaterUseCase.Request).first()
+            }
+
+            ReadLaterTopAppBarAction.Settings -> sendEvent(ReadLaterScreenEvent.Settings)
+        }
     }
 
-    override fun onClearAllClick() {
-        viewModel.clearAll()
+    override fun onFileInfoSheetAction(action: FileInfoSheetAction) {
+        when (action) {
+            FileInfoSheetAction.Close -> navigator.navigateBack()
+            FileInfoSheetAction.Favorite -> navigator.currentDestination?.content?.file?.let {
+                sendEvent(ReadLaterScreenEvent.Favorite(it))
+            }
+
+            FileInfoSheetAction.OpenFolder -> TODO("Not yet implemented")
+            FileInfoSheetAction.ReadLater -> onReadLaterClick()
+        }
+    }
+
+    override fun onContentsAction(action: ReadLaterContentsAction) {
+        when (action) {
+            is ReadLaterContentsAction.File -> sendEvent(ReadLaterScreenEvent.File(action.file))
+            is ReadLaterContentsAction.FileInfo -> navigateToFileInfo(action.file)
+        }
     }
 
     override fun onNavClick() {
@@ -95,6 +144,12 @@ private class ReadLaterScreenStateImpl(
             scope.launch {
                 lazyGridState.scrollToItem(0)
             }
+        }
+    }
+
+    private fun navigateToFileInfo(file: File) {
+        fetchFileInfo(file) {
+            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
         }
     }
 }
