@@ -30,9 +30,9 @@ jobs:
       - name: lint
         run: ./gradlew app:lintRelease
         env:
-          BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
-          BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
-          DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
+          ORG_GRADLE_PROJECT_comicviewerBoxClientId: ${{ secrets.BOX_CLIENT_ID }}
+          ORG_GRADLE_PROJECT_comicviewerBoxClientSecret: ${{ secrets.BOX_CLIENT_SECRET }}
+          ORG_GRADLE_PROJECT_comicviewerDropboxApiKey: ${{ secrets.DROP_BOX_API_KEY }}
 
       - name: reviewdog report
         if: failure()
@@ -54,9 +54,9 @@ jobs:
       - name: detekt
         run: ./gradlew detektRelease
         env:
-          BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
-          BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
-          DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
+          ORG_GRADLE_PROJECT_comicviewerBoxClientId: ${{ secrets.BOX_CLIENT_ID }}
+          ORG_GRADLE_PROJECT_comicviewerBoxClientSecret: ${{ secrets.BOX_CLIENT_SECRET }}
+          ORG_GRADLE_PROJECT_comicviewerDropboxApiKey: ${{ secrets.DROP_BOX_API_KEY }}
       - name: reviewdog report
         if: failure()
         env:
@@ -81,10 +81,10 @@ jobs:
       - name: assemble
         run: ./gradlew bundleRelease
         env:
-          release_storeFile: ${{ steps.android_keystore.outputs.filePath }}
-          release_storePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
-          release_keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          release_keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
-          BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
-          DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseStoreFile: ${{ steps.android_keystore.outputs.filePath }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ORG_GRADLE_PROJECT_comicviewerBoxClientId: ${{ secrets.BOX_CLIENT_ID }}
+          ORG_GRADLE_PROJECT_comicviewerBoxClientSecret: ${{ secrets.BOX_CLIENT_SECRET }}
+          ORG_GRADLE_PROJECT_comicviewerDropboxApiKey: ${{ secrets.DROP_BOX_API_KEY }}

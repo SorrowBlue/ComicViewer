@@ -5,9 +5,6 @@ on:
   push:
     branches: [ "main" ]
 
-env:
-  DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
-
 jobs:
   qodana:
     runs-on: ubuntu-latest
@@ -23,5 +20,5 @@ jobs:
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2023.2
         env:
-          DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
+          ORG_GRADLE_PROJECT_comicviewerDropboxApiKey: ${{ secrets.DROP_BOX_API_KEY }}
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }} # read the steps about it below
