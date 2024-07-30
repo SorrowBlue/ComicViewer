@@ -36,8 +36,8 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
 import com.sorrowblue.comicviewer.file.FileInfoUiState
-import com.sorrowblue.comicviewer.folder.ScreenStateEvent
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

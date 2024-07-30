@@ -10,21 +10,47 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingHistoryBookUseCase
+import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
+import com.sorrowblue.comicviewer.file.FileInfoSheetAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
 import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 
-interface HistoryScreenState : SaveableScreenState, FileInfoSheetState {
+internal sealed interface HistoryScreenEvent {
+    data class Favorite(val file: File) :
+        HistoryScreenEvent
+
+    data class Book(val book: com.sorrowblue.comicviewer.domain.model.file.Book) :
+        HistoryScreenEvent
+
+    data object Back : HistoryScreenEvent
+    data object Settings : HistoryScreenEvent
+}
+
+internal interface HistoryScreenState :
+    SaveableScreenState,
+    FileInfoSheetState,
+    ScreenStateEvent<HistoryScreenEvent> {
     val pagingDataFlow: Flow<PagingData<Book>>
-    fun onFileInfoClick(file: File)
-    fun onExtraPaneCloseClick()
+    fun onHistoryTopAppBarAction(action: HistoryTopAppBarAction)
+    fun onFileInfoSheetAction(action: FileInfoSheetAction)
+    fun onHistoryContentsAction(action: HistoryContentsAction)
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -40,33 +66,64 @@ internal fun rememberHistoryScreenState(
         navigator = navigator,
         snackbarHostState = snackbarHostState,
         scope = scope,
-        viewModel = viewModel
+        addReadLaterUseCase = viewModel.addReadLaterUseCase,
+        existsReadlaterUseCase = viewModel.existsReadlaterUseCase,
+        deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase,
+        getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
+        pagingHistoryBookUseCase = viewModel.pagingHistoryBookUseCase,
     )
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private class HistoryScreenStateImpl(
+    pagingHistoryBookUseCase: PagingHistoryBookUseCase,
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val snackbarHostState: SnackbarHostState,
     override val scope: CoroutineScope,
-    viewModel: HistoryViewModel,
+    override val getFileAttributeUseCase: GetFileAttributeUseCase,
+    override val existsReadlaterUseCase: ExistsReadlaterUseCase,
+    override val deleteReadLaterUseCase: DeleteReadLaterUseCase,
+    override val addReadLaterUseCase: AddReadLaterUseCase,
 ) : HistoryScreenState {
-    override val pagingDataFlow = viewModel.pagingDataFlow
 
-    override fun onFileInfoClick(file: File) {
+    override val pagingDataFlow = pagingHistoryBookUseCase
+        .execute(PagingHistoryBookUseCase.Request(PagingConfig(20)))
+        .cachedIn(scope)
+    override val event = MutableSharedFlow<HistoryScreenEvent>()
+    override var fileInfoJob: Job? = null
+
+    override fun onHistoryTopAppBarAction(action: HistoryTopAppBarAction) {
+        when (action) {
+            HistoryTopAppBarAction.Back -> sendEvent(HistoryScreenEvent.Back)
+            HistoryTopAppBarAction.Settings -> sendEvent(HistoryScreenEvent.Settings)
+        }
+    }
+
+    override fun onFileInfoSheetAction(action: FileInfoSheetAction) {
+        when (action) {
+            FileInfoSheetAction.Close -> navigator.navigateBack()
+            FileInfoSheetAction.Favorite -> navigator.currentDestination?.content?.file?.let {
+                sendEvent(HistoryScreenEvent.Favorite(it))
+            }
+
+            FileInfoSheetAction.OpenFolder ->
+                TODO("Not yet implemented")
+
+            FileInfoSheetAction.ReadLater -> onReadLaterClick()
+        }
+    }
+
+    override fun onHistoryContentsAction(action: HistoryContentsAction) {
+        when (action) {
+            is HistoryContentsAction.Book -> sendEvent(HistoryScreenEvent.Book(action.book))
+            is HistoryContentsAction.FileInfo -> navigateToFileInfo(action.file)
+        }
+    }
+
+    private fun navigateToFileInfo(file: File) {
         fetchFileInfo(file) {
             navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
         }
     }
-
-    override fun onExtraPaneCloseClick() {
-        navigator.navigateBack()
-    }
-
-    override var fileInfoJob: Job? = null
-    override val getFileAttributeUseCase = viewModel.getFileAttributeUseCase
-    override val existsReadlaterUseCase = viewModel.existsReadlaterUseCase
-    override val deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase
-    override val addReadLaterUseCase = viewModel.addReadLaterUseCase
 }

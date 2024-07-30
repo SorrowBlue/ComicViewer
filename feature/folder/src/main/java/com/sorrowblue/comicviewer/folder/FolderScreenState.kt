@@ -44,6 +44,7 @@ import com.sorrowblue.comicviewer.file.FileInfoSheetState
 import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
@@ -53,7 +54,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flattenConcat
 import kotlinx.coroutines.flow.launchIn
@@ -61,21 +61,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.asLog
 import logcat.logcat
-
-interface ScreenStateEvent<T> {
-
-    val event: SharedFlow<T>
-
-    val scope: CoroutineScope
-
-    fun ScreenStateEvent<T>.sendEvent(event: T) {
-        (this@sendEvent.event as? MutableSharedFlow)?.let {
-            scope.launch {
-                it.emit(event)
-            }
-        }
-    }
-}
 
 internal sealed interface FolderScreenEvent {
     data class Favorite(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
