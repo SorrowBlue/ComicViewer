@@ -21,7 +21,7 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.ramcosta.composedestinations.navigation.dependency
-import com.ramcosta.composedestinations.spec.Route
+import com.ramcosta.composedestinations.spec.Direction
 import com.sorrowblue.comicviewer.feature.settings.destinations.DonationScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.destinations.ImageCacheScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
@@ -75,8 +75,8 @@ private fun SettingsScreen(
     ) { contentPadding ->
         DestinationsNavHost(
             navGraph = NavGraphs.settingsDetail,
-            startRoute = navigator.currentDestination?.content?.route
-                ?: SettingsDetailNavGraph.startRoute,
+            start = navigator.currentDestination?.content?.direction
+                ?: SettingsDetailNavGraph.defaultStartDirection,
             dependenciesContainerBuilder = {
                 dependency(contentPadding)
                 SettingsDetailGraphDependencies(navigator, settingsScreenNavigator)
@@ -132,7 +132,7 @@ private fun SettingsScreen(
 enum class Settings2(
     val title: Int,
     val icon: ImageVector,
-    val route: Route? = null,
+    val direction: Direction? = null,
 ) {
     DISPLAY(
         R.string.settings_label_display,
