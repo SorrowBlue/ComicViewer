@@ -14,20 +14,22 @@ import com.sorrowblue.comicviewer.feature.history.R
 import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsButton
 
+internal sealed interface HistoryTopAppBarAction {
+    data object Back : HistoryTopAppBarAction
+    data object Settings : HistoryTopAppBarAction
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun HistoryAppBar(
-    onBackClick: () -> Unit,
-    onSettingsClick: () -> Unit,
+internal fun HistoryTopAppBar(
+    onAction: (HistoryTopAppBarAction) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     TopAppBar(
         title = { Text(stringResource(R.string.history_title)) },
-        navigationIcon = {
-            BackButton(onClick = onBackClick)
-        },
+        navigationIcon = { BackButton(onClick = { onAction(HistoryTopAppBarAction.Back) }) },
         actions = {
-            SettingsButton(onClick = onSettingsClick)
+            SettingsButton(onClick = { onAction(HistoryTopAppBarAction.Settings) })
         },
         windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior

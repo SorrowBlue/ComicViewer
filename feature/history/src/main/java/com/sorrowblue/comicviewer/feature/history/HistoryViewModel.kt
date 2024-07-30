@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class HistoryViewModel @Inject constructor(
-    pagingHistoryBookUseCase: PagingHistoryBookUseCase,
+    val pagingHistoryBookUseCase: PagingHistoryBookUseCase,
     val addReadLaterUseCase: AddReadLaterUseCase,
     val getFileAttributeUseCase: GetFileAttributeUseCase,
     val existsReadlaterUseCase: ExistsReadlaterUseCase,
