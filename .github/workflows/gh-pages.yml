@@ -29,9 +29,9 @@ jobs:
       - name: Generage Dokka
         run: ./gradlew :dokkaHtmlMultiModule --no-configuration-cache
         env:
-          BOX_CLIENT_ID: ${{ secrets.BOX_CLIENT_ID }}
-          BOX_CLIENT_SECRET: ${{ secrets.BOX_CLIENT_SECRET }}
-          DROP_BOX_API_KEY: ${{ secrets.DROP_BOX_API_KEY }}
+          ORG_GRADLE_PROJECT_comicviewerBoxClientId: ${{ secrets.BOX_CLIENT_ID }}
+          ORG_GRADLE_PROJECT_comicviewerBoxClientSecret: ${{ secrets.BOX_CLIENT_SECRET }}
+          ORG_GRADLE_PROJECT_comicviewerDropboxApiKey: ${{ secrets.DROP_BOX_API_KEY }}
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
