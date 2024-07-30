@@ -167,7 +167,7 @@ private fun FolderScreen(
     }
 }
 
-sealed interface FolderContentsAction {
+internal sealed interface FolderContentsAction {
 
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
         FolderContentsAction
@@ -180,7 +180,7 @@ sealed interface FolderContentsAction {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FolderContents(
+private fun FolderContents(
     title: String,
     fileLazyVerticalGridUiState: FileLazyVerticalGridUiState,
     lazyPagingItems: LazyPagingItems<File>,
