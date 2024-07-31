@@ -99,9 +99,9 @@ internal fun PinTextField(
         LaunchedEffect(pinCount) {
             scrollState.animateScrollToItem(pinCount)
         }
-//        LaunchedEffect(Unit) {
-//            focusRequester.requestFocus()
-//        }
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
     }
 }
 

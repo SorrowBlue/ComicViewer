@@ -25,7 +25,7 @@ internal fun HeaderContents(modifier: Modifier = Modifier) {
         )
         Text(
             text = "ComicViewer authentication",
-            style = ComicTheme.typography.headlineLarge,
+            style = ComicTheme.typography.displayMedium,
             textAlign = TextAlign.Center,
         )
     }
