@@ -1,7 +1,11 @@
 package com.sorrowblue.comicviewer.app
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.activity.ComponentActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -109,7 +113,9 @@ internal class RootScreenWrapperViewModel @Inject constructor(
 internal object RootScreenWrapper : DestinationWrapper {
 
     @Composable
-    override fun <T> DestinationScope<T>.Wrap(screenContent: @Composable () -> Unit) {
+    override fun <T> DestinationScope<T>.Wrap(
+        @SuppressLint("ComposableLambdaParameterNaming") screenContent: @Composable () -> Unit,
+    ) {
         val viewModel = hiltViewModel<RootScreenWrapperViewModel>()
         val mainViewModel = hiltViewModel<MainViewModel>(LocalContext.current as ComponentActivity)
         val isTutorial by viewModel.requireTutorial.collectAsState()
@@ -131,7 +137,11 @@ internal object RootScreenWrapper : DestinationWrapper {
             if (!requireAuth || isInitialized || authed) {
                 screenContent()
             }
-            if ((requireAuth && !authed) || (authed && !isInitialized)) {
+            AnimatedVisibility(
+                visible = (requireAuth && !authed) || (authed && !isInitialized),
+                enter = slideInVertically { it },
+                exit = slideOutVertically { it }
+            ) {
                 val activity = LocalContext.current as Activity
                 AuthenticationScreen(
                     args = AuthenticationArgs(Mode.Authentication),
