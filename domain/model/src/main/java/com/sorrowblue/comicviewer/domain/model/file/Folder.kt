@@ -12,7 +12,7 @@ data class Folder(
     override val size: Long,
     override val lastModifier: Long,
     override val isHidden: Boolean,
-    override val params: Map<String, String?> = emptyMap(),
     override val count: Int = 0,
     override val sortIndex: Int = -1,
+    override val cacheKey: String = "",
 ) : IFolder

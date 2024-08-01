@@ -45,14 +45,6 @@
         <location column="21" file="src/main/AndroidManifest.xml" line="33" />
     </issue>
 
-    <issue errorLine1="    override fun &lt;T> DestinationScope&lt;T>.Wrap(screenContent: @Composable () -> Unit) {"
-        errorLine2="                                              ~~~~~~~~~~~~~"
-        id="ComposableLambdaParameterNaming"
-        message="Composable lambda parameter should be named `content`">
-        <location column="47" file="src/main/java/com/sorrowblue/comicviewer/app/ComicViewerApp.kt"
-            line="112" />
-    </issue>
-
     <issue id="TrustAllX509TrustManager"
         message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
         <location

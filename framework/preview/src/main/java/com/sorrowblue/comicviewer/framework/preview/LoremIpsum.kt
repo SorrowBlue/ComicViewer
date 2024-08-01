@@ -44,12 +44,6 @@ fun fakeBookFile(bookshelfId: BookshelfId = BookshelfId(0), name: String = nextL
         (size * 2).also { size = it },
         100,
         false,
-        "",
-        0,
-        0,
-        0,
-        mapOf(),
-        0,
     )
 
 fun fakeFolder(bookshelfId: BookshelfId = BookshelfId(0)) =
@@ -61,7 +55,4 @@ fun fakeFolder(bookshelfId: BookshelfId = BookshelfId(0)) =
         0L,
         0,
         false,
-        emptyMap(),
-        0,
-        0,
     )

@@ -46,6 +46,15 @@ internal class BookThumbnailFetcher(
 
     override fun BufferedSource.readMetadata() = BookThumbnailMetadata.from(this)
 
+    override suspend fun fetch(): FetchResult? {
+        // ページ数が不明
+        return if (book.totalPageCount <= 0) {
+            innerFetch(null)
+        } else {
+            super.fetch()
+        }
+    }
+
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val source = bookshelfLocalDataSource.flow(book.bookshelfId).first()
             ?.let(remoteDataSourceFactory::create)

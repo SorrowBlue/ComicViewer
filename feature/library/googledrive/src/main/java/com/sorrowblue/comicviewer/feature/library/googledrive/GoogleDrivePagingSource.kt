@@ -30,14 +30,14 @@ internal class GoogleDrivePagingSource(
             val list = fileList.files?.map {
                 if (it.mimeType == "application/vnd.google-apps.folder") {
                     Folder(
-                        BookshelfId(0),
-                        it.name,
-                        it.parents.joinToString(","),
-                        it.id,
-                        0,
-                        it.modifiedTime.value,
-                        false,
-                        mapOf("iconLink" to it.iconLink)
+                        bookshelfId = BookshelfId(0),
+                        name = it.name,
+                        parent = it.parents.joinToString(","),
+                        path = it.id,
+                        size = 0,
+                        lastModifier = it.modifiedTime.value,
+                        isHidden = false,
+                        cacheKey = it.iconLink
                     )
                 } else {
                     BookFile(
@@ -48,11 +48,7 @@ internal class GoogleDrivePagingSource(
                         kotlin.runCatching { it.getSize() }.getOrElse { 0 },
                         it.modifiedTime.value,
                         false,
-                        "",
-                        0,
-                        0,
-                        0,
-                        mapOf("iconLink" to it.iconLink)
+                        it.iconLink
                     )
                 }
             }

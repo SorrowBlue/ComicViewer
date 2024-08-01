@@ -137,11 +137,6 @@ internal class DeviceFileClient @AssistedInject constructor(
                 size = length(),
                 lastModifier = lastModified(),
                 isHidden = false,
-                sortIndex = 0,
-                cacheKey = "",
-                totalPageCount = 0,
-                lastPageRead = 0,
-                lastReadTime = 0
             )
         } else if (isFile) {
             BookFile(
@@ -152,11 +147,6 @@ internal class DeviceFileClient @AssistedInject constructor(
                 size = length(),
                 lastModifier = lastModified(),
                 isHidden = false,
-                sortIndex = 0,
-                cacheKey = "",
-                totalPageCount = 0,
-                lastPageRead = 0,
-                lastReadTime = 0
             )
         } else {
             Folder(

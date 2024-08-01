@@ -12,9 +12,6 @@ internal fun configureKotlin(extension: KotlinAndroidProjectExtension) {
             vendor.set(JvmVendorSpec.ADOPTIUM)
             languageVersion.set(JavaLanguageVersion.of(17))
         }
-        compilerOptions {
-            freeCompilerArgs.add("-Xcontext-receivers")
-        }
     }
 }
 

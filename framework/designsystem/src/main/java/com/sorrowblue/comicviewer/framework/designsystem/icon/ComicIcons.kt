@@ -2,9 +2,7 @@ package com.sorrowblue.comicviewer.framework.designsystem.icon
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.automirrored.rounded.ArrowRight
-import androidx.compose.material.icons.automirrored.rounded.Backspace
 import androidx.compose.material.icons.automirrored.rounded.InsertDriveFile
 import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
 import androidx.compose.material.icons.automirrored.rounded.Logout
@@ -17,7 +15,6 @@ import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Book
 import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Circle
 import androidx.compose.material.icons.rounded.ClearAll
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DarkMode
@@ -73,7 +70,6 @@ object ComicIcons {
     val Refresh = Icons.Rounded.Refresh
     val SortByAlpha = Icons.Rounded.SortByAlpha
     val Search = Icons.Rounded.Search
-    val ArrowForward = Icons.AutoMirrored.Rounded.ArrowForward
     val Delete = Icons.Rounded.Delete
     val ViewList = Icons.AutoMirrored.Rounded.ViewList
     val GridView = Icons.Rounded.GridView
@@ -82,9 +78,7 @@ object ComicIcons {
     val Dns = Icons.Rounded.Dns
     val Close = Icons.Rounded.Close
     val Save = Icons.Rounded.Save
-    val Backspace = Icons.AutoMirrored.Rounded.Backspace
     val ArrowDropDown = Icons.Rounded.ArrowDropDown
-    val Circle = Icons.Rounded.Circle
     val Key = Icons.Rounded.Key
     val DarkMode = Icons.Rounded.DarkMode
     val Star = Icons.Rounded.Star

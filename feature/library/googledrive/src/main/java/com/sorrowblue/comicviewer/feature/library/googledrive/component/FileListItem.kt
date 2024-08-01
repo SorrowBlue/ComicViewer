@@ -19,7 +19,7 @@ internal fun FileListItem(file: File, onClick: () -> Unit, modifier: Modifier = 
         },
         leadingContent = {
             AsyncImage(
-                model = file.params["iconLink"],
+                model = file.cacheKey,
                 contentDescription = null,
                 Modifier.size(24.dp)
             )

@@ -19,7 +19,7 @@ fun FileListItem(file: File, onClick: () -> Unit, modifier: Modifier = Modifier)
         },
         leadingContent = {
             AsyncImage(
-                model = file.params["thumbnail"],
+                model = file.cacheKey,
                 contentDescription = null,
                 Modifier.size(24.dp)
             )
