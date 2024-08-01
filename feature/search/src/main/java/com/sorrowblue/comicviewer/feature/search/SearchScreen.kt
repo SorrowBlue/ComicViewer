@@ -10,12 +10,11 @@ import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -38,11 +37,10 @@ import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.preview.flowData
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.parcelize.Parcelize
 
 interface SearchScreenNavigator {
@@ -80,17 +78,16 @@ internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenS
         onFileInfoSheetAction = state::onFileInfoSheetAction,
         onSearchContentsAction = state::onSearchContentsAction
     )
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(Unit) {
-        state.event.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.RESUMED).onEach {
-            when (it) {
-                is SearchScreenEvent.Favorite -> navigator.onFavoriteClick(it.file)
-                is SearchScreenEvent.OpenFolder -> navigator.onOpenFolderClick(it.file)
-                SearchScreenEvent.Back -> navigator.navigateUp()
-                is SearchScreenEvent.File -> navigator.onFileClick(it.file)
-                SearchScreenEvent.Settings -> navigator.onNavigateSettings()
-            }
-        }.launchIn(this)
+
+    val currentNavigator by rememberUpdatedState(navigator)
+    LaunchedEventEffect(state.event) {
+        when (it) {
+            is SearchScreenEvent.Favorite -> currentNavigator.onFavoriteClick(it.file)
+            is SearchScreenEvent.OpenFolder -> currentNavigator.onOpenFolderClick(it.file)
+            SearchScreenEvent.Back -> currentNavigator.navigateUp()
+            is SearchScreenEvent.File -> currentNavigator.onFileClick(it.file)
+            SearchScreenEvent.Settings -> currentNavigator.onNavigateSettings()
+        }
     }
     BackHandlerForNavigator(navigator = state.navigator)
 

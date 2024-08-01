@@ -12,16 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
@@ -74,7 +71,7 @@ internal fun rememberReadLaterScreenState(
         navigator = navigator,
         lazyGridState = lazyGridState,
         scope = scope,
-        pagingReadLaterFileUseCase = viewModel.pagingReadLaterFileUseCase,
+        viewModel = viewModel,
         addReadLaterUseCase = viewModel.addReadLaterUseCase,
         deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase,
         deleteAllReadLaterUseCase = viewModel.deleteAllReadLaterUseCase,
@@ -85,7 +82,7 @@ internal fun rememberReadLaterScreenState(
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private class ReadLaterScreenStateImpl(
-    pagingReadLaterFileUseCase: PagingReadLaterFileUseCase,
+    viewModel: ReadLaterViewModel,
     override val savedStateHandle: SavedStateHandle,
     override val snackbarHostState: SnackbarHostState,
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
@@ -99,9 +96,7 @@ private class ReadLaterScreenStateImpl(
 ) : ReadLaterScreenState {
 
     override val event = MutableSharedFlow<ReadLaterScreenEvent>()
-    override val pagingDataFlow = pagingReadLaterFileUseCase
-        .execute(PagingReadLaterFileUseCase.Request(PagingConfig(20)))
-        .cachedIn(scope)
+    override val pagingDataFlow = viewModel.pagingDataFlow
     override var fileInfoJob: Job? = null
 
     init {

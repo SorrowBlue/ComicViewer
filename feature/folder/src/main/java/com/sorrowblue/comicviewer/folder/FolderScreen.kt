@@ -1,14 +1,21 @@
 package com.sorrowblue.comicviewer.folder
 
 import android.os.Parcelable
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
@@ -22,13 +29,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -47,22 +54,25 @@ import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
+import com.sorrowblue.comicviewer.framework.designsystem.animation.fabAnimation2
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.preview.flowData
 import com.sorrowblue.comicviewer.framework.preview.flowEmptyData
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
 import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -93,21 +103,18 @@ fun FolderScreen(
         snackbarHostState = state.snackbarHostState,
     )
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(Unit) {
-        state.event.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.RESUMED).onEach {
-            when (it) {
-                FolderScreenEvent.Back -> navigator.navigateUp()
-                is FolderScreenEvent.Favorite -> navigator.onFavoriteClick(it.file)
-                is FolderScreenEvent.File -> navigator.onFileClick(it.file)
-                FolderScreenEvent.Refresh -> lazyPagingItems.refresh()
-                FolderScreenEvent.Restore -> navigator.onRestoreComplete()
-                is FolderScreenEvent.Search -> navigator.onSearchClick(it.bookshelfId, it.path)
-                FolderScreenEvent.Settings -> navigator.onSettingsClick()
-                is FolderScreenEvent.Sort -> navigator.onSortClick(it.sortType)
-            }
+    val currentNavigator by rememberUpdatedState(navigator)
+    LaunchedEventEffect(state.event) {
+        when (it) {
+            FolderScreenEvent.Back -> currentNavigator.navigateUp()
+            is FolderScreenEvent.Favorite -> currentNavigator.onFavoriteClick(it.file)
+            is FolderScreenEvent.File -> currentNavigator.onFileClick(it.file)
+            FolderScreenEvent.Refresh -> lazyPagingItems.refresh()
+            FolderScreenEvent.Restore -> currentNavigator.onRestoreComplete()
+            is FolderScreenEvent.Search -> currentNavigator.onSearchClick(it.bookshelfId, it.path)
+            FolderScreenEvent.Settings -> currentNavigator.onSettingsClick()
+            is FolderScreenEvent.Sort -> currentNavigator.onSortClick(it.sortType)
         }
-            .launchIn(this)
     }
 
     LaunchedEffect(lazyPagingItems.loadState) {
@@ -209,17 +216,70 @@ private fun FolderContents(
             )
         } else {
             val (paddings, margins) = calculatePaddingMargins(contentPadding)
-            FileLazyVerticalGrid(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(margins),
-                uiState = fileLazyVerticalGridUiState,
-                lazyPagingItems = lazyPagingItems,
-                contentPadding = paddings,
-                onItemClick = { onAction(FolderContentsAction.File(it)) },
-                onItemInfoClick = { onAction(FolderContentsAction.FileInfo(it)) },
-                state = lazyGridState
-            )
+            Box {
+                FileLazyVerticalGrid(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(margins),
+                    uiState = fileLazyVerticalGridUiState,
+                    lazyPagingItems = lazyPagingItems,
+                    contentPadding = paddings,
+                    onItemClick = { onAction(FolderContentsAction.File(it)) },
+                    onItemInfoClick = { onAction(FolderContentsAction.FileInfo(it)) },
+                    state = lazyGridState
+                )
+                val scope = rememberCoroutineScope()
+                Column(
+                    Modifier
+                        .padding(margins)
+                        .padding(
+                            end = ComicTheme.dimension.margin,
+                            bottom = ComicTheme.dimension.margin
+                        )
+                        .align(Alignment.BottomEnd)
+                ) {
+                    AnimatedContent(
+                        targetState = lazyGridState.canScrollBackward,
+                        transitionSpec = { fabAnimation2() },
+                        label = ""
+                    ) {
+                        if (it) {
+                            FloatingActionButton(onClick = {
+                                scope.launch {
+                                    lazyGridState.scrollToItem(0)
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = ComicIcons.ArrowUpward,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
+                    AnimatedContent(
+                        targetState = lazyGridState.canScrollForward,
+                        transitionSpec = { fabAnimation2() },
+                        label = ""
+                    ) {
+                        if (it) {
+                            FloatingActionButton(onClick = {
+                                scope.launch {
+                                    while (lazyGridState.canScrollForward) {
+                                        lazyGridState.scrollToItem(lazyPagingItems.itemCount)
+                                        delay(250)
+                                    }
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = ComicIcons.ArrowDownward,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

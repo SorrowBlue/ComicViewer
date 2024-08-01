@@ -11,7 +11,9 @@ import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.automirrored.rounded.ViewList
 import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Book
 import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.material.icons.rounded.Check
@@ -91,6 +93,8 @@ object ComicIcons {
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
     val MusicNote = Icons.Rounded.MusicNote
     val VolumeUp = Icons.AutoMirrored.Rounded.VolumeUp
+    val ArrowUpward = Icons.Rounded.ArrowUpward
+    val ArrowDownward = Icons.Rounded.ArrowDownward
     val Start = Icons.Rounded.Start
     val Money = Icons.Rounded.Money
     val Language = Icons.Rounded.Language

@@ -10,16 +10,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingHistoryBookUseCase
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
@@ -70,13 +67,13 @@ internal fun rememberHistoryScreenState(
         existsReadlaterUseCase = viewModel.existsReadlaterUseCase,
         deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase,
         getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
-        pagingHistoryBookUseCase = viewModel.pagingHistoryBookUseCase,
+        viewModel = viewModel
     )
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private class HistoryScreenStateImpl(
-    pagingHistoryBookUseCase: PagingHistoryBookUseCase,
+    viewModel: HistoryViewModel,
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val snackbarHostState: SnackbarHostState,
@@ -87,9 +84,7 @@ private class HistoryScreenStateImpl(
     override val addReadLaterUseCase: AddReadLaterUseCase,
 ) : HistoryScreenState {
 
-    override val pagingDataFlow = pagingHistoryBookUseCase
-        .execute(PagingHistoryBookUseCase.Request(PagingConfig(20)))
-        .cachedIn(scope)
+    override val pagingDataFlow = viewModel.pagingDataFlow
     override val event = MutableSharedFlow<HistoryScreenEvent>()
     override var fileInfoJob: Job? = null
 

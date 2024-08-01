@@ -1,7 +1,13 @@
 package com.sorrowblue.comicviewer.folder
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
@@ -11,20 +17,43 @@ import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flattenConcat
 import kotlinx.coroutines.flow.map
 
 @HiltViewModel
 internal class FolderViewModel @Inject constructor(
     val getFileUseCase: GetFileUseCase,
-    val pagingFileUseCase: PagingFileUseCase,
     val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     val addReadLaterUseCase: AddReadLaterUseCase,
     val deleteReadLaterUseCase: DeleteReadLaterUseCase,
     val getFileAttributeUseCase: GetFileAttributeUseCase,
     val existsReadlaterUseCase: ExistsReadlaterUseCase,
-) : ViewModel()
+    private val pagingFileUseCase: PagingFileUseCase,
+) : ViewModel() {
+
+    var pagingDataFlow: Flow<PagingData<File>>? = null
+
+    var bookshelfId: BookshelfId? = null
+    var path: String? = null
+
+    fun pagingDataFlow(bookshelfId: BookshelfId, path: String) =
+        if (this.bookshelfId != bookshelfId || this.path != path) {
+            this.bookshelfId = bookshelfId
+            this.path = path
+            internalPagingDataFlow(bookshelfId, path)
+        } else {
+            pagingDataFlow ?: internalPagingDataFlow(bookshelfId, path)
+        }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun internalPagingDataFlow(bookshelfId: BookshelfId, path: String) =
+        pagingFileUseCase.execute(
+            PagingFileUseCase.Request(PagingConfig(40), bookshelfId, path)
+        ).filterSuccess().flattenConcat().cachedIn(viewModelScope).also { pagingDataFlow = it }
+}
 
 fun <T, E : Resource.AppError> Flow<Resource<T, E>>.filterSuccess(): Flow<T> {
     return filter {

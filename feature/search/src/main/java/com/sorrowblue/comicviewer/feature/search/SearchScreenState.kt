@@ -18,9 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -28,7 +26,6 @@ import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBarAction
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsAction
@@ -84,7 +81,6 @@ internal fun rememberSearchScreenState(
     navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
 ): SearchScreenState = rememberSaveableScreenState {
     SearchScreenStateImpl(
-        pagingQueryFileUseCase = viewModel.pagingQueryFileUseCase,
         manageFolderDisplaySettingsUseCase = viewModel.manageFolderDisplaySettingsUseCase,
         args = args,
         savedStateHandle = it,
@@ -95,13 +91,13 @@ internal fun rememberSearchScreenState(
         addReadLaterUseCase = viewModel.addReadLaterUseCase,
         snackbarHostState = snackbarHostState,
         scope = scope,
-        lazyGridState = lazyGridState
+        lazyGridState = lazyGridState,
+        viewModel = viewModel
     )
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 private class SearchScreenStateImpl(
-    pagingQueryFileUseCase: PagingQueryFileUseCase,
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     private val args: SearchArgs,
     override val savedStateHandle: SavedStateHandle,
@@ -113,6 +109,7 @@ private class SearchScreenStateImpl(
     override val snackbarHostState: SnackbarHostState,
     override val scope: CoroutineScope,
     override val lazyGridState: LazyGridState,
+    private val viewModel: SearchViewModel,
 ) : SearchScreenState {
 
     override val event = MutableSharedFlow<SearchScreenEvent>()
@@ -120,17 +117,7 @@ private class SearchScreenStateImpl(
     override var fileInfoJob: Job? = null
     override var uiState by savedStateHandle.saveable { mutableStateOf(SearchScreenUiState()) }
         private set
-    override val lazyPagingItems = pagingQueryFileUseCase.execute(
-        PagingQueryFileUseCase.Request(PagingConfig(100), args.bookshelfId) {
-            uiState.searchTopAppBarUiState.searchCondition.copy(
-                range = when (val range = uiState.searchTopAppBarUiState.searchCondition.range) {
-                    SearchCondition.Range.Bookshelf -> range
-                    is SearchCondition.Range.InFolder -> range.copy(args.path)
-                    is SearchCondition.Range.SubFolder -> range.copy(args.path)
-                },
-            )
-        }
-    ).cachedIn(scope)
+    override val lazyPagingItems = viewModel.pagingDataFlow
 
     init {
         navigator.currentDestination?.content?.let { fileInfoUiState ->
@@ -195,7 +182,15 @@ private class SearchScreenStateImpl(
             searchTopAppBarUiState = uiState.searchTopAppBarUiState.copy(
                 searchCondition = action(uiState.searchTopAppBarUiState.searchCondition)
             )
-        )
+        ).also {
+            viewModel.searchCondition = uiState.searchTopAppBarUiState.searchCondition.copy(
+                range = when (val range = uiState.searchTopAppBarUiState.searchCondition.range) {
+                    SearchCondition.Range.Bookshelf -> range
+                    is SearchCondition.Range.InFolder -> range.copy(args.path)
+                    is SearchCondition.Range.SubFolder -> range.copy(args.path)
+                },
+            )
+        }
     }
 
     override fun onFileInfoSheetAction(action: FileInfoSheetAction) {

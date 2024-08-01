@@ -125,13 +125,12 @@ private class AuthenticationScreenStateImpl(
     }
 
     private fun onNextClick() {
-        when (uiState) {
+        when (val currentUiState = uiState) {
             is AuthenticationScreenUiState.Authentication -> {
                 viewModel.check(
                     uiState.pin,
                     onSuccess = {
-                        uiState =
-                            (uiState as AuthenticationScreenUiState.Authentication).copy(loading = true)
+                        uiState = currentUiState.copy(loading = true)
                         sendEvent(AuthenticationScreenEvent.Complete)
                     },
                     onError = {
@@ -173,6 +172,7 @@ private class AuthenticationScreenStateImpl(
             is AuthenticationScreenUiState.Change.Confirm -> {
                 if (uiState.pin == pinHistory) {
                     viewModel.change(uiState.pin) {
+                        uiState = currentUiState.copy(loading = true)
                         sendEvent(AuthenticationScreenEvent.Complete)
                     }
                 } else {
@@ -187,6 +187,7 @@ private class AuthenticationScreenStateImpl(
                 viewModel.remove(
                     uiState.pin,
                     onSuccess = {
+                        uiState = currentUiState.copy(loading = true)
                         sendEvent(AuthenticationScreenEvent.Complete)
                     },
                     onError = {
@@ -214,6 +215,7 @@ private class AuthenticationScreenStateImpl(
             is AuthenticationScreenUiState.Register.Confirm -> {
                 if (uiState.pin == pinHistory) {
                     viewModel.register(uiState.pin)
+                    uiState = currentUiState.copy(loading = true)
                     sendEvent(AuthenticationScreenEvent.Complete)
                 } else {
                     pinHistory = ""

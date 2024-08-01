@@ -16,9 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -30,7 +28,6 @@ import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.favorite.section.FavoriteTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
@@ -103,15 +100,14 @@ internal fun rememberFavoriteScreenState(
         getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
         getFavoriteUseCase = viewModel.getFavoriteUseCase,
         deleteFavoriteUseCase = viewModel.deleteFavoriteUseCase,
-        pagingFavoriteFileUseCase = viewModel.pagingFavoriteFileUseCase,
-        manageFolderDisplaySettingsUseCase = viewModel.displaySettingsUseCase
+        manageFolderDisplaySettingsUseCase = viewModel.displaySettingsUseCase,
+        viewModel = viewModel
     )
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
 @Stable
 private class FavoriteScreenStateImpl(
-    pagingFavoriteFileUseCase: PagingFavoriteFileUseCase,
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val lazyGridState: LazyGridState,
@@ -125,13 +121,12 @@ private class FavoriteScreenStateImpl(
     private val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     private val getFavoriteUseCase: GetFavoriteUseCase,
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
+    viewModel: FavoriteViewModel,
 ) : FavoriteScreenState {
 
     override val event = MutableSharedFlow<FavoriteScreenEvent>()
     override val favoriteId: FavoriteId get() = args.favoriteId
-    override val pagingDataFlow = pagingFavoriteFileUseCase
-        .execute(PagingFavoriteFileUseCase.Request(PagingConfig(20), (args.favoriteId)))
-        .cachedIn(scope)
+    override val pagingDataFlow = viewModel.pagingDataFlow
     override var fileInfoJob: Job? = null
 
     override var uiState by savedStateHandle.saveable { mutableStateOf(FavoriteScreenUiState()) }

@@ -77,15 +77,24 @@ private fun AuthenticationScreen(
 internal sealed interface AuthenticationScreenUiState {
     val pin: String
     val error: Int
+    val loading: Boolean
 
     fun copyPin(pin: String): AuthenticationScreenUiState
 
     sealed interface Register : AuthenticationScreenUiState {
-        data class Input(override val pin: String, override val error: Int) : Register {
+        data class Input(
+            override val pin: String,
+            override val error: Int,
+            override val loading: Boolean = false,
+        ) : Register {
             override fun copyPin(pin: String) = copy(pin = pin)
         }
 
-        data class Confirm(override val pin: String, override val error: Int) : Register {
+        data class Confirm(
+            override val pin: String,
+            override val error: Int,
+            override val loading: Boolean = false,
+        ) : Register {
             override fun copyPin(pin: String) = copy(pin = pin)
         }
     }
@@ -94,26 +103,42 @@ internal sealed interface AuthenticationScreenUiState {
     data class Authentication(
         override val pin: String,
         override val error: Int,
-        val loading: Boolean = false,
+        override val loading: Boolean = false,
     ) : AuthenticationScreenUiState, Parcelable {
         override fun copyPin(pin: String) = copy(pin = pin)
     }
 
     sealed interface Change : AuthenticationScreenUiState {
-        data class ConfirmOld(override val pin: String, override val error: Int) : Change {
+        data class ConfirmOld(
+            override val pin: String,
+            override val error: Int,
+            override val loading: Boolean = false,
+        ) : Change {
             override fun copyPin(pin: String) = copy(pin = pin)
         }
 
-        data class Input(override val pin: String, override val error: Int) : Change {
+        data class Input(
+            override val pin: String,
+            override val error: Int,
+            override val loading: Boolean = false,
+        ) : Change {
             override fun copyPin(pin: String) = copy(pin = pin)
         }
 
-        data class Confirm(override val pin: String, override val error: Int) : Change {
+        data class Confirm(
+            override val pin: String,
+            override val error: Int,
+            override val loading: Boolean = false,
+        ) : Change {
             override fun copyPin(pin: String) = copy(pin = pin)
         }
     }
 
-    data class Erase(override val pin: String, override val error: Int) :
+    data class Erase(
+        override val pin: String,
+        override val error: Int,
+        override val loading: Boolean = false,
+    ) :
         AuthenticationScreenUiState {
         override fun copyPin(pin: String) = copy(pin = pin)
     }
