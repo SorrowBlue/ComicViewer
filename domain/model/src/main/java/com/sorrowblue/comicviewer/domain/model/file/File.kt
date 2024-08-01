@@ -12,6 +12,6 @@ sealed interface File : Parcelable {
     val lastModifier: Long
     val isHidden: Boolean
 
-    val params: Map<String, String?>
     val sortIndex: Int
+    val cacheKey: String
 }

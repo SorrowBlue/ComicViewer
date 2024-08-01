@@ -36,9 +36,7 @@ internal class OneDrivePagingSource(
                         it.size ?: 0,
                         it.lastModifiedDateTime?.toEpochSecond() ?: 0,
                         false,
-                        mapOf(
-                            "thumbnail" to it.thumbnails?.firstOrNull()?.medium?.url.orEmpty()
-                        )
+                        cacheKey = it.thumbnails?.firstOrNull()?.medium?.url.orEmpty()
                     )
                 } else if (it.file != null) {
                     BookFile(
@@ -49,13 +47,7 @@ internal class OneDrivePagingSource(
                         it.size ?: 0,
                         it.lastModifiedDateTime?.toEpochSecond() ?: 0,
                         false,
-                        "",
-                        0,
-                        0,
-                        0,
-                        mapOf(
-                            "thumbnail" to it.thumbnails?.firstOrNull()?.medium?.url.orEmpty()
-                        )
+                        cacheKey = it.thumbnails?.firstOrNull()?.medium?.url.orEmpty()
                     )
                 } else {
                     null

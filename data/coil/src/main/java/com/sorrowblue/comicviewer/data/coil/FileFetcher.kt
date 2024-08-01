@@ -52,7 +52,7 @@ internal abstract class FileFetcher<T : CoilMetaData>(
      */
     abstract suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult?
 
-    final override suspend fun fetch(): FetchResult? {
+    override suspend fun fetch(): FetchResult? {
         return readFromDiskCache()?.use { snapshot ->
             // 高速パス: ネットワーク要求を実行せずに、ディスク キャッシュからイメージをフェッチする。
             // キャッシュされた画像は手動で追加された可能性が高いため、常にメタデータが空の状態で返されます。

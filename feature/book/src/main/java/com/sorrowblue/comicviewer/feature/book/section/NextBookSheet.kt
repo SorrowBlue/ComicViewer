@@ -24,15 +24,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.feature.book.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawTaken
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.preview.previewPlaceholder
 import kotlinx.collections.immutable.toPersistentList
 
@@ -127,27 +126,7 @@ private fun PreviewNextBookSheet() {
     PreviewTheme {
         Surface(Modifier.fillMaxSize()) {
             NextBookSheet(
-                NextPage(
-                    nextBooks = listOf(
-                        NextBook.Folder(
-                            BookFile(
-                                BookshelfId(0),
-                                "Qiitaから通知を受け取りませんか？",
-                                "parent",
-                                "path",
-                                100,
-                                100,
-                                false,
-                                "",
-                                0,
-                                0,
-                                0,
-                                mapOf(),
-                                0,
-                            )
-                        )
-                    ).toPersistentList()
-                ),
+                NextPage(nextBooks = listOf(NextBook.Folder(fakeBookFile())).toPersistentList()),
                 {}
             )
         }
