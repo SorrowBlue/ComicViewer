@@ -19,9 +19,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.LoadState
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
 import com.ramcosta.composedestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.PagingException
@@ -37,7 +35,6 @@ import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
@@ -50,12 +47,10 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flattenConcat
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -109,6 +104,7 @@ internal fun rememberFolderScreenState(
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ): FolderScreenState = rememberSaveableScreenState {
     FolderScreenStateImpl(
+        viewModel = viewModel,
         savedStateHandle = it,
         navigator = navigator,
         lazyGridState = lazyGridState,
@@ -121,7 +117,6 @@ internal fun rememberFolderScreenState(
         addReadLaterUseCase = viewModel.addReadLaterUseCase,
         deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase,
         getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
-        pagingFileUseCase = viewModel.pagingFileUseCase,
         getFileUseCase = viewModel.getFileUseCase
     )
 }
@@ -132,6 +127,7 @@ internal fun rememberFolderScreenState(
     ExperimentalMaterial3Api::class
 )
 private class FolderScreenStateImpl(
+    viewModel: FolderViewModel,
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val lazyGridState: LazyGridState,
@@ -141,7 +137,6 @@ private class FolderScreenStateImpl(
     private val args: FolderArgs,
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     getFileUseCase: GetFileUseCase,
-    pagingFileUseCase: PagingFileUseCase,
     override val existsReadlaterUseCase: ExistsReadlaterUseCase,
     override val getFileAttributeUseCase: GetFileAttributeUseCase,
     override val addReadLaterUseCase: AddReadLaterUseCase,
@@ -152,11 +147,8 @@ private class FolderScreenStateImpl(
 
     override val event = MutableSharedFlow<FolderScreenEvent>()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override val pagingDataFlow =
-        pagingFileUseCase.execute(
-            PagingFileUseCase.Request(PagingConfig(20), args.bookshelfId, args.path)
-        ).filterSuccess().flattenConcat().cachedIn(scope)
+    override val pagingDataFlow = viewModel.pagingDataFlow(args.bookshelfId, args.path)
+
     override var uiState by savedStateHandle.saveable { mutableStateOf(FolderScreenUiState()) }
         private set
 

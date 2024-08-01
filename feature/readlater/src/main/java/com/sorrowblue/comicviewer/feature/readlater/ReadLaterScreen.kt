@@ -9,13 +9,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -35,12 +33,11 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
 import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 interface ReadLaterScreenNavigator {
     fun onSettingsClick()
@@ -79,15 +76,13 @@ private fun ReadLaterScreen(
         onContentsAction = state::onContentsAction
     )
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(Unit) {
-        state.event.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.RESUMED).onEach {
-            when (it) {
-                is ReadLaterScreenEvent.Favorite -> navigator.onFavoriteClick(it.file)
-                is ReadLaterScreenEvent.File -> navigator.onFileClick(it.file)
-                ReadLaterScreenEvent.Settings -> navigator.onSettingsClick()
-            }
-        }.launchIn(this)
+    val currentNavigator by rememberUpdatedState(navigator)
+    LaunchedEventEffect(state.event) {
+        when (it) {
+            is ReadLaterScreenEvent.Favorite -> currentNavigator.onFavoriteClick(it.file)
+            is ReadLaterScreenEvent.File -> currentNavigator.onFileClick(it.file)
+            ReadLaterScreenEvent.Settings -> currentNavigator.onSettingsClick()
+        }
     }
     NavTabHandler(onClick = state::onNavClick)
 

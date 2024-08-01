@@ -12,14 +12,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -38,11 +36,10 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
 import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 interface HistoryScreenNavigator {
     fun navigateUp()
@@ -79,16 +76,14 @@ private fun HistoryScreen(
         snackbarHostState = state.snackbarHostState
     )
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(Unit) {
-        state.event.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.RESUMED).onEach {
-            when (it) {
-                HistoryScreenEvent.Back -> navigator.navigateUp()
-                is HistoryScreenEvent.Favorite -> navigator.onFavoriteClick(it.file)
-                is HistoryScreenEvent.Book -> navigator.navigateToBook(it.book)
-                HistoryScreenEvent.Settings -> navigator.onSettingsClick()
-            }
-        }.launchIn(this)
+    val currentNavigator by rememberUpdatedState(navigator)
+    LaunchedEventEffect(state.event) {
+        when (it) {
+            HistoryScreenEvent.Back -> currentNavigator.navigateUp()
+            is HistoryScreenEvent.Favorite -> currentNavigator.onFavoriteClick(it.file)
+            is HistoryScreenEvent.Book -> currentNavigator.navigateToBook(it.book)
+            HistoryScreenEvent.Settings -> currentNavigator.onSettingsClick()
+        }
     }
     BackHandlerForNavigator(navigator = state.navigator)
 }
