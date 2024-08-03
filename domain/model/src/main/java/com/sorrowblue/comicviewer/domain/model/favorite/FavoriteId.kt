@@ -7,9 +7,13 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 @JvmInline
-value class FavoriteId(val value: Int) : Parcelable {
+value class FavoriteId private constructor(val value: Int) : Parcelable {
 
-    companion object {
-        val Default = FavoriteId(-1)
+    constructor() : this(0)
+
+    interface Converter {
+        fun toId(value: Int?): FavoriteId? = value?.let(::FavoriteId)
+
+        fun toValue(value: FavoriteId?): Int? = value?.value
     }
 }

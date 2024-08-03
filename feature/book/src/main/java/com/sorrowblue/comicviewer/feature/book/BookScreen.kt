@@ -61,7 +61,7 @@ class BookArgs(
     val bookshelfId: BookshelfId,
     val path: String,
     val name: String,
-    val favoriteId: FavoriteId = FavoriteId.Default,
+    val favoriteId: FavoriteId = FavoriteId(),
 )
 
 @Destination<BookGraph>(

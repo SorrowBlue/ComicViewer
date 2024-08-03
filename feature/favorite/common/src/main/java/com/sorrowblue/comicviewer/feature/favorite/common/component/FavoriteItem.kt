@@ -5,6 +5,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -23,8 +25,14 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.DocumentUn
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
-fun FavoriteItem(favorite: Favorite, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun FavoriteItem(
+    favorite: Favorite,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    color: ListItemColors = ListItemDefaults.colors(),
+) {
     ListItem(
+        colors = color,
         modifier = modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = ripple(),

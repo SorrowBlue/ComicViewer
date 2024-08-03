@@ -22,10 +22,6 @@ internal interface FavoriteListScreenState {
     val dialogUiState: FavoriteCreateDialogUiState
     val pagingDataFlow: Flow<PagingData<Favorite>>
     val lazyListState: LazyListState
-    fun onNameChange(name: String)
-    fun onDismissRequest()
-    fun onCreateClick()
-    fun onNewFavoriteClick()
     fun onNavClick()
 }
 
@@ -48,9 +44,9 @@ internal fun rememberFavoriteListScreenState(
 @Stable
 private class FavoriteListScreenStateImpl(
     savedStateHandle: SavedStateHandle,
+    viewModel: FavoriteListViewModel,
     override val lazyListState: LazyListState,
     private val scope: CoroutineScope,
-    private val viewModel: FavoriteListViewModel,
 ) : FavoriteListScreenState {
 
     override var dialogUiState by savedStateHandle.saveable {
@@ -59,26 +55,6 @@ private class FavoriteListScreenStateImpl(
         private set
 
     override val pagingDataFlow = viewModel.pagingDataFlow
-
-    override fun onNameChange(name: String) {
-        dialogUiState = dialogUiState.copy(name = name, nameError = name.isBlank())
-    }
-
-    override fun onDismissRequest() {
-        dialogUiState = FavoriteCreateDialogUiState()
-    }
-
-    override fun onCreateClick() {
-        onNameChange(dialogUiState.name)
-        if (dialogUiState.nameError) return
-        viewModel.create(dialogUiState.name) {
-            dialogUiState = FavoriteCreateDialogUiState()
-        }
-    }
-
-    override fun onNewFavoriteClick() {
-        dialogUiState = dialogUiState.copy(isShown = true)
-    }
 
     override fun onNavClick() {
         if (lazyListState.canScrollBackward) {

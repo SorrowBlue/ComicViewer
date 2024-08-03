@@ -1,11 +1,16 @@
 package com.sorrowblue.comicviewer.domain.usecase.favorite
 
-import com.sorrowblue.comicviewer.domain.BaseRequest
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
-import com.sorrowblue.comicviewer.domain.usecase.FlowOneUseCase
+import com.sorrowblue.comicviewer.domain.usecase.UseCase
 
 abstract class AddFavoriteFileUseCase :
-    FlowOneUseCase<AddFavoriteFileUseCase.Request, Unit, Unit>() {
+    UseCase<AddFavoriteFileUseCase.Request, Unit, AddFavoriteFileUseCase.Error>() {
 
-    class Request(val favoriteFile: FavoriteFile) : BaseRequest
+    class Request(val favoriteFile: FavoriteFile) : UseCase.Request
+
+    sealed interface Error : Resource.AppError {
+        data object System : Error
+        data object NotFound : Error
+    }
 }
