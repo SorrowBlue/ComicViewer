@@ -6,7 +6,8 @@ import com.ramcosta.composedestinations.annotation.NavHostGraph
 import com.sorrowblue.comicviewer.feature.book.destinations.ReceiveBookScreenDestination
 import com.sorrowblue.comicviewer.feature.book.navgraphs.BookNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraphs.BookshelfNavGraph
-import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddScreenDestination
+import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddDialogScreenDestination
+import com.sorrowblue.comicviewer.feature.favorite.create.destinations.FavoriteCreateDialogScreenDestination
 import com.sorrowblue.comicviewer.feature.favorite.navgraphs.FavoriteNavGraph
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryNavGraph
 import com.sorrowblue.comicviewer.feature.readlater.navgraphs.ReadLaterNavGraph
@@ -25,7 +26,8 @@ internal annotation class MainGraph {
     @ExternalNavGraph<SearchNavGraph>
     @ExternalNavGraph<LibraryNavGraph>
     @ExternalNavGraph<TutorialNavGraph>
-    @ExternalDestination<FavoriteAddScreenDestination>
+    @ExternalDestination<FavoriteAddDialogScreenDestination>
+    @ExternalDestination<FavoriteCreateDialogScreenDestination>
     @ExternalDestination<ReceiveBookScreenDestination>
     companion object Includes
 }

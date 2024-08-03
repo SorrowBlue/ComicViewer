@@ -31,7 +31,6 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteListAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListEmptySheet
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListSheet
 import com.sorrowblue.comicviewer.feature.favorite.R
-import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteCreateDialog
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.add
@@ -40,6 +39,7 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 interface FavoriteListNavigator {
     fun onSettingsClick()
     fun onFavoriteClick(favoriteId: FavoriteId)
+    fun onNewFavoriteClick()
 }
 
 @Destination<FavoriteGraph>(
@@ -55,6 +55,7 @@ internal fun FavoriteListScreen(
     FavoriteListScreen(
         savedStateHandle = navBackStackEntry.savedStateHandle,
         onSettingsClick = navigator::onSettingsClick,
+        onNewFavoriteClick = navigator::onNewFavoriteClick,
         onFavoriteClick = navigator::onFavoriteClick
     )
 }
@@ -63,6 +64,7 @@ internal fun FavoriteListScreen(
 private fun FavoriteListScreen(
     savedStateHandle: SavedStateHandle,
     onSettingsClick: () -> Unit,
+    onNewFavoriteClick: () -> Unit,
     onFavoriteClick: (FavoriteId) -> Unit,
     state: FavoriteListScreenState = rememberFavoriteListScreenState(savedStateHandle = savedStateHandle),
 ) {
@@ -72,16 +74,8 @@ private fun FavoriteListScreen(
         lazyListState = state.lazyListState,
         onSettingsClick = onSettingsClick,
         onFavoriteClick = onFavoriteClick,
-        onCreateFavoriteClick = state::onNewFavoriteClick
+        onCreateFavoriteClick = onNewFavoriteClick
     )
-    val dialogUiState = state.dialogUiState
-    FavoriteCreateDialog(
-        uiState = dialogUiState,
-        onNameChange = state::onNameChange,
-        onDismissRequest = state::onDismissRequest,
-        onCreateClick = state::onCreateClick
-    )
-
     NavTabHandler(onClick = state::onNavClick)
 }
 

@@ -19,12 +19,13 @@ internal class BookshelfIdConverter {
     fun toString(value: BookshelfId?): Int? = value?.value
 }
 
-internal class FavoriteIdConverter {
-    @TypeConverter
-    fun toBookshelfId(value: Int?): FavoriteId? = value?.let(::FavoriteId)
+internal class FavoriteIdConverter : FavoriteId.Converter {
 
     @TypeConverter
-    fun toString(value: FavoriteId?): Int? = value?.value
+    override fun toId(value: Int?) = super.toId(value)
+
+    @TypeConverter
+    override fun toValue(value: FavoriteId?) = super.toValue(value)
 }
 
 @Entity(tableName = "bookshelf")

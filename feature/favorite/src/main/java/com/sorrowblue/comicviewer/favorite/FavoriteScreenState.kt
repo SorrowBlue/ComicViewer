@@ -17,6 +17,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -155,10 +156,10 @@ private class FavoriteScreenStateImpl(
         scope.launch {
             getFavoriteUseCase.execute(GetFavoriteUseCase.Request(favoriteId))
                 .collectLatest {
-                    if (it.dataOrNull != null) {
+                    if (it.dataOrNull() != null) {
                         uiState =
                             uiState.copy(
-                                favoriteAppBarUiState = uiState.favoriteAppBarUiState.copy(title = it.dataOrNull!!.name)
+                                favoriteAppBarUiState = uiState.favoriteAppBarUiState.copy(title = it.dataOrNull()!!.name)
                             )
                     }
                 }

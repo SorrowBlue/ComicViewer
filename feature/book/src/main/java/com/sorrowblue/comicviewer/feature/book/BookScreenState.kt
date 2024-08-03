@@ -98,7 +98,7 @@ private class BookScreenStateImpl(
 
     private suspend fun GetNextBookUseCase.execute(isNext: Boolean): NextPage {
         val nextBookList = mutableListOf<NextBook>()
-        if (uiState.favoriteId != FavoriteId.Default) {
+        if (uiState.favoriteId != FavoriteId()) {
             execute(
                 GetNextBookUseCase.Request(
                     uiState.book.bookshelfId,

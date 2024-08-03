@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.domain.service.interactor.paging
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
 import javax.inject.Inject
@@ -19,7 +18,7 @@ internal class PagingFavoriteInteractor @Inject constructor(
             .pagingDataFlow(request.pagingConfig, request.bookshelfId, request.path)
             .map { pagingData ->
                 pagingData.map {
-                    Favorite(FavoriteId(it.id.value), it.name, it.count, it.exist)
+                    Favorite(it.id, it.name, it.count, it.exist)
                 }
             }
     }

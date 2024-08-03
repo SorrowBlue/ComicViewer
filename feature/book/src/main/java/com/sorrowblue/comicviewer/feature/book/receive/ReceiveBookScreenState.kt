@@ -97,7 +97,7 @@ private class ReceiveBookScreenStateImpl(
                             logcat { "book=${it.data}" }
                             uiState = BookScreenUiState.Loaded(
                                 it.data,
-                                FavoriteId.Default,
+                                FavoriteId(),
                                 BookSheetUiState(it.data)
                             )
                             currentList.clear()
