@@ -1,8 +1,11 @@
 package com.sorrowblue.comicviewer.framework.preview
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import kotlin.random.Random
 
 val LoremIpsum = listOf(
     "Lorem ipsum dolor",
@@ -55,4 +58,15 @@ fun fakeFolder(bookshelfId: BookshelfId = BookshelfId(0)) =
         0L,
         0,
         false,
+    )
+
+private val converter = object : FavoriteId.Converter {}
+
+fun fakeFavorite(favoriteId: Int = 0) =
+    Favorite(
+        converter.toId(favoriteId)!!,
+        nextLoremIpsum(),
+        Random(1).nextInt(5, 999),
+        Random(1).nextBoolean(),
+        Random(1).nextLong()
     )

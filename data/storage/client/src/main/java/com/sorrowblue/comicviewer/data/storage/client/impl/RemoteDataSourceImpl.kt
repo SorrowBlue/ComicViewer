@@ -114,10 +114,10 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }
     }
 
-    override suspend fun file(path: String): File {
+    override suspend fun file(path: String, resolveImageFolder: Boolean): File {
         return runCatching {
             withContext(dispatcher) {
-                fileClient.current(path)
+                fileClient.current(path, resolveImageFolder)
             }
         }.getOrElse {
             throw when (it) {
@@ -173,7 +173,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
                             }
                         }
 
-                        is BookFolder -> ImageFolderFileReader(fileClient, book)
+                        is BookFolder -> ImageFolderFileReader(dispatcher, fileClient, book)
                     }
                 }.getOrElse {
                     documentReader("pdf", fileClient.seekableInputStream(book))

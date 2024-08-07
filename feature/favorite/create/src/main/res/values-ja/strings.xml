@@ -2,7 +2,6 @@
 <resources>
     <string name="favorite_create_title_new_favorite">新しいお気に入り</string>
     <string name="favorite_create_label_create">作成</string>
-    <string name="favorite_create_label_favorite_name">お気に入りの名前</string>
     <string name="favorite_create_message_error">名前を空にすることはできません</string>
     <string name="favorite_create_msg_success_create">お気に入り「%1$s」を作成しました</string>
     <string name="favorite_create_msg_success_add">お気に入り「%1$s」に追加しました</string>

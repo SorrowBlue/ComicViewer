@@ -20,10 +20,11 @@ import com.sorrowblue.comicviewer.data.database.entity.ReadLaterFileEntity
 
 @Database(
     entities = [BookshelfEntity::class, FileEntity::class, FavoriteEntity::class, FavoriteFileEntity::class, ReadLaterFileEntity::class],
-    version = 3,
+    version = 4,
     autoMigrations = [
         AutoMigration(1, 2),
         AutoMigration(2, 3),
+        AutoMigration(3, 4),
     ]
 )
 @TypeConverters(PasswordConverters::class, BookshelfIdConverter::class, FavoriteIdConverter::class)

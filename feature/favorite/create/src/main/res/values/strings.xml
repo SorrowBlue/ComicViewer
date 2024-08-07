@@ -2,7 +2,6 @@
 <resources>
     <string name="favorite_create_title_new_favorite">New Favorite</string>
     <string name="favorite_create_label_create">Create</string>
-    <string name="favorite_create_label_favorite_name">Favorite name</string>
     <string name="favorite_create_message_error">Name must not be empty</string>
     <string name="favorite_create_msg_success_create">Favorite "%1$s" created</string>
     <string name="favorite_create_msg_success_add">Added to favorites "%1$s"</string>

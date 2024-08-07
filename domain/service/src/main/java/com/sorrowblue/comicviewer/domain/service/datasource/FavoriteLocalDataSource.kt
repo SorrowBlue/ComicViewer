@@ -16,6 +16,7 @@ interface FavoriteLocalDataSource {
         pagingConfig: PagingConfig,
         bookshelfId: BookshelfId,
         path: String,
+        isRecent: Boolean,
     ): Flow<PagingData<Favorite>>
 
     suspend fun create(favoriteModel: Favorite): Resource<Favorite, FavoriteLocalDataSourceError>
