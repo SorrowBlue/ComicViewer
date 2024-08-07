@@ -26,7 +26,7 @@ interface RemoteDataSource {
     ): List<File>
 
     @Throws(RemoteException::class)
-    suspend fun file(path: String): File
+    suspend fun file(path: String, resolveImageFolder: Boolean = false): File
 
     suspend fun fileReader(book: Book): FileReader?
     suspend fun getAttribute(path: String): FileAttribute?

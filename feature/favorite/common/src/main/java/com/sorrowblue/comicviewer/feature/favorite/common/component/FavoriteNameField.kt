@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.favorite.common.component
 
-import android.os.Parcelable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -11,20 +10,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.sorrowblue.comicviewer.feature.favorite.common.R
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import kotlinx.parcelize.Parcelize
 import soil.form.compose.Controller
 import soil.form.compose.FieldControl
 import soil.form.compose.FormScope
 import soil.form.compose.onFocusChanged
 import soil.form.compose.rememberFieldRuleControl
 import soil.form.rule.notBlank
-
-@Parcelize
-data class FavoriteCreateDialogUiState(
-    val name: String = "",
-    val nameError: Boolean = false,
-    val isShown: Boolean = false,
-) : Parcelable
 
 @Composable
 fun FormScope<String>.FavoriteNameField(
@@ -57,7 +48,7 @@ fun FormScope<String>.FavoriteNameField(
 }
 
 @Composable
-fun FormScope<String>.rememberNameFieldControl(): FieldControl<String> {
+private fun FormScope<String>.rememberNameFieldControl(): FieldControl<String> {
     val notBlankMessage = stringResource(R.string.favorite_common_message_error)
     return rememberFieldRuleControl(
         name = stringResource(R.string.favorite_common_label_favorite_name),

@@ -35,6 +35,13 @@ internal data class FavoriteCreateDialogScreenUiState(
     val error: String = "",
 ) : Parcelable
 
+data class FavoriteCreateDialogScreenArgs(
+    val favoriteBooksToAdd: FavoriteBooksToAdd? = null,
+)
+
+@Parcelize
+data class FavoriteBooksToAdd(val bookshelfId: BookshelfId, val path: String) : Parcelable
+
 @Destination<ExternalModuleGraph>(
     navArgs = FavoriteCreateDialogScreenArgs::class,
     style = DestinationStyle.Dialog::class
@@ -49,13 +56,6 @@ internal fun FavoriteCreateDialogScreen(
         state = rememberFavoriteCreateDialogScreenState(navArgs),
     )
 }
-
-data class FavoriteCreateDialogScreenArgs(
-    val favoriteBooksToAdd: FavoriteBooksToAdd? = null,
-)
-
-@Parcelize
-data class FavoriteBooksToAdd(val bookshelfId: BookshelfId, val path: String) : Parcelable
 
 @Composable
 private fun FavoriteCreateDialogScreen(

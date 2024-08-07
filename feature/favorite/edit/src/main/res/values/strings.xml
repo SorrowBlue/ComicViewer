@@ -2,5 +2,4 @@
 <resources>
     <string name="favorite_edit_title">Edit Favorites</string>
     <string name="favorite_edit_text_no_favorites">No favorites</string>
-    <string name="favorite_edit_action_save">Save</string>
 </resources>

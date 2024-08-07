@@ -12,12 +12,17 @@ internal data class FavoriteEntity(
     @ColumnInfo(ID)
     val id: FavoriteId,
     val name: String,
+    @ColumnInfo("added_date_time", defaultValue = "-1") val addedDateTime: Long = -1,
 ) {
 
     companion object {
 
         const val ID = "id"
 
-        fun fromModel(model: Favorite) = FavoriteEntity(id = model.id, name = model.name)
+        fun fromModel(model: Favorite) = FavoriteEntity(
+            id = model.id,
+            name = model.name,
+            addedDateTime = model.addedDateTime
+        )
     }
 }

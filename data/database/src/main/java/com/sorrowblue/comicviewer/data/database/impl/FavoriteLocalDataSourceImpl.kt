@@ -41,9 +41,14 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
         pagingConfig: PagingConfig,
         bookshelfId: BookshelfId,
         path: String,
+        isRecent: Boolean,
     ): Flow<PagingData<Favorite>> {
         return Pager(pagingConfig) {
-            favoriteDao.pagingSource(bookshelfId.value, path)
+            if (isRecent) {
+                favoriteDao.pagingSourceRecent(bookshelfId.value, path)
+            } else {
+                favoriteDao.pagingSource(bookshelfId.value, path)
+            }
         }.flow.map { pagingData ->
             pagingData.map(FavoriteFileCountEntity::toModel)
         }

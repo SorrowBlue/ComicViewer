@@ -105,9 +105,9 @@ internal class SmbFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun current(path: String): File {
+    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         return runCommand {
-            smbFile(path).toFileModel()
+            smbFile(path).toFileModel(resolveImageFolder)
         }
     }
 
