@@ -6,6 +6,10 @@ plugins {
 android {
     namespace = "com.sorrowblue.comicviewer.feature.library.onedrive"
     resourcePrefix("onedrive")
+
+    packaging {
+        resources.excludes += "META-INF/NOTICE.md"
+    }
 }
 
 dependencies {
