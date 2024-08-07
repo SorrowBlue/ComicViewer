@@ -17,4 +17,4 @@ runs:
       run: chmod +x ./gradlew
 
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
+      uses: gradle/actions/setup-gradle@v4
