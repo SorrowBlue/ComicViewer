@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="favorite_add_title">Add to Favourites</string>
-    <string name="favorite_add_action_close">Close</string>
     <string name="favorite_add_btn_add">Add</string>
+    <string name="favorite_add_label_recent">Recent</string>
 </resources>

@@ -2,5 +2,4 @@
 <resources>
     <string name="favorite_edit_title">お気に入りを編集</string>
     <string name="favorite_edit_text_no_favorites">お気に入りはありません</string>
-    <string name="favorite_edit_action_save">保存</string>
 </resources>

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Book
 import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.ClearAll
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DarkMode
@@ -83,6 +84,7 @@ object ComicIcons {
     val DarkMode = Icons.Rounded.DarkMode
     val Star = Icons.Rounded.Star
     val Check = Icons.Rounded.Check
+    val CheckCircle = Icons.Rounded.CheckCircle
     val Edit = Icons.Rounded.Edit
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
     val MusicNote = Icons.Rounded.MusicNote

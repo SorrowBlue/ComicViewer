@@ -14,7 +14,8 @@ internal data class FavoriteFileCountEntity(
             id = favoriteEntity.id,
             name = favoriteEntity.name,
             count = count,
-            exist = exist
+            exist = exist,
+            addedDateTime = favoriteEntity.addedDateTime
         )
     }
 }

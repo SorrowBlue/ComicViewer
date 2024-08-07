@@ -16,7 +16,7 @@ interface FileClient {
 
     suspend fun exists(path: String): Boolean
 
-    suspend fun current(path: String): File
+    suspend fun current(path: String, resolveImageFolder: Boolean = false): File
 
     suspend fun inputStream(file: File): InputStream
 

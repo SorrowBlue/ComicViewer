@@ -45,7 +45,11 @@ fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
                 navigator.navigateUp()
             }
 
-            override fun onFavoriteClick(favoriteId: FavoriteId) {
+            override fun navigateToEdit(favoriteId: FavoriteId) {
+                navigator.navigate(FavoriteEditScreenDestination(favoriteId))
+            }
+
+            override fun navigateToFavorite(favoriteId: FavoriteId) {
                 navigator.navigate(FavoriteScreenDestination(favoriteId))
             }
 

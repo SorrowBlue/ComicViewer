@@ -3,8 +3,6 @@
     <plurals name="favorite_common_label_file_count">
         <item quantity="other">%1$d ファイル</item>
     </plurals>
-    <string name="favorite_common_title_create">新しいお気に入り</string>
-    <string name="favorite_common_label_create">作成</string>
     <string name="favorite_common_message_error">名前を空にすることはできません。</string>
     <string name="favorite_common_label_favorite_name">お気に入りの名前</string>
 </resources>
