@@ -164,7 +164,7 @@ androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.6.1"
 robolectric = "org.robolectric:robolectric:4.13"
 
 mikepenz-aboutlibrariesComposeM3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "mikepenz-aboutlibraries" }
-nlopez-compose-rules-detekt = "io.nlopez.compose.rules:detekt:0.4.9"
+nlopez-compose-rules-detekt = "io.nlopez.compose.rules:detekt:0.4.10"
 arturbosch-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
