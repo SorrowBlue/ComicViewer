@@ -22,10 +22,10 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
-import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBarAction
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsAction
@@ -164,7 +164,15 @@ private class SearchScreenStateImpl(
                 uiState = copySearchCondition { it.copy(query = action.value) }
 
             is SearchTopAppBarAction.RangeClick ->
-                uiState = copySearchCondition { it.copy(range = action.range) }
+                uiState = copySearchCondition {
+                    it.copy(
+                        range = when (action.range) {
+                            SearchCondition.Range.Bookshelf -> SearchCondition.Range.Bookshelf
+                            is SearchCondition.Range.InFolder -> SearchCondition.Range.InFolder(it.query)
+                            is SearchCondition.Range.SubFolder -> SearchCondition.Range.SubFolder(it.query)
+                        }
+                    )
+                }
 
             is SearchTopAppBarAction.SortTypeClick ->
                 uiState = copySearchCondition { it.copy(sortType = action.sortType) }
@@ -183,13 +191,7 @@ private class SearchScreenStateImpl(
                 searchCondition = action(uiState.searchTopAppBarUiState.searchCondition)
             )
         ).also {
-            viewModel.searchCondition = uiState.searchTopAppBarUiState.searchCondition.copy(
-                range = when (val range = uiState.searchTopAppBarUiState.searchCondition.range) {
-                    SearchCondition.Range.Bookshelf -> range
-                    is SearchCondition.Range.InFolder -> range.copy(args.path)
-                    is SearchCondition.Range.SubFolder -> range.copy(args.path)
-                },
-            )
+            viewModel.searchCondition = it.searchTopAppBarUiState.searchCondition
         }
     }
 

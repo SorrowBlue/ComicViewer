@@ -36,6 +36,7 @@ import com.sorrowblue.comicviewer.feature.favorite.add.section.RecentFavoriteShe
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.preview.fakeFavorite
+import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.coroutines.flow.flowOf
@@ -78,10 +79,15 @@ private fun FavoriteAddDialogScreen(
         recentFavorites = recentFavorites,
         onDismissRequest = navigator::navigateUp,
         onClick = state::onFavoriteClick,
-        onNewFavoriteClick = {
-//            navigator.navigateToCreateFavorite(i)
-        }
+        onNewFavoriteClick = state::onNewFavoriteClick
     )
+
+    LaunchedEventEffect(event = state.event) {
+        when (it) {
+            is FavoriteAddScreenStateEvent.AddClick ->
+                navigator.navigateToCreateFavorite(it.bookshelfId, it.path)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

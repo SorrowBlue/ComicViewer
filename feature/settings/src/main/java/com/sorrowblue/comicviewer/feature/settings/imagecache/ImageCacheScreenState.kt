@@ -57,8 +57,8 @@ private class ImageCacheScreenStateImpl(
             is FavoriteImageCacheInfo -> ClearImageCacheUseCase.FavoriteRequest
         }
         scope.launch {
-            clearImageCacheUseCase.execute(request).first()
-            getImageCacheInfoUseCase.execute(GetImageCacheInfoUseCase.Request).first().onSuccess {
+            clearImageCacheUseCase(request).first()
+            getImageCacheInfoUseCase(GetImageCacheInfoUseCase.Request).first().onSuccess {
                 uiState = uiState.copy(imageCacheInfos = it)
             }
             snackbarHostState.showSnackbar("画像キャッシュを削除しました。")
@@ -70,7 +70,7 @@ private class ImageCacheScreenStateImpl(
 
     init {
         scope.launch {
-            getImageCacheInfoUseCase.execute(GetImageCacheInfoUseCase.Request).first().onSuccess {
+            getImageCacheInfoUseCase(GetImageCacheInfoUseCase.Request).first().onSuccess {
                 uiState = uiState.copy(imageCacheInfos = it)
             }
         }

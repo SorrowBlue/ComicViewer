@@ -40,7 +40,6 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.result.ResultRecipient
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
@@ -289,7 +288,7 @@ private fun FolderContents(
 @Composable
 private fun PreviewFolderScreen() {
     val pagingDataFlow = PagingData.flowData<File> {
-        fakeBookFile(BookshelfId(it))
+        fakeBookFile(it)
     }
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {

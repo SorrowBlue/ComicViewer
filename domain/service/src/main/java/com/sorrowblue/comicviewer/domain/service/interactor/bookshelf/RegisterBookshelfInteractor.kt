@@ -49,7 +49,7 @@ internal class RegisterBookshelfInteractor @Inject constructor(
                             )
                             fileLocalDataSource.deleteAll2(request.bookshelf.id)
                         }
-                        val bookshelf = bookshelfLocalDataSource.create(request.bookshelf)
+                        val bookshelf = bookshelfLocalDataSource.updateOrCreate(request.bookshelf)!!
                         val folderModel = when (file) {
                             is BookFolder -> file.copy(
                                 bookshelfId = bookshelf.id,

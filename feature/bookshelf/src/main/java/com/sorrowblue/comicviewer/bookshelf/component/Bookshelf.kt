@@ -43,14 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.preview.fakeFolder
+import com.sorrowblue.comicviewer.framework.preview.fakeInternalStorage
 import com.sorrowblue.comicviewer.framework.preview.previewPainter
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
@@ -203,12 +202,9 @@ fun Bookshelf(
 private fun PreviewBookshelf() {
     PreviewTheme {
         Bookshelf(
-            bookshelfFolder = BookshelfFolder(
-                InternalStorage(BookshelfId(0), "display name", 0),
-                fakeFolder()
-            ),
-            {},
-            {},
+            bookshelfFolder = BookshelfFolder(fakeInternalStorage(), fakeFolder()),
+            onClick = {},
+            onInfoClick = {},
             modifier = Modifier.fillMaxWidth()
         )
     }

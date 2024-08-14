@@ -31,6 +31,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.ServiceLoader
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import logcat.asLog
+import logcat.logcat
 
 internal class RemoteDataSourceImpl @AssistedInject constructor(
     @Assisted private val bookshelf: Bookshelf,
@@ -162,7 +164,8 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
                                 "pdf", "epub", "xps", "oxps", "mobi", "fb2" ->
                                     documentReader(
                                         book.extension,
-                                        fileClient.seekableInputStream(book)
+                                        fileClient.seekableInputStream(book),
+                                        dispatcher
                                     )
 
                                 else -> zipFileReaderFactory.create(
@@ -176,7 +179,8 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
                         is BookFolder -> ImageFolderFileReader(dispatcher, fileClient, book)
                     }
                 }.getOrElse {
-                    documentReader("pdf", fileClient.seekableInputStream(book))
+                    logcat { it.asLog() }
+                    documentReader("pdf", fileClient.seekableInputStream(book), dispatcher)
                 }
             }
         }.getOrElse {
@@ -197,9 +201,13 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }
     }
 
-    private fun documentReader(extension: String, seekableInputStream: SeekableInputStream) =
+    private fun documentReader(
+        extension: String,
+        seekableInputStream: SeekableInputStream,
+        dispatcher: CoroutineDispatcher,
+    ) =
         ServiceLoader.load(
             FileReaderProvider::class.java,
             FileReaderProvider::class.java.classLoader
-        ).firstOrNull { it.extension == extension }?.get(context, seekableInputStream)
+        ).firstOrNull { it.extension == extension }?.get(context, seekableInputStream, dispatcher)
 }

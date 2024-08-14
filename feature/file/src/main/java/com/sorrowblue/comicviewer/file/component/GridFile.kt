@@ -19,12 +19,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ProgressIndicatorDefaults
+import androidx.compose.material3.ProgressIndicatorDefaults.drawStopIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -113,8 +116,19 @@ fun GridFile(
                         .padding(ComicTheme.dimension.padding)
                 )
                 if (file is Book && 0 < file.lastPageRead) {
+                    val color = ProgressIndicatorDefaults.linearColor
                     LinearProgressIndicator(
                         progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+                        strokeCap = StrokeCap.Butt,
+                        gapSize = 0.dp,
+                        drawStopIndicator = {
+                            drawStopIndicator(
+                                drawScope = this,
+                                stopSize = 0.dp,
+                                color = color,
+                                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
+                            )
+                        },
                         modifier = Modifier
                             .fillMaxWidth(),
                     )

@@ -30,7 +30,7 @@ internal class GoogleDrivePagingSource(
             val list = fileList.files?.map {
                 if (it.mimeType == "application/vnd.google-apps.folder") {
                     Folder(
-                        bookshelfId = BookshelfId(0),
+                        bookshelfId = BookshelfId(),
                         name = it.name,
                         parent = it.parents.joinToString(","),
                         path = it.id,
@@ -41,7 +41,7 @@ internal class GoogleDrivePagingSource(
                     )
                 } else {
                     BookFile(
-                        BookshelfId(0),
+                        BookshelfId(),
                         it.name,
                         it.parents.joinToString(","),
                         it.id,

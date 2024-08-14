@@ -1,19 +1,17 @@
 package com.sorrowblue.comicviewer.domain.model.favorite
 
 import android.os.Parcelable
+import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
 @JvmInline
-value class FavoriteId private constructor(val value: Int) : Parcelable {
+value class FavoriteId @ExperimentalIdValue constructor(val value: Int) : Parcelable {
 
-    constructor() : this(0)
-
-    interface Converter {
-        fun toId(value: Int?): FavoriteId? = value?.let(::FavoriteId)
-
-        fun toValue(value: FavoriteId?): Int? = value?.value
+    companion object {
+        @OptIn(ExperimentalIdValue::class)
+        operator fun invoke() = FavoriteId(0)
     }
 }

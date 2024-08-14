@@ -70,7 +70,7 @@ private class FavoriteCreateDialogScreenStateImpl(
 
     override fun onSubmit(text: String) {
         scope.launch {
-            createFavoriteUseCase.execute(CreateFavoriteUseCase.Request(text)).first()
+            createFavoriteUseCase(CreateFavoriteUseCase.Request(text)).first()
                 .fold({ data ->
                     navArgs.favoriteBooksToAdd?.let {
                         addFavoriteFile(data, it.bookshelfId, it.path)
@@ -104,9 +104,9 @@ private class FavoriteCreateDialogScreenStateImpl(
         bookshelfId: BookshelfId,
         path: String,
     ) {
-        addFavoriteFileUseCase
-            .execute(AddFavoriteFileUseCase.Request(FavoriteFile(favorite.id, bookshelfId, path)))
-            .first()
+        addFavoriteFileUseCase(
+            AddFavoriteFileUseCase.Request(FavoriteFile(favorite.id, bookshelfId, path))
+        ).first()
             .fold({
                 sendEvent(FavoriteCreateDialogScreenEvent.Success)
                 Toast.makeText(

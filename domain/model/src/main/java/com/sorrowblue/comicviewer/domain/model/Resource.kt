@@ -7,10 +7,11 @@ sealed interface Resource<out D, out E : Resource.IError> {
     class Error<out E : IError>(val error: E) : Resource<Nothing, E>
 
     /** data class Runtime(reason: RuntimeError) : ErrorEntity */
-    sealed interface IError
+    interface IError
 
     interface AppError : IError
-    data class SystemError(val throwable: Throwable) : IError
+    class SystemError(val throwable: Throwable) : IError
+    data object ReportedSystemError : IError
 }
 
 inline fun <D, E : Resource.IError, R> Resource<D, E>.fold(

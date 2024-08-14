@@ -5,16 +5,23 @@ import androidx.annotation.Keep
 import com.google.auto.service.AutoService
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderProvider
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import kotlinx.coroutines.CoroutineDispatcher
 
 @Suppress("unused")
 @Keep
-internal class PdfFileReader(context: Context, seekableInputStream: SeekableInputStream) :
-    DocumentFileReader(context, "pdf", seekableInputStream) {
+internal class PdfFileReader(
+    context: Context,
+    seekableInputStream: SeekableInputStream,
+    dispatcher: CoroutineDispatcher,
+) : DocumentFileReader(context, "pdf", seekableInputStream, dispatcher) {
 
     @AutoService(FileReaderProvider::class)
     class Provider : FileReaderProvider {
-        override fun get(context: Context, seekableInputStream: SeekableInputStream) =
-            PdfFileReader(context, seekableInputStream)
+        override fun get(
+            context: Context,
+            seekableInputStream: SeekableInputStream,
+            dispatcher: CoroutineDispatcher,
+        ) = PdfFileReader(context, seekableInputStream, dispatcher)
 
         override val extension = "pdf"
     }

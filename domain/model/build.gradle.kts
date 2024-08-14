@@ -10,4 +10,6 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.serialization.core)
+
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
 }

@@ -11,11 +11,12 @@ import androidx.room.Upsert
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
-import com.sorrowblue.comicviewer.data.database.entity.FileEntity
-import com.sorrowblue.comicviewer.data.database.entity.FileWithCountEntity
-import com.sorrowblue.comicviewer.data.database.entity.SimpleFileEntity
-import com.sorrowblue.comicviewer.data.database.entity.UpdateFileHistoryEntity
-import com.sorrowblue.comicviewer.data.database.entity.UpdateFileInfoEntity
+import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
+import com.sorrowblue.comicviewer.data.database.entity.file.QueryFileWithCountEntity
+import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMinimum
+import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMinimumWithSortIndex
+import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileHistoryEntity
+import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileInfoEntity
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import kotlinx.coroutines.flow.Flow
@@ -37,7 +38,10 @@ internal interface FileDao {
     suspend fun updateInfo(updateFileInfoEntity: UpdateFileInfoEntity)
 
     @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateAllSimple(list: List<SimpleFileEntity>)
+    suspend fun updateSimple(entity: UpdateFileEntityMinimum): Int
+
+    @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateSimple(list: List<UpdateFileEntityMinimumWithSortIndex>)
 
     @Delete
     suspend fun deleteAll(list: List<FileEntity>)
@@ -65,8 +69,9 @@ internal interface FileDao {
             is SortType.Date -> "last_modified"
             is SortType.Size -> "size"
         }
-        val (comparison, order) = if (isNext && sortType.isAsc) ">=" to "ASC" else "<=" to "DESC"
 
+        val comparison = if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) ">=" else "<="
+        val order = if (sortType.isAsc) "ASC" else "DESC"
         return flowPrevNextFile(
             SimpleSQLiteQuery(
                 """
@@ -99,7 +104,7 @@ internal interface FileDao {
     }
 
     @RawQuery(observedEntities = [FileEntity::class])
-    fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, FileWithCountEntity>
+    fun pagingSource(query: SupportSQLiteQuery): PagingSource<Int, QueryFileWithCountEntity>
 
     @Query(
         "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit"
@@ -137,7 +142,7 @@ internal interface FileDao {
     fun pagingSource(
         bookshelfId: Int,
         searchCondition: SearchCondition,
-    ): PagingSource<Int, FileWithCountEntity> {
+    ): PagingSource<Int, QueryFileWithCountEntity> {
         val query = SupportSQLiteQueryBuilder.builder("file").apply {
             columns(
                 arrayOf(

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface BookshelfLocalDataSource {
 
-    suspend fun create(bookshelf: Bookshelf): Bookshelf
+    suspend fun updateOrCreate(bookshelf: Bookshelf): Bookshelf?
 
     suspend fun delete(bookshelf: Bookshelf): Int
 

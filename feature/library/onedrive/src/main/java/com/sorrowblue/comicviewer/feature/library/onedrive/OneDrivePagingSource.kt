@@ -29,7 +29,7 @@ internal class OneDrivePagingSource(
             val list = collectionPage.value.mapNotNull {
                 if (it.folder != null) {
                     Folder(
-                        BookshelfId(0),
+                        BookshelfId(),
                         it.name.orEmpty(),
                         itemId,
                         it.id.orEmpty(),
@@ -40,7 +40,7 @@ internal class OneDrivePagingSource(
                     )
                 } else if (it.file != null) {
                     BookFile(
-                        BookshelfId(0),
+                        BookshelfId(),
                         it.name.orEmpty(),
                         itemId,
                         it.id.orEmpty(),

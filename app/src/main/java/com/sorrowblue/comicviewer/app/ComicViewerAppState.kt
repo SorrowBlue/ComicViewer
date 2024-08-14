@@ -175,7 +175,7 @@ private class ComicViewerAppStateImpl(
         val destinationTransitions = navController.toDestinationsNavigator()
         return scope.launch {
             val history =
-                getNavigationHistoryUseCase.execute(EmptyRequest).first().fold({ it }, { null })
+                getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
             destinationTransitions.navigate(BookshelfNavGraph) {
                 popUpTo(MainNavGraph) {
                     inclusive = true

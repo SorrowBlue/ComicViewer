@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.book
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -16,8 +17,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
-import com.ramcosta.composedestinations.navargs.DestinationsNavTypeSerializer
-import com.ramcosta.composedestinations.navargs.NavTypeSerializer
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -29,12 +28,7 @@ import com.sorrowblue.comicviewer.feature.book.section.BookSheet
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-
-@NavTypeSerializer
-internal class BookshelfIdSerializer : DestinationsNavTypeSerializer<BookshelfId> {
-    override fun toRouteString(value: BookshelfId) = value.value.toString()
-    override fun fromRouteString(routeStr: String) = BookshelfId(routeStr.toInt())
-}
+import kotlinx.parcelize.Parcelize
 
 internal sealed interface BookScreenUiState {
 
@@ -57,12 +51,13 @@ interface BookScreenNavigator {
     fun onContainerLongClick()
 }
 
+@Parcelize
 class BookArgs(
     val bookshelfId: BookshelfId,
     val path: String,
     val name: String,
     val favoriteId: FavoriteId = FavoriteId(),
-)
+) : Parcelable
 
 @Destination<BookGraph>(
     start = true,

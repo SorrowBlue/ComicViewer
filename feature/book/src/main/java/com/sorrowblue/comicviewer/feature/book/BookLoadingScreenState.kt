@@ -8,11 +8,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @Composable
 internal fun rememberBookLoadingScreenState(
@@ -35,22 +36,32 @@ internal interface BookLoadingScreenState {
 private class BookLoadingScreenStateImpl(
     args: BookArgs,
     scope: CoroutineScope,
-    private val viewModel: BookViewModel,
+    viewModel: BookViewModel,
 ) : BookLoadingScreenState {
 
     override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(args.name))
         private set
 
     init {
-        scope.launch {
-            val book = viewModel.getBookUseCase
-                .execute(GetBookUseCase.Request(args.bookshelfId, args.path))
-                .first().dataOrNull
-            uiState = if (book == null || book.totalPageCount <= 0) {
-                BookScreenUiState.Error(args.name)
-            } else {
-                BookScreenUiState.Loaded(book, args.favoriteId, BookSheetUiState(book))
+        viewModel.getBookUseCase(GetBookUseCase.Request(args.bookshelfId, args.path))
+            .onEach {
+                uiState = when (it) {
+                    is Resource.Success ->
+                        BookScreenUiState.Loaded(
+                            it.data,
+                            args.favoriteId,
+                            BookSheetUiState(it.data)
+                        )
+
+                    is Resource.Error -> when (it.error) {
+                        GetBookUseCase.Error.NotFound ->
+                            BookScreenUiState.Error(args.name)
+
+                        GetBookUseCase.Error.ReportedSystemError ->
+                            BookScreenUiState.Error(args.name)
+                    }
+                }
             }
-        }
+            .launchIn(scope)
     }
 }

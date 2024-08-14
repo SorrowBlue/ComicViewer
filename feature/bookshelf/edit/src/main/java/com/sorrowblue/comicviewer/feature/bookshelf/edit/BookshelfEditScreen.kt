@@ -18,7 +18,7 @@ interface BookshelfEditScreenNavigator {
 }
 
 data class BookshelfEditArgs(
-    val bookshelfId: BookshelfId = BookshelfId.Default,
+    val bookshelfId: BookshelfId = BookshelfId(),
     val bookshelfType: BookshelfType = BookshelfType.DEVICE,
 )
 

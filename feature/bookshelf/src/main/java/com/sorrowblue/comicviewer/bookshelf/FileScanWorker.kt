@@ -48,7 +48,7 @@ internal class FileScanWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val request = FileScanRequest.fromWorkData(inputData) ?: return Result.failure()
         val bookshelfInfo =
-            getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(request.bookshelfId))
+            getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(request.bookshelfId))
                 .first().dataOrNull() ?: return Result.failure()
         setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, "", true))
         val useCaseRequest = ScanBookshelfUseCase.Request(request.bookshelfId) { bookshelf, file ->
@@ -63,7 +63,7 @@ internal class FileScanWorker @AssistedInject constructor(
             setProgress(workDataOf("path" to file.path))
             setForeground(createForegroundInfo(bookshelf.displayName, file.path))
         }
-        return scanBookshelfUseCase.execute(useCaseRequest).first().fold({
+        return scanBookshelfUseCase(useCaseRequest).first().fold({
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
                     .setContentTitle("本棚のスキャンが完了しました")

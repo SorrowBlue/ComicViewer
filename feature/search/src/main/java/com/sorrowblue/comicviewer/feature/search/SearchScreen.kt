@@ -11,7 +11,10 @@ import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +45,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.Bac
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import kotlinx.coroutines.delay
 import kotlinx.parcelize.Parcelize
+import logcat.logcat
 
 interface SearchScreenNavigator {
     fun navigateUp()
@@ -51,7 +55,8 @@ interface SearchScreenNavigator {
     fun onNavigateSettings()
 }
 
-class SearchArgs(val bookshelfId: BookshelfId, val path: String)
+@Parcelize
+class SearchArgs(val bookshelfId: BookshelfId, val path: String) : Parcelable
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Destination<SearchGraph>(
@@ -91,9 +96,16 @@ internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenS
     }
     BackHandlerForNavigator(navigator = state.navigator)
 
+    var time by remember {
+        mutableLongStateOf(System.currentTimeMillis())
+    }
+
     LaunchedEffect(state.uiState.searchTopAppBarUiState.searchCondition) {
         if (!state.isSkipFirstRefresh) {
             delay(WaitLoadPage)
+            val now = System.currentTimeMillis()
+            logcat { "before: ${(now - time)}" }
+            time = now
             lazyPagingItems.refresh()
         }
     }
@@ -152,14 +164,14 @@ private fun SearchScreen(
     }
 }
 
-private const val WaitLoadPage = 500L
+private const val WaitLoadPage = 350L
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Preview
 @Composable
 private fun SearchScreenPreview() {
     PreviewTheme {
-        val pagingDataFlow = PagingData.flowData<File> { fakeBookFile(BookshelfId(it)) }
+        val pagingDataFlow = PagingData.flowData<File> { fakeBookFile(it) }
         val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
         SearchScreen(
             uiState = SearchScreenUiState(),

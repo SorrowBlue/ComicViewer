@@ -23,7 +23,7 @@ internal class BookshelfEditViewModel @Inject constructor(
 ) : ViewModel() {
 
     suspend fun fetch(bookshelfId: BookshelfId): BookshelfFolder? {
-        return getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(bookshelfId))
+        return getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
             .first().dataOrNull()
     }
 
@@ -34,7 +34,7 @@ internal class BookshelfEditViewModel @Inject constructor(
         complete: () -> Unit,
     ) {
         viewModelScope.launch {
-            registerBookshelfUseCase.execute(RegisterBookshelfUseCase.Request(bookshelf, path))
+            registerBookshelfUseCase(RegisterBookshelfUseCase.Request(bookshelf, path))
                 .first()
                 .onError {
                     onError(it)

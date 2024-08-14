@@ -77,7 +77,7 @@ private class FavoriteEditScreenStateImpl(
     init {
         if (uiState.initName.isBlank()) {
             scope.launch {
-                getFavoriteUseCase.execute(GetFavoriteUseCase.Request(args.favoriteId))
+                getFavoriteUseCase(GetFavoriteUseCase.Request(args.favoriteId))
                     .first().dataOrNull()?.let {
                         uiState = uiState.copy(initName = it.name)
                     }
@@ -95,13 +95,13 @@ private class FavoriteEditScreenStateImpl(
                 )
             )
         scope.launch {
-            removeFavoriteFileUseCase.execute(request).collect()
+            removeFavoriteFileUseCase(request).collect()
         }
     }
 
     override fun onSaveClick(text: String) {
         scope.launch {
-            val favorite = getFavoriteUseCase.execute(GetFavoriteUseCase.Request(args.favoriteId))
+            val favorite = getFavoriteUseCase(GetFavoriteUseCase.Request(args.favoriteId))
                 .first().dataOrNull() ?: return@launch
             updateFavoriteUseCase.execute(UpdateFavoriteUseCase.Request(favorite.copy(name = text)))
                 .collect()

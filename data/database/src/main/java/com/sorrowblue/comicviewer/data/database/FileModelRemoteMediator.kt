@@ -4,7 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.sorrowblue.comicviewer.data.database.entity.FileWithCountEntity
+import com.sorrowblue.comicviewer.data.database.entity.file.QueryFileWithCountEntity
 import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.SortUtil
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
@@ -31,7 +31,7 @@ internal class FileModelRemoteMediator @AssistedInject constructor(
     @Assisted private val file: File,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val fileLocalDataSource: FileLocalDataSource,
-) : RemoteMediator<Int, FileWithCountEntity>() {
+) : RemoteMediator<Int, QueryFileWithCountEntity>() {
 
     @AssistedFactory
     interface Factory {
@@ -46,7 +46,7 @@ internal class FileModelRemoteMediator @AssistedInject constructor(
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, FileWithCountEntity>,
+        state: PagingState<Int, QueryFileWithCountEntity>,
     ): MediatorResult {
         if (loadType != LoadType.REFRESH) {
             return MediatorResult.Success(endOfPaginationReached = true)

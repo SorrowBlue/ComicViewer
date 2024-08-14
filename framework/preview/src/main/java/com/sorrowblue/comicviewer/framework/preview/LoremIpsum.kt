@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.framework.preview
 
+import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
@@ -38,18 +40,24 @@ private var LoremIpsumIndex = 0
 
 private var size = 100L
 
-fun fakeBookFile(bookshelfId: BookshelfId = BookshelfId(0), name: String = nextLoremIpsum()) =
+@OptIn(ExperimentalIdValue::class)
+fun fakeInternalStorage(bookshelfId: Int = 0, name: String = nextLoremIpsum()): InternalStorage {
+    return InternalStorage(BookshelfId(bookshelfId), name)
+}
+
+@OptIn(ExperimentalIdValue::class)
+fun fakeBookFile(bookshelfId: Int = 0, name: String = nextLoremIpsum()) =
     BookFile(
-        bookshelfId,
+        BookshelfId(bookshelfId),
         name,
         "parent",
-        "path${bookshelfId.value}",
+        "path$bookshelfId",
         (size * 2).also { size = it },
         100,
         false,
     )
 
-fun fakeFolder(bookshelfId: BookshelfId = BookshelfId(0)) =
+fun fakeFolder(bookshelfId: BookshelfId = BookshelfId()) =
     Folder(
         bookshelfId,
         nextLoremIpsum(),
@@ -60,11 +68,9 @@ fun fakeFolder(bookshelfId: BookshelfId = BookshelfId(0)) =
         false,
     )
 
-private val converter = object : FavoriteId.Converter {}
-
 fun fakeFavorite(favoriteId: Int = 0) =
     Favorite(
-        converter.toId(favoriteId)!!,
+        @OptIn(ExperimentalIdValue::class) FavoriteId(favoriteId),
         nextLoremIpsum(),
         Random(1).nextInt(5, 999),
         Random(1).nextBoolean(),

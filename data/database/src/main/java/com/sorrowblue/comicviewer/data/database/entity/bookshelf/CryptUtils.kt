@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.database.entity
+package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties

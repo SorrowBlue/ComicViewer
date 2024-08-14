@@ -30,11 +30,11 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
@@ -171,7 +171,7 @@ private class FolderScreenStateImpl(
                 )
             )
         }.launchIn(scope)
-        getFileUseCase.execute(GetFileUseCase.Request(args.bookshelfId, args.path))
+        getFileUseCase(GetFileUseCase.Request(args.bookshelfId, args.path))
             .onEach {
                 when (it) {
                     is Resource.Error -> TODO()

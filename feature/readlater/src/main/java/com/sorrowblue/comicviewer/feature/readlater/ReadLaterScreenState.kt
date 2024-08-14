@@ -14,11 +14,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.DeleteAllReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteAllReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
@@ -108,7 +108,7 @@ private class ReadLaterScreenStateImpl(
     override fun onTopAppBarAction(action: ReadLaterTopAppBarAction) {
         when (action) {
             ReadLaterTopAppBarAction.ClearAll -> scope.launch {
-                deleteAllReadLaterUseCase.execute(DeleteAllReadLaterUseCase.Request).first()
+                deleteAllReadLaterUseCase(DeleteAllReadLaterUseCase.Request).first()
             }
 
             ReadLaterTopAppBarAction.Settings -> sendEvent(ReadLaterScreenEvent.Settings)

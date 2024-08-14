@@ -7,11 +7,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.favorite.destinations.FavoriteScreenDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
