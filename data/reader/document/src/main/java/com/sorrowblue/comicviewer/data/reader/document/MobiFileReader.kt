@@ -5,16 +5,23 @@ import androidx.annotation.Keep
 import com.google.auto.service.AutoService
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderProvider
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import kotlinx.coroutines.CoroutineDispatcher
 
 @Suppress("unused")
 @Keep
-internal class MobiFileReader(context: Context, seekableInputStream: SeekableInputStream) :
-    DocumentFileReader(context, "mobi", seekableInputStream) {
+internal class MobiFileReader(
+    context: Context,
+    seekableInputStream: SeekableInputStream,
+    dispatcher: CoroutineDispatcher,
+) : DocumentFileReader(context, "mobi", seekableInputStream, dispatcher) {
 
     @AutoService(FileReaderProvider::class)
     class Provider : FileReaderProvider {
-        override fun get(context: Context, seekableInputStream: SeekableInputStream) =
-            MobiFileReader(context, seekableInputStream)
+        override fun get(
+            context: Context,
+            seekableInputStream: SeekableInputStream,
+            dispatcher: CoroutineDispatcher,
+        ) = MobiFileReader(context, seekableInputStream, dispatcher)
 
         override val extension = "mobi"
     }

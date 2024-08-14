@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
-import com.sorrowblue.comicviewer.data.database.entity.BookshelfEntity
+import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -16,6 +16,7 @@ import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -25,15 +26,15 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
     private val dao: BookshelfDao,
 ) : BookshelfLocalDataSource {
 
-    override suspend fun create(bookshelf: Bookshelf): Bookshelf {
+    override suspend fun updateOrCreate(bookshelf: Bookshelf): Bookshelf? {
         val entity = BookshelfEntity.fromModel(bookshelf)
         return dao.upsert(entity).let {
             if (it == -1L) {
-                entity
+                dao.flow(bookshelf.id.value).first()
             } else {
-                entity.copy(id = BookshelfId(it.toInt()))
+                dao.flow(it.toInt()).first()
             }
-        }.toModel(0)
+        }?.toModel(0)
     }
 
     override suspend fun delete(bookshelf: Bookshelf): Int {

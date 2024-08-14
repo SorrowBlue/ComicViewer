@@ -33,7 +33,7 @@ internal class DropBoxPagingSource(
             when (it) {
                 is FolderMetadata -> {
                     Folder(
-                        BookshelfId(0),
+                        BookshelfId(),
                         it.name,
                         parent,
                         it.pathLower.orEmpty(),
@@ -45,7 +45,7 @@ internal class DropBoxPagingSource(
 
                 is FileMetadata -> {
                     BookFile(
-                        BookshelfId(0),
+                        BookshelfId(),
                         it.name,
                         parent,
                         it.pathLower.orEmpty(),

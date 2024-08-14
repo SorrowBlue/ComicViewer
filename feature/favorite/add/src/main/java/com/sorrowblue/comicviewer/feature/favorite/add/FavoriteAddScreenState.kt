@@ -6,6 +6,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.model.fold
@@ -20,12 +21,15 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-internal sealed interface FavoriteAddScreenStateEvent
+internal sealed interface FavoriteAddScreenStateEvent {
+    class AddClick(val bookshelfId: BookshelfId, val path: String) : FavoriteAddScreenStateEvent
+}
 
 internal interface FavoriteAddScreenState : ScreenStateEvent<FavoriteAddScreenStateEvent> {
     val pagingDataFlow: Flow<PagingData<Favorite>>
     val recentFavoritesFlow: Flow<PagingData<Favorite>>
     fun onFavoriteClick(favorite: Favorite)
+    fun onNewFavoriteClick()
 }
 
 @Composable
@@ -60,7 +64,7 @@ private class FavoriteAddScreenStateImpl(
     override fun onFavoriteClick(favorite: Favorite) {
         scope.launch {
             if (favorite.exist) {
-                removeFavoriteFileUseCase.execute(
+                removeFavoriteFileUseCase(
                     RemoveFavoriteFileUseCase.Request(
                         FavoriteFile(favorite.id, args.bookshelfId, args.path)
                     )
@@ -69,12 +73,16 @@ private class FavoriteAddScreenStateImpl(
                     onError = {}
                 )
             } else {
-                addFavoriteFileUseCase.execute(
+                addFavoriteFileUseCase(
                     AddFavoriteFileUseCase.Request(
                         FavoriteFile(favorite.id, args.bookshelfId, args.path)
                     )
                 ).collect()
             }
         }
+    }
+
+    override fun onNewFavoriteClick() {
+        sendEvent(FavoriteAddScreenStateEvent.AddClick(args.bookshelfId, args.path))
     }
 }

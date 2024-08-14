@@ -35,7 +35,6 @@ import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameField
@@ -195,7 +194,7 @@ private fun FavoriteEditScreen(
 @Composable
 private fun PreviewFavoriteEditScreen() {
     fakeBookFile()
-    val pagingDataFlow = flowOf(PagingData.from(List<File>(20) { fakeBookFile(BookshelfId(it)) }))
+    val pagingDataFlow = flowOf(PagingData.from(List<File>(20) { fakeBookFile(it) }))
     ComicTheme {
         FavoriteEditScreen(
             uiState = FavoriteEditScreenUiState(),

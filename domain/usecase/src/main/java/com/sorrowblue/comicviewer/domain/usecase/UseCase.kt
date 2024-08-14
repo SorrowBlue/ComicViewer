@@ -7,10 +7,6 @@ abstract class UseCase<in R : UseCase.Request, out D, out E : Resource.IError> {
 
     interface Request
 
-    fun execute(request: R): Flow<Resource<D, E>> {
-        return run(request)
-    }
-
     operator fun invoke(request: R): Flow<Resource<D, E>> {
         return run(request)
     }

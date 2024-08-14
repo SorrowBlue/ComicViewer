@@ -53,7 +53,7 @@ internal class BookPageFetcher(
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val remoteDataSource = bookshelfLocalDataSource.flow(data.book.bookshelfId).first()
             ?.let(remoteDataSourceFactory::create)
-            ?: remoteDataSourceFactory.create(InternalStorage(BookshelfId(0), "intent"))
+            ?: remoteDataSourceFactory.create(InternalStorage(BookshelfId(), "intent"))
         if (!remoteDataSource.exists(data.book.path)) {
             throw CoilRuntimeException("ファイルがない(${data.book.path})")
         }

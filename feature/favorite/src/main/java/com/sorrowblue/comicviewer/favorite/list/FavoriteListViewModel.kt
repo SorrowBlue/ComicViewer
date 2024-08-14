@@ -22,7 +22,7 @@ internal class FavoriteListViewModel @Inject constructor(
         pagingFavoriteUseCase.execute(
             PagingFavoriteUseCase.Request(
                 PagingConfig(20),
-                BookshelfId(0),
+                BookshelfId(),
                 ""
             )
         )
@@ -30,7 +30,7 @@ internal class FavoriteListViewModel @Inject constructor(
 
     fun create(name: String, done: () -> Unit) {
         viewModelScope.launch {
-            createFavoriteUseCase.execute(CreateFavoriteUseCase.Request(name)).first()
+            createFavoriteUseCase(CreateFavoriteUseCase.Request(name)).first()
             done()
         }
     }

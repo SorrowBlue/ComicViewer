@@ -1,79 +1,16 @@
-package com.sorrowblue.comicviewer.data.database.entity
+package com.sorrowblue.comicviewer.data.database.entity.file
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-
-data class FileWithCountEntity(
-    @ColumnInfo(FileEntity.PATH) val path: String,
-    @ColumnInfo(FileEntity.BOOKSHELF_ID) val bookshelfId: BookshelfId,
-    val name: String,
-    val parent: String,
-    val size: Long,
-    @ColumnInfo(name = "last_modified") val lastModified: Long,
-    @ColumnInfo(name = "hidden") val isHidden: Boolean,
-    @ColumnInfo(name = "file_type") val fileEntityType: FileEntity.Type,
-    @ColumnInfo(name = "file_type_order") val fileTypeOrder: Int = fileEntityType.order,
-    @ColumnInfo(name = "sort_index") val sortIndex: Int,
-    @Embedded val info: FileInfoEntity,
-    @Embedded val history: FileHistoryEntity,
-    val count: Int,
-) {
-
-    fun toModel(): File {
-        return when (fileEntityType) {
-            FileEntity.Type.FILE -> BookFile(
-                path = path,
-                bookshelfId = bookshelfId,
-                parent = parent,
-                name = name,
-                size = size,
-                lastModifier = lastModified,
-                isHidden = isHidden,
-                sortIndex = sortIndex,
-                cacheKey = info.cacheKey,
-                totalPageCount = info.totalPageCount,
-                lastPageRead = history.lastReadPage,
-                lastReadTime = history.lastReading
-            )
-
-            FileEntity.Type.FOLDER -> Folder(
-                path = path,
-                bookshelfId = bookshelfId,
-                name = name,
-                parent = parent,
-                size = size,
-                lastModifier = lastModified,
-                isHidden = isHidden,
-                sortIndex = sortIndex,
-                count = count
-            )
-
-            FileEntity.Type.IMAGE_FOLDER -> BookFolder(
-                path = path,
-                bookshelfId = bookshelfId,
-                name = name,
-                parent = parent,
-                size = size,
-                lastModifier = lastModified,
-                isHidden = isHidden,
-                sortIndex = sortIndex,
-                cacheKey = info.cacheKey,
-                totalPageCount = info.totalPageCount,
-                lastPageRead = history.lastReadPage,
-                lastReadTime = history.lastReading,
-                count = count
-            )
-        }
-    }
-}
 
 @Entity(
     tableName = "file",
@@ -88,9 +25,9 @@ data class FileWithCountEntity(
     ],
     indices = [Index(value = [FileEntity.BOOKSHELF_ID, FileEntity.PATH])]
 )
-data class FileEntity(
+internal data class FileEntity(
     @ColumnInfo(PATH) val path: String,
-    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: Int,
+    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: BookshelfId,
     val name: String,
     val parent: String,
     val size: Long,
@@ -99,8 +36,8 @@ data class FileEntity(
     @ColumnInfo(name = "file_type") val fileType: Type,
     @ColumnInfo(name = "file_type_order") val fileTypeOrder: Int = fileType.order,
     @ColumnInfo(name = "sort_index") val sortIndex: Int,
-    @Embedded val info: FileInfoEntity = FileInfoEntity(),
-    @Embedded val history: FileHistoryEntity = FileHistoryEntity(),
+    @Embedded val info: EmbeddedFileInfoEntity = EmbeddedFileInfoEntity(),
+    @Embedded val history: EmbeddedFileHistoryEntity = EmbeddedFileHistoryEntity(),
 ) {
 
     companion object {
@@ -111,7 +48,7 @@ data class FileEntity(
             when (model) {
                 is BookFile -> FileEntity(
                     path = model.path,
-                    bookshelfId = model.bookshelfId.value,
+                    bookshelfId = model.bookshelfId,
                     name = model.name,
                     parent = model.parent,
                     size = model.size,
@@ -119,13 +56,13 @@ data class FileEntity(
                     isHidden = model.isHidden,
                     fileType = Type.FILE,
                     sortIndex = model.sortIndex,
-                    info = FileInfoEntity(model.cacheKey, model.totalPageCount),
-                    history = FileHistoryEntity(model.lastPageRead, model.lastReadTime)
+                    info = EmbeddedFileInfoEntity(model.cacheKey, model.totalPageCount),
+                    history = EmbeddedFileHistoryEntity(model.lastPageRead, model.lastReadTime)
                 )
 
                 is Folder -> FileEntity(
                     path = model.path,
-                    bookshelfId = model.bookshelfId.value,
+                    bookshelfId = model.bookshelfId,
                     name = model.name,
                     parent = model.parent,
                     size = model.size,
@@ -133,13 +70,13 @@ data class FileEntity(
                     isHidden = model.isHidden,
                     fileType = Type.FOLDER,
                     sortIndex = model.sortIndex,
-                    info = FileInfoEntity("", 0),
-                    history = FileHistoryEntity(0, 0)
+                    info = EmbeddedFileInfoEntity("", 0),
+                    history = EmbeddedFileHistoryEntity(0, 0)
                 )
 
                 is BookFolder -> FileEntity(
                     path = model.path,
-                    bookshelfId = model.bookshelfId.value,
+                    bookshelfId = model.bookshelfId,
                     name = model.name,
                     parent = model.parent,
                     size = model.size,
@@ -147,8 +84,8 @@ data class FileEntity(
                     isHidden = model.isHidden,
                     fileType = Type.IMAGE_FOLDER,
                     sortIndex = model.sortIndex,
-                    info = FileInfoEntity(model.cacheKey, model.totalPageCount),
-                    history = FileHistoryEntity(model.lastPageRead, model.lastReadTime)
+                    info = EmbeddedFileInfoEntity(model.cacheKey, model.totalPageCount),
+                    history = EmbeddedFileHistoryEntity(model.lastPageRead, model.lastReadTime)
                 )
             }
     }
@@ -157,7 +94,7 @@ data class FileEntity(
         return when (fileType) {
             Type.FILE -> BookFile(
                 path = path,
-                bookshelfId = BookshelfId(bookshelfId),
+                bookshelfId = bookshelfId,
                 parent = parent,
                 name = name,
                 size = size,
@@ -172,7 +109,7 @@ data class FileEntity(
 
             Type.FOLDER -> Folder(
                 path = path,
-                bookshelfId = BookshelfId(bookshelfId),
+                bookshelfId = bookshelfId,
                 name = name,
                 parent = parent,
                 size = size,
@@ -183,7 +120,7 @@ data class FileEntity(
 
             Type.IMAGE_FOLDER -> BookFolder(
                 path = path,
-                bookshelfId = BookshelfId(bookshelfId),
+                bookshelfId = bookshelfId,
                 name = name,
                 parent = parent,
                 size = size,

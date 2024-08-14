@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.database.entity
+package com.sorrowblue.comicviewer.data.database.entity.file
 
 import androidx.room.ColumnInfo
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 
-internal class SimpleFileEntity(
+internal class UpdateFileEntityMinimum(
     val path: String,
     @ColumnInfo(name = FileEntity.BOOKSHELF_ID) val bookshelfId: BookshelfId,
     val name: String,
@@ -17,10 +17,9 @@ internal class SimpleFileEntity(
     @ColumnInfo(name = "hidden") val isHidden: Boolean,
     @ColumnInfo(name = "file_type") val fileEntityType: FileEntity.Type,
     @ColumnInfo(name = "file_type_order") val fileTypeOrder: Int = fileEntityType.order,
-    @ColumnInfo(name = "sort_index") val sortIndex: Int,
 ) {
     companion object {
-        fun fromModel(model: File) = SimpleFileEntity(
+        fun fromModel(model: File) = UpdateFileEntityMinimum(
             path = model.path,
             bookshelfId = model.bookshelfId,
             name = model.name,
@@ -33,7 +32,6 @@ internal class SimpleFileEntity(
                 is BookFolder -> FileEntity.Type.IMAGE_FOLDER
                 is Folder -> FileEntity.Type.FOLDER
             },
-            sortIndex = model.sortIndex
         )
     }
 }

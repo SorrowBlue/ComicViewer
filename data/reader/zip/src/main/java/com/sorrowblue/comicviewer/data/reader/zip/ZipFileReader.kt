@@ -6,12 +6,16 @@ import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
 import com.sorrowblue.comicviewer.domain.reader.FileReader
+import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import java.util.Locale
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import okio.Sink
@@ -20,6 +24,7 @@ import okio.buffer
 internal class ZipFileReader @AssistedInject constructor(
     @Assisted private val seekableInputStream: SeekableInputStream,
     @ImageExtension supportedException: Set<String>,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
 
     @AssistedFactory
@@ -62,9 +67,13 @@ internal class ZipFileReader @AssistedInject constructor(
     }
 
     override fun close() {
-        seekableInputStream.close()
-        archive.close()
-        zipFile.close()
+        runBlocking {
+            withContext(dispatcher) {
+                seekableInputStream.close()
+                archive.close()
+                zipFile.close()
+            }
+        }
     }
 }
 

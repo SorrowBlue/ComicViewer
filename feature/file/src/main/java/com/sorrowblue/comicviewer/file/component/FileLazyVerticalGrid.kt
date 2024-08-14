@@ -22,7 +22,6 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
@@ -161,7 +160,7 @@ fun <T : File> FileLazyVerticalGrid(
 @Composable
 private fun PreviewGridFileLazyGrid() {
     val files = List(20) {
-        fakeBookFile(BookshelfId(it))
+        fakeBookFile(it)
     }
     val pagingDataFlow: Flow<PagingData<File>> = flowOf(PagingData.from(files))
     PreviewTheme {

@@ -6,6 +6,13 @@ import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -14,7 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
@@ -42,6 +51,8 @@ import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavGraph
 import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavGraph
 import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreen
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -170,5 +181,50 @@ fun AddOn.findNavGraph(): AddOnNavGraph? {
         AddOn.OneDrive -> OneDriveNavGraph()
         AddOn.Dropbox -> DropBoxNavGraph()
         AddOn.Box -> BoxNavGraph()
+    }
+}
+
+@Preview
+@Composable
+private fun ErrorAlertDialog() {
+    ComicTheme {
+        AlertDialog(
+            onDismissRequest = { },
+            confirmButton = {
+                TextButton(onClick = { }) {
+                    Text(text = "送信")
+                }
+            },
+            icon = {
+                Icon(imageVector = ComicIcons.ErrorOutline, contentDescription = null)
+            },
+            title = {
+                Text(text = "アプリケーションエラーが発生しました。")
+            },
+            text = {
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    Text(text = "エラー内容を送信しますか？")
+                    Text(
+                        text = """
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                    error message here error message here error message here error message here
+                        """.trimIndent()
+                    )
+                }
+            }
+        )
     }
 }

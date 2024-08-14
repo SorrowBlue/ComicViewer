@@ -5,8 +5,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
-import com.sorrowblue.comicviewer.data.database.entity.FavoriteEntity
-import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileCountEntity
+import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteEntity
+import com.sorrowblue.comicviewer.data.database.entity.favorite.QueryFavoriteFileWithCountEntity
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
@@ -25,7 +25,7 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
 
     override fun flow(favoriteModelId: FavoriteId): Flow<Favorite> {
         return favoriteDao.flow(favoriteModelId.value).filterNotNull()
-            .map(FavoriteFileCountEntity::toModel)
+            .map(QueryFavoriteFileWithCountEntity::toModel)
     }
 
     override suspend fun update(favoriteModel: Favorite): Favorite {
@@ -50,7 +50,7 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
                 favoriteDao.pagingSource(bookshelfId.value, path)
             }
         }.flow.map { pagingData ->
-            pagingData.map(FavoriteFileCountEntity::toModel)
+            pagingData.map(QueryFavoriteFileWithCountEntity::toModel)
         }
     }
 

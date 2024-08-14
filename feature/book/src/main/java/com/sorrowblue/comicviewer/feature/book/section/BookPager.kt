@@ -13,8 +13,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
@@ -25,7 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
-import coil3.annotation.ExperimentalCoilApi
+import coil3.Extras
 import coil3.asDrawable
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
@@ -39,6 +44,7 @@ import com.sorrowblue.comicviewer.feature.book.R
 import com.sorrowblue.comicviewer.feature.book.WhiteTrimTransformation
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import kotlin.random.Random
 
 @Composable
 internal fun BookPage(
@@ -73,10 +79,14 @@ private fun DefaultBookPage(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val request = ImageRequest.Builder(context)
-        .data(BookPageRequest(book to bookPage.index))
-        .transformations(WhiteTrimTransformation)
-        .build()
+    var request by remember(bookPage.index) {
+        mutableStateOf(
+            ImageRequest.Builder(context)
+                .data(BookPageRequest(book to bookPage.index))
+                .transformations(WhiteTrimTransformation)
+                .build()
+        )
+    }
     SubcomposeAsyncImage(
         model = request,
         contentDescription = null,
@@ -109,6 +119,14 @@ private fun DefaultBookPage(
                     text = stringResource(R.string.book_msg_page_not_loaded),
                     style = ComicTheme.typography.bodyLarge
                 )
+
+                OutlinedButton(onClick = {
+                    request = request.newBuilder(context)
+                        .apply { extras[Extras.Key(0)] = Random.nextInt() }
+                        .build()
+                }) {
+                    Text(text = "Reload")
+                }
             }
         }
     )
@@ -201,7 +219,6 @@ private fun SpreadBookPage(
 }
 
 object SpreadCombineTransformation {
-    @OptIn(ExperimentalCoilApi::class)
     fun unrated(context: Context, change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->
         if (state is AsyncImagePainter.State.Success) {
             change(state.result.image.asDrawable(context.resources).toBitmap())
@@ -215,7 +232,6 @@ object SpreadCombineTransformation {
     val Spread2 = AsyncImagePainter.DefaultTransform
 }
 
-@OptIn(ExperimentalCoilApi::class)
 object SpreadSplitTransformation {
 
     fun unrated(change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->

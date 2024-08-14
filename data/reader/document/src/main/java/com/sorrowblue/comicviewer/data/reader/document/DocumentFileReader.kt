@@ -11,8 +11,11 @@ import com.artifex.mupdf.fitz.android.AndroidDrawDevice
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.reader.FileReader
 import kotlin.math.min
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import okio.Sink
 import okio.buffer
 
@@ -23,6 +26,7 @@ open class DocumentFileReader(
     context: Context,
     mimeType: String,
     private val seekableInputStream: SeekableInputStream,
+    private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
 
     private val width by lazy {
@@ -41,10 +45,11 @@ open class DocumentFileReader(
 
     private val document =
         Document.openDocument(SeekableInputStreamImpl(seekableInputStream), mimeType)
+
     private val mutex = Mutex()
 
     override suspend fun pageCount(): Int {
-        return document.countPages()
+        return withContext(dispatcher) { document.countPages() }
     }
 
     override suspend fun fileName(pageIndex: Int): String {
@@ -65,6 +70,10 @@ open class DocumentFileReader(
     }
 
     override fun close() {
-        seekableInputStream.close()
+        runBlocking {
+            withContext(dispatcher) {
+                seekableInputStream.close()
+            }
+        }
     }
 }

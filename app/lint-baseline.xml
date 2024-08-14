@@ -31,6 +31,11 @@
         <location file="ktor-utils-jvm-2.3.12.jar" />
     </issue>
 
+    <issue id="InvalidPackage"
+        message="Invalid package reference in org.slf4j:slf4j-api; not included in Android: `java.lang.module`. Referenced from `org.slf4j.helpers.Slf4jEnvUtil`.">
+        <location file="slf4j-api-2.0.15.jar" />
+    </issue>
+
     <issue errorLine1="                    android:host=&quot;comicviewer.sorrowblue.com&quot;"
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         id="AppLinksAutoVerify"

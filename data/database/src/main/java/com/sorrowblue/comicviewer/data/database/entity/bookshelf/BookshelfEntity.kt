@@ -1,32 +1,13 @@
-package com.sorrowblue.comicviewer.data.database.entity
+package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
-
-internal class BookshelfIdConverter {
-    @TypeConverter
-    fun toBookshelfId(value: Int?): BookshelfId? = value?.let(::BookshelfId)
-
-    @TypeConverter
-    fun toString(value: BookshelfId?): Int? = value?.value
-}
-
-internal class FavoriteIdConverter : FavoriteId.Converter {
-
-    @TypeConverter
-    override fun toId(value: Int?) = super.toId(value)
-
-    @TypeConverter
-    override fun toValue(value: FavoriteId?) = super.toValue(value)
-}
 
 @Entity(tableName = "bookshelf")
 internal data class BookshelfEntity(
@@ -39,7 +20,7 @@ internal data class BookshelfEntity(
     val port: Int,
     val domain: String,
     val username: String,
-    val password: DecryptedPasswordEntity,
+    val password: DecryptedPassword,
 ) {
 
     companion object {
@@ -54,7 +35,7 @@ internal data class BookshelfEntity(
                 port = 0,
                 domain = "",
                 username = "",
-                password = DecryptedPasswordEntity("")
+                password = DecryptedPassword("")
             )
 
             is SmbServer -> BookshelfEntity(
@@ -72,8 +53,8 @@ internal data class BookshelfEntity(
                     is SmbServer.Auth.UsernamePassword -> auth.username
                 },
                 password = when (val auth = model.auth) {
-                    SmbServer.Auth.Guest -> DecryptedPasswordEntity("")
-                    is SmbServer.Auth.UsernamePassword -> DecryptedPasswordEntity(auth.password)
+                    SmbServer.Auth.Guest -> DecryptedPassword("")
+                    is SmbServer.Auth.UsernamePassword -> DecryptedPassword(auth.password)
                 }
             )
 
@@ -85,7 +66,7 @@ internal data class BookshelfEntity(
                 port = 0,
                 domain = "",
                 username = "",
-                password = DecryptedPasswordEntity("")
+                password = DecryptedPassword("")
             )
         }
     }

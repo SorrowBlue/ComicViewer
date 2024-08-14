@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.domain.service.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -11,6 +12,11 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import kotlinx.coroutines.flow.Flow
+
+sealed interface LocalDataSourceQueryError : Resource.IError {
+    data object NotFound : LocalDataSourceQueryError
+    data class SystemError(val throwable: Throwable) : LocalDataSourceQueryError
+}
 
 interface FileLocalDataSource {
 
@@ -58,6 +64,7 @@ interface FileLocalDataSource {
     )
 
     suspend fun updateSimpleAll(list: List<File>)
+    suspend fun updateSimple(list: File): Resource<File, LocalDataSourceQueryError>
 
     suspend fun selectByNotPaths(
         bookshelfId: BookshelfId,

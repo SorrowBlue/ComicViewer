@@ -10,9 +10,9 @@ import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteProgram
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.sorrowblue.comicviewer.data.database.entity.BookshelfIdCacheKey
-import com.sorrowblue.comicviewer.data.database.entity.FavoriteFileEntity
-import com.sorrowblue.comicviewer.data.database.entity.FileEntity
+import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfIdCacheKey
+import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteFileEntity
+import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
