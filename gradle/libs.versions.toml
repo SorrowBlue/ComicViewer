@@ -2,8 +2,8 @@
 versionCode = "15"
 targetSdk = "35"
 
-kotlin = "2.0.10"
-google-ksp = "2.0.10-1.0.24"
+kotlin = "2.0.20"
+google-ksp = "2.0.20-1.0.24"
 kotlinx-coroutines = "1.8.1"
 kotlinx-serialization = "1.7.1"
 kotlinx-kover = "0.8.3"
