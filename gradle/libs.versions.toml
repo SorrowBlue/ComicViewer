@@ -21,7 +21,7 @@ google-dagger = "2.52"
 android-gradle = "8.5.2"
 
 detekt = "1.23.6"
-mikepenz-aboutlibraries = "11.2.2"
+mikepenz-aboutlibraries = "11.2.3"
 koin = "3.5.6"
 compose-destinations = "2.1.0-beta11"
 junit = "1.2.1"
