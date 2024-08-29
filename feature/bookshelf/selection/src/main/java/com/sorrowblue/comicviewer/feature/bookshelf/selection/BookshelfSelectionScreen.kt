@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.bookshelf.selection
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyListState
@@ -13,11 +14,20 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.section.BookshelfSourceList
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
 import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -30,10 +40,18 @@ interface BookshelfSelectionScreenNavigator {
 @Destination<ExternalModuleGraph>
 @Composable
 internal fun BookshelfSelectionScreen(navigator: BookshelfSelectionScreenNavigator) {
-    BookshelfSelectionScreen(
-        onBackClick = navigator::navigateUp,
-        onSourceClick = navigator::onSourceClick,
-    )
+    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
+    if (windowAdaptiveInfo.windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT || windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+        BookshelfSelectionScreen(
+            onBackClick = navigator::navigateUp,
+            onSourceClick = navigator::onSourceClick,
+        )
+    } else {
+        BookshelfSelectionDialog(
+            onDismissRequest = navigator::navigateUp,
+            onSourceClick = navigator::onSourceClick
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,9 +61,8 @@ private fun BookshelfSelectionScreen(
     onSourceClick: (BookshelfType) -> Unit,
     state: BookshelfSelectionScreenState = rememberBookshelfSelectionScreenState(),
 ) {
-    val uiState = state.uiState
     BookshelfSelectionScreen(
-        uiState = uiState,
+        uiState = state.uiState,
         onBackClick = onBackClick,
         onSourceClick = onSourceClick
     )
@@ -75,12 +92,31 @@ private fun BookshelfSelectionScreen(
                 scrollBehavior = scrollBehavior
             )
         },
+        contentWindowInsets = WindowInsets.safeDrawing.add(
+            ComicTheme.dimension.run {
+                WindowInsets(left = margin, right = margin, bottom = margin)
+            }
+        ),
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         BookshelfSourceList(
             items = uiState.list,
             onSourceClick = onSourceClick,
             state = lazyListState,
             contentPadding = contentPadding
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun BookshelfSelectionScreenPreview() {
+    PreviewTheme {
+        BookshelfSelectionScreen(
+            uiState = BookshelfSelectionScreenUiState(),
+            onBackClick = {},
+            onSourceClick = {}
         )
     }
 }

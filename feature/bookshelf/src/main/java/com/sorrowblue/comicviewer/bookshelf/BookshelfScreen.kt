@@ -29,7 +29,6 @@ import com.sorrowblue.comicviewer.bookshelf.component.BookshelfFab
 import com.sorrowblue.comicviewer.bookshelf.info.BookshelfInfoSheet
 import com.sorrowblue.comicviewer.bookshelf.info.NotificationRequestResult
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraph
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphTransitions
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfAppBar
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfMainSheet
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
@@ -53,11 +52,7 @@ interface BookshelfScreenNavigator {
     fun onEditClick(bookshelfId: BookshelfId)
 }
 
-@Destination<BookshelfGraph>(
-    start = true,
-    style = BookshelfGraphTransitions::class,
-    visibility = CodeGenVisibility.INTERNAL,
-)
+@Destination<BookshelfGraph>(start = true, visibility = CodeGenVisibility.INTERNAL)
 @Composable
 internal fun BookshelfScreen(
     navigator: BookshelfScreenNavigator,

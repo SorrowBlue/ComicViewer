@@ -1,20 +1,20 @@
 package com.sorrowblue.comicviewer.domain.usecase
 
-import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
+import com.sorrowblue.comicviewer.domain.model.ImageCache
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 
 abstract class ClearImageCacheUseCase :
-    UseCase<ClearImageCacheUseCase.Request, Unit, ClearImageCacheUseCase.Error>() {
+    OneShotUseCase<ClearImageCacheUseCase.Request, Unit, Unit>() {
 
-    sealed interface Request : UseCase.Request
+    sealed interface Request : OneShotUseCase.Request
 
     data class BookshelfRequest(
         val bookshelfId: BookshelfId,
-        val type: BookshelfImageCacheInfo.Type,
+        val imageCache: ImageCache,
     ) : Request
 
-    data object FavoriteRequest : Request
+    data object OtherRequest : Request
 
     enum class Error : Resource.AppError {
         System,

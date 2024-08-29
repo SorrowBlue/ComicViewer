@@ -5,11 +5,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.database.dao.ReadLaterFileDao
-import com.sorrowblue.comicviewer.data.database.entity.ReadLaterFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
+import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEntity
 import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.Resource
-import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
 import javax.inject.Inject
@@ -38,23 +37,23 @@ internal class ReadLaterFileLocalDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun delete(file: ReadLaterFile): Resource<Unit, Resource.ReportedSystemError> {
+    override suspend fun delete(file: ReadLaterFile): Resource<Unit, Resource.SystemError> {
         return kotlin.runCatching {
             readLaterFileDao.delete(ReadLaterFileEntity.fromModel(file))
         }.fold({
             Resource.Success(Unit)
         }, {
-            Resource.Error(Resource.ReportedSystemError)
+            Resource.Error(Resource.SystemError(it))
         })
     }
 
-    override suspend fun deleteAll(): Result<Unit, Unit> {
+    override suspend fun deleteAll(): Resource<Unit, Resource.SystemError> {
         return kotlin.runCatching {
             readLaterFileDao.deleteAll()
         }.fold({
-            Result.Success(Unit)
+            Resource.Success(Unit)
         }, {
-            Result.Error(Unit)
+            Resource.Error(Resource.SystemError(it))
         })
     }
 

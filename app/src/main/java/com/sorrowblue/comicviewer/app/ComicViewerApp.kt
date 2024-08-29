@@ -79,6 +79,7 @@ internal fun ComicViewerApp(
         DestinationsNavHost(
             navGraph = NavGraphs.main,
             navController = state.navController,
+            engine = rememberCustomNavHostEngine(),
             dependenciesContainerBuilder = {
                 MainDependencies(onRestoreComplete = state::onNavigationHistoryRestore)
 

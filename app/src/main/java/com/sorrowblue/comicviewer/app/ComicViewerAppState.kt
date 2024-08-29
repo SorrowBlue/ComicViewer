@@ -115,7 +115,10 @@ private class ComicViewerAppStateImpl(
                         val findDestination =
                             tab.navGraph.findDestination(destination.route.orEmpty())
                         (findDestination?.style as? DestinationTransitions)?.directionToDisplayNavigation?.any { destination.route == it.route }
-                            ?: false
+                            ?: false ||
+                            (tab.navGraph.defaultTransitions as? DestinationTransitions)?.directionToDisplayNavigation?.any {
+                                destination.route == it.route
+                            } ?: false
                     }
                 }
                 uiState = uiState.copy(currentTab = currentTab)

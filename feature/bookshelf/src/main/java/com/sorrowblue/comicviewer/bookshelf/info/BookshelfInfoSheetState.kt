@@ -28,6 +28,7 @@ import com.sorrowblue.comicviewer.bookshelf.FileScanRequest
 import com.sorrowblue.comicviewer.bookshelf.FileScanWorker
 import com.sorrowblue.comicviewer.bookshelf.section.BookshelfRemoveDialogArgs
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.onSuccess
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfRemoveDialogDestination
@@ -154,10 +155,14 @@ private class BookshelfInfoSheetStateImpl(
                     val bookshelf = navigator.currentDestination?.content!!.bookshelf
                     scope.launch {
                         navigator.navigateBack()
-                        removeBookshelfUseCase.execute(RemoveBookshelfUseCase.Request(bookshelf))
-                        snackbarHostState.showSnackbar(
-                            context.getString(R.string.bookshelf_msg_delete, bookshelf.displayName)
-                        )
+                        removeBookshelfUseCase(RemoveBookshelfUseCase.Request(bookshelf.id)).onSuccess {
+                            snackbarHostState.showSnackbar(
+                                context.getString(
+                                    R.string.bookshelf_msg_delete,
+                                    bookshelf.displayName
+                                )
+                            )
+                        }
                     }
                 }
             }

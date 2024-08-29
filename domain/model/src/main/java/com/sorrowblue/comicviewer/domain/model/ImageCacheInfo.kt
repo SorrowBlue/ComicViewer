@@ -2,25 +2,18 @@ package com.sorrowblue.comicviewer.domain.model
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 
-sealed interface ImageCacheInfo {
+sealed interface ImageCache {
     val size: Long
     val maxSize: Long
 }
 
+data class ThumbnailImageCache(override val size: Long, override val maxSize: Long) : ImageCache
+data class BookPageImageCache(override val size: Long, override val maxSize: Long) : ImageCache
+data class OtherImageCache(override val size: Long, override val maxSize: Long) :
+    ImageCache
+
 data class BookshelfImageCacheInfo(
     val bookshelf: Bookshelf,
-    val type: Type,
-    override val size: Long,
-    override val maxSize: Long,
-) : ImageCacheInfo {
-
-    enum class Type {
-        Thumbnail,
-        Page,
-    }
-}
-
-data class FavoriteImageCacheInfo(
-    override val size: Long,
-    override val maxSize: Long,
-) : ImageCacheInfo
+    val thumbnailImageCache: ThumbnailImageCache,
+    val bookPageImageCache: BookPageImageCache,
+)

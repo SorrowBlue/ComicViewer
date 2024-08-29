@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher.Companion.COMPRESS_FORMAT
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.di.CoilDiskCache
-import com.sorrowblue.comicviewer.data.coil.di.FavoriteThumbnailDiskCache
+import com.sorrowblue.comicviewer.data.coil.di.ImageCacheDiskCache
 import com.sorrowblue.comicviewer.data.coil.from
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
@@ -97,7 +97,7 @@ internal class FavoriteThumbnailFetcher(
 
     class Factory @Inject constructor(
         @ApplicationContext private val context: Context,
-        @FavoriteThumbnailDiskCache private val diskCache: Lazy<DiskCache?>,
+        @ImageCacheDiskCache private val diskCache: Lazy<DiskCache?>,
         private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
         private val fileModelLocalDataSource: FileLocalDataSource,
     ) : Fetcher.Factory<Favorite> {

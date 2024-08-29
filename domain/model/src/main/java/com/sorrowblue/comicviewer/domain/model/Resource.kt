@@ -1,10 +1,10 @@
 package com.sorrowblue.comicviewer.domain.model
 
-sealed interface Resource<out D, out E : Resource.IError> {
+sealed interface Resource<out D, out E> {
 
     class Success<D>(val data: D) : Resource<D, Nothing>
 
-    class Error<out E : IError>(val error: E) : Resource<Nothing, E>
+    class Error<out E>(val error: E) : Resource<Nothing, E>
 
     /** data class Runtime(reason: RuntimeError) : ErrorEntity */
     interface IError
@@ -14,7 +14,19 @@ sealed interface Resource<out D, out E : Resource.IError> {
     data object ReportedSystemError : IError
 }
 
-inline fun <D, E : Resource.IError, R> Resource<D, E>.fold(
+val Resource<*, *>.isError
+    get() = when (this) {
+        is Resource.Error -> true
+        is Resource.Success -> false
+    }
+
+val Resource<*, *>.isSuccess
+    get() = when (this) {
+        is Resource.Error -> false
+        is Resource.Success -> true
+    }
+
+inline fun <D, E, R> Resource<D, E>.fold(
     onSuccess: (D) -> R,
     onError: (E) -> R,
 ): R {
@@ -24,14 +36,14 @@ inline fun <D, E : Resource.IError, R> Resource<D, E>.fold(
     }
 }
 
-inline fun <D, E : Resource.IError> Resource<D, E>.onError(onError: (E) -> Unit): Resource<D, E> {
+inline fun <D, E> Resource<D, E>.onError(onError: (E) -> Unit): Resource<D, E> {
     if (this is Resource.Error) {
         onError(error)
     }
     return this
 }
 
-inline fun <D, E : Resource.IError> Resource<D, E>.onSuccess(onSuccess: (D) -> Unit): Resource<D, E> {
+inline fun <D> Resource<D, Unit>.onSuccess(onSuccess: (D) -> Unit): Resource<D, Unit> {
     if (this is Resource.Success) {
         onSuccess(data)
     }

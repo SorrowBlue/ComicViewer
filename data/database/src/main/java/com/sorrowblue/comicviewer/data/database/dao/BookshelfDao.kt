@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Upsert
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.EmbeddedBookshelfFileCountEntity
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -18,6 +19,9 @@ internal interface BookshelfDao {
     @Delete
     suspend fun delete(entity: BookshelfEntity): Int
 
+    @Query("DELETE FROM bookshelf WHERE id = :bookshelfId")
+    suspend fun delete(bookshelfId: BookshelfId): Int
+
     @Query("SELECT * FROM bookshelf WHERE id = :bookshelfId")
     fun flow(bookshelfId: Int): Flow<BookshelfEntity?>
 
@@ -27,5 +31,5 @@ internal interface BookshelfDao {
     fun pagingSource(): PagingSource<Int, EmbeddedBookshelfFileCountEntity>
 
     @Query("SELECT * FROM bookshelf")
-    fun allBookshelf(): List<BookshelfEntity>
+    fun allBookshelf(): Flow<List<BookshelfEntity>>
 }

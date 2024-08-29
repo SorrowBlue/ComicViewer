@@ -30,7 +30,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 internal sealed interface ReadLaterScreenEvent {
@@ -108,7 +107,7 @@ private class ReadLaterScreenStateImpl(
     override fun onTopAppBarAction(action: ReadLaterTopAppBarAction) {
         when (action) {
             ReadLaterTopAppBarAction.ClearAll -> scope.launch {
-                deleteAllReadLaterUseCase(DeleteAllReadLaterUseCase.Request).first()
+                deleteAllReadLaterUseCase(DeleteAllReadLaterUseCase.Request)
             }
 
             ReadLaterTopAppBarAction.Settings -> sendEvent(ReadLaterScreenEvent.Settings)

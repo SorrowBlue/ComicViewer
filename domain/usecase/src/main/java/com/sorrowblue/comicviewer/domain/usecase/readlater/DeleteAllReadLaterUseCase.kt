@@ -1,12 +1,12 @@
 package com.sorrowblue.comicviewer.domain.usecase.readlater
 
 import com.sorrowblue.comicviewer.domain.model.Resource
-import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
 abstract class DeleteAllReadLaterUseCase :
-    UseCase<DeleteAllReadLaterUseCase.Request, Unit, DeleteAllReadLaterUseCase.Error>() {
+    OneShotUseCase<DeleteAllReadLaterUseCase.Request, Unit, Unit>() {
 
-    data object Request : UseCase.Request
+    data object Request : OneShotUseCase.Request
 
     enum class Error : Resource.AppError {
         System,

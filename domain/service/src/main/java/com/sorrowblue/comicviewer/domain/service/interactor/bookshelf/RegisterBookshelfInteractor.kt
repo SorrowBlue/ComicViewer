@@ -12,8 +12,8 @@ import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import logcat.asLog
+import logcat.logcat
 
 internal class RegisterBookshelfInteractor @Inject constructor(
     private val fileLocalDataSource: FileLocalDataSource,
@@ -22,21 +22,22 @@ internal class RegisterBookshelfInteractor @Inject constructor(
     private val imageCacheDataSource: ImageCacheDataSource,
 ) : RegisterBookshelfUseCase() {
 
-    override fun run(request: Request): Flow<Resource<Bookshelf, Error>> {
-        return flow {
-            runCatching {
-                remoteDataSourceFactory.create(request.bookshelf).connect(request.path)
-            }.onFailure {
-                emit(
-                    when (it as RemoteException) {
-                        RemoteException.InvalidAuth -> Resource.Error(Error.Auth)
-                        RemoteException.InvalidServer -> Resource.Error(Error.Host)
-                        RemoteException.NotFound -> Resource.Error(Error.Path)
-                        RemoteException.NoNetwork -> Resource.Error(Error.Network)
-                        RemoteException.Unknown -> Resource.Error(Error.System)
-                    }
-                )
-            }.onSuccess {
+    override suspend fun run(request: Request): Resource<Bookshelf, Error> {
+        return runCatching {
+            remoteDataSourceFactory.create(request.bookshelf).connect(request.path)
+        }.fold(
+            onFailure = {
+                logcat { "onFailure ${it.asLog()}" }
+                when (it as RemoteException) {
+                    RemoteException.InvalidAuth -> Resource.Error(Error.Auth)
+                    RemoteException.InvalidServer -> Resource.Error(Error.Host)
+                    RemoteException.NotFound -> Resource.Error(Error.Path)
+                    RemoteException.NoNetwork -> Resource.Error(Error.Network)
+                    RemoteException.Unknown -> Resource.Error(Error.System)
+                }
+            },
+            onSuccess = {
+                logcat { "onSuccess" }
                 runCatching {
                     remoteDataSourceFactory.create(request.bookshelf).file(request.path)
                 }.fold({ file ->
@@ -59,14 +60,14 @@ internal class RegisterBookshelfInteractor @Inject constructor(
                             is Folder -> file.copy(bookshelfId = bookshelf.id, parent = "")
                         }
                         fileLocalDataSource.addUpdate(folderModel)
-                        emit(Resource.Success(bookshelf))
+                        Resource.Success(bookshelf)
                     } else {
-                        emit(Resource.Error(Error.Network))
+                        Resource.Error(Error.Network)
                     }
                 }, {
-                    emit(Resource.Error(Error.System))
+                    Resource.Error(Error.System)
                 })
             }
-        }
+        )
     }
 }
