@@ -7,11 +7,11 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.destinations.BookshelfE
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.destinations.BookshelfSelectionScreenDestination
 import com.sorrowblue.comicviewer.feature.folder.destinations.SortTypeDialogDestination
 
-@NavGraph<ExternalModuleGraph>
+@NavGraph<ExternalModuleGraph>(defaultTransitions = BookshelfGraphTransitions::class)
 internal annotation class BookshelfGraph {
 
-    @ExternalDestination<BookshelfSelectionScreenDestination>(style = BookshelfGraphTransitions::class)
-    @ExternalDestination<BookshelfEditScreenDestination>(style = BookshelfGraphTransitions::class)
-    @ExternalDestination<SortTypeDialogDestination>()
+    @ExternalDestination<BookshelfSelectionScreenDestination>(style = BookshelfGraphTransitionsWithDialog::class)
+    @ExternalDestination<BookshelfEditScreenDestination>(style = BookshelfGraphTransitionsWithDialog::class)
+    @ExternalDestination<SortTypeDialogDestination>
     companion object Includes
 }

@@ -9,10 +9,11 @@ internal object CoilDiskCache {
 
     fun thumbnailDiskCache(context: Context, bookshelfId: BookshelfId) =
         diskCaches.getOrPut("thumbnail_cache_${bookshelfId.value}") {
-            DiskCache.Builder().directory(
-                context.cacheDir.resolve("thumbnail_cache_${bookshelfId.value}")
-                    .apply { mkdirs() }
-            )
+            DiskCache.Builder()
+                .directory(
+                    context.cacheDir.resolve("thumbnail_cache_${bookshelfId.value}")
+                        .apply { mkdirs() }
+                )
                 .build()
         }
 

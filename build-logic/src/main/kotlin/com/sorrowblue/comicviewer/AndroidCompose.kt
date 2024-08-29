@@ -2,13 +2,8 @@ package com.sorrowblue.comicviewer
 
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 
 internal fun Project.configureAndroidCompose(commonExtension: CommonExtension<*, *, *, *, *, *>) {
-    configure<ComposeCompilerGradlePluginExtension> {
-        enableStrongSkippingMode.set(true)
-    }
 
     commonExtension.buildFeatures.compose = true
 

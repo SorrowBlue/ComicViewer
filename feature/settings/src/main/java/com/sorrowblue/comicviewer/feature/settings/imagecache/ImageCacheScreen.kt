@@ -1,8 +1,7 @@
 package com.sorrowblue.comicviewer.feature.settings.imagecache
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -14,18 +13,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
 import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
-import com.sorrowblue.comicviewer.domain.model.FavoriteImageCacheInfo
-import com.sorrowblue.comicviewer.domain.model.ImageCacheInfo
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.ImageCache
+import com.sorrowblue.comicviewer.domain.model.OtherImageCache
+import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.settings.R
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailGraph
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.preview.fakeInternalStorage
 import kotlin.math.floor
 
 internal data class ThumbnailScreenUiState(
-    val imageCacheInfos: List<ImageCacheInfo> = emptyList(),
+    val imageCacheInfos: List<BookshelfImageCacheInfo> = emptyList(),
+    val otherImageCache: OtherImageCache? = null,
 )
 
 @Destination<SettingsDetailGraph>(visibility = CodeGenVisibility.INTERNAL)
@@ -61,7 +65,7 @@ private fun ImageCacheScreen(
     uiState: ThumbnailScreenUiState,
     snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
-    onClick: (ImageCacheInfo) -> Unit,
+    onClick: (BookshelfId, ImageCache) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     SettingsDetailPane(
@@ -70,20 +74,24 @@ private fun ImageCacheScreen(
         onBackClick = onBackClick,
         contentPadding = contentPadding,
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            uiState.imageCacheInfos.forEach { imageCacheInfo ->
-                when (imageCacheInfo) {
-                    is BookshelfImageCacheInfo ->
-                        BookshelfImageCacheInfoItem(
-                            imageCacheInfo = imageCacheInfo,
-                            onClick = { onClick(imageCacheInfo) }
-                        )
+        uiState.imageCacheInfos.forEach { imageCacheInfo ->
+            BookshelfImageCacheInfoItem(
+                imageCacheInfo = imageCacheInfo,
+                onThumbnailImageCacheClick = {
+                    onClick(imageCacheInfo.bookshelf.id, imageCacheInfo.thumbnailImageCache)
+                },
+                onBookPageImageCacheClick = {
+                    onClick(imageCacheInfo.bookshelf.id, imageCacheInfo.bookPageImageCache)
+                },
+                modifier = Modifier.padding(ComicTheme.dimension.padding)
+            )
+        }
 
-                    is FavoriteImageCacheInfo -> {}
-                }
-            }
+        uiState.otherImageCache?.let { otherImageCache ->
+            OtherImageCacheItem(
+                imageCache = otherImageCache,
+                onClick = { onClick(BookshelfId(), otherImageCache) }
+            )
         }
     }
 }
@@ -95,26 +103,15 @@ private fun ImageCacheScreenPreview() {
         uiState = ThumbnailScreenUiState(
             imageCacheInfos = listOf(
                 BookshelfImageCacheInfo(
-                    InternalStorage("aaaaaaaaa"),
-                    BookshelfImageCacheInfo.Type.Thumbnail,
-                    50,
-                    100
-                ),
-                BookshelfImageCacheInfo(
-                    InternalStorage("bbbbbbbb"),
-                    BookshelfImageCacheInfo.Type.Page,
-                    50,
-                    100
-                ),
-                FavoriteImageCacheInfo(
-                    33,
-                    250
+                    fakeInternalStorage(),
+                    ThumbnailImageCache(50 * 1024 * 1024, 100 * 1024 * 1024),
+                    BookPageImageCache(50 * 1024 * 1024, 100 * 1024 * 1024)
                 ),
             )
         ),
         snackbarHostState = remember { SnackbarHostState() },
         onBackClick = {},
-        onClick = {},
+        onClick = { _, _ -> },
         contentPadding = PaddingValues()
     )
 }

@@ -12,6 +12,8 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.NavGraphs
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfFolderScreenDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfScreenDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.destinations.BookshelfEditScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionScreenNavigator
@@ -48,6 +50,17 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
                 navController.navigateUp()
             }
 
+            override fun onBack(editMode: BookshelfEditMode) {
+                when (editMode) {
+                    is BookshelfEditMode.Edit ->
+                        navigator.navigateUp()
+                    is BookshelfEditMode.Register ->
+                        navigator.navigate(BookshelfSelectionScreenDestination) {
+                            popUpTo(BookshelfScreenDestination)
+                        }
+                }
+            }
+
             override fun onFabClick() =
                 navigator.navigate(BookshelfSelectionScreenDestination)
 
@@ -57,10 +70,15 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
                 )
 
             override fun onEditClick(bookshelfId: BookshelfId) =
-                navigator.navigate(BookshelfEditScreenDestination(bookshelfId))
+                navigator.navigate(BookshelfEditScreenDestination(BookshelfEditMode.Edit(bookshelfId)))
 
-            override fun onSourceClick(bookshelfType: BookshelfType) =
-                navigator.navigate(BookshelfEditScreenDestination(bookshelfType = bookshelfType))
+            override fun onSourceClick(bookshelfType: BookshelfType) {
+                navigator.navigate(
+                    BookshelfEditScreenDestination(BookshelfEditMode.Register(bookshelfType))
+                ) {
+                    popUpTo(BookshelfScreenDestination)
+                }
+            }
 
             override fun onComplete() {
                 if (!navigator.popBackStack(

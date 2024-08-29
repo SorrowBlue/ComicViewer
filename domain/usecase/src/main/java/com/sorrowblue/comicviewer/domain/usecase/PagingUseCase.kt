@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.domain.usecase.paging
+package com.sorrowblue.comicviewer.domain.usecase
 
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.BaseRequest

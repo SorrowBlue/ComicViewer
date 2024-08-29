@@ -6,6 +6,7 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
 
 abstract class PagingQueryFileUseCase :
     PagingUseCase<PagingQueryFileUseCase.Request, File>() {

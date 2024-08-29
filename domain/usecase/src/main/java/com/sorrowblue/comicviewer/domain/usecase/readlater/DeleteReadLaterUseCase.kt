@@ -1,11 +1,13 @@
 package com.sorrowblue.comicviewer.domain.usecase.readlater
 
-import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
 abstract class DeleteReadLaterUseCase :
-    UseCase<DeleteReadLaterUseCase.Request, Unit, Resource.ReportedSystemError>() {
+    OneShotUseCase<DeleteReadLaterUseCase.Request, Unit, Unit>() {
 
-    class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
+    class Request private constructor(val readLaterFile: ReadLaterFile) : OneShotUseCase.Request {
+        constructor(bookshelfId: BookshelfId, path: String) : this(ReadLaterFile(bookshelfId, path))
+    }
 }

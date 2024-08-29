@@ -6,14 +6,15 @@ import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 
@@ -27,7 +28,6 @@ interface FileInfoSheetState {
     @OptIn(ExperimentalMaterial3AdaptiveApi::class)
     fun fetchFileInfo(file: File, onGet: (FileInfoUiState) -> Unit = {}) {
         val getRequest = GetFileAttributeUseCase.Request(file.bookshelfId, file.path)
-        val isRequest = ExistsReadlaterUseCase.Request(file.bookshelfId, file.path)
         onGet(
             FileInfoUiState(file, null, false).also {
                 navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
@@ -36,23 +36,24 @@ interface FileInfoSheetState {
 
         fileInfoJob?.cancel()
         fileInfoJob = scope.launch {
-            getFileAttributeUseCase(getRequest)
-                .combine(existsReadlaterUseCase(isRequest)) { fileAttribute, existsReadLater ->
-                    if (fileAttribute is Resource.Success && existsReadLater is Resource.Success) {
-                        onGet(
-                            FileInfoUiState(
-                                file,
-                                fileAttribute.data,
-                                existsReadLater.data,
-                                false
-                            ).also {
-                                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
-                            }
-                        )
-                    } else {
-                        Resource.Error(GetFileAttributeUseCase.Error.NotFound)
-                    }
-                }.launchIn(this)
+            val erluc: Flow<Resource<Boolean, Unit>> =
+                existsReadlaterUseCase(ExistsReadlaterUseCase.Request(file.bookshelfId, file.path))
+            val gfauc: Flow<Resource<FileAttribute, GetFileAttributeUseCase.Error>> =
+                getFileAttributeUseCase(getRequest)
+            gfauc.combine(erluc) { fileAttribute, existsReadlater ->
+                if (fileAttribute is Resource.Success && existsReadlater is Resource.Success) {
+                    onGet(
+                        FileInfoUiState(
+                            file,
+                            fileAttribute.data,
+                            existsReadlater.data,
+                            false
+                        ).also {
+                            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
+                        }
+                    )
+                }
+            }.launchIn(this)
         }
     }
 
@@ -63,15 +64,8 @@ interface FileInfoSheetState {
         scope.launch {
             if (fileInfo.isReadLater) {
                 deleteReadLaterUseCase(DeleteReadLaterUseCase.Request(file.bookshelfId, file.path))
-                    .first()
             } else {
-                when (
-                    addReadLaterUseCase(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
-                        .first()
-                ) {
-                    is Resource.Success -> Unit
-                    is Resource.Error -> Unit
-                }
+                addReadLaterUseCase(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
             }
         }
         scope.launch {

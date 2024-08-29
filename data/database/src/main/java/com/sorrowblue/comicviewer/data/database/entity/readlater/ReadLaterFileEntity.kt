@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.database.entity
+package com.sorrowblue.comicviewer.data.database.entity.readlater
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

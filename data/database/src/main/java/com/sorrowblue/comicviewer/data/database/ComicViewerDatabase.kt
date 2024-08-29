@@ -9,12 +9,12 @@ import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteFileDao
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.dao.ReadLaterFileDao
-import com.sorrowblue.comicviewer.data.database.entity.ReadLaterFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.PasswordConverters
 import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteEntity
 import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
+import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEntity
 
 @Database(
     entities = [BookshelfEntity::class, FileEntity::class, FavoriteEntity::class, FavoriteFileEntity::class, ReadLaterFileEntity::class],

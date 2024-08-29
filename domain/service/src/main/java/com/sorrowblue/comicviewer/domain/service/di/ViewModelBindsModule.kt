@@ -1,9 +1,11 @@
 package com.sorrowblue.comicviewer.domain.service.di
 
 import com.sorrowblue.comicviewer.domain.service.interactor.ClearImageCacheInteractor
-import com.sorrowblue.comicviewer.domain.service.interactor.GetImageCacheInfoInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.GetBookshelfImageCacheInfoInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.GetInstalledModulesInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.GetNavigationHistoryInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.GetOtherImageCacheInfoInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.SendFatalErrorInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.DeleteHistoryInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfFileInteractor
@@ -18,7 +20,6 @@ import com.sorrowblue.comicviewer.domain.service.interactor.favorite.GetFavorite
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.RemoveFavoriteFileInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.UpdateFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.DeleteThumbnailsInteractor
-import com.sorrowblue.comicviewer.domain.service.interactor.file.ExistsReadlaterInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetFileAttributeInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetFileInteractor
@@ -35,15 +36,16 @@ import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingReadLat
 import com.sorrowblue.comicviewer.domain.service.interactor.readlater.AddReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.readlater.DeleteAllReadLaterInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.readlater.DeleteReadLaterInteractor
-import com.sorrowblue.comicviewer.domain.service.interactor.readlater.SendFatalErrorInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.readlater.ExistsReadlaterInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.LoadSettingsInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageFolderDisplaySettingsInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageOneTimeFlagInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageSecuritySettingsInteractor
 import com.sorrowblue.comicviewer.domain.usecase.ClearImageCacheUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetImageCacheInfoUseCase
+import com.sorrowblue.comicviewer.domain.usecase.GetBookshelfImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
+import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.DeleteHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfBookUseCase
@@ -71,11 +73,11 @@ import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingHistoryBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageOneTimeFlagUseCase
@@ -176,7 +178,12 @@ internal interface ViewModelBindsModule {
     fun bindGetIntentBookUseCase(interactor: GetIntentBookInteractor): GetIntentBookUseCase
 
     @Binds
-    fun bindGetImageCacheInfoUseCase(interactor: GetImageCacheInfoInteractor): GetImageCacheInfoUseCase
+    fun bindGetBookshelfImageCacheInfoUseCase(
+        interactor: GetBookshelfImageCacheInfoInteractor,
+    ): GetBookshelfImageCacheInfoUseCase
+
+    @Binds
+    fun bindGetOtherImageCacheInfoUseCase(interactor: GetOtherImageCacheInfoInteractor): GetOtherImageCacheInfoUseCase
 
     @Binds
     fun bindClearImageCacheUseCase(interactor: ClearImageCacheInteractor): ClearImageCacheUseCase

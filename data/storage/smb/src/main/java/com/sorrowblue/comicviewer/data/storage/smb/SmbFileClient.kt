@@ -19,6 +19,7 @@ import java.io.InputStream
 import java.net.URI
 import java.net.URISyntaxException
 import java.net.URLDecoder
+import java.net.UnknownHostException
 import java.util.Properties
 import jcifs.CIFSContext
 import jcifs.DialectVersion
@@ -78,10 +79,12 @@ internal class SmbFileClient @AssistedInject constructor(
                         NtStatus.NT_STATUS_LOGON_FAILURE -> throw FileClientException.InvalidAuth
                         NtStatus.NT_STATUS_INVALID_PARAMETER -> throw FileClientException.InvalidPath
                         NtStatus.NT_STATUS_UNSUCCESSFUL -> {
-                            if (it.cause is ConnectionTimeoutException || it.cause is TransportException) {
+                            if (it.cause is ConnectionTimeoutException || it.cause is TransportException || it.cause is UnknownHostException) {
                                 throw FileClientException.InvalidServer
                             } else if (it.message == "IPC signing is enforced, but no signing is available") {
                                 throw FileClientException.InvalidAuth
+                            } else {
+                                throw it
                             }
                         }
 

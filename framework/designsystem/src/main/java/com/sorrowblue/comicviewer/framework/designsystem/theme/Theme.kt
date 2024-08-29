@@ -4,6 +4,8 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButtonColors
+import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -157,4 +159,14 @@ object ComicTheme {
         @Composable
         @ReadOnlyComposable
         get() = MaterialTheme.shapes
+
+    var fixedSegmentedButtonColorsCached: SegmentedButtonColors? = null
+}
+
+@Composable
+fun SegmentedButtonDefaults.fixedColors() = ComicTheme.fixedSegmentedButtonColorsCached ?: colors(
+    disabledInactiveBorderColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+    disabledInactiveContentColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+).also {
+    ComicTheme.fixedSegmentedButtonColorsCached = it
 }

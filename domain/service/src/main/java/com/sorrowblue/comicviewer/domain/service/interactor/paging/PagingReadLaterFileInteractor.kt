@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.paging
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingReadLaterFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.PagingReadLaterFileUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
