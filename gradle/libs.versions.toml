@@ -139,7 +139,7 @@ squareup-okhttp3 = "com.squareup.okhttp3:okhttp:4.12.0"
 jcifs-ng = "eu.agno3.jcifs:jcifs-ng:2.1.10"
 com-sorrowblue-sevenzipjbinding = "com.sorrowblue.sevenzipjbinding:7-Zip-JBinding-4Android:16.02-2.03"
 
-artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.24.8"
+artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.24.9"
 squareup-logcat = "com.squareup.logcat:logcat:0.1"
 fasterxml-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.17.2"
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.9.0" }
