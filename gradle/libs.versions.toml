@@ -49,7 +49,7 @@ google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "goo
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "mikepenz-aboutlibraries" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-modulegraph = { id = "dev.iurysouza.modulegraph", version = "0.10.0" }
+modulegraph = { id = "dev.iurysouza.modulegraph", version = "0.10.1" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 semver = { id = "com.xenoterracide.gradle.semver", version = "0.11.3" }
 versions = "com.github.ben-manes.versions:0.51.0"
