@@ -8,11 +8,11 @@ kotlinx-coroutines = "1.8.1"
 kotlinx-serialization = "1.7.2"
 kotlinx-kover = "0.8.3"
 
-androidx-activity = "1.9.1"
+androidx-activity = "1.9.2"
 androidx-credentials = "1.2.2"
 androidx-datastore = "1.1.1"
 androidx-lifecycle = "2.8.5"
-androidx-navigation = "2.7.7"
+androidx-navigation = "2.8.0"
 androidx-paging = "3.3.2"
 androidx-room = "2.6.1"
 androidx-work = "2.9.1"
@@ -87,17 +87,17 @@ androidx-biometric = "androidx.biometric:biometric:1.2.0-alpha05"
 androidx-browser = "androidx.browser:browser:1.8.0"
 androidx-core-ktx = "androidx.core:core-ktx:1.13.1"
 androidx-core-splashscreen = "androidx.core:core-splashscreen:1.0.1"
-androidx-compose-bom = "androidx.compose:compose-bom:2024.08.00"
+androidx-compose-bom = "androidx.compose:compose-bom:2024.09.01"
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-testJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
 androidx-compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.3.0-rc01" }
-androidx-compose-material3-adaptiveNavigationSuite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version = "1.3.0-rc01" }
-androidx-compose-material3-adaptive-layout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout", version = "1.0.0-rc01" }
-androidx-compose-material3-adaptive-navigation = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation", version = "1.0.0-rc01" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.3.0" }
+androidx-compose-material3-adaptiveNavigationSuite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version = "1.3.0" }
+androidx-compose-material3-adaptive-layout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout", version = "1.0.0" }
+androidx-compose-material3-adaptive-navigation = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation", version = "1.0.0" }
 #noinspection CredentialDependency
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "androidx-credentials" }
 androidx-credentials-playServicesAuth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "androidx-credentials" }
@@ -164,7 +164,7 @@ androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.6.1"
 robolectric = "org.robolectric:robolectric:4.13"
 
 mikepenz-aboutlibrariesComposeM3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "mikepenz-aboutlibraries" }
-nlopez-compose-rules-detekt = "io.nlopez.compose.rules:detekt:0.4.10"
+nlopez-compose-rules-detekt = "io.nlopez.compose.rules:detekt:0.4.12"
 arturbosch-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
