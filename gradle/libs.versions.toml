@@ -142,7 +142,7 @@ com-sorrowblue-sevenzipjbinding = "com.sorrowblue.sevenzipjbinding:7-Zip-JBindin
 artifex-mupdf-fitz = "com.artifex.mupdf:fitz:1.24.9"
 squareup-logcat = "com.squareup.logcat:logcat:0.1"
 fasterxml-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.17.2"
-squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.9.0" }
+squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.9.1" }
 
 google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "google-dagger" }
 google-dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "google-dagger" }
