@@ -150,8 +150,8 @@ google-dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", vers
 junit = "junit:junit:4.13.2"
 box-java-sdk = "com.box:box-java-sdk:4.9.0"
 
-microsoft-identity-client-msal = "com.microsoft.identity.client:msal:5.5.0"
-microsoft-graph = "com.microsoft.graph:microsoft-graph:6.15.0"
+microsoft-identity-client-msal = "com.microsoft.identity.client:msal:5.6.0"
+microsoft-graph = "com.microsoft.graph:microsoft-graph:6.16.0"
 
 androidx-test-core-ktx = "androidx.test:core-ktx:1.6.1"
 androidx-test-runner = "androidx.test:runner:1.6.2"
