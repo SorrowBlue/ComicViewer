@@ -87,7 +87,7 @@ androidx-biometric = "androidx.biometric:biometric:1.2.0-alpha05"
 androidx-browser = "androidx.browser:browser:1.8.0"
 androidx-core-ktx = "androidx.core:core-ktx:1.13.1"
 androidx-core-splashscreen = "androidx.core:core-splashscreen:1.0.1"
-androidx-compose-bom = "androidx.compose:compose-bom:2024.09.01"
+androidx-compose-bom = "androidx.compose:compose-bom:2024.09.02"
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-testJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
