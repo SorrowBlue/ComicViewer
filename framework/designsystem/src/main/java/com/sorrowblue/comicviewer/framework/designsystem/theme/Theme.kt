@@ -114,10 +114,10 @@ fun ComicTheme(
         darkTheme -> darkScheme
         else -> lightScheme
     }
-    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
-    val dimension by remember(windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val dimension by remember(windowSizeClass.windowWidthSizeClass) {
         mutableStateOf(
-            when (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
+            when (windowSizeClass.windowWidthSizeClass) {
                 WindowWidthSizeClass.COMPACT -> compactDimension
                 WindowWidthSizeClass.MEDIUM -> mediumDimension
                 WindowWidthSizeClass.EXPANDED -> expandedDimension

@@ -8,7 +8,6 @@ import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import coil3.size.pxOrElse
-import java.io.IOException
 import okio.BufferedSink
 import okio.BufferedSource
 import okio.Sink
@@ -146,7 +145,7 @@ internal abstract class FileFetcher<T : CoilMetaData>(
             fileSystem.read(metadata) {
                 readMetadata()
             }
-        } catch (_: IOException) {
+        } catch (_: Exception) {
             // If we can't parse the metadata, ignore this entry.
             null
         }

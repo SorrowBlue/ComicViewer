@@ -24,7 +24,7 @@ import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.feature.favorite.common.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.previewPainter
+import com.sorrowblue.comicviewer.framework.ui.preview.previewPainter
 
 @Composable
 fun FavoriteItem(

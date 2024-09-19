@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -41,12 +40,12 @@ import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteName
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarBottom
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
 import kotlinx.coroutines.flow.flowOf
 import soil.form.FormPolicy
 import soil.form.compose.Controller
@@ -69,7 +68,6 @@ internal fun FavoriteEditScreen(args: FavoriteEditArgs, navigator: FavoriteEditS
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoriteEditScreen(
     navigator: FavoriteEditScreenNavigator,
@@ -96,7 +94,6 @@ data class FavoriteEditScreenUiState(
     val error: String = "",
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoriteEditScreen(
     uiState: FavoriteEditScreenUiState,
@@ -189,7 +186,6 @@ private fun FavoriteEditScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun PreviewFavoriteEditScreen() {

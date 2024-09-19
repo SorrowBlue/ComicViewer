@@ -26,6 +26,7 @@ import com.sorrowblue.comicviewer.domain.service.interactor.file.GetFileInteract
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetIntentBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetNextBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.UpdateLastReadPageInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingBookshelfBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingBookshelfFolderInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingFavoriteFileInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingFavoriteInteractor
@@ -67,6 +68,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
@@ -197,9 +199,10 @@ internal interface ViewModelBindsModule {
     fun bindPagingQueryFileUseCase(interactor: PagingQueryFileInteractor): PagingQueryFileUseCase
 
     @Binds
-    fun bindPagingBookshelfFolderUseCase(
-        interactor: PagingBookshelfFolderInteractor,
-    ): PagingBookshelfFolderUseCase
+    fun bindPagingBookshelfFolderUseCase(interactor: PagingBookshelfFolderInteractor): PagingBookshelfFolderUseCase
+
+    @Binds
+    fun bindPagingBookshelfBookUseCase(interactor: PagingBookshelfBookInteractor): PagingBookshelfBookUseCase
 
     @Binds
     fun bindPagingFavoriteUseCase(interactor: PagingFavoriteInteractor): PagingFavoriteUseCase

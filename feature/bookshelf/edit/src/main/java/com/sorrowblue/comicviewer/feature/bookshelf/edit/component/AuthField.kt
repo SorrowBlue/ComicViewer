@@ -11,7 +11,6 @@ import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenForm
 import com.sorrowblue.comicviewer.framework.designsystem.theme.fixedColors
-import kotlinx.collections.immutable.toPersistentList
 import soil.form.FieldName
 import soil.form.compose.Controller
 import soil.form.compose.FieldControl
@@ -24,7 +23,7 @@ internal fun FormScope<SmbEditScreenForm>.AuthField(
     control: FieldControl<SmbEditScreenForm.Auth> = rememberAuthFieldControl(),
 ) {
     Controller(control) { field ->
-        val list = remember { SmbEditScreenForm.Auth.entries.toPersistentList() }
+        val list = remember { SmbEditScreenForm.Auth.entries }
         SingleChoiceSegmentedButtonRow(modifier = modifier) {
             list.forEachIndexed { index, auth ->
                 SegmentedButton(

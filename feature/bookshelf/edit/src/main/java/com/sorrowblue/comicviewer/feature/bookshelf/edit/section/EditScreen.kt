@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -31,12 +30,11 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenUiState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.marginPadding
+import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import soil.form.Submission
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun EditScreen(
     uiState: BookshelfEditScreenUiState,

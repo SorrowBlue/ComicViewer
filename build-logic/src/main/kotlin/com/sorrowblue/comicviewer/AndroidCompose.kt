@@ -9,6 +9,10 @@ internal fun Project.configureAndroidCompose(commonExtension: CommonExtension<*,
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask::class.java) {
         compilerOptions {
+            freeCompilerArgs.addAll(
+                "-opt-in=androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi",
+                "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            )
             if (project.findProperty("composeCompilerMetrics") == "true") {
                 freeCompilerArgs.addAll(
                     "-P",

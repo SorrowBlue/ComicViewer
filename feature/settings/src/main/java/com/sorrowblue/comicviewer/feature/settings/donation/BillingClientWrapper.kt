@@ -46,6 +46,7 @@ class BillingClientWrapper(
         .setListener(this)
         .enablePendingPurchases(
             PendingPurchasesParams.newBuilder()
+                .enableOneTimeProducts()
                 .build()
         )
         .build()

@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.file
 
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import com.sorrowblue.comicviewer.domain.model.Resource
@@ -22,10 +21,8 @@ interface FileInfoSheetState {
 
     var fileInfoJob: Job?
 
-    @OptIn(ExperimentalMaterial3AdaptiveApi::class)
     val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>
 
-    @OptIn(ExperimentalMaterial3AdaptiveApi::class)
     fun fetchFileInfo(file: File, onGet: (FileInfoUiState) -> Unit = {}) {
         val getRequest = GetFileAttributeUseCase.Request(file.bookshelfId, file.path)
         onGet(
@@ -57,9 +54,8 @@ interface FileInfoSheetState {
         }
     }
 
-    @OptIn(ExperimentalMaterial3AdaptiveApi::class)
     fun onReadLaterClick() {
-        val fileInfo = navigator.currentDestination?.content ?: return
+        val fileInfo = navigator.currentDestination?.contentKey ?: return
         val file = fileInfo.file
         scope.launch {
             if (fileInfo.isReadLater) {

@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.ModalBottomSheet
@@ -35,10 +34,10 @@ import com.sorrowblue.comicviewer.feature.favorite.add.component.FavoriteAddTopA
 import com.sorrowblue.comicviewer.feature.favorite.add.section.RecentFavoriteSheet
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.preview.fakeFavorite
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
 import kotlinx.coroutines.flow.flowOf
 
 class FavoriteAddArgs(
@@ -66,7 +65,6 @@ internal fun FavoriteAddDialogScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoriteAddDialogScreen(
     navigator: FavoriteAddScreenNavigator,
@@ -90,7 +88,6 @@ private fun FavoriteAddDialogScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoriteAddDialogScreen(
     lazyPagingItems: LazyPagingItems<Favorite>,
@@ -147,7 +144,6 @@ private fun FavoriteAddDialogScreen(
 
 private val BottomButtonMargin = 16.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 private fun PreviewFavoriteAddDialogScreen() {

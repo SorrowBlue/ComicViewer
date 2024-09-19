@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -34,8 +33,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.CustomSlider
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 
 @Composable
 fun Setting(
@@ -323,7 +322,6 @@ fun CheckboxSetting(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SliderSetting(
     title: @Composable () -> Unit,
@@ -356,7 +354,6 @@ fun SliderSetting(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SliderSetting(
     title: @Composable () -> Unit,

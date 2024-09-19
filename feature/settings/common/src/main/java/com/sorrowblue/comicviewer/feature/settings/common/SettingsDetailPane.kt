@@ -5,13 +5,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -19,13 +20,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
@@ -37,18 +38,16 @@ interface SettingsExtraNavigator {
     fun navigateUp()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDetailPane(
     title: @Composable () -> Unit,
     onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     snackbarHost: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
-    widthSizeClass: WindowWidthSizeClass = rememberWindowAdaptiveInfo().value.windowSizeClass.windowWidthSizeClass,
+    windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
     scrollBehavior: TopAppBarScrollBehavior =
-        if (widthSizeClass == WindowWidthSizeClass.COMPACT || widthSizeClass == WindowWidthSizeClass.MEDIUM) {
+        if (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
             TopAppBarDefaults.pinnedScrollBehavior()
         } else {
             TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -58,7 +57,7 @@ fun SettingsDetailPane(
 ) {
     Scaffold(
         topBar = {
-            if (widthSizeClass == WindowWidthSizeClass.COMPACT || widthSizeClass == WindowWidthSizeClass.MEDIUM) {
+            if (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
                 TopAppBar(
                     title = title,
                     navigationIcon = {
@@ -70,7 +69,7 @@ fun SettingsDetailPane(
                         }
                     },
                     actions = actions,
-                    windowInsets = contentPadding.asWindowInsets()
+                    windowInsets = WindowInsets.safeDrawing
                         .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
                     scrollBehavior = scrollBehavior
                 )
@@ -78,14 +77,14 @@ fun SettingsDetailPane(
                 LargeTopAppBar(
                     title = title,
                     actions = actions,
-                    windowInsets = contentPadding.asWindowInsets()
+                    windowInsets = WindowInsets.safeDrawing
                         .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
                     scrollBehavior = scrollBehavior
                 )
             }
         },
         snackbarHost = snackbarHost,
-        contentWindowInsets = contentPadding.asWindowInsets(),
+        contentWindowInsets = WindowInsets.safeDrawing,
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         Column(
@@ -99,7 +98,6 @@ fun SettingsDetailPane(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsExtraPane(
     title: @Composable () -> Unit,

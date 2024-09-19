@@ -8,5 +8,5 @@ android {
 }
 
 dependencies {
-    api("com.soil-kt.soil:form:1.0.0-alpha04")
+    api(libs.soil.form)
 }

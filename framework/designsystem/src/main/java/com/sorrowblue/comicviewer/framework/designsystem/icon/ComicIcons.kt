@@ -41,7 +41,6 @@ import androidx.compose.material.icons.rounded.Money
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Notifications
-import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material.icons.rounded.RocketLaunch
 import androidx.compose.material.icons.rounded.Save
@@ -68,7 +67,6 @@ object ComicIcons {
     val VisibilityOff = Icons.Rounded.VisibilityOff
     val ErrorOutline = Icons.Rounded.ErrorOutline
     val RestartAlt = Icons.Rounded.RestartAlt
-    val Refresh = Icons.Rounded.Refresh
     val SortByAlpha = Icons.Rounded.SortByAlpha
     val Search = Icons.Rounded.Search
     val Delete = Icons.Rounded.Delete

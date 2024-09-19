@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.readlater
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
@@ -55,7 +54,6 @@ internal interface ReadLaterScreenState :
     fun onContentsAction(action: ReadLaterContentsAction)
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberReadLaterScreenState(
     navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
@@ -79,7 +77,6 @@ internal fun rememberReadLaterScreenState(
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private class ReadLaterScreenStateImpl(
     viewModel: ReadLaterViewModel,
     override val savedStateHandle: SavedStateHandle,
@@ -99,7 +96,7 @@ private class ReadLaterScreenStateImpl(
     override var fileInfoJob: Job? = null
 
     init {
-        navigator.currentDestination?.content?.let {
+        navigator.currentDestination?.contentKey?.let {
             navigateToFileInfo(it.file)
         }
     }
@@ -117,7 +114,7 @@ private class ReadLaterScreenStateImpl(
     override fun onFileInfoSheetAction(action: FileInfoSheetAction) {
         when (action) {
             FileInfoSheetAction.Close -> navigator.navigateBack()
-            FileInfoSheetAction.Favorite -> navigator.currentDestination?.content?.file?.let {
+            FileInfoSheetAction.Favorite -> navigator.currentDestination?.contentKey?.file?.let {
                 sendEvent(ReadLaterScreenEvent.Favorite(it))
             }
 

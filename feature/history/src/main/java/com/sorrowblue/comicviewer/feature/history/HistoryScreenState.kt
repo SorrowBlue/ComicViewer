@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.history
 
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
@@ -50,7 +49,6 @@ internal interface HistoryScreenState :
     fun onHistoryContentsAction(action: HistoryContentsAction)
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberHistoryScreenState(
     navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
@@ -71,7 +69,6 @@ internal fun rememberHistoryScreenState(
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private class HistoryScreenStateImpl(
     viewModel: HistoryViewModel,
     override val savedStateHandle: SavedStateHandle,
@@ -98,7 +95,7 @@ private class HistoryScreenStateImpl(
     override fun onFileInfoSheetAction(action: FileInfoSheetAction) {
         when (action) {
             FileInfoSheetAction.Close -> navigator.navigateBack()
-            FileInfoSheetAction.Favorite -> navigator.currentDestination?.content?.file?.let {
+            FileInfoSheetAction.Favorite -> navigator.currentDestination?.contentKey?.file?.let {
                 sendEvent(HistoryScreenEvent.Favorite(it))
             }
 

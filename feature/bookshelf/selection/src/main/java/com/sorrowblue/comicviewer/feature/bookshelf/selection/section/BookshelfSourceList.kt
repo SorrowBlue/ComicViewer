@@ -10,11 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.component.BookshelfSource
-import kotlinx.collections.immutable.PersistentList
 
 @Composable
 internal fun BookshelfSourceList(
-    items: PersistentList<BookshelfType>,
+    items: List<BookshelfType>,
     onSourceClick: (BookshelfType) -> Unit,
     state: LazyListState,
     contentPadding: PaddingValues,

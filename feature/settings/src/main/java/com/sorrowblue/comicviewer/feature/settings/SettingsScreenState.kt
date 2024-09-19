@@ -5,46 +5,108 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.Posture
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
+import androidx.compose.material3.adaptive.allVerticalHingeBounds
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.HingePolicy
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
-import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
+import androidx.compose.material3.adaptive.occludingVerticalHingeBounds
+import androidx.compose.material3.adaptive.separatingVerticalHingeBounds
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberFixListDetailPaneScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+fun calculateLowerInfoPaneScaffoldDirective(
+    windowAdaptiveInfo: WindowAdaptiveInfo,
+    verticalHingePolicy: HingePolicy = HingePolicy.AvoidSeparating,
+): PaneScaffoldDirective {
+    val maxHorizontalPartitions: Int
+    val horizontalPartitionSpacerSize: Dp
+    when (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass) {
+        WindowWidthSizeClass.COMPACT -> {
+            maxHorizontalPartitions = 1
+            horizontalPartitionSpacerSize = 0.dp
+        }
+
+        WindowWidthSizeClass.MEDIUM -> {
+            maxHorizontalPartitions = 2
+            horizontalPartitionSpacerSize = 24.dp
+        }
+
+        else -> {
+            maxHorizontalPartitions = 2
+            horizontalPartitionSpacerSize = 24.dp
+        }
+    }
+    val maxVerticalPartitions: Int
+    val verticalPartitionSpacerSize: Dp
+
+    // TODO(conradchen): Confirm the table top mode settings
+    if (windowAdaptiveInfo.windowPosture.isTabletop) {
+        maxVerticalPartitions = 2
+        verticalPartitionSpacerSize = 24.dp
+    } else {
+        maxVerticalPartitions = 1
+        verticalPartitionSpacerSize = 0.dp
+    }
+
+    // TODO(conradchen): add 412.dp for L/XL window size class when they are available
+    val defaultPanePreferredWidth = 360.dp
+
+    return PaneScaffoldDirective(
+        maxHorizontalPartitions,
+        horizontalPartitionSpacerSize,
+        maxVerticalPartitions,
+        verticalPartitionSpacerSize,
+        defaultPanePreferredWidth,
+        getExcludedVerticalBounds(windowAdaptiveInfo.windowPosture, verticalHingePolicy)
+    )
+}
+
+private fun getExcludedVerticalBounds(posture: Posture, hingePolicy: HingePolicy): List<Rect> {
+    return when (hingePolicy) {
+        HingePolicy.AvoidSeparating -> posture.separatingVerticalHingeBounds
+        HingePolicy.AvoidOccluding -> posture.occludingVerticalHingeBounds
+        HingePolicy.AlwaysAvoid -> posture.allVerticalHingeBounds
+        else -> emptyList()
+    }
+}
+
 internal interface SettingsScreenState : SaveableScreenState {
-    val windowAdaptiveInfo: WindowAdaptiveInfo
     val navigator: ThreePaneScaffoldNavigator<Settings2>
     val navController: NavHostController
     fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit)
     fun onDetailBackClick()
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberSettingsScreenState(
-    windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
-    navigator: ThreePaneScaffoldNavigator<Settings2> = rememberListDetailPaneScaffoldNavigator<Settings2>(),
+    scaffoldDirective: PaneScaffoldDirective =
+        calculateLowerInfoPaneScaffoldDirective(currentWindowAdaptiveInfo()),
+    navigator: ThreePaneScaffoldNavigator<Settings2> = rememberFixListDetailPaneScaffoldNavigator(
+        scaffoldDirective = scaffoldDirective,
+    ),
     navController: NavHostController = rememberNavController(),
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
 ): SettingsScreenState = rememberSaveableScreenState {
     SettingsScreenStateImpl(
         savedStateHandle = it,
-        windowAdaptiveInfo = windowAdaptiveInfo,
         navigator = navigator,
         navController = navController,
         context = context,
@@ -52,11 +114,9 @@ internal fun rememberSettingsScreenState(
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Stable
 private class SettingsScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
-    override val windowAdaptiveInfo: WindowAdaptiveInfo,
     override val navigator: ThreePaneScaffoldNavigator<Settings2>,
     override val navController: NavHostController,
     private val context: Context,
@@ -93,10 +153,7 @@ private class SettingsScreenStateImpl(
     }
 
     private fun onSettingsClick2(settings2: Settings2) {
-        scope.launch {
-            delay(250)
-            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, settings2)
-        }
+        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, settings2)
     }
 
     override fun onDetailBackClick() {

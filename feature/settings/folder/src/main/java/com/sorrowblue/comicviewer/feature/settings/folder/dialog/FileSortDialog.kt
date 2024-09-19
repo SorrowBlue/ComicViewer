@@ -22,8 +22,8 @@ import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.settings.folder.R
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsGraph
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 
 @Destination<FolderSettingsGraph>(
     style = DestinationStyle.Dialog::class,

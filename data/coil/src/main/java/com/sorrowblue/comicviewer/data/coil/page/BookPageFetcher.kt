@@ -99,7 +99,7 @@ internal class BookPageFetcher(
 
     override val diskCacheKey
         get() = options.diskCacheKey
-            ?: "${data.book.bookshelfId.value}:${data.book.path}:${data.pageIndex}".encodeUtf8()
+            ?: "id:${data.book.bookshelfId.value},path:${data.book.path},index:${data.pageIndex}".encodeUtf8()
                 .sha256().hex()
 
     class Factory @Inject constructor(

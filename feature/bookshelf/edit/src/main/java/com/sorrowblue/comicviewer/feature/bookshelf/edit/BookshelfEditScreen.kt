@@ -5,9 +5,6 @@ import android.view.autofill.AutofillManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.core.content.getSystemService
@@ -16,8 +13,7 @@ import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompact
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -66,11 +62,8 @@ internal fun BookshelfEditScreen(
     navArgs: BookshelfEditArgs,
     navigator: BookshelfEditScreenNavigator,
 ) {
-    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
     val state = rememberBookshelfEditScreenState(navArgs)
-    val isCompact by remember(windowAdaptiveInfo) {
-        mutableStateOf(windowAdaptiveInfo.isCompact)
-    }
+    val isCompact = isCompactWindowClass()
     BackHandler {
         navigator.onBack(state.uiState.editMode)
     }
@@ -85,7 +78,8 @@ internal fun BookshelfEditScreen(
             BookshelfEditLoadingScreen(
                 isDialog = !isCompact,
                 uiState = uiState,
-                onBackClick = { navigator.onBack(uiState.editMode) })
+                onBackClick = { navigator.onBack(uiState.editMode) }
+            )
 
         is InternalStorageEditScreenUiState ->
             InternalStorageEditDialogScreen(
