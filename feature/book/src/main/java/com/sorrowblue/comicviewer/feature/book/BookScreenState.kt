@@ -13,7 +13,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
@@ -26,9 +25,8 @@ import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -52,10 +50,10 @@ internal fun rememberBookScreenState(
     systemUiController: SystemUiController = rememberSystemUiController(),
     viewModel: BookViewModel = hiltViewModel(),
 ): BookScreenState {
-    val adaptiveInfo by rememberWindowAdaptiveInfo()
-    return remember(adaptiveInfo.windowSizeClass.windowWidthSizeClass) {
+    val isCompactWindowClass = isCompactWindowClass()
+    return remember(isCompactWindowClass) {
         BookScreenStateImpl(
-            windowWidthSizeClass = adaptiveInfo.windowSizeClass.windowWidthSizeClass,
+            isCompactWindowClass = isCompactWindowClass,
             uiState = uiState,
             currentList = currentList,
             pagerState = pagerState,
@@ -86,7 +84,7 @@ private class BookScreenStateImpl(
     val scope: CoroutineScope,
     val systemUiController: SystemUiController,
     uiState: BookScreenUiState.Loaded,
-    windowWidthSizeClass: WindowWidthSizeClass,
+    isCompactWindowClass: Boolean,
     override val currentList: SnapshotStateList<PageItem>,
     override val pagerState: PagerState,
     getNextBookUseCase: GetNextBookUseCase,
@@ -122,7 +120,7 @@ private class BookScreenStateImpl(
             logcat("TAG") { "nextBook $isNext, $it" }
             nextBookList.add(NextBook.Folder(it))
         }
-        return NextPage(nextBookList.toPersistentList())
+        return NextPage(nextBookList)
     }
 
     init {
@@ -147,7 +145,7 @@ private class BookScreenStateImpl(
                                 }
 
                                 BookSettings.PageFormat.Auto ->
-                                    if (windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+                                    if (isCompactWindowClass) {
                                         (1..uiState.book.totalPageCount).map {
                                             BookPage.Split.Unrated(it - 1)
                                         }

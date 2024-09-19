@@ -1,26 +1,24 @@
 package com.sorrowblue.comicviewer.feature.settings
 
-import android.os.Parcelable
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
-import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
-import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.spec.Direction
 import com.sorrowblue.comicviewer.feature.settings.destinations.DonationScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.destinations.ImageCacheScreenDestination
@@ -33,12 +31,9 @@ import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailGrap
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraphTransitions
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
-import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPaneUiState
 import com.sorrowblue.comicviewer.feature.settings.security.destinations.SecuritySettingsScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.viewer.destinations.ViewerSettingsScreenDestination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.copy
-import kotlinx.parcelize.Parcelize
 
 internal interface SettingsScreenNavigator {
     fun navigateUp()
@@ -53,76 +48,59 @@ internal interface SettingsScreenNavigator {
     visibility = CodeGenVisibility.INTERNAL
 )
 @Composable
-internal fun SettingsScreen(navigator: SettingsScreenNavigator) {
-    SettingsScreen(settingsScreenNavigator = navigator)
-}
-
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
-@Composable
-private fun SettingsScreen(
-    settingsScreenNavigator: SettingsScreenNavigator,
+internal fun SettingsScreen(
+    screenNavigator: SettingsScreenNavigator,
     state: SettingsScreenState = rememberSettingsScreenState(),
 ) {
     val navigator = state.navigator
-    val windowAdaptiveInfo = state.windowAdaptiveInfo
     SettingsScreen(
         navigator = navigator,
-        windowAdaptiveInfo = windowAdaptiveInfo,
-        onBackClick = settingsScreenNavigator::navigateUp,
-        onSettingsClick = {
-            state.onSettingsClick(it, settingsScreenNavigator::onStartTutorialClick)
-        },
-    ) { contentPadding ->
+        onBackClick = screenNavigator::navigateUp,
+        onSettingsClick = { state.onSettingsClick(it, screenNavigator::onStartTutorialClick) },
+    ) {
         DestinationsNavHost(
             navGraph = NavGraphs.settingsDetail,
-            start = navigator.currentDestination?.content?.direction
+            start = navigator.currentDestination?.contentKey?.direction
                 ?: SettingsDetailNavGraph.defaultStartDirection,
             dependenciesContainerBuilder = {
-                dependency(contentPadding)
-                SettingsDetailGraphDependencies(navigator, settingsScreenNavigator)
+                SettingsDetailGraphDependencies(navigator, screenNavigator)
             }
         )
     }
-    BackHandler(navigator.canNavigateBack()) {
-        navigator.navigateBack()
-    }
 }
 
-@Parcelize
-internal data class SettingsScreenUiState(
-    val listPaneUiState: SettingsListPaneUiState = SettingsListPaneUiState(),
-) : Parcelable
-
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsScreen(
     navigator: ThreePaneScaffoldNavigator<Settings2>,
-    windowAdaptiveInfo: WindowAdaptiveInfo,
     onBackClick: () -> Unit,
     onSettingsClick: (Settings2) -> Unit,
-    content: @Composable (PaddingValues) -> Unit,
+    content: @Composable () -> Unit,
 ) {
+    // TODO(b/330584029): support predictive back
+    BackHandler(enabled = navigator.canNavigateBack()) {
+        navigator.navigateBack()
+    }
     ListDetailPaneScaffold(
         value = navigator.scaffoldValue,
-        directive = navigator.scaffoldDirective,
+        directive = navigator.scaffoldDirective.copy(horizontalPartitionSpacerSize = 0.dp),
         detailPane = {
-            val contentPadding =
-                if (navigator.scaffoldValue.secondary == PaneAdaptedValue.Expanded) {
-                    WindowInsets.safeDrawing.asPaddingValues().copy(start = 0.dp)
-                } else {
-                    WindowInsets.safeDrawing.asPaddingValues()
-                }
-            AnimatedPane(modifier = Modifier) {
-                content(contentPadding)
+            val modifier = if (navigator.scaffoldDirective.maxHorizontalPartitions == 1) {
+                Modifier
+            } else {
+                Modifier.consumeWindowInsets(WindowInsets.safeDrawing.only(WindowInsetsSides.Start))
+            }
+            AnimatedPane(modifier = modifier) {
+                content()
             }
         },
         listPane = {
-            AnimatedPane(modifier = Modifier) {
+            val startPadding = WindowInsets.safeDrawing.asPaddingValues()
+                .calculateStartPadding(LocalLayoutDirection.current)
+            AnimatedPane(Modifier.preferredWidth(360.dp + startPadding)) {
                 SettingsListPane(
                     navigator = navigator,
                     onBackClick = onBackClick,
                     onSettingsClick = onSettingsClick,
-                    windowAdaptiveInfo = windowAdaptiveInfo
                 )
             }
         },

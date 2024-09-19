@@ -2,11 +2,9 @@ package com.sorrowblue.comicviewer.feature.settings.donation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHost
@@ -73,20 +71,13 @@ data class DonationScreenUiState(
 
 @Destination<SettingsDetailGraph>(visibility = CodeGenVisibility.INTERNAL)
 @Composable
-internal fun DonationScreen(
-    contentPadding: PaddingValues,
-    navigator: SettingsDetailNavigator,
-) {
-    DonationScreen(
-        contentPadding = contentPadding,
-        onBackClick = navigator::navigateBack
-    )
+internal fun DonationScreen(navigator: SettingsDetailNavigator) {
+    DonationScreen(onBackClick = navigator::navigateBack)
 }
 
 @Composable
-internal fun DonationScreen(
+private fun DonationScreen(
     onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
     state: DonationScreenState = rememberDonationScreenState(),
 ) {
     DonationScreen(
@@ -94,24 +85,20 @@ internal fun DonationScreen(
         snackbarHostState = state.snackbarHostState,
         onBackClick = onBackClick,
         onItemClick = state::onItemClick,
-        contentPadding = contentPadding
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DonationScreen(
     uiState: DonationScreenUiState,
     snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
     onItemClick: (InAppItem) -> Unit,
-    contentPadding: PaddingValues = PaddingValues(),
 ) {
     SettingsDetailPane(
         title = { Text(text = "Donate") },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         onBackClick = onBackClick,
-        contentPadding = contentPadding,
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

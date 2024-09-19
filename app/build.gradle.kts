@@ -137,7 +137,6 @@ dependencies {
     implementation(projects.feature.tutorial)
     implementation(projects.feature.library)
 
-    implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.browser)

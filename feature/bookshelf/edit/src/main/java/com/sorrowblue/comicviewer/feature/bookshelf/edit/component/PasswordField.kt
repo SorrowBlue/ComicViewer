@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
@@ -37,7 +38,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.autofill.connectNode
 import com.sorrowblue.comicviewer.framework.ui.autofill.defaultFocusChangeAutoFill
 import com.sorrowblue.comicviewer.framework.ui.autofill.rememberAutoFillRequestHandler
-import kotlinx.collections.immutable.persistentListOf
 import soil.form.compose.Controller
 import soil.form.compose.FieldControl
 import soil.form.compose.FormScope
@@ -54,6 +54,7 @@ internal fun FormScope<SmbEditScreenForm>.PasswordFieldView(
         AndroidView(
             modifier = modifier,
             factory = {
+                @SuppressLint("InflateParams")
                 val layout = LayoutInflater.from(it).inflate(R.layout.bookshelf_edit_password, null)
                 val textInputLayout = layout.findViewById<TextInputLayout>(R.id.textField)
                 layout.findViewById<TextInputEditText>(R.id.editText).apply {
@@ -82,7 +83,7 @@ internal fun FormScope<SmbEditScreenForm>.PasswordField(
 ) {
     Controller(control) { field ->
         val passwordAutoFillHandler = rememberAutoFillRequestHandler(
-            autofillTypes = remember { persistentListOf(AutofillType.Password) },
+            autofillTypes = remember { listOf(AutofillType.Password) },
             onFill = field.onChange
         )
         var visibility by remember { mutableStateOf(false) }

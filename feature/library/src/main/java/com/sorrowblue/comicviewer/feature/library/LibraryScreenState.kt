@@ -21,7 +21,6 @@ import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListene
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.sorrowblue.comicviewer.feature.library.component.AddOnItemState
 import com.sorrowblue.comicviewer.feature.library.section.Feature
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -72,7 +71,7 @@ private class LibraryScreenStateImpl(
         ).map {
             if (installedModules.contains(it.addOn.moduleName)) it.copy2(AddOnItemState.Installed) else it
         }
-        uiState = LibraryScreenUiState(addOnList = addOns.toPersistentList())
+        uiState = LibraryScreenUiState(addOnList = addOns)
     }
 
     override fun onStart() {
@@ -86,7 +85,7 @@ private class LibraryScreenStateImpl(
                 if (installedModules.contains(it.addOn.moduleName)) AddOnItemState.Installed else AddOnItemState.Still
             )
         }
-        uiState = uiState.copy(addOnList = list.toPersistentList())
+        uiState = uiState.copy(addOnList = list)
     }
 
     override fun onStop() {
@@ -140,7 +139,7 @@ private class LibraryScreenStateImpl(
             } else {
                 addOn
             }
-        }.toPersistentList()
+        }
         uiState = uiState.copy(addOnList = featureList)
     }
 
@@ -197,7 +196,7 @@ private class LibraryScreenStateImpl(
                                     } else {
                                         it
                                     }
-                                }.toPersistentList()
+                                }
                             )
                         }
                     }.getOrNull()
@@ -210,7 +209,7 @@ private class LibraryScreenStateImpl(
                                 } else {
                                     it
                                 }
-                            }.toPersistentList()
+                            }
                         )
                         uiEvent += LibraryScreenUiEvent.Message(
                             text = context.getString(R.string.library_message_addon_already_installed)

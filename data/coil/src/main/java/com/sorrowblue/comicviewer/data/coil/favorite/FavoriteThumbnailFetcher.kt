@@ -36,7 +36,7 @@ internal class FavoriteThumbnailFetcher(
 ) : FileFetcher<FavoriteThumbnailMetadata>(options, diskCache) {
 
     override val diskCacheKey
-        get() = options.diskCacheKey ?: "${data.id.value}".encodeUtf8().sha256().hex()
+        get() = options.diskCacheKey ?: "id:${data.id.value}".encodeUtf8().sha256().hex()
 
     override suspend fun metadata(): FavoriteThumbnailMetadata {
         val thumbnails = getThumbnailCacheList(5)

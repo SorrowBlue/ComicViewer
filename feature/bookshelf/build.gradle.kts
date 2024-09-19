@@ -10,6 +10,7 @@ android {
 dependencies {
     implementation(projects.framework.notification)
     implementation(projects.feature.bookshelf.edit)
+    implementation(projects.feature.bookshelf.remove)
     implementation(projects.feature.bookshelf.selection)
     implementation(projects.feature.folder)
 

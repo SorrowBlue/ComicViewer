@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.settings.navigation
 
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
@@ -15,7 +14,6 @@ import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSetti
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsGraphDependencies
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun DependenciesContainerBuilder<*>.SettingsDetailGraphDependencies(
     scaffoldNavigator: ThreePaneScaffoldNavigator<Settings2>,

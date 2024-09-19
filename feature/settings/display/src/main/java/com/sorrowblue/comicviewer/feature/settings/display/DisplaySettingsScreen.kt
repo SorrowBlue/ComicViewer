@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.display
 
 import android.os.Parcelable
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -19,20 +17,13 @@ import kotlinx.parcelize.Parcelize
 
 @Destination<ExternalModuleGraph>
 @Composable
-internal fun DisplaySettingsScreen(
-    contentPadding: PaddingValues,
-    navigator: SettingsDetailNavigator,
-) {
-    DisplaySettingsScreen(
-        contentPadding = contentPadding,
-        onBackClick = navigator::navigateBack
-    )
+internal fun DisplaySettingsScreen(navigator: SettingsDetailNavigator) {
+    DisplaySettingsScreen(onBackClick = navigator::navigateBack)
 }
 
 @Composable
 private fun DisplaySettingsScreen(
     onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
     state: DisplaySettingsScreenState = rememberDisplaySettingsScreenState(),
 ) {
     DisplaySettingsScreen(
@@ -40,7 +31,6 @@ private fun DisplaySettingsScreen(
         onBackClick = onBackClick,
         onRestoreOnLaunchChange = state::onRestoreOnLaunchChange,
         onDarkModeClick = state::onDarkModeClick,
-        contentPadding = contentPadding
     )
 
     if (state.appearanceDialogController.isShow) {
@@ -58,21 +48,18 @@ internal data class SettingsDisplayScreenUiState(
     val restoreOnLaunch: Boolean = false,
 ) : Parcelable
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DisplaySettingsScreen(
     uiState: SettingsDisplayScreenUiState,
     onBackClick: () -> Unit,
     onRestoreOnLaunchChange: (Boolean) -> Unit,
     onDarkModeClick: () -> Unit,
-    contentPadding: PaddingValues,
 ) {
     SettingsDetailPane(
         title = {
             Text(text = stringResource(id = R.string.settings_display_title))
         },
         onBackClick = onBackClick,
-        contentPadding = contentPadding
     ) {
         Setting(
             title = R.string.settings_display_label_appearance,

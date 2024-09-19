@@ -1,10 +1,8 @@
 package com.sorrowblue.comicviewer.favorite.list
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -14,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -29,7 +26,6 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteListContentsAction
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
-import com.sorrowblue.comicviewer.framework.ui.add
 
 interface FavoriteListNavigator {
     fun onSettingsClick()
@@ -72,7 +68,6 @@ private fun FavoriteListScreen(
     NavTabHandler(onClick = state::onNavClick)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoriteListScreen(
     lazyPagingItems: LazyPagingItems<Favorite>,
@@ -103,7 +98,7 @@ private fun FavoriteListScreen(
             lazyPagingItems = lazyPagingItems,
             onAction = onContentsAction,
             lazyListState = lazyListState,
-            contentPadding = innerPadding.add(paddingValues = PaddingValues(bottom = 88.dp)),
+            contentPadding = innerPadding,
         )
     }
 }

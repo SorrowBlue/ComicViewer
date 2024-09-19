@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentWithReceiverOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -32,10 +31,9 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.EditDialog
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.EditScreen
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompact
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import kotlinx.parcelize.Parcelize
 import soil.form.FormPolicy
 import soil.form.compose.Controller
@@ -95,7 +93,7 @@ internal fun SmbEditScreen(
                             .padding(top = dimension.targetSpacing)
                     )
                     HostField(
-                        enabled= !submission.isSubmitting,
+                        enabled = !submission.isSubmitting,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
@@ -185,9 +183,9 @@ internal fun SmbEditScreen(
 @Composable
 private fun PreviewSmbEditScreen() {
     PreviewTheme {
-        val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
+        val isCompact = isCompactWindowClass()
         SmbEditScreen(
-            isDialog = !windowAdaptiveInfo.isCompact,
+            isDialog = !isCompact,
             uiState = SmbEditScreenUiState(
                 form = SmbEditScreenForm(auth = Auth.UserPass),
                 editMode = BookshelfEditMode.Register(BookshelfType.DEVICE)

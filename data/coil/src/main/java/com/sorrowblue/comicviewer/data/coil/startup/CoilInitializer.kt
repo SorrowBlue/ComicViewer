@@ -15,7 +15,9 @@ import coil3.util.DebugLogger
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import javax.inject.Inject
 import logcat.LogPriority
@@ -24,10 +26,16 @@ import logcat.logcat
 internal class CoilInitializer : Initializer<Unit> {
 
     @Inject
-    lateinit var folderThumbnailFetcher: Fetcher.Factory<Folder>
+    lateinit var oldFolderThumbnailFetcher: Fetcher.Factory<Folder>
 
     @Inject
-    lateinit var bookThumbnailFetcher: Fetcher.Factory<Book>
+    lateinit var oldBookThumbnailFetcher: Fetcher.Factory<Book>
+
+    @Inject
+    lateinit var bookThumbnailFetcher: Fetcher.Factory<BookThumbnail>
+
+    @Inject
+    lateinit var folderThumbnailFetcher: Fetcher.Factory<FolderThumbnail>
 
     @Inject
     lateinit var bookPageFetcherFactory: Fetcher.Factory<BookPageRequest>
@@ -39,8 +47,10 @@ internal class CoilInitializer : Initializer<Unit> {
         InitializerEntryPoint.resolve(context).inject(this)
         val imageLoader = ImageLoader(context).newBuilder()
             .components {
-                add(folderThumbnailFetcher)
+                add(oldFolderThumbnailFetcher)
+                add(oldBookThumbnailFetcher)
                 add(bookThumbnailFetcher)
+                add(folderThumbnailFetcher)
                 add(bookPageFetcherFactory)
                 add(favoriteThumbnailFetcher)
             }

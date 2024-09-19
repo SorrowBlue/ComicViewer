@@ -11,6 +11,8 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
@@ -63,6 +65,15 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
             pagingData.map {
                 BookshelfFolder(it.entity.toModel(it.fileCount), it.fileEntity.toModel() as Folder)
             }
+        }
+    }
+
+    override fun pagingSource(
+        bookshelfId: BookshelfId,
+        pagingConfig: PagingConfig,
+    ): Flow<PagingData<BookThumbnail>> {
+        return Pager(pagingConfig) { dao.pagingSource(bookshelfId) }.flow.map { pagingData ->
+            pagingData.map { BookThumbnail.from(it.toModel() as Book) }
         }
     }
 

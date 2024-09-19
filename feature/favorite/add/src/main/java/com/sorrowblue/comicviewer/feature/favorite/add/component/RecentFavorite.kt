@@ -22,9 +22,9 @@ import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.preview.fakeFavorite
-import com.sorrowblue.comicviewer.framework.preview.previewPainter
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
+import com.sorrowblue.comicviewer.framework.ui.preview.previewPainter
 
 @Composable
 internal fun RecentFavorite(

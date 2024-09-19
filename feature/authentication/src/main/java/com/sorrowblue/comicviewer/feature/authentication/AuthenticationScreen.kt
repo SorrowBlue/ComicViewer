@@ -18,17 +18,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.window.core.layout.WindowHeightSizeClass
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationColumnContents
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationContentsAction
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationRowContents
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import kotlinx.parcelize.Parcelize
 
 interface AuthenticationScreenNavigator {
@@ -150,11 +149,11 @@ private fun AuthenticationScreen(
     snackbarHostState: SnackbarHostState,
     onContentsAction: (AuthenticationContentsAction) -> Unit,
 ) {
-    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
     val localConfig = LocalConfiguration.current
-    val isCompactLandscape by remember(localConfig, windowAdaptiveInfo) {
+    val isCompactWindowClass = isCompactWindowClass()
+    val isCompactLandscape by remember(localConfig, isCompactWindowClass) {
         mutableStateOf(
-            localConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && windowAdaptiveInfo.windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT
+            isCompactWindowClass && localConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
         )
     }
     Scaffold(

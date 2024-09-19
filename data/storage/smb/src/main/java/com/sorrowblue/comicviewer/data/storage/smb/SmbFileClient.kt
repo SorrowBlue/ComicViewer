@@ -200,7 +200,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 bookshelfId = bookshelf.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent.toString() + "/",
-                size = length(),
+                size = 0,
                 lastModifier = lastModified,
                 isHidden = isHidden,
             )
@@ -211,7 +211,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 bookshelfId = bookshelf.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent?.toString().orEmpty().removeSuffix("/") + "/",
-                size = runCatching { length() }.getOrElse { 0 },
+                size = 0,
                 lastModifier = lastModified,
                 isHidden = isHidden,
             )

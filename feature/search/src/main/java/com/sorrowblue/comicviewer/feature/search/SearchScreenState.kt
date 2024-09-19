@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.search
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
@@ -70,10 +69,8 @@ internal interface SearchScreenState :
     fun onSearchContentsAction(action: SearchContentsAction)
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberSearchScreenState(
-    args: SearchArgs,
     scope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: SearchViewModel = hiltViewModel(),
@@ -82,7 +79,6 @@ internal fun rememberSearchScreenState(
 ): SearchScreenState = rememberSaveableScreenState {
     SearchScreenStateImpl(
         manageFolderDisplaySettingsUseCase = viewModel.manageFolderDisplaySettingsUseCase,
-        args = args,
         savedStateHandle = it,
         navigator = navigator,
         getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
@@ -96,10 +92,9 @@ internal fun rememberSearchScreenState(
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
+@OptIn(SavedStateHandleSaveableApi::class)
 private class SearchScreenStateImpl(
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    private val args: SearchArgs,
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val getFileAttributeUseCase: GetFileAttributeUseCase,
@@ -120,7 +115,7 @@ private class SearchScreenStateImpl(
     override val lazyPagingItems = viewModel.pagingDataFlow
 
     init {
-        navigator.currentDestination?.content?.let { fileInfoUiState ->
+        navigator.currentDestination?.contentKey?.let { fileInfoUiState ->
             navigateToFileInfo(fileInfoUiState.file)
         }
     }
@@ -129,7 +124,7 @@ private class SearchScreenStateImpl(
     override var isSkipFirstRefresh by mutableStateOf(true)
 
     init {
-        navigator.currentDestination?.content?.let {
+        navigator.currentDestination?.contentKey?.let {
             navigateToFileInfo(it.file)
         }
         manageFolderDisplaySettingsUseCase.settings.onEach {
@@ -199,11 +194,11 @@ private class SearchScreenStateImpl(
         when (action) {
             FileInfoSheetAction.Close -> navigator.navigateBack()
             FileInfoSheetAction.Favorite -> sendEvent(
-                SearchScreenEvent.Favorite(navigator.currentDestination!!.content!!.file)
+                SearchScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!.file)
             )
 
             FileInfoSheetAction.OpenFolder -> sendEvent(
-                SearchScreenEvent.OpenFolder(navigator.currentDestination!!.content!!.file)
+                SearchScreenEvent.OpenFolder(navigator.currentDestination!!.contentKey!!.file)
             )
 
             FileInfoSheetAction.ReadLater -> onReadLaterClick()

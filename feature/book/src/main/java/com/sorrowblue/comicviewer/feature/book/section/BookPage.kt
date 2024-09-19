@@ -1,11 +1,10 @@
 package com.sorrowblue.comicviewer.feature.book.section
 
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import kotlinx.collections.immutable.PersistentList
 
 sealed interface PageItem
 
-data class NextPage(val nextBooks: PersistentList<NextBook>) : PageItem {
+data class NextPage(val nextBooks: List<NextBook>) : PageItem {
 
     val key = nextBooks.joinToString { "next:${it.book.bookshelfId.value}:${it.book.path}" }
 }

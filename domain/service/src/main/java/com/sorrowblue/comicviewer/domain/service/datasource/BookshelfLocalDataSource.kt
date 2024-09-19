@@ -6,6 +6,7 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import kotlinx.coroutines.flow.Flow
 
 interface BookshelfLocalDataSource {
@@ -17,6 +18,8 @@ interface BookshelfLocalDataSource {
     fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?>
 
     fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>>
+
+    fun pagingSource(bookshelfId: BookshelfId, pagingConfig: PagingConfig): Flow<PagingData<BookThumbnail>>
 
     fun allBookshelf(): Resource<Flow<List<Bookshelf>>, Resource.SystemError>
 }

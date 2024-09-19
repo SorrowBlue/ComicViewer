@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.library
 import android.app.Activity
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -30,9 +29,6 @@ import com.sorrowblue.comicviewer.feature.library.section.Feature
 import com.sorrowblue.comicviewer.feature.library.section.FeatureListSheet
 import com.sorrowblue.comicviewer.feature.library.section.LibraryCloudStorageDialog
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
 internal sealed interface LibraryScreenUiEvent {
@@ -105,11 +101,10 @@ private fun LibraryScreen(
 }
 
 internal data class LibraryScreenUiState(
-    val addOnList: PersistentList<Feature.AddOn> = persistentListOf(),
+    val addOnList: List<Feature.AddOn> = emptyList(),
     val requestInstallAddOn: Feature.AddOn? = null,
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LibraryScreen(
     uiState: LibraryScreenUiState,
@@ -130,7 +125,7 @@ private fun LibraryScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         FeatureListSheet(
-            basicList = remember { Feature.Basic.entries.toPersistentList() },
+            basicList = remember { Feature.Basic.entries },
             addOnList = uiState.addOnList,
             contentPadding = contentPadding,
             onClick = onFeatureClick
@@ -156,7 +151,7 @@ private fun PreviewLibraryScreen() {
             Feature.AddOn.Box(AddOnItemState.Failed)
         )
         val uiState =
-            LibraryScreenUiState(addOnList = addOns.toPersistentList())
+            LibraryScreenUiState(addOnList = addOns)
         LibraryScreen(
             uiState = uiState,
             snackbarHostState = remember { SnackbarHostState() },

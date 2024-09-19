@@ -12,23 +12,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompact
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
-import com.sorrowblue.comicviewer.framework.ui.component.CloseIconButton
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BookshelfEditLoadingScreen(
     isDialog: Boolean,
@@ -70,20 +66,19 @@ internal fun BookshelfEditLoadingScreen(
     }
 }
 
-
 @PreviewMultiScreen
 @Composable
 private fun BookshelfEditLoadingScreenPreview() {
     PreviewTheme {
-        val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
+        val isCompact = isCompactWindowClass()
         BookshelfEditLoadingScreen(
-            isDialog = windowAdaptiveInfo.isCompact,
+            isDialog = !isCompact,
             uiState = BookshelfEditScreenUiState.Loading(
                 BookshelfEditMode.Register(
                     BookshelfType.DEVICE
                 )
-            ), onBackClick = {})
+            ),
+            onBackClick = {}
+        )
     }
 }
-
-

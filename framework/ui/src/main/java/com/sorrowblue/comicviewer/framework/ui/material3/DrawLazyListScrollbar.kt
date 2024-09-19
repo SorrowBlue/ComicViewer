@@ -87,8 +87,8 @@ private class DrawLazyListScrollbarNode(
                 atEnd,
                 color,
                 alpha,
-                thumbSize,
-                startOffset
+                thumbSize - layoutInfo.beforeContentPadding,
+                startOffset + layoutInfo.beforeContentPadding
             )
         }
     }

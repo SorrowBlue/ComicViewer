@@ -1,19 +1,12 @@
 package com.sorrowblue.comicviewer.favorite.section
 
 import android.os.Parcelable
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
@@ -22,7 +15,8 @@ import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.component.FileListDisplayItem
 import com.sorrowblue.comicviewer.file.component.GridSizeItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
+import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalTopAppBar
+import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
@@ -45,17 +39,15 @@ internal sealed interface FavoriteTopAppBarAction {
     data object Settings : FavoriteTopAppBarAction
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FavoriteTopAppBar(
     uiState: FavoriteAppBarUiState,
     onAction: (FavoriteTopAppBarAction) -> Unit,
-    modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
-    TopAppBar(
+    CanonicalTopAppBar(
         title = { Text(text = uiState.title) },
-        navigationIcon = { BackButton(onClick = { onAction(FavoriteTopAppBarAction.Back) }) },
+        navigationIcon = { BackIconButton(onClick = { onAction(FavoriteTopAppBarAction.Back) }) },
         actions = {
             PlainTooltipBox(tooltipContent = { Text(stringResource(R.string.favorite_title_edit)) }) {
                 IconButton(onClick = { onAction(FavoriteTopAppBarAction.Edit) }) {
@@ -84,8 +76,6 @@ internal fun FavoriteTopAppBar(
                 )
             }
         },
-        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior,
-        modifier = modifier
     )
 }

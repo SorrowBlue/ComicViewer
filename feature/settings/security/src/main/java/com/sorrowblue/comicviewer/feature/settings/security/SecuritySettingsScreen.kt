@@ -1,7 +1,5 @@
 package com.sorrowblue.comicviewer.feature.settings.security
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -24,12 +22,8 @@ interface SecuritySettingsScreenNavigator : SettingsDetailNavigator {
 
 @Destination<ExternalModuleGraph>
 @Composable
-internal fun SecuritySettingsScreen(
-    contentPadding: PaddingValues,
-    navigator: SecuritySettingsScreenNavigator,
-) {
+internal fun SecuritySettingsScreen(navigator: SecuritySettingsScreenNavigator) {
     SecuritySettingsScreen(
-        contentPadding = contentPadding,
         onBackClick = navigator::navigateBack,
         onChangeAuthEnable = navigator::navigateToChangeAuth,
         onPasswordChangeClick = navigator::navigateToPasswordChange
@@ -39,7 +33,6 @@ internal fun SecuritySettingsScreen(
 @Composable
 private fun SecuritySettingsScreen(
     onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
     onChangeAuthEnable: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
     state: SecuritySettingsScreenState = rememberSecuritySettingsScreenState(),
@@ -53,7 +46,6 @@ private fun SecuritySettingsScreen(
         onPasswordChangeClick = onPasswordChangeClick,
         onChangeBiometricEnable = state::onChangeBiometricEnabled,
         onChangeBackgroundLockEnable = state::onChangeBackgroundLockEnabled,
-        contentPadding = contentPadding
     )
 
     if (uiState.isBiometricsDialogShow) {
@@ -75,7 +67,6 @@ internal data class SecuritySettingsScreenUiState(
     val isBiometricsDialogShow: Boolean = false,
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SecuritySettingsScreen(
     uiState: SecuritySettingsScreenUiState,
@@ -84,12 +75,10 @@ private fun SecuritySettingsScreen(
     onPasswordChangeClick: () -> Unit,
     onChangeBiometricEnable: (Boolean) -> Unit,
     onChangeBackgroundLockEnable: (Boolean) -> Unit,
-    contentPadding: PaddingValues,
 ) {
     SettingsDetailPane(
         title = { Text(text = stringResource(id = R.string.settings_security_title)) },
         onBackClick = onBackClick,
-        contentPadding = contentPadding
     ) {
         SwitchSetting(
             title = R.string.settings_security_title_password_lock,

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bookshelf_remove_title">本棚の削除</string>
+    <string name="bookshelf_remove_message">%1$s を削除しますか?</string>
+    <string name="bookshelf_remove_btn_remove">削除</string>
+</resources>

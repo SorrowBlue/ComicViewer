@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
@@ -22,7 +23,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenForm
 import com.sorrowblue.comicviewer.framework.ui.autofill.connectNode
 import com.sorrowblue.comicviewer.framework.ui.autofill.defaultFocusChangeAutoFill
 import com.sorrowblue.comicviewer.framework.ui.autofill.rememberAutoFillRequestHandler
-import kotlinx.collections.immutable.persistentListOf
 import soil.form.compose.Controller
 import soil.form.compose.FieldControl
 import soil.form.compose.FormScope
@@ -39,6 +39,7 @@ internal fun FormScope<SmbEditScreenForm>.UsernameFieldView(
         AndroidView(
             modifier = modifier,
             factory = {
+                @SuppressLint("InflateParams")
                 val layout = LayoutInflater.from(it).inflate(R.layout.bookshelf_edit_username, null)
                 val textInputLayout = layout.findViewById<TextInputLayout>(R.id.textField)
                 layout.findViewById<TextInputEditText>(R.id.editText).apply {
@@ -67,7 +68,7 @@ internal fun FormScope<SmbEditScreenForm>.UsernameField(
 ) {
     Controller(control) { field ->
         val usernameAutoFillHandler = rememberAutoFillRequestHandler(
-            autofillTypes = remember { persistentListOf(AutofillType.Username) },
+            autofillTypes = remember { listOf(AutofillType.Username) },
             onFill = field.onChange
         )
         OutlinedTextField(

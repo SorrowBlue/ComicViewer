@@ -2,9 +2,7 @@ package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
@@ -73,7 +71,6 @@ internal sealed interface FolderScreenEvent {
     data object Restore : FolderScreenEvent
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Stable
 internal interface FolderScreenState :
     SaveableScreenState,
@@ -92,7 +89,6 @@ internal interface FolderScreenState :
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun rememberFolderScreenState(
     args: FolderArgs,
@@ -121,11 +117,7 @@ internal fun rememberFolderScreenState(
     )
 }
 
-@OptIn(
-    ExperimentalMaterial3AdaptiveApi::class,
-    SavedStateHandleSaveableApi::class,
-    ExperimentalMaterial3Api::class
-)
+@OptIn(SavedStateHandleSaveableApi::class)
 private class FolderScreenStateImpl(
     viewModel: FolderViewModel,
     override val savedStateHandle: SavedStateHandle,
@@ -190,7 +182,7 @@ private class FolderScreenStateImpl(
                 navigator.navigateBack()
 
             FileInfoSheetAction.Favorite ->
-                sendEvent(FolderScreenEvent.Favorite(navigator.currentDestination!!.content!!.file))
+                sendEvent(FolderScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!.file))
 
             FileInfoSheetAction.OpenFolder ->
                 TODO("Not yet implemented")
@@ -283,7 +275,7 @@ private class FolderScreenStateImpl(
     override var fileInfoJob: Job? = null
 
     init {
-        navigator.currentDestination?.content?.let {
+        navigator.currentDestination?.contentKey?.let {
             fetchFileInfo(it.file)
         }
     }

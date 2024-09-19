@@ -2,14 +2,18 @@ package com.sorrowblue.comicviewer.data.coil.di
 
 import coil3.fetch.Fetcher
 import com.sorrowblue.comicviewer.data.coil.book.BookThumbnailFetcher
+import com.sorrowblue.comicviewer.data.coil.book.OldBookThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.favorite.FavoriteThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.folder.FolderThumbnailFetcher
+import com.sorrowblue.comicviewer.data.coil.folder.OldFolderThumbnailFetcher
 import com.sorrowblue.comicviewer.data.coil.impl.ImageCacheDataSourceImpl
 import com.sorrowblue.comicviewer.data.coil.page.BookPageFetcher
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import dagger.Binds
 import dagger.Module
@@ -27,11 +31,19 @@ internal interface SingletonBindsModule {
 
     @Singleton
     @Binds
-    fun bindBookThumbnailFetcherFetcher(factory: BookThumbnailFetcher.Factory): Fetcher.Factory<Book>
+    fun bindOldBookThumbnailFetcher(factory: OldBookThumbnailFetcher.Factory): Fetcher.Factory<Book>
 
     @Singleton
     @Binds
-    fun bindFolderThumbnailFetcherFetcher(factory: FolderThumbnailFetcher.Factory): Fetcher.Factory<Folder>
+    fun bindBookThumbnailFetcher(factory: BookThumbnailFetcher.Factory): Fetcher.Factory<BookThumbnail>
+
+    @Singleton
+    @Binds
+    fun bindOldFolderThumbnailFetcher(factory: OldFolderThumbnailFetcher.Factory): Fetcher.Factory<Folder>
+
+    @Singleton
+    @Binds
+    fun bindFolderThumbnailFetcher(factory: FolderThumbnailFetcher.Factory): Fetcher.Factory<FolderThumbnail>
 
     @Singleton
     @Binds

@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.imagecache
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -24,7 +22,7 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigato
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.fakeInternalStorage
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeInternalStorage
 import kotlin.math.floor
 
 internal data class ThumbnailScreenUiState(
@@ -34,20 +32,13 @@ internal data class ThumbnailScreenUiState(
 
 @Destination<SettingsDetailGraph>(visibility = CodeGenVisibility.INTERNAL)
 @Composable
-internal fun ImageCacheScreen(
-    contentPadding: PaddingValues,
-    navigator: SettingsDetailNavigator,
-) {
-    ImageCacheScreen(
-        onBackClick = navigator::navigateBack,
-        contentPadding = contentPadding
-    )
+internal fun ImageCacheScreen(navigator: SettingsDetailNavigator) {
+    ImageCacheScreen(onBackClick = navigator::navigateBack)
 }
 
 @Composable
 private fun ImageCacheScreen(
     onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
     state: ImageCacheScreenState = rememberImageCacheScreenState(),
 ) {
     ImageCacheScreen(
@@ -55,24 +46,20 @@ private fun ImageCacheScreen(
         snackbarHostState = state.snackbarHostState,
         onBackClick = onBackClick,
         onClick = state::onClick,
-        contentPadding = contentPadding
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ImageCacheScreen(
     uiState: ThumbnailScreenUiState,
     snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
     onClick: (BookshelfId, ImageCache) -> Unit,
-    contentPadding: PaddingValues = PaddingValues(),
 ) {
     SettingsDetailPane(
         title = { Text(text = stringResource(id = R.string.settings_label_image_cache)) },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         onBackClick = onBackClick,
-        contentPadding = contentPadding,
     ) {
         uiState.imageCacheInfos.forEach { imageCacheInfo ->
             BookshelfImageCacheInfoItem(
@@ -112,7 +99,6 @@ private fun ImageCacheScreenPreview() {
         snackbarHostState = remember { SnackbarHostState() },
         onBackClick = {},
         onClick = { _, _ -> },
-        contentPadding = PaddingValues()
     )
 }
 

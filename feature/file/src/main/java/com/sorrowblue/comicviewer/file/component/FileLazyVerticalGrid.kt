@@ -29,11 +29,11 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.parcelize.Parcelize
@@ -87,7 +87,7 @@ fun <T : File> FileLazyVerticalGrid(
         contentPadding = when (contentType) {
             FileContentType.List -> contentPadding
             FileContentType.ListMedium -> contentPadding.add(PaddingValues(ComicTheme.dimension.margin))
-            is FileContentType.Grid -> contentPadding.add(PaddingValues(ComicTheme.dimension.margin))
+            is FileContentType.Grid -> contentPadding
         },
         verticalArrangement = when (contentType) {
             FileContentType.List -> Arrangement.Top

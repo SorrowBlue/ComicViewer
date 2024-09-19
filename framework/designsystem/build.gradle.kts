@@ -10,8 +10,8 @@ android {
 dependencies {
     api(platform(libs.androidx.compose.bom))
     api(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material3.adaptive.layout)
     implementation(libs.androidx.compose.material.iconsExtended)
+    implementation(libs.androidx.compose.material3.adaptive.layout)
 
     implementation(libs.androidx.appcompat)
 

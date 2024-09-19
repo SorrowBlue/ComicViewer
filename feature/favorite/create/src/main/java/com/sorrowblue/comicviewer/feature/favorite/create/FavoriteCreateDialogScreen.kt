@@ -22,8 +22,8 @@ import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameField
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import kotlinx.parcelize.Parcelize
 import soil.form.FormPolicy
 import soil.form.compose.Controller

@@ -1,7 +1,5 @@
 package com.sorrowblue.comicviewer.feature.settings.viewer
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -16,20 +14,13 @@ import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 
 @Destination<ExternalModuleGraph>
 @Composable
-internal fun ViewerSettingsScreen(
-    contentPadding: PaddingValues,
-    navigator: SettingsDetailNavigator,
-) {
-    ViewerSettingsScreen(
-        contentPadding = contentPadding,
-        onBackClick = navigator::navigateBack
-    )
+internal fun ViewerSettingsScreen(navigator: SettingsDetailNavigator) {
+    ViewerSettingsScreen(onBackClick = navigator::navigateBack)
 }
 
 @Composable
 private fun ViewerSettingsScreen(
     onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
     state: ViewerSettingsScreenState = rememberViewerSettingsScreenState(),
 ) {
     val uiState = state.uiState
@@ -46,7 +37,6 @@ private fun ViewerSettingsScreen(
         onImageQualityChange = state::onImageQualityChange,
         onFixScreenBrightnessChange = state::onFixScreenBrightnessChange,
         onScreenBrightnessChange = state::onScreenBrightnessChange,
-        contentPadding = contentPadding
     )
 }
 
@@ -63,7 +53,6 @@ internal data class SettingsViewerScreenUiState(
     val screenBrightness: Float = 0.5f,
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ViewerSettingsScreen(
     uiState: SettingsViewerScreenUiState,
@@ -78,12 +67,10 @@ private fun ViewerSettingsScreen(
     onImageQualityChange: (Float) -> Unit,
     onFixScreenBrightnessChange: (Boolean) -> Unit,
     onScreenBrightnessChange: (Float) -> Unit,
-    contentPadding: PaddingValues,
 ) {
     SettingsDetailPane(
         title = { Text(text = stringResource(id = R.string.settings_viewer_title)) },
         onBackClick = onBackClick,
-        contentPadding = contentPadding
     ) {
         SwitchSetting(
             title = R.string.settings_viewer_title_show_status_bar,

@@ -1,17 +1,11 @@
 package com.sorrowblue.comicviewer.folder.section
 
 import android.os.Parcelable
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -24,7 +18,8 @@ import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.file.component.FileListDisplayItem
 import com.sorrowblue.comicviewer.file.component.GridSizeItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
+import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalTopAppBar
+import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuScope
@@ -49,7 +44,6 @@ internal sealed interface FolderTopAppBarAction {
     data object Settings : FolderTopAppBarAction
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FolderAppBar(
     uiState: FolderAppBarUiState,
@@ -57,9 +51,9 @@ internal fun FolderAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
-    TopAppBar(
+    CanonicalTopAppBar(
         title = { Text(text = uiState.title) },
-        navigationIcon = { BackButton(onClick = { onAction(FolderTopAppBarAction.Back) }) },
+        navigationIcon = { BackIconButton(onClick = { onAction(FolderTopAppBarAction.Back) }) },
         actions = {
             PlainTooltipBox(tooltipContent = { Text(stringResource(R.string.folder_action_search)) }) {
                 IconButton(onClick = { onAction(FolderTopAppBarAction.Search) }) {
@@ -89,7 +83,6 @@ internal fun FolderAppBar(
                 )
             }
         },
-        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         scrollBehavior = scrollBehavior,
         modifier = modifier
     )

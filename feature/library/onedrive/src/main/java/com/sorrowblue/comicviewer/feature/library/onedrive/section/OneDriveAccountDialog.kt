@@ -21,7 +21,7 @@ import coil3.compose.AsyncImage
 import com.sorrowblue.comicviewer.feature.library.onedrive.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.previewPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

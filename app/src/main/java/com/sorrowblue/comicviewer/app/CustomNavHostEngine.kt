@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.app
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,17 +20,16 @@ import com.ramcosta.composedestinations.spec.NavGraphSpec
 import com.ramcosta.composedestinations.spec.NavHostEngine
 import com.ramcosta.composedestinations.spec.TypedDestinationSpec
 import com.sorrowblue.comicviewer.framework.ui.AnimatedOrDialog
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompact
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 
 @Composable
 internal fun rememberCustomNavHostEngine(
     navHostContentAlignment: Alignment = Alignment.Center,
 ): NavHostEngine {
-    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
-    return remember(navHostContentAlignment, windowAdaptiveInfo.isCompact) {
+    val isCompact = isCompactWindowClass()
+    return remember(navHostContentAlignment, isCompact) {
         CustomNavHostEngine(
-            isCompact = windowAdaptiveInfo.isCompact,
+            isCompact = isCompact,
             navHostContentAlignment = navHostContentAlignment
         )
     }

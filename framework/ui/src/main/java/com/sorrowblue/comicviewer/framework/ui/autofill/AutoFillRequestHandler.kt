@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.content.getSystemService
 import kotlin.math.roundToInt
-import kotlinx.collections.immutable.PersistentList
 
 fun Modifier.connectNode(handler: AutoFillHandler): Modifier {
     return with(handler) { fillBounds() }
@@ -39,7 +38,7 @@ fun Modifier.defaultFocusChangeAutoFill(handler: AutoFillHandler): Modifier {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun rememberAutoFillRequestHandler(
-    autofillTypes: PersistentList<AutofillType>,
+    autofillTypes: List<AutofillType>,
     onFill: (String) -> Unit,
 ): AutoFillHandler {
     val view = LocalView.current

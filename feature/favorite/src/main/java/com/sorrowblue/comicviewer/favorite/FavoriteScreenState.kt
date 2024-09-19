@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.favorite
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
@@ -78,7 +77,6 @@ internal interface FavoriteScreenState :
     fun onFavoriteContentsAction(action: FavoriteContentsAction)
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun rememberFavoriteScreenState(
     args: FavoriteArgs,
@@ -106,7 +104,7 @@ internal fun rememberFavoriteScreenState(
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, SavedStateHandleSaveableApi::class)
+@OptIn(SavedStateHandleSaveableApi::class)
 @Stable
 private class FavoriteScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
@@ -134,7 +132,7 @@ private class FavoriteScreenStateImpl(
         private set
 
     init {
-        navigator.currentDestination?.content?.let {
+        navigator.currentDestination?.contentKey?.let {
             navigateToFileInfo(it.file)
         }
         manageFolderDisplaySettingsUseCase.settings.distinctUntilChanged().onEach {
@@ -233,11 +231,11 @@ private class FavoriteScreenStateImpl(
         when (action) {
             FileInfoSheetAction.Close -> navigator.navigateBack()
             FileInfoSheetAction.Favorite -> sendEvent(
-                FavoriteScreenEvent.Favorite(navigator.currentDestination!!.content!!.file)
+                FavoriteScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!.file)
             )
 
             FileInfoSheetAction.OpenFolder -> sendEvent(
-                FavoriteScreenEvent.OpenFolder(navigator.currentDestination!!.content!!.file)
+                FavoriteScreenEvent.OpenFolder(navigator.currentDestination!!.contentKey!!.file)
             )
 
             FileInfoSheetAction.ReadLater -> onReadLaterClick()

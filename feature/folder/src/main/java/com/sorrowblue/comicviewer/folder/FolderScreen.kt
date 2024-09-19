@@ -13,13 +13,11 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
@@ -53,23 +51,22 @@ import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
-import com.sorrowblue.comicviewer.framework.designsystem.animation.fabAnimation2
+import com.sorrowblue.comicviewer.framework.designsystem.animation.fabAnimation
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.preview.flowData
-import com.sorrowblue.comicviewer.framework.preview.flowEmptyData
-import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
+import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
-import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.flowEmptyData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -81,7 +78,6 @@ internal data class FolderScreenUiState(
     val sortType: SortType = FolderDisplaySettingsDefaults.sortType,
 ) : Parcelable
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun FolderScreen(
     args: FolderArgs,
@@ -122,12 +118,9 @@ fun FolderScreen(
 
     sortTypeResultRecipient.onNavResult(state::onNavResult)
 
-    BackHandlerForNavigator(navigator = state.navigator)
-
     NavTabHandler(onClick = state::onNavClick)
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun FolderScreen(
     navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
@@ -150,12 +143,11 @@ private fun FolderScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-        extraPaneVisible = { innerPadding, fileInfoUiState ->
+        extraPane = { contentPadding, fileInfoUiState ->
             FileInfoSheet(
                 uiState = fileInfoUiState,
-                scaffoldDirective = navigator.scaffoldDirective,
                 onAction = onFileInfoSheetAction,
-                contentPadding = innerPadding
+                contentPadding = contentPadding
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -184,7 +176,6 @@ internal sealed interface FolderContentsAction {
     data object Refresh : FolderContentsAction
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FolderContents(
     title: String,
@@ -218,11 +209,10 @@ private fun FolderContents(
             Box {
                 FileLazyVerticalGrid(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(margins),
+                        .fillMaxSize(),
                     uiState = fileLazyVerticalGridUiState,
                     lazyPagingItems = lazyPagingItems,
-                    contentPadding = paddings,
+                    contentPadding = contentPadding,
                     onItemClick = { onAction(FolderContentsAction.File(it)) },
                     onItemInfoClick = { onAction(FolderContentsAction.FileInfo(it)) },
                     state = lazyGridState
@@ -239,7 +229,7 @@ private fun FolderContents(
                 ) {
                     AnimatedContent(
                         targetState = lazyGridState.canScrollBackward,
-                        transitionSpec = { fabAnimation2() },
+                        transitionSpec = { fabAnimation() },
                         label = ""
                     ) {
                         if (it) {
@@ -258,7 +248,7 @@ private fun FolderContents(
                     Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
                     AnimatedContent(
                         targetState = lazyGridState.canScrollForward,
-                        transitionSpec = { fabAnimation2() },
+                        transitionSpec = { fabAnimation() },
                         label = ""
                     ) {
                         if (it) {
@@ -283,7 +273,6 @@ private fun FolderContents(
     }
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun PreviewFolderScreen() {
@@ -303,7 +292,6 @@ private fun PreviewFolderScreen() {
     }
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun PreviewFolderScreenEmpty() {

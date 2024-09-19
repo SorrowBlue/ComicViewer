@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,11 +32,10 @@ import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
-import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
+import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
-import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 interface HistoryScreenNavigator {
@@ -48,7 +45,6 @@ interface HistoryScreenNavigator {
     fun onFavoriteClick(file: File)
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Destination<ExternalModuleGraph>
 @Composable
 internal fun HistoryScreen(navigator: HistoryScreenNavigator) {
@@ -58,7 +54,6 @@ internal fun HistoryScreen(navigator: HistoryScreenNavigator) {
     )
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun HistoryScreen(
     navigator: HistoryScreenNavigator,
@@ -85,10 +80,8 @@ private fun HistoryScreen(
             HistoryScreenEvent.Settings -> currentNavigator.onSettingsClick()
         }
     }
-    BackHandlerForNavigator(navigator = state.navigator)
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun HistoryScreen(
     lazyPagingItems: LazyPagingItems<Book>,
@@ -108,12 +101,11 @@ private fun HistoryScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-        extraPaneVisible = { innerPadding, fileInfoUiState ->
+        extraPane = { innerPadding, fileInfoUiState ->
             FileInfoSheet(
                 uiState = fileInfoUiState,
                 onAction = onFileInfoSheetAction,
                 contentPadding = innerPadding,
-                scaffoldDirective = navigator.scaffoldDirective
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },

@@ -16,12 +16,11 @@ import com.sorrowblue.comicviewer.feature.library.component.AddOnItem
 import com.sorrowblue.comicviewer.feature.library.component.BasicItem
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
-import kotlinx.collections.immutable.PersistentList
 
 @Composable
 internal fun FeatureListSheet(
-    basicList: PersistentList<Feature.Basic>,
-    addOnList: PersistentList<Feature.AddOn>,
+    basicList: List<Feature.Basic>,
+    addOnList: List<Feature.AddOn>,
     contentPadding: PaddingValues,
     onClick: (Feature) -> Unit,
     state: LazyListState = rememberLazyListState(),
