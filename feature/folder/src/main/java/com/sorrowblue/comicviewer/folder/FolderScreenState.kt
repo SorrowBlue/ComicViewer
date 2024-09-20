@@ -17,8 +17,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.Resource
@@ -37,6 +37,7 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySet
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetState
 import com.sorrowblue.comicviewer.file.FileInfoUiState
+import com.sorrowblue.comicviewer.folder.section.FolderFabAction
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
@@ -46,7 +47,6 @@ import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -65,7 +65,6 @@ internal sealed interface FolderScreenEvent {
 
     data class Sort(val sortType: SortType) : FolderScreenEvent
 
-    data object Refresh : FolderScreenEvent
     data object Back : FolderScreenEvent
     data object Settings : FolderScreenEvent
     data object Restore : FolderScreenEvent
@@ -77,16 +76,17 @@ internal interface FolderScreenState :
     FileInfoSheetState,
     ScreenStateEvent<FolderScreenEvent> {
 
+    val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
     val pullRefreshState: PullToRefreshState
-    val pagingDataFlow: Flow<PagingData<File>>
     fun onNavClick()
     fun onNavResult(navResult: NavResult<SortType>)
     fun onFolderTopAppBarAction(action: FolderTopAppBarAction)
     fun onFileInfoSheetAction(action: FileInfoSheetAction)
     fun onFolderContentsAction(action: FolderContentsAction)
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
+    fun onFolderFabAction(action: FolderFabAction)
 }
 
 @Composable
@@ -98,28 +98,32 @@ internal fun rememberFolderScreenState(
     viewModel: FolderViewModel = hiltViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
-): FolderScreenState = rememberSaveableScreenState {
-    FolderScreenStateImpl(
-        viewModel = viewModel,
-        savedStateHandle = it,
-        navigator = navigator,
-        lazyGridState = lazyGridState,
-        snackbarHostState = snackbarHostState,
-        pullRefreshState = pullRefreshState,
-        scope = scope,
-        args = args,
-        folderDisplaySettingsUseCase = viewModel.displaySettingsUseCase,
-        existsReadlaterUseCase = viewModel.existsReadlaterUseCase,
-        addReadLaterUseCase = viewModel.addReadLaterUseCase,
-        deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase,
-        getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
-        getFileUseCase = viewModel.getFileUseCase
-    )
+): FolderScreenState {
+    val lazyPagingItems =
+        viewModel.pagingDataFlow(args.bookshelfId, args.path).collectAsLazyPagingItems()
+    return rememberSaveableScreenState {
+        FolderScreenStateImpl(
+            lazyPagingItems = lazyPagingItems,
+            savedStateHandle = it,
+            navigator = navigator,
+            lazyGridState = lazyGridState,
+            snackbarHostState = snackbarHostState,
+            pullRefreshState = pullRefreshState,
+            scope = scope,
+            args = args,
+            folderDisplaySettingsUseCase = viewModel.displaySettingsUseCase,
+            existsReadlaterUseCase = viewModel.existsReadlaterUseCase,
+            addReadLaterUseCase = viewModel.addReadLaterUseCase,
+            deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase,
+            getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
+            getFileUseCase = viewModel.getFileUseCase
+        )
+    }
 }
 
 @OptIn(SavedStateHandleSaveableApi::class)
 private class FolderScreenStateImpl(
-    viewModel: FolderViewModel,
+    override val lazyPagingItems: LazyPagingItems<File>,
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
     override val lazyGridState: LazyGridState,
@@ -139,9 +143,7 @@ private class FolderScreenStateImpl(
 
     override val event = MutableSharedFlow<FolderScreenEvent>()
 
-    override val pagingDataFlow = viewModel.pagingDataFlow(args.bookshelfId, args.path)
-
-    override var uiState by savedStateHandle.saveable { mutableStateOf(FolderScreenUiState()) }
+    override var uiState by savedStateHandle.saveable { mutableStateOf(FolderScreenUiState(bookshelfId = args.bookshelfId)) }
         private set
 
     init {
@@ -195,8 +197,12 @@ private class FolderScreenStateImpl(
         when (action) {
             is FolderContentsAction.File -> sendEvent(FolderScreenEvent.File(action.file))
             is FolderContentsAction.FileInfo -> fetchFileInfo(action.file)
-            FolderContentsAction.Refresh -> sendEvent(FolderScreenEvent.Refresh)
+            FolderContentsAction.Refresh -> refreshItems()
         }
+    }
+
+    private fun refreshItems() {
+        lazyPagingItems.refresh()
     }
 
     override fun onFolderTopAppBarAction(action: FolderTopAppBarAction) {
@@ -272,6 +278,18 @@ private class FolderScreenStateImpl(
         }
     }
 
+    override fun onFolderFabAction(action: FolderFabAction) {
+        scope.launch {
+            when (action) {
+                FolderFabAction.Down -> while (lazyGridState.canScrollForward) {
+                    lazyGridState.scrollToItem(lazyPagingItems.itemCount)
+                }
+
+                FolderFabAction.Up -> lazyGridState.scrollToItem(0)
+            }
+        }
+    }
+
     override var fileInfoJob: Job? = null
 
     init {
@@ -288,7 +306,7 @@ private class FolderScreenStateImpl(
                     folderDisplaySettingsUseCase.edit {
                         it.copy(sortType = navResult.value)
                     }
-                    sendEvent(FolderScreenEvent.Refresh)
+                    refreshItems()
                 }
             }
         }
