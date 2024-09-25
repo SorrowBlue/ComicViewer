@@ -124,11 +124,10 @@ private fun FavoriteScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPane = { contentPadding, fileInfoUiState ->
+        extraPane = { fileInfoUiState ->
             FileInfoSheet(
                 uiState = fileInfoUiState,
                 onAction = onFileInfoSheetAction,
-                contentPadding = contentPadding,
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },

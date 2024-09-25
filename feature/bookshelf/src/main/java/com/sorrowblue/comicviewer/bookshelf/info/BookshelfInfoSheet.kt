@@ -112,7 +112,6 @@ internal fun BookshelfInfoSheet(
     navigator: BookshelfInfoSheetNavigator,
     removeDialogResultRecipient: ResultRecipient<BookshelfRemoveDialogDestination, Boolean>,
     notificationResultRecipient: ResultRecipient<NotificationRequestDialogDestination, NotificationRequestResult>,
-    contentPadding: PaddingValues = PaddingValues(),
 ) {
     val state = rememberBookshelfInfoSheetState(
         bookshelfFolder = content,
@@ -124,7 +123,6 @@ internal fun BookshelfInfoSheet(
         uiState = state.uiState,
         onAction = state::onAction,
         lazyPagingItems = lazyPagingItems,
-        contentPadding = contentPadding,
     )
 
     removeDialogResultRecipient.onNavResult(state::onRemoveResult)
@@ -146,12 +144,10 @@ private fun BookshelfInfoSheet(
     lazyPagingItems: LazyPagingItems<BookThumbnail>,
     onAction: (BookshelfInfoSheetAction) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
 ) {
     CanonicalExtraPaneScaffold(
         title = { Text(text = stringResource(id = R.string.bookshelf_info_title)) },
         onCloseClick = { onAction(BookshelfInfoSheetAction.Close) },
-        contentPadding = contentPadding,
         modifier = modifier,
     ) {
         Column(
@@ -419,7 +415,7 @@ private fun BookshelfInfoSheetPreview() {
         )
         CanonicalScaffold(
             navigator = navigator,
-            extraPane = { contentPadding, content ->
+            extraPane = { content ->
                 BookshelfInfoSheet(
                     uiState = BookshelfInfoSheetUiState(
                         bookshelf = content.bookshelf,
@@ -429,7 +425,6 @@ private fun BookshelfInfoSheetPreview() {
                     ),
                     lazyPagingItems = lazyPagingItems,
                     onAction = {},
-                    contentPadding = contentPadding
                 )
             },
         ) {

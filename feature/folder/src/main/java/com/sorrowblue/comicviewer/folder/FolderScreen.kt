@@ -37,7 +37,6 @@ import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.feature.folder.destinations.SortTypeDialogDestination
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
-import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
@@ -112,7 +111,7 @@ fun FolderScreen(
 
 @Composable
 private fun FolderScreen(
-    navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
+    navigator: ThreePaneScaffoldNavigator<File>,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onFolderTopAppBarAction: (FolderTopAppBarAction) -> Unit,
@@ -133,12 +132,8 @@ private fun FolderScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-        extraPane = { contentPadding, fileInfoUiState ->
-            FileInfoSheet(
-                uiState = fileInfoUiState,
-                onAction = onFileInfoSheetAction,
-                contentPadding = contentPadding
-            )
+        extraPane = { content ->
+            FileInfoSheet(file = content, onAction = onFileInfoSheetAction)
         },
         floatingActionButton = {
             FolderFab(
@@ -225,7 +220,7 @@ private fun PreviewFolderScreen() {
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {
         FolderScreen(
-            navigator = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
+            navigator = rememberSupportingPaneScaffoldNavigator<File>(),
             uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
             lazyPagingItems = lazyPagingItems,
             onFileInfoSheetAction = {},
@@ -243,7 +238,7 @@ private fun PreviewFolderScreenEmpty() {
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {
         FolderScreen(
-            navigator = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
+            navigator = rememberSupportingPaneScaffoldNavigator<File>(),
             uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
             lazyPagingItems = lazyPagingItems,
             onFileInfoSheetAction = {},

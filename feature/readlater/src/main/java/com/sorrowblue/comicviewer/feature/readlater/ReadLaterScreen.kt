@@ -100,12 +100,8 @@ private fun ReadLaterScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPane = { contentPadding, fileInfoUiState ->
-            FileInfoSheet(
-                uiState = fileInfoUiState,
-                onAction = onFileInfoSheetAction,
-                contentPadding = contentPadding,
-            )
+        extraPane = { content ->
+            FileInfoSheet(uiState = content, onAction = onFileInfoSheetAction)
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->

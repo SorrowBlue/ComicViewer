@@ -31,6 +31,7 @@ import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingBookshe
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingFavoriteFileInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingFileInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingFolderBookThumbnailsUseCaseInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingHistoryBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingQueryFileInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingReadLaterFileInteractor
@@ -73,6 +74,7 @@ import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUse
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFolderBookThumbnailsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingHistoryBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
@@ -203,6 +205,9 @@ internal interface ViewModelBindsModule {
 
     @Binds
     fun bindPagingBookshelfBookUseCase(interactor: PagingBookshelfBookInteractor): PagingBookshelfBookUseCase
+
+    @Binds
+    fun bindPagingFolderBookThumbnailsUseCase(interactor: PagingFolderBookThumbnailsUseCaseInteractor): PagingFolderBookThumbnailsUseCase
 
     @Binds
     fun bindPagingFavoriteUseCase(interactor: PagingFavoriteInteractor): PagingFavoriteUseCase

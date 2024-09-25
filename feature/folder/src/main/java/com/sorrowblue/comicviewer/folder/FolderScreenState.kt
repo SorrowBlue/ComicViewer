@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.folder
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
@@ -28,15 +29,9 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
-import com.sorrowblue.comicviewer.file.FileInfoSheetState
-import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.folder.section.FolderFabAction
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
@@ -46,7 +41,6 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -73,9 +67,10 @@ internal sealed interface FolderScreenEvent {
 @Stable
 internal interface FolderScreenState :
     SaveableScreenState,
-    FileInfoSheetState,
     ScreenStateEvent<FolderScreenEvent> {
 
+    val navigator: ThreePaneScaffoldNavigator<File>
+    val snackbarHostState: SnackbarHostState
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
@@ -92,7 +87,7 @@ internal interface FolderScreenState :
 @Composable
 internal fun rememberFolderScreenState(
     args: FolderArgs,
-    navigator: ThreePaneScaffoldNavigator<FileInfoUiState> = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
+    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator<File>(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: FolderViewModel = hiltViewModel(),
@@ -112,10 +107,6 @@ internal fun rememberFolderScreenState(
             scope = scope,
             args = args,
             folderDisplaySettingsUseCase = viewModel.displaySettingsUseCase,
-            existsReadlaterUseCase = viewModel.existsReadlaterUseCase,
-            addReadLaterUseCase = viewModel.addReadLaterUseCase,
-            deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase,
-            getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
             getFileUseCase = viewModel.getFileUseCase
         )
     }
@@ -125,7 +116,7 @@ internal fun rememberFolderScreenState(
 private class FolderScreenStateImpl(
     override val lazyPagingItems: LazyPagingItems<File>,
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
+    override val navigator: ThreePaneScaffoldNavigator<File>,
     override val lazyGridState: LazyGridState,
     override val snackbarHostState: SnackbarHostState,
     override val pullRefreshState: PullToRefreshState,
@@ -133,17 +124,15 @@ private class FolderScreenStateImpl(
     private val args: FolderArgs,
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     getFileUseCase: GetFileUseCase,
-    override val existsReadlaterUseCase: ExistsReadlaterUseCase,
-    override val getFileAttributeUseCase: GetFileAttributeUseCase,
-    override val addReadLaterUseCase: AddReadLaterUseCase,
-    override val deleteReadLaterUseCase: DeleteReadLaterUseCase,
 ) : FolderScreenState {
 
     private var isRestored by savedStateHandle.saveable { mutableStateOf(false) }
 
     override val event = MutableSharedFlow<FolderScreenEvent>()
 
-    override var uiState by savedStateHandle.saveable { mutableStateOf(FolderScreenUiState(bookshelfId = args.bookshelfId)) }
+    override var uiState by savedStateHandle.saveable {
+        mutableStateOf(FolderScreenUiState(bookshelfId = args.bookshelfId))
+    }
         private set
 
     init {
@@ -184,19 +173,22 @@ private class FolderScreenStateImpl(
                 navigator.navigateBack()
 
             FileInfoSheetAction.Favorite ->
-                sendEvent(FolderScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!.file))
+                sendEvent(FolderScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!))
 
             FileInfoSheetAction.OpenFolder ->
                 TODO("Not yet implemented")
 
-            FileInfoSheetAction.ReadLater -> onReadLaterClick()
+            FileInfoSheetAction.ReadLater ->
+                TODO("Not yet implemented")
         }
     }
 
     override fun onFolderContentsAction(action: FolderContentsAction) {
         when (action) {
             is FolderContentsAction.File -> sendEvent(FolderScreenEvent.File(action.file))
-            is FolderContentsAction.FileInfo -> fetchFileInfo(action.file)
+            is FolderContentsAction.FileInfo ->
+                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file)
+
             FolderContentsAction.Refresh -> refreshItems()
         }
     }
@@ -287,14 +279,6 @@ private class FolderScreenStateImpl(
 
                 FolderFabAction.Up -> lazyGridState.scrollToItem(0)
             }
-        }
-    }
-
-    override var fileInfoJob: Job? = null
-
-    init {
-        navigator.currentDestination?.contentKey?.let {
-            fetchFileInfo(it.file)
         }
     }
 

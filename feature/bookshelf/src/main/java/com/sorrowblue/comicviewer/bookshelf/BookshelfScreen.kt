@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.bookshelf
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHost
@@ -71,7 +70,7 @@ internal fun BookshelfScreen(
         onSettingsClick = navigator::onSettingsClick,
         onBookshelfClick = navigator::onBookshelfClick,
         onBookshelfInfoClick = state::onBookshelfInfoClick,
-    ) { contentPadding, content ->
+    ) { content ->
         BookshelfInfoSheet(
             content = content,
             snackbarHostState = state.snackbarHostState,
@@ -79,7 +78,6 @@ internal fun BookshelfScreen(
             navigator = navigator,
             removeDialogResultRecipient = removeDialogResultRecipient,
             notificationResultRecipient = notificationResultRecipient,
-            contentPadding = contentPadding,
         )
     }
 
@@ -97,7 +95,7 @@ private fun BookshelfScreen(
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
     modifier: Modifier = Modifier,
     lazyGridState: LazyGridState = rememberLazyGridState(),
-    extraPane: @Composable (PaddingValues, BookshelfFolder) -> Unit,
+    extraPane: @Composable (BookshelfFolder) -> Unit,
 ) {
     val expanded by remember(lazyGridState) {
         derivedStateOf { !lazyGridState.canScrollForward || !lazyGridState.canScrollBackward }
@@ -141,7 +139,7 @@ private fun PreviewBookshelfScreen(
             onBookshelfClick = { _, _ -> },
             onBookshelfInfoClick = {},
             lazyGridState = lazyGridState
-        ) { _, _ -> }
+        ) {}
         val coroutine = rememberCoroutineScope()
         LaunchedEffect(Unit) {
             coroutine.launch {
