@@ -58,14 +58,14 @@ interface FileInfoSheetState {
         val fileInfo = navigator.currentDestination?.contentKey ?: return
         val file = fileInfo.file
         scope.launch {
-            if (fileInfo.isReadLater) {
+            if (fileInfo.readLater) {
                 deleteReadLaterUseCase(DeleteReadLaterUseCase.Request(file.bookshelfId, file.path))
             } else {
                 addReadLaterUseCase(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
             }
         }
         scope.launch {
-            if (fileInfo.isReadLater) {
+            if (fileInfo.readLater) {
                 snackbarHostState.showSnackbar("「${file.name}」を\"あとで読む\"から削除しました")
             } else {
                 snackbarHostState.showSnackbar("「${file.name}」を\"あとで読む\"に追加しました")

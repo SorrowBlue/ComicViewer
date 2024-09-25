@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -41,6 +43,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalComponentCol
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.preview.EdgeToEdgeTemplate
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
@@ -51,7 +54,7 @@ fun <T : Any> CanonicalScaffold(
     navigator: ThreePaneScaffoldNavigator<T>,
     modifier: Modifier = Modifier,
     topBar: @Composable (() -> Unit)? = null,
-    extraPane: @Composable ((PaddingValues, T) -> Unit)? = null,
+    extraPane: @Composable ((T) -> Unit)? = null,
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     alwaysVisibleFloatingActionButton: Boolean = false,
@@ -124,17 +127,20 @@ fun <T : Any> CanonicalScaffold(
                         }
                     }
                     if (contentKey != null) {
-                        val animatePaddingValues by animatePaddingValuesAsState(
-                            with(LocalNavigationState.current) {
-                                contentPadding.copyWhenZero(
-                                    skipStart = this !is NavigationState.NavigationBar && visible,
-//                                    skipEnd = this is NavigationState.NavigationBar,
-//                                    skipBottom = this is NavigationState.NavigationBar,
-//                                    skipTop = this is NavigationState.NavigationBar
-                                )
+                        val (consumeWindowInsets, top) =
+                            if (LocalNavigationState.current is NavigationState.NavigationBar) {
+                                WindowInsets(0) to 0.dp
+                            } else {
+                                contentPadding.asWindowInsets()
+                                    .only(WindowInsetsSides.Start + WindowInsetsSides.Top) to contentPadding.calculateTopPadding()
                             }
-                        )
-                        extraPane.invoke(animatePaddingValues, contentKey!!)
+                        Box(
+                            Modifier
+                                .padding(top = top)
+                                .consumeWindowInsets(consumeWindowInsets)
+                        ) {
+                            extraPane.invoke(contentKey!!)
+                        }
                     }
                 }
             }
@@ -146,6 +152,7 @@ fun <T : Any> CanonicalScaffold(
             }
             val contentPadding1 =
                 if (navigator.scaffoldDirective.maxHorizontalPartitions > 1 && navigator.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
+                    contentPadding.asWindowInsets().only(WindowInsetsSides.End)
                     contentPadding.copy(end = 0.dp)
                 } else {
                     contentPadding
@@ -194,19 +201,27 @@ private fun CanonicalScaffoldPreview(
                     }
                 )
             },
-            extraPane = { contentPadding, contentKey ->
+            extraPane = { contentKey ->
                 CanonicalExtraPaneScaffold(
                     title = { Text(contentKey) },
                     onCloseClick = {},
-                    contentPadding = contentPadding
                 ) {
                     ScratchBox(
                         color = Color.Green,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .padding(it)
+                            .fillMaxSize()
                     )
                 }
             }
         ) {
+
+            ScratchBox(
+                color = Color.Red,
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize()
+            )
         }
     }
 }

@@ -126,12 +126,8 @@ private fun SearchScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPane = { innerPadding, fileInfoUiState ->
-            FileInfoSheet(
-                uiState = fileInfoUiState,
-                onAction = onFileInfoSheetAction,
-                contentPadding = innerPadding,
-            )
+        extraPane = { content ->
+            FileInfoSheet(uiState = content, onAction = onFileInfoSheetAction)
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->

@@ -7,6 +7,7 @@ import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
@@ -94,6 +95,13 @@ interface FileLocalDataSource {
         file: File,
         searchCondition: () -> SearchCondition,
     ): Flow<PagingData<File>>
+
+    fun pagingSourceBookThumbnail(
+        pagingConfig: PagingConfig,
+        bookshelf: Bookshelf,
+        file: File,
+        searchCondition: () -> SearchCondition,
+    ): Flow<PagingData<BookThumbnail>>
 
     fun flow(bookshelfId: BookshelfId, path: String): Flow<File?>
     suspend fun findBy(bookshelfId: BookshelfId, path: String): File?

@@ -101,11 +101,10 @@ private fun HistoryScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-        extraPane = { innerPadding, fileInfoUiState ->
+        extraPane = { fileInfoUiState ->
             FileInfoSheet(
                 uiState = fileInfoUiState,
                 onAction = onFileInfoSheetAction,
-                contentPadding = innerPadding,
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
