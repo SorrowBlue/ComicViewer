@@ -207,7 +207,9 @@ internal interface ViewModelBindsModule {
     fun bindPagingBookshelfBookUseCase(interactor: PagingBookshelfBookInteractor): PagingBookshelfBookUseCase
 
     @Binds
-    fun bindPagingFolderBookThumbnailsUseCase(interactor: PagingFolderBookThumbnailsUseCaseInteractor): PagingFolderBookThumbnailsUseCase
+    fun bindPagingFolderBookThumbnailsUseCase(
+        interactor: PagingFolderBookThumbnailsUseCaseInteractor,
+    ): PagingFolderBookThumbnailsUseCase
 
     @Binds
     fun bindPagingFavoriteUseCase(interactor: PagingFavoriteInteractor): PagingFavoriteUseCase

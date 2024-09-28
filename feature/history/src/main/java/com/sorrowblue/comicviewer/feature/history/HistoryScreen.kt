@@ -5,13 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -26,8 +23,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheet
-import com.sorrowblue.comicviewer.file.FileInfoSheetAction
-import com.sorrowblue.comicviewer.file.FileInfoUiState
+import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -68,7 +64,6 @@ private fun HistoryScreen(
         onFileInfoSheetAction = state::onFileInfoSheetAction,
         onHistoryContentsAction = state::onHistoryContentsAction,
         lazyGridState = lazyGridState,
-        snackbarHostState = state.snackbarHostState
     )
 
     val currentNavigator by rememberUpdatedState(navigator)
@@ -85,12 +80,11 @@ private fun HistoryScreen(
 @Composable
 private fun HistoryScreen(
     lazyPagingItems: LazyPagingItems<Book>,
-    navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
+    navigator: ThreePaneScaffoldNavigator<File>,
     onHistoryTopAppBarAction: (HistoryTopAppBarAction) -> Unit,
-    onFileInfoSheetAction: (FileInfoSheetAction) -> Unit,
+    onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onHistoryContentsAction: (HistoryContentsAction) -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     CanonicalScaffold(
@@ -101,13 +95,7 @@ private fun HistoryScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-        extraPane = { fileInfoUiState ->
-            FileInfoSheet(
-                uiState = fileInfoUiState,
-                onAction = onFileInfoSheetAction,
-            )
-        },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        extraPane = { content -> FileInfoSheet(file = content, onAction = onFileInfoSheetAction) },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         FavoriteContents(

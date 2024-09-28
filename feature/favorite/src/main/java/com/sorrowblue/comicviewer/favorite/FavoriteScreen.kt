@@ -30,8 +30,7 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteTopAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteTopAppBarAction
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.FileInfoSheet
-import com.sorrowblue.comicviewer.file.FileInfoSheetAction
-import com.sorrowblue.comicviewer.file.FileInfoUiState
+import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -77,7 +76,6 @@ private fun FavoriteScreen(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onFavoriteTopAppBarAction = state::onFavoriteTopAppBarAction,
-        snackbarHostState = state.snackbarHostState,
         onFavoriteContentsAction = state::onFavoriteContentsAction,
         lazyGridState = state.lazyGridState,
         onFileInfoSheetAction = state::onFileInfoSheetAction,
@@ -107,10 +105,10 @@ internal data class FavoriteScreenUiState(
 @Composable
 private fun FavoriteScreen(
     uiState: FavoriteScreenUiState,
-    navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
+    navigator: ThreePaneScaffoldNavigator<File>,
     lazyPagingItems: LazyPagingItems<File>,
     onFavoriteTopAppBarAction: (FavoriteTopAppBarAction) -> Unit,
-    onFileInfoSheetAction: (FileInfoSheetAction) -> Unit,
+    onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onFavoriteContentsAction: (FavoriteContentsAction) -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
@@ -124,12 +122,7 @@ private fun FavoriteScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPane = { fileInfoUiState ->
-            FileInfoSheet(
-                uiState = fileInfoUiState,
-                onAction = onFileInfoSheetAction,
-            )
-        },
+        extraPane = { content -> FileInfoSheet(file = content, onAction = onFileInfoSheetAction) },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         navigator = navigator,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)

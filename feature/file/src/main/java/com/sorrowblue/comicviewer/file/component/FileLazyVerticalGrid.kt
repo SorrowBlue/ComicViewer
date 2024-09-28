@@ -34,8 +34,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -159,15 +158,12 @@ fun <T : File> FileLazyVerticalGrid(
 @PreviewMultiScreen
 @Composable
 private fun PreviewGridFileLazyGrid() {
-    val files = List(20) {
-        fakeBookFile(it)
-    }
-    val pagingDataFlow: Flow<PagingData<File>> = flowOf(PagingData.from(files))
+    val lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }.collectAsLazyPagingItems()
     PreviewTheme {
         Scaffold {
             FileLazyVerticalGrid(
                 uiState = FileLazyVerticalGridUiState(),
-                lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems(),
+                lazyPagingItems = lazyPagingItems,
                 onItemClick = {},
                 onItemInfoClick = {},
                 contentPadding = it

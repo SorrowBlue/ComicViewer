@@ -15,8 +15,10 @@ import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCas
 import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flattenConcat
 import kotlinx.coroutines.flow.map
 
 @HiltViewModel
@@ -41,13 +43,14 @@ internal class FileInfoSheetViewModel @Inject constructor(
     private var bookshelfId: BookshelfId? = null
     private var path: String? = null
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun internalPagingDataFlow(bookshelfId: BookshelfId, path: String) =
-        pagingFolderBookThumbnailsUseCase.execute(
+        pagingFolderBookThumbnailsUseCase(
             PagingFolderBookThumbnailsUseCase.Request(bookshelfId, path, PagingConfig(40))
-        ).cachedIn(viewModelScope).also { pagingDataFlow = it }
+        ).filterSuccess().flattenConcat().cachedIn(viewModelScope).also { pagingDataFlow = it }
 }
 
-private fun <T, E : Resource.AppError> Flow<Resource<T, E>>.filterSuccess(): Flow<T> {
+fun <T, E : Resource.AppError> Flow<Resource<T, E>>.filterSuccess(): Flow<T> {
     return filter {
         it is Resource.Success<T>
     }.map {

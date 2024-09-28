@@ -145,16 +145,17 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,
         file: File,
-        searchCondition: () -> SearchCondition
+        searchCondition: () -> SearchCondition,
     ): Flow<PagingData<BookThumbnail>> {
         val remoteMediator = factory.create(bookshelf, file)
         return Pager(pagingConfig, remoteMediator = remoteMediator) {
             dao.pagingSource(bookshelf.id.value, searchCondition())
-        }.flow.map { it.map {
-            BookThumbnail.from(it.toModel() as Book)
-        } }
+        }.flow.map { pagingData ->
+            pagingData.map {
+                BookThumbnail.from(it.toModel() as Book)
+            }
+        }
     }
-
 
     override suspend fun root(id: BookshelfId): Folder? {
         return withContext(dispatcher) {
