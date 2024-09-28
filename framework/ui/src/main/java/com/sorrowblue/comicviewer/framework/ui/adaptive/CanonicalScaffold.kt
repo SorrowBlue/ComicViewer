@@ -215,7 +215,6 @@ private fun CanonicalScaffoldPreview(
                 }
             }
         ) {
-
             ScratchBox(
                 color = Color.Red,
                 modifier = Modifier

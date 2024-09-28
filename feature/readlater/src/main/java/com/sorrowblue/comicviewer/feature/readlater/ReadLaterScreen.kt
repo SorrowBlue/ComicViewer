@@ -23,8 +23,7 @@ import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraphTra
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBar
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheet
-import com.sorrowblue.comicviewer.file.FileInfoSheetAction
-import com.sorrowblue.comicviewer.file.FileInfoUiState
+import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -85,10 +84,10 @@ private fun ReadLaterScreen(
 @Composable
 private fun ReadLaterScreen(
     lazyPagingItems: LazyPagingItems<File>,
-    navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
+    navigator: ThreePaneScaffoldNavigator<File>,
     lazyGridState: LazyGridState,
     onTopAppBarAction: (ReadLaterTopAppBarAction) -> Unit,
-    onFileInfoSheetAction: (FileInfoSheetAction) -> Unit,
+    onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onContentsAction: (ReadLaterContentsAction) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -100,9 +99,7 @@ private fun ReadLaterScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPane = { content ->
-            FileInfoSheet(uiState = content, onAction = onFileInfoSheetAction)
-        },
+        extraPane = { content -> FileInfoSheet(file = content, onAction = onFileInfoSheetAction) },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         ReadLaterContents(

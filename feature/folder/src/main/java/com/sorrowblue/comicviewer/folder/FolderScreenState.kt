@@ -31,7 +31,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.file.FileInfoSheetAction
+import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.folder.section.FolderFabAction
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
@@ -78,7 +78,7 @@ internal interface FolderScreenState :
     fun onNavClick()
     fun onNavResult(navResult: NavResult<SortType>)
     fun onFolderTopAppBarAction(action: FolderTopAppBarAction)
-    fun onFileInfoSheetAction(action: FileInfoSheetAction)
+    fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onFolderContentsAction(action: FolderContentsAction)
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
     fun onFolderFabAction(action: FolderFabAction)
@@ -167,18 +167,13 @@ private class FolderScreenStateImpl(
             }.launchIn(scope)
     }
 
-    override fun onFileInfoSheetAction(action: FileInfoSheetAction) {
+    override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
-            FileInfoSheetAction.Close ->
-                navigator.navigateBack()
-
-            FileInfoSheetAction.Favorite ->
+            FileInfoSheetNavigator.Back -> navigator.navigateBack()
+            is FileInfoSheetNavigator.Favorite ->
                 sendEvent(FolderScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!))
 
-            FileInfoSheetAction.OpenFolder ->
-                TODO("Not yet implemented")
-
-            FileInfoSheetAction.ReadLater ->
+            is FileInfoSheetNavigator.OpenFolder ->
                 TODO("Not yet implemented")
         }
     }

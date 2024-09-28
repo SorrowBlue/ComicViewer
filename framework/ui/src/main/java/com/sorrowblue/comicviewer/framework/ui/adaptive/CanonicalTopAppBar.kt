@@ -33,10 +33,14 @@ fun CanonicalTopAppBar(
             navigationIcon = navigationIcon,
             actions = actions,
             colors = with(LocalComponentColors.current) {
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = containerColor,
-                    scrolledContainerColor = contentColor
-                )
+                if (LocalNavigationState.current is NavigationState.NavigationBar) {
+                    TopAppBarDefaults.topAppBarColors()
+                } else {
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = containerColor,
+                        scrolledContainerColor = contentColor
+                    )
+                }
             },
             scrollBehavior = scrollBehavior,
             windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),

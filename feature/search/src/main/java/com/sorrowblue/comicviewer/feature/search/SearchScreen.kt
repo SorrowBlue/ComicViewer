@@ -29,8 +29,7 @@ import com.sorrowblue.comicviewer.feature.search.section.SearchContents
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsAction
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsUiState
 import com.sorrowblue.comicviewer.file.FileInfoSheet
-import com.sorrowblue.comicviewer.file.FileInfoSheetAction
-import com.sorrowblue.comicviewer.file.FileInfoUiState
+import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
@@ -110,10 +109,10 @@ internal data class SearchScreenUiState(
 private fun SearchScreen(
     uiState: SearchScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
-    navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
+    navigator: ThreePaneScaffoldNavigator<File>,
     lazyGridState: LazyGridState,
     onSearchTopAppBarAction: (SearchTopAppBarAction) -> Unit,
-    onFileInfoSheetAction: (FileInfoSheetAction) -> Unit,
+    onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onSearchContentsAction: (SearchContentsAction) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -126,9 +125,7 @@ private fun SearchScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPane = { content ->
-            FileInfoSheet(uiState = content, onAction = onFileInfoSheetAction)
-        },
+        extraPane = { content -> FileInfoSheet(file = content, onAction = onFileInfoSheetAction) },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         SearchContents(
@@ -152,7 +149,7 @@ private fun SearchScreenPreview() {
         SearchScreen(
             uiState = SearchScreenUiState(),
             lazyPagingItems = lazyPagingItems,
-            navigator = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
+            navigator = rememberSupportingPaneScaffoldNavigator<File>(),
             lazyGridState = rememberLazyGridState(),
             onSearchTopAppBarAction = {},
             onFileInfoSheetAction = {},

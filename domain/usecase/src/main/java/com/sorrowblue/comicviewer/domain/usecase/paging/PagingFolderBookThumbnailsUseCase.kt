@@ -1,14 +1,20 @@
 package com.sorrowblue.comicviewer.domain.usecase.paging
 
 import androidx.paging.PagingConfig
-import com.sorrowblue.comicviewer.domain.BaseRequest
+import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
+import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import kotlinx.coroutines.flow.Flow
 
 abstract class PagingFolderBookThumbnailsUseCase :
-    PagingUseCase<PagingFolderBookThumbnailsUseCase.Request, BookThumbnail>() {
+    UseCase<PagingFolderBookThumbnailsUseCase.Request, Flow<PagingData<BookThumbnail>>, PagingFolderBookThumbnailsUseCase.Error>() {
 
     class Request(val bookshelfId: BookshelfId, val path: String, val pagingConfig: PagingConfig) :
-        BaseRequest
+        UseCase.Request
+
+    enum class Error : Resource.AppError {
+        NOT_FOUND,
+    }
 }

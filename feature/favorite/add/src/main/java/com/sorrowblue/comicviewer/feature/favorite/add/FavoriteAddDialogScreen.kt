@@ -38,7 +38,7 @@ import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
-import kotlinx.coroutines.flow.flowOf
+import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 
 class FavoriteAddArgs(
     val bookshelfId: BookshelfId,
@@ -147,8 +147,7 @@ private val BottomButtonMargin = 16.dp
 @Composable
 @Preview
 private fun PreviewFavoriteAddDialogScreen() {
-    val list = List(20) { fakeFavorite(it) }
-    val lazyPagingItems = flowOf(PagingData.from(list)).collectAsLazyPagingItems()
+    val lazyPagingItems = PagingData.flowData { fakeFavorite(it) }.collectAsLazyPagingItems()
     FavoriteAddDialogScreen(
         lazyPagingItems = lazyPagingItems,
         recentFavorites = lazyPagingItems,

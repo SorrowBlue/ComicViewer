@@ -7,11 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.favorite.destinations.FavoriteScreenDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,10 +20,6 @@ internal class FavoriteViewModel @Inject constructor(
     val getFavoriteUseCase: GetFavoriteUseCase,
     val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     val deleteFavoriteUseCase: DeleteFavoriteUseCase,
-    val addReadLaterUseCase: AddReadLaterUseCase,
-    val getFileAttributeUseCase: GetFileAttributeUseCase,
-    val existsReadlaterUseCase: ExistsReadlaterUseCase,
-    val deleteReadLaterUseCase: DeleteReadLaterUseCase,
 ) : ViewModel() {
 
     private val args = FavoriteScreenDestination.argsFrom(savedStateHandle)

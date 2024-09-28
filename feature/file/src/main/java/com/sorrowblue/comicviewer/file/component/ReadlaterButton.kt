@@ -8,12 +8,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconToggleButton
-import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedIconToggleButton
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,7 +30,6 @@ internal fun ReadlaterButton(uiState: ReadLaterUiState, onClick: () -> Unit) {
                 .padding(top = ComicTheme.dimension.minPadding * 4)
                 .padding(horizontal = ComicTheme.dimension.minPadding * 4)
         ) {
-
             if (uiState.loading) {
                 CircularProgressIndicator(modifier = Modifier.size(24.dp))
             } else {

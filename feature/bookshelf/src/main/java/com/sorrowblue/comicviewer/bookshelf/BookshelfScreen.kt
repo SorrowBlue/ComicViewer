@@ -17,8 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -42,8 +40,11 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme3
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeFolder
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeInternalStorage
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData2
-import kotlinx.coroutines.flow.flowOf
+import com.sorrowblue.comicviewer.framework.ui.preview.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.flowEmptyData
+import com.sorrowblue.comicviewer.framework.ui.preview.flowLoadingData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 internal interface BookshelfScreenNavigator : BookshelfInfoSheetNavigator {
@@ -100,7 +101,7 @@ private fun BookshelfScreen(
     val expanded by remember(lazyGridState) {
         derivedStateOf { !lazyGridState.canScrollForward || !lazyGridState.canScrollBackward }
     }
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     CanonicalScaffold(
         navigator = navigator,
         topBar = {
@@ -128,7 +129,7 @@ private fun PreviewBookshelfScreen(
     @PreviewParameter(PagingDataProvider::class) pagingData: PagingData<BookshelfFolder>,
 ) {
     PreviewTheme3 {
-        val lazyPagingItems = flowOf(pagingData).collectAsLazyPagingItems()
+        val lazyPagingItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
         val lazyGridState = rememberLazyGridState()
         BookshelfScreen(
             navigator = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>(),
@@ -149,16 +150,10 @@ private fun PreviewBookshelfScreen(
     }
 }
 
-private class PagingDataProvider : PreviewParameterProvider<PagingData<BookshelfFolder>> {
-    override val values: Sequence<PagingData<BookshelfFolder>> = sequenceOf(
-        PagingData.flowData2(20) { BookshelfFolder(fakeInternalStorage(it), fakeFolder()) },
-        PagingData.empty(),
-        PagingData.empty(
-            sourceLoadStates = LoadStates(
-                LoadState.NotLoading(true),
-                LoadState.NotLoading(true),
-                LoadState.NotLoading(true)
-            )
-        )
+private class PagingDataProvider : PreviewParameterProvider<Flow<PagingData<BookshelfFolder>>> {
+    override val values: Sequence<Flow<PagingData<BookshelfFolder>>> = sequenceOf(
+        PagingData.flowData { BookshelfFolder(fakeInternalStorage(it), fakeFolder()) },
+        PagingData.flowLoadingData(),
+        PagingData.flowEmptyData()
     )
 }

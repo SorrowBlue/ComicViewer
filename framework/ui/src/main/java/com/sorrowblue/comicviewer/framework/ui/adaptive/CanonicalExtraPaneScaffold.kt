@@ -99,27 +99,42 @@ fun WindowInsets.zero(
                     this,
                     layoutDirection
                 ) > 0
-            ) 0.dp else ComicTheme.dimension.margin
+            ) {
+                0.dp
+            } else {
+                ComicTheme.dimension.margin
+            }
             right = if (ignoreEnd || getRight(
                     this,
                     layoutDirection
                 ) > 0
-            ) 0.dp else ComicTheme.dimension.margin
+            ) {
+                0.dp
+            } else {
+                ComicTheme.dimension.margin
+            }
         } else {
             right = if (ignoreStart || getRight(
                     this,
                     layoutDirection
                 ) > 0
-            ) 0.dp else ComicTheme.dimension.margin
+            ) {
+                0.dp
+            } else {
+                ComicTheme.dimension.margin
+            }
             left = if (ignoreEnd || getLeft(
                     this,
                     layoutDirection
                 ) > 0
-            ) 0.dp else ComicTheme.dimension.margin
+            ) {
+                0.dp
+            } else {
+                ComicTheme.dimension.margin
+            }
         }
         val top = if (ignoreTop || getTop(this) > 0) 0.dp else ComicTheme.dimension.margin
         val bottom = if (ignoreBottom || getBottom(this) > 0) 0.dp else ComicTheme.dimension.margin
         return add(WindowInsets(left = left, top = top, right = right, bottom = bottom))
     }
 }
-

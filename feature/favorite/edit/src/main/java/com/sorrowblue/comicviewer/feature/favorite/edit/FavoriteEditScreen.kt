@@ -46,7 +46,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarBottom
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
-import kotlinx.coroutines.flow.flowOf
+import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import soil.form.FormPolicy
 import soil.form.compose.Controller
 import soil.form.compose.Form
@@ -190,11 +190,11 @@ private fun FavoriteEditScreen(
 @Composable
 private fun PreviewFavoriteEditScreen() {
     fakeBookFile()
-    val pagingDataFlow = flowOf(PagingData.from(List<File>(20) { fakeBookFile(it) }))
+    val lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }.collectAsLazyPagingItems()
     ComicTheme {
         FavoriteEditScreen(
             uiState = FavoriteEditScreenUiState(),
-            lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems(),
+            lazyPagingItems = lazyPagingItems,
             onBackClick = {},
             onSaveClick = {},
             onDeleteClick = {}
