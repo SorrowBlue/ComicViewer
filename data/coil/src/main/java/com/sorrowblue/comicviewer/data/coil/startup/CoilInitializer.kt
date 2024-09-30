@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.startup.Initializer
 import coil3.ImageLoader
+import coil3.PlatformContext
 import coil3.SingletonImageLoader
-import coil3.annotation.DelicateCoilApi
 import coil3.fetch.Fetcher
 import coil3.request.allowRgb565
 import coil3.request.bitmapConfig
@@ -23,7 +23,7 @@ import javax.inject.Inject
 import logcat.LogPriority
 import logcat.logcat
 
-internal class CoilInitializer : Initializer<Unit> {
+internal class CoilInitializer : Initializer<Unit>, SingletonImageLoader.Factory {
 
     @Inject
     lateinit var oldFolderThumbnailFetcher: Fetcher.Factory<Folder>
@@ -45,7 +45,12 @@ internal class CoilInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
         InitializerEntryPoint.resolve(context).inject(this)
-        val imageLoader = ImageLoader(context).newBuilder()
+        SingletonImageLoader.setSafe(this)
+        logcat(LogPriority.INFO) { "Initialized coil." }
+    }
+
+    override fun newImageLoader(context: PlatformContext): ImageLoader {
+        return ImageLoader(context).newBuilder()
             .components {
                 add(oldFolderThumbnailFetcher)
                 add(oldBookThumbnailFetcher)
@@ -60,10 +65,6 @@ internal class CoilInitializer : Initializer<Unit> {
             .precision(Precision.INEXACT)
             .logger(DebugLogger())
             .build()
-
-        @OptIn(DelicateCoilApi::class)
-        SingletonImageLoader.setUnsafe(imageLoader)
-        logcat(LogPriority.INFO) { "Initialized coil." }
     }
 
     override fun dependencies() = listOf(LogcatInitializer::class.java)
