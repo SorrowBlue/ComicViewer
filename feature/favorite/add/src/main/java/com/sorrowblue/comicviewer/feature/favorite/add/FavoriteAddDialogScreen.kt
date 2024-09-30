@@ -118,7 +118,13 @@ private fun FavoriteAddDialogScreen(
                     .drawVerticalScrollbar(lazyListState)
             ) {
                 item("recentFavorites") {
-                    RecentFavoriteSheet(lazyPagingItems = recentFavorites, onClick = onClick)
+                    if (recentFavorites.itemCount > 0) {
+                        RecentFavoriteSheet(
+                            lazyPagingItems = recentFavorites,
+                            onClick = onClick,
+                            modifier = Modifier.animateItem()
+                        )
+                    }
                 }
                 items(
                     count = lazyPagingItems.itemCount,

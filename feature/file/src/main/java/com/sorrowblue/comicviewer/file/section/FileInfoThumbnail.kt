@@ -35,7 +35,10 @@ internal fun FileInfoThumbnail(
 ) {
     Box(modifier = modifier) {
         if (lazyPagingItems != null) {
-            FolderThumbnailsCarousel(lazyPagingItems = lazyPagingItems)
+            FolderThumbnailsCarousel(
+                lazyPagingItems = lazyPagingItems,
+                modifier = Modifier.height(186.dp)
+            )
         } else {
             FileThumbnailAsyncImage(
                 fileThumbnail = FileThumbnail.from(file),
@@ -59,7 +62,9 @@ private fun FileInfoThumbnailPreview() {
             FileInfoThumbnail(
                 file = BookFile(BookshelfId(), "", "", "", 0, 0, false, "", 0),
                 lazyPagingItems = lazyPagingItems,
-                modifier = Modifier.fillMaxSize().padding(it)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
             )
         }
     }

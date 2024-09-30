@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCas
 import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -67,31 +67,28 @@ internal fun rememberFileInfoSheetState2(
 }
 
 private class FileInfoSheetStateImpl(
+    getFileAttributeUseCase: GetFileAttributeUseCase,
+    existsReadlaterUseCase: ExistsReadlaterUseCase,
     private val file: File,
-    override val scope: CoroutineScope,
-    private val getFileAttributeUseCase: GetFileAttributeUseCase,
-    private val existsReadlaterUseCase: ExistsReadlaterUseCase,
     private val deleteReadLaterUseCase: DeleteReadLaterUseCase,
     private val addReadLaterUseCase: AddReadLaterUseCase,
+    override val scope: CoroutineScope,
     override val lazyPagingItems: LazyPagingItems<BookThumbnail>?,
 ) : FileInfoSheetState {
 
     override val event: SharedFlow<FileInfoSheetStateEvent> = MutableSharedFlow()
 
     override var uiState: FileInfoUiState by mutableStateOf(FileInfoUiState(file = file))
+    private val runningJob = ArrayDeque<Job>()
 
     init {
-        fetch(file)
-    }
-
-    fun fetch(file: File) {
-        scope.cancel()
         uiState = uiState.copy(
             file = file,
             attribute = null,
             readLaterUiState = uiState.readLaterUiState.copy(loading = true)
         )
-        val getRequest = GetFileAttributeUseCase.Request(file.bookshelfId, file.path)
+        runningJob.forEach(Job::cancel)
+        runningJob.clear()
         existsReadlaterUseCase(
             ExistsReadlaterUseCase.Request(
                 file.bookshelfId,
@@ -106,10 +103,15 @@ private class FileInfoSheetStateImpl(
                     )
                 )
             }
-        }.launchIn(scope)
-        getFileAttributeUseCase(getRequest).onEach {
+        }.launchIn(scope).let(runningJob::add)
+        getFileAttributeUseCase(
+            GetFileAttributeUseCase.Request(
+                file.bookshelfId,
+                file.path
+            )
+        ).onEach {
             uiState = uiState.copy(attribute = it.dataOrNull())
-        }.launchIn(scope)
+        }.launchIn(scope).let(runningJob::add)
     }
 
     override fun onAction(action: FileInfoSheetAction) {

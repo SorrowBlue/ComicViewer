@@ -20,7 +20,7 @@ androidx-work = "2.9.1"
 google-android-material = "1.13.0-alpha06"
 google-dagger = "2.52"
 android-gradle = "8.6.1"
-
+coil-kt = "3.0.0-alpha10"
 detekt = "1.23.7"
 mikepenz-aboutlibraries = "11.2.3"
 koin = "4.0.0"
@@ -133,9 +133,10 @@ google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev202
 squareup-leakcanary-android = "com.squareup.leakcanary:leakcanary-android:2.14"
 dropbox-androidSdk = "com.dropbox.core:dropbox-android-sdk:7.0.0"
 
-coil3 = "io.coil-kt.coil3:coil:3.0.0-alpha10"
-coil3-compose = "io.coil-kt.coil3:coil-compose:3.0.0-alpha10"
-coil3-networkKtor = "io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha08"
+coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil-kt" }
+coil3-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-kt" }
+coil3-networkKtor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil-kt" }
+
 ktor-client-android = "io.ktor:ktor-client-android:2.3.12"
 squareup-okhttp3 = "com.squareup.okhttp3:okhttp:4.12.0"
 jcifs-ng = "eu.agno3.jcifs:jcifs-ng:2.1.10"

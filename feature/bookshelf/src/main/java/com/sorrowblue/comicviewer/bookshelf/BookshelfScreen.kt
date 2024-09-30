@@ -44,7 +44,6 @@ import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.flowEmptyData
 import com.sorrowblue.comicviewer.framework.ui.preview.flowLoadingData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 internal interface BookshelfScreenNavigator : BookshelfInfoSheetNavigator {
@@ -126,10 +125,10 @@ private fun BookshelfScreen(
 @PreviewMultiScreen
 @Composable
 private fun PreviewBookshelfScreen(
-    @PreviewParameter(PagingDataProvider::class) pagingData: PagingData<BookshelfFolder>,
+    @PreviewParameter(PagingDataProvider::class) pagingDataFlow: Flow<PagingData<BookshelfFolder>>,
 ) {
     PreviewTheme3 {
-        val lazyPagingItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
+        val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
         val lazyGridState = rememberLazyGridState()
         BookshelfScreen(
             navigator = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>(),

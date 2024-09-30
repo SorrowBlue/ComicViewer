@@ -51,8 +51,6 @@ data class ReadLaterUiState(val checked: Boolean = false, val loading: Boolean =
 data class FileInfoUiState(
     val file: File,
     val attribute: FileAttribute? = null,
-    val readLater: Boolean = false,
-    val loading: Boolean = true,
     val readLaterUiState: ReadLaterUiState = ReadLaterUiState(),
     val isOpenFolderEnabled: Boolean = false,
 ) : Parcelable
@@ -220,14 +218,12 @@ private class FileInfoUiStateProvider : PreviewParameterProvider<FileInfoUiState
                 fakeBookFile(),
                 attribute = attribute,
                 readLaterUiState = ReadLaterUiState(checked = true, loading = true),
-                loading = true,
                 isOpenFolderEnabled = true
             ),
             FileInfoUiState(
                 fakeBookFile(),
                 attribute = attribute,
                 readLaterUiState = ReadLaterUiState(checked = true, loading = false),
-                loading = true,
                 isOpenFolderEnabled = true
             ),
         )
