@@ -116,7 +116,7 @@ private class BookshelfEditScreenStateImpl(
                                     displayName = bookshelf.displayName,
                                     host = bookshelf.host,
                                     port = bookshelf.port,
-                                    path = it.folder.path,
+                                    path = it.folder.path.removeSurrounding("/"),
                                     auth = when (bookshelf.auth) {
                                         is SmbServer.Auth.Guest -> SmbEditScreenForm.Auth.Guest
                                         is SmbServer.Auth.UsernamePassword ->

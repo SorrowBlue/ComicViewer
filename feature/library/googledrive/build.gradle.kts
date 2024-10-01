@@ -22,8 +22,8 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.playServicesAuth)
     implementation(libs.google.android.gms.play.services.auth)
-    implementation("com.google.apis:google-api-services-people:v1-rev20240313-2.0.0")
     implementation(libs.google.api.client.android)
     implementation(libs.google.api.services.drive)
+    implementation(libs.google.api.services.people)
     implementation(libs.kotlinx.coroutines.play.services)
 }

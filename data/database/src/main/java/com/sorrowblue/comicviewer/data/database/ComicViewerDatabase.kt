@@ -16,9 +16,11 @@ import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteFileEnti
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEntity
 
+internal const val DATABASE_VERSION = 5
+
 @Database(
     entities = [BookshelfEntity::class, FileEntity::class, FavoriteEntity::class, FavoriteFileEntity::class, ReadLaterFileEntity::class],
-    version = 5,
+    version = DATABASE_VERSION,
     autoMigrations = [
         AutoMigration(1, 2),
         AutoMigration(2, 3),

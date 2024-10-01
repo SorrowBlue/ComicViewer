@@ -11,5 +11,5 @@ dependencies {
     implementation(projects.data.storage.client)
 
     implementation(libs.jcifs.ng)
-    implementation("uk.uuid.slf4j:slf4j-android:2.0.16-0")
+    implementation(libs.slf4j.android)
 }

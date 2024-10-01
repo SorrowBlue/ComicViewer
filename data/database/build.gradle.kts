@@ -6,6 +6,13 @@ plugins {
 
 android {
     namespace = "com.sorrowblue.comicviewer.data.database"
+
+    sourceSets {
+        val androidTest by getting
+        androidTest.assets.srcDir(file("$projectDir/schemas"))
+        val test by getting
+        test.assets.srcDir(file("$projectDir/schemas"))
+    }
 }
 
 kotlin {
@@ -24,6 +31,7 @@ dependencies {
     implementation(libs.bundles.androidx.room)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.paging.common)
+    testImplementation(libs.androidx.room.testing)
 }
 
 ksp {
