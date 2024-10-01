@@ -21,5 +21,5 @@ dependencies {
 
     implementation(libs.microsoft.graph)
     implementation(libs.microsoft.identity.client.msal)
-    implementation(libs.kotlinx.coroutines.jdk8)
+    implementation(libs.kotlinx.coroutines.android)
 }

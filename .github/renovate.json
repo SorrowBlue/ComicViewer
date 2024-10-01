@@ -81,13 +81,6 @@
     },
     {
       "matchPackagePrefixes": [
-        "io.github.takahirom.roborazzi"
-      ],
-      "groupName": "Roborazzi",
-      "groupSlug": "takahirom_roborazzi"
-    },
-    {
-      "matchPackagePrefixes": [
         "androidx.compose"
       ],
       "groupName": "androidx.compose",
