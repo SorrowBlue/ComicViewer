@@ -13,7 +13,7 @@ internal class GetFileAttributeInteractor @Inject constructor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : GetFileAttributeUseCase() {
-    override fun run(request: Request): Flow<Resource<FileAttribute?, Error>> {
+    override fun run(request: Request): Flow<Resource<FileAttribute, Error>> {
         return bookshelfLocalDataSource.flow(request.bookshelfId).map { bookshelf ->
             if (bookshelf != null) {
                 kotlin.runCatching {

@@ -105,8 +105,7 @@ android {
     }
 
     lint {
-        this.checkAllWarnings = true
-        this.
+        checkAllWarnings = true
         checkDependencies = true
         htmlReport = true
         htmlOutput = file("$rootDir/build/reports/lint/lint-result.html")
@@ -114,6 +113,10 @@ android {
         sarifOutput = file("$rootDir/build/reports/lint/lint-result.sarif")
         textReport = false
         xmlReport = false
+    }
+
+    packaging {
+        resources.excludes += "com/ramcosta/composedestinations/generated/mermaid/**"
     }
 }
 
@@ -129,6 +132,7 @@ dependencies {
     implementation(projects.feature.bookshelf)
     implementation(projects.feature.favorite)
     implementation(projects.feature.favorite.add)
+    implementation(projects.feature.favorite.create)
     implementation(projects.feature.readlater)
     implementation(projects.feature.search)
     implementation(projects.feature.settings)
@@ -136,7 +140,6 @@ dependencies {
     implementation(projects.feature.tutorial)
     implementation(projects.feature.library)
 
-    implementation(libs.androidx.compose.material3.adaptiveNavigationSuite)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.browser)

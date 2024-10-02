@@ -24,5 +24,3 @@ sealed class Result<out S, out F> {
         is Exception -> onException(cause)
     }
 }
-
-class Unknown(val throws: Throwable) : Result.Exception.Cause

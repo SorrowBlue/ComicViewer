@@ -25,7 +25,7 @@ internal class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
             enableEdgeToEdge(
-                navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+                navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
             )
             super.onCreate(savedInstanceState)
             setOnExitAnimationListener(SplashScreenViewProvider::startShrinkingAnimation)

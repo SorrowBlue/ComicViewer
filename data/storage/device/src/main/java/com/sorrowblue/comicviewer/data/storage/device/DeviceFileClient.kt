@@ -82,9 +82,9 @@ internal class DeviceFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun current(path: String): File {
+    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         return kotlin.runCatching {
-            documentFile(path).toFileModel()
+            documentFile(path).toFileModel(resolveImageFolder)
         }.getOrElse {
             it.printStackTrace()
             when (it) {

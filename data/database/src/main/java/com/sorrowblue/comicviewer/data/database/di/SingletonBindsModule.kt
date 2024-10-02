@@ -4,12 +4,12 @@ import com.sorrowblue.comicviewer.data.database.impl.BookshelfLocalDataSourceImp
 import com.sorrowblue.comicviewer.data.database.impl.FavoriteFileLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.FavoriteLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.FileModelLocalDataSourceImpl
-import com.sorrowblue.comicviewer.data.database.impl.ReadLaterFileModelLocalDataSourceImpl
+import com.sorrowblue.comicviewer.data.database.impl.ReadLaterFileLocalDataSourceImpl
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileModelLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -27,8 +27,8 @@ internal interface SingletonBindsModule {
     @Singleton
     @Binds
     fun bindReadLaterFileModelLocalDataSource(
-        dataSource: ReadLaterFileModelLocalDataSourceImpl,
-    ): ReadLaterFileModelLocalDataSource
+        dataSource: ReadLaterFileLocalDataSourceImpl,
+    ): ReadLaterFileLocalDataSource
 
     @Singleton
     @Binds

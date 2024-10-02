@@ -4,6 +4,6 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class MainViewModel : ViewModel() {
-    var shouldKeepSplash = MutableStateFlow(true)
-    var isInitialized = MutableStateFlow(false)
+    val shouldKeepSplash = MutableStateFlow(true)
+    val isInitialized = MutableStateFlow(false)
 }

@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.framework.designsystem.icon.symbols
 
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
@@ -8,9 +10,11 @@ import androidx.compose.ui.graphics.StrokeJoin.Companion.Miter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.DocumentUnknown: ImageVector
     get() {
         if (_documentUnknown != null) {
@@ -120,4 +124,11 @@ val ComicIcons.DocumentUnknown: ImageVector
         return _documentUnknown!!
     }
 
+@Suppress("ObjectPropertyName")
 private var _documentUnknown: ImageVector? = null
+
+@Preview
+@Composable
+private fun DocumentUnknownPreview() {
+    Icon(imageVector = ComicIcons.DocumentUnknown, contentDescription = null)
+}

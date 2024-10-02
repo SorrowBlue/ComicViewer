@@ -115,7 +115,10 @@ private class ComicViewerAppStateImpl(
                         val findDestination =
                             tab.navGraph.findDestination(destination.route.orEmpty())
                         (findDestination?.style as? DestinationTransitions)?.directionToDisplayNavigation?.any { destination.route == it.route }
-                            ?: false
+                            ?: false ||
+                            (tab.navGraph.defaultTransitions as? DestinationTransitions)?.directionToDisplayNavigation?.any {
+                                destination.route == it.route
+                            } ?: false
                     }
                 }
                 uiState = uiState.copy(currentTab = currentTab)
@@ -175,7 +178,7 @@ private class ComicViewerAppStateImpl(
         val destinationTransitions = navController.toDestinationsNavigator()
         return scope.launch {
             val history =
-                getNavigationHistoryUseCase.execute(EmptyRequest).first().fold({ it }, { null })
+                getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
             destinationTransitions.navigate(BookshelfNavGraph) {
                 popUpTo(MainNavGraph) {
                     inclusive = true

@@ -3,9 +3,9 @@ package com.sorrowblue.comicviewer.file.component
 import android.os.Parcelable
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuScope
 import kotlinx.parcelize.IgnoredOnParcel
@@ -117,9 +117,8 @@ fun rememberFileContentType(
     fileListDisplay: FileListDisplay,
     gridColumnSize: GridColumnSize,
 ): State<FileContentType> {
-    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
-    val widthSizeClass = windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass
-    val isCompact = widthSizeClass == WindowWidthSizeClass.COMPACT
+    val widthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    val isCompact = isCompactWindowClass()
     return remember(fileListDisplay, gridColumnSize) {
         mutableStateOf(
             when (fileListDisplay) {

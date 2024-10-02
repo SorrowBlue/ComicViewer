@@ -5,7 +5,6 @@ import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
@@ -18,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 
-@OptIn(ExperimentalMaterial3Api::class)
 fun TopAppBarColors.containerColor(colorTransitionFraction: Float): Color {
     return lerp(
         containerColor,
@@ -34,7 +32,7 @@ fun TopAppBarColors.containerColor(colorTransitionFraction: Float): Color {
  * @param scrollBehavior
  * @param content
  */
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun TopAppBarBottom(
     modifier: Modifier = Modifier,

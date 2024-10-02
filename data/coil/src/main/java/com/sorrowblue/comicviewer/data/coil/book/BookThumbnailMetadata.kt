@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.data.coil.book
 
 import com.sorrowblue.comicviewer.data.coil.CoilMetaData
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
@@ -20,6 +21,13 @@ internal data class BookThumbnailMetadata(
 ) : CoilMetaData {
 
     constructor(book: Book) : this(
+        book.path,
+        book.bookshelfId.value,
+        book.lastModifier,
+        book.size
+    )
+
+    constructor(book: BookThumbnail) : this(
         book.path,
         book.bookshelfId.value,
         book.lastModifier,

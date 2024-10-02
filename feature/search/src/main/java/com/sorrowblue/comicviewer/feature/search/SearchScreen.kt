@@ -3,9 +3,7 @@ package com.sorrowblue.comicviewer.feature.search
 import android.os.Parcelable
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
@@ -31,15 +29,13 @@ import com.sorrowblue.comicviewer.feature.search.section.SearchContents
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsAction
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsUiState
 import com.sorrowblue.comicviewer.file.FileInfoSheet
-import com.sorrowblue.comicviewer.file.FileInfoSheetAction
-import com.sorrowblue.comicviewer.file.FileInfoUiState
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.preview.flowData
-import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
+import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.material3.adaptive.navigation.BackHandlerForNavigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import kotlinx.coroutines.delay
 import kotlinx.parcelize.Parcelize
 
@@ -51,9 +47,9 @@ interface SearchScreenNavigator {
     fun onNavigateSettings()
 }
 
-class SearchArgs(val bookshelfId: BookshelfId, val path: String)
+@Parcelize
+class SearchArgs(val bookshelfId: BookshelfId, val path: String) : Parcelable
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Destination<SearchGraph>(
     start = true,
     navArgs = SearchArgs::class,
@@ -61,11 +57,10 @@ class SearchArgs(val bookshelfId: BookshelfId, val path: String)
     visibility = CodeGenVisibility.INTERNAL
 )
 @Composable
-internal fun SearchScreen(args: SearchArgs, navigator: SearchScreenNavigator) {
-    SearchScreen(navigator = navigator, state = rememberSearchScreenState(args = args))
+internal fun SearchScreen(navigator: SearchScreenNavigator) {
+    SearchScreen(navigator = navigator, state = rememberSearchScreenState())
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenState) {
     val lazyPagingItems = state.lazyPagingItems.collectAsLazyPagingItems()
@@ -89,7 +84,6 @@ internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenS
             SearchScreenEvent.Settings -> currentNavigator.onNavigateSettings()
         }
     }
-    BackHandlerForNavigator(navigator = state.navigator)
 
     LaunchedEffect(state.uiState.searchTopAppBarUiState.searchCondition) {
         if (!state.isSkipFirstRefresh) {
@@ -111,15 +105,14 @@ internal data class SearchScreenUiState(
     val searchContentsUiState: SearchContentsUiState = SearchContentsUiState(),
 ) : Parcelable
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchScreen(
     uiState: SearchScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
-    navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
+    navigator: ThreePaneScaffoldNavigator<File>,
     lazyGridState: LazyGridState,
     onSearchTopAppBarAction: (SearchTopAppBarAction) -> Unit,
-    onFileInfoSheetAction: (FileInfoSheetAction) -> Unit,
+    onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onSearchContentsAction: (SearchContentsAction) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -132,14 +125,7 @@ private fun SearchScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPaneVisible = { innerPadding, fileInfoUiState ->
-            FileInfoSheet(
-                uiState = fileInfoUiState,
-                onAction = onFileInfoSheetAction,
-                contentPadding = innerPadding,
-                scaffoldDirective = navigator.scaffoldDirective
-            )
-        },
+        extraPane = { content -> FileInfoSheet(file = content, onAction = onFileInfoSheetAction) },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         SearchContents(
@@ -152,19 +138,18 @@ private fun SearchScreen(
     }
 }
 
-private const val WaitLoadPage = 500L
+private const val WaitLoadPage = 350L
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Preview
 @Composable
 private fun SearchScreenPreview() {
     PreviewTheme {
-        val pagingDataFlow = PagingData.flowData<File> { fakeBookFile(BookshelfId(it)) }
+        val pagingDataFlow = PagingData.flowData<File> { fakeBookFile(it) }
         val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
         SearchScreen(
             uiState = SearchScreenUiState(),
             lazyPagingItems = lazyPagingItems,
-            navigator = rememberSupportingPaneScaffoldNavigator<FileInfoUiState>(),
+            navigator = rememberSupportingPaneScaffoldNavigator<File>(),
             lazyGridState = rememberLazyGridState(),
             onSearchTopAppBarAction = {},
             onFileInfoSheetAction = {},

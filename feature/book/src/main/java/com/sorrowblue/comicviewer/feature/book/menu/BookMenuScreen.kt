@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.book.menu
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -23,7 +22,6 @@ import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ExposedDropdownMenu
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.collections.immutable.toPersistentList
 
 internal data class BookMenuScreenUiState(
     val pageFormat2: PageFormat2 = PageFormat2.Default,
@@ -57,7 +55,6 @@ private fun BookMenuScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BookMenuScreen(
     uiState: BookMenuScreenUiState,
@@ -73,13 +70,13 @@ internal fun BookMenuScreen(
             label = stringResource(id = R.string.book_label_display_format),
             value = stringResource(id = uiState.pageFormat2.label),
             onChangeValue = onPageFormatChange,
-            menus = remember(PageFormat2.entries::toPersistentList),
+            menus = remember { PageFormat2.entries },
         )
         ExposedDropdownMenu(
             label = stringResource(id = R.string.book_label_scale),
             value = stringResource(id = uiState.pageScale.label),
             onChangeValue = onPageScaleChange,
-            menus = remember(PageScale.entries::toPersistentList),
+            menus = remember { PageScale.entries },
         )
         Spacer(modifier = Modifier.navigationBarsPadding())
     }

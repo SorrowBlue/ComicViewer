@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,11 +30,10 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.toUri
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.preview.previewPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
 import logcat.logcat
 
 @OptIn(ExperimentalCoilApi::class)
-@ExperimentalMaterial3Api
 @Composable
 internal fun BoxTopAppBar(
     path: String,

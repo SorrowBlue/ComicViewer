@@ -37,15 +37,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.preview.previewPainter
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.previewPainter
 
 /**
  * ファイル情報をリストアイテムで表示する
@@ -73,33 +76,11 @@ fun ListFile(
     ListItem(
         leadingContent = {
             if (showThumbnail) {
-                SubcomposeAsyncImage(
-                    model = file,
-                    contentDescription = null,
+                ListFileThumbnail(
+                    thumbnail = FileThumbnail.from(file),
                     contentScale = contentScale,
                     filterQuality = filterQuality,
-                    loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
-                    error = {
-                        if (LocalInspectionMode.current) {
-                            Image(
-                                painter = previewPainter(),
-                                contentDescription = null,
-                                contentScale = contentScale
-                            )
-                        } else {
-                            Icon(
-                                imageVector = if (file is Book) ComicIcons.BrokenImage else ComicIcons.FolderOff,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .wrapContentSize()
-                                    .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
-                            )
-                        }
-                    },
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CardDefaults.shape)
-                        .background(ComicTheme.colorScheme.surfaceVariant),
+                    modifier = Modifier.size(64.dp)
                 )
             } else {
                 Box(
@@ -159,6 +140,45 @@ fun ListFile(
     )
 }
 
+@Composable
+private fun ListFileThumbnail(
+    thumbnail: FileThumbnail,
+    contentScale: ContentScale,
+    filterQuality: FilterQuality,
+    modifier: Modifier = Modifier,
+) {
+    SubcomposeAsyncImage(
+        model = thumbnail,
+        contentDescription = null,
+        contentScale = contentScale,
+        filterQuality = filterQuality,
+        loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
+        error = {
+            if (LocalInspectionMode.current) {
+                Image(
+                    painter = previewPainter(),
+                    contentDescription = null,
+                    contentScale = contentScale
+                )
+            } else {
+                Icon(
+                    imageVector = when (thumbnail) {
+                        is BookThumbnail -> ComicIcons.BrokenImage
+                        is FolderThumbnail -> ComicIcons.FolderOff
+                    },
+                    contentDescription = null,
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
+                )
+            }
+        },
+        modifier = modifier
+            .clip(CardDefaults.shape)
+            .background(ComicTheme.colorScheme.surfaceVariant),
+    )
+}
+
 /**
  * ファイル情報をカードで表示する ファイル情報をリストアイテムで表示する
  *
@@ -186,33 +206,11 @@ fun ListFileCard(
         ListItem(
             leadingContent = {
                 if (showThumbnail) {
-                    SubcomposeAsyncImage(
-                        model = file,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CardDefaults.shape)
-                            .background(ComicTheme.colorScheme.surfaceContainer),
-                        contentDescription = null,
+                    ListFileThumbnail(
+                        thumbnail = FileThumbnail.from(file),
                         contentScale = contentScale,
                         filterQuality = filterQuality,
-                        loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
-                        error = {
-                            if (LocalInspectionMode.current) {
-                                Image(
-                                    painter = previewPainter(),
-                                    contentDescription = null,
-                                    contentScale = contentScale
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = if (file is Book) ComicIcons.BrokenImage else ComicIcons.FolderOff,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .wrapContentSize()
-                                        .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
-                                )
-                            }
-                        },
+                        modifier = Modifier.size(64.dp)
                     )
                 } else {
                     Box(

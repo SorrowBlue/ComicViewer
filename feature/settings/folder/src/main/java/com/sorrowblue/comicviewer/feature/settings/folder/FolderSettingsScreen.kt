@@ -1,7 +1,5 @@
 package com.sorrowblue.comicviewer.feature.settings.folder
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -28,7 +26,7 @@ import com.sorrowblue.comicviewer.feature.settings.folder.destinations.ImageForm
 import com.sorrowblue.comicviewer.feature.settings.folder.destinations.ImageScaleDialogDestination
 import com.sorrowblue.comicviewer.feature.settings.folder.dialog.displayText
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsGraph
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 
 internal data class FolderSettingsScreenUiState(
     val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.isDisplayHiddenFile,
@@ -60,7 +58,6 @@ internal interface FolderSettingsScreenNavigator : SettingsDetailNavigator {
 )
 @Composable
 internal fun FolderSettingsScreen(
-    contentPadding: PaddingValues,
     imageFormatResultRecipient: ResultRecipient<ImageFormatDialogDestination, ImageFormat>,
     fileSortResultRecipient: ResultRecipient<FileSortDialogDestination, SortType>,
     imageScaleResultRecipient: ResultRecipient<ImageScaleDialogDestination, ImageScale>,
@@ -69,7 +66,6 @@ internal fun FolderSettingsScreen(
     navigator: FolderSettingsScreenNavigator,
 ) {
     FolderSettingsScreen(
-        contentPadding = contentPadding,
         onBackClick = navigator::navigateBack,
         onImageFormatClick = navigator::navigateToImageFormat,
         onFileSortClick = navigator::navigateToFileSort,
@@ -86,7 +82,6 @@ internal fun FolderSettingsScreen(
 
 @Composable
 private fun FolderSettingsScreen(
-    contentPadding: PaddingValues,
     onBackClick: () -> Unit,
     onImageFormatClick: (ImageFormat) -> Unit,
     onFileSortClick: (SortType) -> Unit,
@@ -115,7 +110,6 @@ private fun FolderSettingsScreen(
         onImageFormatClick = { onImageFormatClick(state.uiState.imageFormat) },
         onThumbnailQualityChange = state::onThumbnailQualityChange,
         onFolderThumbnailOrderClick = { onFolderThumbnailOrderClick(state.uiState.folderThumbnailOrder) },
-        contentPadding = contentPadding
     )
 
     imageFormatResultRecipient.onNavResult(state::onImageFormatChange)
@@ -125,7 +119,6 @@ private fun FolderSettingsScreen(
     folderThumbnailOrderRecipient.onNavResult(state::onFolderThumbnailOrder)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FolderSettingsScreen(
     uiState: FolderSettingsScreenUiState,
@@ -142,14 +135,10 @@ private fun FolderSettingsScreen(
     onFontSizeChange: (Int) -> Unit,
     onImageFormatClick: () -> Unit,
     onThumbnailQualityChange: (Int) -> Unit,
-    contentPadding: PaddingValues,
 ) {
     SettingsDetailPane(
-        title = {
-            Text(text = stringResource(id = R.string.settings_folder_title))
-        },
+        title = { Text(text = stringResource(id = R.string.settings_folder_title)) },
         onBackClick = onBackClick,
-        contentPadding = contentPadding
     ) {
         SwitchSetting(
             title = R.string.settings_folder_label_show_hidden_files,
@@ -245,8 +234,7 @@ private fun FolderSettingsScreenPreview() {
             onFontSizeChange = {},
             onImageFormatClick = {},
             onThumbnailQualityChange = {},
-            onFolderThumbnailOrderClick = {},
-            contentPadding = PaddingValues()
+            onFolderThumbnailOrderClick = {}
         )
     }
 }

@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings
 
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -17,31 +15,19 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigato
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailGraph
 import java.util.Locale
-import kotlinx.collections.immutable.toPersistentList
 
 @Destination<SettingsDetailGraph>(visibility = CodeGenVisibility.INTERNAL)
 @Composable
-internal fun InAppLanguagePickerScreen(
-    contentPadding: PaddingValues,
-    navigator: SettingsDetailNavigator,
-) {
-    InAppLanguagePickerScreen(
-        contentPadding = contentPadding,
-        onBackClick = navigator::navigateBack
-    )
+internal fun InAppLanguagePickerScreen(navigator: SettingsDetailNavigator) {
+    InAppLanguagePickerScreen(onBackClick = navigator::navigateBack)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun InAppLanguagePickerScreen(
-    contentPadding: PaddingValues,
-    onBackClick: () -> Unit,
-) {
-    val languages = remember { Language.entries.toPersistentList() }
+private fun InAppLanguagePickerScreen(onBackClick: () -> Unit) {
+    val languages = remember { Language.entries }
     SettingsDetailPane(
         title = { Text(text = stringResource(id = R.string.settings_language_title)) },
         onBackClick = onBackClick,
-        contentPadding = contentPadding
     ) {
         val current = remember {
             AppCompatDelegate.getApplicationLocales().toLanguageTags()

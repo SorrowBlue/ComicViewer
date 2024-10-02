@@ -33,7 +33,7 @@ interface ScreenStateEvent<T> {
 fun <T : Any> LaunchedEventEffect(event: SharedFlow<T>, onEvent: (T) -> Unit) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val currentOnEvent by rememberUpdatedState(onEvent)
-    LaunchedEffect(Unit) {
+    LaunchedEffect(event, lifecycle) {
         event.flowWithLifecycle(lifecycle, Lifecycle.State.RESUMED)
             .onEach {
                 currentOnEvent(it)

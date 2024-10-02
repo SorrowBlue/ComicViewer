@@ -13,10 +13,8 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import coil3.SingletonImageLoader
-import coil3.request.ImageRequest
+import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
-import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
@@ -48,27 +46,49 @@ internal class FileScanWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val request = FileScanRequest.fromWorkData(inputData) ?: return Result.failure()
         val bookshelfInfo =
-            getBookshelfInfoUseCase.execute(GetBookshelfInfoUseCase.Request(request.bookshelfId))
+            getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(request.bookshelfId))
                 .first().dataOrNull() ?: return Result.failure()
         setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, "", true))
-        val useCaseRequest = ScanBookshelfUseCase.Request(request.bookshelfId) { bookshelf, file ->
-            kotlin.runCatching {
-                if (request.withThumbnails && file is Book) {
-                    val imageRequest = ImageRequest.Builder(applicationContext).data(file).build()
-                    SingletonImageLoader.get(applicationContext).enqueue(imageRequest)
-                }
-            }.onFailure {
-                logcat { it.asLog() }
+        return try {
+            innerWork(bookshelfInfo)
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            logcat { "catch: ${e.asLog()}" }
+            val notification =
+                NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
+                    .setContentTitle("本棚のスキャン")
+                    .setContentText("スキャンはキャンセルされました。")
+                    .setSubText(bookshelfInfo.bookshelf.displayName)
+                    .setSmallIcon(NotificationR.drawable.ic_sync_cancel_24dp)
+                    .setOngoing(false)
+                    .build()
+            if (ActivityCompat.checkSelfPermission(
+                    applicationContext,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                notificationManager.notify(notificationID, notification)
             }
-            setProgress(workDataOf("path" to file.path))
-            setForeground(createForegroundInfo(bookshelf.displayName, file.path))
+            Result.failure()
         }
-        return scanBookshelfUseCase.execute(useCaseRequest).first().fold({
+    }
+
+    private suspend fun innerWork(bookshelfInfo: BookshelfFolder): Result {
+        val useCaseRequest =
+            ScanBookshelfUseCase.Request(bookshelfInfo.bookshelf.id) { bookshelf, file ->
+                setProgress(
+                    workDataOf(
+                        "path" to file.path,
+                        FileScanRequest.ID to file.bookshelfId.value
+                    )
+                )
+                setForeground(createForegroundInfo(bookshelf.displayName, file.path))
+            }
+        return scanBookshelfUseCase(useCaseRequest).first().fold({
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
                     .setContentTitle("本棚のスキャンが完了しました")
                     .setSubText(bookshelfInfo.bookshelf.displayName)
-                    .setSmallIcon(NotificationR.drawable.ic_sync_disabled_24)
+                    .setSmallIcon(NotificationR.drawable.ic_sync_done_24dp)
                     .setOngoing(false)
                     .build()
             if (ActivityCompat.checkSelfPermission(
@@ -80,21 +100,6 @@ internal class FileScanWorker @AssistedInject constructor(
             }
             Result.success()
         }, {
-            val notification =
-                NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("本棚のスキャン")
-                    .setContentText("スキャンはキャンセルされました。")
-                    .setSubText(bookshelfInfo.bookshelf.displayName)
-                    .setSmallIcon(NotificationR.drawable.ic_sync_disabled_24)
-                    .setOngoing(false)
-                    .build()
-            if (ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                notificationManager.notify(notificationID, notification)
-            }
             Result.failure()
         })
     }
@@ -111,9 +116,9 @@ internal class FileScanWorker @AssistedInject constructor(
                 setContentTitle(applicationContext.getString(R.string.bookshelf_title_bookshelf))
                 setSubText(bookshelfName)
                 setContentText(path)
-                setSmallIcon(NotificationR.drawable.ic_sync_24)
+                setSmallIcon(NotificationR.drawable.ic_sync_book_24dp)
                 addAction(
-                    com.sorrowblue.comicviewer.framework.designsystem.R.drawable.ic_download_24,
+                    NotificationR.drawable.ic_sync_cancel_24dp,
                     applicationContext.getString(android.R.string.cancel),
                     cancelIntent
                 )

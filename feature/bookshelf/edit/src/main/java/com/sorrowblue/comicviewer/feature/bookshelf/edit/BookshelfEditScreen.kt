@@ -1,71 +1,115 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.CircularProgressIndicator
+import android.os.Parcelable
+import android.view.autofill.AutofillManager
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.core.content.getSystemService
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
+import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
+
+data class BookshelfEditArgs(val editMode: BookshelfEditMode)
+
+sealed class BookshelfEditMode : Parcelable {
+
+    internal abstract val title: Int
+
+    @Parcelize
+    data class Register(val bookshelfType: BookshelfType) : BookshelfEditMode() {
+        @IgnoredOnParcel
+        override val title = R.string.bookshelf_edit_title_register
+    }
+
+    @Parcelize
+    data class Edit(val bookshelfId: BookshelfId) : BookshelfEditMode() {
+        @IgnoredOnParcel
+        override val title = R.string.bookshelf_edit_title_edit
+    }
+}
 
 interface BookshelfEditScreenNavigator {
-    fun navigateUp()
+    fun onBack(editMode: BookshelfEditMode)
     fun onComplete()
 }
 
-data class BookshelfEditArgs(
-    val bookshelfId: BookshelfId = BookshelfId.Default,
-    val bookshelfType: BookshelfType = BookshelfType.DEVICE,
-)
+sealed interface BookshelfEditScreenUiState {
+
+    val editMode: BookshelfEditMode
+
+    data class Loading(
+        override val editMode: BookshelfEditMode,
+    ) : BookshelfEditScreenUiState
+}
+
+sealed interface BookshelfEditForm : Parcelable {
+    fun <T : BookshelfEditForm> update(displayName: String): T
+
+    val displayName: String
+}
 
 @Destination<ExternalModuleGraph>(navArgs = BookshelfEditArgs::class)
 @Composable
 internal fun BookshelfEditScreen(
-    args: BookshelfEditArgs,
+    navArgs: BookshelfEditArgs,
     navigator: BookshelfEditScreenNavigator,
 ) {
-    BookshelfEditScreen(
-        args = args,
-        onBackClick = navigator::navigateUp,
-        onComplete = navigator::onComplete
-    )
-}
-
-@Composable
-private fun BookshelfEditScreen(
-    args: BookshelfEditArgs,
-    onBackClick: () -> Unit,
-    onComplete: () -> Unit,
-    state: BookshelfEditScreenState = rememberNeoBookshelfEditScreenState(args),
-) {
-    when (val screenState = state.innerScreenState) {
-        BookshelfEditLoading -> Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .safeDrawingPadding(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+    val state = rememberBookshelfEditScreenState(navArgs)
+    val isCompact = isCompactWindowClass()
+    BackHandler {
+        navigator.onBack(state.uiState.editMode)
+    }
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        onDispose {
+            context.getSystemService<AutofillManager>()!!.commit()
         }
-
-        is StorageEditScreenState -> {
-            StorageEditRoute(
-                state = screenState,
-                onBackClick = onBackClick,
-                onComplete = onComplete
+    }
+    when (val uiState = state.uiState) {
+        is BookshelfEditScreenUiState.Loading ->
+            BookshelfEditLoadingScreen(
+                isDialog = !isCompact,
+                uiState = uiState,
+                onBackClick = { navigator.onBack(uiState.editMode) }
             )
-        }
 
-        is SmbEditScreenState -> {
+        is InternalStorageEditScreenUiState ->
+            InternalStorageEditDialogScreen(
+                isDialog = !isCompact,
+                uiState = uiState,
+                snackbarHostState = state.snackbarHostState,
+                onBackClick = { navigator.onBack(uiState.editMode) },
+                onSubmit = { state.onSubmit(it) }
+            )
+
+        is SmbEditScreenUiState ->
             SmbEditScreen(
-                state = screenState,
-                onBackClick = onBackClick,
-                onComplete = onComplete
+                isDialog = !isCompact,
+                uiState = uiState,
+                snackbarHostState = state.snackbarHostState,
+                onBackClick = { navigator.onBack(uiState.editMode) },
+                onSubmit = { state.onSubmit(it) }
             )
+    }
+
+    LaunchedEventEffect(event = state.event) {
+        when (it) {
+            BookshelfEditScreenEvent.Complete -> navigator.onComplete()
+        }
+    }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    DisposableEffect(Unit) {
+        onDispose {
+            keyboardController?.hide()
         }
     }
 }

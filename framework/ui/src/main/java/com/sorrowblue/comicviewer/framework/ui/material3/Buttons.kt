@@ -9,21 +9,31 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.R
 
 @Composable
-fun SettingsButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SettingsIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(onClick = onClick, modifier = modifier) {
         Icon(
             imageVector = ComicIcons.Settings,
-            contentDescription = stringResource(R.string.ui_desc_to_settings)
+            contentDescription = stringResource(R.string.ui_desc_open_settings)
         )
     }
 }
 
 @Composable
-fun BackButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun BackIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(onClick = onClick, modifier = modifier) {
         Icon(
             imageVector = ComicIcons.ArrowBack,
-            contentDescription = stringResource(R.string.ui_desc_to_settings)
+            contentDescription = stringResource(R.string.ui_desc_move_up)
+        )
+    }
+}
+
+@Composable
+fun CloseIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    IconButton(onClick = onClick, modifier = modifier) {
+        Icon(
+            imageVector = ComicIcons.Close,
+            contentDescription = stringResource(R.string.ui_desc_close)
         )
     }
 }

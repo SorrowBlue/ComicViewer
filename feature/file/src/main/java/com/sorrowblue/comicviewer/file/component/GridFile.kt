@@ -12,19 +12,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ProgressIndicatorDefaults
+import androidx.compose.material3.ProgressIndicatorDefaults.drawStopIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -35,15 +38,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.preview.previewPainter
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalComponentColors
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.previewPainter
 
 /**
  * ファイル情報をグリッドアイテムで表示する
@@ -65,11 +71,15 @@ fun GridFile(
     filterQuality: FilterQuality,
     modifier: Modifier = Modifier,
 ) {
-    ElevatedCard(onClick = onClick, modifier = modifier) {
+    Card(
+        onClick = onClick,
+        colors = with(LocalComponentColors.current) { CardDefaults.cardColors(containerColor = contentColor) },
+        modifier = modifier,
+    ) {
         Box {
             if (showThumbnail) {
                 GridFileThumbnail(
-                    file = file,
+                    thumbnail = FileThumbnail.from(file),
                     contentScale = contentScale,
                     filterQuality = filterQuality
                 )
@@ -113,8 +123,19 @@ fun GridFile(
                         .padding(ComicTheme.dimension.padding)
                 )
                 if (file is Book && 0 < file.lastPageRead) {
+                    val color = ProgressIndicatorDefaults.linearColor
                     LinearProgressIndicator(
                         progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+                        strokeCap = StrokeCap.Butt,
+                        gapSize = 0.dp,
+                        drawStopIndicator = {
+                            drawStopIndicator(
+                                drawScope = this,
+                                stopSize = 0.dp,
+                                color = color,
+                                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
+                            )
+                        },
                         modifier = Modifier
                             .fillMaxWidth(),
                     )
@@ -126,12 +147,12 @@ fun GridFile(
 
 @Composable
 private fun GridFileThumbnail(
-    file: File,
+    thumbnail: FileThumbnail,
     contentScale: ContentScale,
     filterQuality: FilterQuality,
 ) {
     SubcomposeAsyncImage(
-        model = file,
+        model = thumbnail,
         contentDescription = null,
         alignment = Alignment.TopCenter,
         contentScale = contentScale,
@@ -148,7 +169,7 @@ private fun GridFileThumbnail(
                 Image(painter = previewPainter(), contentDescription = null)
             } else {
                 Icon(
-                    imageVector = if (file is Book) ComicIcons.BrokenImage else ComicIcons.FolderOff,
+                    imageVector = if (thumbnail is BookThumbnail) ComicIcons.BrokenImage else ComicIcons.FolderOff,
                     contentDescription = null,
                     modifier = Modifier
                         .wrapContentSize()
@@ -200,7 +221,7 @@ private fun GridFileIcon(file: File) {
 @Preview(widthDp = 200)
 @Composable
 internal fun PreviewFileGrid() {
-    PreviewTheme {
+    PreviewTheme2(showDeviceFrame = false) {
         GridFile(
             file = fakeBookFile(),
             onClick = {},

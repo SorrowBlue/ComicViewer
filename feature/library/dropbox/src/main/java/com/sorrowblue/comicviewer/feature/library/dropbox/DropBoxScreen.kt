@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -58,7 +57,6 @@ internal fun DropBoxScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DropBoxScreen(
     args: DropBoxArgs,
@@ -101,7 +99,6 @@ internal data class DropBoxScreenUiState(
     val profileUri: String = "",
 ) : Parcelable
 
-@ExperimentalMaterial3Api
 @Composable
 private fun DropBoxScreen(
     uiState: DropBoxScreenUiState,
