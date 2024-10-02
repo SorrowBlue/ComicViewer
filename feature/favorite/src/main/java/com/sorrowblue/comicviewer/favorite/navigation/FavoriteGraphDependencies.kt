@@ -24,6 +24,7 @@ fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
     onFavoriteClick: (File) -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
+    onNewFavoriteClick: () -> Unit,
 ) {
     navGraph(NavGraphs.favorite) {
         dependency(object :
@@ -44,8 +45,16 @@ fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
                 navigator.navigateUp()
             }
 
-            override fun onFavoriteClick(favoriteId: FavoriteId) {
+            override fun navigateToEdit(favoriteId: FavoriteId) {
+                navigator.navigate(FavoriteEditScreenDestination(favoriteId))
+            }
+
+            override fun navigateToFavorite(favoriteId: FavoriteId) {
                 navigator.navigate(FavoriteScreenDestination(favoriteId))
+            }
+
+            override fun onNewFavoriteClick() {
+                onNewFavoriteClick()
             }
 
             override fun onOpenFolderClick(file: File) {

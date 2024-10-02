@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -59,7 +58,6 @@ internal fun GoogleDriveScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GoogleDriveScreen(
     args: GoogleDriveArgs,
@@ -102,7 +100,6 @@ internal data class GoogleDriveScreenUiState(
     val googleAccountDialogUiState: GoogleAccountDialogUiState = GoogleAccountDialogUiState.Hide,
 ) : Parcelable
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun GoogleDriveScreen(
     uiState: GoogleDriveScreenUiState,

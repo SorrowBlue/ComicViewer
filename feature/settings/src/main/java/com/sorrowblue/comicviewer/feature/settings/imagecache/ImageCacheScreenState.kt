@@ -8,15 +8,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
-import com.sorrowblue.comicviewer.domain.model.FavoriteImageCacheInfo
-import com.sorrowblue.comicviewer.domain.model.ImageCacheInfo
+import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
+import com.sorrowblue.comicviewer.domain.model.ImageCache
+import com.sorrowblue.comicviewer.domain.model.OtherImageCache
+import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.onSuccess
 import com.sorrowblue.comicviewer.domain.usecase.ClearImageCacheUseCase
-import com.sorrowblue.comicviewer.domain.usecase.GetImageCacheInfoUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import com.sorrowblue.comicviewer.domain.usecase.GetBookshelfImageCacheInfoUseCase
+import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -30,13 +30,14 @@ internal fun rememberImageCacheScreenState(
     ImageCacheScreenStateImpl(
         scope = scope,
         snackbarHostState = snackbarHostState,
-        getImageCacheInfoUseCase = viewModel.getImageCacheInfoUseCase,
+        getBookshelfImageCacheInfoUseCase = viewModel.getBookshelfImageCacheInfoUseCase,
+        getOtherImageCacheInfoUseCase = viewModel.getOtherImageCacheInfoUseCase,
         clearImageCacheUseCase = viewModel.clearImageCacheUseCase
     )
 }
 
 internal interface ImageCacheScreenState {
-    fun onClick(imageCacheInfo: ImageCacheInfo)
+    fun onClick(bookshelfId: BookshelfId, imageCache: ImageCache)
     val snackbarHostState: SnackbarHostState
     val uiState: ThumbnailScreenUiState
 }
@@ -44,23 +45,23 @@ internal interface ImageCacheScreenState {
 private class ImageCacheScreenStateImpl(
     override val snackbarHostState: SnackbarHostState,
     private val scope: CoroutineScope,
-    private val getImageCacheInfoUseCase: GetImageCacheInfoUseCase,
+    private val getBookshelfImageCacheInfoUseCase: GetBookshelfImageCacheInfoUseCase,
+    private val getOtherImageCacheInfoUseCase: GetOtherImageCacheInfoUseCase,
     private val clearImageCacheUseCase: ClearImageCacheUseCase,
 ) : ImageCacheScreenState {
-    override fun onClick(imageCacheInfo: ImageCacheInfo) {
-        val request = when (imageCacheInfo) {
-            is BookshelfImageCacheInfo -> ClearImageCacheUseCase.BookshelfRequest(
-                imageCacheInfo.bookshelf.id,
-                imageCacheInfo.type
-            )
+    override fun onClick(bookshelfId: BookshelfId, imageCache: ImageCache) {
+        val request = when (imageCache) {
+            is ThumbnailImageCache ->
+                ClearImageCacheUseCase.BookshelfRequest(bookshelfId, imageCache)
 
-            is FavoriteImageCacheInfo -> ClearImageCacheUseCase.FavoriteRequest
+            is BookPageImageCache ->
+                ClearImageCacheUseCase.BookshelfRequest(bookshelfId, imageCache)
+
+            is OtherImageCache -> ClearImageCacheUseCase.OtherRequest
         }
         scope.launch {
-            clearImageCacheUseCase.execute(request).first()
-            getImageCacheInfoUseCase.execute(GetImageCacheInfoUseCase.Request).first().onSuccess {
-                uiState = uiState.copy(imageCacheInfos = it)
-            }
+            clearImageCacheUseCase(request)
+            fetch()
             snackbarHostState.showSnackbar("画像キャッシュを削除しました。")
         }
     }
@@ -69,16 +70,18 @@ private class ImageCacheScreenStateImpl(
         private set
 
     init {
+        fetch()
+    }
+
+    private fun fetch() {
         scope.launch {
-            getImageCacheInfoUseCase.execute(GetImageCacheInfoUseCase.Request).first().onSuccess {
-                uiState = uiState.copy(imageCacheInfos = it)
+            getBookshelfImageCacheInfoUseCase(GetBookshelfImageCacheInfoUseCase.Request).first()
+                .onSuccess {
+                    uiState = uiState.copy(imageCacheInfos = it)
+                }
+            getOtherImageCacheInfoUseCase(GetOtherImageCacheInfoUseCase.Request).onSuccess {
+                uiState = uiState.copy(otherImageCache = it)
             }
         }
     }
 }
-
-@HiltViewModel
-internal class ImageCacheScreenViewModel @Inject constructor(
-    val getImageCacheInfoUseCase: GetImageCacheInfoUseCase,
-    val clearImageCacheUseCase: ClearImageCacheUseCase,
-) : ViewModel()

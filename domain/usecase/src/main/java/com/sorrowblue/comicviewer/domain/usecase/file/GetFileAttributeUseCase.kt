@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
 
 abstract class GetFileAttributeUseCase :
-    UseCase<GetFileAttributeUseCase.Request, FileAttribute?, GetFileAttributeUseCase.Error>() {
+    UseCase<GetFileAttributeUseCase.Request, FileAttribute, GetFileAttributeUseCase.Error>() {
 
     sealed interface Error : Resource.AppError {
         data object NotFound : Error

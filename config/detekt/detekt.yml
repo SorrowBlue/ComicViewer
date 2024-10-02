@@ -55,10 +55,6 @@ style:
   UnusedPrivateMember:
     ignoreAnnotated:
       - 'Preview'
-      - 'PreviewComic'
-      - 'PreviewMobile'
-      - 'PreviewTablet'
-      - 'PreviewScreenSizes'
       - 'PreviewMultiScreen'
       - 'PreviewLightDark'
 
@@ -68,8 +64,8 @@ Compose:
     active: true
     allowedCompositionLocals:
       - 'LocalDimension'
-      - 'LocalWindowSize'
-      - 'LocalWindowAdaptiveInfo'
+      - 'LocalComponentColors'
+      - 'LocalNavigationState'
     # You can optionally define a list of CompositionLocals that are allowed here
     # allowedCompositionLocals: LocalSomething,LocalSomethingElse
   ContentEmitterReturningValues:
@@ -118,7 +114,7 @@ Compose:
   RememberContentMissing:
     active: true
   UnstableCollections:
-    active: true
+    active: false
   ViewModelForwarding:
     active: true
     allowedStateHolderNames:

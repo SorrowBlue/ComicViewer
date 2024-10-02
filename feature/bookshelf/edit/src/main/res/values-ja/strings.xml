@@ -2,7 +2,7 @@
 <resources>
     <string name="bookshelf_edit_error_display_name">表示名を入力してください。</string>
     <string name="bookshelf_edit_error_select_folder">フォルダを選択してください。</string>
-    <string name="bookshelf_edit_hint_domain">ドメイン</string>
+    <string name="bookshelf_edit_hint_domain">ドメイン（省略可能）</string>
     <string name="bookshelf_edit_hint_password">パスワード</string>
     <string name="bookshelf_edit_hint_username">ユーザ名</string>
     <string name="bookshelf_edit_label_display_name">表示名</string>
@@ -22,4 +22,8 @@
     <string name="bookshelf_edit_smb_input_label_port">ポート番号</string>
     <string name="bookshelf_edit_title_edit">本棚の編集</string>
     <string name="bookshelf_edit_title_register">本棚の登録</string>
+    <string name="bookshelf_edit_error_bad_auth">正しい認証情報を入力してください</string>
+    <string name="bookshelf_edit_error_bad_host">IP/ホスト名で接続できませんでした</string>
+    <string name="bookshelf_edit_error_bad_network">有効なネットワークがありません</string>
+    <string name="bookshelf_edit_error_bad_path">パスに接続できませんでした</string>
 </resources>

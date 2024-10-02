@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues name="AGP (8.5.1)" by="lint 8.5.1" client="gradle" dependencies="true" format="6"
-    type="baseline" variant="all" version="8.5.1">
+<issues name="AGP (8.6.0)" by="lint 8.6.0" client="gradle" dependencies="true" format="6"
+    type="baseline" variant="all" version="8.6.0">
+
     <issue id="InvalidPackage"
         message="Invalid package reference in library; not included in Android: `javax.naming.directory`. Referenced from `org.bouncycastle.jce.provider.CrlCache`.">
-        <location file="bcprov-jdk18on-1.76.jar" />
+        <location file="bcprov-jdk18on-1.78.1.jar" />
     </issue>
 
     <issue id="InvalidPackage"
         message="Invalid package reference in library; not included in Android: `javax.naming`. Referenced from `org.bouncycastle.jce.provider.X509LDAPCertStoreSpi`.">
-        <location file="bcprov-jdk18on-1.76.jar" />
+        <location file="bcprov-jdk18on-1.78.1.jar" />
     </issue>
 
     <issue id="InvalidPackage"
@@ -28,7 +29,12 @@
 
     <issue id="InvalidPackage"
         message="Invalid package reference in io.ktor:ktor-utils-jvm; not included in Android: `java.lang.management`. Referenced from `io.ktor.util.debug.IntellijIdeaDebugDetector.isDebuggerConnected.2`.">
-        <location file="ktor-utils-jvm-2.3.12.jar" />
+        <location file="ktor-utils-jvm-3.0.0-beta-2.jar" />
+    </issue>
+
+    <issue id="InvalidPackage"
+        message="Invalid package reference in library; not included in Android: java.lang.foreign. Referenced from com.fasterxml.jackson.core.internal.shaded.fdp.v2_18_0.FastDoubleSwar.">
+        <location file="jackson-core-2.18.0.jar" />
     </issue>
 
     <issue errorLine1="                    android:host=&quot;comicviewer.sorrowblue.com&quot;"
@@ -38,147 +44,18 @@
         <location column="21" file="src/main/AndroidManifest.xml" line="33" />
     </issue>
 
-    <issue errorLine1="google-dagger = &quot;2.51.1&quot;" errorLine2="                ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of com.google.dagger.hilt.android than 2.51.1 is available: 2.52">
-        <location column="17" file="../gradle/libs.versions.toml" line="20" />
-    </issue>
-
-    <issue errorLine1="google-dagger = &quot;2.51.1&quot;" errorLine2="                ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of com.google.dagger.hilt.android than 2.51.1 is available: 2.52">
-        <location column="17" file="../gradle/libs.versions.toml" line="20" />
-    </issue>
-
-    <issue errorLine1="google-dagger = &quot;2.51.1&quot;" errorLine2="                ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of com.google.dagger:hilt-android than 2.51.1 is available: 2.52">
-        <location column="17" file="../gradle/libs.versions.toml" line="20" />
-    </issue>
-
-    <issue errorLine1="google-dagger = &quot;2.51.1&quot;" errorLine2="                ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of com.google.dagger:hilt-android than 2.51.1 is available: 2.52">
-        <location column="17" file="../gradle/libs.versions.toml" line="20" />
-    </issue>
-
-    <issue errorLine1="google-dagger = &quot;2.51.1&quot;" errorLine2="                ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of com.google.dagger:hilt-compiler than 2.51.1 is available: 2.52">
-        <location column="17" file="../gradle/libs.versions.toml" line="20" />
-    </issue>
-
-    <issue errorLine1="google-dagger = &quot;2.51.1&quot;" errorLine2="                ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of com.google.dagger:hilt-compiler than 2.51.1 is available: 2.52">
-        <location column="17" file="../gradle/libs.versions.toml" line="20" />
-    </issue>
-
-    <issue errorLine1="roborazzi = &quot;1.25.0&quot;" errorLine2="            ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of io.github.takahirom.roborazzi than 1.25.0 is available: 1.26.0">
-        <location column="13" file="../gradle/libs.versions.toml" line="28" />
-    </issue>
-
-    <issue errorLine1="roborazzi = &quot;1.25.0&quot;" errorLine2="            ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of io.github.takahirom.roborazzi than 1.25.0 is available: 1.26.0">
-        <location column="13" file="../gradle/libs.versions.toml" line="28" />
-    </issue>
-
-    <issue errorLine1="roborazzi = &quot;1.25.0&quot;" errorLine2="            ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of io.github.takahirom.roborazzi:roborazzi than 1.25.0 is available: 1.26.0">
-        <location column="13" file="../gradle/libs.versions.toml" line="28" />
-    </issue>
-
-    <issue errorLine1="roborazzi = &quot;1.25.0&quot;" errorLine2="            ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of io.github.takahirom.roborazzi:roborazzi than 1.25.0 is available: 1.26.0">
-        <location column="13" file="../gradle/libs.versions.toml" line="28" />
-    </issue>
-
-    <issue errorLine1="roborazzi = &quot;1.25.0&quot;" errorLine2="            ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of io.github.takahirom.roborazzi:roborazzi-compose than 1.25.0 is available: 1.26.0">
-        <location column="13" file="../gradle/libs.versions.toml" line="28" />
-    </issue>
-
-    <issue errorLine1="roborazzi = &quot;1.25.0&quot;" errorLine2="            ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of io.github.takahirom.roborazzi:roborazzi-compose than 1.25.0 is available: 1.26.0">
-        <location column="13" file="../gradle/libs.versions.toml" line="28" />
-    </issue>
-
-    <issue errorLine1="roborazzi = &quot;1.25.0&quot;" errorLine2="            ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of io.github.takahirom.roborazzi:roborazzi-junit-rule than 1.25.0 is available: 1.26.0">
-        <location column="13" file="../gradle/libs.versions.toml" line="28" />
-    </issue>
-
-    <issue errorLine1="roborazzi = &quot;1.25.0&quot;" errorLine2="            ~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of io.github.takahirom.roborazzi:roborazzi-junit-rule than 1.25.0 is available: 1.26.0">
-        <location column="13" file="../gradle/libs.versions.toml" line="28" />
-    </issue>
-
-    <issue errorLine1="box-java-sdk = &quot;com.box:box-java-sdk:4.9.0&quot;"
-        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~" id="NewerVersionAvailable"
-        message="A newer version of com.box:box-java-sdk than 4.9.0 is available: 4.11.1">
-        <location column="16" file="../gradle/libs.versions.toml" line="151" />
-    </issue>
-
-    <issue errorLine1="box-java-sdk = &quot;com.box:box-java-sdk:4.9.0&quot;"
-        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~" id="NewerVersionAvailable"
-        message="A newer version of com.box:box-java-sdk than 4.9.0 is available: 4.11.1">
-        <location column="16" file="../gradle/libs.versions.toml" line="151" />
-    </issue>
-
-    <issue
-        errorLine1="nlopez-compose-rules-detekt = &quot;io.nlopez.compose.rules:detekt:0.4.8&quot;"
-        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of io.nlopez.compose.rules:detekt than 0.4.8 is available: 0.4.9">
-        <location column="31" file="../gradle/libs.versions.toml" line="167" />
-    </issue>
-
-    <issue
-        errorLine1="nlopez-compose-rules-detekt = &quot;io.nlopez.compose.rules:detekt:0.4.8&quot;"
-        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        id="NewerVersionAvailable"
-        message="A newer version of io.nlopez.compose.rules:detekt than 0.4.8 is available: 0.4.9">
-        <location column="31" file="../gradle/libs.versions.toml" line="167" />
-    </issue>
-
     <issue id="TrustAllX509TrustManager"
         message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
-        <location file="bcpkix-jdk18on-1.77.jar" />
+        <location file="bcpkix-jdk18on-1.78.1.jar" />
     </issue>
 
     <issue id="TrustAllX509TrustManager"
         message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
-        <location file="google-http-client-1.44.2.jar" />
+        <location file="google-http-client-1.45.0.jar" />
     </issue>
 
     <issue id="TrustAllX509TrustManager"
         message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
-        <location file="google-http-client-1.44.2.jar" />
+        <location file="google-http-client-1.45.0.jar" />
     </issue>
-
-    <issue
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2="^" id="UnusedResources"
-        message="The resource `R.drawable.ic_notification` appears to be unused">
-        <location column="1"
-            file="../framework/designsystem/src/main/res/drawable/ic_notification.xml" line="1" />
-    </issue>
-
-    <issue
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2="^" id="UnusedResources"
-        message="The resource `R.drawable.ic_open_in_new_24` appears to be unused">
-        <location column="1"
-            file="../framework/designsystem/src/main/res/drawable/ic_open_in_new_24.xml" line="2" />
-    </issue>
-
 </issues>

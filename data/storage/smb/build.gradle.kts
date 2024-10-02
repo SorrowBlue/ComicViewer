@@ -11,4 +11,5 @@ dependencies {
     implementation(projects.data.storage.client)
 
     implementation(libs.jcifs.ng)
+    implementation(libs.slf4j.android)
 }

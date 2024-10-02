@@ -9,15 +9,15 @@ android {
 }
 
 dependencies {
-//    implementation(projects.domain.model)
+    implementation(projects.domain.model)
     implementation(projects.framework.designsystem)
 
     api(libs.androidx.window)
     api(libs.androidx.compose.material3.adaptive.layout)
     api(libs.androidx.compose.material3.adaptive.navigation)
+    api(libs.androidx.compose.material3.adaptiveNavigationSuite)
     implementation(libs.androidx.compose.ui.util)
-
-    api(libs.kotlinx.collections.immutable)
+    implementation(libs.drick.compose.edgeToEdgePreview)
 
     api(libs.androidx.hilt.navigationCompose)
     api(libs.androidx.lifecycle.viewmodelKtx)

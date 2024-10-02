@@ -16,10 +16,10 @@ import javax.inject.Singleton
 internal object SingletonProvidesModule {
 
     @Singleton
-    @FavoriteThumbnailDiskCache
+    @ImageCacheDiskCache
     @Provides
-    fun provideThumbnailDiskCache(@ApplicationContext context: Context): DiskCache {
-        return context.newDiskCache("favorite_thumbnail_cache")
+    fun provideImageCacheDiskCacheDiskCache(@ApplicationContext context: Context): DiskCache {
+        return context.newDiskCache("image_cache")
     }
 
     private fun Context.newDiskCache(folder: String) =
@@ -28,4 +28,4 @@ internal object SingletonProvidesModule {
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-internal annotation class FavoriteThumbnailDiskCache
+internal annotation class ImageCacheDiskCache

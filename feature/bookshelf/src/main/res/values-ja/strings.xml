@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bookshelf_list_title">本棚一覧</string>
+    <string name="bookshelf_list_title">本棚</string>
     <string name="bookshelf_list_message_no_bookshelves_added_yet">本棚はまだ追加されていません。</string>
     <string name="bookshelf_info_title">本棚情報</string>
     <string name="bookshelf_info_label_display_name">表示名</string>
@@ -12,12 +12,17 @@
     <string name="bookshelf_action_edit">編集</string>
     <string name="bookshelf_action_delete">削除</string>
     <string name="bookshelf_action_scan">スキャン</string>
-    <string name="bookshelf_edit_title_remove">本棚の削除</string>
-    <string name="bookshelf_remove_label">%1$s を削除しますか?</string>
-    <string name="bookshelf_remove_label_delete">削除</string>
+    <string name="bookshelf_action_scan_with_thumbnails">サムネイルを再生成</string>
     <string name="bookshelf_msg_delete">「%1$s」は削除されました。</string>
     <string name="bookshelf_desc_open_bookshelf_info">本棚情報を開く</string>
     <string name="bookshelf_desc_thumbnail">本棚のサムネイル</string>
     <string name="bookshelf_btn_add">新規</string>
     <string name="bookshelf_title_bookshelf">本棚をスキャンしています</string>
+    <string name="bookshelf_title_notification_permission">通知権限</string>
+    <string name="bookshelf_msg_notification_permission">本棚のスキャンの進行状況を通知から確認できます。\n通知の権限がなくての本棚はスキャンされます</string>
+    <string name="bookshelf_label_remove_thumbnail">サムネイルを削除</string>
+    <string name="bookshelf_label_bookshelf_type">本棚の種類</string>
+    <string name="bookshelf_label_auth_method">認証方式</string>
+    <string name="bookshelf_label_guest">ゲスト</string>
+    <string name="bookshelf_label_Id_password">ID・パスワード</string>
 </resources>

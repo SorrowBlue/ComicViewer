@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,16 +30,15 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteTopAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteTopAppBarAction
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.FileInfoSheet
-import com.sorrowblue.comicviewer.file.FileInfoSheetAction
-import com.sorrowblue.comicviewer.file.FileInfoUiState
+import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
-import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
+import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
@@ -57,7 +54,6 @@ interface FavoriteScreenNavigator {
 
 class FavoriteArgs(val favoriteId: FavoriteId)
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Destination<FavoriteGraph>(
     navArgs = FavoriteArgs::class,
     style = FavoriteGraphTransitions::class,
@@ -68,7 +64,6 @@ internal fun FavoriteScreen(args: FavoriteArgs, navigator: FavoriteScreenNavigat
     FavoriteScreen(navigator = navigator, state = rememberFavoriteScreenState(args = args))
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun FavoriteScreen(
     navigator: FavoriteScreenNavigator,
@@ -81,7 +76,6 @@ private fun FavoriteScreen(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onFavoriteTopAppBarAction = state::onFavoriteTopAppBarAction,
-        snackbarHostState = state.snackbarHostState,
         onFavoriteContentsAction = state::onFavoriteContentsAction,
         lazyGridState = state.lazyGridState,
         onFileInfoSheetAction = state::onFileInfoSheetAction,
@@ -108,14 +102,13 @@ internal data class FavoriteScreenUiState(
     val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
 ) : Parcelable
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 private fun FavoriteScreen(
     uiState: FavoriteScreenUiState,
-    navigator: ThreePaneScaffoldNavigator<FileInfoUiState>,
+    navigator: ThreePaneScaffoldNavigator<File>,
     lazyPagingItems: LazyPagingItems<File>,
     onFavoriteTopAppBarAction: (FavoriteTopAppBarAction) -> Unit,
-    onFileInfoSheetAction: (FileInfoSheetAction) -> Unit,
+    onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onFavoriteContentsAction: (FavoriteContentsAction) -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
@@ -129,14 +122,7 @@ private fun FavoriteScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPaneVisible = { innerPadding, fileInfoUiState ->
-            FileInfoSheet(
-                uiState = fileInfoUiState,
-                onAction = onFileInfoSheetAction,
-                contentPadding = innerPadding,
-                scaffoldDirective = navigator.scaffoldDirective
-            )
-        },
+        extraPane = { content -> FileInfoSheet(file = content, onAction = onFileInfoSheetAction) },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         navigator = navigator,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)

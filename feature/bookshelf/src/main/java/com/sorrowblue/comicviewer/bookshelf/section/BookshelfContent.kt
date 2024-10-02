@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.bookshelf.section
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -22,8 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
-import androidx.window.core.layout.WindowWidthSizeClass
-import com.sorrowblue.comicviewer.bookshelf.component.Bookshelf
+import com.sorrowblue.comicviewer.bookshelf.component.BookshelfCard
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.R
@@ -31,7 +32,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookshelves
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
@@ -41,37 +43,34 @@ internal fun BookshelfMainSheet(
     lazyGridState: LazyGridState,
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
-    innerPadding: PaddingValues,
+    contentPadding: PaddingValues,
 ) {
-    if (lazyPagingItems.isEmptyData) {
-        BookshelfEmptyContents(contentPadding = innerPadding)
-    } else {
-        BookshelfListContents(
-            lazyGridState = lazyGridState,
-            lazyPagingItems = lazyPagingItems,
-            onBookshelfClick = onBookshelfClick,
-            onBookshelfInfoClick = onBookshelfInfoClick,
-            contentPadding = innerPadding
-        )
+    Box {
+        if (lazyPagingItems.isEmptyData) {
+            EmptyContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding),
+                imageVector = ComicIcons.UndrawBookshelves,
+                text = stringResource(id = R.string.bookshelf_list_message_no_bookshelves_added_yet)
+            )
+        } else {
+            BookshelfListContents(
+                lazyGridState = lazyGridState,
+                lazyPagingItems = lazyPagingItems,
+                onBookshelfClick = onBookshelfClick,
+                onBookshelfInfoClick = onBookshelfInfoClick,
+                contentPadding = contentPadding
+            )
+        }
+        if (lazyPagingItems.loadState.refresh is LoadState.Loading) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = contentPadding.calculateTopPadding())
+            )
+        }
     }
-    if (lazyPagingItems.loadState.refresh is LoadState.Loading) {
-        LinearProgressIndicator(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = innerPadding.calculateTopPadding())
-        )
-    }
-}
-
-@Composable
-private fun BookshelfEmptyContents(contentPadding: PaddingValues) {
-    EmptyContent(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(contentPadding),
-        imageVector = ComicIcons.UndrawBookshelves,
-        text = stringResource(id = R.string.bookshelf_list_message_no_bookshelves_added_yet)
-    )
 }
 
 @Composable
@@ -82,13 +81,16 @@ private fun BookshelfListContents(
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
     contentPadding: PaddingValues,
 ) {
-    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
-    val gridCells =
-        if (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
-            GridCells.Fixed(1)
-        } else {
-            GridCells.Adaptive(200.dp)
-        }
+    val navigationState = LocalNavigationState.current
+    val gridCells by remember(navigationState) {
+        mutableStateOf(
+            if (navigationState is NavigationState.NavigationBar) {
+                GridCells.Fixed(1)
+            } else {
+                GridCells.Adaptive(280.dp)
+            }
+        )
+    }
     var spanCount by remember { mutableIntStateOf(1) }
     LazyVerticalGrid(
         columns = gridCells,
@@ -114,9 +116,9 @@ private fun BookshelfListContents(
             },
             key = lazyPagingItems.itemKey { it.bookshelf.id.value }
         ) {
-            val item = lazyPagingItems[it]
-            if (item != null) {
-                Bookshelf(
+            lazyPagingItems[it]?.let { item ->
+                BookshelfCard(
+                    state = navigationState,
                     bookshelfFolder = item,
                     onClick = { onBookshelfClick(item.bookshelf.id, item.folder.path) },
                     onInfoClick = { onBookshelfInfoClick(item) },

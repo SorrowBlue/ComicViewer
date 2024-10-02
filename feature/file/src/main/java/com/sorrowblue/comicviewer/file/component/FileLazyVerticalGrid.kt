@@ -22,7 +22,6 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
@@ -30,13 +29,12 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -88,7 +86,7 @@ fun <T : File> FileLazyVerticalGrid(
         contentPadding = when (contentType) {
             FileContentType.List -> contentPadding
             FileContentType.ListMedium -> contentPadding.add(PaddingValues(ComicTheme.dimension.margin))
-            is FileContentType.Grid -> contentPadding.add(PaddingValues(ComicTheme.dimension.margin))
+            is FileContentType.Grid -> contentPadding
         },
         verticalArrangement = when (contentType) {
             FileContentType.List -> Arrangement.Top
@@ -160,15 +158,12 @@ fun <T : File> FileLazyVerticalGrid(
 @PreviewMultiScreen
 @Composable
 private fun PreviewGridFileLazyGrid() {
-    val files = List(20) {
-        fakeBookFile(BookshelfId(it))
-    }
-    val pagingDataFlow: Flow<PagingData<File>> = flowOf(PagingData.from(files))
+    val lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }.collectAsLazyPagingItems()
     PreviewTheme {
         Scaffold {
             FileLazyVerticalGrid(
                 uiState = FileLazyVerticalGridUiState(),
-                lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems(),
+                lazyPagingItems = lazyPagingItems,
                 onItemClick = {},
                 onItemInfoClick = {},
                 contentPadding = it

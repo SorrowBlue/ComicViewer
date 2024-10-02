@@ -14,7 +14,7 @@ data class SmbServer(
 ) : Bookshelf {
 
     constructor(displayName: String, host: String, port: Int, auth: Auth) : this(
-        BookshelfId(0),
+        BookshelfId(),
         displayName,
         host,
         port,

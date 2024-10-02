@@ -5,8 +5,6 @@
         <item quantity="other">%1$d files</item>
     </plurals>
 
-    <string name="favorite_common_title_create">New Favorite</string>
-    <string name="favorite_common_label_create">Create</string>
     <string name="favorite_common_message_error">Name must not be empty.</string>
     <string name="favorite_common_label_favorite_name">favorite name</string>
 </resources>

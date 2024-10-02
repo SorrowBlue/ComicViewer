@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -47,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomSlider(
     value: Float,
@@ -508,7 +506,7 @@ object CustomSliderDefaults {
      * @param modifier The modifier for styling the track.
      * @param colors The color of the track.
      */
-    @OptIn(ExperimentalMaterial3Api::class)
+
     @Composable
     fun Track(
         sliderState: SliderState,
@@ -576,7 +574,6 @@ fun Modifier.track(
     .heightIn(min = height)
     .clip(shape)
 
-@OptIn(ExperimentalMaterial3Api::class)
 fun Modifier.progress(
     sliderState: SliderState,
     height: Dp = TrackHeight,

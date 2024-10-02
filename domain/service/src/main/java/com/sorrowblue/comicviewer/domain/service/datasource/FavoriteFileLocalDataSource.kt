@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.domain.service.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
@@ -13,7 +14,7 @@ interface FavoriteFileLocalDataSource {
 
     suspend fun add(favoriteFileModel: FavoriteFile)
 
-    suspend fun delete(favoriteFileModel: FavoriteFile)
+    suspend fun delete(favoriteFileModel: FavoriteFile): Resource<Int, Resource.SystemError>
 
     fun pagingSource(
         pagingConfig: PagingConfig,

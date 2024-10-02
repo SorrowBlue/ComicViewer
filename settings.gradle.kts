@@ -26,16 +26,26 @@ extensions.configure<SettingsExtension> {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
-        // com.artifex.mupdf:fitz
-        maven { url = uri("https://maven.ghostscript.com/") }
-
-        maven { url = uri("https://androidx.dev/storage/compose-compiler/repository/") }
-
+        maven {
+            url = uri("https://maven.ghostscript.com/")
+            content {
+                includeModule("com.artifex.mupdf", "fitz")
+            }
+        }
         maven {
             url =
                 uri("https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1")
+            content {
+                includeGroupByRegex("com\\.microsoft.*")
+            }
         }
     }
 }
@@ -48,7 +58,6 @@ include(":catalog")
 include(":framework:common")
 include(":framework:notification")
 include(":framework:designsystem")
-include(":framework:preview")
 include(":framework:ui")
 
 include(":domain:model")
@@ -70,10 +79,12 @@ include(":feature:authentication")
 include(":feature:book")
 include(":feature:bookshelf")
 include(":feature:bookshelf:edit")
+include(":feature:bookshelf:remove")
 include(":feature:bookshelf:selection")
 include(":feature:favorite")
 include(":feature:favorite:add")
 include(":feature:favorite:common")
+include(":feature:favorite:create")
 include(":feature:favorite:edit")
 include(":feature:file")
 include(":feature:folder")

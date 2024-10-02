@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.app.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
+import com.ramcosta.composedestinations.navigation.dependency
 import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphDependencies
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
@@ -12,7 +13,11 @@ import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphDependencies
 import com.sorrowblue.comicviewer.feature.book.BookArgs
 import com.sorrowblue.comicviewer.feature.book.navgraphs.BookNavGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.BookGraphDependencies
-import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddScreenDestination
+import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
+import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddDialogScreenDestination
+import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteBooksToAdd
+import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreateDialogScreenArgs
+import com.sorrowblue.comicviewer.feature.favorite.create.destinations.FavoriteCreateDialogScreenDestination
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGraphDependencies
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraphDependencies
 import com.sorrowblue.comicviewer.feature.search.SearchArgs
@@ -37,7 +42,7 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
                         book.bookshelfId,
                         book.path,
                         book.name,
-                        favoriteId ?: FavoriteId.Default
+                        favoriteId ?: FavoriteId()
                     )
                 )
             )
@@ -47,7 +52,7 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
         {
                 file: File ->
             destinationsNavigator.navigate(
-                FavoriteAddScreenDestination(file.bookshelfId, file.path)
+                FavoriteAddDialogScreenDestination(file.bookshelfId, file.path)
             )
         }
     }
@@ -55,6 +60,21 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
     val onSearchClick = { bookshelfId: BookshelfId, path: String ->
         destinationsNavigator.navigate(SearchNavGraph(SearchArgs(bookshelfId, path)))
     }
+
+    dependency(object : FavoriteAddScreenNavigator {
+        override fun navigateUp() {
+            destinationsNavigator.navigateUp()
+        }
+
+        override fun navigateToCreateFavorite(bookshelfId: BookshelfId, path: String) {
+            destinationsNavigator.navigateUp()
+            destinationsNavigator.navigate(
+                FavoriteCreateDialogScreenDestination(
+                    FavoriteCreateDialogScreenArgs(FavoriteBooksToAdd(bookshelfId, path))
+                )
+            )
+        }
+    })
 
     BookGraphDependencies(onSettingsClick = onSettingsClick)
 
@@ -77,14 +97,7 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
 
     SearchGraphDependencies(
         onBookClick = { onBookClick(it, null) },
-        onFavoriteClick = { file ->
-            destinationsNavigator.navigate(
-                FavoriteAddScreenDestination(
-                    file.bookshelfId,
-                    file.path
-                )
-            )
-        },
+        onFavoriteClick = onFavoriteClick,
         onSearchClick = onSearchClick,
         onSettingsClick = onSettingsClick
     )
@@ -93,7 +106,10 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
         onBookClick = onBookClick,
         onFavoriteClick = onFavoriteClick,
         onSearchClick = onSearchClick,
-        onSettingsClick = onSettingsClick
+        onSettingsClick = onSettingsClick,
+        onNewFavoriteClick = {
+            destinationsNavigator.navigate(FavoriteCreateDialogScreenDestination())
+        }
     )
 
     SettingsGraphDependencies(

@@ -4,7 +4,6 @@ import android.os.Parcelable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -16,13 +15,11 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -37,10 +34,10 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.search.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.BackButton
-import com.sorrowblue.comicviewer.framework.ui.material3.SettingsButton
+import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalTopAppBar
+import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
+import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarBottom
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.parcelize.Parcelize
 import com.sorrowblue.comicviewer.feature.folder.R as FolderR
 
@@ -96,7 +93,6 @@ internal data class SearchTopAppBarUiState(
     val searchCondition: SearchCondition = SearchCondition(),
 ) : Parcelable
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 internal fun SearchTopAppBar(
     uiState: SearchTopAppBarUiState,
@@ -104,7 +100,7 @@ internal fun SearchTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     Column {
-        TopAppBar(
+        CanonicalTopAppBar(
             title = {
                 val skc = LocalSoftwareKeyboardController.current
                 TextField(
@@ -122,12 +118,11 @@ internal fun SearchTopAppBar(
                 )
             },
             navigationIcon = {
-                BackButton(onClick = { onAction(SearchTopAppBarAction.BackClick) })
+                BackIconButton(onClick = { onAction(SearchTopAppBarAction.BackClick) })
             },
             actions = {
-                SettingsButton(onClick = { onAction(SearchTopAppBarAction.Settings) })
+                SettingsIconButton(onClick = { onAction(SearchTopAppBarAction.Settings) })
             },
-            windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
             scrollBehavior = scrollBehavior
         )
         TopAppBarBottom(scrollBehavior = scrollBehavior) {
@@ -141,19 +136,19 @@ internal fun SearchTopAppBar(
                 DropdownMenuChip(
                     text = stringResource(uiState.searchCondition.range.displayText),
                     onChangeSelect = { onAction(SearchTopAppBarAction.RangeClick(it)) },
-                    menus = remember { SearchCondition.Range.entries.toPersistentList() },
+                    menus = remember { SearchCondition.Range.entries },
                     menu = { stringResource(it.displayText) }
                 )
                 DropdownMenuChip(
                     text = stringResource(uiState.searchCondition.period.displayText),
                     onChangeSelect = { onAction(SearchTopAppBarAction.PeriodClick(it)) },
-                    menus = remember { SearchCondition.Period.entries.toPersistentList() },
+                    menus = remember { SearchCondition.Period.entries },
                     menu = { stringResource(it.displayText) }
                 )
                 DropdownMenuChip(
                     text = stringResource(uiState.searchCondition.sortType.displayText),
                     onChangeSelect = { onAction(SearchTopAppBarAction.SortTypeClick(it)) },
-                    menus = remember { SortType.entries.toPersistentList() },
+                    menus = remember { SortType.entries },
                     menu = { stringResource(it.displayText) }
                 )
                 FilterChip(

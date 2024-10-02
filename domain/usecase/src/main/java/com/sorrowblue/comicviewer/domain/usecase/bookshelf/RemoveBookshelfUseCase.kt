@@ -1,11 +1,10 @@
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
-import com.sorrowblue.comicviewer.domain.BaseRequest
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.usecase.FlowUseCase
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
 abstract class RemoveBookshelfUseCase :
-    FlowUseCase<RemoveBookshelfUseCase.Request, Boolean, Unit>() {
+    OneShotUseCase<RemoveBookshelfUseCase.Request, Unit, Unit>() {
 
-    class Request(val bookshelf: Bookshelf) : BaseRequest
+    class Request(val bookshelfId: BookshelfId) : OneShotUseCase.Request
 }

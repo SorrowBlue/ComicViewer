@@ -31,7 +31,7 @@ internal class BoxPagingSource(
             when (it.type) {
                 "folder" -> {
                     Folder(
-                        BookshelfId(0),
+                        BookshelfId(),
                         it.name,
                         parent,
                         it.id,
@@ -43,7 +43,7 @@ internal class BoxPagingSource(
 
                 "file" -> {
                     BookFile(
-                        BookshelfId(0),
+                        BookshelfId(),
                         it.name,
                         parent,
                         it.id,

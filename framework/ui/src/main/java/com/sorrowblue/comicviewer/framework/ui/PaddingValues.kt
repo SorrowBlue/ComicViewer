@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.MeasureResult
@@ -21,9 +20,8 @@ import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
-import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.theme.Dimension
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberWindowAdaptiveInfo
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 
 @Composable
 fun PaddingValues.asWindowInsets(localLayoutDirection: LayoutDirection = LocalLayoutDirection.current) =
@@ -170,9 +168,7 @@ private class PaddingNode(
 
 @Composable
 fun calculatePaddingMargins(contentPadding: PaddingValues): Pair<PaddingValues, PaddingValues> {
-    val windowAdaptiveInfo by rememberWindowAdaptiveInfo()
-    val isCompact =
-        windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+    val isCompact = isCompactWindowClass()
     val paddings = if (isCompact) {
         contentPadding.copy(
             top = 0.dp,

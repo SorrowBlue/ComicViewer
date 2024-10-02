@@ -1,87 +1,137 @@
 package com.sorrowblue.comicviewer.file
 
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
-import com.sorrowblue.comicviewer.domain.model.Resource
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.sorrowblue.comicviewer.domain.model.dataOrNull
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.usecase.file.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.DeleteReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.ExistsReadlaterUseCase
+import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.onSuccess
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
+import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-interface FileInfoSheetState {
+sealed interface FileInfoSheetStateEvent {
+    data class Favorite(val file: File) : FileInfoSheetStateEvent
+    data class OpenFolder(val file: File) : FileInfoSheetStateEvent
+    data object Close : FileInfoSheetStateEvent
+}
 
-    var fileInfoJob: Job?
+internal interface FileInfoSheetState : ScreenStateEvent<FileInfoSheetStateEvent> {
+    val uiState: FileInfoUiState
+    val lazyPagingItems: LazyPagingItems<BookThumbnail>?
+    fun onAction(action: FileInfoSheetAction)
+}
 
-    @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-    val navigator: ThreePaneScaffoldNavigator<FileInfoUiState>
-
-    @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-    fun fetchFileInfo(file: File, onGet: (FileInfoUiState) -> Unit = {}) {
-        val getRequest = GetFileAttributeUseCase.Request(file.bookshelfId, file.path)
-        val isRequest = ExistsReadlaterUseCase.Request(file.bookshelfId, file.path)
-        onGet(
-            FileInfoUiState(file, null, false).also {
-                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
-            }
+@Composable
+internal fun rememberFileInfoSheetState2(
+    file: File,
+    scope: CoroutineScope = rememberCoroutineScope(),
+    viewModel: FileInfoSheetViewModel = hiltViewModel(),
+): FileInfoSheetState {
+    val lazyPagingItems = when (file) {
+        is Book -> null
+        is Folder -> {
+            viewModel.pagingDataFlow(file.bookshelfId, file.path).collectAsLazyPagingItems()
+        }
+    }
+    return remember(file) {
+        FileInfoSheetStateImpl(
+            file = file,
+            lazyPagingItems = lazyPagingItems,
+            scope = scope,
+            getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
+            existsReadlaterUseCase = viewModel.existsReadlaterUseCase,
+            deleteReadLaterUseCase = viewModel.deleteReadLaterUseCase,
+            addReadLaterUseCase = viewModel.addReadLaterUseCase,
         )
+    }
+}
 
-        fileInfoJob?.cancel()
-        fileInfoJob = scope.launch {
-            getFileAttributeUseCase(getRequest)
-                .combine(existsReadlaterUseCase(isRequest)) { fileAttribute, existsReadLater ->
-                    if (fileAttribute is Resource.Success && existsReadLater is Resource.Success) {
-                        onGet(
-                            FileInfoUiState(
-                                file,
-                                fileAttribute.data,
-                                existsReadLater.data,
-                                false
-                            ).also {
-                                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, it)
-                            }
-                        )
-                    } else {
-                        Resource.Error(GetFileAttributeUseCase.Error.NotFound)
-                    }
-                }.launchIn(this)
+private class FileInfoSheetStateImpl(
+    getFileAttributeUseCase: GetFileAttributeUseCase,
+    existsReadlaterUseCase: ExistsReadlaterUseCase,
+    private val file: File,
+    private val deleteReadLaterUseCase: DeleteReadLaterUseCase,
+    private val addReadLaterUseCase: AddReadLaterUseCase,
+    override val scope: CoroutineScope,
+    override val lazyPagingItems: LazyPagingItems<BookThumbnail>?,
+) : FileInfoSheetState {
+
+    override val event: SharedFlow<FileInfoSheetStateEvent> = MutableSharedFlow()
+
+    override var uiState: FileInfoUiState by mutableStateOf(FileInfoUiState(file = file))
+    private val runningJob = ArrayDeque<Job>()
+
+    init {
+        uiState = uiState.copy(
+            file = file,
+            attribute = null,
+            readLaterUiState = uiState.readLaterUiState.copy(loading = true)
+        )
+        runningJob.forEach(Job::cancel)
+        runningJob.clear()
+        existsReadlaterUseCase(
+            ExistsReadlaterUseCase.Request(
+                file.bookshelfId,
+                file.path
+            )
+        ).onEach { resource ->
+            resource.onSuccess {
+                uiState = uiState.copy(
+                    readLaterUiState = uiState.readLaterUiState.copy(
+                        checked = it,
+                        loading = false
+                    )
+                )
+            }
+        }.launchIn(scope).let(runningJob::add)
+        getFileAttributeUseCase(
+            GetFileAttributeUseCase.Request(
+                file.bookshelfId,
+                file.path
+            )
+        ).onEach {
+            uiState = uiState.copy(attribute = it.dataOrNull())
+        }.launchIn(scope).let(runningJob::add)
+    }
+
+    override fun onAction(action: FileInfoSheetAction) {
+        when (action) {
+            FileInfoSheetAction.Close -> sendEvent(FileInfoSheetStateEvent.Close)
+            FileInfoSheetAction.Favorite -> sendEvent(FileInfoSheetStateEvent.Favorite(file))
+            FileInfoSheetAction.OpenFolder -> sendEvent(FileInfoSheetStateEvent.OpenFolder(file))
+            FileInfoSheetAction.ReadLater -> updateReadLater()
         }
     }
 
-    @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-    fun onReadLaterClick() {
-        val fileInfo = navigator.currentDestination?.content ?: return
-        val file = fileInfo.file
+    fun updateReadLater() {
+        uiState = uiState.copy(readLaterUiState = uiState.readLaterUiState.copy(loading = true))
         scope.launch {
-            if (fileInfo.isReadLater) {
+            delay(250)
+            if (uiState.readLaterUiState.checked) {
                 deleteReadLaterUseCase(DeleteReadLaterUseCase.Request(file.bookshelfId, file.path))
-                    .first()
             } else {
                 addReadLaterUseCase(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
-                    .first()
-            }
-        }
-        scope.launch {
-            if (fileInfo.isReadLater) {
-                snackbarHostState.showSnackbar("「${file.name}」を\"あとで読む\"から削除しました")
-            } else {
-                snackbarHostState.showSnackbar("「${file.name}」を\"あとで読む\"に追加しました")
             }
         }
     }
-
-    val getFileAttributeUseCase: GetFileAttributeUseCase
-    val existsReadlaterUseCase: ExistsReadlaterUseCase
-    val deleteReadLaterUseCase: DeleteReadLaterUseCase
-    val addReadLaterUseCase: AddReadLaterUseCase
-    val snackbarHostState: SnackbarHostState
-    val scope: CoroutineScope
 }

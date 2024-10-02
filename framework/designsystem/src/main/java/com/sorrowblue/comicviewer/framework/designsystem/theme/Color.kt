@@ -1,6 +1,17 @@
 package com.sorrowblue.comicviewer.framework.designsystem.theme
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
+
+@Immutable
+data class ComponentColors(
+    val containerColor: Color,
+    val contentColor: Color,
+)
+
+val LocalComponentColors =
+    compositionLocalOf { ComponentColors(Color.Unspecified, Color.Unspecified) }
 
 val source = Color(0xFF007E66)
 val primaryLight = Color(0xFF106B57)

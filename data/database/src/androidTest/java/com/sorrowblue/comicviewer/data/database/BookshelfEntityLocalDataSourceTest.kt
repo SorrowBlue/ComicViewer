@@ -4,8 +4,8 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
-import com.sorrowblue.comicviewer.data.database.entity.BookshelfEntity
-import com.sorrowblue.comicviewer.data.database.entity.DecryptedPasswordEntity
+import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
+import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPassword
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -64,6 +64,6 @@ class BookshelfEntityLocalDataSourceTest {
         445,
         "domain_$id",
         "test_username_$id",
-        DecryptedPasswordEntity("pass_$id")
+        DecryptedPassword("pass_$id")
     )
 }

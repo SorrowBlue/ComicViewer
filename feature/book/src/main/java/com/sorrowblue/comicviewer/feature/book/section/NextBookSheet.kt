@@ -29,11 +29,10 @@ import com.sorrowblue.comicviewer.feature.book.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawTaken
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.preview.previewPlaceholder
-import kotlinx.collections.immutable.toPersistentList
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
 
 @Composable
 internal fun NextBookSheet(
@@ -126,7 +125,7 @@ private fun PreviewNextBookSheet() {
     PreviewTheme {
         Surface(Modifier.fillMaxSize()) {
             NextBookSheet(
-                NextPage(nextBooks = listOf(NextBook.Folder(fakeBookFile())).toPersistentList()),
+                NextPage(nextBooks = listOf(NextBook.Folder(fakeBookFile()))),
                 {}
             )
         }

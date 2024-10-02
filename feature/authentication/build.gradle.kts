@@ -9,5 +9,5 @@ android {
 
 dependencies {
     implementation(libs.androidx.biometric)
-    implementation("androidx.compose.animation:animation-graphics")
+    implementation(libs.androidx.compose.animation.graphics)
 }

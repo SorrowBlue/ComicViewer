@@ -9,14 +9,14 @@ data class InternalStorage(
     override val displayName: String,
     override val fileCount: Int,
 ) : Bookshelf {
-    constructor(displayName: String) : this(BookshelfId(0), displayName, 0)
+    constructor(displayName: String) : this(BookshelfId(), displayName, 0)
     constructor(id: BookshelfId, displayName: String) : this(id, displayName, 0)
 }
 
 @Parcelize
 data object ShareContents : Bookshelf {
     @IgnoredOnParcel
-    override val id: BookshelfId = BookshelfId(-1)
+    override val id: BookshelfId = BookshelfId()
 
     @IgnoredOnParcel
     override val displayName: String = "ShareContents"

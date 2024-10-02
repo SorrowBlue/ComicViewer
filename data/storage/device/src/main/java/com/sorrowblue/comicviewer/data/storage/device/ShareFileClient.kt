@@ -78,7 +78,7 @@ internal class ShareFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun current(path: String): File {
+    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         return kotlin.runCatching {
             documentFile(path).toFileModel()
         }.getOrElse {
