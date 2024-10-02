@@ -4,12 +4,12 @@
 
     <issue id="InvalidPackage"
         message="Invalid package reference in library; not included in Android: `javax.naming.directory`. Referenced from `org.bouncycastle.jce.provider.CrlCache`.">
-        <location file="bcprov-jdk18on-1.76.jar" />
+        <location file="bcprov-jdk18on-1.78.1.jar" />
     </issue>
 
     <issue id="InvalidPackage"
         message="Invalid package reference in library; not included in Android: `javax.naming`. Referenced from `org.bouncycastle.jce.provider.X509LDAPCertStoreSpi`.">
-        <location file="bcprov-jdk18on-1.76.jar" />
+        <location file="bcprov-jdk18on-1.78.1.jar" />
     </issue>
 
     <issue id="InvalidPackage"
@@ -29,7 +29,12 @@
 
     <issue id="InvalidPackage"
         message="Invalid package reference in io.ktor:ktor-utils-jvm; not included in Android: `java.lang.management`. Referenced from `io.ktor.util.debug.IntellijIdeaDebugDetector.isDebuggerConnected.2`.">
-        <location file="ktor-utils-jvm-2.3.12.jar" />
+        <location file="ktor-utils-jvm-3.0.0-beta-2.jar" />
+    </issue>
+
+    <issue id="InvalidPackage"
+        message="Invalid package reference in library; not included in Android: java.lang.foreign. Referenced from com.fasterxml.jackson.core.internal.shaded.fdp.v2_18_0.FastDoubleSwar.">
+        <location file="jackson-core-2.18.0.jar" />
     </issue>
 
     <issue errorLine1="                    android:host=&quot;comicviewer.sorrowblue.com&quot;"
@@ -41,7 +46,7 @@
 
     <issue id="TrustAllX509TrustManager"
         message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
-        <location file="bcpkix-jdk18on-1.77.jar" />
+        <location file="bcpkix-jdk18on-1.78.1.jar" />
     </issue>
 
     <issue id="TrustAllX509TrustManager"
