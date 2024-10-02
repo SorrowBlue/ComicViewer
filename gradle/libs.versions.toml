@@ -14,7 +14,7 @@ androidx-paging = "3.3.2"
 androidx-room = "2.6.1"
 
 google-dagger = "2.52"
-android-gradle = "8.6.1"
+android-gradle = "8.7.0"
 coil-kt = "3.0.0-alpha10"
 detekt = "1.23.7"
 mikepenz-aboutlibraries = "11.2.3"
