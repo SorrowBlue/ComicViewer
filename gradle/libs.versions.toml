@@ -121,7 +121,7 @@ androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version
 
 google-android-play-feature-delivery-ktx = "com.google.android.play:feature-delivery-ktx:2.1.0"
 google-android-play-review-ktx = "com.google.android.play:review-ktx:2.0.1"
-google-android-billingclient-billingKtx = "com.android.billingclient:billing-ktx:7.0.0"
+google-android-billingclient-billingKtx = "com.android.billingclient:billing-ktx:7.1.0"
 google-code-gson = "com.google.code.gson:gson:2.11.0"
 google-guava = "com.google.guava:guava:33.3.1-jre"
 google-android-gms-play-services-auth = "com.google.android.gms:play-services-auth:21.2.0"
