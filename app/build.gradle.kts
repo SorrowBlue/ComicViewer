@@ -105,8 +105,7 @@ android {
     }
 
     lint {
-        this.checkAllWarnings = true
-        this.
+        checkAllWarnings = true
         checkDependencies = true
         htmlReport = true
         htmlOutput = file("$rootDir/build/reports/lint/lint-result.html")
@@ -114,6 +113,10 @@ android {
         sarifOutput = file("$rootDir/build/reports/lint/lint-result.sarif")
         textReport = false
         xmlReport = false
+    }
+
+    packaging {
+        resources.excludes += "com/ramcosta/composedestinations/generated/mermaid/**"
     }
 }
 
