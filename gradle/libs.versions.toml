@@ -139,7 +139,7 @@ soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha0
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version = "0.4.0" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.16-0" }
 
-artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.24.9" }
+artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.24.10" }
 squareup-logcat = { group = "com.squareup.logcat", name = "logcat", version = "0.1" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.9.1" }
 
