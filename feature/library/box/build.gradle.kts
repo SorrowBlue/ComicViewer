@@ -37,7 +37,7 @@ dependencies {
 
     implementation(libs.androidx.browser)
     implementation(libs.androidx.datastore)
-    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.work.runtime)
 
     implementation(libs.box.java.sdk)
     implementation(libs.kotlinx.serialization.protobuf)

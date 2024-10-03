@@ -18,6 +18,7 @@ import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 
 internal sealed interface HistoryScreenEvent {
     data class Favorite(val file: File) :
@@ -73,7 +74,7 @@ private class HistoryScreenStateImpl(
 
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
-            FileInfoSheetNavigator.Back -> navigator.navigateBack()
+            FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
             is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
                 sendEvent(HistoryScreenEvent.Favorite(it))
             }
@@ -91,6 +92,8 @@ private class HistoryScreenStateImpl(
     }
 
     private fun navigateToFileInfo(file: File) {
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
+        scope.launch {
+            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
+        }
     }
 }

@@ -121,7 +121,7 @@ private class BookshelfInfoSheetStateImpl(
 
     override fun onAction(action: BookshelfInfoSheetAction) {
         when (action) {
-            BookshelfInfoSheetAction.Close -> navigator.navigateBack()
+            BookshelfInfoSheetAction.Close -> scope.launch { navigator.navigateBack() }
             BookshelfInfoSheetAction.Edit -> sendEvent(BookshelfInfoSheetStateEvent.Edit(uiState.bookshelf.id))
             BookshelfInfoSheetAction.Remove -> sendEvent(BookshelfInfoSheetStateEvent.Remove(uiState.bookshelf))
             BookshelfInfoSheetAction.Scan -> requestScan()
@@ -144,8 +144,8 @@ private class BookshelfInfoSheetStateImpl(
             NavResult.Canceled -> Unit
             is NavResult.Value -> {
                 if (result.value) {
-                    navigator.navigateBack()
                     scope.launch {
+                        navigator.navigateBack()
                         snackbarHostState.showSnackbar(
                             context.getString(
                                 R.string.bookshelf_msg_delete,

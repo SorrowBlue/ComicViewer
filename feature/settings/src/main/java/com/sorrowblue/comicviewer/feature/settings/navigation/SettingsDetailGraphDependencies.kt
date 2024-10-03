@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.settings.navigation
 
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navGraph
@@ -13,12 +14,14 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsGraphDependencies
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsGraphDependencies
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun DependenciesContainerBuilder<*>.SettingsDetailGraphDependencies(
     scaffoldNavigator: ThreePaneScaffoldNavigator<Settings2>,
     settingsScreenNavigator: SettingsScreenNavigator,
 ) {
+    val scope = rememberCoroutineScope()
     navGraph(NavGraphs.settingsDetail) {
         dependency(object :
             SecuritySettingsScreenNavigator,
@@ -34,7 +37,9 @@ internal fun DependenciesContainerBuilder<*>.SettingsDetailGraphDependencies(
             }
 
             override fun navigateBack() {
-                scaffoldNavigator.navigateBack()
+                scope.launch {
+                    scaffoldNavigator.navigateBack()
+                }
             }
 
             override fun navigateUp() {
@@ -44,9 +49,13 @@ internal fun DependenciesContainerBuilder<*>.SettingsDetailGraphDependencies(
     }
 
     FolderSettingsGraphDependencies(
-        navigateBack = scaffoldNavigator::navigateBack
+        navigateBack = {
+            scope.launch { scaffoldNavigator.navigateBack() }
+        }
     )
     AppInfoSettingsGraphDependencies(
-        navigateBack = scaffoldNavigator::navigateBack
+        navigateBack = {
+            scope.launch { scaffoldNavigator.navigateBack() }
+        }
     )
 }

@@ -86,7 +86,10 @@ private class ReadLaterScreenStateImpl(
 
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
-            FileInfoSheetNavigator.Back -> navigator.navigateBack()
+            FileInfoSheetNavigator.Back -> scope.launch {
+                navigator.navigateBack()
+            }
+
             is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
                 sendEvent(ReadLaterScreenEvent.Favorite(it))
             }
@@ -98,8 +101,9 @@ private class ReadLaterScreenStateImpl(
     override fun onContentsAction(action: ReadLaterContentsAction) {
         when (action) {
             is ReadLaterContentsAction.File -> sendEvent(ReadLaterScreenEvent.File(action.file))
-            is ReadLaterContentsAction.FileInfo ->
+            is ReadLaterContentsAction.FileInfo -> scope.launch {
                 navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file)
+            }
         }
     }
 

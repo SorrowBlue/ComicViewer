@@ -14,7 +14,7 @@ dependencies {
     implementation(projects.feature.bookshelf.selection)
     implementation(projects.feature.folder)
 
-    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.work.runtime)
 
     implementation(libs.androidx.hilt.work)
     ksp(libs.androidx.hilt.compiler)

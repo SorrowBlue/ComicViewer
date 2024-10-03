@@ -30,6 +30,7 @@ import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberFixListDetailPaneScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 fun calculateLowerInfoPaneScaffoldDirective(
     windowAdaptiveInfo: WindowAdaptiveInfo,
@@ -153,10 +154,14 @@ private class SettingsScreenStateImpl(
     }
 
     private fun onSettingsClick2(settings2: Settings2) {
-        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, settings2)
+        scope.launch {
+            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, settings2)
+        }
     }
 
     override fun onDetailBackClick() {
-        navigator.navigateBack()
+        scope.launch {
+            navigator.navigateBack()
+        }
     }
 }

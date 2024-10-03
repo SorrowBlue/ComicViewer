@@ -17,7 +17,7 @@ dependencies {
     implementation(projects.domain.model)
     implementation(projects.feature.library)
 
-    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.work.runtime)
 
     implementation(libs.microsoft.graph)
     implementation(libs.microsoft.identity.client.msal)

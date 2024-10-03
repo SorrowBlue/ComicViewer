@@ -27,7 +27,7 @@ dependencies {
     implementation(projects.feature.library)
 
     implementation(libs.androidx.datastore)
-    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.work.runtime)
 
     implementation(libs.dropbox.androidSdk)
     implementation(libs.kotlinx.serialization.protobuf)

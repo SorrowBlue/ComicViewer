@@ -140,7 +140,7 @@ dependencies {
     implementation(projects.feature.tutorial)
     implementation(projects.feature.library)
 
-    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.activity)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.core.splashscreen)

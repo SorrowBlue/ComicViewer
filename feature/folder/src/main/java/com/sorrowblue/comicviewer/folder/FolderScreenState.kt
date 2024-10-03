@@ -169,7 +169,7 @@ private class FolderScreenStateImpl(
 
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
-            FileInfoSheetNavigator.Back -> navigator.navigateBack()
+            FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
             is FileInfoSheetNavigator.Favorite ->
                 sendEvent(FolderScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!))
 
@@ -181,8 +181,9 @@ private class FolderScreenStateImpl(
     override fun onFolderContentsAction(action: FolderContentsAction) {
         when (action) {
             is FolderContentsAction.File -> sendEvent(FolderScreenEvent.File(action.file))
-            is FolderContentsAction.FileInfo ->
+            is FolderContentsAction.FileInfo -> scope.launch {
                 navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file)
+            }
 
             FolderContentsAction.Refresh -> refreshItems()
         }
