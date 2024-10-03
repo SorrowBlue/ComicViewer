@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.settings
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -9,7 +8,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.adaptive.layout.AnimatedPane
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -76,13 +75,9 @@ private fun SettingsScreen(
     onSettingsClick: (Settings2) -> Unit,
     content: @Composable () -> Unit,
 ) {
-    // TODO(b/330584029): support predictive back
-    BackHandler(enabled = navigator.canNavigateBack()) {
-        navigator.navigateBack()
-    }
-    ListDetailPaneScaffold(
-        value = navigator.scaffoldValue,
-        directive = navigator.scaffoldDirective.copy(horizontalPartitionSpacerSize = 0.dp),
+    @Suppress("UNCHECKED_CAST")
+    NavigableListDetailPaneScaffold(
+        navigator = navigator as ThreePaneScaffoldNavigator<Any>,
         detailPane = {
             val modifier = if (navigator.scaffoldDirective.maxHorizontalPartitions == 1) {
                 Modifier

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.framework.ui.adaptive
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -10,10 +9,9 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
-import androidx.compose.material3.adaptive.layout.SupportingPaneScaffold
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
-import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
+import androidx.compose.material3.adaptive.navigation.NavigableSupportingPaneScaffold
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
@@ -31,20 +29,13 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
 
 @Composable
 fun AnimatedExtraPaneScaffold(
-    navigator: ThreePaneScaffoldNavigator<*>,
+    navigator: ThreePaneScaffoldNavigator<Any>,
     extraPane: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    val defaultBackBehavior: BackNavigationBehavior =
-        BackNavigationBehavior.PopUntilScaffoldValueChange
-    // TODO(b/330584029): support predictive back
-    BackHandler(enabled = navigator.canNavigateBack(defaultBackBehavior)) {
-        navigator.navigateBack(defaultBackBehavior)
-    }
-    SupportingPaneScaffold(
-        directive = navigator.scaffoldDirective,
-        value = navigator.scaffoldValue,
+    NavigableSupportingPaneScaffold(
+        navigator = navigator,
         mainPane = {
             AnimatedPane(
                 modifier = if (navigator.scaffoldDirective.maxHorizontalPartitions != 1 && navigator.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
@@ -78,7 +69,7 @@ private fun AnimatedExtraPaneScaffoldPreview(
     @PreviewParameter(DestinationItemProvider::class) parameter: AnimatedExtraPaneScaffoldParameter,
 ) {
     PreviewTheme2(showNavigation = parameter.showNavigation) {
-        val navigator = rememberSupportingPaneScaffoldNavigator<String>(
+        val navigator = rememberSupportingPaneScaffoldNavigator<Any>(
             initialDestinationHistory = listOf(parameter.item)
         )
         AnimatedExtraPaneScaffold(

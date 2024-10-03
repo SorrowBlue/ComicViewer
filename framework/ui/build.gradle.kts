@@ -20,7 +20,7 @@ dependencies {
     implementation(libs.drick.compose.edgeToEdgePreview)
 
     api(libs.androidx.hilt.navigationCompose)
-    api(libs.androidx.lifecycle.viewmodelKtx)
+    api(libs.androidx.lifecycle.viewmodel)
     api(libs.androidx.paging.compose)
 
     api(libs.coil3.compose)

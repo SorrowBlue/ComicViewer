@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 internal sealed interface SearchScreenEvent {
     data object Back : SearchScreenEvent
@@ -162,7 +163,10 @@ private class SearchScreenStateImpl(
 
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
-            FileInfoSheetNavigator.Back -> navigator.navigateBack()
+            FileInfoSheetNavigator.Back -> scope.launch {
+                navigator.navigateBack()
+            }
+
             is FileInfoSheetNavigator.Favorite -> sendEvent(
                 SearchScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!)
             )
@@ -176,8 +180,9 @@ private class SearchScreenStateImpl(
     override fun onSearchContentsAction(action: SearchContentsAction) {
         when (action) {
             is SearchContentsAction.File -> sendEvent(SearchScreenEvent.File(action.file))
-            is SearchContentsAction.FileInfo ->
+            is SearchContentsAction.FileInfo -> scope.launch {
                 navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file)
+            }
         }
     }
 }

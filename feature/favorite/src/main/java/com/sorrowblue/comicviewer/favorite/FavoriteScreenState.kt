@@ -179,7 +179,9 @@ private class FavoriteScreenStateImpl(
     }
 
     private fun navigateToFileInfo(file: File) {
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
+        scope.launch {
+            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
+        }
     }
 
     private fun delete() {
@@ -200,7 +202,10 @@ private class FavoriteScreenStateImpl(
 
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
-            FileInfoSheetNavigator.Back -> navigator.navigateBack()
+            FileInfoSheetNavigator.Back -> scope.launch {
+                navigator.navigateBack()
+            }
+
             is FileInfoSheetNavigator.Favorite -> sendEvent(
                 FavoriteScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!)
             )

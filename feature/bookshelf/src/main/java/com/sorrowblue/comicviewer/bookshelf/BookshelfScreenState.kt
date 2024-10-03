@@ -65,7 +65,9 @@ private class BookshelfScreenStateImpl(
     override fun pagingDataFlow(id: BookshelfId) = viewModel.pagingDataFlow2(id)
 
     override fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder) {
-        navigator.navigateTo(SupportingPaneScaffoldRole.Extra, bookshelfFolder)
+        scope.launch {
+            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, bookshelfFolder)
+        }
     }
 
     override fun onNavClick() {

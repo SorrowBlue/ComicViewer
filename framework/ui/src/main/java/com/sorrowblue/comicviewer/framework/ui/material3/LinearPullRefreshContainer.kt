@@ -45,7 +45,7 @@ fun LinearPullRefreshContainer(
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(contentPadding),
+                    .padding(top = contentPadding.calculateTopPadding()),
                 trackColor = Color.Transparent,
                 strokeCap = StrokeCap.Butt,
                 gapSize = 0.dp,
@@ -55,7 +55,7 @@ fun LinearPullRefreshContainer(
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(contentPadding),
+                    .padding(top = contentPadding.calculateTopPadding()),
                 progress = { pullRefreshState.distanceFraction },
                 strokeCap = StrokeCap.Butt,
                 gapSize = 1.dp,

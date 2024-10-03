@@ -27,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +49,7 @@ import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.preview.EdgeToEdgeTemplate
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
+import kotlinx.coroutines.launch
 
 @Composable
 fun <T : Any> CanonicalScaffold(
@@ -114,8 +116,9 @@ fun <T : Any> CanonicalScaffold(
         containerColor = LocalComponentColors.current.containerColor,
         modifier = modifier
     ) { contentPadding ->
+        @Suppress("UNCHECKED_CAST")
         AnimatedExtraPaneScaffold(
-            navigator = navigator,
+            navigator = navigator as ThreePaneScaffoldNavigator<Any>,
             extraPane = {
                 if (extraPane != null) {
                     var contentKey by remember {
@@ -179,6 +182,7 @@ private fun CanonicalScaffoldPreview(
         val navigator = rememberSupportingPaneScaffoldNavigator(
             initialDestinationHistory = listOf(item.destinationItem)
         )
+        val scope = rememberCoroutineScope()
         CanonicalScaffold(
             navigator = navigator,
             topBar = {
@@ -194,9 +198,13 @@ private fun CanonicalScaffoldPreview(
                     icon = { Icon(ComicIcons.Image, null) },
                     onClick = {
                         if (navigator.canNavigateBack()) {
-                            navigator.navigateBack()
+                            scope.launch {
+                                navigator.navigateBack()
+                            }
                         } else {
-                            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, "extra")
+                            scope.launch {
+                                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, "extra")
+                            }
                         }
                     }
                 )
