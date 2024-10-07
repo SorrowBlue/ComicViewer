@@ -7,7 +7,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.Flow
 internal class BookshelfViewModel @Inject constructor(
     pagingBookshelfFolderUseCase: PagingBookshelfFolderUseCase,
     private val pagingBookshelfBookUseCase: PagingBookshelfBookUseCase,
-    val removeBookshelfUseCase: RemoveBookshelfUseCase,
 ) : ViewModel() {
 
     val pagingDataFlow =

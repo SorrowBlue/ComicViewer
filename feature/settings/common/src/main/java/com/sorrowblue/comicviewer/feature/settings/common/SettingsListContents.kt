@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -224,101 +223,6 @@ fun SeparateSwitchSetting(
         },
         onClick = onClick,
         modifier = modifier,
-    )
-}
-
-@Composable
-fun SeparateSwitchSetting(
-    title: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    summary: String? = null,
-    icon: ImageVector? = null,
-) {
-    SeparateSwitchSetting(
-        title = { Text(text = title) },
-        checked = checked,
-        onCheckedChange = onCheckedChange,
-        onClick = onClick,
-        modifier = modifier,
-        summary = summary?.let { { Text(text = it) } },
-        icon = icon?.let { { Icon(imageVector = it, contentDescription = null) } }
-    )
-}
-
-@Composable
-fun CheckboxSetting(
-    title: @Composable () -> Unit,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    summary: @Composable (() -> Unit)? = null,
-    icon: @Composable (() -> Unit)? = null,
-    enabled: Boolean = true,
-) {
-    Box(modifier = modifier) {
-        Setting(
-            title = title,
-            summary = summary,
-            icon = icon,
-            widget = {
-                Checkbox(
-                    checked = checked,
-                    onCheckedChange = onCheckedChange,
-                    enabled = enabled
-                )
-            },
-            onClick = {},
-        )
-        Box(
-            Modifier
-                .matchParentSize()
-                .clickable { onCheckedChange(!checked) }
-        )
-    }
-}
-
-@Composable
-fun CheckboxSetting(
-    title: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    summary: String? = null,
-    icon: ImageVector? = null,
-    enabled: Boolean = true,
-) {
-    CheckboxSetting(
-        title = { Text(text = title) },
-        checked = checked,
-        onCheckedChange = onCheckedChange,
-        modifier = modifier,
-        summary = summary?.let { { Text(text = it) } },
-        icon = icon?.let { { Icon(imageVector = it, contentDescription = null) } },
-        enabled = enabled
-    )
-}
-
-@Composable
-fun CheckboxSetting(
-    title: Int,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    summary: Int? = null,
-    icon: ImageVector? = null,
-    enabled: Boolean = true,
-) {
-    CheckboxSetting(
-        title = stringResource(id = title),
-        checked = checked,
-        onCheckedChange = onCheckedChange,
-        modifier = modifier,
-        summary = summary?.let { stringResource(id = it) },
-        icon = icon,
-        enabled = enabled
     )
 }
 
