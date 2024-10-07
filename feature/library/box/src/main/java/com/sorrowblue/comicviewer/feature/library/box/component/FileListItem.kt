@@ -17,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
 import coil3.network.NetworkHeaders
 import coil3.network.httpHeaders
@@ -32,7 +31,6 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.auth.AuthScheme
 import org.koin.compose.koinInject
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun FileListItem(file: File, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val repository: BoxApiRepository = koinInject()

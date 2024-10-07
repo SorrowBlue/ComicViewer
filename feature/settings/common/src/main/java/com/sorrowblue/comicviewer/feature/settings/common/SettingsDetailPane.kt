@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.settings.common
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -27,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
 interface SettingsDetailNavigator {
@@ -85,67 +83,6 @@ fun SettingsDetailPane(
         },
         snackbarHost = snackbarHost,
         contentWindowInsets = WindowInsets.safeDrawing,
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .drawVerticalScrollbar(scrollState)
-                .verticalScroll(scrollState)
-                .padding(innerPadding),
-            content = content
-        )
-    }
-}
-
-@Composable
-fun SettingsExtraPane(
-    title: @Composable () -> Unit,
-    onBackClick: () -> Unit,
-    contentPadding: PaddingValues,
-    modifier: Modifier = Modifier,
-    actions: @Composable (RowScope.() -> Unit) = {},
-    widthSizeClass: WindowWidthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass,
-    scrollBehavior: TopAppBarScrollBehavior =
-        if (widthSizeClass == WindowWidthSizeClass.COMPACT || widthSizeClass == WindowWidthSizeClass.MEDIUM) {
-            TopAppBarDefaults.pinnedScrollBehavior()
-        } else {
-            TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-        },
-    scrollState: ScrollState = rememberScrollState(),
-    content: @Composable (ColumnScope.() -> Unit),
-) {
-    Scaffold(
-        topBar = {
-            if (widthSizeClass == WindowWidthSizeClass.COMPACT || widthSizeClass == WindowWidthSizeClass.MEDIUM) {
-                TopAppBar(
-                    title = title,
-                    navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
-                        }
-                    },
-                    actions = actions,
-                    windowInsets = contentPadding.asWindowInsets()
-                        .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
-                    scrollBehavior = scrollBehavior
-                )
-            } else {
-                LargeTopAppBar(
-                    title = title,
-                    navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
-                        }
-                    },
-                    actions = actions,
-                    windowInsets = contentPadding.asWindowInsets()
-                        .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
-                    scrollBehavior = scrollBehavior
-                )
-            }
-        },
-        contentWindowInsets = contentPadding.asWindowInsets(),
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         Column(

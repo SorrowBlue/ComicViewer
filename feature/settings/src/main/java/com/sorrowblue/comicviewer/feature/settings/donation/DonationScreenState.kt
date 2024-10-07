@@ -50,7 +50,7 @@ private class DonationScreenStateImpl(
     var billingClient = BillingClientWrapper(context)
 
     init {
-        billingClient.onCancell = {
+        billingClient.onCancel = {
             scope.launch {
                 snackbarHostState.showSnackbar("購入がキャンセルされました。")
             }

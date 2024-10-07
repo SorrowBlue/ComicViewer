@@ -35,10 +35,23 @@ import logcat.logcat
 class BillingClientWrapper(
     context: Context,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
-) :
-    PurchasesUpdatedListener {
+) : PurchasesUpdatedListener {
 
-    var onCancell: (() -> Unit)? = null
+    /** 再試行可能なレスポンスコード */
+    private val retryableResponseCodes = setOf(
+        BillingClient.BillingResponseCode.ERROR,
+        BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
+        BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
+    )
+
+    /** 再試行できないレスポンスコード */
+    private val notRetryableResponseCodes = setOf(
+        BillingClient.BillingResponseCode.BILLING_UNAVAILABLE,
+        BillingClient.BillingResponseCode.DEVELOPER_ERROR,
+        BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED,
+    )
+
+    var onCancel: (() -> Unit)? = null
     var onError: ((BillingResult) -> Unit)? = null
 
     // Initialize the BillingClient.
@@ -121,7 +134,7 @@ class BillingClientWrapper(
             }
         } else if (result.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
             // Handle an error caused by a user cancelling the purchase flow.
-            onCancell?.invoke()
+            onCancel?.invoke()
         } else {
             onError?.invoke(result)
             // Handle any other error codes.
@@ -169,30 +182,18 @@ class BillingClientWrapper(
                 }
             }
 
-            in setOf(
-                BillingClient.BillingResponseCode.ERROR,
-                BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
-                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
-            ),
-            -> {
+            in retryableResponseCodes -> {
                 logcat {
                     "Acknowledgement failed, but can be retried -- Response Code: ${billingResult.responseCode} -- Debug Message: ${billingResult.debugMessage}"
                 }
-                return runBlocking {
-                    exponentialRetry(
-                        maxTries = maxTries,
-                        initialDelay = retryDelayMs,
-                        retryFactor = retryFactor
-                    ) { queryProductDetail(productId) }
-                }
+                return exponentialRetry(
+                    maxTries = maxTries,
+                    initialDelay = retryDelayMs,
+                    retryFactor = retryFactor
+                ) { queryProductDetail(productId) }
             }
 
-            in setOf(
-                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE,
-                BillingClient.BillingResponseCode.DEVELOPER_ERROR,
-                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED,
-            ),
-            -> {
+            in notRetryableResponseCodes -> {
                 logcat(
                     LogPriority.ERROR
                 ) {
@@ -247,30 +248,18 @@ class BillingClientWrapper(
                 }
             }
 
-            in setOf(
-                BillingClient.BillingResponseCode.ERROR,
-                BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
-                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
-            ),
-            -> {
+            in retryableResponseCodes -> {
                 logcat {
                     "Acknowledgement failed, but can be retried -- Response Code: ${billingResult.responseCode} -- Debug Message: ${billingResult.debugMessage}"
                 }
-                return runBlocking {
-                    exponentialRetry(
-                        maxTries = maxTries,
-                        initialDelay = retryDelayMs,
-                        retryFactor = retryFactor
-                    ) { queryProductDetails(productIds) }.orEmpty()
-                }
+                return exponentialRetry(
+                    maxTries = maxTries,
+                    initialDelay = retryDelayMs,
+                    retryFactor = retryFactor
+                ) { queryProductDetails(productIds) }.orEmpty()
             }
 
-            in setOf(
-                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE,
-                BillingClient.BillingResponseCode.DEVELOPER_ERROR,
-                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED,
-            ),
-            -> {
+            in notRetryableResponseCodes -> {
                 logcat(
                     LogPriority.ERROR
                 ) {
@@ -360,30 +349,18 @@ class BillingClientWrapper(
                 }
             }
 
-            in setOf(
-                BillingClient.BillingResponseCode.ERROR,
-                BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
-                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
-            ),
-            -> {
+            in retryableResponseCodes -> {
                 logcat {
                     "Acknowledgement failed, but can be retried -- Response Code: ${acknowledgePurchaseResult.responseCode} -- Debug Message: ${acknowledgePurchaseResult.debugMessage}"
                 }
-                runBlocking {
-                    exponentialRetry(
-                        maxTries = maxTries,
-                        initialDelay = retryDelayMs,
-                        retryFactor = retryFactor
-                    ) { acknowledge(purchaseToken) }
-                }
+                exponentialRetry(
+                    maxTries = maxTries,
+                    initialDelay = retryDelayMs,
+                    retryFactor = retryFactor
+                ) { acknowledge(purchaseToken) }
             }
 
-            in setOf(
-                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE,
-                BillingClient.BillingResponseCode.DEVELOPER_ERROR,
-                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED,
-            ),
-            -> {
+            in notRetryableResponseCodes -> {
                 logcat(
                     LogPriority.ERROR
                 ) {

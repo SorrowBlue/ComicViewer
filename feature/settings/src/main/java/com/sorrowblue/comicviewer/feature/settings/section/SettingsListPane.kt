@@ -42,7 +42,7 @@ internal fun SettingsListPane(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
-    val settingsList = remember { Settings2.entries + Settings2.entries + Settings2.entries }
+    val settingsList = remember { Settings2.entries }
     if (navigator.scaffoldDirective.maxHorizontalPartitions == 1) {
         CompactListPane(
             settingsList = settingsList,

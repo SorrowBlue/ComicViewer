@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.bookshelf.info
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -294,74 +293,76 @@ private fun ActionChips(
 }
 
 @Composable
-private fun ColumnScope.BookshelfInfo(
+private fun BookshelfInfo(
     bookshelf: Bookshelf,
     folder: Folder,
 ) {
-    val colors = ListItemDefaults.colors(containerColor = Color.Transparent)
-    ListItem(
-        colors = colors,
-        modifier = Modifier.height(56.dp),
-        overlineContent = { Text(text = stringResource(R.string.bookshelf_label_bookshelf_type)) },
-        headlineContent = { Text(text = stringResource(id = bookshelf.source())) },
-    )
-    ListItem(
-        modifier = Modifier.height(56.dp),
-        colors = colors,
-        overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_display_name)) },
-        headlineContent = { Text(text = bookshelf.displayName) },
-    )
+    Column {
+        val colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+        ListItem(
+            colors = colors,
+            modifier = Modifier.height(56.dp),
+            overlineContent = { Text(text = stringResource(R.string.bookshelf_label_bookshelf_type)) },
+            headlineContent = { Text(text = stringResource(id = bookshelf.source())) },
+        )
+        ListItem(
+            modifier = Modifier.height(56.dp),
+            colors = colors,
+            overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_display_name)) },
+            headlineContent = { Text(text = bookshelf.displayName) },
+        )
 
-    when (bookshelf) {
-        is InternalStorage -> {
-            ListItem(
-                colors = colors,
-                overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
-                headlineContent = { Text(text = folder.path) },
-            )
-        }
+        when (bookshelf) {
+            is InternalStorage -> {
+                ListItem(
+                    colors = colors,
+                    overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
+                    headlineContent = { Text(text = folder.path) },
+                )
+            }
 
-        is SmbServer -> {
-            ListItem(
-                modifier = Modifier.height(56.dp),
-                colors = colors,
-                overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_host)) },
-                headlineContent = { Text(text = bookshelf.host) },
-            )
-            ListItem(
-                modifier = Modifier.height(56.dp),
-                colors = colors,
-                overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_port)) },
-                headlineContent = { Text(text = bookshelf.port.toString()) },
-            )
-            ListItem(
-                modifier = Modifier.height(56.dp),
-                colors = colors,
-                overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
-                headlineContent = { Text(text = folder.path) },
-            )
-            when (bookshelf.auth) {
-                SmbServer.Auth.Guest -> {
-                    ListItem(
-                        modifier = Modifier.height(56.dp),
-                        colors = colors,
-                        overlineContent = { Text(text = stringResource(R.string.bookshelf_label_auth_method)) },
-                        headlineContent = { Text(text = stringResource(R.string.bookshelf_label_guest)) },
-                    )
-                }
+            is SmbServer -> {
+                ListItem(
+                    modifier = Modifier.height(56.dp),
+                    colors = colors,
+                    overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_host)) },
+                    headlineContent = { Text(text = bookshelf.host) },
+                )
+                ListItem(
+                    modifier = Modifier.height(56.dp),
+                    colors = colors,
+                    overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_port)) },
+                    headlineContent = { Text(text = bookshelf.port.toString()) },
+                )
+                ListItem(
+                    modifier = Modifier.height(56.dp),
+                    colors = colors,
+                    overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_path)) },
+                    headlineContent = { Text(text = folder.path) },
+                )
+                when (bookshelf.auth) {
+                    SmbServer.Auth.Guest -> {
+                        ListItem(
+                            modifier = Modifier.height(56.dp),
+                            colors = colors,
+                            overlineContent = { Text(text = stringResource(R.string.bookshelf_label_auth_method)) },
+                            headlineContent = { Text(text = stringResource(R.string.bookshelf_label_guest)) },
+                        )
+                    }
 
-                is SmbServer.Auth.UsernamePassword -> {
-                    ListItem(
-                        modifier = Modifier.height(56.dp),
-                        colors = colors,
-                        overlineContent = { Text(text = stringResource(R.string.bookshelf_label_auth_method)) },
-                        headlineContent = { Text(text = stringResource(R.string.bookshelf_label_Id_password)) },
-                    )
+                    is SmbServer.Auth.UsernamePassword -> {
+                        ListItem(
+                            modifier = Modifier.height(56.dp),
+                            colors = colors,
+                            overlineContent = { Text(text = stringResource(R.string.bookshelf_label_auth_method)) },
+                            headlineContent = { Text(text = stringResource(R.string.bookshelf_label_Id_password)) },
+                        )
+                    }
                 }
             }
-        }
 
-        ShareContents -> {
+            ShareContents -> {
+            }
         }
     }
 }
@@ -405,7 +406,7 @@ private fun BookshelfInfoSheetPreview() {
         val lazyPagingItems =
             PagingData.flowData { BookThumbnail.from(fakeBookFile(it)) }.collectAsLazyPagingItems()
 
-        val navigator = rememberSupportingPaneScaffoldNavigator<BookshelfFolder>(
+        val navigator = rememberSupportingPaneScaffoldNavigator(
             initialDestinationHistory = listOf(
                 ThreePaneScaffoldDestinationItem(
                     SupportingPaneScaffoldRole.Extra,

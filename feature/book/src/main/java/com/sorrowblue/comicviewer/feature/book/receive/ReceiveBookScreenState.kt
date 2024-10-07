@@ -90,21 +90,21 @@ private class ReceiveBookScreenStateImpl(
             Toast.makeText(context, "ファイルを開けませんでした", Toast.LENGTH_SHORT).show()
         } else {
             scope.launch {
-                getIntentBookUseCase(GetIntentBookUseCase.Request(data)).collect {
-                    when (it) {
+                getIntentBookUseCase(GetIntentBookUseCase.Request(data)).collect { resource ->
+                    when (resource) {
                         is Resource.Error -> TODO()
                         is Resource.Success -> {
-                            logcat { "book=${it.data}" }
+                            logcat { "book=${resource.data}" }
                             uiState = BookScreenUiState.Loaded(
-                                it.data,
+                                resource.data,
                                 FavoriteId(),
-                                BookSheetUiState(it.data)
+                                BookSheetUiState(resource.data)
                             )
                             currentList.clear()
                             currentList.addAll(
                                 buildList {
                                     addAll(
-                                        (1..it.data.totalPageCount).map {
+                                        (1..resource.data.totalPageCount).map {
                                             BookPage.Default(it - 1)
                                         }
                                     )

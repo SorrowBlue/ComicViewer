@@ -19,7 +19,6 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.ramcosta.composedestinations.spec.Direction
-import com.sorrowblue.comicviewer.feature.settings.destinations.DonationScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.destinations.ImageCacheScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
@@ -129,7 +128,8 @@ enum class Settings2(
         AppInfoSettingsNavGraph
     ),
     TUTORIAL(R.string.settings_label_tutorial, ComicIcons.Start),
-    Donation(R.string.settings_label_donation, ComicIcons.Money, DonationScreenDestination),
+
+    //    Donation(R.string.settings_label_donation, ComicIcons.Money, DonationScreenDestination),
     Thumbnail(R.string.settings_label_image_cache, ComicIcons.Storage, ImageCacheScreenDestination),
     LANGUAGE(
         R.string.settings_label_language,
