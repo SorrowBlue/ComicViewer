@@ -167,7 +167,7 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 robolectric = { group = "org.robolectric", name = "robolectric", version = "4.13" }
 
 mikepenz-aboutlibrariesComposeM3 = { group = "com.mikepenz", name = "aboutlibraries-compose-m3", version.ref = "mikepenz-aboutlibraries" }
-nlopez-compose-rules-detekt = { group = "io.nlopez.compose.rules", name = "detekt", version = "0.4.12" }
+nlopez-compose-rules-detekt = { group = "io.nlopez.compose.rules", name = "detekt", version = "0.4.15" }
 arturbosch-detektFormatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
