@@ -15,6 +15,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@Stable
+internal interface BookLoadingScreenState {
+    val uiState: BookScreenUiState
+}
+
 @Composable
 internal fun rememberBookLoadingScreenState(
     args: BookArgs,
@@ -28,11 +33,6 @@ internal fun rememberBookLoadingScreenState(
     )
 }
 
-@Stable
-internal interface BookLoadingScreenState {
-    val uiState: BookScreenUiState
-}
-
 private class BookLoadingScreenStateImpl(
     args: BookArgs,
     scope: CoroutineScope,
@@ -43,25 +43,23 @@ private class BookLoadingScreenStateImpl(
         private set
 
     init {
-        viewModel.getBookUseCase(GetBookUseCase.Request(args.bookshelfId, args.path))
-            .onEach {
-                uiState = when (it) {
-                    is Resource.Success ->
-                        BookScreenUiState.Loaded(
-                            it.data,
-                            args.favoriteId,
-                            BookSheetUiState(it.data)
-                        )
+        viewModel.getBookUseCase(GetBookUseCase.Request(args.bookshelfId, args.path)).onEach {
+            uiState = when (it) {
+                is Resource.Success ->
+                    BookScreenUiState.Loaded(
+                        it.data,
+                        args.favoriteId,
+                        BookSheetUiState(it.data)
+                    )
 
-                    is Resource.Error -> when (it.error) {
-                        GetBookUseCase.Error.NotFound ->
-                            BookScreenUiState.Error(args.name)
+                is Resource.Error -> when (it.error) {
+                    GetBookUseCase.Error.NotFound ->
+                        BookScreenUiState.Error(args.name)
 
-                        GetBookUseCase.Error.ReportedSystemError ->
-                            BookScreenUiState.Error(args.name)
-                    }
+                    GetBookUseCase.Error.ReportedSystemError ->
+                        BookScreenUiState.Error(args.name)
                 }
             }
-            .launchIn(scope)
+        }.launchIn(scope)
     }
 }

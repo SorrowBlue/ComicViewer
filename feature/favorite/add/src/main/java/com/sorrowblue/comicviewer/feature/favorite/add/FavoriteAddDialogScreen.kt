@@ -40,7 +40,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 
-class FavoriteAddArgs(
+data class FavoriteAddArgs(
     val bookshelfId: BookshelfId,
     val path: String,
 )

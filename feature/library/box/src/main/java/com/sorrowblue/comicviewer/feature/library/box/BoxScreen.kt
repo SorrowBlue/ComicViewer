@@ -37,7 +37,7 @@ interface BoxScreenNavigator {
     fun requireLogin()
 }
 
-class BoxArgs(val path: String = "")
+data class BoxArgs(val path: String = "")
 
 @Destination<BoxGraph>(start = true, navArgs = BoxArgs::class)
 @Composable
