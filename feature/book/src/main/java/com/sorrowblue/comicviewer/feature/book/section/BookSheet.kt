@@ -8,11 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Density
 import com.sorrowblue.comicviewer.domain.model.file.Book
 
 internal data class BookSheetUiState(
@@ -35,29 +35,17 @@ internal fun BookSheet(
     HorizontalPager(
         state = pagerState,
         beyondViewportPageCount = 3,
-        pageSize = object : PageSize {
-            override fun Density.calculateMainAxisPageSize(
-                availableSpace: Int,
-                pageSpacing: Int,
-            ): Int {
-                return availableSpace
-            }
-        },
+        pageSize = PageSize.Fill,
         reverseLayout = true,
         modifier = modifier
             .fillMaxSize()
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null,
+                indication = ripple(),
                 onClick = onClick,
                 onLongClick = onLongClick
             ),
-        key = {
-            when (val item = pages[it]) {
-                is NextPage -> item.key
-                is BookPage -> item.key
-            }
-        }
+        key = { pages[it].key }
     ) { pageIndex ->
         when (val item = pages[pageIndex]) {
             is NextPage -> NextBookSheet(item, onClick = onNextBookClick)
