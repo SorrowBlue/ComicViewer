@@ -1,1 +1,2 @@
--keep @com.box.sdk.BoxResourceType class *
+-keepnames class com.box.sdk.** extends com.box.sdk.BoxResource { *; }
+-keepnames class com.box.sdk.** extends com.box.sdk.BoxResource$Info { *; }

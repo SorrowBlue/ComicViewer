@@ -39,7 +39,7 @@ interface GoogleDriveScreenNavigator {
     fun requireAuthentication()
 }
 
-class GoogleDriveArgs(val path: String = "root")
+data class GoogleDriveArgs(val path: String = "root")
 
 @Destination<GoogleDriveGraph>(start = true, navArgs = GoogleDriveArgs::class)
 @Composable

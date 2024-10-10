@@ -57,7 +57,7 @@ interface FavoriteEditScreenNavigator {
     fun onComplete()
 }
 
-class FavoriteEditArgs(val favoriteId: FavoriteId)
+data class FavoriteEditArgs(val favoriteId: FavoriteId)
 
 @Destination<ExternalModuleGraph>(navArgs = FavoriteEditArgs::class)
 @Composable

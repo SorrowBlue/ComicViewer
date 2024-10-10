@@ -40,7 +40,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 
-class FavoriteAddArgs(
+data class FavoriteAddArgs(
     val bookshelfId: BookshelfId,
     val path: String,
 )
@@ -109,10 +109,12 @@ private fun FavoriteAddDialogScreen(
             topBar = { FavoriteAddTopAppBar(onCloseClick = onDismissRequest) },
             floatingActionButton = { FavoriteAddButton(onClick = onNewFavoriteClick) },
             contentWindowInsets = WindowInsets(0),
-        ) {
+        ) { contentPadding ->
             LazyColumn(
                 state = lazyListState,
-                contentPadding = it.add(PaddingValues(bottom = BottomButtonMargin * 2 + ButtonDefaults.MinHeight)),
+                contentPadding = contentPadding.add(
+                    PaddingValues(bottom = BottomButtonMargin * 2 + ButtonDefaults.MinHeight)
+                ),
                 modifier = Modifier
                     .fillMaxSize()
                     .drawVerticalScrollbar(lazyListState)
@@ -129,8 +131,8 @@ private fun FavoriteAddDialogScreen(
                 items(
                     count = lazyPagingItems.itemCount,
                     key = lazyPagingItems.itemKey { it.id.value }
-                ) {
-                    lazyPagingItems[it]?.let { item ->
+                ) { index ->
+                    lazyPagingItems[index]?.let { item ->
                         FavoriteItem(
                             favorite = item,
                             onClick = { onClick(item) },
