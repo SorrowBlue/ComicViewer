@@ -29,7 +29,7 @@
 
     <issue id="InvalidPackage"
         message="Invalid package reference in io.ktor:ktor-utils-jvm; not included in Android: `java.lang.management`. Referenced from `io.ktor.util.debug.IntellijIdeaDebugDetector.isDebuggerConnected.2`.">
-        <location file="ktor-utils-jvm-3.0.0-rc-1.jar" />
+        <location file="ktor-utils-jvm-3.0.0.jar" />
     </issue>
 
     <issue id="InvalidPackage"
