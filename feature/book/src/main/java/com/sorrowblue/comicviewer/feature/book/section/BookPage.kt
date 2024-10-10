@@ -2,11 +2,14 @@ package com.sorrowblue.comicviewer.feature.book.section
 
 import com.sorrowblue.comicviewer.domain.model.file.Book
 
-sealed interface PageItem
+sealed interface PageItem {
+    val key: String
+}
 
 data class NextPage(val nextBooks: List<NextBook>) : PageItem {
 
-    val key = nextBooks.joinToString { "next:${it.book.bookshelfId.value}:${it.book.path}" }
+    override val key =
+        nextBooks.joinToString { "next:${it.book.bookshelfId.value}:${it.book.path}" }
 }
 
 sealed interface NextBook {
@@ -19,7 +22,6 @@ sealed interface NextBook {
 sealed interface UnratedPage
 
 sealed interface BookPage : PageItem {
-    val key: String
 
     /** 読み取ったページをそのまま表示 */
     data class Default(val index: Int) : BookPage {

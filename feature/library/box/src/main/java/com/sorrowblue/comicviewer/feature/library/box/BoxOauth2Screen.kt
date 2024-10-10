@@ -115,4 +115,4 @@ internal fun rememberBoxOauth2ScreenState(
     BoxOauth2ScreenState(snackbarHostState, args, scope, repository)
 }
 
-class BoxOauth2Args(val state: String, val code: String)
+data class BoxOauth2Args(val state: String, val code: String)

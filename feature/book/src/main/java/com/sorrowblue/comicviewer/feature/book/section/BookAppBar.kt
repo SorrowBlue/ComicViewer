@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
+import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 
 @Composable
 internal fun BookAppBar(title: String, onBackClick: () -> Unit, onSettingsClick: () -> Unit) {
@@ -29,9 +30,7 @@ internal fun BookAppBar(title: String, onBackClick: () -> Unit, onSettingsClick:
             }
         },
         actions = {
-            IconButton(onClick = onSettingsClick) {
-                Icon(imageVector = ComicIcons.Settings, contentDescription = null)
-            }
+            SettingsIconButton(onClick = onSettingsClick)
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(

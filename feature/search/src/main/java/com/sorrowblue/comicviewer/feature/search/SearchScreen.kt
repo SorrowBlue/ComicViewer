@@ -47,8 +47,7 @@ interface SearchScreenNavigator {
     fun onNavigateSettings()
 }
 
-@Parcelize
-class SearchArgs(val bookshelfId: BookshelfId, val path: String) : Parcelable
+data class SearchArgs(val bookshelfId: BookshelfId, val path: String)
 
 @Destination<SearchGraph>(
     start = true,

@@ -11,7 +11,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.Navigator
 import androidx.navigation.compose.navigation
 import com.ramcosta.composedestinations.animations.NavHostAnimatedDestinationStyle
-import com.ramcosta.composedestinations.annotation.internal.InternalDestinationsApi
 import com.ramcosta.composedestinations.manualcomposablecalls.ManualComposableCalls
 import com.ramcosta.composedestinations.manualcomposablecalls.allDeepLinks
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
@@ -106,7 +105,6 @@ internal class CustomNavHostEngine(
         }
     }
 
-    @OptIn(InternalDestinationsApi::class)
     @SuppressLint("RestrictedApi")
     override fun <T> NavGraphBuilder.composable(
         destination: TypedDestinationSpec<T>,
