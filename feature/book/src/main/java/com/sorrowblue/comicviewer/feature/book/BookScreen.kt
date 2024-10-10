@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.feature.book
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -28,7 +27,6 @@ import com.sorrowblue.comicviewer.feature.book.section.BookSheet
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-import kotlinx.parcelize.Parcelize
 
 internal sealed interface BookScreenUiState {
 
@@ -51,13 +49,12 @@ interface BookScreenNavigator {
     fun onContainerLongClick()
 }
 
-@Parcelize
-class BookArgs(
+data class BookArgs(
     val bookshelfId: BookshelfId,
     val path: String,
     val name: String,
     val favoriteId: FavoriteId = FavoriteId(),
-) : Parcelable
+)
 
 @Destination<BookGraph>(
     start = true,
@@ -66,10 +63,7 @@ class BookArgs(
     visibility = CodeGenVisibility.INTERNAL
 )
 @Composable
-internal fun BookScreen(
-    args: BookArgs,
-    navigator: BookScreenNavigator,
-) {
+internal fun BookScreen(args: BookArgs, navigator: BookScreenNavigator) {
     BookScreen(
         args = args,
         onBackClick = navigator::navigateUp,

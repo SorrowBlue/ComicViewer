@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
  * @param path フォルダのパス
  * @param restorePath 復元するパス (nullの場合は復元しない)
  */
-class FolderArgs(
+data class FolderArgs(
     val bookshelfId: BookshelfId,
     val path: String,
     val restorePath: String?,

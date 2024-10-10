@@ -52,7 +52,7 @@ interface FavoriteScreenNavigator {
     fun onOpenFolderClick(file: File)
 }
 
-class FavoriteArgs(val favoriteId: FavoriteId)
+data class FavoriteArgs(val favoriteId: FavoriteId)
 
 @Destination<FavoriteGraph>(
     navArgs = FavoriteArgs::class,
