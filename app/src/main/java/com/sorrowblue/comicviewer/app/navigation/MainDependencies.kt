@@ -26,6 +26,7 @@ import com.sorrowblue.comicviewer.feature.search.navigation.SearchGraphDependenc
 import com.sorrowblue.comicviewer.feature.settings.navgraphs.SettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraphDependencies
 import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
+import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialGraphDependencies
 
 @Composable
 internal fun DependenciesContainerBuilder<*>.MainDependencies(
@@ -117,6 +118,8 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
             destinationsNavigator.navigate(TutorialNavGraph)
         }
     )
+
+    TutorialGraphDependencies(destinationsNavigator::navigateUp)
 
     LibraryGraphDependencies(
         navigateToBook = { onBookClick(it, null) },

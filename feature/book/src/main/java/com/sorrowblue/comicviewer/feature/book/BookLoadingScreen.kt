@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
+import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 
 @Composable
 internal fun BookLoadingScreen(
@@ -31,7 +33,7 @@ internal fun BookLoadingScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = uiState.name)
+                    Text(text = uiState.name, modifier = Modifier.basicMarquee())
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
@@ -40,6 +42,9 @@ internal fun BookLoadingScreen(
                             contentDescription = null
                         )
                     }
+                },
+                actions = {
+                    SettingsIconButton(onClick = {})
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(

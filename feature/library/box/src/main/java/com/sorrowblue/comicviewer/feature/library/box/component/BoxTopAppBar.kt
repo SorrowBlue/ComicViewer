@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
 import coil3.network.NetworkHeaders
 import coil3.network.httpHeaders
@@ -31,9 +30,7 @@ import coil3.request.crossfade
 import coil3.toUri
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
-import logcat.logcat
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 internal fun BoxTopAppBar(
     path: String,
@@ -71,9 +68,6 @@ internal fun BoxTopAppBar(
                         )
                         .crossfade(true)
                         .diskCachePolicy(CachePolicy.ENABLED)
-                        .listener { request, result ->
-                            logcat { "request=$request, result=$result" }
-                        }
                         .build(),
                     error = previewPlaceholder(),
                     contentDescription = null,

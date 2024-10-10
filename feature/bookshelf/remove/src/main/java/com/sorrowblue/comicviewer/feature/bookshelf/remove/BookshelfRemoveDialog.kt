@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.remove
 
-import android.os.Parcelable
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
@@ -19,12 +18,10 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 data class BookshelfRemoveDialogArgs(
     val bookshelf: Bookshelf,
-) : Parcelable
+)
 
 internal data class BookshelfRemoveDialogUiState(
     val title: String = "",

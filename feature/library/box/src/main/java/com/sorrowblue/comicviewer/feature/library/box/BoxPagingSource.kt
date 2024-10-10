@@ -63,7 +63,7 @@ internal class BoxPagingSource(
         return LoadResult.Page(
             data = list,
             prevKey = null,
-            nextKey = if (list.isEmpty()) null else (params.key ?: 0) + list.size
+            nextKey = if (list.isEmpty()) null else (params.key ?: 0) + list.size + 1
         )
     }
 }
