@@ -17,7 +17,7 @@ dependencies {
     implementation(libs.androidx.exifinterface)
     implementation(libs.coil3)
     implementation(libs.coil3.networkKtor)
-    implementation("io.ktor:ktor-client-okhttp:3.0.0-rc-1")
+    implementation("io.ktor:ktor-client-okhttp:3.0.0")
     implementation(libs.jcifs.ng)
     implementation(libs.kotlinx.serialization.protobuf)
 }
