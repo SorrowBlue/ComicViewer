@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.data.coil.CacheKeySnapshot
 import com.sorrowblue.comicviewer.data.coil.CoilDecoder
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
-import com.sorrowblue.comicviewer.data.coil.book.FileModelFetcher.Companion.COMPRESS_FORMAT
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.di.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.from

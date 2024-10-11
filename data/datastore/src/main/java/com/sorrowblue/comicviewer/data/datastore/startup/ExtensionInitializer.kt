@@ -11,7 +11,6 @@ import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
 
-@Suppress("unused")
 internal class ExtensionInitializer : Initializer<Unit> {
 
     @Inject
