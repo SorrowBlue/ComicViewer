@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.data.coil
 
+import android.graphics.Bitmap
 import coil3.decode.DataSource
 import coil3.decode.ImageSource
 import coil3.disk.DiskCache
@@ -117,7 +118,7 @@ internal abstract class FileFetcher<T : CoilMetaData>(
         }.getOrThrow()
     }
 
-    protected val isCacheable get() = options.diskCachePolicy.writeEnabled
+    private val isCacheable get() = options.diskCachePolicy.writeEnabled
 
     protected fun DiskCache.Snapshot.toImageSource() =
         ImageSource(data, fileSystem, diskCacheKey, this)
@@ -125,7 +126,7 @@ internal abstract class FileFetcher<T : CoilMetaData>(
     protected fun Sink.toImageSource() =
         ImageSource(source = buffer().buffer, fileSystem = options.fileSystem)
 
-    protected val fileSystem get() = diskCache!!.fileSystem
+    private val fileSystem get() = diskCache!!.fileSystem
 
     private fun readFromDiskCache(): DiskCache.Snapshot? {
         return if (options.diskCachePolicy.readEnabled) {
@@ -149,5 +150,9 @@ internal abstract class FileFetcher<T : CoilMetaData>(
             // If we can't parse the metadata, ignore this entry.
             null
         }
+    }
+
+    protected companion object {
+        val COMPRESS_FORMAT = Bitmap.CompressFormat.WEBP_LOSSY
     }
 }

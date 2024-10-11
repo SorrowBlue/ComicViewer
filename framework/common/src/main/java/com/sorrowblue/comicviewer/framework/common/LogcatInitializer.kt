@@ -11,8 +11,10 @@ import logcat.logcat
 class LogcatInitializer : Initializer<LogcatLogger.Companion> {
     override fun create(context: Context): LogcatLogger.Companion {
         AndroidLogcatLogger.installOnDebuggableApp(context as Application, LogPriority.VERBOSE)
+        if (!LogcatLogger.isInstalled) {
+            LogcatLogger.install(AndroidLogcatLogger(LogPriority.INFO))
+        }
         logcat(LogPriority.INFO) { "Initialized logcat." }
-        LogcatLogger.install(AndroidLogcatLogger(LogPriority.VERBOSE))
         return LogcatLogger.Companion
     }
 

@@ -13,7 +13,7 @@ internal interface CoilMetaData {
     interface CompanionObject
 }
 
+@Suppress("UnusedReceiverParameter")
 @OptIn(ExperimentalSerializationApi::class)
-@Suppress("unused")
 internal inline fun <reified T : CoilMetaData> CoilMetaData.CompanionObject.from(source: BufferedSource) =
     ProtoBuf.decodeFromByteArray<T>(source.readByteArray())
