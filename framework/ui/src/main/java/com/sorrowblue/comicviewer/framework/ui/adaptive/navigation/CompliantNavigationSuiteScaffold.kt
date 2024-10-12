@@ -79,6 +79,7 @@ val LocalNavigationState =
  * @return [NavigationState]
  * @see [NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo]
  */
+@Suppress("UnusedReceiverParameter")
 fun NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo2(
     adaptiveInfo: WindowAdaptiveInfo,
     defaultVisible: Boolean = true,

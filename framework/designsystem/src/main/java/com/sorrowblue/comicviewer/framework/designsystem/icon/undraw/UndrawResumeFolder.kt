@@ -14,12 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.UndrawResumeFolder: ImageVector
     @Composable get() {
-        if (_undrawResumeFolder != null) {
-            return _undrawResumeFolder!!
+        if (undrawResumeFolder != null) {
+            return undrawResumeFolder!!
         }
-        _undrawResumeFolder = ImageVector.Builder(
+        undrawResumeFolder = ImageVector.Builder(
             name = "UndrawResumeFolder",
             defaultWidth = 827.9.dp,
             defaultHeight = 666.5.dp,
@@ -738,9 +739,9 @@ val ComicIcons.UndrawResumeFolder: ImageVector
             arcToRelative(1.0F, 1.0F, 0.0F, false, true, 0.0F, 2.0F)
             close()
         }.build()
-        return _undrawResumeFolder!!
+        return undrawResumeFolder!!
     }
-private var _undrawResumeFolder: ImageVector? = null
+private var undrawResumeFolder: ImageVector? = null
 
 @Preview
 @Composable

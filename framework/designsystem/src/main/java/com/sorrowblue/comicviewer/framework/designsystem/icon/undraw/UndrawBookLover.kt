@@ -14,12 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.UndrawBookLover: ImageVector
     @Composable get() {
-        if (_undrawBookLover != null) {
-            return _undrawBookLover!!
+        if (undrawBookLover != null) {
+            return undrawBookLover!!
         }
-        _undrawBookLover = ImageVector.Builder(
+        undrawBookLover = ImageVector.Builder(
             name = "UndrawBookLover",
             defaultWidth = 669.18.dp,
             defaultHeight = 511.63.dp,
@@ -162,13 +163,37 @@ val ComicIcons.UndrawBookLover: ImageVector
             pathFillType = PathFillType.NonZero,
         ) {
             moveTo(397.77F, 475.54F)
-            arcToRelative(105.22F, 105.22F, 0.0F, false, true, -41.73F, -11.78F)
+            arcToRelative(
+                a = 105.22F,
+                b = 105.22F,
+                theta = 0.0F,
+                isMoreThanHalf = false,
+                isPositiveArc = true,
+                dx1 = -41.73F,
+                dy1 = -11.78F
+            )
             lineToRelative(-10.9F, -5.78F)
             lineToRelative(0.28F, -2.86F)
-            arcToRelative(1.73F, 1.73F, 0.0F, false, true, 1.84F, -1.4F)
+            arcToRelative(
+                a = 1.73F,
+                b = 1.73F,
+                theta = 0.0F,
+                isMoreThanHalf = false,
+                isPositiveArc = true,
+                dx1 = 1.84F,
+                dy1 = -1.4F
+            )
             lineToRelative(0.96F, 0.01F)
             lineTo(494.86F, 455.9F)
-            arcToRelative(85.94F, 85.94F, 0.0F, false, true, 28.13F, 5.11F)
+            arcToRelative(
+                a = 85.94F,
+                b = 85.94F,
+                theta = 0.0F,
+                isMoreThanHalf = false,
+                isPositiveArc = true,
+                dx1 = 28.13F,
+                dy1 = 5.11F
+            )
             lineToRelative(31.95F, 11.6F)
             lineToRelative(-0.02F, 0.17F)
             curveToRelative(-0.27F, 2.69F, -2.98F, 4.77F, -6.18F, 4.74F)
@@ -258,7 +283,15 @@ val ComicIcons.UndrawBookLover: ImageVector
             pathFillType = PathFillType.NonZero,
         ) {
             moveTo(552.46F, 505.7F)
-            arcToRelative(4.84F, 4.84F, 0.0F, false, false, 4.83F, 4.83F)
+            arcToRelative(
+                a = 4.84F,
+                b = 4.84F,
+                theta = 0.0F,
+                isMoreThanHalf = false,
+                isPositiveArc = false,
+                dx1 = 4.83F,
+                dy1 = 4.83F
+            )
             horizontalLineToRelative(21.51F)
             lineToRelative(3.71F, -7.65F)
             lineToRelative(1.44F, 7.65F)
@@ -269,7 +302,15 @@ val ComicIcons.UndrawBookLover: ImageVector
             lineToRelative(-2.0F, -0.12F)
             verticalLineToRelative(7.75F)
             lineTo(554.54F, 501.72F)
-            arcTo(4.84F, 4.84F, 0.0F, false, false, 552.46F, 505.7F)
+            arcTo(
+                horizontalEllipseRadius = 4.84F,
+                verticalEllipseRadius = 4.84F,
+                theta = 0.0F,
+                isMoreThanHalf = false,
+                isPositiveArc = false,
+                x1 = 552.46F,
+                y1 = 505.7F
+            )
             close()
         }.path(
             fill = SolidColor(Color(0xFFFFB6B6)),
@@ -298,7 +339,15 @@ val ComicIcons.UndrawBookLover: ImageVector
             pathFillType = PathFillType.NonZero,
         ) {
             moveTo(447.94F, 455.7F)
-            arcToRelative(4.84F, 4.84F, 0.0F, false, false, 4.83F, 4.83F)
+            arcToRelative(
+                a = 4.84F,
+                b = 4.84F,
+                theta = 0.0F,
+                isMoreThanHalf = false,
+                isPositiveArc = false,
+                dx1 = 4.83F,
+                dy1 = 4.83F
+            )
             horizontalLineToRelative(21.51F)
             lineToRelative(3.71F, -7.65F)
             lineToRelative(1.44F, 7.65F)
@@ -1230,9 +1279,9 @@ val ComicIcons.UndrawBookLover: ImageVector
             curveTo(573.09F, 28.13F, 571.8F, 24.94F, 572.4F, 22.51F)
             close()
         }.build()
-        return _undrawBookLover!!
+        return undrawBookLover!!
     }
-private var _undrawBookLover: ImageVector? = null
+private var undrawBookLover: ImageVector? = null
 
 @Preview
 @Composable

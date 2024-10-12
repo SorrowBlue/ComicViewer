@@ -9,12 +9,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.source
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.Launcher: ImageVector
     get() {
-        if (_launcher != null) {
-            return _launcher!!
+        if (launcher != null) {
+            return launcher!!
         }
-        _launcher = ImageVector.Builder(
+        launcher = ImageVector.Builder(
             name = "Launcher",
             defaultWidth = 128.0.dp,
             defaultHeight = 128.0.dp,
@@ -59,9 +60,9 @@ val ComicIcons.Launcher: ImageVector
             }
         }
             .build()
-        return _launcher!!
+        return launcher!!
     }
-private var _launcher: ImageVector? = null
+private var launcher: ImageVector? = null
 
 @Preview
 @Composable

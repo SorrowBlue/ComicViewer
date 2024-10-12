@@ -13,12 +13,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.BrandGoogleDrive: ImageVector
     get() {
-        if (_brandGoogleDrive != null) {
-            return _brandGoogleDrive!!
+        if (brandGoogleDrive != null) {
+            return brandGoogleDrive!!
         }
-        _brandGoogleDrive = ImageVector.Builder(
+        brandGoogleDrive = ImageVector.Builder(
             name = "BrandGoogleDrive",
             defaultWidth = 87.3.dp,
             defaultHeight = 78.0.dp,
@@ -134,9 +135,9 @@ val ComicIcons.BrandGoogleDrive: ImageVector
             curveToRelative(0.0F, -1.55F, -0.4F, -3.1F, -1.2F, -4.5F)
             close()
         }.build()
-        return _brandGoogleDrive!!
+        return brandGoogleDrive!!
     }
-private var _brandGoogleDrive: ImageVector? = null
+private var brandGoogleDrive: ImageVector? = null
 
 @Preview
 @Composable

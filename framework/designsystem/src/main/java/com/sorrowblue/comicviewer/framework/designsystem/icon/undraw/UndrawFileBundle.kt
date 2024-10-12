@@ -14,12 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.UndrawFileBundle: ImageVector
     @Composable get() {
-        if (_undrawFileBundle != null) {
-            return _undrawFileBundle!!
+        if (undrawFileBundle != null) {
+            return undrawFileBundle!!
         }
-        _undrawFileBundle = ImageVector.Builder(
+        undrawFileBundle = ImageVector.Builder(
             name = "UndrawFileBundle",
             defaultWidth = 785.17.dp,
             defaultHeight = 507.75.dp,
@@ -1338,9 +1339,9 @@ val ComicIcons.UndrawFileBundle: ImageVector
             lineToRelative(-0.14F, 0.09F)
             close()
         }.build()
-        return _undrawFileBundle!!
+        return undrawFileBundle!!
     }
-private var _undrawFileBundle: ImageVector? = null
+private var undrawFileBundle: ImageVector? = null
 
 @Preview
 @Composable
