@@ -10,14 +10,6 @@ sealed interface SortType : Parcelable {
 
     val isAsc: Boolean
 
-    fun copy2(isAsc: Boolean): SortType {
-        return when (this) {
-            is Date -> copy(isAsc)
-            is Name -> copy(isAsc)
-            is Size -> copy(isAsc)
-        }
-    }
-
     @Parcelize
     @Serializable
     data class Name(override val isAsc: Boolean) : SortType
