@@ -14,12 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.UndrawFileSearching: ImageVector
     @Composable get() {
-        if (_undrawFileSearching != null) {
-            return _undrawFileSearching!!
+        if (undrawFileSearching != null) {
+            return undrawFileSearching!!
         }
-        _undrawFileSearching = ImageVector.Builder(
+        undrawFileSearching = ImageVector.Builder(
             name = "UndrawFileSearching",
             defaultWidth = 578.0.dp,
             defaultHeight = 621.93.dp,
@@ -876,9 +877,9 @@ val ComicIcons.UndrawFileSearching: ImageVector
             arcToRelative(1.0F, 1.0F, 0.0F, false, true, 0.0F, 2.0F)
             close()
         }.build()
-        return _undrawFileSearching!!
+        return undrawFileSearching!!
     }
-private var _undrawFileSearching: ImageVector? = null
+private var undrawFileSearching: ImageVector? = null
 
 @Preview
 @Composable

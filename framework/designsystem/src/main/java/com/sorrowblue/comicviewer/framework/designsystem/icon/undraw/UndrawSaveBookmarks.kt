@@ -14,12 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.UndrawSaveBookmarks: ImageVector
     @Composable get() {
-        if (_unDrawSaveBookmarks != null) {
-            return _unDrawSaveBookmarks!!
+        if (unDrawSaveBookmarks != null) {
+            return unDrawSaveBookmarks!!
         }
-        _unDrawSaveBookmarks = ImageVector.Builder(
+        unDrawSaveBookmarks = ImageVector.Builder(
             name = "UndrawSaveBookmarks",
             defaultWidth = 655.05.dp,
             defaultHeight = 473.41.dp,
@@ -585,9 +586,9 @@ val ComicIcons.UndrawSaveBookmarks: ImageVector
             arcToRelative(1.25F, 1.25F, 0.0F, false, false, 0.0F, 2.49F)
             close()
         }.build()
-        return _unDrawSaveBookmarks!!
+        return unDrawSaveBookmarks!!
     }
-private var _unDrawSaveBookmarks: ImageVector? = null
+private var unDrawSaveBookmarks: ImageVector? = null
 
 @Preview
 @Composable

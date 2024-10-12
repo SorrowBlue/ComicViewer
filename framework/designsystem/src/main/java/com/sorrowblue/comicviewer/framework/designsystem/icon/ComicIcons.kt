@@ -37,7 +37,6 @@ import androidx.compose.material.icons.rounded.InstallMobile
 import androidx.compose.material.icons.rounded.Key
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Lock
-import androidx.compose.material.icons.rounded.Money
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Notifications
@@ -51,8 +50,6 @@ import androidx.compose.material.icons.rounded.SortByAlpha
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Start
 import androidx.compose.material.icons.rounded.Storage
-import androidx.compose.material.icons.rounded.Visibility
-import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.WatchLater
 
 object ComicIcons {
@@ -63,8 +60,6 @@ object ComicIcons {
     val Favorite = Icons.Rounded.Favorite
     val RocketLaunch = Icons.Rounded.RocketLaunch
     val History = Icons.Rounded.History
-    val Visibility = Icons.Rounded.Visibility
-    val VisibilityOff = Icons.Rounded.VisibilityOff
     val ErrorOutline = Icons.Rounded.ErrorOutline
     val RestartAlt = Icons.Rounded.RestartAlt
     val SortByAlpha = Icons.Rounded.SortByAlpha
@@ -90,7 +85,6 @@ object ComicIcons {
     val ArrowUpward = Icons.Rounded.ArrowUpward
     val ArrowDownward = Icons.Rounded.ArrowDownward
     val Start = Icons.Rounded.Start
-    val Money = Icons.Rounded.Money
     val Language = Icons.Rounded.Language
     val Info = Icons.Rounded.Info
     val Lock = Icons.Rounded.Lock

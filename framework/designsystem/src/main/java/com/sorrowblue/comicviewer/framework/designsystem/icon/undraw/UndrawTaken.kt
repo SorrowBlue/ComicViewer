@@ -14,13 +14,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.UndrawTaken: ImageVector
     @Composable
     get() {
-        if (_undrawTaken != null) {
-            return _undrawTaken!!
+        if (undrawTaken != null) {
+            return undrawTaken!!
         }
-        _undrawTaken = ImageVector.Builder(
+        undrawTaken = ImageVector.Builder(
             name = "UndrawTaken",
             defaultWidth = 672.53.dp,
             defaultHeight = 738.39.dp,
@@ -801,9 +802,9 @@ val ComicIcons.UndrawTaken: ImageVector
             arcToRelative(1.0F, 1.0F, 0.0F, false, true, 0.0F, 2.0F)
             close()
         }.build()
-        return _undrawTaken!!
+        return undrawTaken!!
     }
-private var _undrawTaken: ImageVector? = null
+private var undrawTaken: ImageVector? = null
 
 @Preview
 @Composable

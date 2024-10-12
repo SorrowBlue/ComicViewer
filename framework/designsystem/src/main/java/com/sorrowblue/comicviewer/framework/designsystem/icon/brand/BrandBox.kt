@@ -13,12 +13,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.BrandBox: ImageVector
     get() {
-        if (_brandBox != null) {
-            return _brandBox!!
+        if (brandBox != null) {
+            return brandBox!!
         }
-        _brandBox = ImageVector.Builder(
+        brandBox = ImageVector.Builder(
             name = "BrandBox",
             defaultWidth = 613.56.dp,
             defaultHeight = 324.93.dp,
@@ -92,9 +93,9 @@ val ComicIcons.BrandBox: ImageVector
             curveToRelative(10.87F, -7.51F, 13.14F, -21.56F, 5.25F, -31.67F)
             close()
         }.build()
-        return _brandBox!!
+        return brandBox!!
     }
-private var _brandBox: ImageVector? = null
+private var brandBox: ImageVector? = null
 
 @Preview
 @Composable
