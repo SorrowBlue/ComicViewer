@@ -11,14 +11,8 @@ sealed interface Resource<out D, out E> {
 
     interface AppError : IError
     class SystemError(val throwable: Throwable) : IError
-    data object ReportedSystemError : IError
 }
 
-val Resource<*, *>.isError
-    get() = when (this) {
-        is Resource.Error -> true
-        is Resource.Success -> false
-    }
 
 val Resource<*, *>.isSuccess
     get() = when (this) {

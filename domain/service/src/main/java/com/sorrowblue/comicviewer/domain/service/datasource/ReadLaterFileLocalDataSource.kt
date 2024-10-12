@@ -15,9 +15,3 @@ interface ReadLaterFileLocalDataSource {
     fun exists(file: ReadLaterFile): Resource<Flow<Boolean>, Resource.SystemError>
     fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<File>>
 }
-
-sealed interface LocalDataSourceQueryResult {
-    data class Exsits<T>(val value: T) : LocalDataSourceQueryResult
-    data object NotExists : LocalDataSourceQueryResult
-    data class Error(val throwable: Throwable) : LocalDataSourceQueryResult
-}
