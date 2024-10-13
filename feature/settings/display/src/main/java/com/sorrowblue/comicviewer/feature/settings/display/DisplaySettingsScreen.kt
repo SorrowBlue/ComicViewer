@@ -5,41 +5,40 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.comicviewer.feature.settings.display.section.AppearanceDialog
+import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import kotlinx.parcelize.Parcelize
 
-@Destination<ExternalModuleGraph>
+internal interface DisplaySettingsScreenNavigator : SettingsDetailNavigator {
+    fun navigateToDarkMode()
+}
+
+@Destination<DisplaySettingsNavGraph>(start = true)
 @Composable
-internal fun DisplaySettingsScreen(navigator: SettingsDetailNavigator) {
-    DisplaySettingsScreen(onBackClick = navigator::navigateBack)
+internal fun DisplaySettingsScreen(navigator: DisplaySettingsScreenNavigator) {
+    DisplaySettingsScreen(
+        onBackClick = navigator::navigateBack,
+        onDarkModeClick = navigator::navigateToDarkMode
+    )
 }
 
 @Composable
 private fun DisplaySettingsScreen(
     onBackClick: () -> Unit,
+    onDarkModeClick: () -> Unit,
     state: DisplaySettingsScreenState = rememberDisplaySettingsScreenState(),
 ) {
     DisplaySettingsScreen(
         uiState = state.uiState,
         onBackClick = onBackClick,
         onRestoreOnLaunchChange = state::onRestoreOnLaunchChange,
-        onDarkModeClick = state::onDarkModeClick,
+        onDarkModeClick = onDarkModeClick,
     )
-
-    if (state.appearanceDialogController.isShow) {
-        AppearanceDialog(
-            onDismissRequest = state::onAppearanceDismissRequest,
-            currentDarkMode = state.uiState.darkMode,
-            onDarkModeChange = state::onDarkModeChange
-        )
-    }
 }
 
 @Parcelize

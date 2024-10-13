@@ -9,21 +9,87 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsViewModel
 import com.sorrowblue.comicviewer.feature.settings.display.R
 import com.sorrowblue.comicviewer.feature.settings.display.label
-import com.sorrowblue.comicviewer.framework.ui.DialogController
+import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavGraph
 import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+
+interface AppearanceDialogState {
+    val darkMode: DarkMode
+    fun onDarkModeChange(darkMode: DarkMode)
+}
 
 @Composable
-internal fun AppearanceDialog(
+internal fun rememberAppearanceDialogState(
+    scope: CoroutineScope = rememberCoroutineScope(),
+    viewModel: DisplaySettingsViewModel = hiltViewModel(),
+): AppearanceDialogState = remember {
+    AppearanceDialogStateImpl(
+        scope = scope,
+        displaySettingsUseCase = viewModel.displaySettingsUseCase
+    )
+}
+
+private class AppearanceDialogStateImpl(
+    private val scope: CoroutineScope,
+    private val displaySettingsUseCase: ManageDisplaySettingsUseCase,
+) : AppearanceDialogState {
+
+    override var darkMode by mutableStateOf(DarkMode.DEVICE)
+        private set
+
+    init {
+        displaySettingsUseCase.settings.onEach {
+            darkMode = it.darkMode
+        }.launchIn(scope)
+    }
+
+    override fun onDarkModeChange(darkMode: DarkMode) {
+        scope.launch {
+            displaySettingsUseCase.edit {
+                it.copy(darkMode = darkMode)
+            }
+        }
+    }
+}
+
+@Destination<DisplaySettingsNavGraph>(
+    style = DestinationStyle.Dialog::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
+@Composable
+internal fun AppearanceDialog() {
+    val state: AppearanceDialogState = rememberAppearanceDialogState()
+    AppearanceDialog(
+        onDismissRequest = {},
+        currentDarkMode = state.darkMode,
+        onDarkModeChange = state::onDarkModeChange
+    )
+}
+
+@Composable
+private fun AppearanceDialog(
     onDismissRequest: () -> Unit,
     currentDarkMode: DarkMode?,
     onDarkModeChange: (DarkMode) -> Unit,
@@ -53,16 +119,3 @@ internal fun AppearanceDialog(
         }
     }
 }
-
-class AppearanceDialogController : DialogController<DarkMode>(DarkMode.DEVICE)
-
-@Composable
-fun rememberAppearanceDialogController() = rememberSaveable(
-    saver = Saver(save = {
-        if (it.isShow) it.value else null
-    }, restore = {
-        AppearanceDialogController().apply {
-            show(it)
-        }
-    })
-) { AppearanceDialogController() }
