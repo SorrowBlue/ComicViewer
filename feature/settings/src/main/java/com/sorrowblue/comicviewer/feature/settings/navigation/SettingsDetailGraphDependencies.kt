@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.feature.settings.Settings2
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
+import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsGraphDependencies
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsGraphDependencies
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsGraphDependencies
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
@@ -49,6 +50,11 @@ internal fun DependenciesContainerBuilder<*>.SettingsDetailGraphDependencies(
     }
 
     FolderSettingsGraphDependencies(
+        navigateBack = {
+            scope.launch { scaffoldNavigator.navigateBack() }
+        }
+    )
+    DisplaySettingsGraphDependencies(
         navigateBack = {
             scope.launch { scaffoldNavigator.navigateBack() }
         }

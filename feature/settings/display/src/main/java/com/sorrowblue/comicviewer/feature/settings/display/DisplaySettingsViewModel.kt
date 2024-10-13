@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class DisplaySettingsViewModel @Inject constructor(
-    private val displaySettingsUseCase: ManageDisplaySettingsUseCase,
+    val displaySettingsUseCase: ManageDisplaySettingsUseCase,
 ) : ViewModel() {
 
     val displaySettings = displaySettingsUseCase.settings

@@ -21,7 +21,7 @@ import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.ramcosta.composedestinations.spec.Direction
 import com.sorrowblue.comicviewer.feature.settings.destinations.ImageCacheScreenDestination
 import com.sorrowblue.comicviewer.feature.settings.destinations.InAppLanguagePickerScreenDestination
-import com.sorrowblue.comicviewer.feature.settings.display.destinations.DisplaySettingsScreenDestination
+import com.sorrowblue.comicviewer.feature.settings.display.navgraphs.DisplaySettingsGraph
 import com.sorrowblue.comicviewer.feature.settings.folder.navgraphs.FolderSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.info.navgraphs.AppInfoSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navgraphs.SettingsDetailNavGraph
@@ -109,7 +109,7 @@ enum class Settings2(
     DISPLAY(
         R.string.settings_label_display,
         ComicIcons.DisplaySettings,
-        DisplaySettingsScreenDestination
+        DisplaySettingsGraph
     ),
     FOLDER(
         R.string.settings_label_folder,

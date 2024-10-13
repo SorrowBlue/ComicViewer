@@ -13,7 +13,6 @@ sealed interface Resource<out D, out E> {
     class SystemError(val throwable: Throwable) : IError
 }
 
-
 val Resource<*, *>.isSuccess
     get() = when (this) {
         is Resource.Error -> false

@@ -24,12 +24,14 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview(
     name = "Unfolded Foldable",
     showBackground = true,
-    apiLevel = 34, device = "spec:width=673dp,height=841dp"
+    apiLevel = 34,
+    device = "spec:width=673dp,height=841dp"
 )
 @Preview(name = "Tablet", device = "id:pixel_tablet", showBackground = true, apiLevel = 34)
 @Preview(
     name = "Desktop",
     showBackground = true,
-    apiLevel = 34, device = "id:desktop_medium"
+    apiLevel = 34,
+    device = "id:desktop_medium"
 )
 annotation class PreviewMultiScreen

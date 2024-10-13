@@ -32,6 +32,15 @@ import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/**
+ * Calculate lower info pane scaffold directive
+ *
+ * @param windowAdaptiveInfo
+ * @param verticalHingePolicy
+ * @return PaneScaffoldDirective
+ * @see
+ *    [androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective]
+ */
 fun calculateLowerInfoPaneScaffoldDirective(
     windowAdaptiveInfo: WindowAdaptiveInfo,
     verticalHingePolicy: HingePolicy = HingePolicy.AvoidSeparating,
@@ -46,12 +55,11 @@ fun calculateLowerInfoPaneScaffoldDirective(
 
         WindowWidthSizeClass.MEDIUM -> {
             maxHorizontalPartitions = 2
-            horizontalPartitionSpacerSize = 24.dp
+            horizontalPartitionSpacerSize = 0.dp
         }
-
         else -> {
             maxHorizontalPartitions = 2
-            horizontalPartitionSpacerSize = 24.dp
+            horizontalPartitionSpacerSize = 0.dp
         }
     }
     val maxVerticalPartitions: Int
@@ -75,7 +83,10 @@ fun calculateLowerInfoPaneScaffoldDirective(
         maxVerticalPartitions,
         verticalPartitionSpacerSize,
         defaultPanePreferredWidth,
-        getExcludedVerticalBounds(windowAdaptiveInfo.windowPosture, verticalHingePolicy)
+        getExcludedVerticalBounds(
+            windowAdaptiveInfo.windowPosture,
+            verticalHingePolicy
+        )
     )
 }
 
