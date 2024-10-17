@@ -25,6 +25,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -85,6 +86,7 @@ fun CustomSlider(
     },
     steps: Int = 0,
 ) {
+    val thumbContent = remember { movableContentOf { thumb(value) } }
     val itemCount = (valueRange.endInclusive - valueRange.start).roundToInt()
     Box(modifier = modifier) {
         Layout(
@@ -104,7 +106,7 @@ fun CustomSlider(
                 }
 
                 Box(modifier = Modifier.layoutId(CustomSliderComponents.THUMB)) {
-                    thumb(value)
+                    thumbContent()
                 }
 
                 Slider(
@@ -118,9 +120,7 @@ fun CustomSlider(
                     onValueChangeFinished = onValueChangeFinish,
                     colors = colors.toOriginal(),
                     steps = steps,
-                    thumb = {
-                        thumb(value)
-                    },
+                    thumb = { thumbContent() },
                     track = { track(it) }
                 )
 
