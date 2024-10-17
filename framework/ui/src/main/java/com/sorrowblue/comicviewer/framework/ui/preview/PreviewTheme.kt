@@ -6,6 +6,8 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -73,6 +75,7 @@ fun PreviewTheme2(
     template: EdgeToEdgeTemplate = EdgeToEdgeTemplate(),
     content: @Composable () -> Unit,
 ) {
+    val contentContent = remember { movableContentOf(content) }
     Box(
         modifier = modifier,
     ) {
@@ -96,7 +99,7 @@ fun PreviewTheme2(
                         },
                         navigationState = navigationState
                     ) {
-                        content()
+                        contentContent()
                     }
                 }
             }
