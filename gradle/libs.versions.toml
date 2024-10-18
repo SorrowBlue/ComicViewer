@@ -153,7 +153,7 @@ google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compil
 box-java-sdk = { group = "com.box", name = "box-java-sdk", version = "4.11.1" }
 
 microsoft-identity-client-msal = { group = "com.microsoft.identity.client", name = "msal", version = "5.7.0" }
-microsoft-graph = { group = "com.microsoft.graph", name = "microsoft-graph", version = "6.18.0" }
+microsoft-graph = { group = "com.microsoft.graph", name = "microsoft-graph", version = "6.19.0" }
 
 # Test libraries
 androidx-compose-ui-testJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
