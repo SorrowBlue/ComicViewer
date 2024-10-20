@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.display.section
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
@@ -70,6 +72,11 @@ private class AppearanceDialogStateImpl(
             displaySettingsUseCase.edit {
                 it.copy(darkMode = darkMode)
             }
+            when (darkMode) {
+                DarkMode.DEVICE -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                DarkMode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
+                DarkMode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+            }.let(AppCompatDelegate::setDefaultNightMode)
         }
     }
 }
@@ -79,12 +86,15 @@ private class AppearanceDialogStateImpl(
     visibility = CodeGenVisibility.INTERNAL
 )
 @Composable
-internal fun AppearanceDialog() {
+internal fun AppearanceDialog(destinationsNavigator: DestinationsNavigator) {
     val state: AppearanceDialogState = rememberAppearanceDialogState()
     AppearanceDialog(
-        onDismissRequest = {},
+        onDismissRequest = { destinationsNavigator.popBackStack() },
         currentDarkMode = state.darkMode,
-        onDarkModeChange = state::onDarkModeChange
+        onDarkModeChange = {
+            state.onDarkModeChange(it)
+            destinationsNavigator.popBackStack()
+        }
     )
 }
 
