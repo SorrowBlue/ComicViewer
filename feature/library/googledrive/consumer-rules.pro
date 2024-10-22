@@ -2,11 +2,6 @@
   @com.google.api.client.util.Key <fields>;
 }
 
--keep class com.google.api.services.drive.** {
-  *;
-}
-
--if class androidx.credentials.CredentialManager
--keep class androidx.credentials.playservices.** {
-  *;
+-keep class * extends com.google.api.client.json.GenericJson {
+  <init>();
 }

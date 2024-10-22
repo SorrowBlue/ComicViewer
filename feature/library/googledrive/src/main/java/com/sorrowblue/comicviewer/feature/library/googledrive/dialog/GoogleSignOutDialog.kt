@@ -1,10 +1,11 @@
-package com.sorrowblue.comicviewer.feature.library.googledrive.section
+package com.sorrowblue.comicviewer.feature.library.googledrive.dialog
 
-import android.os.Parcelable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,51 +19,52 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.sorrowblue.comicviewer.feature.library.googledrive.R
+import com.sorrowblue.comicviewer.feature.library.googledrive.navigation.GoogleDriveGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.nextLoremIpsum
 import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
-import kotlinx.parcelize.Parcelize
 
-internal sealed interface GoogleAccountDialogUiState : Parcelable {
+internal data class GoogleSignOutDialogUiState(
+    val photoUrl: String = "",
+    val name: String = "",
+)
 
-    @Parcelize
-    data object Hide : GoogleAccountDialogUiState
-
-    @Parcelize
-    data class Show(
-        val photoUrl: String = "",
-        val name: String = "",
-    ) : GoogleAccountDialogUiState
-}
-
+@Destination<GoogleDriveGraph>(
+    style = DestinationStyle.Dialog::class,
+    visibility = CodeGenVisibility.INTERNAL
+)
 @Composable
-internal fun GoogleAccountDialog(
-    uiState: GoogleAccountDialogUiState,
-    onDismissRequest: () -> Unit,
-    onLogoutClick: () -> Unit,
+internal fun GoogleSignOutDialog(
+    destinationsNavigator: DestinationsNavigator,
+    state: GoogleSignOutDialogState = rememberGoogleSignOutDialogState(),
 ) {
-    when (uiState) {
-        GoogleAccountDialogUiState.Hide -> Unit
-        is GoogleAccountDialogUiState.Show ->
-            GoogleAccountDialog(
-                uiState = uiState,
-                onDismissRequest = onDismissRequest,
-                onLogoutClick = onLogoutClick,
-            )
-    }
+    GoogleSignOutDialog(
+        uiState = state.uiState,
+        onDismissRequest = destinationsNavigator::popBackStack,
+        onSignOutClick = {
+            state.onSignOutClick {
+                destinationsNavigator.popBackStack()
+            }
+        }
+    )
 }
 
 @Composable
-private fun GoogleAccountDialog(
-    uiState: GoogleAccountDialogUiState.Show = GoogleAccountDialogUiState.Show(),
-    onDismissRequest: () -> Unit = {},
-    onLogoutClick: () -> Unit = {},
+private fun GoogleSignOutDialog(
+    uiState: GoogleSignOutDialogUiState,
+    onDismissRequest: () -> Unit,
+    onSignOutClick: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            TextButton(onClick = onLogoutClick) {
+            TextButton(onClick = onSignOutClick) {
                 Icon(imageVector = ComicIcons.Logout, contentDescription = null)
                 Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
                 Text(text = stringResource(R.string.googledrive_action_logout))
@@ -72,10 +74,11 @@ private fun GoogleAccountDialog(
             AsyncImage(
                 model = uiState.photoUrl,
                 contentDescription = null,
-                placeholder = previewPlaceholder(),
+                error = previewPlaceholder(),
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
+                    .background(AlertDialogDefaults.iconContentColor)
             )
         },
         title = {
@@ -89,10 +92,14 @@ private fun GoogleAccountDialog(
 
 @Preview
 @Composable
-private fun PreviewGoogleAccountDialog() {
+private fun PreviewGoogleSignOutDialog() {
     ComicTheme {
         Surface {
-            GoogleAccountDialog()
+            GoogleSignOutDialog(
+                uiState = GoogleSignOutDialogUiState("aaaaaa", nextLoremIpsum()),
+                onDismissRequest = {},
+                onSignOutClick = {}
+            )
         }
     }
 }

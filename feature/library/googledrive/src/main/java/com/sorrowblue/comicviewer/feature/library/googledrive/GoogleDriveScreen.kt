@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.feature.library.googledrive
 
 import android.os.Parcelable
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,37 +22,35 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.googledrive.component.FileListItem
 import com.sorrowblue.comicviewer.feature.library.googledrive.component.GoogleDriveTopAppBar
-import com.sorrowblue.comicviewer.feature.library.googledrive.data.googleAuthModule
-import com.sorrowblue.comicviewer.feature.library.googledrive.data.googleDriveModule
 import com.sorrowblue.comicviewer.feature.library.googledrive.navigation.GoogleDriveGraph
-import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialog
-import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialogUiState
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import kotlinx.parcelize.Parcelize
-import org.koin.core.context.loadKoinModules
 
-interface GoogleDriveScreenNavigator {
+internal interface GoogleDriveScreenNavigator {
     fun navigateUp()
+    fun navigateToProfile()
     fun onFolderClick(folder: Folder)
-    fun requireAuthentication()
 }
 
 data class GoogleDriveArgs(val path: String = "root")
 
-@Destination<GoogleDriveGraph>(start = true, navArgs = GoogleDriveArgs::class)
+@Destination<GoogleDriveGraph>(
+    start = true,
+    navArgs = GoogleDriveArgs::class,
+    wrappers = [GoogleDriveScreenWrapper::class]
+)
 @Composable
 internal fun GoogleDriveScreen(
     args: GoogleDriveArgs,
     navBackStackEntry: NavBackStackEntry,
     navigator: GoogleDriveScreenNavigator,
 ) {
-    loadKoinModules(listOf(googleAuthModule, googleDriveModule))
     GoogleDriveScreen(
         args = args,
         savedStateHandle = navBackStackEntry.savedStateHandle,
         onBackClick = navigator::navigateUp,
+        onProfileImageClick = navigator::navigateToProfile,
         onFolderClick = navigator::onFolderClick,
-        requireAuthentication = navigator::requireAuthentication
     )
 }
 
@@ -63,33 +59,15 @@ private fun GoogleDriveScreen(
     args: GoogleDriveArgs,
     savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
+    onProfileImageClick: () -> Unit,
     onFolderClick: (Folder) -> Unit,
-    requireAuthentication: () -> Unit,
     state: GoogleDriveScreenState = rememberGoogleDriveScreenState(args = args, savedStateHandle),
 ) {
-    state.events.forEach { event ->
-        when (event) {
-            GoogleDriveScreenEvent.RequireAuthentication -> {
-                state.consumeEvent(event)
-                requireAuthentication()
-            }
-        }
-    }
-
-    val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
-    val uiState = state.uiState
-    val createFileRequest =
-        rememberLauncherForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-            state::onResult
-        )
     GoogleDriveScreen(
-        uiState = uiState,
-        lazyPagingItems = lazyPagingItems,
-        onProfileImageClick = state::onProfileImageClick,
-        onFileClick = { file -> state.onFileClick(file, createFileRequest, onFolderClick) },
-        onDialogDismissRequest = state::onDialogDismissRequest,
-        onLogoutClick = state::onLogoutClick,
+        uiState = state.uiState,
+        lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
+        onProfileImageClick = onProfileImageClick,
+        onFileClick = { file -> state.onFileClick(file, onFolderClick) },
         onBackClick = onBackClick,
     )
 }
@@ -97,18 +75,15 @@ private fun GoogleDriveScreen(
 @Parcelize
 internal data class GoogleDriveScreenUiState(
     val profileUri: String = "",
-    val googleAccountDialogUiState: GoogleAccountDialogUiState = GoogleAccountDialogUiState.Hide,
 ) : Parcelable
 
 @Composable
-internal fun GoogleDriveScreen(
+private fun GoogleDriveScreen(
     uiState: GoogleDriveScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onBackClick: () -> Unit,
     onProfileImageClick: () -> Unit,
     onFileClick: (File) -> Unit,
-    onDialogDismissRequest: () -> Unit,
-    onLogoutClick: () -> Unit,
     lazyListState: LazyListState = rememberLazyListState(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
@@ -139,9 +114,4 @@ internal fun GoogleDriveScreen(
             }
         }
     }
-    GoogleAccountDialog(
-        uiState.googleAccountDialogUiState,
-        onDismissRequest = onDialogDismissRequest,
-        onLogoutClick = onLogoutClick,
-    )
 }

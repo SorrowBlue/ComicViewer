@@ -2,8 +2,6 @@
 <resources>
     <string name="googledrive_action_login">Login</string>
     <string name="googledrive_action_logout">Logout</string>
-    <string name="googledrive_desc_notify_download_status">Notify download status</string>
     <string name="googledrive_msg_downloading_background">Downloading in the background</string>
     <string name="googledrive_msg_one_file_downloaded">1 file downloaded.</string>
-    <string name="googledrive_name_download_status">Download status</string>
 </resources>

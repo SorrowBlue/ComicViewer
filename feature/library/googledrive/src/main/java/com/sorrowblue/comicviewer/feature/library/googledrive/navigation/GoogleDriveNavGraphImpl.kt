@@ -1,15 +1,10 @@
 package com.sorrowblue.comicviewer.feature.library.googledrive.navigation
 
 import androidx.compose.runtime.Composable
-import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
-import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.sorrowblue.comicviewer.feature.library.googledrive.GoogleDriveArgs
 import com.sorrowblue.comicviewer.feature.library.googledrive.NavGraphs
 import com.sorrowblue.comicviewer.feature.library.serviceloader.GoogleDriveNavGraph
-
-@NavGraph<ExternalModuleGraph>
-internal annotation class GoogleDriveGraph
 
 internal object GoogleDriveNavGraphImpl : GoogleDriveNavGraph {
 
