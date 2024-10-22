@@ -8,6 +8,7 @@ import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
 import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.automirrored.rounded.ViewList
 import androidx.compose.material.icons.automirrored.rounded.VolumeUp
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.ArrowDropDown
@@ -53,6 +54,7 @@ import androidx.compose.material.icons.rounded.Storage
 import androidx.compose.material.icons.rounded.WatchLater
 
 object ComicIcons {
+    val AccountCircle = Icons.Rounded.AccountCircle
     val FolderOff = Icons.Rounded.FolderOff
     val Logout = Icons.AutoMirrored.Rounded.Logout
     val LibraryBooks = Icons.AutoMirrored.Rounded.LibraryBooks

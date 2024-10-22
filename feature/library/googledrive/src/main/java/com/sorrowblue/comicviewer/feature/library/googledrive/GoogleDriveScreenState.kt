@@ -4,24 +4,20 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.autoSaver
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.app.NotificationChannelCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequestBuilder
@@ -31,19 +27,25 @@ import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.library.googledrive.data.AuthStatus
 import com.sorrowblue.comicviewer.feature.library.googledrive.data.DriveDownloadWorker
-import com.sorrowblue.comicviewer.feature.library.googledrive.data.GoogleAuthorizationRepository
 import com.sorrowblue.comicviewer.feature.library.googledrive.data.GoogleDriveApiRepository
-import com.sorrowblue.comicviewer.feature.library.googledrive.section.GoogleAccountDialogUiState
-import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
+
+internal interface GoogleDriveScreenState {
+    val uiState: GoogleDriveScreenUiState
+    val pagingDataFlow: Flow<PagingData<File>>
+    fun onFileClick(
+        file: File,
+        onFileClick: (Folder) -> Unit,
+    )
+}
 
 @Composable
 internal fun rememberGoogleDriveScreenState(
@@ -52,53 +54,71 @@ internal fun rememberGoogleDriveScreenState(
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
     repository: GoogleDriveApiRepository = koinInject(),
-    authRepository: GoogleAuthorizationRepository = koinInject(),
-) = remember {
-    GoogleDriveScreenState(
-        args = args,
-        savedStateHandle = savedStateHandle,
-        context = context,
-        scope = scope,
-        repository = repository,
-        authRepository = authRepository
+): GoogleDriveScreenState {
+    val stateImpl = remember {
+        GoogleDriveScreenStateImpl(
+            args = args,
+            context = context,
+            savedStateHandle = savedStateHandle,
+            scope = scope,
+            repository = repository,
+        )
+    }
+    stateImpl.resultLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+        stateImpl::onResult
     )
-}
-
-sealed interface GoogleDriveScreenEvent {
-
-    data object RequireAuthentication : GoogleDriveScreenEvent
+    return stateImpl
 }
 
 @OptIn(SavedStateHandleSaveableApi::class)
-@Stable
-internal class GoogleDriveScreenState(
+private class GoogleDriveScreenStateImpl(
     args: GoogleDriveArgs,
-    savedStateHandle: SavedStateHandle,
     context: Context,
-    private val scope: CoroutineScope,
+    savedStateHandle: SavedStateHandle,
+    scope: CoroutineScope,
     private val repository: GoogleDriveApiRepository,
-    private val authRepository: GoogleAuthorizationRepository,
-) : KoinComponent {
+) : GoogleDriveScreenState, KoinComponent {
 
-    private val path = args.path
+    private val workManager = WorkManager.getInstance(context)
+    private var book by savedStateHandle.saveable { mutableStateOf<Book?>(null) }
+    lateinit var resultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
 
-    var uiState by savedStateHandle.saveable { mutableStateOf(GoogleDriveScreenUiState()) }
+    override var uiState by savedStateHandle.saveable { mutableStateOf(GoogleDriveScreenUiState()) }
         private set
 
-    private var book: Book? by savedStateHandle.saveable(
-        key = "book",
-        stateSaver = autoSaver()
-    ) { mutableStateOf(null) }
+    override val pagingDataFlow =
+        Pager(PagingConfig(20)) {
+            GoogleDrivePagingSource(args.path, repository)
+        }.flow.cachedIn(scope)
 
-    var events = mutableStateListOf<GoogleDriveScreenEvent>()
-        private set
-
-    fun consumeEvent(event: GoogleDriveScreenEvent) {
-        events.remove(event)
+    init {
+        repository.profile.filterNotNull().onEach {
+            uiState = uiState.copy(profileUri = it.photos.firstOrNull()?.url.orEmpty())
+        }.launchIn(scope)
+        scope.launch {
+            repository.fetchProfile()
+        }
     }
 
-    val pagingDataFlow =
-        Pager(PagingConfig(20)) { GoogleDrivePagingSource(path, repository) }.flow.cachedIn(scope)
+    override fun onFileClick(
+        file: File,
+        onFileClick: (Folder) -> Unit,
+    ) {
+        when (file) {
+            is Book -> {
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    putExtra(Intent.EXTRA_TITLE, file.name)
+                    type = "*/*"
+                }
+                book = file
+                resultLauncher.launch(intent)
+            }
+
+            is Folder -> onFileClick(file)
+        }
+    }
 
     fun onResult(activityResult: ActivityResult) {
         if (activityResult.resultCode == Activity.RESULT_OK && activityResult.data?.data != null) {
@@ -106,23 +126,6 @@ internal class GoogleDriveScreenState(
         }
     }
 
-    init {
-        authRepository.state.filter { it == AuthStatus.Uncertified }.onEach {
-            events += GoogleDriveScreenEvent.RequireAuthentication
-        }.launchIn(scope)
-
-        val notificationManager = NotificationManagerCompat.from(context)
-        val name = context.getString(R.string.googledrive_name_download_status)
-        val descriptionText = context.getString(R.string.googledrive_desc_notify_download_status)
-        val channel = NotificationChannelCompat.Builder(
-            ChannelID.DOWNLOAD.id,
-            NotificationManagerCompat.IMPORTANCE_LOW
-        ).setName(name).setDescription(descriptionText)
-            .build()
-        notificationManager.createNotificationChannel(channel)
-    }
-
-    private val workManager = WorkManager.getInstance(context)
     private fun enqueueDownload(outputUri: String, file: File) {
         val request = OneTimeWorkRequestBuilder<DriveDownloadWorker>()
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
@@ -130,48 +133,5 @@ internal class GoogleDriveScreenState(
             .setConstraints(Constraints.Builder().setRequiresStorageNotLow(true).build())
             .build()
         workManager.enqueue(request)
-    }
-
-    fun onProfileImageClick() {
-        scope.launch {
-            repository.profile()?.let {
-                uiState = uiState.copy(
-                    googleAccountDialogUiState = GoogleAccountDialogUiState.Show(
-                        photoUrl = it.photos.firstOrNull()?.url.orEmpty(),
-                        name = it.names.firstOrNull()?.displayName.orEmpty()
-                    )
-                )
-            }
-        }
-    }
-
-    fun onDialogDismissRequest() {
-        uiState = uiState.copy(googleAccountDialogUiState = GoogleAccountDialogUiState.Hide)
-    }
-
-    fun onFileClick(
-        file: File,
-        createFileRequest: ManagedActivityResultLauncher<Intent, ActivityResult>,
-        onFileClick: (Folder) -> Unit,
-    ) {
-        when (file) {
-            is Book -> {
-                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                intent.putExtra(Intent.EXTRA_TITLE, file.name)
-                intent.type = "*/*"
-                this.book = file
-                createFileRequest.launch(intent)
-            }
-
-            is Folder -> onFileClick(file)
-        }
-    }
-
-    fun onLogoutClick() {
-        scope.launch {
-            authRepository.signout()
-            onDialogDismissRequest()
-        }
     }
 }

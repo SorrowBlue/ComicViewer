@@ -4,10 +4,14 @@ import com.google.api.client.googleapis.media.MediaHttpDownloader
 import com.google.api.services.drive.model.FileList
 import com.google.api.services.people.v1.model.Person
 import java.io.OutputStream
+import kotlinx.coroutines.flow.StateFlow
 
 interface GoogleDriveApiRepository {
 
-    suspend fun profile(): Person?
+    val profile: StateFlow<Person?>
+
+    suspend fun fetchProfile()
+
     suspend fun fileList(
         parent: String = "root",
         loadSize: Int = 10,

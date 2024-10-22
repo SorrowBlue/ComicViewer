@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.comicviewer.android.library)
     alias(libs.plugins.comicviewer.android.compose)
+    alias(libs.plugins.comicviewer.koin)
     alias(libs.plugins.kotlin.parcelize)
 }
 

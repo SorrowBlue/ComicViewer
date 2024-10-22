@@ -14,17 +14,12 @@ import com.google.api.services.people.v1.model.Person
 import java.io.OutputStream
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
-import logcat.logcat
 import org.koin.dsl.module
 
 internal val googleDriveModule = module {
     single<GoogleDriveApiRepository> { GoogleDriveApiRepositoryImpl(get(), get()) }
-}
-
-enum class AuthStatus {
-    Uncertified,
-    Authenticated,
 }
 
 internal class GoogleDriveApiRepositoryImpl(
@@ -36,19 +31,13 @@ internal class GoogleDriveApiRepositoryImpl(
     private val scopes = listOf(Scope(DriveScopes.DRIVE_READONLY))
 
     private fun driveService(credential: Credential) =
-        Drive.Builder(
-            NetHttpTransport(),
-            GsonFactory.getDefaultInstance(),
-            credential
-        )
+        Drive.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance(), credential)
             .setApplicationName(context.getString(com.sorrowblue.comicviewer.framework.ui.R.string.app_name))
             .build()
 
-    override suspend fun fileList(
-        parent: String,
-        loadSize: Int,
-        pageToken: String?,
-    ): FileList? {
+    override val profile = MutableStateFlow<Person?>(null)
+
+    override suspend fun fileList(parent: String, loadSize: Int, pageToken: String?): FileList? {
         return authRepository.request(
             scopes = scopes,
             authenticated = {
@@ -70,11 +59,11 @@ internal class GoogleDriveApiRepositoryImpl(
     }
 
     override suspend fun fileName(fileId: String): String? {
-        return authRepository.request(scopes, authenticated = {
-            driveService(it).files().get(fileId).execute().name
-        }, unauthorized = {
-            null
-        })
+        return authRepository.request(
+            scopes,
+            authenticated = { driveService(it).files().get(fileId).execute().name },
+            unauthorized = { null }
+        )
     }
 
     override suspend fun download(
@@ -82,19 +71,22 @@ internal class GoogleDriveApiRepositoryImpl(
         output: OutputStream,
         progressChanged: (MediaHttpDownloader) -> Unit,
     ) {
-        authRepository.request(scopes, authenticated = {
-            driveService(it).files().get(fileId).apply {
-                mediaHttpDownloader.isDirectDownloadEnabled = false
-                mediaHttpDownloader.chunkSize = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE
-                mediaHttpDownloader.setProgressListener(progressChanged)
-                executeMediaAndDownloadTo(output)
-            }
-        }, unauthorized = {})
+        authRepository.request(
+            scopes,
+            authenticated = {
+                driveService(it).files().get(fileId).apply {
+                    mediaHttpDownloader.isDirectDownloadEnabled = false
+                    mediaHttpDownloader.chunkSize = MediaHttpDownloader.MAXIMUM_CHUNK_SIZE
+                    mediaHttpDownloader.setProgressListener(progressChanged)
+                    executeMediaAndDownloadTo(output)
+                }
+            },
+            unauthorized = {}
+        )
     }
 
-    override suspend fun profile(): Person? {
-        logcat { "profile" }
-        return authRepository.request(
+    override suspend fun fetchProfile() {
+        authRepository.request(
             scopes = scopes,
             authenticated = {
                 withContext(dispatcher) {
@@ -112,6 +104,8 @@ internal class GoogleDriveApiRepositoryImpl(
             unauthorized = {
                 null
             }
-        )
+        ).let {
+            profile.value = it
+        }
     }
 }
