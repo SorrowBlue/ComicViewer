@@ -32,7 +32,7 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
-class BillingClientWrapper(
+internal class BillingClientWrapper(
     context: Context,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : PurchasesUpdatedListener {
@@ -86,16 +86,15 @@ class BillingClientWrapper(
     }
 
     /** 請求接続の再試行ロジック。これは単純な最大再試行パターンです */
-    private fun retryBillingServiceConnection() {
+    fun retryBillingServiceConnection() {
         val maxTries = 3
         var tries = 1
         var isConnectionEstablished = false
         do {
             try {
                 billingClient.startConnection(object : BillingClientStateListener {
-                    override fun onBillingServiceDisconnected() {
-//                        TODO("Not yet implemented")
-                    }
+
+                    override fun onBillingServiceDisconnected() = Unit
 
                     override fun onBillingSetupFinished(billingResult: BillingResult) {
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {

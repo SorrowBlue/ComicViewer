@@ -2,41 +2,6 @@
 <issues name="AGP (8.6.0)" by="lint 8.6.0" client="gradle" dependencies="true" format="6"
     type="baseline" variant="all" version="8.6.0">
 
-    <issue id="InvalidPackage"
-        message="Invalid package reference in library; not included in Android: `javax.naming.directory`. Referenced from `org.bouncycastle.jce.provider.CrlCache`.">
-        <location file="bcprov-jdk18on-1.78.1.jar" />
-    </issue>
-
-    <issue id="InvalidPackage"
-        message="Invalid package reference in library; not included in Android: `javax.naming`. Referenced from `org.bouncycastle.jce.provider.X509LDAPCertStoreSpi`.">
-        <location file="bcprov-jdk18on-1.78.1.jar" />
-    </issue>
-
-    <issue id="InvalidPackage"
-        message="Invalid package reference in library; not included in Android: `javax.security.auth.kerberos`. Referenced from `jcifs.pac.PacMac`.">
-        <location file="jcifs-ng-2.1.10.jar" />
-    </issue>
-
-    <issue id="InvalidPackage"
-        message="Invalid package reference in library; not included in Android: `javax.servlet.http`. Referenced from `jcifs.http.NetworkExplorer`.">
-        <location file="jcifs-ng-2.1.10.jar" />
-    </issue>
-
-    <issue id="InvalidPackage"
-        message="Invalid package reference in library; not included in Android: `javax.servlet`. Referenced from `jcifs.http.NetworkExplorer`.">
-        <location file="jcifs-ng-2.1.10.jar" />
-    </issue>
-
-    <issue id="InvalidPackage"
-        message="Invalid package reference in io.ktor:ktor-utils-jvm; not included in Android: `java.lang.management`. Referenced from `io.ktor.util.debug.IntellijIdeaDebugDetector.isDebuggerConnected.2`.">
-        <location file="ktor-utils-jvm-3.0.0.jar" />
-    </issue>
-
-    <issue id="InvalidPackage"
-        message="Invalid package reference in library; not included in Android: java.lang.foreign. Referenced from com.fasterxml.jackson.core.internal.shaded.fdp.v2_18_0.FastDoubleSwar.">
-        <location file="jackson-core-2.18.0.jar" />
-    </issue>
-
     <issue errorLine1="                    android:host=&quot;comicviewer.sorrowblue.com&quot;"
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         id="AppLinksAutoVerify"

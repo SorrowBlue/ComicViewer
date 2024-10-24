@@ -13,7 +13,7 @@
     <string name="library_message_addon_installing">Installing add-on (%1$s)&#8230;</string>
     <string name="library_message_other_addon_installing">Installing other add-on. Please try again later.</string>
     <string name="library_message_restart_app">Please restart the app.</string>
-    <string name="library_need_install_extension">To use \"%1$s\", you need to install an extension.</string>
+    <string name="library_need_install_extension">To use “%1$s”, you need to install an extension.</string>
     <string name="library_title">Library</string>
     <string name="library_title_extensions">Extensions</string>
 </resources>

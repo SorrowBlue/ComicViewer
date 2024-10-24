@@ -107,6 +107,8 @@ android {
     lint {
         checkAllWarnings = true
         checkDependencies = true
+        enable += "WrongThreadInterprocedural"
+        disable += "InvalidPackage"
         htmlReport = true
         htmlOutput = file("$rootDir/build/reports/lint/lint-result.html")
         sarifReport = true

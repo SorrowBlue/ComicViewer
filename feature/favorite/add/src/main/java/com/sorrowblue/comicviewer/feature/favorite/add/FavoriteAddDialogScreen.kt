@@ -136,13 +136,12 @@ private fun FavoriteAddDialogScreen(
                         FavoriteItem(
                             favorite = item,
                             onClick = { onClick(item) },
-                            trailingContent = {
-                                if (item.exist) {
-                                    Icon(imageVector = ComicIcons.Check, contentDescription = null)
-                                }
-                            },
-                            color = ListItemDefaults.colors(containerColor = Color.Transparent),
-                        )
+                            color = ListItemDefaults.colors(containerColor = Color.Transparent)
+                        ) {
+                            if (item.exist) {
+                                Icon(imageVector = ComicIcons.Check, contentDescription = null)
+                            }
+                        }
                     }
                 }
             }

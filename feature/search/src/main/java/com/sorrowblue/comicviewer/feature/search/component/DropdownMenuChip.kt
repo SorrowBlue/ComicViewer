@@ -21,8 +21,8 @@ fun <T> DropdownMenuChip(
     text: String,
     onChangeSelect: (T) -> Unit,
     menus: List<T>,
-    menu: @Composable (T) -> String,
     modifier: Modifier = Modifier,
+    content: @Composable (T) -> Unit,
 ) {
     Box(modifier = modifier.wrapContentSize(Alignment.TopStart)) {
         var expanded by remember { mutableStateOf(false) }
@@ -43,7 +43,7 @@ fun <T> DropdownMenuChip(
         ) {
             menus.forEach {
                 DropdownMenuItem(
-                    text = { Text(text = menu(it)) },
+                    text = { content(it) },
                     onClick = {
                         onChangeSelect(it)
                         expanded = false

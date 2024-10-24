@@ -11,8 +11,6 @@
     <string name="bookshelf_edit_label_select_folder">フォルダ選択</string>
     <string name="bookshelf_edit_label_username_password">ユーザ名／パスワード</string>
     <string name="bookshelf_edit_msg_cancelled_folder_selection">フォルダの選択がキャンセルされました。</string>
-    <string name="bookshelf_edit_msg_could_not_load_bookshelf">本棚データが読み込めませんでした。</string>
-    <string name="bookshelf_edit_msg_input_error">入力内容を確認してください。</string>
     <string name="bookshelf_edit_smb_input_error_host">サーバー名またはIPアドレスを入力してください。</string>
     <string name="bookshelf_edit_smb_input_error_password">パスワードを入力してください。</string>
     <string name="bookshelf_edit_smb_input_error_port">0～65535の範囲で入力してください。</string>

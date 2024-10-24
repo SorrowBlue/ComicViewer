@@ -125,7 +125,7 @@ private class BookshelfInfoSheetStateImpl(
             BookshelfInfoSheetAction.Edit -> sendEvent(BookshelfInfoSheetStateEvent.Edit(uiState.bookshelf.id))
             BookshelfInfoSheetAction.Remove -> sendEvent(BookshelfInfoSheetStateEvent.Remove(uiState.bookshelf))
             BookshelfInfoSheetAction.Scan -> requestScan()
-            BookshelfInfoSheetAction.ThumbnailRegeneration -> TODO()
+            BookshelfInfoSheetAction.ThumbnailRegeneration -> Unit
         }
     }
 

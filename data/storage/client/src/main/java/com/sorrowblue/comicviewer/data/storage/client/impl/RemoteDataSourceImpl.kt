@@ -193,7 +193,7 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
                 }
 
                 is FileReaderException -> when (it) {
-                    FileReaderException.NotSupport -> TODO()
+                    FileReaderException.NotSupport -> RemoteException.NotFound
                 }
 
                 else -> it

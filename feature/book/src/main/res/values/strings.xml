@@ -16,7 +16,7 @@
     <string name="book_label_scale_inside">Fit to screen only</string>
     <string name="book_label_scale_none">Original size</string>
     <string name="book_text_could_not_open">Could not open</string>
-    <string name="book_text_could_not_open_name">Could not open \'%1$s\'</string>
+    <string name="book_text_could_not_open_name">Could not open “%1$s”</string>
     <string name="book_text_favorite_book">Favorite book</string>
     <string name="book_text_folder_book">Folder books</string>
     <string name="book_label_next_book">Next book</string>

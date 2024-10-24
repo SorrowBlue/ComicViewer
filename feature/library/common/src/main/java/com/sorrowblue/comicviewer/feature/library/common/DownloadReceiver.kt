@@ -15,7 +15,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.getSystemService
 import androidx.documentfile.provider.DocumentFile
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
-import com.sorrowblue.comicviewer.framework.designsystem.R as DesignsystemR
 
 internal class DownloadReceiver : BroadcastReceiver() {
 
@@ -25,13 +24,16 @@ internal class DownloadReceiver : BroadcastReceiver() {
             val file = context.getSystemService<DownloadManager>()!!.getUriForDownloadedFile(id)
             val fileName = DocumentFile.fromSingleUri(context, file)?.name
             val notification = Notification.Builder(context, ChannelID.DOWNLOAD.id)
-                .setSmallIcon(DesignsystemR.drawable.ic_notification)
+                .setSmallIcon(com.sorrowblue.comicviewer.framework.designsystem.R.drawable.ic_notification)
                 .setContentTitle("1個のファイルをダウンロードしました")
                 .setContentText(fileName)
                 .setAutoCancel(true)
                 .addAction(
                     Notification.Action.Builder(
-                        Icon.createWithResource(context, DesignsystemR.drawable.ic_open_in_new_24),
+                        Icon.createWithResource(
+                            context,
+                            com.sorrowblue.comicviewer.framework.designsystem.R.drawable.ic_open_in_new_24
+                        ),
                         "開く",
                         PendingIntent.getActivity(
                             context,

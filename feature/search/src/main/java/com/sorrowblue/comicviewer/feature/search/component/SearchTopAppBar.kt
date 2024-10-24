@@ -136,21 +136,24 @@ internal fun SearchTopAppBar(
                 DropdownMenuChip(
                     text = stringResource(uiState.searchCondition.range.displayText),
                     onChangeSelect = { onAction(SearchTopAppBarAction.RangeClick(it)) },
-                    menus = remember { SearchCondition.Range.entries },
-                    menu = { stringResource(it.displayText) }
-                )
+                    menus = remember { SearchCondition.Range.entries }
+                ) {
+                    Text(stringResource(it.displayText))
+                }
                 DropdownMenuChip(
                     text = stringResource(uiState.searchCondition.period.displayText),
                     onChangeSelect = { onAction(SearchTopAppBarAction.PeriodClick(it)) },
-                    menus = remember { SearchCondition.Period.entries },
-                    menu = { stringResource(it.displayText) }
-                )
+                    menus = remember { SearchCondition.Period.entries }
+                ) {
+                    Text(stringResource(it.displayText))
+                }
                 DropdownMenuChip(
                     text = stringResource(uiState.searchCondition.sortType.displayText),
                     onChangeSelect = { onAction(SearchTopAppBarAction.SortTypeClick(it)) },
-                    menus = remember { SortType.entries },
-                    menu = { stringResource(it.displayText) }
-                )
+                    menus = remember { SortType.entries }
+                ) {
+                    Text(stringResource(it.displayText))
+                }
                 FilterChip(
                     selected = uiState.searchCondition.showHidden,
                     onClick = { onAction(SearchTopAppBarAction.ShowHiddenClick(!uiState.searchCondition.showHidden)) },

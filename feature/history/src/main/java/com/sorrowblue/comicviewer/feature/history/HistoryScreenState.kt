@@ -79,8 +79,7 @@ private class HistoryScreenStateImpl(
                 sendEvent(HistoryScreenEvent.Favorite(it))
             }
 
-            is FileInfoSheetNavigator.OpenFolder ->
-                TODO("Not yet implemented")
+            is FileInfoSheetNavigator.OpenFolder -> Unit
         }
     }
 

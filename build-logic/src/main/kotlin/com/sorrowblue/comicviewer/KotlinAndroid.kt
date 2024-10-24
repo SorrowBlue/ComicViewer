@@ -32,7 +32,15 @@ internal fun Project.configureKotlinAndroid(
         }
 
         lint {
+            checkAllWarnings = true
+            checkDependencies = true
+            enable += "WrongThreadInterprocedural"
+            disable += "InvalidPackage"
             baseline = file("lint-baseline.xml")
+            htmlReport = true
+            sarifReport = true
+            textReport = false
+            xmlReport = false
         }
 
         buildTypes {

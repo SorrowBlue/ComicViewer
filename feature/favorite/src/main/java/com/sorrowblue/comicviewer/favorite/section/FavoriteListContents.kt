@@ -42,7 +42,9 @@ internal fun FavoriteListContents(
         EmptyContent(
             imageVector = ComicIcons.UndrawNoData,
             text = stringResource(id = R.string.favorite_list_label_no_favorites),
-            modifier = modifier.fillMaxSize().padding(contentPadding)
+            modifier = modifier
+                .fillMaxSize()
+                .padding(contentPadding)
         )
     } else {
         LazyColumn(
@@ -57,13 +59,12 @@ internal fun FavoriteListContents(
                 lazyPagingItems[index]?.let {
                     FavoriteItem(
                         favorite = it,
-                        onClick = { onAction(FavoriteListContentsAction.FavoriteClick(it.id)) },
-                        trailingContent = {
-                            IconButton(onClick = { onAction(FavoriteListContentsAction.EditClick(it.id)) }) {
-                                Icon(imageVector = ComicIcons.Edit, contentDescription = null)
-                            }
+                        onClick = { onAction(FavoriteListContentsAction.FavoriteClick(it.id)) }
+                    ) {
+                        IconButton(onClick = { onAction(FavoriteListContentsAction.EditClick(it.id)) }) {
+                            Icon(imageVector = ComicIcons.Edit, contentDescription = null)
                         }
-                    )
+                    }
                 }
             }
         }

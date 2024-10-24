@@ -11,8 +11,6 @@
     <string name="bookshelf_edit_label_select_folder">Select folder</string>
     <string name="bookshelf_edit_label_username_password">Username/password</string>
     <string name="bookshelf_edit_msg_cancelled_folder_selection">Folder selection canceled.</string>
-    <string name="bookshelf_edit_msg_could_not_load_bookshelf">Bookshelf could not be loaded.</string>
-    <string name="bookshelf_edit_msg_input_error">Please check your entries.</string>
     <string name="bookshelf_edit_smb_input_error_host">Please enter the server name or IP address.</string>
     <string name="bookshelf_edit_smb_input_error_password">Please enter password.</string>
     <string name="bookshelf_edit_smb_input_error_port">Please enter in the range of 0 to 65535.</string>
