@@ -157,7 +157,7 @@ private class FolderScreenStateImpl(
         getFileUseCase(GetFileUseCase.Request(args.bookshelfId, args.path))
             .onEach {
                 when (it) {
-                    is Resource.Error -> TODO()
+                    is Resource.Error -> Unit
                     is Resource.Success -> {
                         uiState = uiState.copy(
                             folderAppBarUiState = uiState.folderAppBarUiState.copy(title = it.data.name)
@@ -173,8 +173,7 @@ private class FolderScreenStateImpl(
             is FileInfoSheetNavigator.Favorite ->
                 sendEvent(FolderScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!))
 
-            is FileInfoSheetNavigator.OpenFolder ->
-                TODO("Not yet implemented")
+            is FileInfoSheetNavigator.OpenFolder -> Unit
         }
     }
 

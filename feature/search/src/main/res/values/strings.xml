@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="search_label_not_found">No results were found for "%1$s".</string>
+    <string name="search_label_not_found">No results were found for “%1$s”.</string>
     <string name="search_label_search">Search</string>
 
     <string name="search_label_bookshelf">whole bookshelf</string>

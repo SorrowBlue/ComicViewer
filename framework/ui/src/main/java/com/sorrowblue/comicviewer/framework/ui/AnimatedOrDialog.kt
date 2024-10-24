@@ -42,43 +42,43 @@ abstract class AnimatedOrDialog : DestinationTransitions() {
                 destination,
                 navController,
                 navBackStackEntry,
-                dependenciesContainerBuilder,
-                contentLambda
+                contentLambda,
+                dependenciesContainerBuilder
             )
         }
     }
-}
 
-@SuppressLint("RestrictedApi")
-@Composable
-private fun <T> CallDialogComposable(
-    destination: TypedDestinationSpec<T>,
-    navController: NavHostController,
-    navBackStackEntry: NavBackStackEntry,
-    dependenciesContainerBuilder: @Composable DependenciesContainerBuilder<*>.() -> Unit,
-    contentWrapper: DestinationLambda<T>?,
-) {
-    val scope =
-        remember(destination, navBackStackEntry, navController, dependenciesContainerBuilder) {
-            DestinationScopeImplDefault(
-                destination,
-                navBackStackEntry,
-                navController,
-                dependenciesContainerBuilder,
-            )
+    @SuppressLint("RestrictedApi")
+    @Composable
+    private fun <T> CallDialogComposable(
+        destination: TypedDestinationSpec<T>,
+        navController: NavHostController,
+        navBackStackEntry: NavBackStackEntry,
+        contentWrapper: DestinationLambda<T>?,
+        content: @Composable DependenciesContainerBuilder<*>.() -> Unit,
+    ) {
+        val scope =
+            remember(destination, navBackStackEntry, navController, content) {
+                DestinationScopeImplDefault(
+                    destination,
+                    navBackStackEntry,
+                    navController,
+                    content,
+                )
+            }
+
+        if (contentWrapper == null) {
+            with(destination) { scope.Content() }
+        } else {
+            contentWrapper(scope)
         }
-
-    if (contentWrapper == null) {
-        with(destination) { scope.Content() }
-    } else {
-        contentWrapper(scope)
     }
-}
 
-@SuppressLint("RestrictedApi")
-private class DestinationScopeImplDefault<T>(
-    override val destination: TypedDestinationSpec<T>,
-    override val navBackStackEntry: NavBackStackEntry,
-    override val navController: NavController,
-    override val dependenciesContainerBuilder: @Composable DependenciesContainerBuilder<*>.() -> Unit,
-) : DestinationScopeImpl<T>()
+    @SuppressLint("RestrictedApi")
+    private class DestinationScopeImplDefault<T>(
+        override val destination: TypedDestinationSpec<T>,
+        override val navBackStackEntry: NavBackStackEntry,
+        override val navController: NavController,
+        override val dependenciesContainerBuilder: @Composable DependenciesContainerBuilder<*>.() -> Unit,
+    ) : DestinationScopeImpl<T>()
+}

@@ -31,16 +31,13 @@ internal class SmbEditScreenTest {
             scope = TestScope(),
             registerBookshelfUseCase = object : RegisterBookshelfUseCase() {
                 override fun run(request: Request): Flow<Resource<Bookshelf, Error>> {
-                    TODO("Not yet implemented")
                 }
             },
             softwareKeyboardController = object : SoftwareKeyboardController {
                 override fun hide() {
-                    TODO("Not yet implemented")
                 }
 
                 override fun show() {
-                    TODO("Not yet implemented")
                 }
 
             }

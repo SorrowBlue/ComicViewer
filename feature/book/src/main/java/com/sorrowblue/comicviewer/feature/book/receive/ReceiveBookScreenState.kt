@@ -92,7 +92,7 @@ private class ReceiveBookScreenStateImpl(
             scope.launch {
                 getIntentBookUseCase(GetIntentBookUseCase.Request(data)).collect { resource ->
                     when (resource) {
-                        is Resource.Error -> TODO()
+                        is Resource.Error -> Unit
                         is Resource.Success -> {
                             logcat { "book=${resource.data}" }
                             uiState = BookScreenUiState.Loaded(

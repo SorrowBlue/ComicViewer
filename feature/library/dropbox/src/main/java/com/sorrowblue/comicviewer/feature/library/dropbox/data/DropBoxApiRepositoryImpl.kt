@@ -30,7 +30,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 @OptIn(ExperimentalSerializationApi::class)
-private val Context.dropboxCredentialDataStore: DataStore<DropboxCredential> by dataStore(
+internal val Context.dropboxCredentialDataStore: DataStore<DropboxCredential> by dataStore(
     fileName = "dropbox_credential.pb",
     serializer = DropboxCredential.Serializer()
 )

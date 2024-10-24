@@ -75,10 +75,10 @@ internal class ZipFileReader @AssistedInject constructor(
             }
         }
     }
-}
 
-private fun ISimpleInArchiveItem.extractSlow2(function: (data: ByteArray) -> Int) {
-    extractSlow { function.invoke(it) }
+    private fun ISimpleInArchiveItem.extractSlow2(function: (data: ByteArray) -> Int) {
+        extractSlow { function.invoke(it) }
+    }
 }
 
 fun String.extension() = substringAfterLast('.', "").lowercase()

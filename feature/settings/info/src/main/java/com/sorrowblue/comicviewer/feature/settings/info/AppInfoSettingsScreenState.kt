@@ -51,11 +51,11 @@ private class AppInfoSettingsScreenStateImpl(
             "http://play.google.com/store/apps/details?id=$applicationId".toUri()
         )
     }
-}
 
-private val Context.packageInfo: PackageInfo
-    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
-    } else {
-        packageManager.getPackageInfo(packageName, 0)
-    }
+    private val Context.packageInfo: PackageInfo
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
+        } else {
+            packageManager.getPackageInfo(packageName, 0)
+        }
+}

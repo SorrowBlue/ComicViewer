@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.library.googledrive
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,7 +22,9 @@ import org.koin.compose.koinInject
 
 internal object GoogleDriveScreenWrapper : DestinationWrapper {
     @Composable
-    override fun <T> DestinationScope<T>.Wrap(screenContent: @Composable () -> Unit) {
+    override fun <T> DestinationScope<T>.Wrap(
+        @SuppressLint("ComposableLambdaParameterNaming") screenContent: @Composable () -> Unit,
+    ) {
         rememberKoinNavGraphModules(navController, GoogleDriveNavGraph.route) {
             listOf(googleAuthModule, googleDriveModule)
         }

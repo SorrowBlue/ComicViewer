@@ -65,7 +65,6 @@ fun calculateLowerInfoPaneScaffoldDirective(
     val maxVerticalPartitions: Int
     val verticalPartitionSpacerSize: Dp
 
-    // TODO(conradchen): Confirm the table top mode settings
     if (windowAdaptiveInfo.windowPosture.isTabletop) {
         maxVerticalPartitions = 2
         verticalPartitionSpacerSize = 24.dp
@@ -74,7 +73,6 @@ fun calculateLowerInfoPaneScaffoldDirective(
         verticalPartitionSpacerSize = 0.dp
     }
 
-    // TODO(conradchen): add 412.dp for L/XL window size class when they are available
     val defaultPanePreferredWidth = 360.dp
 
     return PaneScaffoldDirective(

@@ -270,16 +270,16 @@ object SpreadSplitTransformation {
             state
         }
     }
-}
 
-private fun Bitmap.createSplitBitmap(isLeft: Boolean): Bitmap {
-    return Bitmap.createBitmap(
-        this,
-        if (isLeft) 0 else this.width / 2,
-        0,
-        this.width / 2,
-        this.height
-    ).apply {
-        this@createSplitBitmap.recycle()
+    private fun Bitmap.createSplitBitmap(isLeft: Boolean): Bitmap {
+        return Bitmap.createBitmap(
+            this,
+            if (isLeft) 0 else this.width / 2,
+            0,
+            this.width / 2,
+            this.height
+        ).apply {
+            this@createSplitBitmap.recycle()
+        }
     }
 }

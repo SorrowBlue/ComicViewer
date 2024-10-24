@@ -101,7 +101,7 @@ fun CustomSlider(
                     Label(
                         modifier = Modifier.layoutId(CustomSliderComponents.LABEL),
                         value = value,
-                        label = label
+                        content = label
                     )
                 }
 
@@ -216,14 +216,14 @@ private fun customSliderMeasurePolicy(
 @Composable
 private fun Label(
     value: Float,
-    label: @Composable (labelValue: Float) -> Unit,
     modifier: Modifier = Modifier,
+    content: @Composable (labelValue: Float) -> Unit,
 ) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        label(value)
+        content(value)
     }
 }
 

@@ -13,7 +13,7 @@
     <string name="bookshelf_action_delete">Remove</string>
     <string name="bookshelf_action_scan">Scan file</string>
     <string name="bookshelf_action_scan_with_thumbnails">Regenerate thumbnails</string>
-    <string name="bookshelf_msg_delete">\"%1$s\" has been deleted.</string>
+    <string name="bookshelf_msg_delete">“%1$s” has been deleted.</string>
     <string name="bookshelf_desc_open_bookshelf_info">Open bookshelf information</string>
     <string name="bookshelf_desc_thumbnail">bookshelf thumbnail</string>
     <string name="bookshelf_btn_add">Add</string>

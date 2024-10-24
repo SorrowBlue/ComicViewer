@@ -31,9 +31,8 @@ fun FavoriteItem(
     favorite: Favorite,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    trailingContent: @Composable (() -> Unit)? = null,
     color: ListItemColors = ListItemDefaults.colors(),
-
+    content: @Composable (() -> Unit)? = null,
 ) {
     ListItem(
         colors = color,
@@ -72,7 +71,7 @@ fun FavoriteItem(
                 }
             )
         },
-        trailingContent = trailingContent
+        trailingContent = content
     )
 }
 
@@ -80,6 +79,6 @@ fun FavoriteItem(
 @Composable
 private fun PrivateFavoriteItem() {
     ComicTheme {
-        FavoriteItem(Favorite("Preview name"), {})
+        FavoriteItem(Favorite(name = "Preview name"), onClick = {})
     }
 }
