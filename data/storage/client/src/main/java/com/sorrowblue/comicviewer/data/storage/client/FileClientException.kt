@@ -1,12 +1,12 @@
 package com.sorrowblue.comicviewer.data.storage.client
 
 sealed class FileClientException : RuntimeException() {
-    data object NoNetwork : FileClientException()
-    data object InvalidAuth : FileClientException()
-    data object InvalidServer : FileClientException()
-    data object InvalidPath : FileClientException()
+    class NoNetwork : FileClientException()
+    class InvalidAuth : FileClientException()
+    class InvalidServer : FileClientException()
+    class InvalidPath : FileClientException()
 }
 
 sealed class FileReaderException : RuntimeException() {
-    data object NotSupport : FileReaderException()
+    class NotSupport : FileReaderException()
 }

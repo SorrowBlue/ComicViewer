@@ -41,8 +41,8 @@ internal class DeviceFileClient @AssistedInject constructor(
         }.getOrElse {
             it.printStackTrace()
             when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth
-                is IllegalArgumentException -> throw FileClientException.InvalidPath
+                is SecurityException -> throw FileClientException.InvalidAuth()
+                is IllegalArgumentException -> throw FileClientException.InvalidPath()
                 else -> throw it
             }
         }
@@ -57,13 +57,13 @@ internal class DeviceFileClient @AssistedInject constructor(
             documentFile(path).exists()
         }.fold({
             if (!it) {
-                throw FileClientException.InvalidPath
+                throw FileClientException.InvalidPath()
             }
         }) {
             it.printStackTrace()
             when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth
-                is IllegalArgumentException -> throw FileClientException.InvalidPath
+                is SecurityException -> throw FileClientException.InvalidAuth()
+                is IllegalArgumentException -> throw FileClientException.InvalidPath()
                 else -> throw it
             }
         }
@@ -75,8 +75,8 @@ internal class DeviceFileClient @AssistedInject constructor(
         }.getOrElse {
             it.printStackTrace()
             when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth
-                is IllegalArgumentException -> throw FileClientException.InvalidPath
+                is SecurityException -> throw FileClientException.InvalidAuth()
+                is IllegalArgumentException -> throw FileClientException.InvalidPath()
                 else -> throw it
             }
         }
@@ -88,8 +88,8 @@ internal class DeviceFileClient @AssistedInject constructor(
         }.getOrElse {
             it.printStackTrace()
             when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth
-                is IllegalArgumentException -> throw FileClientException.InvalidPath
+                is SecurityException -> throw FileClientException.InvalidAuth()
+                is IllegalArgumentException -> throw FileClientException.InvalidPath()
                 else -> throw it
             }
         }
@@ -104,8 +104,8 @@ internal class DeviceFileClient @AssistedInject constructor(
         }.getOrElse {
             it.printStackTrace()
             when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth
-                is IllegalArgumentException -> throw FileClientException.InvalidPath
+                is SecurityException -> throw FileClientException.InvalidAuth()
+                is IllegalArgumentException -> throw FileClientException.InvalidPath()
                 else -> throw it
             }
         }
@@ -117,8 +117,8 @@ internal class DeviceFileClient @AssistedInject constructor(
         }.getOrElse {
             it.printStackTrace()
             when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth
-                is IllegalArgumentException -> throw FileClientException.InvalidPath
+                is SecurityException -> throw FileClientException.InvalidAuth()
+                is IllegalArgumentException -> throw FileClientException.InvalidPath()
                 else -> throw it
             }
         }
