@@ -195,16 +195,6 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         bookshelfId: BookshelfId,
         parent: String,
         limit: Int,
-    ): List<String> {
-        return withContext(dispatcher) {
-            dao.findCacheKeyOrderSortIndex(bookshelfId.value, "$parent%", limit)
-        }
-    }
-
-    override suspend fun getCacheKeys(
-        bookshelfId: BookshelfId,
-        parent: String,
-        limit: Int,
         folderThumbnailOrderModel: FolderThumbnailOrder,
     ): List<String> {
         return withContext(dispatcher) {

@@ -29,11 +29,11 @@ internal class RegisterBookshelfInteractor @Inject constructor(
             onFailure = {
                 logcat { "onFailure ${it.asLog()}" }
                 when (it as RemoteException) {
-                    RemoteException.InvalidAuth -> Resource.Error(Error.Auth)
-                    RemoteException.InvalidServer -> Resource.Error(Error.Host)
-                    RemoteException.NotFound -> Resource.Error(Error.Path)
-                    RemoteException.NoNetwork -> Resource.Error(Error.Network)
-                    RemoteException.Unknown -> Resource.Error(Error.System)
+                    is RemoteException.InvalidAuth -> Resource.Error(Error.Auth)
+                    is RemoteException.InvalidServer -> Resource.Error(Error.Host)
+                    is RemoteException.NotFound -> Resource.Error(Error.Path)
+                    is RemoteException.NoNetwork -> Resource.Error(Error.Network)
+                    is RemoteException.Unknown -> Resource.Error(Error.System)
                 }
             },
             onSuccess = {

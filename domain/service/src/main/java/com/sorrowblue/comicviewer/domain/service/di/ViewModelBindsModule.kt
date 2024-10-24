@@ -6,9 +6,6 @@ import com.sorrowblue.comicviewer.domain.service.interactor.GetInstalledModulesI
 import com.sorrowblue.comicviewer.domain.service.interactor.GetNavigationHistoryInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.GetOtherImageCacheInfoInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.SendFatalErrorInteractor
-import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.DeleteHistoryInteractor
-import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfBookInteractor
-import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfFileInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfInfoInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RegisterBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RemoveBookshelfInteractor
@@ -49,9 +46,6 @@ import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.DeleteHistoryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
@@ -111,9 +105,6 @@ internal interface ViewModelBindsModule {
     fun bindRemoveBookshelfUseCase(interactor: RemoveBookshelfInteractor): RemoveBookshelfUseCase
 
     @Binds
-    fun bindGetBookshelfBookUseCase(interactor: GetBookshelfBookInteractor): GetBookshelfBookUseCase
-
-    @Binds
     fun bindGetBookUseCase(interactor: GetBookInteractor): GetBookUseCase
 
     @Binds
@@ -143,9 +134,6 @@ internal interface ViewModelBindsModule {
     fun bindUpdateLastReadPageUseCase(interactor: UpdateLastReadPageInteractor): UpdateLastReadPageUseCase
 
     @Binds
-    fun bindDeleteHistoryUseCase(interactor: DeleteHistoryInteractor): DeleteHistoryUseCase
-
-    @Binds
     fun bindGetBookshelfInfoUseCase(interactor: GetBookshelfInfoInteractor): GetBookshelfInfoUseCase
 
     @Binds
@@ -156,9 +144,6 @@ internal interface ViewModelBindsModule {
 
     @Binds
     fun bindDeleteThumbnailsUseCase(interactor: DeleteThumbnailsInteractor): DeleteThumbnailsUseCase
-
-    @Binds
-    fun bindGetBookshelfFileUseCase(interactor: GetBookshelfFileInteractor): GetBookshelfFileUseCase
 
     @Binds
     fun bindAddFavoriteFileUseCase(interactor: AddFavoriteFileInteractor): AddFavoriteFileUseCase

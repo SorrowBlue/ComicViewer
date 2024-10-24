@@ -68,21 +68,21 @@ internal class SmbFileClient @AssistedInject constructor(
             if (it) {
                 Result.Success(Unit)
             } else {
-                throw FileClientException.InvalidPath
+                throw FileClientException.InvalidPath()
             }
         }) {
             when (it) {
                 is SmbException -> {
                     logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
                     when (it.ntStatus) {
-                        NtStatus.NT_STATUS_BAD_NETWORK_NAME -> throw FileClientException.InvalidPath
-                        NtStatus.NT_STATUS_LOGON_FAILURE -> throw FileClientException.InvalidAuth
-                        NtStatus.NT_STATUS_INVALID_PARAMETER -> throw FileClientException.InvalidPath
+                        NtStatus.NT_STATUS_BAD_NETWORK_NAME -> throw FileClientException.InvalidPath()
+                        NtStatus.NT_STATUS_LOGON_FAILURE -> throw FileClientException.InvalidAuth()
+                        NtStatus.NT_STATUS_INVALID_PARAMETER -> throw FileClientException.InvalidPath()
                         NtStatus.NT_STATUS_UNSUCCESSFUL -> {
                             if (it.cause is ConnectionTimeoutException || it.cause is TransportException || it.cause is UnknownHostException) {
-                                throw FileClientException.InvalidServer
+                                throw FileClientException.InvalidServer()
                             } else if (it.message == "IPC signing is enforced, but no signing is available") {
-                                throw FileClientException.InvalidAuth
+                                throw FileClientException.InvalidAuth()
                             } else {
                                 throw it
                             }
@@ -92,7 +92,7 @@ internal class SmbFileClient @AssistedInject constructor(
                     }
                 }
 
-                is URISyntaxException -> throw FileClientException.InvalidPath
+                is URISyntaxException -> throw FileClientException.InvalidPath()
 
                 else -> {
                     logcat(LogPriority.INFO) { it.asLog() }
@@ -161,14 +161,14 @@ internal class SmbFileClient @AssistedInject constructor(
                 is SmbException -> {
                     logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
                     when (it.ntStatus) {
-                        NtStatus.NT_STATUS_BAD_NETWORK_NAME -> FileClientException.InvalidPath
-                        NtStatus.NT_STATUS_LOGON_FAILURE -> FileClientException.InvalidAuth
-                        NtStatus.NT_STATUS_INVALID_PARAMETER -> FileClientException.InvalidPath
+                        NtStatus.NT_STATUS_BAD_NETWORK_NAME -> FileClientException.InvalidPath()
+                        NtStatus.NT_STATUS_LOGON_FAILURE -> FileClientException.InvalidAuth()
+                        NtStatus.NT_STATUS_INVALID_PARAMETER -> FileClientException.InvalidPath()
                         NtStatus.NT_STATUS_UNSUCCESSFUL -> {
                             if (it.cause is ConnectionTimeoutException || it.cause is TransportException) {
-                                FileClientException.InvalidServer
+                                FileClientException.InvalidServer()
                             } else if (it.message == "IPC signing is enforced, but no signing is available") {
-                                FileClientException.InvalidAuth
+                                FileClientException.InvalidAuth()
                             } else {
                                 it
                             }
@@ -178,7 +178,7 @@ internal class SmbFileClient @AssistedInject constructor(
                     }
                 }
 
-                is URISyntaxException -> FileClientException.InvalidPath
+                is URISyntaxException -> FileClientException.InvalidPath()
 
                 else -> {
                     logcat(LogPriority.INFO) { it.asLog() }

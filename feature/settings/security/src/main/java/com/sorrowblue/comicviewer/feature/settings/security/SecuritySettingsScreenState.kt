@@ -73,11 +73,7 @@ internal fun rememberChildSecuritySettingsScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: SecuritySettingsViewModel = hiltViewModel(),
 ): SecuritySettingsScreenState = remember {
-    ChildSecuritySettingsScreenState(
-        context = context,
-        scope = scope,
-        viewModel = viewModel
-    )
+    ChildSecuritySettingsScreenState(context = context, scope = scope, viewModel = viewModel)
 }
 
 private class ChildSecuritySettingsScreenState(
@@ -85,14 +81,13 @@ private class ChildSecuritySettingsScreenState(
     private val scope: CoroutineScope,
     private val viewModel: SecuritySettingsViewModel,
     override val snackbarHostState: SnackbarHostState = SnackbarHostState(),
-    private val biometricsDialogController: BiometricsDialogController = BiometricsDialogController(),
 ) : SecuritySettingsScreenState {
+
+    private val biometricManager = BiometricManager.from(context)
 
     override fun onBiometricsDialogClick() {
         throw NotImplementedError("")
     }
-
-    private val biometricManager = BiometricManager.from(context)
 
     override fun activityResult(activityResult: ActivityResult) {
         when (biometricManager.canAuthenticateWeak()) {
@@ -112,7 +107,7 @@ private class ChildSecuritySettingsScreenState(
             BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED,
             BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
             BiometricManager.BIOMETRIC_STATUS_UNKNOWN,
-            -> {
+                -> {
                 logcat { "生体認証 利用不可" }
                 scope.launch {
                     snackbarHostState.showSnackbar(context.getString(R.string.settings_security_not_available_bio_auth))
@@ -170,7 +165,6 @@ private class ChildSecuritySettingsScreenState(
                 BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                     // 生体認証が設定されていないため、設定を促す
                     uiState = uiState.copy(isBiometricsDialogShow = true)
-                    biometricsDialogController.show(Unit)
                 }
 
                 BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE, BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
@@ -184,7 +178,7 @@ private class ChildSecuritySettingsScreenState(
 
                 BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
                 BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
-                -> {
+                    -> {
                     // 生体認証が利用不可のため、エラーメッセージ表示
                     scope.launch {
                         snackbarHostState.showSnackbar(
@@ -235,7 +229,7 @@ private class ChildSecuritySettingsScreenState(
                     BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
                     BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE,
                     BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED,
-                    -> viewModel.updateUseBiometrics(false)
+                        -> viewModel.updateUseBiometrics(false)
 
                     BiometricManager.BIOMETRIC_SUCCESS, BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> Unit
                 }
@@ -245,7 +239,6 @@ private class ChildSecuritySettingsScreenState(
 
     override fun onBiometricsDialogDismissRequest() {
         uiState = uiState.copy(isBiometricsDialogShow = false)
-        biometricsDialogController.dismiss()
     }
 
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())

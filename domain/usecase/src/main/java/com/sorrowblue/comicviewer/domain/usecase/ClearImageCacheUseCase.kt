@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.domain.usecase
 
 import com.sorrowblue.comicviewer.domain.model.ImageCache
-import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 
 abstract class ClearImageCacheUseCase :
@@ -15,8 +14,4 @@ abstract class ClearImageCacheUseCase :
     ) : Request
 
     data object OtherRequest : Request
-
-    enum class Error : Resource.AppError {
-        System,
-    }
 }

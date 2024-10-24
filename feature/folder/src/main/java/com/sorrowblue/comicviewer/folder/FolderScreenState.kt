@@ -252,13 +252,13 @@ private class FolderScreenStateImpl(
             ((lazyPagingItems.loadState.refresh as LoadState.Error).error as? PagingException)?.let {
                 scope.launch {
                     when (it) {
-                        PagingException.InvalidAuth -> snackbarHostState.showSnackbar("認証エラー")
+                        is PagingException.InvalidAuth -> snackbarHostState.showSnackbar("認証エラー")
 
-                        PagingException.InvalidServer -> snackbarHostState.showSnackbar("サーバーエラー")
+                        is PagingException.InvalidServer -> snackbarHostState.showSnackbar("サーバーエラー")
 
-                        PagingException.NoNetwork -> snackbarHostState.showSnackbar("ネットワークエラー")
+                        is PagingException.NoNetwork -> snackbarHostState.showSnackbar("ネットワークエラー")
 
-                        PagingException.NotFound -> snackbarHostState.showSnackbar("見つかりませんでした")
+                        is PagingException.NotFound -> snackbarHostState.showSnackbar("見つかりませんでした")
                     }
                 }
             }

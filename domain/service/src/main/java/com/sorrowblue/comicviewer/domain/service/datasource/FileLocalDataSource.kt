@@ -113,8 +113,6 @@ interface FileLocalDataSource {
         sortType: SortType,
     ): Flow<File?>
 
-    suspend fun getCacheKeys(bookshelfId: BookshelfId, parent: String, limit: Int): List<String>
-
     suspend fun getCacheKeys(
         bookshelfId: BookshelfId,
         parent: String,

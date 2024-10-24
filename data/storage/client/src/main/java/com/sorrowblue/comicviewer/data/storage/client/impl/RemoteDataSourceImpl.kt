@@ -63,13 +63,13 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {
-                    FileClientException.InvalidAuth -> RemoteException.InvalidAuth
-                    FileClientException.InvalidPath -> RemoteException.NotFound
-                    FileClientException.InvalidServer -> RemoteException.InvalidServer
-                    FileClientException.NoNetwork -> RemoteException.NoNetwork
+                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                    is FileClientException.InvalidPath -> RemoteException.NotFound()
+                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
                 }
 
-                else -> RemoteException.Unknown
+                else -> RemoteException.Unknown()
             }
         }
     }
@@ -82,13 +82,13 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {
-                    FileClientException.InvalidAuth -> RemoteException.InvalidAuth
-                    FileClientException.InvalidPath -> RemoteException.NotFound
-                    FileClientException.InvalidServer -> RemoteException.InvalidServer
-                    FileClientException.NoNetwork -> RemoteException.NoNetwork
+                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                    is FileClientException.InvalidPath -> RemoteException.NotFound()
+                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
                 }
 
-                else -> RemoteException.Unknown
+                else -> RemoteException.Unknown()
             }
         }
     }
@@ -105,10 +105,10 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {
-                    FileClientException.InvalidAuth -> RemoteException.InvalidAuth
-                    FileClientException.InvalidPath -> RemoteException.NotFound
-                    FileClientException.InvalidServer -> RemoteException.InvalidServer
-                    FileClientException.NoNetwork -> RemoteException.NoNetwork
+                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                    is FileClientException.InvalidPath -> RemoteException.NotFound()
+                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
                 }
 
                 else -> it
@@ -124,10 +124,10 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {
-                    FileClientException.InvalidAuth -> RemoteException.InvalidAuth
-                    FileClientException.InvalidPath -> RemoteException.NotFound
-                    FileClientException.InvalidServer -> RemoteException.InvalidServer
-                    FileClientException.NoNetwork -> RemoteException.NoNetwork
+                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                    is FileClientException.InvalidPath -> RemoteException.NotFound()
+                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
                 }
 
                 else -> it
@@ -143,10 +143,10 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {
-                    FileClientException.InvalidAuth -> RemoteException.InvalidAuth
-                    FileClientException.InvalidPath -> RemoteException.NotFound
-                    FileClientException.InvalidServer -> RemoteException.InvalidServer
-                    FileClientException.NoNetwork -> RemoteException.NoNetwork
+                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                    is FileClientException.InvalidPath -> RemoteException.NotFound()
+                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
                 }
 
                 else -> it
@@ -186,14 +186,14 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
         }.getOrElse {
             throw when (it) {
                 is FileClientException -> when (it) {
-                    FileClientException.InvalidAuth -> RemoteException.InvalidAuth
-                    FileClientException.InvalidPath -> RemoteException.NotFound
-                    FileClientException.InvalidServer -> RemoteException.InvalidServer
-                    FileClientException.NoNetwork -> RemoteException.NoNetwork
+                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                    is FileClientException.InvalidPath -> RemoteException.NotFound()
+                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
                 }
 
                 is FileReaderException -> when (it) {
-                    FileReaderException.NotSupport -> RemoteException.NotFound
+                    is FileReaderException.NotSupport -> RemoteException.NotFound()
                 }
 
                 else -> it

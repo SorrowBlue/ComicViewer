@@ -68,11 +68,11 @@ internal class FileModelRemoteMediator @AssistedInject constructor(
         }, {
             val error = if (it is RemoteException) {
                 when (it) {
-                    RemoteException.InvalidAuth -> PagingException.InvalidAuth
-                    RemoteException.InvalidServer -> PagingException.InvalidServer
-                    RemoteException.NoNetwork -> PagingException.NoNetwork
-                    RemoteException.NotFound -> PagingException.NotFound
-                    RemoteException.Unknown -> PagingException.NotFound
+                    is RemoteException.InvalidAuth -> PagingException.InvalidAuth()
+                    is RemoteException.InvalidServer -> PagingException.InvalidServer()
+                    is RemoteException.NoNetwork -> PagingException.NoNetwork()
+                    is RemoteException.NotFound -> PagingException.NotFound()
+                    is RemoteException.Unknown -> PagingException.NotFound()
                 }
             } else {
                 it

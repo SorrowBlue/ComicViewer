@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigato
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 import com.sorrowblue.comicviewer.feature.settings.security.section.BiometricsDialog
-import com.sorrowblue.comicviewer.framework.ui.DialogController
 
 interface SecuritySettingsScreenNavigator : SettingsDetailNavigator {
 
@@ -57,8 +56,6 @@ private fun SecuritySettingsScreen(
 
     LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME, onEvent = state::onResume)
 }
-
-internal class BiometricsDialogController : DialogController<Unit>(Unit)
 
 internal data class SecuritySettingsScreenUiState(
     val isAuthEnabled: Boolean = false,
