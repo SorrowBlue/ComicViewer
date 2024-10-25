@@ -4,7 +4,6 @@ import androidx.datastore.core.DataStore
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
-import com.sorrowblue.comicviewer.domain.model.settings.OneTimeFlag
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
@@ -23,14 +22,7 @@ internal class DatastoreDataSourceImpl @Inject constructor(
     private val folderSettingsDataStore: DataStore<FolderSettings>,
     private val viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings>,
     private val securitySettingsDataStore: DataStore<SecuritySettings>,
-    private val oneTimeFlagDataStore: DataStore<OneTimeFlag>,
 ) : DatastoreDataSource {
-
-    override val oneTimeFlag: Flow<OneTimeFlag> = oneTimeFlagDataStore.data
-
-    override suspend fun updateOneTimeFlag(transform: suspend (OneTimeFlag) -> OneTimeFlag) {
-        oneTimeFlagDataStore.updateData(transform)
-    }
 
     override val settings = settingsDataStore.data
     override suspend fun updateSettings(transform: suspend (Settings) -> Settings) =

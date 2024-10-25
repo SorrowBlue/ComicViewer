@@ -7,7 +7,6 @@ import com.sorrowblue.comicviewer.data.datastore.serializer.BookSettingsSerializ
 import com.sorrowblue.comicviewer.data.datastore.serializer.DisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.FolderDisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.FolderSettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.OneTimeFlagSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SecuritySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerOperationSettingsSerializer
@@ -15,7 +14,6 @@ import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerSettingsSerial
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
-import com.sorrowblue.comicviewer.domain.model.settings.OneTimeFlag
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
@@ -74,11 +72,6 @@ internal object SingletonProvidesModule {
         serializer = SecuritySettingsSerializer()
     )
 
-    private val Context.oneTimeFlagDataStore: DataStore<OneTimeFlag> by dataStore(
-        fileName = "oneTimeFlag.pb",
-        serializer = OneTimeFlagSerializer()
-    )
-
     @Singleton
     @Provides
     fun provideFolderDisplaySettingsDataStore(@ApplicationContext context: Context): DataStore<FolderDisplaySettings> =
@@ -120,9 +113,4 @@ internal object SingletonProvidesModule {
     @Provides
     fun provideSecuritySettingsDataStore(@ApplicationContext context: Context): DataStore<SecuritySettings> =
         context.securitySettingsDataStore
-
-    @Singleton
-    @Provides
-    fun provideOneTimeFlagDataStore(@ApplicationContext context: Context): DataStore<OneTimeFlag> =
-        context.oneTimeFlagDataStore
 }
