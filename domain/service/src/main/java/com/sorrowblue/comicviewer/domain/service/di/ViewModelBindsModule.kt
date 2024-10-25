@@ -38,7 +38,6 @@ import com.sorrowblue.comicviewer.domain.service.interactor.readlater.DeleteRead
 import com.sorrowblue.comicviewer.domain.service.interactor.readlater.ExistsReadlaterInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.LoadSettingsInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageFolderDisplaySettingsInteractor
-import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageOneTimeFlagInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageSecuritySettingsInteractor
 import com.sorrowblue.comicviewer.domain.usecase.ClearImageCacheUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetBookshelfImageCacheInfoUseCase
@@ -78,7 +77,6 @@ import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCas
 import com.sorrowblue.comicviewer.domain.usecase.readlater.PagingReadLaterFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageOneTimeFlagUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import dagger.Binds
 import dagger.Module
@@ -88,9 +86,6 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 internal interface ViewModelBindsModule {
-
-    @Binds
-    fun bindManageOneTimeFlagUseCase(interactor: ManageOneTimeFlagInteractor): ManageOneTimeFlagUseCase
 
     @Binds
     fun bindRegisterBookshelfUseCase(interactor: RegisterBookshelfInteractor): RegisterBookshelfUseCase
