@@ -1,22 +1,20 @@
 package com.sorrowblue.comicviewer.domain.usecase.file
 
-import com.sorrowblue.comicviewer.domain.BaseRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.usecase.FlowUseCase2
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError
+import com.sorrowblue.comicviewer.domain.usecase.UseCase
 
 abstract class GetNextBookUseCase :
-    FlowUseCase2<GetNextBookUseCase.Request, Book, GetLibraryInfoError>() {
+    UseCase<GetNextBookUseCase.Request, Book, GetLibraryInfoError>() {
 
     class Request(
         val bookshelfId: BookshelfId,
         val path: String,
         val location: Location,
         val isNext: Boolean,
-    ) :
-        BaseRequest
+    ) : UseCase.Request
 
     sealed interface Location {
         data object Folder : Location

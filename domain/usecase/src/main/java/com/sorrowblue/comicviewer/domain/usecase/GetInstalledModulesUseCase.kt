@@ -1,9 +1,5 @@
 package com.sorrowblue.comicviewer.domain.usecase
 
-import com.sorrowblue.comicviewer.domain.BaseRequest
+import com.sorrowblue.comicviewer.domain.EmptyRequest
 
-abstract class GetInstalledModulesUseCase :
-    FlowUseCase2<GetInstalledModulesUseCase.Request, Set<String>, Unit>() {
-
-    object Request : BaseRequest
-}
+abstract class GetInstalledModulesUseCase : UseCase<EmptyRequest, Set<String>, Unit>()

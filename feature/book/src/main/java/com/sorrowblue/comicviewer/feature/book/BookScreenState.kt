@@ -13,6 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
@@ -36,7 +37,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import logcat.logcat
 
 @Composable
 internal fun rememberBookScreenState(
@@ -98,26 +98,25 @@ private class BookScreenStateImpl(
     private suspend fun GetNextBookUseCase.execute(isNext: Boolean): NextPage {
         val nextBookList = mutableListOf<NextBook>()
         if (uiState.favoriteId != FavoriteId()) {
-            execute(
+            invoke(
                 GetNextBookUseCase.Request(
                     uiState.book.bookshelfId,
                     uiState.book.path,
                     GetNextBookUseCase.Location.Favorite(uiState.favoriteId),
                     isNext
                 )
-            ).first().dataOrNull?.let {
+            ).first().dataOrNull()?.let {
                 nextBookList.add(NextBook.Favorite(it))
             }
         }
-        execute(
+        invoke(
             GetNextBookUseCase.Request(
                 uiState.book.bookshelfId,
                 uiState.book.path,
                 GetNextBookUseCase.Location.Folder,
                 isNext
             )
-        ).first().dataOrNull?.let {
-            logcat("TAG") { "nextBook $isNext, $it" }
+        ).first().dataOrNull()?.let {
             nextBookList.add(NextBook.Folder(it))
         }
         return NextPage(nextBookList)
@@ -174,14 +173,12 @@ private class BookScreenStateImpl(
                 )
             )
         }.launchIn(scope)
-        scope.launch {
-            val request = UpdateLastReadPageUseCase.Request(
-                uiState.book.bookshelfId,
-                uiState.book.path,
-                pagerState.currentPage - 1
-            )
-            updateLastReadPageUseCase.execute(request)
-        }
+        val request = UpdateLastReadPageUseCase.Request(
+            uiState.book.bookshelfId,
+            uiState.book.path,
+            pagerState.currentPage - 1
+        )
+        updateLastReadPageUseCase(request).launchIn(scope)
     }
 
     override fun toggleTooltip() {
@@ -194,14 +191,12 @@ private class BookScreenStateImpl(
     }
 
     override fun onStop() {
-        scope.launch {
-            val request = UpdateLastReadPageUseCase.Request(
-                uiState.book.bookshelfId,
-                uiState.book.path,
-                pagerState.currentPage - 1
-            )
-            updateLastReadPageUseCase.execute(request)
-        }
+        val request = UpdateLastReadPageUseCase.Request(
+            uiState.book.bookshelfId,
+            uiState.book.path,
+            pagerState.currentPage - 1
+        )
+        updateLastReadPageUseCase(request).launchIn(scope)
     }
 
     override fun onPageChange(page: Int) {

@@ -31,7 +31,6 @@ import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -185,11 +184,8 @@ private class FavoriteScreenStateImpl(
     }
 
     private fun delete() {
-        scope.launch {
-            deleteFavoriteUseCase.execute(DeleteFavoriteUseCase.Request(favoriteId))
-                .collect()
-            sendEvent(FavoriteScreenEvent.Back)
-        }
+        deleteFavoriteUseCase(DeleteFavoriteUseCase.Request(favoriteId)).launchIn(scope)
+        sendEvent(FavoriteScreenEvent.Back)
     }
 
     override fun onNavClick() {

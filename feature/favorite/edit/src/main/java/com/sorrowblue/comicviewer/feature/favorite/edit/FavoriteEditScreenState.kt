@@ -103,7 +103,7 @@ private class FavoriteEditScreenStateImpl(
         scope.launch {
             val favorite = getFavoriteUseCase(GetFavoriteUseCase.Request(args.favoriteId))
                 .first().dataOrNull() ?: return@launch
-            updateFavoriteUseCase.execute(UpdateFavoriteUseCase.Request(favorite.copy(name = text)))
+            updateFavoriteUseCase(UpdateFavoriteUseCase.Request(favorite.copy(name = text)))
                 .collect()
             sendEvent(FavoriteEditScreenStateEvent.EditComplete)
         }
