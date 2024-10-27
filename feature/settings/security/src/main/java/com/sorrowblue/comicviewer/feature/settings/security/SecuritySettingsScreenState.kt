@@ -92,7 +92,7 @@ private class ChildSecuritySettingsScreenState(
     override fun activityResult(activityResult: ActivityResult) {
         when (biometricManager.canAuthenticateWeak()) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
-                startBimetric()
+                startBiometric()
             }
 
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
@@ -116,7 +116,7 @@ private class ChildSecuritySettingsScreenState(
         }
     }
 
-    private fun startBimetric() {
+    private fun startBiometric() {
         val biometricPrompt = BiometricPrompt(
             context as FragmentActivity,
             object : BiometricPrompt.AuthenticationCallback() {
@@ -159,7 +159,7 @@ private class ChildSecuritySettingsScreenState(
             when (biometricManager.canAuthenticateWeak()) {
                 BiometricManager.BIOMETRIC_SUCCESS, BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
                     // 生体認証が有効なため、認証する
-                    startBimetric()
+                    startBiometric()
                 }
 
                 BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {

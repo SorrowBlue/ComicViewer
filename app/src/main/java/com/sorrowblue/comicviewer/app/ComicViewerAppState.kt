@@ -30,6 +30,7 @@ import com.sorrowblue.comicviewer.app.component.MainScreenTab
 import com.sorrowblue.comicviewer.app.navgraphs.MainNavGraph
 import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.AddOn
+import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
@@ -237,8 +238,8 @@ private class ComicViewerAppStateImpl(
     override fun refreshAddOnList() {
         runBlocking {
             val installedModules =
-                getInstalledModulesUseCase.execute(GetInstalledModulesUseCase.Request)
-                    .first().dataOrNull!!
+                getInstalledModulesUseCase(EmptyRequest)
+                    .first().dataOrNull()!!
             addOnList.removeAll { !installedModules.contains(it.moduleName) }
             addOnList.addAll(
                 installedModules

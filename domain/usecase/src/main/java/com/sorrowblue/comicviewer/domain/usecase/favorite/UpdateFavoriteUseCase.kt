@@ -1,10 +1,8 @@
 package com.sorrowblue.comicviewer.domain.usecase.favorite
 
-import com.sorrowblue.comicviewer.domain.BaseRequest
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
-import com.sorrowblue.comicviewer.domain.usecase.FlowOneUseCase
+import com.sorrowblue.comicviewer.domain.usecase.UseCase
 
-abstract class UpdateFavoriteUseCase :
-    FlowOneUseCase<UpdateFavoriteUseCase.Request, Favorite, Unit>() {
-    class Request(val favorite: Favorite) : BaseRequest
+abstract class UpdateFavoriteUseCase : UseCase<UpdateFavoriteUseCase.Request, Favorite, Unit>() {
+    class Request(val favorite: Favorite) : UseCase.Request
 }
