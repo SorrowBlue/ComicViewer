@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.data.storage.smb
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.domain.model.Result
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.extension
@@ -65,9 +64,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 it.exists()
             }
         }.fold({
-            if (it) {
-                Result.Success(Unit)
-            } else {
+            if (!it) {
                 throw FileClientException.InvalidPath()
             }
         }) {

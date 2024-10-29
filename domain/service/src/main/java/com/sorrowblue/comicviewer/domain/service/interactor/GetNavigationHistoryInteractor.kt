@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.domain.service.interactor
 
 import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.Resource
-import com.sorrowblue.comicviewer.domain.model.Response
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
@@ -24,22 +23,20 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
             val bookshelf = bookshelfLocalDataSource.flow(file.bookshelfId).first()
             if (bookshelf != null) {
                 val book = fileLocalDataSource.findBy(file.bookshelfId, file.path) as? Book
-                    ?: return@map Resource.Error(Error.System)
-                getFolderList(bookshelf, book.parent).fold({
-                    Resource.Success(NavigationHistory(it, book))
-                }, {
-                    Resource.Error(Error.System)
-                })
-            } else {
-                Resource.Error(Error.System)
+                if (book != null) {
+                    return@map Resource.Success(
+                        NavigationHistory(getFolderList(bookshelf, book.parent), book)
+                    )
+                }
             }
+            return@map Resource.Error(Error.System)
         }
     }
 
     private suspend fun getFolderList(
         bookshelf: Bookshelf,
         path: String,
-    ): Response.Success<List<Folder>> {
+    ): List<Folder> {
         val list = mutableListOf<Folder>()
         var parent: String? = path
         while (!parent.isNullOrEmpty()) {
@@ -48,10 +45,10 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
                 parent = it.parent
             } ?: kotlin.run {
                 parent = null
-                return Response.Success(emptyList())
+                return emptyList()
             }
         }
-        return Response.Success(list)
+        return list
     }
 
     private suspend fun getFolder(bookshelf: Bookshelf, path: String): Folder? {
