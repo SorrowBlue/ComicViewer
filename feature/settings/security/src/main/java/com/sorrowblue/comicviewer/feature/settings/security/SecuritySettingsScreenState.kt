@@ -107,7 +107,7 @@ private class ChildSecuritySettingsScreenState(
             BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED,
             BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
             BiometricManager.BIOMETRIC_STATUS_UNKNOWN,
-                -> {
+            -> {
                 logcat { "生体認証 利用不可" }
                 scope.launch {
                     snackbarHostState.showSnackbar(context.getString(R.string.settings_security_not_available_bio_auth))
@@ -178,7 +178,7 @@ private class ChildSecuritySettingsScreenState(
 
                 BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
                 BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
-                    -> {
+                -> {
                     // 生体認証が利用不可のため、エラーメッセージ表示
                     scope.launch {
                         snackbarHostState.showSnackbar(
@@ -229,7 +229,7 @@ private class ChildSecuritySettingsScreenState(
                     BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
                     BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE,
                     BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED,
-                        -> viewModel.updateUseBiometrics(false)
+                    -> viewModel.updateUseBiometrics(false)
 
                     BiometricManager.BIOMETRIC_SUCCESS, BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> Unit
                 }

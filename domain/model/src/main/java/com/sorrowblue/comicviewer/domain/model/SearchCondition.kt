@@ -17,11 +17,11 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class SearchCondition(
-    val query: String = SearchConditionDefaults.QUERY,
-    val range: Range = SearchConditionDefaults.range,
-    val period: Period = SearchConditionDefaults.period,
-    val sortType: SortType = SearchConditionDefaults.sortType,
-    val showHidden: Boolean = SearchConditionDefaults.SHOW_HIDDEN,
+    val query: String = "",
+    val range: Range = Range.Bookshelf,
+    val period: Period = Period.None,
+    val sortType: SortType = SortType.Name(true),
+    val showHidden: Boolean = false,
 ) : Parcelable {
 
     sealed interface Range : Parcelable {
@@ -42,12 +42,4 @@ data class SearchCondition(
     enum class Period {
         None, Hour24, Week1, Month1
     }
-}
-
-object SearchConditionDefaults {
-    const val QUERY: String = ""
-    val range: Range = Range.Bookshelf
-    val period: Period = Period.None
-    val sortType: SortType = SortType.Name(true)
-    const val SHOW_HIDDEN: Boolean = false
 }
