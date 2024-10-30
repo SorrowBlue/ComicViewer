@@ -122,7 +122,8 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
     TutorialGraphDependencies(destinationsNavigator::navigateUp)
 
     LibraryGraphDependencies(
-        navigateToBook = { onBookClick(it, null) },
+        navigateToBook = onBookClick,
+        onSearchClick = onSearchClick,
         onFavoriteClick = onFavoriteClick,
         onSettingsClick = onSettingsClick
     )

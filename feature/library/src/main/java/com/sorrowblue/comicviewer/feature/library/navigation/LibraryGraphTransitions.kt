@@ -1,7 +1,8 @@
 package com.sorrowblue.comicviewer.feature.library.navigation
 
 import com.ramcosta.composedestinations.spec.DestinationSpec
-import com.sorrowblue.comicviewer.feature.history.destinations.HistoryScreenDestination
+import com.ramcosta.composedestinations.utils.startDestination
+import com.sorrowblue.comicviewer.feature.history.navgraphs.HistoryNavGraph
 import com.sorrowblue.comicviewer.feature.library.destinations.LibraryScreenDestination
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavGraph
 import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavGraph
@@ -13,13 +14,13 @@ import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
 internal object LibraryGraphTransitions : DestinationTransitions() {
     override val directionToDisplayNavigation = listOf<DestinationSpec>(
         LibraryScreenDestination,
-        HistoryScreenDestination
+        HistoryNavGraph.startDestination
     )
     override val transitions
         get() = listOf(
             TransitionsConfigure(
                 LibraryScreenDestination,
-                HistoryScreenDestination,
+                HistoryNavGraph,
                 TransitionsConfigure.Type.SharedAxisX
             ),
             TransitionsConfigure(

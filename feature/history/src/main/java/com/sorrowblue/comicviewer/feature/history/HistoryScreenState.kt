@@ -21,9 +21,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 internal sealed interface HistoryScreenEvent {
-    data class Favorite(val file: File) :
-        HistoryScreenEvent
-
+    data class Favorite(val file: File) : HistoryScreenEvent
+    data class OpenFolder(val file: File) : HistoryScreenEvent
     data class Book(val book: com.sorrowblue.comicviewer.domain.model.file.Book) :
         HistoryScreenEvent
 
@@ -79,7 +78,7 @@ private class HistoryScreenStateImpl(
                 sendEvent(HistoryScreenEvent.Favorite(it))
             }
 
-            is FileInfoSheetNavigator.OpenFolder -> Unit
+            is FileInfoSheetNavigator.OpenFolder -> sendEvent(HistoryScreenEvent.OpenFolder(action.file))
         }
     }
 

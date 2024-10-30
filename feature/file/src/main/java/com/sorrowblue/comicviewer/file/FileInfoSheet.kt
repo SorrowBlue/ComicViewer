@@ -72,8 +72,9 @@ internal sealed interface FileInfoSheetAction {
 fun FileInfoSheet(
     file: File,
     onAction: (FileInfoSheetNavigator) -> Unit,
+    isOpenFolderEnabled: Boolean = false,
 ) {
-    val state = rememberFileInfoSheetState2(file = file)
+    val state = rememberFileInfoSheetState(file = file, isOpenFolderEnabled = isOpenFolderEnabled)
     FileInfoSheet(
         uiState = state.uiState,
         lazyPagingItems = state.lazyPagingItems,
