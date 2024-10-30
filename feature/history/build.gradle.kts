@@ -9,4 +9,5 @@ android {
 
 dependencies {
     implementation(projects.feature.file)
+    implementation(projects.feature.folder)
 }

@@ -42,8 +42,9 @@ internal interface FileInfoSheetState : ScreenStateEvent<FileInfoSheetStateEvent
 }
 
 @Composable
-internal fun rememberFileInfoSheetState2(
+internal fun rememberFileInfoSheetState(
     file: File,
+    isOpenFolderEnabled: Boolean = false,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: FileInfoSheetViewModel = hiltViewModel(),
 ): FileInfoSheetState {
@@ -56,6 +57,7 @@ internal fun rememberFileInfoSheetState2(
     return remember(file) {
         FileInfoSheetStateImpl(
             file = file,
+            isOpenFolderEnabled = isOpenFolderEnabled,
             lazyPagingItems = lazyPagingItems,
             scope = scope,
             getFileAttributeUseCase = viewModel.getFileAttributeUseCase,
@@ -69,6 +71,7 @@ internal fun rememberFileInfoSheetState2(
 private class FileInfoSheetStateImpl(
     getFileAttributeUseCase: GetFileAttributeUseCase,
     existsReadlaterUseCase: ExistsReadlaterUseCase,
+    isOpenFolderEnabled: Boolean,
     private val file: File,
     private val deleteReadLaterUseCase: DeleteReadLaterUseCase,
     private val addReadLaterUseCase: AddReadLaterUseCase,
@@ -78,7 +81,9 @@ private class FileInfoSheetStateImpl(
 
     override val event: SharedFlow<FileInfoSheetStateEvent> = MutableSharedFlow()
 
-    override var uiState: FileInfoUiState by mutableStateOf(FileInfoUiState(file = file))
+    override var uiState: FileInfoUiState by mutableStateOf(
+        FileInfoUiState(file = file, isOpenFolderEnabled = isOpenFolderEnabled)
+    )
     private val runningJob = ArrayDeque<Job>()
 
     init {

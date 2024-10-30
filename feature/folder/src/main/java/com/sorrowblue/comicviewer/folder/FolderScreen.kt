@@ -65,6 +65,7 @@ internal data class FolderScreenUiState(
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
     val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
     val sortType: SortType = FolderDisplaySettingsDefaults.sortType,
+    val emphasisPath: String = "",
 ) : Parcelable
 
 @Composable
@@ -152,7 +153,8 @@ private fun FolderScreen(
             lazyGridState = lazyGridState,
             pullRefreshState = pullRefreshState,
             onAction = onFolderContentsAction,
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
+            emphasisPath = uiState.emphasisPath
         )
     }
 }
@@ -177,6 +179,7 @@ private fun FolderContents(
     pullRefreshState: PullToRefreshState,
     onAction: (FolderContentsAction) -> Unit,
     modifier: Modifier = Modifier,
+    emphasisPath: String = "",
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     val isRefreshing by remember(lazyPagingItems.loadState) { derivedStateOf { lazyPagingItems.loadState.isLoading } }
@@ -205,7 +208,8 @@ private fun FolderContents(
                 contentPadding = contentPadding,
                 onItemClick = { onAction(FolderContentsAction.File(it)) },
                 onItemInfoClick = { onAction(FolderContentsAction.FileInfo(it)) },
-                state = lazyGridState
+                state = lazyGridState,
+                emphasisPath = emphasisPath
             )
         }
     }

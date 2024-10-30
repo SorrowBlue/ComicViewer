@@ -16,10 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
+import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.feature.history.navigation.HistoryGraph
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheet
@@ -39,9 +40,10 @@ interface HistoryScreenNavigator {
     fun onSettingsClick()
     fun navigateToBook(book: Book)
     fun onFavoriteClick(file: File)
+    fun navigateToFolder(file: File)
 }
 
-@Destination<ExternalModuleGraph>
+@Destination<HistoryGraph>(start = true, visibility = CodeGenVisibility.INTERNAL)
 @Composable
 internal fun HistoryScreen(navigator: HistoryScreenNavigator) {
     HistoryScreen(
@@ -69,9 +71,10 @@ private fun HistoryScreen(
     val currentNavigator by rememberUpdatedState(navigator)
     LaunchedEventEffect(state.event) {
         when (it) {
-            HistoryScreenEvent.Back -> currentNavigator.navigateUp()
             is HistoryScreenEvent.Favorite -> currentNavigator.onFavoriteClick(it.file)
             is HistoryScreenEvent.Book -> currentNavigator.navigateToBook(it.book)
+            is HistoryScreenEvent.OpenFolder -> currentNavigator.navigateToFolder(it.file)
+            HistoryScreenEvent.Back -> currentNavigator.navigateUp()
             HistoryScreenEvent.Settings -> currentNavigator.onSettingsClick()
         }
     }
@@ -95,7 +98,13 @@ private fun HistoryScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-        extraPane = { content -> FileInfoSheet(file = content, onAction = onFileInfoSheetAction) },
+        extraPane = { content ->
+            FileInfoSheet(
+                file = content,
+                isOpenFolderEnabled = true,
+                onAction = onFileInfoSheetAction
+            )
+        },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         FavoriteContents(

@@ -54,6 +54,7 @@ fun <T : File> FileLazyVerticalGrid(
     onItemClick: (T) -> Unit,
     onItemInfoClick: (T) -> Unit,
     modifier: Modifier = Modifier,
+    emphasisPath: String = "",
     state: LazyGridState = rememberLazyGridState(),
     contentPadding: PaddingValues = PaddingValues(),
 ) {
@@ -148,6 +149,7 @@ fun <T : File> FileLazyVerticalGrid(
                         fontSize = uiState.fontSize,
                         contentScale = contentScale,
                         filterQuality = filterQuality,
+                        isEmphasis = item.path == emphasisPath
                     )
                 }
             }

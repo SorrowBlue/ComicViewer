@@ -4,10 +4,12 @@ import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navGraph
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.feature.history.HistoryScreenNavigator
-import com.sorrowblue.comicviewer.feature.history.destinations.HistoryScreenDestination
+import com.sorrowblue.comicviewer.feature.history.navgraphs.HistoryNavGraph
+import com.sorrowblue.comicviewer.feature.history.navigation.HistoryGraphDependencies
 import com.sorrowblue.comicviewer.feature.library.LibraryScreenNavigator
 import com.sorrowblue.comicviewer.feature.library.NavGraphs
 import com.sorrowblue.comicviewer.feature.library.section.Feature
@@ -19,23 +21,13 @@ import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavGraph
 @Composable
 fun DependenciesContainerBuilder<*>.LibraryGraphDependencies(
     onSettingsClick: () -> Unit,
-    navigateToBook: (Book) -> Unit,
+    onSearchClick: (BookshelfId, String) -> Unit,
+    navigateToBook: (Book, FavoriteId?) -> Unit,
     onFavoriteClick: (File) -> Unit,
 ) {
     navGraph(NavGraphs.library) {
         dependency(
-            object : LibraryScreenNavigator, HistoryScreenNavigator {
-
-                override fun onSettingsClick() = onSettingsClick()
-
-                override fun navigateToBook(book: Book) = navigateToBook(book)
-
-                override fun onFavoriteClick(file: File) = onFavoriteClick(file)
-
-                override fun navigateUp() {
-                    destinationsNavigator.navigateUp()
-                }
-
+            object : LibraryScreenNavigator {
                 override fun onFeatureClick(feature: Feature) {
                     when (feature) {
                         is Feature.AddOn -> {
@@ -49,10 +41,17 @@ fun DependenciesContainerBuilder<*>.LibraryGraphDependencies(
                             }
                         }
 
-                        Feature.Basic.History -> destinationsNavigator.navigate(HistoryScreenDestination())
+                        Feature.Basic.History -> destinationsNavigator.navigate(HistoryNavGraph)
                     }
                 }
             }
+        )
+        HistoryGraphDependencies(
+            onSettingsClick = onSettingsClick,
+            navigateToBook = { navigateToBook(it, null) },
+            onFavoriteClick = onFavoriteClick,
+            onSearchClick = onSearchClick,
+            onBookClick = navigateToBook,
         )
     }
 }

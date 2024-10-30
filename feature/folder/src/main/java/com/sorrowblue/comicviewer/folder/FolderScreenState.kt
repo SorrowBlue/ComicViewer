@@ -136,6 +136,7 @@ private class FolderScreenStateImpl(
         private set
 
     init {
+        uiState = uiState.copy(emphasisPath = args.restorePath.orEmpty())
         folderDisplaySettingsUseCase.settings.distinctUntilChanged().onEach {
             uiState = uiState.copy(
                 sortType = it.sortType,
@@ -232,6 +233,7 @@ private class FolderScreenStateImpl(
     }
 
     override fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>) {
+        logcat { "isRestored: $isRestored, restorePath: ${args.restorePath}, itemCount: ${lazyPagingItems.itemCount}" }
         if (!isRestored && args.restorePath != null && 0 < lazyPagingItems.itemCount) {
             val index = lazyPagingItems.indexOf { it?.path == args.restorePath }
             if (0 <= index) {

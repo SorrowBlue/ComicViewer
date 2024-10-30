@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.file.component
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -23,12 +24,22 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.ProgressIndicatorDefaults.drawStopIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.toRect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawOutline
+import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.node.DrawModifierNode
+import androidx.compose.ui.node.ModifierNodeElement
+import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -50,6 +61,62 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalComponentCol
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.previewPainter
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+fun Modifier.blink(
+    color: Color = Color.Red,
+    alpha: Float = 0.5f,
+): Modifier = this then BlinkElement(color, alpha)
+
+private data class BlinkElement(
+    val color: Color,
+    val alpha: Float,
+) : ModifierNodeElement<DrawWithContentModifier>() {
+    override fun create() = DrawWithContentModifier(color, alpha)
+
+    override fun update(node: DrawWithContentModifier) {
+        node.update(color, alpha)
+    }
+
+    override fun InspectorInfo.inspectableProperties() {
+        name = "blink"
+        properties["color"] = color
+        properties["alpha"] = alpha
+    }
+}
+
+// TODO(点滅しない)
+private class DrawWithContentModifier(
+    var color: Color = Color.Red,
+    var alpha: Float = 0.5f,
+) : Modifier.Node(), DrawModifierNode {
+
+    val alpahAnimtable = Animatable(alpha)
+
+    // LaunchedEffect の代わりに
+    fun update(color: Color, alpha: Float) {
+        if (color != this.color || alpha != this.alpha) {
+            this.alpha = alpha
+            this.color = color
+            coroutineScope.launch {
+                while (true) {
+                    delay(500)
+                    if (alpahAnimtable.value == 0f) {
+                        alpahAnimtable.animateTo(alpha)
+                    } else {
+                        alpahAnimtable.animateTo(0f)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun ContentDrawScope.draw() {
+        drawContent()
+        drawOutline(Outline.Rectangle(size.toRect()), Color.Red, alpahAnimtable.value)
+    }
+}
 
 /**
  * ファイル情報をグリッドアイテムで表示する
@@ -69,12 +136,17 @@ fun GridFile(
     fontSize: Int,
     contentScale: ContentScale,
     filterQuality: FilterQuality,
+    isEmphasis: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Card(
         onClick = onClick,
         colors = with(LocalComponentColors.current) { CardDefaults.cardColors(containerColor = contentColor) },
-        modifier = modifier,
+        modifier = if (isEmphasis) {
+            modifier.blink(Color.Red, 0.5f)
+        } else {
+            modifier
+        }
     ) {
         Box {
             if (showThumbnail) {
@@ -229,7 +301,8 @@ internal fun PreviewFileGrid() {
             showThumbnail = true,
             fontSize = FolderDisplaySettingsDefaults.fontSize,
             contentScale = ContentScale.Fit,
-            filterQuality = FilterQuality.None
+            filterQuality = FilterQuality.None,
+            isEmphasis = true
         )
     }
 }
