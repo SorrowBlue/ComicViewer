@@ -16,7 +16,7 @@ dependencies {
 
     // :feature:library:box :feature:library:onedrive
     implementation(libs.squareup.okhttp3)
-    implementation("org.bouncycastle:bcprov-jdk18on:1.78.1")
+    implementation(libs.bouncycastle.bcprovJdk18on)
     // :feature:library:dropbox :feature:library:onedrive
     implementation(libs.fasterxml.jackson.core)
     // :feature:library:googledrive :feature:library:onedrive
