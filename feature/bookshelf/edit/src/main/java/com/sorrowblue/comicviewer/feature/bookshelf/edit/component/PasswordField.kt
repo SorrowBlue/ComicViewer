@@ -1,16 +1,28 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
-import android.annotation.SuppressLint
-import android.view.LayoutInflater
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.widget.doAfterTextChanged
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenForm
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import soil.form.compose.Controller
 import soil.form.compose.FieldControl
 import soil.form.compose.FormScope
@@ -24,26 +36,42 @@ internal fun FormScope<SmbEditScreenForm>.PasswordFieldView(
     control: FieldControl<String> = rememberPasswordFieldControl(),
 ) {
     Controller(control) { field ->
-        AndroidView(
-            modifier = modifier,
-            factory = { context ->
-                @SuppressLint("InflateParams")
-                val layout =
-                    LayoutInflater.from(context).inflate(R.layout.bookshelf_edit_password, null)
-                val textInputLayout = layout.findViewById<TextInputLayout>(R.id.textField)
-                layout.findViewById<TextInputEditText>(R.id.editText).apply {
-                    doAfterTextChanged {
-                        field.onChange(it?.toString().orEmpty())
+        var showPassword by remember { mutableStateOf(value = false) }
+        OutlinedTextField(
+            value = field.value,
+            onValueChange = field.onChange,
+            label = { Text(text = field.name) },
+            isError = field.hasError,
+            enabled = enabled && field.isEnabled,
+            supportingText = field.errorContent { Text(text = it.first()) },
+            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                if (showPassword) {
+                    IconButton(onClick = { showPassword = false }) {
+                        Icon(
+                            imageVector = ComicIcons.Visibility,
+                            contentDescription = "hide_password"
+                        )
                     }
-                    setText(field.value)
+                } else {
+                    IconButton(onClick = { showPassword = true }) {
+                        Icon(
+                            imageVector = ComicIcons.VisibilityOff,
+                            contentDescription = "hide_password"
+                        )
+                    }
                 }
-                textInputLayout
             },
-            update = {
-                it.isEnabled = enabled && field.isEnabled
-                it.isErrorEnabled = field.hasError
-                field.errors.firstOrNull().let(it::setError)
-            }
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
+            singleLine = true,
+            modifier = modifier
+                .testTag("Password")
+                .semantics {
+                    contentType = ContentType.Password
+                }
         )
     }
 }

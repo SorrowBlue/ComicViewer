@@ -16,7 +16,7 @@ fun PlainTooltipBox(
     content: @Composable () -> Unit,
 ) {
     TooltipBox(
-        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
         tooltip = {
             PlainTooltip(
                 modifier = Modifier.padding(4.dp),

@@ -10,6 +10,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.ComposeUiFlags
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
@@ -37,6 +39,9 @@ internal class MainActivity : AppCompatActivity() {
             setOnExitAnimationListener(SplashScreenViewProvider::startShrinkingAnimation)
             setKeepOnScreenCondition(viewModel.shouldKeepSplash::value)
         }
+
+        @OptIn(ExperimentalComposeUiApi::class)
+        ComposeUiFlags.isSemanticAutofillEnabled = true
 
         setContent {
             KoinApplication(application = {
