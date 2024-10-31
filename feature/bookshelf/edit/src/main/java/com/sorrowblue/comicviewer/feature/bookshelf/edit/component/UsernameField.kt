@@ -1,14 +1,17 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
-import android.annotation.SuppressLint
-import android.view.LayoutInflater
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.widget.doAfterTextChanged
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenForm
 import soil.form.compose.Controller
@@ -24,26 +27,21 @@ internal fun FormScope<SmbEditScreenForm>.UsernameFieldView(
     control: FieldControl<String> = rememberUsernameFieldControl(),
 ) {
     Controller(control) { field ->
-        AndroidView(
-            modifier = modifier,
-            factory = { context ->
-                @SuppressLint("InflateParams")
-                val layout =
-                    LayoutInflater.from(context).inflate(R.layout.bookshelf_edit_username, null)
-                val textInputLayout = layout.findViewById<TextInputLayout>(R.id.textField)
-                layout.findViewById<TextInputEditText>(R.id.editText).apply {
-                    doAfterTextChanged {
-                        field.onChange(it?.toString().orEmpty())
-                    }
-                    setText(field.value)
-                }
-                textInputLayout
-            },
-            update = {
-                it.isEnabled = enabled && field.isEnabled
-                it.isErrorEnabled = field.hasError
-                field.errors.firstOrNull().let(it::setError)
-            }
+        OutlinedTextField(
+            value = field.value,
+            onValueChange = field.onChange,
+            label = { Text(text = field.name) },
+            isError = field.hasError,
+            enabled = enabled && field.isEnabled,
+            supportingText = field.errorContent { Text(text = it.first()) },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            singleLine = true,
+            modifier = modifier
+                .testTag("Username")
+                .semantics { contentType = ContentType.Username }
         )
     }
 }

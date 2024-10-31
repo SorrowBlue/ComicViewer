@@ -51,10 +51,14 @@ import androidx.compose.material.icons.rounded.SortByAlpha
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Start
 import androidx.compose.material.icons.rounded.Storage
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.WatchLater
 
 object ComicIcons {
     val AccountCircle = Icons.Rounded.AccountCircle
+    val Visibility = Icons.Rounded.Visibility
+    val VisibilityOff = Icons.Rounded.VisibilityOff
     val FolderOff = Icons.Rounded.FolderOff
     val Logout = Icons.AutoMirrored.Rounded.Logout
     val LibraryBooks = Icons.AutoMirrored.Rounded.LibraryBooks
