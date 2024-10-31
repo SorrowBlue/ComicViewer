@@ -71,7 +71,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version = 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.2.0-alpha05" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.8.0" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.13.1" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.15.0" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.1" }
 
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom-alpha", version = "2024.10.01" }
