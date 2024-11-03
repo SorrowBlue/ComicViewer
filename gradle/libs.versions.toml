@@ -67,7 +67,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 kotlin-compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlinx-kover-gradlePlugin = { group = "org.jetbrains.kotlinx.kover", name = "org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kotlinx-kover" }
 
-androidx-activity = { group = "androidx.activity", name = "activity", version = "1.9.3" }
+androidx-activity = { group = "androidx.activity", name = "activity", version = "1.9.2" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.2.0-alpha05" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.8.0" }
