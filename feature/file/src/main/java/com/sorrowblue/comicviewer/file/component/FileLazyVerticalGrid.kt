@@ -30,6 +30,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQualit
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
@@ -125,7 +126,12 @@ fun <T : File> FileLazyVerticalGrid(
                             showThumbnail = uiState.showThumbnails,
                             fontSize = uiState.fontSize,
                             contentScale = contentScale,
-                            filterQuality = filterQuality
+                            filterQuality = filterQuality,
+                            modifier = if (item.path == emphasisPath) {
+                                Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
+                            } else {
+                                Modifier
+                            }
                         )
                     }
 
@@ -138,6 +144,11 @@ fun <T : File> FileLazyVerticalGrid(
                             fontSize = uiState.fontSize,
                             contentScale = contentScale,
                             filterQuality = filterQuality,
+                            modifier = if (item.path == emphasisPath) {
+                                Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
+                            } else {
+                                Modifier
+                            }
                         )
                     }
 
@@ -149,7 +160,11 @@ fun <T : File> FileLazyVerticalGrid(
                         fontSize = uiState.fontSize,
                         contentScale = contentScale,
                         filterQuality = filterQuality,
-                        isEmphasis = item.path == emphasisPath
+                        modifier = if (item.path == emphasisPath) {
+                            Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
+                        } else {
+                            Modifier
+                        }
                     )
                 }
             }
