@@ -25,6 +25,7 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.containerColo
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.contentColor
 import de.drick.compose.edgetoedgepreviewlib.CameraCutoutMode
 import de.drick.compose.edgetoedgepreviewlib.EdgeToEdgeTemplate
+import de.drick.compose.edgetoedgepreviewlib.InsetMode
 import de.drick.compose.edgetoedgepreviewlib.NavigationMode
 
 @Composable
@@ -33,8 +34,8 @@ fun PreviewTheme(isInvertedOrientation: Boolean = false, content: @Composable ()
         navMode = NavigationMode.Gesture,
         cameraCutoutMode = CameraCutoutMode.Middle,
         showInsetsBorder = false,
-        isStatusBarVisible = true,
-        isNavigationBarVisible = true,
+        statusBarMode = InsetMode.Hidden,
+        navigationBarMode = InsetMode.Hidden,
         isInvertedOrientation = isInvertedOrientation,
     ) {
         ComicTheme {
@@ -85,8 +86,8 @@ fun PreviewTheme2(
                     navMode = template.navMode,
                     cameraCutoutMode = template.cameraCutoutMode,
                     showInsetsBorder = template.showInsetsBorder,
-                    isStatusBarVisible = template.isStatusBarVisible,
-                    isNavigationBarVisible = template.isNavigationBarVisible,
+                    statusBarMode = if (template.isStatusBarVisible) InsetMode.Visible else InsetMode.Hidden,
+                    navigationBarMode = if (template.isNavigationBarVisible) InsetMode.Visible else InsetMode.Hidden,
                     isInvertedOrientation = template.isInvertedOrientation,
                 ) {
                     val navigationState = NavigationSuiteScaffoldDefaults
