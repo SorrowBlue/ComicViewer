@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.folder
 
-import android.os.Parcelable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -57,16 +56,14 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.flowEmptyData
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 internal data class FolderScreenUiState(
     val bookshelfId: BookshelfId = BookshelfId(),
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
     val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
     val sortType: SortType = FolderDisplaySettingsDefaults.sortType,
     val emphasisPath: String = "",
-) : Parcelable
+)
 
 @Composable
 fun FolderScreen(
@@ -92,7 +89,11 @@ fun FolderScreen(
     LaunchedEventEffect(state.event) {
         when (it) {
             FolderScreenEvent.Back -> currentNavigator.navigateUp()
-            is FolderScreenEvent.Favorite -> currentNavigator.onFavoriteClick(it.file)
+            is FolderScreenEvent.Favorite -> currentNavigator.onFavoriteClick(
+                it.bookshelfId,
+                it.path
+            )
+
             is FolderScreenEvent.File -> currentNavigator.onFileClick(it.file)
             FolderScreenEvent.Restore -> currentNavigator.onRestoreComplete()
             is FolderScreenEvent.Search -> currentNavigator.onSearchClick(it.bookshelfId, it.path)
@@ -112,7 +113,7 @@ fun FolderScreen(
 
 @Composable
 private fun FolderScreen(
-    navigator: ThreePaneScaffoldNavigator<File>,
+    navigator: ThreePaneScaffoldNavigator<File.Key>,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onFolderTopAppBarAction: (FolderTopAppBarAction) -> Unit,
@@ -134,7 +135,7 @@ private fun FolderScreen(
             )
         },
         extraPane = { content ->
-            FileInfoSheet(file = content, onAction = onFileInfoSheetAction)
+            FileInfoSheet(fileKey = content, onAction = onFileInfoSheetAction)
         },
         floatingActionButton = {
             FolderFab(
@@ -224,7 +225,7 @@ private fun PreviewFolderScreen() {
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {
         FolderScreen(
-            navigator = rememberSupportingPaneScaffoldNavigator<File>(),
+            navigator = rememberSupportingPaneScaffoldNavigator<File.Key>(),
             uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
             lazyPagingItems = lazyPagingItems,
             onFileInfoSheetAction = {},
@@ -242,7 +243,7 @@ private fun PreviewFolderScreenEmpty() {
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {
         FolderScreen(
-            navigator = rememberSupportingPaneScaffoldNavigator<File>(),
+            navigator = rememberSupportingPaneScaffoldNavigator<File.Key>(),
             uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
             lazyPagingItems = lazyPagingItems,
             onFileInfoSheetAction = {},

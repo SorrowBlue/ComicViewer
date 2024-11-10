@@ -18,7 +18,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.destinations.NotificationReq
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.destinations.BookshelfEditScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.remove.BookshelfRemoveDialogArgs
 import com.sorrowblue.comicviewer.feature.bookshelf.remove.destinations.BookshelfRemoveDialogDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.destinations.BookshelfSelectionScreenDestination
@@ -27,7 +26,7 @@ import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 @Composable
 fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
     onBookClick: (Book) -> Unit,
-    onFavoriteClick: (File) -> Unit,
+    onFavoriteClick: (BookshelfId, String) -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
     onRestoreComplete: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -41,7 +40,8 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
 
             override val navigator get() = destinationsNavigator
 
-            override fun onFavoriteClick(file: File) = onFavoriteClick(file)
+            override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) =
+                onFavoriteClick(bookshelfId, path)
 
             override fun onSearchClick(bookshelfId: BookshelfId, path: String) =
                 onSearchClick(bookshelfId, path)
@@ -87,7 +87,7 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
 
             override fun remove(bookshelf: Bookshelf) {
                 navigator.navigate(
-                    BookshelfRemoveDialogDestination(BookshelfRemoveDialogArgs(bookshelf))
+                    BookshelfRemoveDialogDestination(bookshelf.id, bookshelf.displayName)
                 )
             }
 

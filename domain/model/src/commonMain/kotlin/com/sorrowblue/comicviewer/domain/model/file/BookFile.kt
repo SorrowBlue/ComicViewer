@@ -1,10 +1,9 @@
 package com.sorrowblue.comicviewer.domain.model.file
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import kotlinx.parcelize.Parcelize
+import com.sorrowblue.comicviewer.domain.model.extension
 
-@Parcelize
-data class Folder(
+data class BookFile(
     override val bookshelfId: BookshelfId,
     override val name: String,
     override val parent: String,
@@ -12,7 +11,12 @@ data class Folder(
     override val size: Long,
     override val lastModifier: Long,
     override val isHidden: Boolean,
-    override val count: Int = 0,
-    override val sortIndex: Int = -1,
     override val cacheKey: String = "",
-) : IFolder
+    override val lastPageRead: Int = 0,
+    override val totalPageCount: Int = 0,
+    override val lastReadTime: Long = 0,
+    override val sortIndex: Int = -1,
+) : Book {
+
+    val extension get() = path.extension
+}

@@ -7,7 +7,6 @@ import com.ramcosta.composedestinations.navigation.navGraph
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.navgraphs.HistoryNavGraph
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryGraphDependencies
 import com.sorrowblue.comicviewer.feature.library.LibraryScreenNavigator
@@ -23,7 +22,7 @@ fun DependenciesContainerBuilder<*>.LibraryGraphDependencies(
     onSettingsClick: () -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
     navigateToBook: (Book, FavoriteId?) -> Unit,
-    onFavoriteClick: (File) -> Unit,
+    onFavoriteClick: (BookshelfId, String) -> Unit,
 ) {
     navGraph(NavGraphs.library) {
         dependency(

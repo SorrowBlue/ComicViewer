@@ -14,6 +14,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -38,14 +39,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 internal sealed interface FavoriteScreenEvent {
-    data class Favorite(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
-        FavoriteScreenEvent
+    data class Favorite(val bookshelfId: BookshelfId, val path: String) : FavoriteScreenEvent
 
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
         FavoriteScreenEvent
 
-    data class OpenFolder(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
-        FavoriteScreenEvent
+    data class OpenFolder(val bookshelfId: BookshelfId, val parent: String) : FavoriteScreenEvent
 
     data class Edit(val favoriteId: FavoriteId) : FavoriteScreenEvent
 
@@ -56,7 +55,7 @@ internal sealed interface FavoriteScreenEvent {
 internal interface FavoriteScreenState :
     SaveableScreenState,
     ScreenStateEvent<FavoriteScreenEvent> {
-    val navigator: ThreePaneScaffoldNavigator<File>
+    val navigator: ThreePaneScaffoldNavigator<File.Key>
     val favoriteId: FavoriteId
     val uiState: FavoriteScreenUiState
     val pagingDataFlow: Flow<PagingData<File>>
@@ -70,7 +69,7 @@ internal interface FavoriteScreenState :
 @Composable
 internal fun rememberFavoriteScreenState(
     args: FavoriteArgs,
-    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator<File>(),
+    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberSupportingPaneScaffoldNavigator<File.Key>(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: FavoriteViewModel = hiltViewModel(),
@@ -92,7 +91,7 @@ internal fun rememberFavoriteScreenState(
 @Stable
 private class FavoriteScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator<File>,
+    override val navigator: ThreePaneScaffoldNavigator<File.Key>,
     override val lazyGridState: LazyGridState,
     override val scope: CoroutineScope,
     private val args: FavoriteArgs,
@@ -179,7 +178,7 @@ private class FavoriteScreenStateImpl(
 
     private fun navigateToFileInfo(file: File) {
         scope.launch {
-            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
+            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file.key())
         }
     }
 
@@ -202,13 +201,16 @@ private class FavoriteScreenStateImpl(
                 navigator.navigateBack()
             }
 
-            is FileInfoSheetNavigator.Favorite -> sendEvent(
-                FavoriteScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!)
-            )
+            is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
+                sendEvent(FavoriteScreenEvent.Favorite(it.bookshelfId, it.path))
+            }
 
-            is FileInfoSheetNavigator.OpenFolder -> sendEvent(
-                FavoriteScreenEvent.OpenFolder(navigator.currentDestination!!.contentKey!!)
-            )
+            is FileInfoSheetNavigator.OpenFolder ->
+                navigator.currentDestination?.contentKey?.let {
+                    sendEvent(
+                        FavoriteScreenEvent.OpenFolder(it.bookshelfId, it.parent)
+                    )
+                }
         }
     }
 

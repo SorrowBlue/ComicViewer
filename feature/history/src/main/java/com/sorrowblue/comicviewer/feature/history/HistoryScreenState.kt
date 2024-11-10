@@ -8,6 +8,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 internal sealed interface HistoryScreenEvent {
-    data class Favorite(val file: File) : HistoryScreenEvent
+    data class Favorite(val bookshelfId: BookshelfId, val path: String) : HistoryScreenEvent
     data class OpenFolder(val file: File) : HistoryScreenEvent
     data class Book(val book: com.sorrowblue.comicviewer.domain.model.file.Book) :
         HistoryScreenEvent
@@ -34,7 +35,7 @@ internal interface HistoryScreenState :
     SaveableScreenState,
     ScreenStateEvent<HistoryScreenEvent> {
     val pagingDataFlow: Flow<PagingData<Book>>
-    val navigator: ThreePaneScaffoldNavigator<File>
+    val navigator: ThreePaneScaffoldNavigator<File.Key>
     fun onHistoryTopAppBarAction(action: HistoryTopAppBarAction)
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onHistoryContentsAction(action: HistoryContentsAction)
@@ -42,7 +43,7 @@ internal interface HistoryScreenState :
 
 @Composable
 internal fun rememberHistoryScreenState(
-    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator<File>(),
+    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberSupportingPaneScaffoldNavigator<File.Key>(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: HistoryViewModel = hiltViewModel(),
 ): HistoryScreenState = rememberSaveableScreenState {
@@ -57,7 +58,7 @@ internal fun rememberHistoryScreenState(
 private class HistoryScreenStateImpl(
     viewModel: HistoryViewModel,
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator<File>,
+    override val navigator: ThreePaneScaffoldNavigator<File.Key>,
     override val scope: CoroutineScope,
 ) : HistoryScreenState {
 
@@ -75,7 +76,7 @@ private class HistoryScreenStateImpl(
         when (action) {
             FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
             is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
-                sendEvent(HistoryScreenEvent.Favorite(it))
+                sendEvent(HistoryScreenEvent.Favorite(it.bookshelfId, it.path))
             }
 
             is FileInfoSheetNavigator.OpenFolder -> sendEvent(HistoryScreenEvent.OpenFolder(action.file))
@@ -91,7 +92,7 @@ private class HistoryScreenStateImpl(
 
     private fun navigateToFileInfo(file: File) {
         scope.launch {
-            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file)
+            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file.key())
         }
     }
 }

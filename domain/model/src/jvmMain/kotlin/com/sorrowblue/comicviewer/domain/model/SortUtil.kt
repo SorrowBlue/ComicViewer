@@ -1,12 +1,12 @@
 package com.sorrowblue.comicviewer.domain.model
 
-import android.icu.text.Collator
-import android.icu.text.RuleBasedCollator
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
+import java.text.Collator
+import java.text.RuleBasedCollator
 import java.util.Locale
 
 actual object SortUtil {
@@ -17,16 +17,18 @@ actual object SortUtil {
             val lo = Collator.getInstance(Locale.getDefault()) as RuleBasedCollator
             return RuleBasedCollator(us.rules + lo.rules).apply {
                 strength = Collator.PRIMARY
-                numericCollation = true
             }
         }
 
-    actual fun filter(file: File, supportExtensions: List<String>): Boolean {
-        return file is IFolder || (file is BookFile && file.extension in supportExtensions)
-    }
-
     private val sort = compareBy<File> { if (it is BookFile) 1 else 0 }
         .thenBy(collator::compare, File::name)
+
+    actual fun filter(
+        file: File,
+        supportExtensions: List<String>,
+    ): Boolean {
+        return file is IFolder || (file is BookFile && file.extension in supportExtensions)
+    }
 
     actual fun sortedIndex(list: List<File>): List<File> {
         return list.sortedWith(sort)

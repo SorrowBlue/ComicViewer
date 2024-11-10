@@ -1,14 +1,12 @@
 package com.sorrowblue.comicviewer.domain.model.bookshelf
 
-import android.os.Parcelable
 import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
-import kotlinx.parcelize.Parcelize
+import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 @JvmInline
-value class BookshelfId @ExperimentalIdValue constructor(val value: Int) : Parcelable {
+value class BookshelfId @ExperimentalIdValue constructor(val value: Int) {
     companion object {
         @OptIn(ExperimentalIdValue::class)
         operator fun invoke() = BookshelfId(0)

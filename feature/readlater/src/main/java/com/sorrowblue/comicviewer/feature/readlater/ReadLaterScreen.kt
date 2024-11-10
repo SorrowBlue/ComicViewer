@@ -16,6 +16,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraph
@@ -38,7 +39,7 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 interface ReadLaterScreenNavigator {
     fun onSettingsClick()
     fun onFileClick(file: File)
-    fun onFavoriteClick(file: File)
+    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
     fun onOpenFolderClick(file: File)
 }
 
@@ -73,7 +74,11 @@ private fun ReadLaterScreen(
     val currentNavigator by rememberUpdatedState(navigator)
     LaunchedEventEffect(state.event) {
         when (it) {
-            is ReadLaterScreenEvent.Favorite -> currentNavigator.onFavoriteClick(it.file)
+            is ReadLaterScreenEvent.Favorite -> currentNavigator.onFavoriteClick(
+                it.bookshelfId,
+                it.path
+            )
+
             is ReadLaterScreenEvent.File -> currentNavigator.onFileClick(it.file)
             ReadLaterScreenEvent.Settings -> currentNavigator.onSettingsClick()
         }
@@ -84,7 +89,7 @@ private fun ReadLaterScreen(
 @Composable
 private fun ReadLaterScreen(
     lazyPagingItems: LazyPagingItems<File>,
-    navigator: ThreePaneScaffoldNavigator<File>,
+    navigator: ThreePaneScaffoldNavigator<File.Key>,
     lazyGridState: LazyGridState,
     onTopAppBarAction: (ReadLaterTopAppBarAction) -> Unit,
     onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
@@ -99,7 +104,9 @@ private fun ReadLaterScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPane = { content -> FileInfoSheet(file = content, onAction = onFileInfoSheetAction) },
+        extraPane = { content ->
+            FileInfoSheet(fileKey = content, onAction = onFileInfoSheetAction)
+        },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         ReadLaterContents(

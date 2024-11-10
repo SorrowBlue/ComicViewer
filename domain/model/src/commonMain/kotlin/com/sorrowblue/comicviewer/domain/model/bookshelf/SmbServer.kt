@@ -1,9 +1,5 @@
 package com.sorrowblue.comicviewer.domain.model.bookshelf
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
 data class SmbServer(
     override val id: BookshelfId,
     override val displayName: String,
@@ -31,16 +27,14 @@ data class SmbServer(
         0
     )
 
-    sealed interface Auth : Parcelable {
+    sealed interface Auth {
 
-        @Parcelize
         data class UsernamePassword(
             val domain: String,
             val username: String,
             val password: String,
         ) : Auth
 
-        @Parcelize
         data object Guest : Auth
     }
 }

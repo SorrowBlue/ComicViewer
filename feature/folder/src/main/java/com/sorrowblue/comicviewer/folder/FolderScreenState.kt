@@ -5,14 +5,15 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
-import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
@@ -36,6 +37,7 @@ import com.sorrowblue.comicviewer.folder.section.FolderFabAction
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
@@ -50,8 +52,7 @@ import logcat.asLog
 import logcat.logcat
 
 internal sealed interface FolderScreenEvent {
-    data class Favorite(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
-        FolderScreenEvent
+    data class Favorite(val bookshelfId: BookshelfId, val path: String) : FolderScreenEvent
 
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) : FolderScreenEvent
 
@@ -69,7 +70,7 @@ internal interface FolderScreenState :
     SaveableScreenState,
     ScreenStateEvent<FolderScreenEvent> {
 
-    val navigator: ThreePaneScaffoldNavigator<File>
+    val navigator: ThreePaneScaffoldNavigator<File.Key>
     val snackbarHostState: SnackbarHostState
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
@@ -87,7 +88,7 @@ internal interface FolderScreenState :
 @Composable
 internal fun rememberFolderScreenState(
     args: FolderArgs,
-    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator<File>(),
+    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: FolderViewModel = hiltViewModel(),
@@ -116,7 +117,7 @@ internal fun rememberFolderScreenState(
 private class FolderScreenStateImpl(
     override val lazyPagingItems: LazyPagingItems<File>,
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator<File>,
+    override val navigator: ThreePaneScaffoldNavigator<File.Key>,
     override val lazyGridState: LazyGridState,
     override val snackbarHostState: SnackbarHostState,
     override val pullRefreshState: PullToRefreshState,
@@ -130,9 +131,7 @@ private class FolderScreenStateImpl(
 
     override val event = MutableSharedFlow<FolderScreenEvent>()
 
-    override var uiState by savedStateHandle.saveable {
-        mutableStateOf(FolderScreenUiState(bookshelfId = args.bookshelfId))
-    }
+    override var uiState by mutableStateOf(FolderScreenUiState(bookshelfId = args.bookshelfId))
         private set
 
     init {
@@ -171,8 +170,9 @@ private class FolderScreenStateImpl(
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
             FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
-            is FileInfoSheetNavigator.Favorite ->
-                sendEvent(FolderScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!))
+            is FileInfoSheetNavigator.Favorite -> navigator.currentDestination!!.contentKey!!.let {
+                sendEvent(FolderScreenEvent.Favorite(it.bookshelfId, it.path))
+            }
 
             is FileInfoSheetNavigator.OpenFolder -> Unit
         }
@@ -182,7 +182,7 @@ private class FolderScreenStateImpl(
         when (action) {
             is FolderContentsAction.File -> sendEvent(FolderScreenEvent.File(action.file))
             is FolderContentsAction.FileInfo -> scope.launch {
-                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file)
+                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file.key())
             }
 
             FolderContentsAction.Refresh -> refreshItems()

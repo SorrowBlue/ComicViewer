@@ -15,21 +15,22 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 import kotlinx.parcelize.IgnoredOnParcel
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 data class BookshelfEditArgs(val editMode: BookshelfEditMode)
 
-sealed class BookshelfEditMode : Parcelable {
+@Serializable
+sealed class BookshelfEditMode {
 
     internal abstract val title: Int
 
-    @Parcelize
+    @Serializable
     data class Register(val bookshelfType: BookshelfType) : BookshelfEditMode() {
         @IgnoredOnParcel
         override val title = R.string.bookshelf_edit_title_register
     }
 
-    @Parcelize
+    @Serializable
     data class Edit(val bookshelfId: BookshelfId) : BookshelfEditMode() {
         @IgnoredOnParcel
         override val title = R.string.bookshelf_edit_title_edit

@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
@@ -36,13 +37,8 @@ import kotlinx.coroutines.launch
 internal sealed interface SearchScreenEvent {
     data object Back : SearchScreenEvent
     data object Settings : SearchScreenEvent
-
-    data class Favorite(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
-        SearchScreenEvent
-
-    data class OpenFolder(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
-        SearchScreenEvent
-
+    data class Favorite(val bookshelfId: BookshelfId, val path: String) : SearchScreenEvent
+    data class OpenFolder(val bookshelfId: BookshelfId, val parent: String) : SearchScreenEvent
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) : SearchScreenEvent
 }
 
@@ -55,7 +51,7 @@ internal interface SearchScreenState :
     val lazyPagingItems: Flow<PagingData<File>>
     var isSkipFirstRefresh: Boolean
     var isScrollableTop: Boolean
-    val navigator: ThreePaneScaffoldNavigator<File>
+    val navigator: ThreePaneScaffoldNavigator<File.Key>
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onSearchTopAppBarAction(action: SearchTopAppBarAction)
     fun onSearchContentsAction(action: SearchContentsAction)
@@ -66,7 +62,7 @@ internal fun rememberSearchScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: SearchViewModel = hiltViewModel(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
-    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator<File>(),
+    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberSupportingPaneScaffoldNavigator<File.Key>(),
 ): SearchScreenState = rememberSaveableScreenState {
     SearchScreenStateImpl(
         manageFolderDisplaySettingsUseCase = viewModel.manageFolderDisplaySettingsUseCase,
@@ -82,17 +78,19 @@ internal fun rememberSearchScreenState(
 private class SearchScreenStateImpl(
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator<File>,
+    override val navigator: ThreePaneScaffoldNavigator<File.Key>,
     override val scope: CoroutineScope,
     override val lazyGridState: LazyGridState,
     private val viewModel: SearchViewModel,
 ) : SearchScreenState {
 
     override val event = MutableSharedFlow<SearchScreenEvent>()
-
-    override var uiState by savedStateHandle.saveable { mutableStateOf(SearchScreenUiState()) }
-        private set
     override val lazyPagingItems = viewModel.pagingDataFlow
+
+    override var uiState by savedStateHandle.saveable(stateSaver = SearchScreenUiState.Saver) {
+        mutableStateOf(SearchScreenUiState())
+    }
+        private set
 
     override var isScrollableTop by mutableStateOf(false)
     override var isSkipFirstRefresh by mutableStateOf(true)
@@ -126,8 +124,13 @@ private class SearchScreenStateImpl(
             is SearchTopAppBarAction.PeriodClick ->
                 uiState = copySearchCondition { it.copy(period = action.period) }
 
-            is SearchTopAppBarAction.QueryChange ->
-                uiState = copySearchCondition { it.copy(query = action.value) }
+            is SearchTopAppBarAction.QueryChange -> {
+                uiState = uiState.copy(
+                    searchCondition = uiState.searchCondition.copy(query = action.value)
+                        .also { viewModel.searchCondition = it },
+                    searchContentsUiState = uiState.searchContentsUiState.copy(query = action.value)
+                )
+            }
 
             is SearchTopAppBarAction.RangeClick ->
                 uiState = copySearchCondition {
@@ -152,12 +155,8 @@ private class SearchScreenStateImpl(
     }
 
     private fun copySearchCondition(action: (SearchCondition) -> SearchCondition): SearchScreenUiState {
-        return uiState.copy(
-            searchTopAppBarUiState = uiState.searchTopAppBarUiState.copy(
-                searchCondition = action(uiState.searchTopAppBarUiState.searchCondition)
-            )
-        ).also {
-            viewModel.searchCondition = it.searchTopAppBarUiState.searchCondition
+        return uiState.copy(searchCondition = action(uiState.searchCondition)).also {
+            viewModel.searchCondition = it.searchCondition
         }
     }
 
@@ -167,13 +166,14 @@ private class SearchScreenStateImpl(
                 navigator.navigateBack()
             }
 
-            is FileInfoSheetNavigator.Favorite -> sendEvent(
-                SearchScreenEvent.Favorite(navigator.currentDestination!!.contentKey!!)
-            )
+            is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
+                sendEvent(SearchScreenEvent.Favorite(it.bookshelfId, it.path))
+            }
 
-            is FileInfoSheetNavigator.OpenFolder -> sendEvent(
-                SearchScreenEvent.OpenFolder(navigator.currentDestination!!.contentKey!!)
-            )
+            is FileInfoSheetNavigator.OpenFolder ->
+                navigator.currentDestination?.contentKey?.let {
+                    sendEvent(SearchScreenEvent.OpenFolder(it.bookshelfId, it.parent))
+                }
         }
     }
 
@@ -181,7 +181,7 @@ private class SearchScreenStateImpl(
         when (action) {
             is SearchContentsAction.File -> sendEvent(SearchScreenEvent.File(action.file))
             is SearchContentsAction.FileInfo -> scope.launch {
-                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file)
+                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file.key())
             }
         }
     }

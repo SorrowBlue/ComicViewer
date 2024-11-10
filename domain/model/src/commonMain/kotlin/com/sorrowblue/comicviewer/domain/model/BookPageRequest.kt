@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.domain.model
 
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import kotlin.jvm.JvmInline
 
 @JvmInline
 value class BookPageRequest(val value: Pair<Book, Int>) {

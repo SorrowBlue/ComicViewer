@@ -47,14 +47,14 @@ private class BookshelfRemoveDialogStateImpl(
 
     override val event = MutableSharedFlow<BookshelfRemoveDialogEvent>()
 
-    override var uiState by mutableStateOf(BookshelfRemoveDialogUiState(navArgs.bookshelf.displayName))
+    override var uiState by mutableStateOf(BookshelfRemoveDialogUiState(navArgs.displayName))
         private set
 
     override fun remove() {
         scope.launch {
             uiState = uiState.copy(isProcessing = true)
             delay(300)
-            removeBookshelfUseCase(RemoveBookshelfUseCase.Request(navArgs.bookshelf.id)).fold(
+            removeBookshelfUseCase(RemoveBookshelfUseCase.Request(navArgs.bookshelfId)).fold(
                 onSuccess = {
                     sendEvent(BookshelfRemoveDialogEvent.RemoveSuccess)
                 },

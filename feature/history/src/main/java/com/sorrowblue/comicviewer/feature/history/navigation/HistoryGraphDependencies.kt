@@ -20,7 +20,7 @@ fun DependenciesContainerBuilder<*>.HistoryGraphDependencies(
     onSearchClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
     navigateToBook: (Book) -> Unit,
-    onFavoriteClick: (File) -> Unit,
+    onFavoriteClick: (BookshelfId, String) -> Unit,
 ) {
     navGraph(NavGraphs.history) {
         dependency(
@@ -40,7 +40,8 @@ fun DependenciesContainerBuilder<*>.HistoryGraphDependencies(
 
                 override val navigator get() = destinationsNavigator
 
-                override fun onFavoriteClick(file: File) = onFavoriteClick(file)
+                override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) =
+                    onFavoriteClick(bookshelfId, path)
 
                 override fun onSearchClick(bookshelfId: BookshelfId, path: String) =
                     onSearchClick(bookshelfId, path)

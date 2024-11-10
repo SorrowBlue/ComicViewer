@@ -35,9 +35,10 @@ interface FolderScreenNavigator {
     /**
      * お気に入りボタンが押されたとき
      *
-     * @param file　お気に入りにするファイル
+     * @param bookshelfId 本棚ID
+     * @param path お気に入りにするパス
      */
-    fun onFavoriteClick(file: File)
+    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
 
     fun onSortClick(sortType: SortType) {
         navigator.navigate(SortTypeDialogDestination(sortType))

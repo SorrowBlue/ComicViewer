@@ -15,12 +15,12 @@ import androidx.compose.ui.window.DialogProperties
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.ramcosta.composedestinations.result.ResultBackNavigator
-import com.ramcosta.composedestinations.spec.DestinationStyle
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 
 data class BookshelfRemoveDialogArgs(
-    val bookshelf: Bookshelf,
+    val bookshelfId: BookshelfId,
+    val displayName: String,
 )
 
 internal data class BookshelfRemoveDialogUiState(
@@ -28,10 +28,7 @@ internal data class BookshelfRemoveDialogUiState(
     val isProcessing: Boolean = false,
 )
 
-@Destination<ExternalModuleGraph>(
-    navArgs = BookshelfRemoveDialogArgs::class,
-    style = DestinationStyle.Dialog::class
-)
+@Destination<ExternalModuleGraph>(navArgs = BookshelfRemoveDialogArgs::class)
 @Composable
 internal fun BookshelfRemoveDialog(
     navArgs: BookshelfRemoveDialogArgs,
