@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.domain.usecase.UseCase
 
 abstract class GetFileUseCase : UseCase<GetFileUseCase.Request, File, GetFileUseCase.Error>() {
 
-    class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
+    data class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
 
     enum class Error : Resource.AppError {
         NOT_FOUND,

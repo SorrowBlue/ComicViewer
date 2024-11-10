@@ -24,6 +24,3 @@ kotlin {
         }
     }
 }
-
-// workaround for https://youtrack.jetbrains.com/issue/KT-27170
-configurations.create("compileClasspath")

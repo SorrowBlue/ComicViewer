@@ -1,6 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration name="detekt lint" default="false" factoryName="Gradle"
-        type="GradleRunConfiguration">
+  <configuration default="false" name="detekt lint" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -11,11 +10,8 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="detektMain" />
-          <option value="lintDebug" />
-          <option value="lintInternal" />
-          <option value="lintRelease" />
-            <option value="lintPrerelease" />
+          <option value="detektRelease" />
+          <option value="app:lintRelease" />
         </list>
       </option>
       <option name="vmOptions" />

@@ -9,6 +9,7 @@ abstract class UseCase<in R : UseCase.Request, out D, out E> {
     interface Request
 
     operator fun invoke(request: R): Flow<Resource<D, E>> {
+        // TODO(Migrate Logger to Multiplatform)
         logcat { "invoke(request: $request) " }
         return run(request)
     }
@@ -21,6 +22,7 @@ abstract class OneShotUseCase<in R : OneShotUseCase.Request, out D, out E> {
     interface Request
 
     suspend operator fun invoke(request: R): Resource<D, E> {
+        // TODO(Migrate Logger to Multiplatform)
         logcat { "invoke(request: $request) " }
         return run(request)
     }

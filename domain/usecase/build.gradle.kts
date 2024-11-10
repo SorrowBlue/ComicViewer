@@ -1,14 +1,27 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.library)
-    alias(libs.plugins.comicviewer.android.hilt)
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.android.library)
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer.domain.usecase"
 }
 
-dependencies {
-    api(projects.domain.model)
+kotlin {
+    jvmToolchain {
+        vendor = JvmVendorSpec.ADOPTIUM
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    androidTarget()
+    jvm()
+    sourceSets {
+        commonMain {
+            dependencies {
+                api(projects.domain.model)
 
-    implementation(libs.androidx.paging.common)
+                implementation(projects.framework.common)
+                implementation(libs.androidx.paging.common)
+            }
+        }
+    }
 }
