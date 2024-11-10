@@ -19,7 +19,7 @@ internal class GetIntentBookInteractor @Inject constructor(
         val remoteDataSource = remoteDataSourceFactory.create(bookshelf)
         return flow {
             logcat { "request.data=${request.data}" }
-            var book = remoteDataSource.file(request.data.toString())
+            var book = remoteDataSource.file(request.data)
             logcat { "book=$book" }
             book = book as BookFile
             book = book.copy(totalPageCount = remoteDataSource.fileReader(book)?.pageCount() ?: 0)

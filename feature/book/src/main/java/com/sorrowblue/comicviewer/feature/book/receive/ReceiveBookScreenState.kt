@@ -90,7 +90,7 @@ private class ReceiveBookScreenStateImpl(
             Toast.makeText(context, "ファイルを開けませんでした", Toast.LENGTH_SHORT).show()
         } else {
             scope.launch {
-                getIntentBookUseCase(GetIntentBookUseCase.Request(data)).collect { resource ->
+                getIntentBookUseCase(GetIntentBookUseCase.Request(data.toString())).collect { resource ->
                     when (resource) {
                         is Resource.Error -> Unit
                         is Resource.Success -> {

@@ -1,12 +1,55 @@
+//plugins {
+//    alias(libs.plugins.comicviewer.android.library)
+//}
+//
+//android {
+//    namespace = "com.sorrowblue.comicviewer.framework.common"
+//}
+//
+//dependencies {
+//    implementation(libs.androidx.startup.runtime)
+//    implementation(libs.squareup.logcat)
+//}
 plugins {
-    alias(libs.plugins.comicviewer.android.library)
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.android.library)
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer.framework.common"
+
+    lint {
+        checkAllWarnings = true
+        checkDependencies = true
+        enable += "WrongThreadInterprocedural"
+        disable += "InvalidPackage"
+        baseline = file("lint-baseline.xml")
+        htmlReport = true
+        sarifReport = true
+        textReport = false
+        xmlReport = false
+    }
 }
 
-dependencies {
-    implementation(libs.androidx.startup.runtime)
-    implementation(libs.squareup.logcat)
+kotlin {
+    jvmToolchain {
+        vendor = JvmVendorSpec.ADOPTIUM
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    androidTarget()
+    jvm()
+    sourceSets {
+        commonMain {
+            dependencies {
+                api(projects.domain.model)
+
+                implementation(libs.androidx.paging.common)
+            }
+        }
+        androidMain {
+            dependencies {
+                implementation(libs.androidx.startup.runtime)
+            }
+        }
+    }
 }
