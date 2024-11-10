@@ -38,6 +38,8 @@ internal class ComposeConventionPlugin : Plugin<Project> {
                 implementation(libs.compose.destinations.core)
                 ksp(libs.compose.destinations.ksp)
 
+                implementation(libs.kotlinx.serialization.json)
+
                 debugImplementation(libs.airbnb.android.showkase)
                 implementation(libs.airbnb.android.showkase.annotation)
                 kspDebug(libs.airbnb.android.showkase.processor)

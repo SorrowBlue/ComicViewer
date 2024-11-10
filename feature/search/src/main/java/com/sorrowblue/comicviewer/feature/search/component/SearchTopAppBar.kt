@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.search.component
 
-import android.os.Parcelable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,7 +37,6 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalTopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarBottom
-import kotlinx.parcelize.Parcelize
 import com.sorrowblue.comicviewer.feature.folder.R as FolderR
 
 internal sealed interface SearchTopAppBarAction {
@@ -88,14 +86,9 @@ internal sealed interface SearchTopAppBarAction {
     data class ShowHiddenClick(val value: Boolean) : SearchTopAppBarAction
 }
 
-@Parcelize
-internal data class SearchTopAppBarUiState(
-    val searchCondition: SearchCondition = SearchCondition(),
-) : Parcelable
-
 @Composable
 internal fun SearchTopAppBar(
-    uiState: SearchTopAppBarUiState,
+    searchCondition: SearchCondition,
     onAction: (SearchTopAppBarAction) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
@@ -104,7 +97,7 @@ internal fun SearchTopAppBar(
             title = {
                 val skc = LocalSoftwareKeyboardController.current
                 TextField(
-                    value = uiState.searchCondition.query,
+                    value = searchCondition.query,
                     onValueChange = { onAction(SearchTopAppBarAction.QueryChange(it)) },
                     placeholder = { Text(text = stringResource(R.string.search_label_search)) },
                     maxLines = 1,
@@ -134,32 +127,32 @@ internal fun SearchTopAppBar(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 DropdownMenuChip(
-                    text = stringResource(uiState.searchCondition.range.displayText),
+                    text = stringResource(searchCondition.range.displayText),
                     onChangeSelect = { onAction(SearchTopAppBarAction.RangeClick(it)) },
                     menus = remember { SearchCondition.Range.entries }
                 ) {
                     Text(stringResource(it.displayText))
                 }
                 DropdownMenuChip(
-                    text = stringResource(uiState.searchCondition.period.displayText),
+                    text = stringResource(searchCondition.period.displayText),
                     onChangeSelect = { onAction(SearchTopAppBarAction.PeriodClick(it)) },
                     menus = remember { SearchCondition.Period.entries }
                 ) {
                     Text(stringResource(it.displayText))
                 }
                 DropdownMenuChip(
-                    text = stringResource(uiState.searchCondition.sortType.displayText),
+                    text = stringResource(searchCondition.sortType.displayText),
                     onChangeSelect = { onAction(SearchTopAppBarAction.SortTypeClick(it)) },
                     menus = remember { SortType.entries }
                 ) {
                     Text(stringResource(it.displayText))
                 }
                 FilterChip(
-                    selected = uiState.searchCondition.showHidden,
-                    onClick = { onAction(SearchTopAppBarAction.ShowHiddenClick(!uiState.searchCondition.showHidden)) },
+                    selected = searchCondition.showHidden,
+                    onClick = { onAction(SearchTopAppBarAction.ShowHiddenClick(!searchCondition.showHidden)) },
                     label = { Text(text = stringResource(R.string.search_label_show_hidden_files)) },
                     leadingIcon = {
-                        if (uiState.searchCondition.showHidden) {
+                        if (searchCondition.showHidden) {
                             Icon(imageVector = ComicIcons.Check, contentDescription = null)
                         }
                     }

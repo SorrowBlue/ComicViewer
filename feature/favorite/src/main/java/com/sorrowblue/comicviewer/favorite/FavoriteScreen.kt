@@ -21,6 +21,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraph
@@ -48,8 +49,8 @@ interface FavoriteScreenNavigator {
     fun onEditClick(favoriteId: FavoriteId)
     fun onSettingsClick()
     fun onFileClick(file: File, favoriteId: FavoriteId)
-    fun onFavoriteClick(file: File)
-    fun onOpenFolderClick(file: File)
+    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onOpenFolderClick(bookshelfId: BookshelfId, parent: String)
 }
 
 data class FavoriteArgs(val favoriteId: FavoriteId)
@@ -85,9 +86,13 @@ private fun FavoriteScreen(
     LaunchedEventEffect(state.event) {
         when (it) {
             FavoriteScreenEvent.Back -> currentNavigator.navigateUp()
-            is FavoriteScreenEvent.Favorite -> currentNavigator.onFavoriteClick(it.file)
+            is FavoriteScreenEvent.Favorite ->
+                currentNavigator.onFavoriteClick(it.bookshelfId, it.path)
+
             is FavoriteScreenEvent.File -> currentNavigator.onFileClick(it.file, state.favoriteId)
-            is FavoriteScreenEvent.OpenFolder -> currentNavigator.onOpenFolderClick(it.file)
+            is FavoriteScreenEvent.OpenFolder ->
+                currentNavigator.onOpenFolderClick(it.bookshelfId, it.parent)
+
             FavoriteScreenEvent.Settings -> currentNavigator.onSettingsClick()
             is FavoriteScreenEvent.Edit -> currentNavigator.onEditClick(it.favoriteId)
         }
@@ -105,7 +110,7 @@ internal data class FavoriteScreenUiState(
 @Composable
 private fun FavoriteScreen(
     uiState: FavoriteScreenUiState,
-    navigator: ThreePaneScaffoldNavigator<File>,
+    navigator: ThreePaneScaffoldNavigator<File.Key>,
     lazyPagingItems: LazyPagingItems<File>,
     onFavoriteTopAppBarAction: (FavoriteTopAppBarAction) -> Unit,
     onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
@@ -122,7 +127,9 @@ private fun FavoriteScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPane = { content -> FileInfoSheet(file = content, onAction = onFileInfoSheetAction) },
+        extraPane = { content ->
+            FileInfoSheet(fileKey = content, onAction = onFileInfoSheetAction)
+        },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         navigator = navigator,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)

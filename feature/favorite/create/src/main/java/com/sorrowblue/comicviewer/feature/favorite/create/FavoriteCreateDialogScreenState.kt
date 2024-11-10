@@ -72,9 +72,9 @@ private class FavoriteCreateDialogScreenStateImpl(
         scope.launch {
             createFavoriteUseCase(CreateFavoriteUseCase.Request(text)).first()
                 .fold({ data ->
-                    navArgs.favoriteBooksToAdd?.let {
-                        addFavoriteFile(data, it.bookshelfId, it.path)
-                    } ?: run {
+                    if (navArgs.bookshelfId != null && navArgs.path != null) {
+                        addFavoriteFile(data, navArgs.bookshelfId, navArgs.path)
+                    } else {
                         Toast.makeText(
                             context,
                             context.getString(

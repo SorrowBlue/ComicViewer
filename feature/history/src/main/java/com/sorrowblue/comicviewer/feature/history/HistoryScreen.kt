@@ -17,6 +17,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -39,7 +40,7 @@ interface HistoryScreenNavigator {
     fun navigateUp()
     fun onSettingsClick()
     fun navigateToBook(book: Book)
-    fun onFavoriteClick(file: File)
+    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
     fun navigateToFolder(file: File)
 }
 
@@ -71,7 +72,11 @@ private fun HistoryScreen(
     val currentNavigator by rememberUpdatedState(navigator)
     LaunchedEventEffect(state.event) {
         when (it) {
-            is HistoryScreenEvent.Favorite -> currentNavigator.onFavoriteClick(it.file)
+            is HistoryScreenEvent.Favorite -> currentNavigator.onFavoriteClick(
+                it.bookshelfId,
+                it.path
+            )
+
             is HistoryScreenEvent.Book -> currentNavigator.navigateToBook(it.book)
             is HistoryScreenEvent.OpenFolder -> currentNavigator.navigateToFolder(it.file)
             HistoryScreenEvent.Back -> currentNavigator.navigateUp()
@@ -83,7 +88,7 @@ private fun HistoryScreen(
 @Composable
 private fun HistoryScreen(
     lazyPagingItems: LazyPagingItems<Book>,
-    navigator: ThreePaneScaffoldNavigator<File>,
+    navigator: ThreePaneScaffoldNavigator<File.Key>,
     onHistoryTopAppBarAction: (HistoryTopAppBarAction) -> Unit,
     onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onHistoryContentsAction: (HistoryContentsAction) -> Unit,
@@ -100,9 +105,9 @@ private fun HistoryScreen(
         },
         extraPane = { content ->
             FileInfoSheet(
-                file = content,
-                isOpenFolderEnabled = true,
-                onAction = onFileInfoSheetAction
+                fileKey = content,
+                onAction = onFileInfoSheetAction,
+                isOpenFolderEnabled = true
             )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)

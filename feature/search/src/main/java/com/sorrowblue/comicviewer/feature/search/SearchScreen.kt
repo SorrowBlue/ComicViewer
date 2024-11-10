@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.search
 
-import android.os.Parcelable
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.TopAppBarDefaults
@@ -10,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,11 +18,11 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBar
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBarAction
-import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBarUiState
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchGraph
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchGraphTransitions
 import com.sorrowblue.comicviewer.feature.search.section.SearchContents
@@ -37,13 +37,14 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import kotlinx.coroutines.delay
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 interface SearchScreenNavigator {
     fun navigateUp()
     fun onFileClick(file: File)
-    fun onFavoriteClick(file: File)
-    fun onOpenFolderClick(file: File)
+    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onOpenFolderClick(bookshelfId: BookshelfId, parent: String)
     fun onNavigateSettings()
 }
 
@@ -76,15 +77,23 @@ internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenS
     val currentNavigator by rememberUpdatedState(navigator)
     LaunchedEventEffect(state.event) {
         when (it) {
-            is SearchScreenEvent.Favorite -> currentNavigator.onFavoriteClick(it.file)
-            is SearchScreenEvent.OpenFolder -> currentNavigator.onOpenFolderClick(it.file)
+            is SearchScreenEvent.Favorite -> currentNavigator.onFavoriteClick(
+                it.bookshelfId,
+                it.path
+            )
+
+            is SearchScreenEvent.OpenFolder -> currentNavigator.onOpenFolderClick(
+                it.bookshelfId,
+                it.parent
+            )
+
             SearchScreenEvent.Back -> currentNavigator.navigateUp()
             is SearchScreenEvent.File -> currentNavigator.onFileClick(it.file)
             SearchScreenEvent.Settings -> currentNavigator.onNavigateSettings()
         }
     }
 
-    LaunchedEffect(state.uiState.searchTopAppBarUiState.searchCondition) {
+    LaunchedEffect(state.uiState.searchCondition) {
         if (!state.isSkipFirstRefresh) {
             delay(WaitLoadPage)
             lazyPagingItems.refresh()
@@ -98,17 +107,30 @@ internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenS
     }
 }
 
-@Parcelize
 internal data class SearchScreenUiState(
-    val searchTopAppBarUiState: SearchTopAppBarUiState = SearchTopAppBarUiState(),
+    val searchCondition: SearchCondition = SearchCondition(),
     val searchContentsUiState: SearchContentsUiState = SearchContentsUiState(),
-) : Parcelable
+) {
+    object Saver :
+        androidx.compose.runtime.saveable.Saver<SearchScreenUiState, String> {
+        override fun restore(value: String): SearchScreenUiState {
+            val searchCondition = Json.decodeFromString<SearchCondition>(value)
+            return SearchScreenUiState(
+                searchCondition = searchCondition,
+                searchContentsUiState = SearchContentsUiState(searchCondition.query)
+            )
+        }
+
+        override fun SaverScope.save(value: SearchScreenUiState) =
+            Json.encodeToString<SearchCondition>(value.searchCondition)
+    }
+}
 
 @Composable
 private fun SearchScreen(
     uiState: SearchScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
-    navigator: ThreePaneScaffoldNavigator<File>,
+    navigator: ThreePaneScaffoldNavigator<File.Key>,
     lazyGridState: LazyGridState,
     onSearchTopAppBarAction: (SearchTopAppBarAction) -> Unit,
     onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
@@ -119,12 +141,14 @@ private fun SearchScreen(
         navigator = navigator,
         topBar = {
             SearchTopAppBar(
-                uiState = uiState.searchTopAppBarUiState,
+                searchCondition = uiState.searchCondition,
                 onAction = onSearchTopAppBarAction,
                 scrollBehavior = scrollBehavior
             )
         },
-        extraPane = { content -> FileInfoSheet(file = content, onAction = onFileInfoSheetAction) },
+        extraPane = { content ->
+            FileInfoSheet(fileKey = content, onAction = onFileInfoSheetAction)
+        },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         SearchContents(
@@ -148,7 +172,7 @@ private fun SearchScreenPreview() {
         SearchScreen(
             uiState = SearchScreenUiState(),
             lazyPagingItems = lazyPagingItems,
-            navigator = rememberSupportingPaneScaffoldNavigator<File>(),
+            navigator = rememberSupportingPaneScaffoldNavigator<File.Key>(),
             lazyGridState = rememberLazyGridState(),
             onSearchTopAppBarAction = {},
             onFileInfoSheetAction = {},

@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 @Composable
 fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
     onBookClick: (Book, FavoriteId?) -> Unit,
-    onFavoriteClick: (File) -> Unit,
+    onFavoriteClick: (BookshelfId, String) -> Unit,
     onSearchClick: (BookshelfId, String) -> Unit,
     onSettingsClick: () -> Unit,
     onNewFavoriteClick: () -> Unit,
@@ -34,7 +34,8 @@ fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
             FavoriteEditScreenNavigator {
             override val navigator get() = destinationsNavigator
 
-            override fun onFavoriteClick(file: File) = onFavoriteClick(file)
+            override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) =
+                onFavoriteClick(bookshelfId, path)
 
             override fun onSearchClick(bookshelfId: BookshelfId, path: String) =
                 onSearchClick(bookshelfId, path)
@@ -57,15 +58,8 @@ fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
                 onNewFavoriteClick()
             }
 
-            override fun onOpenFolderClick(file: File) {
-                navigator.navigate(
-                    FavoriteFolderScreenDestination(
-                        file.bookshelfId,
-                        file.parent,
-                        null
-                    )
-                )
-            }
+            override fun onOpenFolderClick(bookshelfId: BookshelfId, parent: String) =
+                navigator.navigate(FavoriteFolderScreenDestination(bookshelfId, parent, null))
 
             override fun onEditClick(favoriteId: FavoriteId) {
                 navigator.navigate(FavoriteEditScreenDestination(favoriteId))

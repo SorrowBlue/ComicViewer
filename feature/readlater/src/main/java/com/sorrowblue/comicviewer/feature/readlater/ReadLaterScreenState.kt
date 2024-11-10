@@ -10,6 +10,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAction
@@ -24,8 +25,7 @@ import kotlinx.coroutines.launch
 
 internal sealed interface ReadLaterScreenEvent {
 
-    data class Favorite(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
-        ReadLaterScreenEvent
+    data class Favorite(val bookshelfId: BookshelfId, val path: String) : ReadLaterScreenEvent
 
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
         ReadLaterScreenEvent
@@ -38,7 +38,7 @@ internal interface ReadLaterScreenState :
     ScreenStateEvent<ReadLaterScreenEvent> {
     val pagingDataFlow: Flow<PagingData<File>>
     val lazyGridState: LazyGridState
-    val navigator: ThreePaneScaffoldNavigator<File>
+    val navigator: ThreePaneScaffoldNavigator<File.Key>
     fun onNavClick()
     fun onTopAppBarAction(action: ReadLaterTopAppBarAction)
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
@@ -47,7 +47,7 @@ internal interface ReadLaterScreenState :
 
 @Composable
 internal fun rememberReadLaterScreenState(
-    navigator: ThreePaneScaffoldNavigator<File> = rememberSupportingPaneScaffoldNavigator<File>(),
+    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberSupportingPaneScaffoldNavigator<File.Key>(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: ReadLaterViewModel = hiltViewModel(),
@@ -65,7 +65,7 @@ internal fun rememberReadLaterScreenState(
 private class ReadLaterScreenStateImpl(
     viewModel: ReadLaterViewModel,
     override val savedStateHandle: SavedStateHandle,
-    override val navigator: ThreePaneScaffoldNavigator<File>,
+    override val navigator: ThreePaneScaffoldNavigator<File.Key>,
     override val lazyGridState: LazyGridState,
     override val scope: CoroutineScope,
     private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
@@ -91,7 +91,7 @@ private class ReadLaterScreenStateImpl(
             }
 
             is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
-                sendEvent(ReadLaterScreenEvent.Favorite(it))
+                sendEvent(ReadLaterScreenEvent.Favorite(it.bookshelfId, it.path))
             }
 
             is FileInfoSheetNavigator.OpenFolder -> Unit
@@ -102,7 +102,7 @@ private class ReadLaterScreenStateImpl(
         when (action) {
             is ReadLaterContentsAction.File -> sendEvent(ReadLaterScreenEvent.File(action.file))
             is ReadLaterContentsAction.FileInfo -> scope.launch {
-                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file)
+                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file.key())
             }
         }
     }
