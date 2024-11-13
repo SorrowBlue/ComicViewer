@@ -8,13 +8,11 @@ import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.autoSaver
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
@@ -33,10 +31,8 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.onedrive.data.OneDriveApiRepository
 import com.sorrowblue.comicviewer.feature.library.onedrive.data.OneDriveDownloadWorker
-import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveDialogUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
@@ -44,17 +40,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
-sealed interface OneDriveScreenEvent {
-
-    data object RequireAuthentication : OneDriveScreenEvent
-}
-
 @Stable
 internal interface OneDriveScreenState {
 
     val pagingDataFlow: Flow<PagingData<File>>
     val uiState: OneDriveScreenUiState
-    val events: SnapshotStateList<OneDriveScreenEvent>
 
     fun onLogoutClick()
     fun onResume()
@@ -65,9 +55,7 @@ internal interface OneDriveScreenState {
         onFolderClick: (Folder) -> Unit,
     )
 
-    fun onProfileImageClick()
     fun onResult(activityResult: ActivityResult)
-    fun consumeEvent(event: OneDriveScreenEvent)
 }
 
 @Composable
@@ -112,30 +100,18 @@ internal class OneDriveScreenStateImpl(
     override var uiState by savedStateHandle.saveable { mutableStateOf(OneDriveScreenUiState()) }
         private set
 
-    override var events = mutableStateListOf<OneDriveScreenEvent>()
-        private set
-
     init {
         scope.launch {
             repository.initialize()
-            repository.accountFlow.collectLatest { account ->
-                if (account == null) {
-                    delay(1000)
-                    events += OneDriveScreenEvent.RequireAuthentication
-                } else {
-                    uiState = uiState.copy(
-                        path = args.name.orEmpty(),
-                        profileUri = {
-                            repository.profileImage()
-                        }
-                    )
-                }
+            repository.accountFlow.filterNotNull().collectLatest {
+                uiState = uiState.copy(
+                    path = args.name.orEmpty(),
+                    profileUri = {
+                        repository.profileImage()
+                    }
+                )
             }
         }
-    }
-
-    override fun consumeEvent(event: OneDriveScreenEvent) {
-        events.remove(event)
     }
 
     override fun onResume() {
@@ -171,18 +147,6 @@ internal class OneDriveScreenStateImpl(
             is Folder -> {
                 onFolderClick(file)
             }
-        }
-    }
-
-    override fun onProfileImageClick() {
-        scope.launch {
-            uiState = uiState.copy(
-                showDialog = true,
-                oneDriveDialogUiState = OneDriveDialogUiState(
-                    "",
-                    repository.getCurrentUser()?.displayName.orEmpty()
-                )
-            )
         }
     }
 

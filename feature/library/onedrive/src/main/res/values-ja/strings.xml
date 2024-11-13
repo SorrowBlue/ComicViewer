@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="onedrive_action_login">ログイン</string>
-    <string name="onedrive_action_logout">ログアウト</string>
+    <string name="onedrive_action_signin">サインイン</string>
+    <string name="onedrive_action_signout">サインアウト</string>
     <string name="onedrive_msg_downloading_background">バックグラウンドでダウンロード中</string>
     <string name="onedrive_msg_one_file_downloaded">1つのファイルをダウンロードしました</string>
 </resources>

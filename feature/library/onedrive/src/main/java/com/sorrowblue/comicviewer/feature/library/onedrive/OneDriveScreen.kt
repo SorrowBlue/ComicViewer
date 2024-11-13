@@ -27,20 +27,16 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.library.onedrive.component.FileListItem
 import com.sorrowblue.comicviewer.feature.library.onedrive.component.OneDriveTopAppBar
-import com.sorrowblue.comicviewer.feature.library.onedrive.data.oneDriveModule
 import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveGraph
-import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveAccountDialog
-import com.sorrowblue.comicviewer.feature.library.onedrive.section.OneDriveDialogUiState
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import java.io.InputStream
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import org.koin.core.context.loadKoinModules
 
 internal interface OneDriveScreenNavigator {
     fun navigateUp()
     fun onFileClick(file: File)
-    fun requireAuthentication()
+    fun onProfileImageClick()
 }
 
 data class OneDriveArgs(
@@ -51,6 +47,7 @@ data class OneDriveArgs(
 @Destination<OneDriveGraph>(
     start = true,
     navArgs = OneDriveArgs::class,
+    wrappers = [OneDriveScreenWrapper::class],
     visibility = CodeGenVisibility.INTERNAL
 )
 @Composable
@@ -59,13 +56,12 @@ internal fun OneDriveScreen(
     navBackStackEntry: NavBackStackEntry,
     navigator: OneDriveScreenNavigator,
 ) {
-    loadKoinModules(oneDriveModule)
     OneDriveScreen(
         args = args,
         savedStateHandle = navBackStackEntry.savedStateHandle,
         onBackClick = navigator::navigateUp,
         onFolderClick = navigator::onFileClick,
-        requireAuthentication = navigator::requireAuthentication
+        onProfileImageClick = navigator::onProfileImageClick,
     )
 }
 
@@ -74,22 +70,13 @@ private fun OneDriveScreen(
     args: OneDriveArgs,
     savedStateHandle: SavedStateHandle,
     onBackClick: () -> Unit,
+    onProfileImageClick: () -> Unit,
     onFolderClick: (Folder) -> Unit,
-    requireAuthentication: () -> Unit,
     state: OneDriveScreenState = rememberOneDriveScreenState(
         args = args,
         savedStateHandle = savedStateHandle
     ),
 ) {
-    state.events.forEach { event ->
-        when (event) {
-            OneDriveScreenEvent.RequireAuthentication -> {
-                state.consumeEvent(event)
-                requireAuthentication()
-            }
-        }
-    }
-
     val uiState = state.uiState
     val lazPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     val createFileRequest = rememberLauncherForActivityResult(
@@ -100,10 +87,8 @@ private fun OneDriveScreen(
         lazyPagingItems = lazPagingItems,
         uiState = uiState,
         onBackClick = onBackClick,
-        onProfileImageClick = state::onProfileImageClick,
+        onProfileImageClick = onProfileImageClick,
         onFileClick = { state.onFileClick(it, createFileRequest, onFolderClick) },
-        onDialogDismissRequest = state::onDialogDismissRequest,
-        onLogoutClick = state::onLogoutClick,
     )
 
     LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME, onEvent = state::onResume)
@@ -112,7 +97,6 @@ private fun OneDriveScreen(
 @Parcelize
 internal data class OneDriveScreenUiState(
     val showDialog: Boolean = false,
-    val oneDriveDialogUiState: OneDriveDialogUiState = OneDriveDialogUiState(),
     val path: String = "",
     @IgnoredOnParcel val profileUri: suspend () -> InputStream? = { null },
 ) : Parcelable
@@ -124,8 +108,6 @@ private fun OneDriveScreen(
     onBackClick: () -> Unit,
     onProfileImageClick: () -> Unit,
     onFileClick: (File) -> Unit,
-    onDialogDismissRequest: () -> Unit,
-    onLogoutClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
@@ -156,12 +138,5 @@ private fun OneDriveScreen(
                 }
             }
         }
-    }
-    if (uiState.showDialog) {
-        OneDriveAccountDialog(
-            uiState = uiState.oneDriveDialogUiState,
-            onDismissRequest = onDialogDismissRequest,
-            onLogoutClick = onLogoutClick
-        )
     }
 }

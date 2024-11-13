@@ -6,9 +6,10 @@ import com.microsoft.graph.models.User
 import com.microsoft.identity.client.IAccount
 import java.io.InputStream
 import java.io.OutputStream
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-interface OneDriveApiRepository {
+internal interface OneDriveApiRepository {
 
     val accountFlow: StateFlow<IAccount?>
 
@@ -30,4 +31,5 @@ interface OneDriveApiRepository {
     suspend fun login(activity: Activity)
     suspend fun logout()
     suspend fun initialize()
+    val authStatus: StateFlow<AuthStatus>
 }
