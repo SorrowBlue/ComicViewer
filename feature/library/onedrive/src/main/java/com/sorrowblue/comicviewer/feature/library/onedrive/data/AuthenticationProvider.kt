@@ -27,6 +27,14 @@ import logcat.asLog
 import logcat.logcat
 import reactor.core.publisher.Mono
 
+
+
+internal enum class AuthStatus {
+    Undefined,
+    Uncertified,
+    Authenticated,
+}
+
 internal class AuthenticationProvider(
     private val appContext: Context,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
@@ -34,6 +42,7 @@ internal class AuthenticationProvider(
 
     private var clientApplication: ISingleAccountPublicClientApplication? = null
     val account = MutableStateFlow<IAccount?>(null)
+    val authStatus = MutableStateFlow(AuthStatus.Undefined)
 
     private val scopes = listOf("User.Read", "Files.Read")
 
@@ -47,13 +56,13 @@ internal class AuthenticationProvider(
                 R.raw.onedrive_auth_config_single_account,
                 object : IPublicClientApplication.ISingleAccountApplicationCreatedListener {
                     override fun onCreated(application: ISingleAccountPublicClientApplication) {
-                        logcat(LogPriority.INFO) { "Success creating MSAL application." }
+                        logcat(TAG, LogPriority.INFO) { "Success creating MSAL application." }
                         clientApplication = application
                         loadAccount()
                     }
 
                     override fun onError(exception: MsalException) {
-                        logcat(LogPriority.ERROR) { "Error creating MSAL application. ${exception.localizedMessage}" }
+                        logcat(TAG, LogPriority.ERROR) { "Error creating MSAL application. ${exception.localizedMessage}" }
                     }
                 }
             )
@@ -93,12 +102,13 @@ internal class AuthenticationProvider(
             clientApplication?.signOut(object :
                 ISingleAccountPublicClientApplication.SignOutCallback {
                 override fun onSignOut() {
-                    logcat(LogPriority.INFO) { "Signed out." }
+                    logcat(TAG, LogPriority.INFO) { "Signed out." }
+                    authStatus.value = AuthStatus.Uncertified
                     account.value = null
                 }
 
                 override fun onError(exception: MsalException) {
-                    logcat(LogPriority.ERROR) { "MSAL error signing out. ${exception.localizedMessage}" }
+                    logcat(TAG, LogPriority.ERROR) { "MSAL error signing out. ${exception.localizedMessage}" }
                 }
             })
         }
@@ -121,18 +131,18 @@ internal class AuthenticationProvider(
     ) =
         object : AuthenticationCallback {
             override fun onCancel() {
-                logcat { "onCancel" }
+                logcat("TAG") { "onCancel" }
                 future.cancel(true)
             }
 
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
-                authenticationResult.logcat { "onSuccess ${authenticationResult.account.id}" }
+                logcat("TAG") { "onSuccess ${authenticationResult.account.id}" }
                 onSuccess()
                 future.complete(authenticationResult)
             }
 
             override fun onError(exception: MsalException) {
-                logcat { "${exception.localizedMessage}, errorCode=${exception.errorCode}" }
+                logcat("TAG") { "${exception.localizedMessage}, errorCode=${exception.errorCode}" }
                 future.completeExceptionally(exception)
             }
         }
@@ -140,18 +150,22 @@ internal class AuthenticationProvider(
     fun loadAccount() {
         clientApplication?.getCurrentAccountAsync(object : CurrentAccountCallback {
             override fun onAccountLoaded(activeAccount: IAccount?) {
-                logcat { "onAccountLoaded: ${activeAccount?.id}" }
+                logcat("TAG") { "onAccountLoaded: ${activeAccount?.id}" }
+                authStatus.value = if (activeAccount == null) AuthStatus.Uncertified else AuthStatus.Authenticated
                 account.value = activeAccount
             }
 
             override fun onAccountChanged(priorAccount: IAccount?, currentAccount: IAccount?) {
-                logcat { "onAccountChanged: priorAccount=${priorAccount?.id}, currentAccount=${currentAccount?.id}" }
+                logcat("TAG") { "onAccountChanged: priorAccount=${priorAccount?.id}, currentAccount=${currentAccount?.id}" }
+                authStatus.value = if (currentAccount == null) AuthStatus.Uncertified else AuthStatus.Authenticated
                 account.value = currentAccount
             }
 
             override fun onError(exception: MsalException) {
-                logcat { "onError: ${exception.asLog()}" }
+                logcat("TAG") { "onError: ${exception.asLog()}" }
             }
         })
     }
 }
+
+private const val TAG = "AuthenticationProvider"

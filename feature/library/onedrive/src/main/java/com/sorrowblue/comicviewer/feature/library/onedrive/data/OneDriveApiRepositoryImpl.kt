@@ -4,13 +4,11 @@ import android.app.Activity
 import com.microsoft.graph.models.DriveItemCollectionResponse
 import com.microsoft.graph.models.User
 import com.microsoft.graph.serviceclient.GraphServiceClient
-import com.microsoft.identity.client.IAccount
 import com.sorrowblue.comicviewer.app.IoDispatcher
 import java.io.InputStream
 import java.io.OutputStream
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
 import logcat.logcat
@@ -34,7 +32,8 @@ internal class OneDriveApiRepositoryImpl(
 
     override suspend fun initialize() = authenticationProvider.initialize()
 
-    override val accountFlow: StateFlow<IAccount?> = authenticationProvider.account
+    override val accountFlow = authenticationProvider.account
+    override val authStatus = authenticationProvider.authStatus
 
     override suspend fun getCurrentUser(): User? {
         return withContext(dispatcher) {
