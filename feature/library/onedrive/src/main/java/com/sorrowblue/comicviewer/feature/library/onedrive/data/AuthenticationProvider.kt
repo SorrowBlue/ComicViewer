@@ -27,8 +27,6 @@ import logcat.asLog
 import logcat.logcat
 import reactor.core.publisher.Mono
 
-
-
 internal enum class AuthStatus {
     Undefined,
     Uncertified,
@@ -62,7 +60,10 @@ internal class AuthenticationProvider(
                     }
 
                     override fun onError(exception: MsalException) {
-                        logcat(TAG, LogPriority.ERROR) { "Error creating MSAL application. ${exception.localizedMessage}" }
+                        logcat(
+                            TAG,
+                            LogPriority.ERROR
+                        ) { "Error creating MSAL application. ${exception.localizedMessage}" }
                     }
                 }
             )
@@ -156,7 +157,9 @@ internal class AuthenticationProvider(
             }
 
             override fun onAccountChanged(priorAccount: IAccount?, currentAccount: IAccount?) {
-                logcat("TAG") { "onAccountChanged: priorAccount=${priorAccount?.id}, currentAccount=${currentAccount?.id}" }
+                logcat(
+                    "TAG"
+                ) { "onAccountChanged: priorAccount=${priorAccount?.id}, currentAccount=${currentAccount?.id}" }
                 authStatus.value = if (currentAccount == null) AuthStatus.Uncertified else AuthStatus.Authenticated
                 account.value = currentAccount
             }
