@@ -34,7 +34,7 @@ internal class AndroidDynamicFeatureConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                implementation(libs.squareup.logcat)
+                implementation(project(":framework:common"))
                 applyTestImplementation()
             }
         }

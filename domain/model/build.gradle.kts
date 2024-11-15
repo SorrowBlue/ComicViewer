@@ -6,6 +6,15 @@ plugins {
 
 android {
     namespace = "com.sorrowblue.comicviewer.domain.model"
+
+    buildTypes {
+        create("prerelease") {
+            initWith(getByName("release"))
+        }
+        create("internal") {
+            initWith(getByName("release"))
+        }
+    }
 }
 
 kotlin {

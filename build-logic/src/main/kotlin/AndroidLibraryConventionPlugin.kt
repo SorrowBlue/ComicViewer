@@ -35,7 +35,7 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                implementation(libs.squareup.logcat)
+                implementation(project(":framework:common"))
 
                 applyTestImplementation()
             }

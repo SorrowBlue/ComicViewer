@@ -5,6 +5,15 @@ plugins {
 
 android {
     namespace = "com.sorrowblue.comicviewer.data.reader"
+
+    buildTypes {
+        create("prerelease") {
+            initWith(getByName("release"))
+        }
+        create("internal") {
+            initWith(getByName("release"))
+        }
+    }
 }
 
 kotlin {
