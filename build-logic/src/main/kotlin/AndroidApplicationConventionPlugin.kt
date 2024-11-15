@@ -34,7 +34,7 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
             dependencies {
                 detektPlugins(libs.nlopez.compose.rules.detekt)
                 detektPlugins(libs.arturbosch.detektFormatting)
-                implementation(libs.squareup.logcat)
+                implementation(project(":framework:common"))
                 applyTestImplementation()
             }
         }

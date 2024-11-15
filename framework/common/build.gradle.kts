@@ -17,6 +17,15 @@ android {
         textReport = false
         xmlReport = false
     }
+
+    buildTypes {
+        create("prerelease") {
+            initWith(getByName("release"))
+        }
+        create("internal") {
+            initWith(getByName("release"))
+        }
+    }
 }
 
 kotlin {
@@ -24,7 +33,9 @@ kotlin {
         vendor = JvmVendorSpec.ADOPTIUM
         languageVersion = JavaLanguageVersion.of(17)
     }
-    androidTarget()
+    androidTarget {
+        publishAllLibraryVariants()
+    }
     jvm()
     sourceSets {
         commonMain {
