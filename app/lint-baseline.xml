@@ -23,4 +23,10 @@
         message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
         <location file="google-http-client-1.45.0.jar" />
     </issue>
+
+    <issue id="EnsureInitializerMetadata"
+        message="Every Initializer needs to be accompanied by a corresponding &lt;meta-data> entry in the AndroidManifest.xml file.">
+        <location
+            file="framework\common\src\main\java\com\sorrowblue\comicviewer\framework\common\LogcatInitializer.kt" />
+    </issue>
 </issues>
