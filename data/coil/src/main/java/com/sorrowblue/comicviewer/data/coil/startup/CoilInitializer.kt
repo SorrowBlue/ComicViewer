@@ -13,9 +13,7 @@ import coil3.request.crossfade
 import coil3.size.Precision
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
-import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import javax.inject.Inject
@@ -23,12 +21,6 @@ import logcat.LogPriority
 import logcat.logcat
 
 internal class CoilInitializer : Initializer<Unit>, SingletonImageLoader.Factory {
-
-    @Inject
-    lateinit var oldFolderThumbnailFetcher: Fetcher.Factory<Folder>
-
-    @Inject
-    lateinit var oldBookThumbnailFetcher: Fetcher.Factory<Book>
 
     @Inject
     lateinit var bookThumbnailFetcher: Fetcher.Factory<BookThumbnail>
@@ -51,8 +43,6 @@ internal class CoilInitializer : Initializer<Unit>, SingletonImageLoader.Factory
     override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader(context).newBuilder()
             .components {
-                add(oldFolderThumbnailFetcher)
-                add(oldBookThumbnailFetcher)
                 add(bookThumbnailFetcher)
                 add(folderThumbnailFetcher)
                 add(bookPageFetcherFactory)
