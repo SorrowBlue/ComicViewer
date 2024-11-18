@@ -4,7 +4,6 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
-import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,6 +16,7 @@ import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAc
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -47,7 +47,7 @@ internal interface ReadLaterScreenState :
 
 @Composable
 internal fun rememberReadLaterScreenState(
-    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberSupportingPaneScaffoldNavigator<File.Key>(),
+    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: ReadLaterViewModel = hiltViewModel(),

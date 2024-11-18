@@ -4,7 +4,6 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
-import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +27,7 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -69,7 +69,7 @@ internal interface FavoriteScreenState :
 @Composable
 internal fun rememberFavoriteScreenState(
     args: FavoriteArgs,
-    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberSupportingPaneScaffoldNavigator<File.Key>(),
+    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: FavoriteViewModel = hiltViewModel(),

@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.feature.history
 
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
-import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -15,6 +14,7 @@ import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -43,7 +43,7 @@ internal interface HistoryScreenState :
 
 @Composable
 internal fun rememberHistoryScreenState(
-    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberSupportingPaneScaffoldNavigator<File.Key>(),
+    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: HistoryViewModel = hiltViewModel(),
 ): HistoryScreenState = rememberSaveableScreenState {
