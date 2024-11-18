@@ -11,7 +11,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
-import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -49,6 +48,7 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
@@ -225,7 +225,7 @@ private fun PreviewFolderScreen() {
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {
         FolderScreen(
-            navigator = rememberSupportingPaneScaffoldNavigator<File.Key>(),
+            navigator = rememberCanonicalScaffoldNavigator(),
             uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
             lazyPagingItems = lazyPagingItems,
             onFileInfoSheetAction = {},
@@ -243,7 +243,7 @@ private fun PreviewFolderScreenEmpty() {
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {
         FolderScreen(
-            navigator = rememberSupportingPaneScaffoldNavigator<File.Key>(),
+            navigator = rememberCanonicalScaffoldNavigator(),
             uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
             lazyPagingItems = lazyPagingItems,
             onFileInfoSheetAction = {},

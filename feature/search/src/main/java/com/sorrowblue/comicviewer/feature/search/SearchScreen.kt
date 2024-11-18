@@ -4,7 +4,6 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
-import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,6 +31,7 @@ import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
@@ -172,7 +172,7 @@ private fun SearchScreenPreview() {
         SearchScreen(
             uiState = SearchScreenUiState(),
             lazyPagingItems = lazyPagingItems,
-            navigator = rememberSupportingPaneScaffoldNavigator<File.Key>(),
+            navigator = rememberCanonicalScaffoldNavigator(),
             lazyGridState = rememberLazyGridState(),
             onSearchTopAppBarAction = {},
             onFileInfoSheetAction = {},
