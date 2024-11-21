@@ -3,7 +3,7 @@ versionCode = "15"
 targetSdk = "35"
 
 kotlin = "2.0.21"
-google-ksp = "2.0.21-1.0.27"
+google-ksp = "2.0.21-1.0.28"
 kotlinx-coroutines = "1.9.0"
 kotlinx-serialization = "1.7.3"
 kotlinx-kover = "0.8.3"
@@ -15,7 +15,7 @@ androidx-room = "2.6.1"
 
 google-dagger = "2.52"
 android-gradle = "8.7.2"
-coil-kt = "3.0.2"
+coil-kt = "3.0.3"
 detekt = "1.23.7"
 mikepenz-aboutlibraries = "11.2.3"
 koin = "4.0.0"
@@ -141,7 +141,7 @@ soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha0
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version = "0.5.0" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.16-0" }
 
-artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.24.10" }
+artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.24.11" }
 squareup-logcat = { group = "com.squareup.logcat", name = "logcat", version = "0.1" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.9.1" }
 
@@ -156,7 +156,7 @@ google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compil
 
 box-java-sdk = { group = "com.box", name = "box-java-sdk", version = "4.12.0" }
 
-microsoft-identity-client-msal = { group = "com.microsoft.identity.client", name = "msal", version = "5.8.0" }
+microsoft-identity-client-msal = { group = "com.microsoft.identity.client", name = "msal", version = "5.8.2" }
 microsoft-graph = { group = "com.microsoft.graph", name = "microsoft-graph", version = "6.20.0" }
 
 # Test libraries
@@ -171,7 +171,7 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 robolectric = { group = "org.robolectric", name = "robolectric", version = "4.14" }
 
 mikepenz-aboutlibrariesComposeM3 = { group = "com.mikepenz", name = "aboutlibraries-compose-m3", version.ref = "mikepenz-aboutlibraries" }
-nlopez-compose-rules-detekt = { group = "io.nlopez.compose.rules", name = "detekt", version = "0.4.18" }
+nlopez-compose-rules-detekt = { group = "io.nlopez.compose.rules", name = "detekt", version = "0.4.19" }
 arturbosch-detektFormatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
