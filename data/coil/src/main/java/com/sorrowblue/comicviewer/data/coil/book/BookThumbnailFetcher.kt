@@ -12,6 +12,7 @@ import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
+import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.di.CoilDiskCache
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
@@ -75,6 +76,7 @@ internal class BookThumbnailFetcher(
             val compressFormat = displaySettings.imageFormat.toCompressFormat()
             Buffer().use {
                 fileReader.copyTo(0, it)
+                fileReader.closeQuietly()
                 BitmapFactory.decodeStream(it.inputStream())
             }.let { bitmap ->
                 bitmap.compress(compressFormat, quality, sink.outputStream())
@@ -88,6 +90,7 @@ internal class BookThumbnailFetcher(
                 diskCacheKey,
                 fileReader.pageCount()
             )
+            fileReader.closeQuietly()
             return SourceFetchResult(
                 source = it.toImageSource(),
                 mimeType = null,
@@ -97,6 +100,7 @@ internal class BookThumbnailFetcher(
             // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
             Buffer().use { buffer ->
                 fileReader.copyTo(0, buffer)
+                fileReader.closeQuietly()
                 SourceFetchResult(
                     source = buffer.toImageSource(),
                     mimeType = null,

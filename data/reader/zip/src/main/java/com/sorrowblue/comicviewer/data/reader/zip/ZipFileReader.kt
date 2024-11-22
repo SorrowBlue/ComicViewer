@@ -1,16 +1,14 @@
 package com.sorrowblue.comicviewer.data.reader.zip
 
-import android.icu.text.Collator
-import android.icu.text.RuleBasedCollator
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
+import com.sorrowblue.comicviewer.domain.model.SortUtil
 import com.sorrowblue.comicviewer.domain.reader.FileReader
 import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import java.util.Locale
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -35,16 +33,12 @@ internal class ZipFileReader @AssistedInject constructor(
 
     private val zipFile = SevenZip.openInArchive(null, IInStreamImpl(seekableInputStream))
 
-    private val collator = (Collator.getInstance(Locale.getDefault()) as RuleBasedCollator).apply {
-        numericCollation = true
-        strength = Collator.PRIMARY
-    }
-
     private val archive = zipFile.simpleInterface
 
     private val entries =
         archive.archiveItems.filter { !it.isFolder && it.path.extension() in supportedException }
-            .sortedWith(Comparator.comparing({ it.path }, collator::compare))
+            .sortedWith(Comparator.comparing(ISimpleInArchiveItem::getPath, SortUtil.compareName))
+
     private val mutex = Mutex()
 
     override suspend fun fileSize(pageIndex: Int): Long = entries[pageIndex].size ?: 0
