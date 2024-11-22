@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.data.storage.client.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.domain.model.SortUtil
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.reader.FileReader
@@ -23,7 +24,7 @@ internal class ImageFolderFileReader(
         return withContext(dispatcher) {
             list ?: fileClient.listFiles(file, false)
                 .filter { it is BookFile && it.extension in SUPPORTED_IMAGE }
-                .sortedWith(compareBy<File> { it.name.length }.thenBy { it.name })
+                .sortedWith(SortUtil.compareFile)
                 .also { list = it }
         }
     }

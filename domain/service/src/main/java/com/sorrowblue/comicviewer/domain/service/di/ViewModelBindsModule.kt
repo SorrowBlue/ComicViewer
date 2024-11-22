@@ -7,6 +7,7 @@ import com.sorrowblue.comicviewer.domain.service.interactor.GetNavigationHistory
 import com.sorrowblue.comicviewer.domain.service.interactor.GetOtherImageCacheInfoInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.SendFatalErrorInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.GetBookshelfInfoInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RegenerateThumbnailsInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RegisterBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RemoveBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.ScanBookshelfInteractor
@@ -45,6 +46,7 @@ import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
@@ -90,6 +92,9 @@ internal interface ViewModelBindsModule {
 
     @Binds
     fun bindScanBookshelfUseCase(interactor: ScanBookshelfInteractor): ScanBookshelfUseCase
+
+    @Binds
+    fun bindRegenerateThumbnailsUseCase(interactor: RegenerateThumbnailsInteractor): RegenerateThumbnailsUseCase
 
     @Binds
     fun bindLoadSettingsUseCase(interactor: LoadSettingsInteractor): LoadSettingsUseCase

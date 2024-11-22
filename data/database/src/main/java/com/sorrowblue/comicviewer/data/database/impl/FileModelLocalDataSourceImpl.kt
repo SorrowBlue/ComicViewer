@@ -31,6 +31,7 @@ import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -40,6 +41,14 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
     private val factory: FileModelRemoteMediator.Factory,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : FileLocalDataSource {
+
+    override suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File> {
+        return dao.fileList(bookshelfId.value, limit, offset).first().map { it.toModel() }
+    }
+
+    override suspend fun count(bookshelfId: BookshelfId): Long {
+        return dao.count(bookshelfId.value).first()
+    }
 
     override fun pagingSource(
         pagingConfig: PagingConfig,

@@ -9,6 +9,7 @@ import java.text.Collator
 import java.text.RuleBasedCollator
 import java.util.Locale
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual object SortUtil {
 
     private val collator: Collator
@@ -20,7 +21,9 @@ actual object SortUtil {
             }
         }
 
-    private val sort = compareBy<File> { if (it is BookFile) 1 else 0 }
+    actual val compareName = Comparator(collator::compare)
+
+    actual val compareFile = compareBy<File> { if (it is BookFile) 1 else 0 }
         .thenBy(collator::compare, File::name)
 
     actual fun filter(
@@ -31,7 +34,7 @@ actual object SortUtil {
     }
 
     actual fun sortedIndex(list: List<File>): List<File> {
-        return list.sortedWith(sort)
+        return list.sortedWith(compareFile)
             .mapIndexed { index, fileModel ->
                 when (fileModel) {
                     is BookFile -> fileModel.copy(sortIndex = index)

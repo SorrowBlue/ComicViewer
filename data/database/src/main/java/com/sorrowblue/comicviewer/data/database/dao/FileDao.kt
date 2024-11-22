@@ -221,4 +221,12 @@ internal interface FileDao {
 
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :id")
     suspend fun cacheKeyList(id: Int): List<String>
+
+    @Query(
+        "SELECT * FROM file WHERE bookshelf_id = :id AND file_type = 'FILE' ORDER BY path LIMIT :limit OFFSET :offset"
+    )
+    fun fileList(id: Int, limit: Int, offset: Long): Flow<List<FileEntity>>
+
+    @Query("SELECT Count(*) FROM file WHERE bookshelf_id = :id AND file_type = 'FILE'")
+    fun count(id: Int): Flow<Long>
 }
