@@ -11,6 +11,7 @@ import coil3.request.allowRgb565
 import coil3.request.bitmapConfig
 import coil3.request.crossfade
 import coil3.size.Precision
+import coil3.util.DebugLogger
 import com.sorrowblue.comicviewer.domain.model.BookPageRequest
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
@@ -52,6 +53,7 @@ internal class CoilInitializer : Initializer<Unit>, SingletonImageLoader.Factory
             .crossfade(true)
             .bitmapConfig(Bitmap.Config.ARGB_8888)
             .precision(Precision.INEXACT)
+            .logger(DebugLogger())
             .build()
     }
 

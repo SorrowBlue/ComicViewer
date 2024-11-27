@@ -1,10 +1,7 @@
 package com.sorrowblue.comicviewer.bookshelf.component
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -15,17 +12,13 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,20 +30,41 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
-import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
+import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.feature.bookshelf.R
+import com.sorrowblue.comicviewer.file.component.FileThumbnailAsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalComponentColors
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
-import com.sorrowblue.comicviewer.framework.ui.preview.previewPainter
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreenDarkFixedWidth
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreenFixedWidth
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeSmbServer
+
+@PreviewMultiScreenFixedWidth
+@PreviewMultiScreenDarkFixedWidth
+@Composable
+private fun BookshelfCardPreview() {
+    PreviewTheme {
+        val navigationState = LocalNavigationState.current
+        val bookshelfFolder = BookshelfFolder(fakeSmbServer(), fakeFolder())
+        BookshelfCard(
+            state = navigationState,
+            bookshelfFolder = bookshelfFolder,
+            onClick = {},
+            onInfoClick = {}
+        )
+    }
+}
 
 @Composable
 fun BookshelfCard(
@@ -77,7 +91,7 @@ fun BookshelfCard(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BookshelfColumnCard(
     bookshelfFolder: BookshelfFolder,
@@ -87,41 +101,11 @@ private fun BookshelfColumnCard(
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = LocalComponentColors.current.contentColor),
-        modifier = modifier.combinedClickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = ripple(),
-            onClick = onClick,
-        )
+        modifier = modifier.clickable(onClick = onClick)
     ) {
-        SubcomposeAsyncImage(
-            model = bookshelfFolder.folder,
-            contentDescription = stringResource(R.string.bookshelf_desc_thumbnail),
+        FileThumbnailAsyncImage(
+            fileThumbnail = FolderThumbnail.from(bookshelfFolder.folder),
             contentScale = ContentScale.Crop,
-            loading = {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .align(Alignment.Center)
-                )
-            },
-            error = {
-                if (LocalInspectionMode.current) {
-                    Image(
-                        painter = previewPainter(),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Icon(
-                        imageVector = ComicIcons.FolderOff,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
-                            .align(Alignment.Center)
-                    )
-                }
-            },
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(16f / 9f)
@@ -184,7 +168,7 @@ private fun BookshelfColumnCard(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BookshelfRowCard(
     bookshelfFolder: BookshelfFolder,
@@ -194,40 +178,18 @@ private fun BookshelfRowCard(
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = LocalComponentColors.current.contentColor),
-        modifier = modifier
-            .combinedClickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(),
-                onClick = onClick,
-            ),
+        modifier = modifier.clickable(onClick = onClick)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             var size by remember { mutableStateOf(140.dp) }
-            SubcomposeAsyncImage(
-                model = bookshelfFolder.folder,
-                contentDescription = stringResource(R.string.bookshelf_desc_thumbnail),
+            FileThumbnailAsyncImage(
+                fileThumbnail = FolderThumbnail.from(bookshelfFolder.folder),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(min(size, 120.dp), size)
                     .align(Alignment.Top)
                     .clip(CardDefaults.shape)
                     .background(ComicTheme.colorScheme.surfaceVariant, CardDefaults.shape),
-                error = {
-                    if (LocalInspectionMode.current) {
-                        Image(previewPainter(), null)
-                    } else {
-                        Icon(
-                            imageVector = ComicIcons.FolderOff,
-                            contentDescription = null,
-                            modifier = Modifier.wrapContentSize()
-                        )
-                    }
-                },
-                loading = {
-                    CircularProgressIndicator(
-                        modifier = Modifier.wrapContentSize()
-                    )
-                }
             )
             val density = LocalDensity.current
             Column(

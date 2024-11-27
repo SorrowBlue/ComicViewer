@@ -25,6 +25,7 @@ dependencies {
     api(libs.androidx.paging.compose)
 
     api(libs.coil3.compose)
+    api(libs.coil3.test)
     api(libs.coil3.networkKtor)
 
     api(libs.androidx.compose.ui.toolingPreview)

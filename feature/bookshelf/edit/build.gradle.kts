@@ -10,5 +10,4 @@ android {
 
 dependencies {
     implementation(libs.soil.form)
-    implementation(libs.google.android.material)
 }

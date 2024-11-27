@@ -5,7 +5,6 @@ import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navGraph
 import com.sorrowblue.comicviewer.bookshelf.BookshelfScreenNavigator
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -14,11 +13,11 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.NavGraphs
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfFolderScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.destinations.NotificationRequestDialogDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.destinations.BookshelfEditScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.remove.destinations.BookshelfRemoveDialogDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.BookshelfRemoveDialogDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.NotificationRequestDialogDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.destinations.BookshelfSelectionScreenDestination
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
@@ -85,11 +84,13 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
                 navigator.navigate(BookshelfEditScreenDestination(BookshelfEditMode.Edit(id)))
             }
 
-            override fun remove(bookshelf: Bookshelf) {
+            override fun remove(bookshelfId: BookshelfId) {
                 navigator.navigate(
-                    BookshelfRemoveDialogDestination(bookshelf.id, bookshelf.displayName)
+                    BookshelfRemoveDialogDestination(bookshelfId)
                 )
             }
+
+            override fun navigateBack() = Unit
 
             override fun onSourceClick(bookshelfType: BookshelfType) {
                 navigator.navigate(

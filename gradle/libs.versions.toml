@@ -115,7 +115,6 @@ kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 
-google-android-material = { group = "com.google.android.material", name = "material", version = "1.13.0-alpha07" }
 google-android-play-feature-delivery-ktx = { group = "com.google.android.play", name = "feature-delivery-ktx", version = "2.1.0" }
 google-android-play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version = "2.0.2" }
 google-android-billingclient-billingKtx = { group = "com.android.billingclient", name = "billing-ktx", version = "7.1.1" }
@@ -134,6 +133,7 @@ dropbox-androidSdk = { group = "com.dropbox.core", name = "dropbox-android-sdk",
 coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil-kt" }
 coil3-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-kt" }
 coil3-networkKtor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil-kt" }
+coil3-test = { group = "io.coil-kt.coil3", name = "coil-test", version.ref = "coil-kt" }
 
 jcifs-ng = { group = "eu.agno3.jcifs", name = "jcifs-ng", version = "2.1.10" }
 com-sorrowblue-sevenzipjbinding = { group = "com.sorrowblue.sevenzipjbinding", name = "7-Zip-JBinding-4Android", version = "16.02-2.03" }

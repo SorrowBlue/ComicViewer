@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.feature.book.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawTaken
@@ -90,7 +91,7 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
                 .padding(top = 16.dp)
         )
         AsyncImage(
-            model = nextBook.book,
+            model = FileThumbnail.from(nextBook.book),
             error = previewPlaceholder(),
             contentDescription = null,
             modifier = Modifier
