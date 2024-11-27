@@ -31,8 +31,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.ServiceLoader
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import logcat.asLog
-import logcat.logcat
 
 internal class RemoteDataSourceImpl @AssistedInject constructor(
     @Assisted private val bookshelf: Bookshelf,
@@ -155,48 +153,43 @@ internal class RemoteDataSourceImpl @AssistedInject constructor(
     }
 
     override suspend fun fileReader(book: Book): FileReader? {
-        return runCatching {
-            withContext(dispatcher) {
-                kotlin.runCatching {
-                    when (book) {
-                        is BookFile -> {
-                            when (book.extension) {
-                                "pdf", "epub", "xps", "oxps", "mobi", "fb2" ->
-                                    documentReader(
-                                        book.extension,
-                                        fileClient.seekableInputStream(book),
-                                        dispatcher
-                                    )
-
-                                else -> zipFileReaderFactory.create(
-                                    fileClient.seekableInputStream(
-                                        book
-                                    )
+        return withContext(dispatcher) {
+            kotlin.runCatching {
+                when (book) {
+                    is BookFile -> {
+                        when (book.extension) {
+                            "pdf", "epub", "xps", "oxps", "mobi", "fb2" ->
+                                documentReader(
+                                    book.extension,
+                                    fileClient.seekableInputStream(book),
+                                    dispatcher
                                 )
-                            }
+
+                            else -> zipFileReaderFactory.create(
+                                fileClient.seekableInputStream(
+                                    book
+                                )
+                            )
                         }
-
-                        is BookFolder -> ImageFolderFileReader(dispatcher, fileClient, book)
                     }
-                }.getOrElse {
-                    logcat { it.asLog() }
-                    documentReader("pdf", fileClient.seekableInputStream(book), dispatcher)
-                }
-            }
-        }.getOrElse {
-            throw when (it) {
-                is FileClientException -> when (it) {
-                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                    is FileClientException.InvalidPath -> RemoteException.NotFound()
-                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-                }
 
-                is FileReaderException -> when (it) {
-                    is FileReaderException.NotSupport -> RemoteException.NotFound()
+                    is BookFolder -> ImageFolderFileReader(dispatcher, fileClient, book)
                 }
+            }.getOrElse {
+                throw when (it) {
+                    is FileClientException -> when (it) {
+                        is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                        is FileClientException.InvalidPath -> RemoteException.NotFound()
+                        is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                        is FileClientException.NoNetwork -> RemoteException.NoNetwork()
+                    }
 
-                else -> it
+                    is FileReaderException -> when (it) {
+                        is FileReaderException.NotSupport -> RemoteException.NotFound()
+                    }
+
+                    else -> it
+                }
             }
         }
     }

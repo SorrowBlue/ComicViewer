@@ -9,15 +9,14 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.compose.ui.platform.LocalContext
+import coil3.annotation.ExperimentalCoilApi
+import coil3.compose.AsyncImagePreviewHandler
+import coil3.compose.LocalAsyncImagePreviewHandler
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComponentColors
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalComponentColors
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDimension
-import com.sorrowblue.comicviewer.framework.designsystem.theme.compactDimension
-import com.sorrowblue.comicviewer.framework.designsystem.theme.expandedDimension
-import com.sorrowblue.comicviewer.framework.designsystem.theme.mediumDimension
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CompliantNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.calculateFromAdaptiveInfo2
@@ -28,33 +27,26 @@ import de.drick.compose.edgetoedgepreviewlib.EdgeToEdgeTemplate
 import de.drick.compose.edgetoedgepreviewlib.InsetMode
 import de.drick.compose.edgetoedgepreviewlib.NavigationMode
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun PreviewTheme(isInvertedOrientation: Boolean = false, content: @Composable () -> Unit) {
-    EdgeToEdgeTemplate(
-        navMode = NavigationMode.Gesture,
-        cameraCutoutMode = CameraCutoutMode.Middle,
-        showInsetsBorder = false,
-        statusBarMode = InsetMode.Hidden,
-        navigationBarMode = InsetMode.Hidden,
-        isInvertedOrientation = isInvertedOrientation,
-    ) {
-        ComicTheme {
-            val dimension =
-                when (currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass) {
-                    WindowWidthSizeClass.COMPACT -> compactDimension
-                    WindowWidthSizeClass.MEDIUM -> mediumDimension
-                    WindowWidthSizeClass.EXPANDED -> expandedDimension
-                    else -> compactDimension
-                }
-            CompositionLocalProvider(
-                LocalDimension provides dimension,
-                LocalComponentColors provides ComponentColors(
-                    ComicTheme.colorScheme.surface,
-                    ComicTheme.colorScheme.surfaceContainer
-                )
-            ) {
-                content()
-            }
+fun PreviewTheme(content: @Composable () -> Unit) {
+    ComicTheme {
+        val navigationState =
+            NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo2(currentWindowAdaptiveInfo())
+        val componentColors = ComponentColors(
+            containerColor = navigationState.containerColor(),
+            contentColor = navigationState.contentColor()
+        )
+        val context = LocalContext.current
+        val previewHandler = AsyncImagePreviewHandler {
+            PreviewImage(context)
+        }
+        CompositionLocalProvider(
+            LocalAsyncImagePreviewHandler provides previewHandler,
+            LocalNavigationState provides navigationState,
+            LocalComponentColors provides componentColors
+        ) {
+            content()
         }
     }
 }
@@ -68,6 +60,7 @@ data class EdgeToEdgeTemplate(
     val isNavigationBarVisible: Boolean = true,
 )
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun PreviewTheme2(
     modifier: Modifier = Modifier,
@@ -100,7 +93,11 @@ fun PreviewTheme2(
                         },
                         navigationState = navigationState
                     ) {
-                        contentContent()
+                        val context = LocalContext.current
+                        val previewHandler = AsyncImagePreviewHandler { PreviewImage(context) }
+                        CompositionLocalProvider(LocalAsyncImagePreviewHandler provides previewHandler) {
+                            contentContent()
+                        }
                     }
                 }
             }
@@ -112,45 +109,14 @@ fun PreviewTheme2(
                     containerColor = navigationState.containerColor(),
                     contentColor = navigationState.contentColor()
                 )
+                val context = LocalContext.current
+                val previewHandler = AsyncImagePreviewHandler { PreviewImage(context) }
                 CompositionLocalProvider(
                     LocalComponentColors provides componentColors,
-                    LocalNavigationState provides navigationState
+                    LocalNavigationState provides navigationState,
+                    LocalAsyncImagePreviewHandler provides previewHandler,
                 ) {
-                    content()
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun PreviewTheme3(
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
-) {
-    Box(modifier = modifier) {
-        ComicTheme {
-            val dimension =
-                when (currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass) {
-                    WindowWidthSizeClass.COMPACT -> compactDimension
-                    WindowWidthSizeClass.MEDIUM -> mediumDimension
-                    WindowWidthSizeClass.EXPANDED -> expandedDimension
-                    else -> compactDimension
-                }
-
-            CompositionLocalProvider(
-                LocalDimension provides dimension,
-                LocalComponentColors provides ComponentColors(
-                    ComicTheme.colorScheme.surface,
-                    ComicTheme.colorScheme.surfaceContainer
-                )
-            ) {
-                CompliantNavigationSuiteScaffold({
-                    repeat(5) {
-                        item(it == 0, {}, { Icon(ComicIcons.Folder, null) })
-                    }
-                }) {
-                    content()
+                    contentContent()
                 }
             }
         }

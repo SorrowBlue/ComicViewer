@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="bookshelf_remove_title">Delete bookshelf</string>
-    <string name="bookshelf_remove_message">Do you want to remove %1$s?</string>
-    <string name="bookshelf_remove_btn_remove">Delete</string>
-</resources>

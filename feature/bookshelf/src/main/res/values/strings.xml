@@ -2,27 +2,7 @@
 <resources>
     <string name="bookshelf_list_title">Bookshelf</string>
     <string name="bookshelf_list_message_no_bookshelves_added_yet">No bookshelves added yet</string>
-    <string name="bookshelf_info_title">Bookshelf info</string>
-    <string name="bookshelf_info_label_display_name">Display name</string>
-    <string name="bookshelf_info_label_host">IP/Host</string>
-    <string name="bookshelf_info_label_path">Path</string>
-    <string name="bookshelf_info_label_internal_storage">Internal storage</string>
-    <string name="bookshelf_info_label_smb">LAN/SMB</string>
-    <string name="bookshelf_info_label_port">Port</string>
-    <string name="bookshelf_action_edit">Edit</string>
-    <string name="bookshelf_action_delete">Remove</string>
-    <string name="bookshelf_action_scan">Scan file</string>
-    <string name="bookshelf_action_scan_with_thumbnails">Regenerate thumbnails</string>
-    <string name="bookshelf_msg_delete">“%1$s” has been deleted.</string>
+
     <string name="bookshelf_desc_open_bookshelf_info">Open bookshelf information</string>
-    <string name="bookshelf_desc_thumbnail">bookshelf thumbnail</string>
     <string name="bookshelf_btn_add">Add</string>
-    <string name="bookshelf_title_bookshelf">scanning bookshelf</string>
-    <string name="bookshelf_title_notification_permission">Notification permission</string>
-    <string name="bookshelf_msg_notification_permission">You can check the progress of the bookshelf scan from the notification. \nBookshelves without notification permission will be scanned.</string>
-    <string name="bookshelf_label_remove_thumbnail">Remove thumbnail</string>
-    <string name="bookshelf_label_bookshelf_type">Bookshelf type</string>
-    <string name="bookshelf_label_auth_method">Authentication method</string>
-    <string name="bookshelf_label_guest">Guest</string>
-    <string name="bookshelf_label_Id_password">ID / Password</string>
 </resources>
