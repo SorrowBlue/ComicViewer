@@ -98,6 +98,5 @@ moduleGraphConfig {
 }
 
 tasks.updateDaemonJvm {
-    @Suppress("UnstableApiUsage")
-    jvmVersion = JavaVersion.VERSION_17
+    jvmVersion = JavaLanguageVersion.of(17)
 }

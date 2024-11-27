@@ -1,7 +1,6 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import com.sorrowblue.comicviewer.ComicBuildType
-import com.sorrowblue.comicviewer.projectString
 
 plugins {
     alias(libs.plugins.comicviewer.android.application)
@@ -94,11 +93,11 @@ android {
     }
 
     dynamicFeatures += setOf(
-        projects.data.reader.document.projectString(),
-        projects.feature.library.box.projectString(),
-        projects.feature.library.dropbox.projectString(),
-        projects.feature.library.googledrive.projectString(),
-        projects.feature.library.onedrive.projectString(),
+        projects.data.reader.document.path,
+        projects.feature.library.box.path,
+        projects.feature.library.dropbox.path,
+        projects.feature.library.googledrive.path,
+        projects.feature.library.onedrive.path,
     )
     buildFeatures {
         buildConfig = true
