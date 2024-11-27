@@ -2,23 +2,12 @@ package com.sorrowblue.comicviewer
 
 import org.gradle.api.Action
 import org.gradle.api.Project
-import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.plugins.PluginManager
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.the
 import org.gradle.plugin.use.PluginDependency
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
-
-fun DelegatingProjectDependency.projectString(): String {
-    val n = ":" + dependencyProject.name
-    return if (dependencyProject.parent == null) n else dependencyProject.parent!!.projectString(n)
-}
-
-fun Project.projectString(a: String): String {
-    val n = ":$name$a"
-    return if (parent == null || parent!!.name == rootProject.name) n else parent!!.projectString(n)
-}
 
 fun Project.parentName(): String {
     return parent?.let { it.parentName() + ".$name" } ?: name
