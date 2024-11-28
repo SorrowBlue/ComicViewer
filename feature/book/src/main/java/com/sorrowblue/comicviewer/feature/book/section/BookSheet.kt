@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book.section
 
 import android.graphics.Bitmap
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +19,6 @@ internal data class BookSheetUiState(
     val pageScale: PageScale = PageScale.Fit,
 )
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun BookSheet(
     uiState: BookSheetUiState,
