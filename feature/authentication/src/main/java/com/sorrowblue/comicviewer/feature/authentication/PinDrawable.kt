@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.authentication
 
-import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
@@ -17,7 +16,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
-@OptIn(ExperimentalAnimationGraphicsApi::class)
 @Composable
 fun PinDrawable(
     index: Int,

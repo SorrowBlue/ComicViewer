@@ -162,7 +162,7 @@ internal class DeviceFileClient @AssistedInject constructor(
         }
     }
 
-    private val File.uri get() = this@uri.path.toUri()
+    private val File.uri get() = path.toUri()
 
     private fun documentFile(path: String): DocumentFile =
         DocumentFile.fromTreeUri(context, path.toUri())!!
