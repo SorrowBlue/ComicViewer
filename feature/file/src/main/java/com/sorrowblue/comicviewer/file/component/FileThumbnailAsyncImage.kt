@@ -8,7 +8,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,12 +44,16 @@ fun FileThumbnailAsyncImage(
             State.Loading,
         ) -> Unit
     )? = if (LocalInspectionMode.current) null else FileThumbnailAsyncImageDefault.loading,
+    filterQuality: FilterQuality = FilterQuality.None,
+    alignment: Alignment = Alignment.Center,
     contentScale: ContentScale = ContentScale.Fit,
 ) {
     SubcomposeAsyncImage(
         model = fileThumbnail,
         contentDescription = null,
         contentScale = contentScale,
+        filterQuality = filterQuality,
+        alignment = alignment,
         error = error,
         loading = loading,
         modifier = modifier

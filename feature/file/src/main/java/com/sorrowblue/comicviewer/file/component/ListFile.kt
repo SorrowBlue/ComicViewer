@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.file.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -9,11 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -30,25 +26,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.previewPainter
 
 /**
  * ファイル情報をリストアイテムで表示する
@@ -76,11 +69,14 @@ fun ListFile(
     ListItem(
         leadingContent = {
             if (showThumbnail) {
-                ListFileThumbnail(
-                    thumbnail = FileThumbnail.from(file),
+                FileThumbnailAsyncImage(
+                    fileThumbnail = FileThumbnail.from(file),
                     contentScale = contentScale,
                     filterQuality = filterQuality,
-                    modifier = Modifier.size(64.dp)
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CardDefaults.shape)
+                        .background(ComicTheme.colorScheme.surfaceContainerHigh)
                 )
             } else {
                 Box(
@@ -136,46 +132,7 @@ fun ListFile(
                 )
             }
         },
-        modifier = modifier.clickable { onClick() },
-    )
-}
-
-@Composable
-private fun ListFileThumbnail(
-    thumbnail: FileThumbnail,
-    contentScale: ContentScale,
-    filterQuality: FilterQuality,
-    modifier: Modifier = Modifier,
-) {
-    SubcomposeAsyncImage(
-        model = thumbnail,
-        contentDescription = null,
-        contentScale = contentScale,
-        filterQuality = filterQuality,
-        loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
-        error = {
-            if (LocalInspectionMode.current) {
-                Image(
-                    painter = previewPainter(),
-                    contentDescription = null,
-                    contentScale = contentScale
-                )
-            } else {
-                Icon(
-                    imageVector = when (thumbnail) {
-                        is BookThumbnail -> ComicIcons.BrokenImage
-                        is FolderThumbnail -> ComicIcons.FolderOff
-                    },
-                    contentDescription = null,
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .sizeIn(minHeight = 48.dp, minWidth = 48.dp)
-                )
-            }
-        },
-        modifier = modifier
-            .clip(CardDefaults.shape)
-            .background(ComicTheme.colorScheme.surfaceVariant),
+        modifier = modifier.clickable(onClick = onClick)
     )
 }
 
@@ -206,19 +163,20 @@ fun ListFileCard(
         ListItem(
             leadingContent = {
                 if (showThumbnail) {
-                    ListFileThumbnail(
-                        thumbnail = FileThumbnail.from(file),
+                    FileThumbnailAsyncImage(
+                        fileThumbnail = FileThumbnail.from(file),
                         contentScale = contentScale,
                         filterQuality = filterQuality,
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CardDefaults.shape)
+                            .background(ComicTheme.colorScheme.surfaceContainerHigh)
                     )
                 } else {
                     Box(
                         modifier = Modifier
-                            .size(64.dp)
-                            .clip(CardDefaults.shape)
-                            .background(ComicTheme.colorScheme.surfaceVariant),
-                        contentAlignment = Alignment.Center
+                            .size(64.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
                         if (file is Book) {
                             Icon(imageVector = ComicIcons.Book, contentDescription = null)
@@ -229,13 +187,7 @@ fun ListFileCard(
                 }
             },
             headlineContent = {
-                Row {
-                    if (file is Folder) {
-                        Icon(imageVector = ComicIcons.Folder, contentDescription = null)
-                        Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
-                    }
-                    Text(file.name, fontSize = fontSize.sp)
-                }
+                Text(file.name, fontSize = fontSize.sp)
             },
             supportingContent = {
                 if (file is Book && 0 < file.lastPageRead) {
@@ -259,13 +211,15 @@ fun ListFileCard(
 
 @PreviewLightDark
 @Composable
-private fun PreviewFileList() {
+private fun PreviewFileList(
+    @PreviewParameter(BooleanProvider::class) showThumbnail: Boolean,
+) {
     PreviewTheme {
         ListFile(
-            file = fakeBookFile(),
+            file = fakeBookFile(name = "Fake book name"),
             onClick = {},
             onLongClick = {},
-            showThumbnail = true,
+            showThumbnail = showThumbnail,
             fontSize = FolderDisplaySettingsDefaults.fontSize,
             contentScale = ContentScale.Crop,
             filterQuality = FilterQuality.None
@@ -275,16 +229,22 @@ private fun PreviewFileList() {
 
 @PreviewLightDark
 @Composable
-private fun PreviewFileListCard() {
+private fun PreviewFileListCard(
+    @PreviewParameter(BooleanProvider::class) showThumbnail: Boolean,
+) {
     PreviewTheme {
         ListFileCard(
-            file = fakeBookFile(),
+            file = fakeBookFile(name = "Fake book name"),
             onClick = {},
             onLongClick = {},
-            showThumbnail = true,
+            showThumbnail = showThumbnail,
             fontSize = FolderDisplaySettingsDefaults.fontSize,
             contentScale = ContentScale.Crop,
             filterQuality = FilterQuality.None
         )
     }
+}
+
+private class BooleanProvider : PreviewParameterProvider<Boolean> {
+    override val values = sequenceOf(true, false)
 }
