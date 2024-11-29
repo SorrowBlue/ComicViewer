@@ -78,11 +78,11 @@ fun fakeFolder(bookshelfId: BookshelfId = BookshelfId()) =
         false,
     )
 
-fun fakeFavorite(favoriteId: Int = 0) =
+fun fakeFavorite(favoriteId: Int = 0, exist: Boolean = Random(1).nextBoolean()) =
     Favorite(
         @OptIn(ExperimentalIdValue::class) FavoriteId(favoriteId),
         nextLoremIpsum(),
         Random(1).nextInt(5, 999),
-        Random(1).nextBoolean(),
+        exist,
         Random(1).nextLong()
     )

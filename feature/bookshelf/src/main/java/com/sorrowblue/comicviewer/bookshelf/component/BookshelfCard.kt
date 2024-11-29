@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.bookshelf.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -41,7 +40,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.file.component.FileThumbnailAsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalComponentColors
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreenDarkFixedWidth
@@ -99,10 +97,7 @@ private fun BookshelfColumnCard(
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        colors = CardDefaults.cardColors(containerColor = LocalComponentColors.current.contentColor),
-        modifier = modifier.clickable(onClick = onClick)
-    ) {
+    Card(onClick = onClick, modifier = modifier) {
         FileThumbnailAsyncImage(
             fileThumbnail = FolderThumbnail.from(bookshelfFolder.folder),
             contentScale = ContentScale.Crop,
@@ -110,7 +105,7 @@ private fun BookshelfColumnCard(
                 .fillMaxWidth()
                 .aspectRatio(16f / 9f)
                 .clip(CardDefaults.shape)
-                .background(ComicTheme.colorScheme.surfaceVariant, CardDefaults.shape),
+                .background(ComicTheme.colorScheme.surfaceContainerHigh)
         )
         Text(
             text = BookshelfConverter.displayName(
@@ -176,10 +171,7 @@ private fun BookshelfRowCard(
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        colors = CardDefaults.cardColors(containerColor = LocalComponentColors.current.contentColor),
-        modifier = modifier.clickable(onClick = onClick)
-    ) {
+    Card(onClick = onClick, modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             var size by remember { mutableStateOf(140.dp) }
             FileThumbnailAsyncImage(
@@ -189,7 +181,7 @@ private fun BookshelfRowCard(
                     .size(min(size, 120.dp), size)
                     .align(Alignment.Top)
                     .clip(CardDefaults.shape)
-                    .background(ComicTheme.colorScheme.surfaceVariant, CardDefaults.shape),
+                    .background(ComicTheme.colorScheme.surfaceContainerHigh),
             )
             val density = LocalDensity.current
             Column(

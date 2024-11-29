@@ -5,18 +5,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
@@ -35,7 +36,6 @@ internal fun RecentFavorite(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .width(72.dp)
             .clickable { onClick() }
     ) {
         Box {
@@ -44,8 +44,7 @@ internal fun RecentFavorite(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(72.dp)
-                    .clip(ComicTheme.shapes.small),
+                    .size(72.dp),
                 error = {
                     if (LocalInspectionMode.current) {
                         Image(
@@ -56,7 +55,8 @@ internal fun RecentFavorite(
                     } else {
                         Icon(
                             imageVector = ComicIcons.Image,
-                            contentDescription = null
+                            contentDescription = null,
+                            modifier = Modifier.wrapContentSize()
                         )
                     }
                 }
@@ -90,10 +90,14 @@ internal fun RecentFavorite(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, apiLevel = 34)
 @Composable
-private fun PreviewRecentFavorite() {
+private fun PreviewRecentFavorite(@PreviewParameter(BooleanProvider::class) exist: Boolean) {
     PreviewTheme {
-        RecentFavorite(favorite = fakeFavorite(), onClick = {})
+        RecentFavorite(favorite = fakeFavorite(exist = exist), onClick = {})
     }
+}
+
+private class BooleanProvider : PreviewParameterProvider<Boolean> {
+    override val values = sequenceOf(true, false)
 }
