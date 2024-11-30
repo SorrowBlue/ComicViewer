@@ -25,6 +25,7 @@ internal fun DependenciesContainerBuilder<*>.BoxGraphDependencies() {
                     }
                 }
             }
+
             override fun onFolderClick(folder: Folder) {
                 destinationsNavigator.navigate(BoxScreenDestination(folder.path))
             }

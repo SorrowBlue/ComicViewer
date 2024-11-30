@@ -10,6 +10,6 @@
     <string name="googledrive_title" translatable="false">Support GoogleDrive</string>
     <string name="onedrive_title" translatable="false">Support OneDrive</string>
 
-    <string name="yubikit_otp_activity_title" translatable="false" tools:ignore="ResourceName,UnusedResources"/>
+    <string name="yubikit_otp_activity_title" translatable="false" tools:ignore="ResourceName,UnusedResources" />
     <string name="yubikit_prompt_activity_title" translatable="false" tools:ignore="ResourceName,UnusedResources" />
 </resources>

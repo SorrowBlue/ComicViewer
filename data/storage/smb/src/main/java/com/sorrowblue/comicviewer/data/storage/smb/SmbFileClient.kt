@@ -247,7 +247,7 @@ internal class SmbFileClient @AssistedInject constructor(
             false
         } else {
             when (bookshelfAuth) {
-                SmbServer.Auth.Guest -> credentials.isGuest()
+                SmbServer.Auth.Guest -> credentials.isGuest
                 is SmbServer.Auth.UsernamePassword -> {
                     NtlmPasswordAuthenticator(
                         bookshelfAuth.domain,

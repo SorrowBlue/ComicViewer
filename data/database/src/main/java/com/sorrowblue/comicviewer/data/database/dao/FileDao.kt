@@ -70,7 +70,8 @@ internal interface FileDao {
             is SortType.Size -> "size"
         }
 
-        val comparison = if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) ">=" else "<="
+        val comparison =
+            if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) ">=" else "<="
         val order = if (sortType.isAsc) "ASC" else "DESC"
         return flowPrevNextFile(
             SimpleSQLiteQuery(

@@ -11,8 +11,11 @@ import kotlinx.coroutines.flow.Flow
 abstract class PagingFileUseCase :
     UseCase<PagingFileUseCase.Request, Flow<PagingData<File>>, PagingFileUseCase.Error>() {
 
-    data class Request(val pagingConfig: PagingConfig, val bookshelfId: BookshelfId, val path: String) :
-        UseCase.Request
+    data class Request(
+        val pagingConfig: PagingConfig,
+        val bookshelfId: BookshelfId,
+        val path: String,
+    ) : UseCase.Request
 
     enum class Error : Resource.AppError {
         NOT_FOUND,

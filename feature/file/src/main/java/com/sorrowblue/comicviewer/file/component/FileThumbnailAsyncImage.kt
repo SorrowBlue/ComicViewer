@@ -39,11 +39,8 @@ fun FileThumbnailAsyncImage(
             modifier = Modifier.wrapContentSize()
         )
     },
-    loading: @Composable (
-        SubcomposeAsyncImageScope.(
-            State.Loading,
-        ) -> Unit
-    )? = if (LocalInspectionMode.current) null else FileThumbnailAsyncImageDefault.loading,
+    loading: @Composable (SubcomposeAsyncImageScope.(State.Loading) -> Unit)? =
+        if (LocalInspectionMode.current) null else FileThumbnailAsyncImageDefault.loading,
     filterQuality: FilterQuality = FilterQuality.None,
     alignment: Alignment = Alignment.Center,
     contentScale: ContentScale = ContentScale.Fit,

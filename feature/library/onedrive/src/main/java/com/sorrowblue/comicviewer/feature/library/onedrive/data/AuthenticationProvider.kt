@@ -109,7 +109,10 @@ internal class AuthenticationProvider(
                 }
 
                 override fun onError(exception: MsalException) {
-                    logcat(TAG, LogPriority.ERROR) { "MSAL error signing out. ${exception.localizedMessage}" }
+                    logcat(
+                        TAG,
+                        LogPriority.ERROR
+                    ) { "MSAL error signing out. ${exception.localizedMessage}" }
                 }
             })
         }
@@ -152,7 +155,8 @@ internal class AuthenticationProvider(
         clientApplication?.getCurrentAccountAsync(object : CurrentAccountCallback {
             override fun onAccountLoaded(activeAccount: IAccount?) {
                 logcat("TAG") { "onAccountLoaded: ${activeAccount?.id}" }
-                authStatus.value = if (activeAccount == null) AuthStatus.Uncertified else AuthStatus.Authenticated
+                authStatus.value =
+                    if (activeAccount == null) AuthStatus.Uncertified else AuthStatus.Authenticated
                 account.value = activeAccount
             }
 
@@ -160,7 +164,8 @@ internal class AuthenticationProvider(
                 logcat(
                     "TAG"
                 ) { "onAccountChanged: priorAccount=${priorAccount?.id}, currentAccount=${currentAccount?.id}" }
-                authStatus.value = if (currentAccount == null) AuthStatus.Uncertified else AuthStatus.Authenticated
+                authStatus.value =
+                    if (currentAccount == null) AuthStatus.Uncertified else AuthStatus.Authenticated
                 account.value = currentAccount
             }
 

@@ -4,21 +4,25 @@ import logcat.LogPriority.DEBUG
 
 
 /**
- * A tiny Kotlin API for cheap logging on top of Android's normal `Log` class.
+ * A tiny Kotlin API for cheap logging on top of Android's normal `Log`
+ * class.
  *
- * The [logcat] function has 3 parameters: an optional [priority], an optional [tag], and a required
- * string producing lambda ([message]). The lambda is only evaluated if a logger is installed and
- * the logger deems the priority loggable.
+ * The [logcat] function has 3 parameters: an optional [priority], an
+ * optional [tag], and a required string producing lambda ([message]). The
+ * lambda is only evaluated if a logger is installed and the logger deems
+ * the priority loggable.
  *
  * The priority defaults to [LogPriority.DEBUG].
  *
- * The tag defaults to the class name of the log call site, without any extra runtime cost. This works
- * because [logcat] is an inlined extension function of [Any] and has access to [this] from which
- * it can extract the class name. If logging from a standalone function which has no [this], use the
- * [logcat] overload which requires a tag parameter.
+ * The tag defaults to the class name of the log call site, without any
+ * extra runtime cost. This works because [logcat] is an inlined extension
+ * function of [Any] and has access to [this] from which it can extract the
+ * class name. If logging from a standalone function which has no [this],
+ * use the [logcat] overload which requires a tag parameter.
  *
- * The [logcat] function does not take a [Throwable] parameter. Instead, the library provides
- * a Throwable extension function: [Throwable.asLog] which returns a loggable string.
+ * The [logcat] function does not take a [Throwable] parameter. Instead,
+ * the library provides a Throwable extension function: [Throwable.asLog]
+ * which returns a loggable string.
  *
  * ```
  * import logcat.LogPriority.INFO
@@ -51,11 +55,11 @@ import logcat.LogPriority.DEBUG
 inline fun Any.logcat(
     priority: LogPriority = DEBUG,
     /**
-     * If provided, the log will use this tag instead of the simple class name of `this` at the call
-     * site.
+     * If provided, the log will use this tag instead of the simple class name
+     * of `this` at the call site.
      */
     tag: String? = null,
-    message: () -> String
+    message: () -> String,
 ) {
     LogcatLogger.logger.let { logger ->
         if (logger.isLoggable(priority)) {
@@ -66,14 +70,16 @@ inline fun Any.logcat(
 }
 
 /**
- * An overload for logging that does not capture the calling code as tag. This should only
- * be used in standalone functions where there is no `this`.
+ * An overload for logging that does not capture the calling code as tag.
+ * This should only be used in standalone functions where there is no
+ * `this`.
+ *
  * @see logcat above
  */
 inline fun logcat(
     tag: String,
     priority: LogPriority = DEBUG,
-    message: () -> String
+    message: () -> String,
 ) {
     with(LogcatLogger.logger) {
         if (isLoggable(priority)) {

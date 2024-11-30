@@ -4,7 +4,9 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application>
-        <meta-data android:name="dropboxApiKey" android:value="${dropbox_api_key}"/>
+        <meta-data
+            android:name="dropboxApiKey"
+            android:value="${dropbox_api_key}" />
         <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"

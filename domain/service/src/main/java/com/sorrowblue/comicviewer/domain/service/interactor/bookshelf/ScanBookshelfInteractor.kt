@@ -28,11 +28,19 @@ internal class ScanBookshelfInteractor @Inject constructor(
             if (bookshelf != null) {
                 val rootFolder = fileLocalDataSource.root(request.bookshelfId)
                 if (rootFolder != null) {
-                    val supportExtension = datastoreDataSource.folderSettings.first().supportExtension.map { it.extension }
-                    val resolveImageFolder = datastoreDataSource.folderSettings.first().resolveImageFolder
+                    val supportExtension =
+                        datastoreDataSource.folderSettings.first().supportExtension.map { it.extension }
+                    val resolveImageFolder =
+                        datastoreDataSource.folderSettings.first().resolveImageFolder
                     remoteDataSourceFactory.create(
                         bookshelf
-                    ).nestedListFiles(bookshelf, rootFolder, request.process, resolveImageFolder, supportExtension)
+                    ).nestedListFiles(
+                        bookshelf,
+                        rootFolder,
+                        request.process,
+                        resolveImageFolder,
+                        supportExtension
+                    )
                 }
             }
             emit(Resource.Success(emptyList()))

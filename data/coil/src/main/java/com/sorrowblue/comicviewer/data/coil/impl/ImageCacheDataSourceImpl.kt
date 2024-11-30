@@ -69,7 +69,8 @@ internal class ImageCacheDataSourceImpl @Inject constructor(
             when (imageCache) {
                 is BookPageImageCache -> CoilDiskCache.pageDiskCache(context, bookshelfId).clear()
                 is OtherImageCache -> imageCacheDiskCache.get().clear()
-                is ThumbnailImageCache -> CoilDiskCache.thumbnailDiskCache(context, bookshelfId).clear()
+                is ThumbnailImageCache -> CoilDiskCache.thumbnailDiskCache(context, bookshelfId)
+                    .clear()
             }
         }.fold(
             onSuccess = { Resource.Success(Unit) },

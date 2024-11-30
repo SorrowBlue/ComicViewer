@@ -2,11 +2,12 @@ package com.sorrowblue.comicviewer.framework.ui.preview
 
 import com.sorrowblue.comicviewer.framework.ui.R
 
-internal val nextSampleAvatar get() = avatarList[AvatarIndex++].apply {
-    if (AvatarIndex >= avatarList.size) {
-        AvatarIndex = 0
+internal val nextSampleAvatar
+    get() = avatarList[AvatarIndex++].apply {
+        if (AvatarIndex >= avatarList.size) {
+            AvatarIndex = 0
+        }
     }
-}
 
 private var AvatarIndex = 0
 

@@ -57,6 +57,7 @@ fun calculateLowerInfoPaneScaffoldDirective(
             maxHorizontalPartitions = 2
             horizontalPartitionSpacerSize = 0.dp
         }
+
         else -> {
             maxHorizontalPartitions = 2
             horizontalPartitionSpacerSize = 0.dp

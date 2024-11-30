@@ -26,7 +26,10 @@ internal interface FavoriteDao {
     @Query(
         "SELECT *, (SELECT COUNT(*) FROM favorite_file WHERE id = favorite_id) count, EXISTS(SELECT file_path FROM favorite_file WHERE id = favorite_id AND bookshelf_id = :bookshelfId AND file_path = :path) exist FROM favorite"
     )
-    fun pagingSource(bookshelfId: Int, path: String): PagingSource<Int, QueryFavoriteFileWithCountEntity>
+    fun pagingSource(
+        bookshelfId: Int,
+        path: String,
+    ): PagingSource<Int, QueryFavoriteFileWithCountEntity>
 
     @Query(
         "SELECT *, (SELECT COUNT(*) FROM favorite_file WHERE id = favorite_id) count, EXISTS(SELECT file_path FROM favorite_file WHERE id = favorite_id AND bookshelf_id = :bookshelfId AND file_path = :path) exist FROM favorite ORDER BY added_date_time DESC"

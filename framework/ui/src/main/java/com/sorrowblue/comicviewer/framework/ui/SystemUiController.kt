@@ -19,8 +19,7 @@ import androidx.core.view.WindowInsetsControllerCompat
  * A class which provides easy-to-use utilities for updating the System UI
  * bar colors within Jetpack Compose.
  *
- * @sample
- *     com.google.accompanist.sample.systemuicontroller.SystemUiControllerSample
+ * @sample com.google.accompanist.sample.systemuicontroller.SystemUiControllerSample
  */
 @Stable
 interface SystemUiController {

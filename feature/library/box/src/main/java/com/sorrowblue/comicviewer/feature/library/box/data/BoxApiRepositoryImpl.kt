@@ -89,7 +89,12 @@ internal class BoxApiRepositoryImpl(
         })
     }
 
-    override suspend fun authenticate(state: String, code: String, onSuccess: () -> Unit, fail: () -> Unit) {
+    override suspend fun authenticate(
+        state: String,
+        code: String,
+        onSuccess: () -> Unit,
+        fail: () -> Unit,
+    ) {
         if (this.state != state) {
             logcat { "認証失敗" }
             dropboxCredentialDataStore.updateData { connectionState -> connectionState.copy(state = null) }

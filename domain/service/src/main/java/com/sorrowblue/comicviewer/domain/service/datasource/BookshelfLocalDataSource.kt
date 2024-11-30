@@ -19,7 +19,10 @@ interface BookshelfLocalDataSource {
 
     fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>>
 
-    fun pagingSource(bookshelfId: BookshelfId, pagingConfig: PagingConfig): Flow<PagingData<BookThumbnail>>
+    fun pagingSource(
+        bookshelfId: BookshelfId,
+        pagingConfig: PagingConfig,
+    ): Flow<PagingData<BookThumbnail>>
 
     fun allBookshelf(): Resource<Flow<List<Bookshelf>>, Resource.SystemError>
 }
