@@ -26,7 +26,10 @@ data class BookshelfRemoveDialogArgs(
     val bookshelfId: BookshelfId,
 )
 
-@Destination<ExternalModuleGraph>(style = DestinationStyle.Dialog::class, navArgs = BookshelfRemoveDialogArgs::class)
+@Destination<ExternalModuleGraph>(
+    style = DestinationStyle.Dialog::class,
+    navArgs = BookshelfRemoveDialogArgs::class
+)
 @Composable
 internal fun BookshelfRemoveDialog(
     navArgs: BookshelfRemoveDialogArgs,

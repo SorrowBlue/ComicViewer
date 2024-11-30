@@ -102,8 +102,7 @@ private class BoxScreenStateImpl(
         mutableStateOf(null)
     }
 
-    override var event = mutableStateListOf<BoxScreenUiEvent>()
-        private set
+    override val event = mutableStateListOf<BoxScreenUiEvent>()
 
     override fun consumeEvent(event: BoxScreenUiEvent) {
         this.event.remove(event)

@@ -20,6 +20,7 @@ internal interface DropBoxApiRepository {
         outputStream: OutputStream,
         progress: suspend (Double) -> Unit,
     )
+
     fun startSignIn()
     suspend fun dbxCredential(): Boolean
 

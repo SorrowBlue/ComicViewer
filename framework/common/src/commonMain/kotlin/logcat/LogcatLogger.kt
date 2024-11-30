@@ -3,18 +3,16 @@ package logcat
 interface LogcatLogger {
 
     /**
-     * Whether a log with the provided priority should be logged and the corresponding message
-     * providing lambda evaluated. Called by [logcat].
+     * Whether a log with the provided priority should be logged and the
+     * corresponding message providing lambda evaluated. Called by [logcat].
      */
     fun isLoggable(priority: LogPriority) = true
 
-    /**
-     * Write a log to its destination. Called by [logcat].
-     */
+    /** Write a log to its destination. Called by [logcat]. */
     fun log(
         priority: LogPriority,
         tag: String,
-        message: String
+        message: String,
     )
 
     companion object {
@@ -32,8 +30,9 @@ interface LogcatLogger {
         /**
          * Installs a [LogcatLogger].
          *
-         * It is an error to call [install] more than once without calling [uninstall] in between,
-         * however doing this won't throw, it'll log an error to the newly provided logger.
+         * It is an error to call [install] more than once without calling
+         * [uninstall] in between, however doing this won't throw, it'll log an
+         * error to the newly provided logger.
          */
         fun install(logger: LogcatLogger) {
             synchronized(this) {
@@ -50,9 +49,7 @@ interface LogcatLogger {
             }
         }
 
-        /**
-         * Replaces the current logger (if any) with a no-op logger.
-         */
+        /** Replaces the current logger (if any) with a no-op logger. */
         fun uninstall() {
             synchronized(this) {
                 installedThrowable = null
@@ -67,7 +64,7 @@ interface LogcatLogger {
         override fun log(
             priority: LogPriority,
             tag: String,
-            message: String
+            message: String,
         ) = error("Should never receive any log")
     }
 }

@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.util.Log
 import kotlin.math.min
-import logcat.AndroidLogcatLogger.Companion.installOnDebuggableApp
 
 
 private const val MAX_LOG_LENGTH = 4000

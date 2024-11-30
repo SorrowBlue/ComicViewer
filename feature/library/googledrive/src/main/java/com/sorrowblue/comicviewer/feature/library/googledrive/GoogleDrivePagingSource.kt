@@ -45,7 +45,7 @@ internal class GoogleDrivePagingSource(
                         it.name,
                         it.parents.joinToString(","),
                         it.id,
-                        kotlin.runCatching { it.getSize() }.getOrElse { 0 },
+                        kotlin.runCatching { it.size.toLong() }.getOrElse { 0 },
                         it.modifiedTime.value,
                         false,
                         it.iconLink

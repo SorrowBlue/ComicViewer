@@ -16,6 +16,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -113,13 +114,7 @@ private class ComicViewerAppStateImpl(
             .onEach { backStackEntry ->
                 val currentTab = MainScreenTab.entries.find { tab ->
                     backStackEntry.destination.hierarchy.any { destination ->
-                        val findDestination =
-                            tab.navGraph.findDestination(destination.route.orEmpty())
-                        (findDestination?.style as? DestinationTransitions)?.directionToDisplayNavigation?.any { destination.route == it.route }
-                            ?: false ||
-                            (tab.navGraph.defaultTransitions as? DestinationTransitions)?.directionToDisplayNavigation?.any {
-                                destination.route == it.route
-                            } ?: false
+                        findCurrentTab(tab, destination)
                     }
                 }
                 uiState = uiState.copy(currentTab = currentTab)
@@ -144,6 +139,15 @@ private class ComicViewerAppStateImpl(
         } else {
             completeRestoreHistory()
         }
+    }
+
+    private fun findCurrentTab(tab: MainScreenTab, currentDestination: NavDestination): Boolean {
+        val findDestination =
+            tab.navGraph.findDestination(currentDestination.route.orEmpty())
+        val destinationTransitions = (tab.navGraph.defaultTransitions as? DestinationTransitions)
+            ?: (findDestination?.style as? DestinationTransitions)
+            ?: return false
+        return destinationTransitions.directionToDisplayNavigation.any { currentDestination.route == it.route }
     }
 
     override fun onTabSelect(tab: MainScreenTab) {
@@ -188,7 +192,7 @@ private class ComicViewerAppStateImpl(
             if (history?.folderList.isNullOrEmpty()) {
                 completeRestoreHistory()
             } else {
-                val (folderList, book) = history!!.value
+                val (folderList, book) = history.value
                 val bookshelfId = folderList.first().bookshelfId
                 if (folderList.size == 1) {
                     destinationTransitions.navigate(

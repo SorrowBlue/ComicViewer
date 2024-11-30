@@ -105,8 +105,7 @@ private class DropBoxScreenStateImpl(
     override var uiState by savedStateHandle.saveable { mutableStateOf(DropBoxScreenUiState()) }
         private set
 
-    override var events = mutableStateListOf<DropBoxScreenEvent>()
-        private set
+    override val events = mutableStateListOf<DropBoxScreenEvent>()
 
     override fun consumeEvent(event: DropBoxScreenEvent) {
         events.remove(event)
