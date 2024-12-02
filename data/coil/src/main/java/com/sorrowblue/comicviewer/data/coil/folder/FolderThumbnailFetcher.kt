@@ -3,13 +3,13 @@ package com.sorrowblue.comicviewer.data.coil.folder
 import android.content.Context
 import coil3.ImageLoader
 import coil3.decode.DataSource
+import coil3.decode.ImageSource
 import coil3.disk.DiskCache
 import coil3.fetch.FetchResult
 import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CacheKeySnapshot
-import com.sorrowblue.comicviewer.data.coil.CoilDecoder
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
@@ -56,27 +56,18 @@ internal class FolderThumbnailFetcher(
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val folderThumbnailOrder =
             datastoreDataSource.folderDisplaySettings.first().folderThumbnailOrder
-        val thumbnails = getThumbnailCacheList(5, folderThumbnailOrder)
+        val thumbnails = getThumbnailCacheList(1, folderThumbnailOrder)
         if (thumbnails.isEmpty()) {
             throw CoilRuntimeException("There are no book thumbnails in this folder.")
         } else {
-            val pxSize =
-                CoilDecoder.calculateMaxThumbnailSize(thumbnails, requestWidth, requestHeight)
-            val bitmap = CoilDecoder.createShiftedBitmapFromSnapshots(thumbnails, pxSize)
-                ?: throw CoilRuntimeException("Thumbnail generation failed.")
-            // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
-            return writeToDiskCache(snapshot = snapshot, metaData = metadata()) { sink ->
-                bitmap.compress(COMPRESS_FORMAT, 75, sink.outputStream())
-                bitmap.recycle()
-            }?.use {
-                SourceFetchResult(
-                    source = it.toImageSource(),
-                    mimeType = null,
-                    dataSource = DataSource.DISK
-                )
-            } ?: run {
-                throw CoilRuntimeException("Failed to write thumbnail.")
-            }
+            return SourceFetchResult(
+                source = ImageSource(
+                    file = thumbnails.first().second.data,
+                    fileSystem = options.fileSystem
+                ),
+                mimeType = null,
+                dataSource = DataSource.DISK
+            )
         }
     }
 
