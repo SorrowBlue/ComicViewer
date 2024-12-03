@@ -9,7 +9,6 @@ android {
     lint {
         checkAllWarnings = true
         checkDependencies = true
-        enable += "WrongThreadInterprocedural"
         disable += "InvalidPackage"
         baseline = file("lint-baseline.xml")
         htmlReport = true

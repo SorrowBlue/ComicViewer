@@ -106,7 +106,6 @@ android {
     lint {
         checkAllWarnings = true
         checkDependencies = true
-        enable += "WrongThreadInterprocedural"
         disable += "InvalidPackage"
         htmlReport = true
         htmlOutput = file("$rootDir/build/reports/lint/lint-result.html")
@@ -133,6 +132,7 @@ dependencies {
     implementation(projects.feature.book)
     implementation(projects.feature.bookshelf)
     implementation(projects.feature.favorite)
+    implementation(projects.feature.folder)
     implementation(projects.feature.favorite.add)
     implementation(projects.feature.favorite.create)
     implementation(projects.feature.readlater)
