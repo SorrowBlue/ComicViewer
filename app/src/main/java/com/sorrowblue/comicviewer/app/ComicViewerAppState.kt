@@ -196,10 +196,10 @@ private class ComicViewerAppStateImpl(
                 val bookshelfId = folderList.first().bookshelfId
                 if (folderList.size == 1) {
                     destinationTransitions.navigate(
-                        BookshelfFolderScreenDestination(
-                            bookshelfId,
-                            folderList.first().path,
-                            book.path
+                        BookshelfFolderScreenDestination.invoke(
+                            bookshelfId = bookshelfId,
+                            path = folderList.first().path,
+                            restorePath = book.path
                         )
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -207,17 +207,21 @@ private class ComicViewerAppStateImpl(
                     }
                 } else {
                     destinationTransitions.navigate(
-                        BookshelfFolderScreenDestination(bookshelfId, folderList.first().path, null)
+                        BookshelfFolderScreenDestination.invoke(
+                            bookshelfId = bookshelfId,
+                            path = folderList.first().path,
+                            restorePath = null
+                        )
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                     folderList.drop(1).dropLast(1).forEach { folder ->
                         destinationTransitions.navigate(
-                            BookshelfFolderScreenDestination(
-                                bookshelfId,
-                                folder.path,
-                                null
+                            BookshelfFolderScreenDestination.invoke(
+                                bookshelfId = bookshelfId,
+                                path = folder.path,
+                                restorePath = null
                             )
                         )
                         logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -225,10 +229,10 @@ private class ComicViewerAppStateImpl(
                         }
                     }
                     destinationTransitions.navigate(
-                        BookshelfFolderScreenDestination(
-                            bookshelfId,
-                            folderList.last().path,
-                            book.path
+                        BookshelfFolderScreenDestination.invoke(
+                            bookshelfId = bookshelfId,
+                            path = folderList.last().path,
+                            restorePath = book.path
                         )
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {

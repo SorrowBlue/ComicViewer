@@ -107,7 +107,7 @@ internal interface FavoriteFileDao {
                     LIMIT 1
                     ;
                 """.trimIndent(),
-                arrayOf(favoriteId.value.toLong(), bookshelfId.value.toLong(), path)
+                arrayOf<Any>(favoriteId.value.toLong(), bookshelfId.value.toLong(), path)
             )
         )
     }

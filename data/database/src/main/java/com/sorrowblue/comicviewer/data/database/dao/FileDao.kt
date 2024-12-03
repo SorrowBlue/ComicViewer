@@ -99,7 +99,7 @@ internal interface FileDao {
                   LIMIT 1
                   ;
                 """.trimIndent(),
-                arrayOf(bookshelfId.toLong(), path)
+                arrayOf<Any>(bookshelfId.toLong(), path)
             )
         )
     }
