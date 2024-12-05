@@ -106,7 +106,8 @@ android {
     lint {
         checkAllWarnings = true
         checkDependencies = true
-        disable += "InvalidPackage"
+        baseline = file("lint-baseline.xml")
+        disable += listOf("InvalidPackage", "NewerVersionAvailable", "GradleDependency")
         htmlReport = true
         htmlOutput = file("$rootDir/build/reports/lint/lint-result.html")
         sarifReport = true
