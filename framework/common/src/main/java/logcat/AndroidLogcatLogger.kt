@@ -9,9 +9,6 @@ import kotlin.math.min
 private const val MAX_LOG_LENGTH = 4000
 private const val MAX_TAG_LENGTH = 23
 
-private val Application.isDebuggableApp: Boolean
-    get() = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
-
 /**
  * A [logcat] logger that delegates to [android.util.Log] for any log with
  * a priority of at least [minPriorityInt], and is otherwise a no-op.
@@ -79,5 +76,8 @@ class AndroidLogcatLogger(minPriority: LogPriority = LogPriority.DEBUG) : Logcat
                 LogcatLogger.install(AndroidLogcatLogger(minPriority))
             }
         }
+
+        private val Application.isDebuggableApp: Boolean
+            get() = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
     }
 }

@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues name="AGP (8.6.0)" by="lint 8.6.0" client="gradle" dependencies="true" format="6"
-    type="baseline" variant="all" version="8.6.0">
+<issues name="AGP (8.7.3)" by="lint 8.7.3" client="gradle" dependencies="true" format="6"
+    type="baseline" variant="all" version="8.7.3">
 
     <issue errorLine1="                    android:host=&quot;comicviewer.sorrowblue.com&quot;"
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         id="AppLinksAutoVerify"
         message="This host does not support app links to your app. Checks the Digital Asset Links JSON file: https://comicviewer.sorrowblue.com/.well-known/assetlinks.json">
         <location column="21" file="src/main/AndroidManifest.xml" line="33" />
+    </issue>
+
+    <issue id="EnsureInitializerMetadata"
+        message="Every Initializer needs to be accompanied by a corresponding &lt;meta-data> entry in the AndroidManifest.xml file.">
+        <location
+            file="src/main/java/com/sorrowblue/comicviewer/framework/common/LogcatInitializer.kt" />
     </issue>
 
     <issue id="TrustAllX509TrustManager"
@@ -22,11 +28,5 @@
     <issue id="TrustAllX509TrustManager"
         message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
         <location file="google-http-client-1.45.0.jar" />
-    </issue>
-
-    <issue id="EnsureInitializerMetadata"
-        message="Every Initializer needs to be accompanied by a corresponding &lt;meta-data> entry in the AndroidManifest.xml file.">
-        <location
-            file="framework\common\src\main\java\com\sorrowblue\comicviewer\framework\common\LogcatInitializer.kt" />
     </issue>
 </issues>

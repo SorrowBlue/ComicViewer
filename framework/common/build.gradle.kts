@@ -6,17 +6,6 @@ plugins {
 android {
     namespace = "com.sorrowblue.comicviewer.framework.common"
 
-    lint {
-        checkAllWarnings = true
-        checkDependencies = true
-        disable += "InvalidPackage"
-        baseline = file("lint-baseline.xml")
-        htmlReport = true
-        sarifReport = true
-        textReport = false
-        xmlReport = false
-    }
-
     buildTypes {
         create("prerelease") {
             initWith(getByName("release"))

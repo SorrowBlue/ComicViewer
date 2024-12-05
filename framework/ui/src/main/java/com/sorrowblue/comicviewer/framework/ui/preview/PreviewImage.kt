@@ -24,27 +24,27 @@ internal class PreviewImage(context: Context) : Image {
     override fun draw(canvas: coil3.Canvas) {
         canvas.drawBitmap(bitmap, 0f, 0f, null)
     }
+
+    private val Bitmap.allocationByteCountCompat: Int
+        get() {
+            check(!isRecycled) {
+                "Cannot obtain size for recycled bitmap: $this [$width x $height] + $config"
+            }
+
+            return try {
+                allocationByteCount
+            } catch (_: Exception) {
+                width * height * config.bytesPerPixel
+            }
+        }
+
+    @Suppress("DEPRECATION")
+    private val Bitmap.Config?.bytesPerPixel: Int
+        get() = when {
+            this == Bitmap.Config.ALPHA_8 -> 1
+            this == Bitmap.Config.RGB_565 -> 2
+            this == Bitmap.Config.ARGB_4444 -> 2
+            this == Bitmap.Config.RGBA_F16 -> 8
+            else -> 4
+        }
 }
-
-private val Bitmap.allocationByteCountCompat: Int
-    get() {
-        check(!isRecycled) {
-            "Cannot obtain size for recycled bitmap: $this [$width x $height] + $config"
-        }
-
-        return try {
-            allocationByteCount
-        } catch (_: Exception) {
-            width * height * config.bytesPerPixel
-        }
-    }
-
-@Suppress("DEPRECATION")
-private val Bitmap.Config?.bytesPerPixel: Int
-    get() = when {
-        this == Bitmap.Config.ALPHA_8 -> 1
-        this == Bitmap.Config.RGB_565 -> 2
-        this == Bitmap.Config.ARGB_4444 -> 2
-        this == Bitmap.Config.RGBA_F16 -> 8
-        else -> 4
-    }
