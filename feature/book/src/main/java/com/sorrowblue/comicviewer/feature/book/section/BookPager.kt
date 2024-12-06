@@ -2,7 +2,9 @@ package com.sorrowblue.comicviewer.feature.book.section
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,11 +33,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
-import coil3.Extras
 import coil3.asDrawable
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
-import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.transformations
 import coil3.toBitmap
@@ -44,7 +46,6 @@ import com.sorrowblue.comicviewer.feature.book.R
 import com.sorrowblue.comicviewer.feature.book.WhiteTrimTransformation
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import kotlin.random.Random
 
 @Composable
 internal fun BookPage(
@@ -87,49 +88,56 @@ private fun DefaultBookPage(
                 .build()
         )
     }
-    SubcomposeAsyncImage(
+    val painter = rememberAsyncImagePainter(
         model = request,
-        contentDescription = null,
         contentScale = pageScale.contentScale,
         filterQuality = FilterQuality.None,
-        modifier = Modifier
-            .fillMaxSize()
-            .then(modifier),
-        loading = {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .align(Alignment.TopStart)
-                    .padding(ComicTheme.dimension.margin)
-            )
-            Spacer(modifier = Modifier.fillMaxSize())
-        },
-        error = {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    modifier = Modifier.size(96.dp),
-                    painter = rememberVectorPainter(image = ComicIcons.BrokenImage),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
-                Text(
-                    text = stringResource(R.string.book_msg_page_not_loaded),
-                    style = ComicTheme.typography.bodyLarge
-                )
+    )
+    Box {
+        Image(
+            painter = painter,
+            contentDescription = null,
+            contentScale = pageScale.contentScale,
+            modifier = Modifier
+                .fillMaxSize()
+                .then(modifier)
+        )
+        val state by painter.state.collectAsState()
+        when (state) {
+            is AsyncImagePainter.State.Error -> {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        modifier = Modifier.size(96.dp),
+                        painter = rememberVectorPainter(image = ComicIcons.BrokenImage),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
+                    Text(
+                        text = stringResource(R.string.book_msg_page_not_loaded),
+                        style = ComicTheme.typography.bodyLarge
+                    )
 
-                OutlinedButton(onClick = {
-                    request = request.newBuilder(context)
-                        .apply { extras[Extras.Key(0)] = Random.nextInt() }
-                        .build()
-                }) {
-                    Text(text = "Reload")
+                    OutlinedButton(onClick = { painter.restart() }) {
+                        Text(text = "Reload")
+                    }
                 }
             }
+
+            is AsyncImagePainter.State.Loading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .wrapContentSize()
+                        .padding(ComicTheme.dimension.margin)
+                )
+            }
+
+            AsyncImagePainter.State.Empty, is AsyncImagePainter.State.Success -> Unit
         }
-    )
+    }
 }
 
 @Composable
