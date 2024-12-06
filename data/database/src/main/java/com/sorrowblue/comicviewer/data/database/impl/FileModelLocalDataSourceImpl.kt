@@ -251,6 +251,12 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun clearCacheKey(bookshelfId: BookshelfId) {
+        withContext(dispatcher) {
+            dao.updateCacheKeyToEmpty(bookshelfId = bookshelfId.value)
+        }
+    }
+
     override suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>) {
         withContext(dispatcher) {
             dao.deleteHistory(bookshelfId.value, list.toTypedArray())
