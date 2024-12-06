@@ -9,7 +9,6 @@ import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CacheKeySnapshot
-import com.sorrowblue.comicviewer.data.coil.CoilDecoder
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
@@ -22,6 +21,8 @@ import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import dagger.Lazy
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import logcat.LogPriority
+import logcat.logcat
 import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
 
@@ -35,63 +36,45 @@ internal class FavoriteThumbnailFetcher(
 ) : FileFetcher<FavoriteThumbnailMetadata>(options, diskCache) {
 
     override val diskCacheKey
-        get() = options.diskCacheKey ?: "id:${data.id.value}".encodeUtf8().sha256().hex()
+        get() = options.diskCacheKey ?: "favorite:${data.id.value}".encodeUtf8().sha256().hex()
 
     override suspend fun metadata(): FavoriteThumbnailMetadata {
-        val thumbnails = getThumbnailCacheList(5)
-        thumbnails.forEach { it.second.closeQuietly() }
-        return FavoriteThumbnailMetadata(data.id.value, thumbnails.map { it.first })
+        val thumbnails = getThumbnailCache()
+        thumbnails?.second?.closeQuietly()
+        return FavoriteThumbnailMetadata(data.id.value, thumbnails?.first)
     }
 
     override fun BufferedSource.readMetadata() =
         FavoriteThumbnailMetadata.from<FavoriteThumbnailMetadata>(this)
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
-        val thumbnails = getThumbnailCacheList(5)
-        if (thumbnails.isEmpty()) {
+        val thumbnailCache = getThumbnailCache()
+        if (thumbnailCache == null) {
             throw CoilRuntimeException("No thumbnails were generated for this favorite file.")
         } else {
-            val pxSize =
-                CoilDecoder.calculateMaxThumbnailSize(thumbnails, requestWidth, requestHeight)
-            val bitmap = CoilDecoder.createShiftedBitmapFromSnapshots(thumbnails, pxSize)
-                ?: throw CoilRuntimeException("Thumbnail generation failed.")
             // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
-            return writeToDiskCache(snapshot = snapshot, metaData = metadata()) { sink ->
-                bitmap.compress(COMPRESS_FORMAT, 75, sink.outputStream())
-                bitmap.recycle()
-            }?.use {
-                SourceFetchResult(
-                    source = it.toImageSource(),
-                    mimeType = null,
-                    dataSource = DataSource.DISK
-                )
-            } ?: run {
-                throw CoilRuntimeException("Failed to write thumbnail.")
-            }
+            return SourceFetchResult(
+                source = thumbnailCache.second.toImageSource(),
+                mimeType = null,
+                dataSource = DataSource.DISK
+            )
         }
     }
 
-    /**
-     * サムネイルキャッシュを取得する
-     *
-     * @param maxSize サムネイルの最大数
-     * @return
-     */
-    private suspend fun getThumbnailCacheList(maxSize: Int): List<CacheKeySnapshot> {
-        val cacheKeyList = favoriteFileLocalDataSource.getCacheKeyList(data.id, 5)
-        val notEnough = cacheKeyList.size < maxSize
-        val list = cacheKeyList.mapNotNull { (bookshelfId, cacheKey) ->
+    private suspend fun getThumbnailCache(): CacheKeySnapshot? {
+        val cacheKeyList = favoriteFileLocalDataSource.getCacheKeyList(data.id, 10)
+        if (cacheKeyList.isEmpty()) {
+            logcat(LogPriority.INFO) { "Not found thumbnail cache.$data" }
+            return null
+        }
+        return cacheKeyList.firstNotNullOfOrNull { (bookshelfId, cacheKey) ->
             CoilDiskCache.thumbnailDiskCache(context, bookshelfId).openSnapshot(cacheKey)?.let {
                 cacheKey to it
-            } ?: null.apply {
+            } ?: run {
                 fileModelLocalDataSource.removeCacheKey(cacheKey)
+                null
             }
-        }
-        return if (notEnough || maxSize <= list.size) {
-            list.reversed()
-        } else {
-            getThumbnailCacheList(maxSize)
-        }
+        } ?: getThumbnailCache()
     }
 
     class Factory @Inject constructor(

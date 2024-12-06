@@ -25,7 +25,7 @@ actual object SortUtil {
     actual val compareName = Comparator(collator::compare)
 
     actual val compareFile = compareBy<File> { if (it is BookFile) 1 else 0 }
-        .thenBy(collator::compare, File::name)
+        .thenBy({ a, b -> collator.compare(a, b) }, { it.name })
 
     actual fun filter(file: File, supportExtensions: List<String>): Boolean {
         return file is IFolder || (file is BookFile && file.extension in supportExtensions)

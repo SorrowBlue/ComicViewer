@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.data.coil.folder
 import android.content.Context
 import coil3.ImageLoader
 import coil3.decode.DataSource
-import coil3.decode.ImageSource
 import coil3.disk.DiskCache
 import coil3.fetch.FetchResult
 import coil3.fetch.Fetcher
@@ -22,6 +21,8 @@ import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
+import logcat.LogPriority
+import logcat.logcat
 import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
 
@@ -35,18 +36,18 @@ internal class FolderThumbnailFetcher(
 
     override val diskCacheKey
         get() = options.diskCacheKey
-            ?: "id:${data.bookshelfId.value},path:${data.path}".encodeUtf8().sha256().hex()
+            ?: "folder:${data.bookshelfId.value}:${data.path}".encodeUtf8().sha256().hex()
 
     override suspend fun metadata(): FolderThumbnailMetadata {
         val folderThumbnailOrder =
             datastoreDataSource.folderDisplaySettings.first().folderThumbnailOrder
-        val thumbnails = getThumbnailCacheList(5, folderThumbnailOrder)
-        thumbnails.forEach { it.second.closeQuietly() }
+        val thumbnailCache = getThumbnailCache(folderThumbnailOrder)
+        thumbnailCache?.second?.closeQuietly()
         return FolderThumbnailMetadata(
             data.path,
             data.bookshelfId.value,
             data.lastModifier,
-            thumbnails.map { it.first }
+            thumbnailCache?.first
         )
     }
 
@@ -56,51 +57,37 @@ internal class FolderThumbnailFetcher(
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val folderThumbnailOrder =
             datastoreDataSource.folderDisplaySettings.first().folderThumbnailOrder
-        val thumbnails = getThumbnailCacheList(1, folderThumbnailOrder)
-        if (thumbnails.isEmpty()) {
+        val thumbnailCache = getThumbnailCache(folderThumbnailOrder)
+        if (thumbnailCache == null) {
             throw CoilRuntimeException("There are no book thumbnails in this folder.")
         } else {
             return SourceFetchResult(
-                source = ImageSource(
-                    file = thumbnails.first().second.data,
-                    fileSystem = options.fileSystem
-                ),
+                source = thumbnailCache.second.toImageSource(),
                 mimeType = null,
                 dataSource = DataSource.DISK
             )
         }
     }
 
-    /**
-     * サムネイルキャッシュを取得する
-     *
-     * @param maxSize サムネイルの最大数
-     * @param folderThumbnailOrder 取得するサムネイルの順番
-     * @return
-     */
-    private suspend fun getThumbnailCacheList(
-        maxSize: Int,
-        folderThumbnailOrder: FolderThumbnailOrder,
-    ): List<CacheKeySnapshot> {
-        val cacheKeyList = fileLocalDataSource.getCacheKeys(
+    private suspend fun getThumbnailCache(folderThumbnailOrder: FolderThumbnailOrder): CacheKeySnapshot? {
+        val thumbnailCache = fileLocalDataSource.getCacheKeys(
             data.bookshelfId,
             data.path,
-            maxSize,
+            10,
             FolderThumbnailOrder.valueOf(folderThumbnailOrder.name)
         )
-        val notEnough = cacheKeyList.size < maxSize
-        val list = cacheKeyList.mapNotNull { cacheKey ->
+        if (thumbnailCache.isEmpty()) {
+            logcat(LogPriority.INFO) { "Not found thumbnail cache.$data" }
+            return null
+        }
+        return thumbnailCache.firstNotNullOfOrNull { cacheKey ->
             diskCache?.openSnapshot(cacheKey)?.let {
                 cacheKey to it
-            } ?: null.apply {
+            } ?: run {
                 fileLocalDataSource.removeCacheKey(cacheKey)
+                null
             }
-        }
-        return if (notEnough || maxSize <= list.size) {
-            list.reversed()
-        } else {
-            getThumbnailCacheList(maxSize, folderThumbnailOrder)
-        }
+        } ?: getThumbnailCache(folderThumbnailOrder)
     }
 
     class Factory @Inject constructor(

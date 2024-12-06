@@ -41,7 +41,7 @@ internal class BookThumbnailFetcher(
 
     override val diskCacheKey
         get() = options.diskCacheKey
-            ?: "id:${data.bookshelfId.value},path:${data.path}".encodeUtf8().sha256().hex()
+            ?: "book:${data.bookshelfId.value}:${data.path}".encodeUtf8().sha256().hex()
 
     override suspend fun metadata() = BookThumbnailMetadata(data)
 
