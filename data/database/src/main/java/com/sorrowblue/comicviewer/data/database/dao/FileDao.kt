@@ -137,6 +137,9 @@ internal interface FileDao {
     @Query("UPDATE file SET cache_key = '' WHERE cache_key = :cacheKey")
     suspend fun deleteCacheKeyBy(cacheKey: String)
 
+    @Query("UPDATE file SET cache_key = '' WHERE bookshelf_id = :bookshelfId AND cache_key != ''")
+    suspend fun updateCacheKeyToEmpty(bookshelfId: Int)
+
     @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND parent = ''")
     suspend fun findRootFile(bookshelfId: Int): FileEntity?
 

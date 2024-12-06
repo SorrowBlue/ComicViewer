@@ -7,7 +7,6 @@ import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
-import com.sorrowblue.comicviewer.domain.usecase.ClearImageCacheUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetBookshelfImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import javax.inject.Inject
@@ -37,21 +36,5 @@ internal class GetBookshelfImageCacheInfoInteractor @Inject constructor(
         return list.mapNotNull {
             imageCacheDataSource.getBookshelfImageCacheInfo(it).dataOrNull()
         }
-    }
-}
-
-internal class ClearImageCacheInteractor @Inject constructor(
-    private val imageCacheDataSource: ImageCacheDataSource,
-) : ClearImageCacheUseCase() {
-
-    override suspend fun run(request: Request): Resource<Unit, Unit> {
-        when (request) {
-            is BookshelfRequest ->
-                imageCacheDataSource.clearImageCache(request.bookshelfId, request.imageCache)
-
-            OtherRequest ->
-                imageCacheDataSource.clearImageCache()
-        }
-        return Resource.Success(Unit)
     }
 }

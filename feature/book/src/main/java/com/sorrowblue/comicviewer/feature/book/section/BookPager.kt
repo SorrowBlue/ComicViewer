@@ -22,7 +22,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
@@ -80,7 +79,7 @@ private fun DefaultBookPage(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    var request by remember(bookPage.index) {
+    val request by remember(bookPage.index) {
         mutableStateOf(
             ImageRequest.Builder(context)
                 .data(BookPageRequest(book to bookPage.index))
@@ -93,21 +92,24 @@ private fun DefaultBookPage(
         contentScale = pageScale.contentScale,
         filterQuality = FilterQuality.None,
     )
-    Box {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier)
+    ) {
         Image(
             painter = painter,
             contentDescription = null,
             contentScale = pageScale.contentScale,
-            modifier = Modifier
-                .fillMaxSize()
-                .then(modifier)
+            modifier = Modifier.fillMaxSize()
         )
         val state by painter.state.collectAsState()
         when (state) {
             is AsyncImagePainter.State.Error -> {
                 Column(
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     Icon(
                         modifier = Modifier.size(96.dp),
