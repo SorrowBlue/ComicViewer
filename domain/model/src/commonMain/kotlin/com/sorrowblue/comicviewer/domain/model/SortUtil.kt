@@ -7,8 +7,6 @@ expect object SortUtil {
 
     val compareFile: Comparator<File>
 
-    val compareName: Comparator<String>
-
     fun filter(file: File, supportExtensions: List<String>): Boolean
 
     fun sortedIndex(list: List<File>): List<File>

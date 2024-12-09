@@ -1,37 +1,62 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.DynamicFeatureExtension
 import com.android.build.api.dsl.LibraryExtension
-import com.google.devtools.ksp.gradle.KspExtension
-import com.sorrowblue.comicviewer.apply
+import com.sorrowblue.comicviewer.composeCompiler
 import com.sorrowblue.comicviewer.configureAndroidCompose
 import com.sorrowblue.comicviewer.debugImplementation
+import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.implementation
+import com.sorrowblue.comicviewer.kotlin
 import com.sorrowblue.comicviewer.ksp
 import com.sorrowblue.comicviewer.kspDebug
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.parentName
+import com.sorrowblue.comicviewer.plugins
 import com.sorrowblue.comicviewer.testImplementation
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.findByType
+import org.gradle.kotlin.dsl.provideDelegate
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidExtension
 
+@Suppress("unused")
 internal class ComposeConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply(libs.plugins.kotlin.compose)
-                apply(libs.plugins.google.ksp)
+            plugins {
+                id(libs.plugins.kotlin.compose)
+                id(libs.plugins.google.ksp)
             }
 
-            extensions.findByType<ApplicationExtension>()?.let {
-                configureAndroidCompose(it)
-            } ?: extensions.findByType<DynamicFeatureExtension>()?.let {
-                configureAndroidCompose(it)
-            } ?: extensions.findByType<LibraryExtension>()?.let {
-                configureAndroidCompose(it)
+            when {
+                pluginManager.hasPlugin(libs.plugins.android.application) ->
+                    configureAndroidCompose<ApplicationExtension>()
+
+                pluginManager.hasPlugin(libs.plugins.android.library) ->
+                    configureAndroidCompose<LibraryExtension>()
+
+                pluginManager.hasPlugin(libs.plugins.android.dynamicFeature) ->
+                    configureAndroidCompose<DynamicFeatureExtension>()
+
+                else -> TODO("'${libs.plugins.kotlin.compose.get().pluginId}' cannot be applied to '$name' module.")
+            }
+
+            kotlin<KotlinAndroidExtension> {
+                compilerOptions {
+                    freeCompilerArgs.addAll(
+                        "-opt-in=androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi",
+                        "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+                    )
+                }
+            }
+
+            composeCompiler {
+                val composeCompilerReports: String? by project
+                if (composeCompilerReports.toBoolean()) {
+                    reportsDestination.set(layout.buildDirectory.dir("compose_compiler"))
+                    metricsDestination.set(layout.buildDirectory.dir("compose_compiler"))
+                }
             }
 
             dependencies {
@@ -49,7 +74,7 @@ internal class ComposeConventionPlugin : Plugin<Project> {
                 testImplementation(libs.androidx.compose.ui.testJunit4)
             }
 
-            extensions.configure<KspExtension> {
+            ksp {
                 arg("compose-destinations.codeGenPackageName", "com.sorrowblue.${parentName()}")
                 arg("skipPrivatePreviews", "true")
             }

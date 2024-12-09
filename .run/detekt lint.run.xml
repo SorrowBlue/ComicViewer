@@ -10,7 +10,11 @@
       </option>
       <option name="taskNames">
         <list>
+          <option value=":build-logic:detektMain" />
           <option value="detektRelease" />
+          <option value="detektAndroidRelease" />
+          <option value="detektJvmMain" />
+          <option value="detektMetadataCommonMain" />
           <option value="app:lintRelease" />
         </list>
       </option>

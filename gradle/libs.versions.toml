@@ -1,6 +1,7 @@
 [versions]
 versionCode = "15"
 targetSdk = "35"
+java = "21"
 
 kotlin = "2.1.0"
 google-ksp = "2.1.0-1.0.29"
@@ -52,6 +53,8 @@ comicviewer-android-application = { id = "comicviewer.android.application" }
 comicviewer-android-library = { id = "comicviewer.android.library" }
 comicviewer-android-dynamicFeature = { id = "comicviewer.android.dynamic-feature" }
 comicviewer-android-compose = { id = "comicviewer.android.compose" }
+comicviewer-android-lint = { id = "comicviewer.android.lint" }
+comicviewer-android-kotlinMultiplatform = { id = "comicviewer.kotlinMultiplatform" }
 comicviewer-android-hilt = { id = "comicviewer.android.hilt" }
 comicviewer-koin = { id = "comicviewer.koin" }
 comicviewer-detekt = { id = "comicviewer.android.detekt" }

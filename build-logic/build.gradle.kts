@@ -1,5 +1,6 @@
 plugins {
     `kotlin-dsl`
+    alias(libs.plugins.detekt)
 }
 
 group = "com.sorrowblue.comicviewer.buildlogic"
@@ -7,22 +8,34 @@ group = "com.sorrowblue.comicviewer.buildlogic"
 kotlin {
     jvmToolchain {
         vendor = JvmVendorSpec.ADOPTIUM
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
     }
-    compilerOptions {
-        freeCompilerArgs.add("-Xcontext-receivers")
+}
+
+tasks {
+    validatePlugins {
+        enableStricterValidation = true
+        failOnWarning = true
     }
 }
 
 dependencies {
-    implementation(libs.android.gradlePlugin)
-    implementation(libs.kotlin.gradlePlugin)
-    implementation(libs.kotlin.compose.gradlePlugin)
-    implementation(libs.kotlinx.kover.gradlePlugin)
-    implementation(libs.google.ksp.gradlePlugin)
-    implementation(libs.detekt.gradlePlugin)
-    implementation(libs.dokka.gradlePlugin)
-    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+    compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(libs.kotlin.compose.gradlePlugin)
+    compileOnly(libs.kotlinx.kover.gradlePlugin)
+    compileOnly(libs.google.ksp.gradlePlugin)
+    compileOnly(libs.detekt.gradlePlugin)
+    compileOnly(libs.dokka.gradlePlugin)
+    compileOnly(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+    detektPlugins(libs.nlopez.compose.rules.detekt)
+    detektPlugins(libs.arturbosch.detektFormatting)
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    autoCorrect = true
+    config.setFrom(layout.projectDirectory.file("../config/detekt/detekt.yml"))
 }
 
 gradlePlugin {
@@ -36,9 +49,14 @@ gradlePlugin {
         register(libs.plugins.comicviewer.android.dynamicFeature) {
             implementationClass = "AndroidDynamicFeatureConventionPlugin"
         }
-
         register(libs.plugins.comicviewer.android.compose) {
             implementationClass = "ComposeConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.android.lint) {
+            implementationClass = "AndroidLintConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.android.kotlinMultiplatform) {
+            implementationClass = "AndroidKotlinMultiplatformConventionPlugin"
         }
         register(libs.plugins.comicviewer.android.hilt) {
             implementationClass = "DaggerHiltConventionPlugin"

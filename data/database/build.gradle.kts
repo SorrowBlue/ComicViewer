@@ -14,10 +14,6 @@ android {
 }
 
 kotlin {
-    jvmToolchain {
-        vendor = JvmVendorSpec.ADOPTIUM
-        languageVersion = JavaLanguageVersion.of(17)
-    }
     compilerOptions {
         freeCompilerArgs.add("-opt-in=com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue")
     }

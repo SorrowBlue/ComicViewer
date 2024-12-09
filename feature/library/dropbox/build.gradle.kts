@@ -11,7 +11,7 @@ android {
     buildTypes {
         val comicviewerDropboxApiKey: String? by project
         if (comicviewerDropboxApiKey.isNullOrEmpty()) {
-            logger.warn("DROP_BOX_API_KEY is not set.")
+            logger.warn("comicviewerDropboxApiKey is not set.")
         } else {
             all {
                 manifestPlaceholders += mapOf("dropbox_api_key" to comicviewerDropboxApiKey!!)

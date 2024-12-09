@@ -5,9 +5,7 @@ import android.content.pm.ApplicationInfo
 import android.util.Log
 import kotlin.math.min
 
-
 private const val MAX_LOG_LENGTH = 4000
-private const val MAX_TAG_LENGTH = 23
 
 /**
  * A [logcat] logger that delegates to [android.util.Log] for any log with

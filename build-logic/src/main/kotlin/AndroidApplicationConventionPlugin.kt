@@ -1,41 +1,86 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.sorrowblue.comicviewer.apply
+import com.sorrowblue.comicviewer.ComicBuildType
+import com.sorrowblue.comicviewer.android
 import com.sorrowblue.comicviewer.applyTestImplementation
+import com.sorrowblue.comicviewer.configureAndroid
 import com.sorrowblue.comicviewer.configureKotlin
-import com.sorrowblue.comicviewer.configureKotlinAndroid
-import com.sorrowblue.comicviewer.detektPlugins
+import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.libs
+import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.provideDelegate
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
+@Suppress("unused")
 internal class AndroidApplicationConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply(libs.plugins.android.application)
-                apply(libs.plugins.kotlin.android)
-                apply(libs.plugins.comicviewer.detekt)
-                apply(libs.plugins.comicviewer.dokka)
+            plugins {
+                id(libs.plugins.android.application)
+                id(libs.plugins.kotlin.android)
+                id(libs.plugins.comicviewer.android.lint)
+                id(libs.plugins.comicviewer.detekt)
+                id(libs.plugins.comicviewer.dokka)
             }
 
-            extensions.configure<ApplicationExtension> {
-                configureKotlinAndroid(this)
-            }
+            configureAndroid<ApplicationExtension>()
 
-            extensions.configure<KotlinAndroidProjectExtension> {
-                configureKotlin(this)
+            configureKotlin<KotlinAndroidProjectExtension>()
+
+            android<ApplicationExtension> {
+                defaultConfig {
+                    proguardFiles(
+                        getDefaultProguardFile("proguard-android-optimize.txt"),
+                        "proguard-rules.pro"
+                    )
+                }
+
+                signingConfigs {
+                    val androidSigningDebugStoreFile: String? by project
+                    if (!androidSigningDebugStoreFile.isNullOrEmpty()) {
+                        named(ComicBuildType.DEBUG.display) {
+                            val androidSigningDebugStorePassword: String? by project
+                            val androidSigningDebugKeyAlias: String? by project
+                            val androidSigningDebugKeyPassword: String? by project
+                            storeFile = file(androidSigningDebugStoreFile!!)
+                            storePassword = androidSigningDebugStorePassword
+                            keyAlias = androidSigningDebugKeyAlias
+                            keyPassword = androidSigningDebugKeyPassword
+                        }
+                    } else {
+                        logger.warn("androidSigningDebugStoreFile not found")
+                    }
+
+                    val androidSigningReleaseStoreFile: String? by project
+                    if (!androidSigningReleaseStoreFile.isNullOrEmpty()) {
+                        create(ComicBuildType.RELEASE.display) {
+                            val androidSigningReleaseStorePassword: String? by project
+                            val androidSigningReleaseKeyAlias: String? by project
+                            val androidSigningReleaseKeyPassword: String? by project
+                            storeFile = file(androidSigningReleaseStoreFile!!)
+                            storePassword = androidSigningReleaseStorePassword
+                            keyAlias = androidSigningReleaseKeyAlias
+                            keyPassword = androidSigningReleaseKeyPassword
+                        }
+                    } else {
+                        logger.warn("androidSigningReleaseStoreFile not found")
+                    }
+                    create(ComicBuildType.PRERELEASE.display) {
+                        initWith(getByName(ComicBuildType.RELEASE.display))
+                    }
+                    create(ComicBuildType.INTERNAL.display) {
+                        initWith(getByName(ComicBuildType.RELEASE.display))
+                    }
+                }
             }
 
             dependencies {
-                detektPlugins(libs.nlopez.compose.rules.detekt)
-                detektPlugins(libs.arturbosch.detektFormatting)
                 implementation(project(":framework:common"))
-                applyTestImplementation()
+                applyTestImplementation(target)
             }
         }
     }

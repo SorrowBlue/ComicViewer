@@ -8,6 +8,11 @@ plugins {
 android {
     namespace = "com.sorrowblue.comicviewer.framework.ui"
 }
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    metricsDestination = layout.buildDirectory.dir("compose_compiler")
+}
+
 
 dependencies {
     implementation(projects.domain.model)

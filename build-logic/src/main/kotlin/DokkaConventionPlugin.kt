@@ -1,14 +1,16 @@
-import com.sorrowblue.comicviewer.apply
+import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.libs
+import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+@Suppress("unused")
 internal class DokkaConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply(libs.plugins.dokka)
+            plugins {
+                id(libs.plugins.dokka)
             }
         }
     }

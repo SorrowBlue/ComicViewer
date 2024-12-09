@@ -8,5 +8,8 @@ enum class ComicBuildType(
     DEBUG(false, false, ".debug"),
     RELEASE(true, true),
     INTERNAL(true, true),
-    PRERELEASE(true, true, ".prerelease")
+    PRERELEASE(true, true, ".prerelease"),
+    ;
+
+    val display = this.name.lowercase()
 }
