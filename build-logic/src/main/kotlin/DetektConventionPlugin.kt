@@ -1,18 +1,20 @@
-import com.sorrowblue.comicviewer.apply
 import com.sorrowblue.comicviewer.detektPlugins
+import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.libs
+import com.sorrowblue.comicviewer.plugins
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 
+@Suppress("unused")
 internal class DetektConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply(libs.plugins.detekt)
+            plugins {
+                id(libs.plugins.detekt)
             }
 
             dependencies {
@@ -20,7 +22,7 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 detektPlugins(libs.arturbosch.detektFormatting)
             }
 
-            extensions.configure<DetektExtension> {
+            configure<DetektExtension> {
                 buildUponDefaultConfig = true
                 autoCorrect = true
                 config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")

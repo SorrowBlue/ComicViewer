@@ -1,41 +1,43 @@
 import com.android.build.api.dsl.DynamicFeatureExtension
-import com.sorrowblue.comicviewer.apply
+import com.sorrowblue.comicviewer.android
 import com.sorrowblue.comicviewer.applyTestImplementation
+import com.sorrowblue.comicviewer.configureAndroid
 import com.sorrowblue.comicviewer.configureKotlin
-import com.sorrowblue.comicviewer.configureKotlinAndroid
+import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.libs
+import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
+@Suppress("unused")
 internal class AndroidDynamicFeatureConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply(libs.plugins.android.dynamicFeature)
-                apply(libs.plugins.kotlin.android)
-                apply(libs.plugins.comicviewer.detekt)
-                apply(libs.plugins.comicviewer.dokka)
+            plugins {
+                id(libs.plugins.android.dynamicFeature)
+                id(libs.plugins.kotlin.android)
+                id(libs.plugins.comicviewer.android.lint)
+                id(libs.plugins.comicviewer.detekt)
+                id(libs.plugins.comicviewer.dokka)
             }
 
-            extensions.configure<DynamicFeatureExtension> {
-                configureKotlinAndroid(this)
+            configureAndroid<DynamicFeatureExtension>()
+
+            configureKotlin<KotlinAndroidProjectExtension>()
+
+            android<DynamicFeatureExtension> {
                 defaultConfig {
                     proguardFile("consumer-rules.pro")
                 }
             }
 
-            extensions.configure<KotlinAndroidProjectExtension> {
-                configureKotlin(this)
-            }
-
             dependencies {
                 implementation(project(":framework:common"))
-                applyTestImplementation()
+                applyTestImplementation(this@with)
             }
         }
     }

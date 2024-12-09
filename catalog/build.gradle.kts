@@ -19,6 +19,8 @@ dependencies {
     implementation(projects.feature.file)
 
     implementation(libs.androidx.appcompat)
+    compileOnly(libs.androidx.compose.material3)
+    compileOnly(libs.androidx.compose.material3.adaptive.layout)
 
     implementation(libs.airbnb.android.showkase)
 }

@@ -21,48 +21,9 @@ android {
         versionCode = libs.versions.versionCode.get().toInt()
         versionName = semver.gitDescribed.toString()
         logger.lifecycle("versionName=$versionName")
-        proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
     androidResources {
         generateLocaleConfig = true
-    }
-    signingConfigs {
-        val androidSigningDebugStoreFile: String? by project
-        if (androidSigningDebugStoreFile?.isNotEmpty() == true && file(androidSigningDebugStoreFile!!).exists()) {
-            getByName("debug") {
-                val androidSigningDebugStorePassword: String? by project
-                val androidSigningDebugKeyAlias: String? by project
-                val androidSigningDebugKeyPassword: String? by project
-                storeFile = file(androidSigningDebugStoreFile!!)
-                storePassword = androidSigningDebugStorePassword
-                keyAlias = androidSigningDebugKeyAlias
-                keyPassword = androidSigningDebugKeyPassword
-            }
-        } else {
-            logger.warn("debugStoreFile not found")
-        }
-
-        val androidSigningReleaseStoreFile: String? by project
-        if (androidSigningReleaseStoreFile?.isNotEmpty() == true && file(
-                androidSigningReleaseStoreFile!!
-            ).exists()
-        ) {
-            val release = create("release") {
-                val androidSigningReleaseStorePassword: String? by project
-                val androidSigningReleaseKeyAlias: String? by project
-                val androidSigningReleaseKeyPassword: String? by project
-                storeFile = file(androidSigningReleaseStoreFile!!)
-                storePassword = androidSigningReleaseStorePassword
-                keyAlias = androidSigningReleaseKeyAlias
-                keyPassword = androidSigningReleaseKeyPassword
-            }
-            create("prerelease") {
-                initWith(release)
-            }
-            create("internal") {
-                initWith(release)
-            }
-        }
     }
 
     buildTypes {
@@ -72,13 +33,15 @@ android {
             isShrinkResources = ComicBuildType.RELEASE.isShrinkResources
             signingConfig = signingConfigs.findByName(name)
         }
-        getByName("prerelease") {
+        getByName(ComicBuildType.PRERELEASE.display) {
+            initWith(getByName(ComicBuildType.RELEASE.display))
             applicationIdSuffix = ComicBuildType.PRERELEASE.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.PRERELEASE.isMinifyEnabled
             isShrinkResources = ComicBuildType.PRERELEASE.isShrinkResources
             signingConfig = signingConfigs.findByName(name)
         }
-        getByName("internal") {
+        getByName(ComicBuildType.INTERNAL.display) {
+            initWith(getByName(ComicBuildType.RELEASE.display))
             applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.INTERNAL.isMinifyEnabled
             isShrinkResources = ComicBuildType.INTERNAL.isShrinkResources
@@ -99,22 +62,8 @@ android {
         projects.feature.library.googledrive.path,
         projects.feature.library.onedrive.path,
     )
-    buildFeatures {
-        buildConfig = true
-    }
 
-    lint {
-        checkAllWarnings = true
-        checkDependencies = true
-        baseline = file("lint-baseline.xml")
-        disable += listOf("InvalidPackage", "NewerVersionAvailable", "GradleDependency")
-        htmlReport = true
-        htmlOutput = file("$rootDir/build/reports/lint/lint-result.html")
-        sarifReport = true
-        sarifOutput = file("$rootDir/build/reports/lint/lint-result.sarif")
-        textReport = false
-        xmlReport = false
-    }
+    buildFeatures.buildConfig = true
 
     packaging {
         resources.excludes += "com/ramcosta/composedestinations/generated/mermaid/**"

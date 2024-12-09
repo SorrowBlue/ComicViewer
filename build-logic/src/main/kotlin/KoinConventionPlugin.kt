@@ -1,18 +1,20 @@
 import com.google.devtools.ksp.gradle.KspExtension
-import com.sorrowblue.comicviewer.apply
+import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.libs
+import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 
+@Suppress("unused")
 internal class KoinConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply(libs.plugins.google.ksp)
+            plugins {
+                id(libs.plugins.google.ksp)
             }
 
             dependencies {
@@ -20,7 +22,7 @@ internal class KoinConventionPlugin : Plugin<Project> {
                 implementation(libs.koin.compose)
                 implementation(libs.koin.android)
             }
-            extensions.configure<KspExtension> {
+            configure<KspExtension> {
                 arg("KOIN_CONFIG_CHECK", "false")
             }
         }

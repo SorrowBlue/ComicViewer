@@ -15,7 +15,6 @@ sealed interface File {
     val sortIndex: Int
     val cacheKey: String
 
-
     fun key() = Key(bookshelfId, path, parent)
 
     @Serializable

@@ -5,12 +5,12 @@ plugins {
 android {
     namespace = "com.sorrowblue.comicviewer.feature.settings.info"
     resourcePrefix("settings_info")
+
     defaultConfig {
         buildConfigField("long", "TIMESTAMP", "${System.currentTimeMillis()}L")
     }
-    buildFeatures {
-        buildConfig = true
-    }
+
+    buildFeatures.buildConfig = true
 }
 
 dependencies {

@@ -2,7 +2,6 @@ package logcat
 
 import logcat.LogPriority.DEBUG
 
-
 /**
  * A tiny Kotlin API for cheap logging on top of Android's normal `Log`
  * class.

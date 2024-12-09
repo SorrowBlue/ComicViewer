@@ -21,8 +21,6 @@ actual object SortUtil {
             }
         }
 
-    actual val compareName = Comparator(collator::compare)
-
     actual val compareFile = compareBy<File> { if (it is BookFile) 1 else 0 }
         .thenBy(collator::compare, File::name)
 

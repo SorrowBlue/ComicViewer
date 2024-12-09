@@ -1,27 +1,18 @@
 package com.sorrowblue.comicviewer
 
 import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.LibraryDefaultConfig
 import org.gradle.api.Project
-import org.gradle.jvm.toolchain.JavaLanguageVersion
-import org.gradle.jvm.toolchain.JvmVendorSpec
-import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+import org.gradle.kotlin.dsl.configure
 
-internal fun configureKotlin(extension: KotlinAndroidProjectExtension) {
-    with(extension) {
-        jvmToolchain {
-            vendor.set(JvmVendorSpec.ADOPTIUM)
-            languageVersion.set(JavaLanguageVersion.of(17))
-        }
-    }
-}
-
-internal fun Project.configureKotlinAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
-) {
-    with(commonExtension) {
-
+internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.configureAndroid() =
+    configure<T> {
         defaultConfig {
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+            if (this is LibraryDefaultConfig) {
+                consumerProguardFiles("consumer-rules.pro")
+            }
         }
 
         @Suppress("UnstableApiUsage")
@@ -32,13 +23,11 @@ internal fun Project.configureKotlinAndroid(
         }
 
         buildTypes {
-            create("prerelease") {
-                initWith(getByName("release"))
+            create(ComicBuildType.PRERELEASE.display) {
+                initWith(getByName(ComicBuildType.RELEASE.display))
             }
-            create("internal") {
-                initWith(getByName("release"))
+            create(ComicBuildType.INTERNAL.display) {
+                initWith(getByName(ComicBuildType.RELEASE.display))
             }
         }
-
     }
-}

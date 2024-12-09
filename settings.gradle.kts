@@ -1,5 +1,3 @@
-import com.android.build.api.dsl.SettingsExtension
-
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
@@ -16,7 +14,7 @@ plugins {
     id("com.android.settings") version "8.7.3"
 }
 
-extensions.configure<SettingsExtension> {
+android {
     buildToolsVersion = "35.0.0"
     compileSdk = 35
     minSdk = 30
