@@ -57,7 +57,7 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
 
                     val androidSigningReleaseStoreFile: String? by project
                     if (!androidSigningReleaseStoreFile.isNullOrEmpty()) {
-                        create(ComicBuildType.RELEASE.display) {
+                        val release = create(ComicBuildType.RELEASE.display) {
                             val androidSigningReleaseStorePassword: String? by project
                             val androidSigningReleaseKeyAlias: String? by project
                             val androidSigningReleaseKeyPassword: String? by project
@@ -66,14 +66,14 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
                             keyAlias = androidSigningReleaseKeyAlias
                             keyPassword = androidSigningReleaseKeyPassword
                         }
+                        create(ComicBuildType.PRERELEASE.display) {
+                            initWith(release)
+                        }
+                        create(ComicBuildType.INTERNAL.display) {
+                            initWith(release)
+                        }
                     } else {
                         logger.warn("androidSigningReleaseStoreFile not found")
-                    }
-                    create(ComicBuildType.PRERELEASE.display) {
-                        initWith(getByName(ComicBuildType.RELEASE.display))
-                    }
-                    create(ComicBuildType.INTERNAL.display) {
-                        initWith(getByName(ComicBuildType.RELEASE.display))
                     }
                 }
             }
