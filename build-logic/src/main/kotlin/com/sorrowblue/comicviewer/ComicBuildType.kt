@@ -11,5 +11,5 @@ enum class ComicBuildType(
     PRERELEASE(true, true, ".prerelease"),
     ;
 
-    val display = this.name.lowercase()
+    val display get() = this.name.lowercase()
 }
