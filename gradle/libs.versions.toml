@@ -140,7 +140,7 @@ coil3-test = { group = "io.coil-kt.coil3", name = "coil-test", version.ref = "co
 
 jcifs-ng = { group = "eu.agno3.jcifs", name = "jcifs-ng", version = "2.1.10" }
 com-sorrowblue-sevenzipjbinding = { group = "com.sorrowblue.sevenzipjbinding", name = "7-Zip-JBinding-4Android", version = "16.02-2.03" }
-soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha08" }
+soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha09" }
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version = "0.6.0" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.16-0" }
 
