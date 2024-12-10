@@ -233,4 +233,7 @@ internal interface FileDao {
 
     @Query("SELECT Count(*) FROM file WHERE bookshelf_id = :id AND file_type = 'FILE'")
     fun count(id: Int): Flow<Long>
+
+    @Query("UPDATE file SET last_read = 0, last_read_page = 0")
+    suspend fun deleteAllHistory()
 }

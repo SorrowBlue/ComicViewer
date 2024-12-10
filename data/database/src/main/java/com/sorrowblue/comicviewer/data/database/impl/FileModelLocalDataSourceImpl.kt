@@ -263,6 +263,12 @@ internal class FileModelLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteAllHistory() {
+        withContext(dispatcher) {
+            dao.deleteAllHistory()
+        }
+    }
+
     override suspend fun updateHistory(file: File, files: List<File>) {
         withContext(dispatcher) {
             database.withTransaction {
