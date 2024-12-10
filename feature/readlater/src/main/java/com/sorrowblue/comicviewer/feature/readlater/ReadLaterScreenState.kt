@@ -30,6 +30,9 @@ internal sealed interface ReadLaterScreenEvent {
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
         ReadLaterScreenEvent
 
+    data class OpenFolder(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
+        ReadLaterScreenEvent
+
     data object Settings : ReadLaterScreenEvent
 }
 
@@ -94,7 +97,9 @@ private class ReadLaterScreenStateImpl(
                 sendEvent(ReadLaterScreenEvent.Favorite(it.bookshelfId, it.path))
             }
 
-            is FileInfoSheetNavigator.OpenFolder -> Unit
+            is FileInfoSheetNavigator.OpenFolder -> {
+                sendEvent(ReadLaterScreenEvent.OpenFolder(action.file))
+            }
         }
     }
 

@@ -46,7 +46,7 @@ fun DependenciesContainerBuilder<*>.ReadLaterGraphDependencies(
 
             override fun onOpenFolderClick(file: File) {
                 navigator.navigate(
-                    ReadLaterFolderScreenDestination(file.bookshelfId, file.parent, null)
+                    ReadLaterFolderScreenDestination(file.bookshelfId, file.parent, file.path)
                 )
             }
 

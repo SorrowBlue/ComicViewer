@@ -80,6 +80,7 @@ private fun ReadLaterScreen(
             )
 
             is ReadLaterScreenEvent.File -> currentNavigator.onFileClick(it.file)
+            is ReadLaterScreenEvent.OpenFolder -> currentNavigator.onOpenFolderClick(it.file)
             ReadLaterScreenEvent.Settings -> currentNavigator.onSettingsClick()
         }
     }
@@ -105,7 +106,11 @@ private fun ReadLaterScreen(
             )
         },
         extraPane = { content ->
-            FileInfoSheet(fileKey = content, onAction = onFileInfoSheetAction)
+            FileInfoSheet(
+                fileKey = content,
+                onAction = onFileInfoSheetAction,
+                isOpenFolderEnabled = true
+            )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
