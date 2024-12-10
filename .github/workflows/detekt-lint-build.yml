@@ -13,6 +13,8 @@ concurrency:
 permissions:
   contents: read
   pull-requests: write
+  # required for all workflows
+  security-events: write
 
 jobs:
 
@@ -21,37 +23,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-java-gradle
-      - name: Setup reviewdog
-        uses: reviewdog/action-setup@v1
-        with:
-          reviewdog_version: latest
       - name: lint
         run: ./gradlew app:lintRelease
-      - name: reviewdog report
-        if: failure()
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: cat ./build/reports/lint/lint-result.sarif |
-          reviewdog -f="sarif" -name="android-lint" -reporter="github-pr-review" -filter-mode="nofilter"
 
   detekt:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-java-gradle
-      - name: Setup reviewdog
-        uses: reviewdog/action-setup@v1
-        with:
-          reviewdog_version: latest
       - name: detekt
         run: ./gradlew :build-logic:detektMain detektRelease
-      - name: reviewdog report
-        if: failure()
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: cat ./build/reports/detekt/merge.sarif |
-          reviewdog -f="sarif" -name="detekt" -reporter="github-pr-review" -filter-mode="nofilter"
-
+      - name: Upload SARIF to GitHub using the upload-sarif action
+        uses: github/codeql-action/upload-sarif@v3
+        if: success() || failure()
+        with:
+          sarif_file: reports/detekt/merge.sarif
   build:
     runs-on: ubuntu-latest
     environment: android

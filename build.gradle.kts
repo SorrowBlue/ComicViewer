@@ -44,21 +44,11 @@ tasks.named(
     }
 }
 
-tasks.named("detekt", io.gitlab.arturbosch.detekt.Detekt::class.java).configure {
-    reports {
-        html.required = true
-        md.required = false
-        sarif.required = true
-        txt.required = false
-        xml.required = false
-    }
-}
 val reportMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
     output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
 }
 
 subprojects {
-
     tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
         finalizedBy(reportMerge)
     }

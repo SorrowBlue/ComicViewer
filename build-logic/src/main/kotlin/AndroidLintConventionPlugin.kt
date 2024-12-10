@@ -47,7 +47,7 @@ internal fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Bool
 }
 
 private fun Lint.configure(project: Project) {
-    @Suppress("LocalVariableName", "VariableNaming")
+    @Suppress("LocalVariableName")
     val CI: String? by project
     val isCI = CI.toBoolean() == true
     checkAllWarnings = true
@@ -59,7 +59,7 @@ private fun Lint.configure(project: Project) {
         if (htmlReport) project.file("${project.rootDir}/build/reports/lint/lint-result.html") else null
     sarifReport = isCI
     sarifOutput =
-        if (sarifReport) project.file("${project.rootDir}/build/reports/lint/lint-result.html") else null
+        if (sarifReport) project.file("${project.rootDir}/build/reports/lint/lint-result.sarif") else null
     textReport = false
     xmlReport = false
 }
