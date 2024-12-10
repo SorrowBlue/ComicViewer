@@ -34,14 +34,6 @@ jobs:
           reviewdog_version: latest
       - name: lint
         run: ./gradlew app:lintRelease
-        env:
-          ORG_GRADLE_PROJECT_androidSigningReleaseStoreFile: ${{ steps.android_keystore.outputs.filePath }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          ORG_GRADLE_PROJECT_comicviewerBoxClientId: ${{ secrets.BOX_CLIENT_ID }}
-          ORG_GRADLE_PROJECT_comicviewerBoxClientSecret: ${{ secrets.BOX_CLIENT_SECRET }}
-          ORG_GRADLE_PROJECT_comicviewerDropboxApiKey: ${{ secrets.DROP_BOX_API_KEY }}
       - name: reviewdog report
         if: failure()
         env:
@@ -67,14 +59,6 @@ jobs:
           reviewdog_version: latest
       - name: detekt
         run: ./gradlew :build-logic:detektMain detektRelease
-        env:
-          ORG_GRADLE_PROJECT_androidSigningReleaseStoreFile: ${{ steps.android_keystore.outputs.filePath }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          ORG_GRADLE_PROJECT_comicviewerBoxClientId: ${{ secrets.BOX_CLIENT_ID }}
-          ORG_GRADLE_PROJECT_comicviewerBoxClientSecret: ${{ secrets.BOX_CLIENT_SECRET }}
-          ORG_GRADLE_PROJECT_comicviewerDropboxApiKey: ${{ secrets.DROP_BOX_API_KEY }}
       - name: reviewdog report
         if: failure()
         env:
@@ -101,6 +85,3 @@ jobs:
           ORG_GRADLE_PROJECT_androidSigningReleaseStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
           ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
           ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          ORG_GRADLE_PROJECT_comicviewerBoxClientId: ${{ secrets.BOX_CLIENT_ID }}
-          ORG_GRADLE_PROJECT_comicviewerBoxClientSecret: ${{ secrets.BOX_CLIENT_SECRET }}
-          ORG_GRADLE_PROJECT_comicviewerDropboxApiKey: ${{ secrets.DROP_BOX_API_KEY }}

@@ -1,4 +1,5 @@
 name: Qodana
+
 on:
   workflow_dispatch:
   pull_request:
@@ -20,5 +21,4 @@ jobs:
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2024.2
         env:
-          ORG_GRADLE_PROJECT_comicviewerDropboxApiKey: ${{ secrets.DROP_BOX_API_KEY }}
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }} # read the steps about it below

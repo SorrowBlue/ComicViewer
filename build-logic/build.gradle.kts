@@ -27,7 +27,7 @@ dependencies {
     compileOnly(libs.google.ksp.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
     compileOnly(libs.dokka.gradlePlugin)
-    compileOnly(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+    compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
     detektPlugins(libs.nlopez.compose.rules.detekt)
     detektPlugins(libs.arturbosch.detektFormatting)
 }
@@ -78,6 +78,9 @@ gradlePlugin {
         }
     }
 }
+
+// Temporarily set to PushMode only
+private val currentLibs get() = libs
 
 private fun NamedDomainObjectContainer<PluginDeclaration>.register(
     provider: Provider<PluginDependency>,

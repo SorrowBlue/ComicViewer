@@ -12,10 +12,9 @@ android {
         val comicviewerDropboxApiKey: String? by project
         if (comicviewerDropboxApiKey.isNullOrEmpty()) {
             logger.warn("comicviewerDropboxApiKey is not set.")
-        } else {
-            all {
-                manifestPlaceholders += mapOf("dropbox_api_key" to comicviewerDropboxApiKey!!)
-            }
+        }
+        all {
+            manifestPlaceholders += mapOf("dropbox_api_key" to comicviewerDropboxApiKey.orEmpty())
         }
     }
 }
