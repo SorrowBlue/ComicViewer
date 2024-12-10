@@ -37,7 +37,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         if: success() || failure()
         with:
-          sarif_file: reports/detekt/merge.sarif
+          sarif_file: build/reports/detekt/merge.sarif
   build:
     runs-on: ubuntu-latest
     environment: android
