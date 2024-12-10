@@ -58,8 +58,14 @@ fun DependenciesContainerBuilder<*>.FavoriteGraphDependencies(
                 onNewFavoriteClick()
             }
 
-            override fun onOpenFolderClick(bookshelfId: BookshelfId, parent: String) =
-                navigator.navigate(FavoriteFolderScreenDestination(bookshelfId, parent, null))
+            override fun onOpenFolderClick(file: File) =
+                navigator.navigate(
+                    FavoriteFolderScreenDestination(
+                        file.bookshelfId,
+                        file.parent,
+                        file.path
+                    )
+                )
 
             override fun onEditClick(favoriteId: FavoriteId) {
                 navigator.navigate(FavoriteEditScreenDestination(favoriteId))
