@@ -5,6 +5,7 @@ import com.android.build.api.dsl.Lint
 import com.sorrowblue.comicviewer.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.logging.Logging
 import org.gradle.api.plugins.PluginManager
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.configure
@@ -47,7 +48,7 @@ internal fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Bool
 }
 
 private fun Lint.configure(project: Project) {
-    @Suppress("LocalVariableName")
+    @Suppress("LocalVariableName", "VariableNaming")
     val CI: String? by project
     val isCI = CI.toBoolean() == true
     checkAllWarnings = true
