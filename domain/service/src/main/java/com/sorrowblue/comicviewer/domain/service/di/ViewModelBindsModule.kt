@@ -23,6 +23,7 @@ import com.sorrowblue.comicviewer.domain.service.interactor.file.GetFileInteract
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetIntentBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetNextBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.UpdateLastReadPageInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.file.ClearAllHistoryInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingBookshelfBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingBookshelfFolderInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.paging.PagingFavoriteFileInteractor
@@ -62,6 +63,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.ClearAllHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
@@ -122,6 +124,9 @@ internal interface ViewModelBindsModule {
 
     @Binds
     fun bindDeleteAllReadLaterUseCase(interactor: DeleteAllReadLaterInteractor): DeleteAllReadLaterUseCase
+
+    @Binds
+    fun bindClearAllHistoryUseCase(interactor: ClearAllHistoryInteractor): ClearAllHistoryUseCase
 
     @Binds
     fun bindGetNavigationHistoryUseCase(

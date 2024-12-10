@@ -2,4 +2,8 @@
 <resources>
     <string name="history_label_no_history">No history.</string>
     <string name="history_title">History</string>
+
+    <string name="history_btn_clear_all">Clear all</string>
+    <string name="history_title_clear_all">Clear all history of books read</string>
+    <string name="history_text_clear_all">Do you want to clear all history of books you have read?\nLast page you read and date and time will also be cleared from your history.</string>
 </resources>
