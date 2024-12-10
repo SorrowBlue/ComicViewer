@@ -2,7 +2,6 @@ import com.sorrowblue.comicviewer.detektPlugins
 import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
-import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -26,11 +25,6 @@ internal class DetektConventionPlugin : Plugin<Project> {
             configure<DetektExtension> {
                 buildUponDefaultConfig = true
                 autoCorrect = true
-                basePath = rootProject.projectDir.absolutePath
-                config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
-            }
-
-            tasks.named("detekt", Detekt::class.java).configure {
                 reports {
                     html.required.set(false)
                     md.required.set(false)
@@ -38,6 +32,8 @@ internal class DetektConventionPlugin : Plugin<Project> {
                     txt.required.set(false)
                     xml.required.set(false)
                 }
+                basePath = rootProject.projectDir.absolutePath
+                config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
             }
         }
     }

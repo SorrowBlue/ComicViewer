@@ -23,21 +23,69 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-java-gradle
-      - name: lint
+      - name: Run app:lintRelease
         run: ./gradlew app:lintRelease
 
-  detekt:
+  detekt_build-logic_detektMain:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-java-gradle
-      - name: detekt
-        run: ./gradlew :build-logic:detektMain detektRelease
-      - name: Upload SARIF to GitHub using the upload-sarif action
-        uses: github/codeql-action/upload-sarif@v3
-        if: success() || failure()
+      - name: Run :build-logic:detektMain
+        run: ./gradlew :build-logic:detektMain
+      - uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: build-logic/build/reports/detekt/main.sarif
+
+  detekt_detektRelease:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-java-gradle
+      - name: Run detektRelease
+        run: ./gradlew detektRelease
+      - uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() }}
         with:
           sarif_file: build/reports/detekt/merge.sarif
+
+  detekt_detektAndroidRelease:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-java-gradle
+      - name: Run detektAndroidRelease
+        run: ./gradlew detektAndroidRelease
+      - uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: build/reports/detekt/merge.sarif
+
+  detekt_detektJvmMain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-java-gradle
+      - name: Run detektJvmMain
+        run: ./gradlew detektJvmMain
+      - uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: build/reports/detekt/merge.sarif
+
+  detekt_detektMetadataCommonMain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-java-gradle
+      - name: Run detektMetadataCommonMain
+        run: ./gradlew detektMetadataCommonMain
+      - uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: build/reports/detekt/merge.sarif
+
   build:
     runs-on: ubuntu-latest
     environment: android
@@ -50,7 +98,7 @@ jobs:
         with:
           fileName: 'android_keystore.jks'
           encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
-      - name: assemble
+      - name: Run bundleRelease
         run: ./gradlew bundleRelease
         env:
           ORG_GRADLE_PROJECT_androidSigningReleaseStoreFile: ${{ steps.android_keystore.outputs.filePath }}

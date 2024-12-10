@@ -38,6 +38,16 @@ detekt {
     config.setFrom(layout.projectDirectory.file("../config/detekt/detekt.yml"))
 }
 
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    reports {
+        html.required.set(false)
+        md.required.set(false)
+        sarif.required.set(true)
+        txt.required.set(false)
+        xml.required.set(false)
+    }
+}
+
 gradlePlugin {
     plugins {
         register(libs.plugins.comicviewer.android.application) {
