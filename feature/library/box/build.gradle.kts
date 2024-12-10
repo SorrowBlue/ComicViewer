@@ -18,8 +18,12 @@ android {
             logger.warn("comicviewerBoxClientSecret is not set.")
         }
         all {
-            buildConfigField("String", "BOX_CLIENT_ID", "\"$comicviewerBoxClientId\"")
-            buildConfigField("String", "BOX_CLIENT_SECRET", "\"$comicviewerBoxClientSecret\"")
+            buildConfigField("String", "BOX_CLIENT_ID", "\"${comicviewerBoxClientId.orEmpty()}\"")
+            buildConfigField(
+                "String",
+                "BOX_CLIENT_SECRET",
+                "\"${comicviewerBoxClientSecret.orEmpty()}\""
+            )
         }
     }
 
