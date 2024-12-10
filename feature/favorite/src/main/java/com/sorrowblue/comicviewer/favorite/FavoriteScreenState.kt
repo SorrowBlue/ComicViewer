@@ -44,7 +44,8 @@ internal sealed interface FavoriteScreenEvent {
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
         FavoriteScreenEvent
 
-    data class OpenFolder(val bookshelfId: BookshelfId, val parent: String) : FavoriteScreenEvent
+    data class OpenFolder(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
+        FavoriteScreenEvent
 
     data class Edit(val favoriteId: FavoriteId) : FavoriteScreenEvent
 
@@ -206,11 +207,7 @@ private class FavoriteScreenStateImpl(
             }
 
             is FileInfoSheetNavigator.OpenFolder ->
-                navigator.currentDestination?.contentKey?.let {
-                    sendEvent(
-                        FavoriteScreenEvent.OpenFolder(it.bookshelfId, it.parent)
-                    )
-                }
+                sendEvent(FavoriteScreenEvent.OpenFolder(action.file))
         }
     }
 

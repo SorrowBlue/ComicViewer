@@ -50,7 +50,7 @@ interface FavoriteScreenNavigator {
     fun onSettingsClick()
     fun onFileClick(file: File, favoriteId: FavoriteId)
     fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
-    fun onOpenFolderClick(bookshelfId: BookshelfId, parent: String)
+    fun onOpenFolderClick(file: File)
 }
 
 data class FavoriteArgs(val favoriteId: FavoriteId)
@@ -91,7 +91,7 @@ private fun FavoriteScreen(
 
             is FavoriteScreenEvent.File -> currentNavigator.onFileClick(it.file, state.favoriteId)
             is FavoriteScreenEvent.OpenFolder ->
-                currentNavigator.onOpenFolderClick(it.bookshelfId, it.parent)
+                currentNavigator.onOpenFolderClick(it.file)
 
             FavoriteScreenEvent.Settings -> currentNavigator.onSettingsClick()
             is FavoriteScreenEvent.Edit -> currentNavigator.onEditClick(it.favoriteId)
@@ -128,7 +128,11 @@ private fun FavoriteScreen(
             )
         },
         extraPane = { content ->
-            FileInfoSheet(fileKey = content, onAction = onFileInfoSheetAction)
+            FileInfoSheet(
+                fileKey = content,
+                onAction = onFileInfoSheetAction,
+                isOpenFolderEnabled = true
+            )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         navigator = navigator,
