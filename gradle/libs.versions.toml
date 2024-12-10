@@ -14,7 +14,7 @@ androidx-navigation = "2.8.4"
 androidx-paging = "3.3.4"
 androidx-room = "2.6.1"
 
-google-dagger = "2.53"
+google-dagger = "2.53.1"
 android-gradle = "8.7.3"
 coil-kt = "3.0.4"
 detekt = "1.23.7"
