@@ -3,8 +3,12 @@ name: Qodana
 on:
   workflow_dispatch:
   pull_request:
+    branches-ignore:
+      - '**'
   push:
-    branches: [ "main" ]
+#    branches: [ "main" ]
+    branches-ignore:
+      - '**'
 
 jobs:
   qodana:

@@ -25,6 +25,14 @@ internal class DetektConventionPlugin : Plugin<Project> {
             configure<DetektExtension> {
                 buildUponDefaultConfig = true
                 autoCorrect = true
+                reports {
+                    html.required.set(false)
+                    md.required.set(false)
+                    sarif.required.set(true)
+                    txt.required.set(false)
+                    xml.required.set(false)
+                }
+                basePath = rootProject.projectDir.absolutePath
                 config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
             }
         }
