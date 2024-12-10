@@ -8,7 +8,6 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.PluginManager
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.plugin.use.PluginDependency
 
 @Suppress("unused")
@@ -47,9 +46,7 @@ internal fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Bool
 }
 
 private fun Lint.configure(project: Project) {
-    @Suppress("LocalVariableName", "VariableNaming")
-    val CI: String? by project
-    val isCI = CI.toBoolean() == true
+    val isCI = System.getenv("CI").toBoolean() == true
     checkAllWarnings = true
     checkDependencies = true
     disable += listOf("InvalidPackage", "NewerVersionAvailable", "GradleDependency")

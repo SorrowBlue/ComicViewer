@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.history.HistoryScreenNavigator
 import com.sorrowblue.comicviewer.feature.history.NavGraphs
+import com.sorrowblue.comicviewer.feature.history.destinations.ClearAllHistoryDialogDestination
 import com.sorrowblue.comicviewer.feature.history.destinations.HistoryFolderScreenDestination
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 
@@ -36,6 +37,10 @@ fun DependenciesContainerBuilder<*>.HistoryGraphDependencies(
                             file.path
                         )
                     )
+                }
+
+                override fun onClearAllClick() {
+                    destinationsNavigator.navigate(ClearAllHistoryDialogDestination)
                 }
 
                 override val navigator get() = destinationsNavigator

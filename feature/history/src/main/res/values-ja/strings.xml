@@ -2,4 +2,7 @@
 <resources>
     <string name="history_label_no_history">履歴に本はありません。</string>
     <string name="history_title">履歴</string>
+    <string name="history_btn_clear_all">削除</string>
+    <string name="history_title_clear_all">読んだ本の履歴をすべて削除</string>
+    <string name="history_text_clear_all">読んだ本の履歴をすべて削除しますか？\n最後に読んだページ／日時も履歴から削除します。</string>
 </resources>

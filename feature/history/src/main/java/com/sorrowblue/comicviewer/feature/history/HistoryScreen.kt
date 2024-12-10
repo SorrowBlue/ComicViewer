@@ -17,10 +17,12 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.feature.history.destinations.ClearAllHistoryDialogDestination
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryGraph
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
@@ -42,14 +44,18 @@ interface HistoryScreenNavigator {
     fun navigateToBook(book: Book)
     fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
     fun navigateToFolder(file: File)
+    fun onClearAllClick()
 }
 
 @Destination<HistoryGraph>(start = true, visibility = CodeGenVisibility.INTERNAL)
 @Composable
-internal fun HistoryScreen(navigator: HistoryScreenNavigator) {
+internal fun HistoryScreen(
+    navigator: HistoryScreenNavigator,
+    clearAllResult: ResultRecipient<ClearAllHistoryDialogDestination, Boolean>,
+) {
     HistoryScreen(
         navigator = navigator,
-        state = rememberHistoryScreenState(),
+        state = rememberHistoryScreenState(clearAllResult = clearAllResult),
     )
 }
 
@@ -81,6 +87,7 @@ private fun HistoryScreen(
             is HistoryScreenEvent.OpenFolder -> currentNavigator.navigateToFolder(it.file)
             HistoryScreenEvent.Back -> currentNavigator.navigateUp()
             HistoryScreenEvent.Settings -> currentNavigator.onSettingsClick()
+            HistoryScreenEvent.DeleteAll -> currentNavigator.onClearAllClick()
         }
     }
 }

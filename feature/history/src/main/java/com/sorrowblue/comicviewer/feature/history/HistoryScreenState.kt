@@ -7,9 +7,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.usecase.file.ClearAllHistoryUseCase
+import com.sorrowblue.comicviewer.feature.history.destinations.ClearAllHistoryDialogDestination
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
@@ -29,6 +33,7 @@ internal sealed interface HistoryScreenEvent {
 
     data object Back : HistoryScreenEvent
     data object Settings : HistoryScreenEvent
+    data object DeleteAll : HistoryScreenEvent
 }
 
 internal interface HistoryScreenState :
@@ -43,32 +48,48 @@ internal interface HistoryScreenState :
 
 @Composable
 internal fun rememberHistoryScreenState(
+    clearAllResult: ResultRecipient<ClearAllHistoryDialogDestination, Boolean>,
     navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: HistoryViewModel = hiltViewModel(),
-): HistoryScreenState = rememberSaveableScreenState {
-    HistoryScreenStateImpl(
-        savedStateHandle = it,
-        navigator = navigator,
-        scope = scope,
-        viewModel = viewModel
-    )
+): HistoryScreenState {
+    val state = rememberSaveableScreenState {
+        HistoryScreenStateImpl(
+            pagingDataFlow = viewModel.pagingDataFlow,
+            savedStateHandle = it,
+            navigator = navigator,
+            scope = scope,
+            clearAllHistoryUseCase = viewModel.clearAllHistoryUseCase
+        )
+    }
+    clearAllResult.onNavResult {
+        when (it) {
+            NavResult.Canceled -> Unit
+            is NavResult.Value -> {
+                if (it.value) {
+                    state.clearAll()
+                }
+            }
+        }
+    }
+    return state
 }
 
 private class HistoryScreenStateImpl(
-    viewModel: HistoryViewModel,
+    override val pagingDataFlow: Flow<PagingData<Book>>,
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<File.Key>,
     override val scope: CoroutineScope,
+    private val clearAllHistoryUseCase: ClearAllHistoryUseCase,
 ) : HistoryScreenState {
 
-    override val pagingDataFlow = viewModel.pagingDataFlow
     override val event = MutableSharedFlow<HistoryScreenEvent>()
 
     override fun onHistoryTopAppBarAction(action: HistoryTopAppBarAction) {
         when (action) {
             HistoryTopAppBarAction.Back -> sendEvent(HistoryScreenEvent.Back)
             HistoryTopAppBarAction.Settings -> sendEvent(HistoryScreenEvent.Settings)
+            HistoryTopAppBarAction.DeleteAll -> sendEvent(HistoryScreenEvent.DeleteAll)
         }
     }
 
@@ -93,6 +114,12 @@ private class HistoryScreenStateImpl(
     private fun navigateToFileInfo(file: File) {
         scope.launch {
             navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file.key())
+        }
+    }
+
+    fun clearAll() {
+        scope.launch {
+            clearAllHistoryUseCase(ClearAllHistoryUseCase.Request)
         }
     }
 }
