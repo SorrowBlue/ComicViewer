@@ -18,16 +18,9 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    environment: android
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-java-gradle
-      - name: Decode android keystore file
-        id: android_keystore
-        uses: timheuer/base64-to-file@v1.2.4
-        with:
-          fileName: 'android_keystore.jks'
-          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
       - name: Setup reviewdog
         uses: reviewdog/action-setup@v1
         with:
@@ -43,16 +36,9 @@ jobs:
 
   detekt:
     runs-on: ubuntu-latest
-    environment: android
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-java-gradle
-      - name: Decode android keystore file
-        id: android_keystore
-        uses: timheuer/base64-to-file@v1.2.4
-        with:
-          fileName: 'android_keystore.jks'
-          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
       - name: Setup reviewdog
         uses: reviewdog/action-setup@v1
         with:
