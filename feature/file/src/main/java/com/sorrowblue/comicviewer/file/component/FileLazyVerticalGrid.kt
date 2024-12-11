@@ -29,7 +29,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.adaptive.copyWhenZero
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
@@ -87,7 +87,7 @@ fun <T : File> FileLazyVerticalGrid(
         state = state,
         contentPadding = when (contentType) {
             FileContentType.List -> contentPadding
-            FileContentType.ListMedium -> contentPadding.add(PaddingValues(ComicTheme.dimension.margin))
+            FileContentType.ListMedium -> contentPadding.copyWhenZero()
             is FileContentType.Grid -> contentPadding
         },
         verticalArrangement = when (contentType) {
