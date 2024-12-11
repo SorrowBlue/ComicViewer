@@ -124,7 +124,7 @@ google-android-billingclient-billingKtx = { group = "com.android.billingclient",
 google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.11.0" }
 google-guava = { group = "com.google.guava", name = "guava", version = "33.3.1-jre" }
 google-android-gms-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version = "21.3.0" }
-google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version = "2.7.0" }
+google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version = "2.7.1" }
 google-api-services-drive = { group = "com.google.apis", name = "google-api-services-drive", version = "v3-rev20241027-2.0.0" }
 google-api-services-people = { group = "com.google.apis", name = "google-api-services-people", version = "v1-rev20240313-2.0.0" }
 google-autoServiceAnnotations = { group = "com.google.auto.service", name = "auto-service-annotations", version = "1.1.1" }
