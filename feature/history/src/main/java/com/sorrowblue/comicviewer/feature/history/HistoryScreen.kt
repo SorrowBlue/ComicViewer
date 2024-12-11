@@ -13,6 +13,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -32,10 +33,12 @@ import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 interface HistoryScreenNavigator {
@@ -153,17 +156,19 @@ private fun FavoriteContents(
                 .padding(contentPadding)
         )
     } else {
-        val (paddings, margins) = calculatePaddingMargins(contentPadding)
+        val padding = if (isCompactWindowClass()) {
+            contentPadding.copy(start = 0.dp, end = 0.dp)
+        } else {
+            contentPadding
+        }
         FileLazyVerticalGrid(
             uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
             state = lazyGridState,
             lazyPagingItems = lazyPagingItems,
             onItemClick = { onAction(HistoryContentsAction.Book(it)) },
             onItemInfoClick = { onAction(HistoryContentsAction.FileInfo(it)) },
-            contentPadding = paddings,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(margins)
+            contentPadding = padding,
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
