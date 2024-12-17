@@ -10,7 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
@@ -24,7 +23,8 @@ import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.file.component.FileThumbnailAsyncImage
 import com.sorrowblue.comicviewer.file.component.FolderThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalComponentColors
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 
 @Composable
@@ -33,6 +33,7 @@ internal fun FileInfoThumbnail(
     lazyPagingItems: LazyPagingItems<BookThumbnail>?,
     modifier: Modifier = Modifier,
 ) {
+    val navigationState = LocalNavigationState.current
     Box(modifier = modifier) {
         if (lazyPagingItems != null) {
             FolderThumbnailsCarousel(
@@ -45,15 +46,16 @@ internal fun FileInfoThumbnail(
                 modifier = Modifier
                     .height(186.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(LocalComponentColors.current.contentColor.complementary())
+                    .background(
+                        if (navigationState is NavigationState.NavigationBar) {
+                            ComicTheme.colorScheme.surfaceVariant
+                        } else {
+                            ComicTheme.colorScheme.surfaceContainerHigh
+                        }
+                    )
             )
         }
     }
-}
-
-private fun Color.complementary(): Color {
-    val maxmin = maxOf(red, green, blue) + minOf(red, green, blue)
-    return copy(red = maxmin - red, green = maxmin - green, blue = maxmin - blue)
 }
 
 @Composable

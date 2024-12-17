@@ -29,11 +29,15 @@ import com.sorrowblue.comicviewer.feature.search.section.SearchContentsAction
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsUiState
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
+import com.sorrowblue.comicviewer.file.component.FileContentType
+import com.sorrowblue.comicviewer.file.component.rememberFileContentType
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.animatedMainContentPadding
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import kotlinx.coroutines.delay
@@ -150,13 +154,21 @@ private fun SearchScreen(
             FileInfoSheet(fileKey = content, onAction = onFileInfoSheetAction)
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) { innerPadding ->
+    ) { contentPadding ->
+        val contentType by rememberFileContentType(
+            fileListDisplay = uiState.searchContentsUiState.fileLazyVerticalGridUiState.fileListDisplay,
+            gridColumnSize = uiState.searchContentsUiState.fileLazyVerticalGridUiState.columnSize
+        )
+        val additionalPadding by animatedMainContentPadding(
+            navigator = navigator,
+            fillWidth = contentType is FileContentType.List
+        )
         SearchContents(
             uiState = uiState.searchContentsUiState,
             lazyPagingItems = lazyPagingItems,
             lazyListState = lazyGridState,
             onAction = onSearchContentsAction,
-            contentPadding = innerPadding,
+            contentPadding = contentPadding.add(additionalPadding),
         )
     }
 }
@@ -166,7 +178,7 @@ private const val WaitLoadPage = 350L
 @Preview
 @Composable
 private fun SearchScreenPreview() {
-    PreviewTheme {
+    PreviewTheme2 {
         val pagingDataFlow = PagingData.flowData<File> { fakeBookFile(it) }
         val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
         SearchScreen(

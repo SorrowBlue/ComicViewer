@@ -35,8 +35,10 @@ import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.feature.folder.destinations.SortTypeDialogDestination
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
+import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
+import com.sorrowblue.comicviewer.file.component.rememberFileContentType
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderFab
@@ -48,7 +50,9 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.animatedMainContentPadding
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
@@ -147,6 +151,14 @@ private fun FolderScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
+        val contentType by rememberFileContentType(
+            fileListDisplay = uiState.fileLazyVerticalGridUiState.fileListDisplay,
+            gridColumnSize = uiState.fileLazyVerticalGridUiState.columnSize
+        )
+        val additionalPadding by animatedMainContentPadding(
+            navigator = navigator,
+            fillWidth = contentType is FileContentType.List
+        )
         FolderContents(
             title = uiState.folderAppBarUiState.title,
             fileLazyVerticalGridUiState = uiState.fileLazyVerticalGridUiState,
@@ -154,7 +166,7 @@ private fun FolderScreen(
             lazyGridState = lazyGridState,
             pullRefreshState = pullRefreshState,
             onAction = onFolderContentsAction,
-            contentPadding = contentPadding,
+            contentPadding = contentPadding.add(additionalPadding),
             emphasisPath = uiState.emphasisPath
         )
     }

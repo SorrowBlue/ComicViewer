@@ -8,12 +8,16 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import kotlin.math.max
 
 @Composable
@@ -26,28 +30,28 @@ fun PaddingValues.copyWhenZero(
     val start = calculateStartPadding(LocalLayoutDirection.current).let { startPadding ->
         when {
             skipStart -> startPadding
-            startPadding > 0.dp -> startPadding
+            startPadding > ZeroDP -> startPadding
             else -> ComicTheme.dimension.margin
         }
     }
     val top = calculateTopPadding().let { topPadding ->
         when {
             skipTop -> topPadding
-            topPadding > 0.dp -> topPadding
+            topPadding > ZeroDP -> topPadding
             else -> ComicTheme.dimension.margin
         }
     }
     val end = calculateEndPadding(LocalLayoutDirection.current).let { endPadding ->
         when {
             skipEnd -> endPadding
-            endPadding > 0.dp -> endPadding
+            endPadding > ZeroDP -> endPadding
             else -> ComicTheme.dimension.margin
         }
     }
     val bottom = calculateBottomPadding().let { bottomPadding ->
         when {
             skipBottom -> bottomPadding
-            bottomPadding > 0.dp -> bottomPadding
+            bottomPadding > ZeroDP -> bottomPadding
             else -> ComicTheme.dimension.margin
         }
     }
@@ -71,6 +75,81 @@ fun animatePaddingValuesAsState(
     )
 }
 
+@Composable
+fun animatedExtraContentPadding(
+    navigator: ThreePaneScaffoldNavigator<*>,
+    fillWidth: Boolean = false,
+): State<PaddingValues> {
+    return animatedPadding(
+        enableTop = true,
+        enableEnd = navigator.scaffoldDirective.maxHorizontalPartitions == 1 ||
+            navigator.scaffoldState.currentState.tertiary == PaneAdaptedValue.Hidden,
+        fillWidth = fillWidth
+    )
+}
+
+@Composable
+fun animatedMainContentPadding(
+    navigator: ThreePaneScaffoldNavigator<*>,
+    topAppBar: Boolean = true,
+    fillWidth: Boolean = false,
+    navigationState: NavigationState = LocalNavigationState.current,
+): State<PaddingValues> {
+    val enableEnd = navigator.scaffoldDirective.maxHorizontalPartitions == 1 ||
+        navigator.scaffoldState.targetState.tertiary == PaneAdaptedValue.Hidden
+    val pad =
+        if (navigationState is NavigationState.NavigationRail || navigationState is NavigationState.NavigationDrawer) {
+            with(ComicTheme.dimension) {
+                PaddingValues(
+                    start = if (navigationState.visible || fillWidth) ZeroDP else margin,
+                    top = if (topAppBar) ZeroDP else margin,
+                    bottom = margin,
+                    end = if (enableEnd && !fillWidth) margin else ZeroDP
+                )
+            }
+        } else {
+            with(ComicTheme.dimension) {
+                PaddingValues(
+                    start = if (fillWidth) ZeroDP else margin,
+                    top = if (topAppBar) ZeroDP else margin,
+                    bottom = margin,
+                    end = if (fillWidth) ZeroDP else margin
+                )
+            }
+        }
+    return animatePaddingValuesAsState(pad)
+}
+
+@Composable
+fun animatedPadding(
+    enableTop: Boolean = true,
+    enableEnd: Boolean = true,
+    fillWidth: Boolean = false,
+    navigationState: NavigationState = LocalNavigationState.current,
+): State<PaddingValues> {
+    val pad =
+        if (navigationState is NavigationState.NavigationRail || navigationState is NavigationState.NavigationDrawer) {
+            with(ComicTheme.dimension) {
+                PaddingValues(
+                    start = if (navigationState.visible || fillWidth) ZeroDP else margin,
+                    top = if (enableTop) margin else ZeroDP,
+                    bottom = margin,
+                    end = if (enableEnd && !fillWidth) margin else ZeroDP
+                )
+            }
+        } else {
+            with(ComicTheme.dimension) {
+                PaddingValues(
+                    start = if (fillWidth) ZeroDP else margin,
+                    top = if (enableTop) margin else ZeroDP,
+                    bottom = margin,
+                    end = if (fillWidth) ZeroDP else margin
+                )
+            }
+        }
+    return animatePaddingValuesAsState(pad)
+}
+
 private fun paddingValuesToVector(layoutDirection: LayoutDirection): TwoWayConverter<PaddingValues, AnimationVector4D> =
     TwoWayConverter(
         convertToVector = {
@@ -90,6 +169,8 @@ private fun paddingValuesToVector(layoutDirection: LayoutDirection): TwoWayConve
             )
         }
     )
+
+private val ZeroDP = 0.dp
 
 private val paddingValuesVisibilityThreshold = PaddingValues(1.dp)
 

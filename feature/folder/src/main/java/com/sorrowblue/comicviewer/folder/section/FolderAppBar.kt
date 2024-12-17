@@ -86,68 +86,6 @@ internal fun FolderAppBar(
         scrollBehavior = scrollBehavior,
         modifier = modifier
     )
-//    var text by remember { mutableStateOf("") }
-//    var expanded by remember { mutableStateOf(false) }
-//    val merginHorizontal by animateDpAsState(if (expanded) 0.dp else ComicTheme.dimension.margin)
-//    SearchBar(
-//        inputField = {
-//            SearchBarDefaults.InputField(
-//                query = text,
-//                onQueryChange = { text = it },
-//                expanded = expanded,
-//                onExpandedChange = { expanded = it },
-//                onSearch = { /* TODO */ },
-//                modifier = Modifier.fillMaxWidth(),
-//                leadingIcon = {
-//                    BackIconButton(onClick = { onAction(FolderTopAppBarAction.Back) })
-//                },
-//                trailingIcon = {
-//                    OverflowMenu {
-//                        OverflowMenuItem(
-//                            text = {},
-//                            leadingIcon = { Icon(ComicIcons.SortByAlpha, "sort") },
-//                            onClick = { onAction(FolderTopAppBarAction.Sort) }
-//                        )
-//                        OverflowMenuItem(
-//                            text = {},
-//                            leadingIcon = {
-//                                Icon(
-//                                    ComicIcons.Search,
-//                                    stringResource(R.string.folder_action_search)
-//                                )
-//                            },
-//                            onClick = { onAction(FolderTopAppBarAction.Search) }
-//                        )
-//                        FileListDisplayItem(
-//                            fileListDisplay = uiState.fileListDisplay,
-//                            onClick = { onAction(FolderTopAppBarAction.FileListDisplay) }
-//                        )
-//                        GridSizeItem(
-//                            fileListDisplay = uiState.fileListDisplay,
-//                            onClick = { onAction(FolderTopAppBarAction.GridSize) }
-//                        )
-//                        ShowHiddenFile(
-//                            showHiddenFile = uiState.showHiddenFile,
-//                            onClick = { onAction(FolderTopAppBarAction.HiddenFile) }
-//                        )
-//                        OverflowMenuItem(
-//                            text = stringResource(R.string.folder_action_settings),
-//                            icon = ComicIcons.Settings,
-//                            onClick = { onAction(FolderTopAppBarAction.Settings) }
-//                        )
-//                    }
-//                }
-//            )
-//        },
-//        expanded = expanded,
-//        modifier = Modifier.padding(horizontal = merginHorizontal),
-//        onExpandedChange = { expanded = it },
-//        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-//    ) {
-//        LaunchedEffect(Unit) {
-//            logcat { "Search Cotainer LaunchedEffect" }
-//        }
-//    }
 }
 
 @Composable

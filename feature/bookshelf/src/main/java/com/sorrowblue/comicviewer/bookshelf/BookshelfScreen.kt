@@ -36,6 +36,9 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.LocalDestinationScopeWi
 import com.sorrowblue.comicviewer.feature.bookshelf.info.LocalSnackbarHostState
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffoldExtraPaneScope
+import com.sorrowblue.comicviewer.framework.ui.adaptive.animatedMainContentPadding
+import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeFolder
@@ -120,7 +123,7 @@ private fun BookshelfScreen(
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
     modifier: Modifier = Modifier,
     lazyGridState: LazyGridState = rememberLazyGridState(),
-    extraPane: @Composable (BookshelfId) -> Unit,
+    extraPane: @Composable CanonicalScaffoldExtraPaneScope.(BookshelfId) -> Unit,
 ) {
     val expanded by remember(lazyGridState) {
         derivedStateOf { !lazyGridState.canScrollForward || !lazyGridState.canScrollBackward }
@@ -137,12 +140,13 @@ private fun BookshelfScreen(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
+        val padding by animatedMainContentPadding(navigator, true, false)
         BookshelfMainSheet(
             lazyPagingItems = lazyPagingItems,
             lazyGridState = lazyGridState,
             onBookshelfClick = onBookshelfClick,
             onBookshelfInfoClick = onBookshelfInfoClick,
-            contentPadding = contentPadding
+            contentPadding = contentPadding.add(padding)
         )
     }
 }

@@ -2,7 +2,7 @@
 <resources>
     <string name="favorite_action_delete">削除</string>
     <string name="favorite_label_no_favorites">お気に入りはありません</string>
-    <string name="favorite_list_label_no_favorites">お気に入りはありません</string>
+    <string name="favorite_list_label_no_favorites">お気に入りリストは空です</string>
     <string name="favorite_title_edit">編集</string>
     <string name="favorite_title_list">お気に入り</string>
     <string name="favorite_btn_create">作成</string>

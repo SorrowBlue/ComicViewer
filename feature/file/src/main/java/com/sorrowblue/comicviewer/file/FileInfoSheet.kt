@@ -19,7 +19,6 @@ import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,8 +44,9 @@ import com.sorrowblue.comicviewer.file.section.FileInfoList
 import com.sorrowblue.comicviewer.file.section.FileInfoThumbnail
 import com.sorrowblue.comicviewer.file.section.SheetActionButtons
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffoldExtraPaneScope
+import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
@@ -115,7 +115,7 @@ private class FileKeyStateImpl(
 }
 
 @Composable
-fun FileInfoSheet(
+fun CanonicalScaffoldExtraPaneScope.FileInfoSheet(
     fileKey: File.Key,
     onAction: (FileInfoSheetNavigator) -> Unit,
     isOpenFolderEnabled: Boolean = false,
@@ -127,7 +127,7 @@ fun FileInfoSheet(
 }
 
 @Composable
-fun FileInfoSheet(
+fun CanonicalScaffoldExtraPaneScope.FileInfoSheet(
     file: File,
     onAction: (FileInfoSheetNavigator) -> Unit,
     isOpenFolderEnabled: Boolean = false,
@@ -148,7 +148,7 @@ fun FileInfoSheet(
 }
 
 @Composable
-internal fun FileInfoSheet(
+internal fun CanonicalScaffoldExtraPaneScope.FileInfoSheet(
     uiState: FileInfoUiState,
     onAction: (FileInfoSheetAction) -> Unit,
     modifier: Modifier = Modifier,
@@ -156,7 +156,7 @@ internal fun FileInfoSheet(
     lazyPagingItems: LazyPagingItems<BookThumbnail>? = null,
 ) {
     val file = uiState.file
-    CanonicalExtraPaneScaffold(
+    ExtraPaneScaffold(
         title = { Text(text = file.name) },
         onCloseClick = { onAction(FileInfoSheetAction.Close) },
         modifier = modifier
@@ -183,7 +183,13 @@ internal fun FileInfoSheet(
                         horizontal = contentPadding
                     ),
                 )
-                FileInfoList(file = file)
+                FileInfoList(
+                    file = file,
+                    modifier = Modifier.padding(
+                        layoutDirection = LocalLayoutDirection.current,
+                        horizontal = contentPadding
+                    )
+                )
                 uiState.attribute?.let {
                     FileAttributeChips(
                         it,
@@ -237,9 +243,6 @@ private fun PreviewFileInfoSheet(
                     onAction = {},
                     scrollState = screenState
                 )
-                LaunchedEffect(Unit) {
-//                    screenState.scrollTo(screenState.maxValue)
-                }
             }
         ) {
         }

@@ -1,7 +1,8 @@
 package com.sorrowblue.comicviewer.file.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.carousel.CarouselState
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
@@ -12,6 +13,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 
 @Composable
 internal fun FolderThumbnailsCarousel(
@@ -19,6 +23,7 @@ internal fun FolderThumbnailsCarousel(
     modifier: Modifier = Modifier,
     carouselState: CarouselState = rememberCarouselState(itemCount = lazyPagingItems::itemCount),
 ) {
+    val navigationState = LocalNavigationState.current
     HorizontalMultiBrowseCarousel(
         state = carouselState,
         preferredItemWidth = ItemWidth,
@@ -32,8 +37,15 @@ internal fun FolderThumbnailsCarousel(
                     fileThumbnail = it,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .maskClip(MaterialTheme.shapes.medium)
+                        .background(
+                            if (navigationState is NavigationState.NavigationBar) {
+                                ComicTheme.colorScheme.surfaceVariant
+                            } else {
+                                ComicTheme.colorScheme.surfaceContainerHigh
+                            }
+                        )
                 )
             }
         }

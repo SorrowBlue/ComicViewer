@@ -5,6 +5,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -17,8 +18,8 @@ import com.sorrowblue.comicviewer.file.asDateTime
 import com.sorrowblue.comicviewer.file.asFileSize
 
 @Composable
-internal fun FileInfoList(file: File) {
-    Column {
+internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
         val transparentColor = ListItemDefaults.colors(containerColor = Color.Transparent)
         ListItem(
             overlineContent = { Text(text = "パス") },

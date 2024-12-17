@@ -1,33 +1,52 @@
 package com.sorrowblue.comicviewer.favorite.section
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.feature.favorite.R
-import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
+import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteListCardItem
+import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteListItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.adaptive.ResponsiveLazyColumn
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.add
-import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
+import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
+import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 
 internal sealed interface FavoriteListContentsAction {
     data class FavoriteClick(val favoriteId: FavoriteId) : FavoriteListContentsAction
     data class EditClick(val favoriteId: FavoriteId) : FavoriteListContentsAction
+    data class DeleteClick(val favoriteId: FavoriteId) : FavoriteListContentsAction
 }
 
 @Composable
@@ -47,26 +66,68 @@ internal fun FavoriteListContents(
                 .padding(contentPadding)
         )
     } else {
-        LazyColumn(
-            contentPadding = contentPadding.add(paddingValues = PaddingValues(bottom = 88.dp)),
+        val isCompact = isCompactWindowClass()
+        ResponsiveLazyColumn(
             state = lazyListState,
-            modifier = modifier.drawVerticalScrollbar(lazyListState)
+            contentPadding = contentPadding.add(PaddingValues(bottom = 88.dp)),
+            modifier = modifier
         ) {
             items(
                 count = lazyPagingItems.itemCount,
-                key = lazyPagingItems.itemKey { it.id.value }
+                key = lazyPagingItems.itemKey { it.id.value },
+                contentType = { isCompact }
             ) { index ->
                 lazyPagingItems[index]?.let {
-                    FavoriteItem(
-                        favorite = it,
-                        onClick = { onAction(FavoriteListContentsAction.FavoriteClick(it.id)) }
-                    ) {
-                        IconButton(onClick = { onAction(FavoriteListContentsAction.EditClick(it.id)) }) {
-                            Icon(imageVector = ComicIcons.Edit, contentDescription = null)
+                    val content = remember {
+                        movableContentOf {
+                            var expanded by remember { mutableStateOf(false) }
+                            IconButton(onClick = { expanded = !expanded }) {
+                                Icon(ComicIcons.MoreVert, null)
+                            }
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("Edit") },
+                                    onClick = { onAction(FavoriteListContentsAction.EditClick(it.id)) }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Delete") },
+                                    onClick = { onAction(FavoriteListContentsAction.DeleteClick(it.id)) }
+                                )
+                            }
                         }
+                    }
+                    if (isCompact) {
+                        FavoriteListItem(
+                            favorite = it,
+                            onClick = { onAction(FavoriteListContentsAction.FavoriteClick(it.id)) },
+                            content = content
+                        )
+                    } else {
+                        FavoriteListCardItem(
+                            favorite = it,
+                            onClick = { onAction(FavoriteListContentsAction.FavoriteClick(it.id)) },
+                            content = content
+                        )
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+@PreviewMultiScreen
+private fun FavoriteListContentsPreview() {
+    val lazyPagingItems =
+        PagingData.flowData { fakeFavorite(favoriteId = it) }.collectAsLazyPagingItems()
+    PreviewTheme2 {
+        FavoriteListContents(
+            lazyPagingItems = lazyPagingItems,
+            onAction = {},
+            contentPadding = WindowInsets.safeDrawing.asPaddingValues()
+        )
     }
 }

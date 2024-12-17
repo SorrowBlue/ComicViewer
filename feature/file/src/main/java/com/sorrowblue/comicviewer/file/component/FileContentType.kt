@@ -2,8 +2,8 @@ package com.sorrowblue.comicviewer.file.component
 
 import android.os.Parcelable
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -15,44 +15,27 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuScope
-import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 sealed class FileContentType : Parcelable {
 
-    @IgnoredOnParcel
     abstract val columns: GridCells
-    abstract val staggeredGridCells: StaggeredGridCells
 
     @Parcelize
     data object List : FileContentType() {
-        @IgnoredOnParcel
-        override val columns = GridCells.Fixed(1)
-
-        @IgnoredOnParcel
-        override val staggeredGridCells = StaggeredGridCells.Fixed(1)
+        override val columns get() = GridCells.Fixed(1)
     }
 
     @Parcelize
     data object ListMedium : FileContentType() {
-        @IgnoredOnParcel
-        override val columns = GridCells.Fixed(1)
-
-        @IgnoredOnParcel
-        override val staggeredGridCells = StaggeredGridCells.Fixed(1)
+        override val columns get() = GridCells.Adaptive(300.dp)
     }
 
     @Parcelize
     data class Grid(val minSize: Int) : FileContentType() {
-
-        override val columns: GridCells
-            get() = GridCells.Adaptive(minSize.dp)
-
-        override val staggeredGridCells
-            get() = StaggeredGridCells.Adaptive(minSize.dp)
+        override val columns get() = GridCells.Adaptive(minSize.dp)
     }
 }
 
@@ -89,12 +72,12 @@ fun rememberFileContentType(
     fileListDisplay: FileListDisplay,
     gridColumnSize: GridColumnSize,
 ): State<FileContentType> {
+    val scaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
     val widthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-    val isCompact = isCompactWindowClass()
     return remember(fileListDisplay, gridColumnSize) {
         mutableStateOf(
             when (fileListDisplay) {
-                FileListDisplay.List -> if (isCompact) FileContentType.List else FileContentType.ListMedium
+                FileListDisplay.List -> if (scaffoldDirective.maxHorizontalPartitions == 1) FileContentType.List else FileContentType.ListMedium
                 FileListDisplay.Grid -> when (widthSizeClass) {
                     WindowWidthSizeClass.COMPACT -> when (gridColumnSize) {
                         GridColumnSize.Medium -> 120
