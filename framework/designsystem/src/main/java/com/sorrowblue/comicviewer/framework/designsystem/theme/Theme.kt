@@ -16,9 +16,11 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.window.core.layout.WindowWidthSizeClass
 
@@ -162,6 +164,20 @@ object ComicTheme {
 
     var fixedSegmentedButtonColorsCached: SegmentedButtonColors? = null
 }
+
+@Stable
+fun ColorScheme.imageBackground(backgroundColor: Color): Color =
+    when (backgroundColor) {
+        surface -> surfaceContainerHighest
+        surfaceVariant -> Color.Red
+        surfaceBright -> Color.Red
+        surfaceContainer -> Color.Red
+        surfaceContainerHigh -> Color.Red
+        surfaceContainerHighest -> surfaceContainerHigh
+        surfaceContainerLow -> surfaceContainerHigh
+        surfaceContainerLowest -> Color.Red
+        else -> Color.Unspecified
+    }
 
 @Composable
 fun SegmentedButtonDefaults.fixedColors() = ComicTheme.fixedSegmentedButtonColorsCached ?: colors(
