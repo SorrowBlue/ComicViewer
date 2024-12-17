@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -35,8 +35,9 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoCo
 import com.sorrowblue.comicviewer.feature.bookshelf.notification.NotificationRequestResult
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffoldExtraPaneScope
+import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
@@ -48,7 +49,10 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fakeSmbServer
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 
 @Composable
-fun BookshelfInfoSheet(bookshelfId: BookshelfId, navigator: BookshelfInfoSheetNavigator) {
+fun CanonicalScaffoldExtraPaneScope.BookshelfInfoSheet(
+    bookshelfId: BookshelfId,
+    navigator: BookshelfInfoSheetNavigator,
+) {
     BookshelfInfoSheetWrapper(bookshelfId = bookshelfId) {
         BookshelfInfoSheet(bookshelfFolder = it, navigator = navigator)
     }
@@ -77,7 +81,7 @@ interface BookshelfInfoSheetNavigator {
 }
 
 @Composable
-private fun BookshelfInfoSheet(
+private fun CanonicalScaffoldExtraPaneScope.BookshelfInfoSheet(
     bookshelfFolder: BookshelfFolder,
     navigator: BookshelfInfoSheetNavigator,
     removeDialogResultRecipient: ResultRecipient<BookshelfRemoveDialogDestination, Boolean> =
@@ -105,21 +109,21 @@ private fun BookshelfInfoSheet(
 }
 
 @Composable
-private fun BookshelfInfoSheet(
+private fun CanonicalScaffoldExtraPaneScope.BookshelfInfoSheet(
     uiState: BookshelfInfoSheetUiState,
     lazyPagingItems: LazyPagingItems<BookThumbnail>,
     onAction: (BookshelfInfoSheetAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    CanonicalExtraPaneScaffold(
+    ExtraPaneScaffold(
         title = { Text(text = stringResource(id = R.string.bookshelf_info_title)) },
         onCloseClick = { onAction(BookshelfInfoSheetAction.Close) },
         modifier = modifier,
     ) {
         Column(
             Modifier
-                .fillMaxHeight()
-                .padding(top = it.calculateTopPadding())
+                .fillMaxSize()
+                .padding(it)
         ) {
             val scrollState = rememberScrollState()
             if (LocalNavigationState.current !is NavigationState.NavigationBar && scrollState.canScrollBackward) {
@@ -194,6 +198,26 @@ private fun BookshelfInfoSheetPreview() {
                     onAction = {},
                 )
             },
+        ) {
+        }
+    }
+}
+
+@Composable
+@PreviewMultiScreen
+private fun BookshelfInfoSheet2Preview() {
+    PreviewTheme2 {
+        val navigator = rememberSupportingPaneScaffoldNavigator(
+            initialDestinationHistory = listOf(
+                ThreePaneScaffoldDestinationItem(
+                    SupportingPaneScaffoldRole.Extra,
+                    BookshelfFolder(fakeSmbServer(), fakeFolder())
+                )
+            )
+        )
+        CanonicalScaffold(
+            navigator = navigator,
+            extraPane = { LoadingScreen() },
         ) {
         }
     }

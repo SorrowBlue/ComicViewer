@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +37,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySett
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
 
@@ -58,11 +60,9 @@ fun GridFile(
     contentScale: ContentScale,
     filterQuality: FilterQuality,
     modifier: Modifier = Modifier,
+    colors: CardColors = CardDefaults.cardColors(),
 ) {
-    Card(
-        onClick = onClick,
-        modifier = modifier
-    ) {
+    Card(onClick = onClick, colors = colors, modifier = modifier) {
         Box {
             if (showThumbnail) {
                 FileThumbnailAsyncImage(
@@ -74,7 +74,7 @@ fun GridFile(
                         .fillMaxWidth()
                         .aspectRatio(1f)
                         .clip(CardDefaults.shape)
-                        .background(ComicTheme.colorScheme.surfaceContainerHigh)
+                        .background(ComicTheme.colorScheme.imageBackground(colors.containerColor))
                 )
             } else {
                 GridFileIcon(file = file)

@@ -28,7 +28,7 @@ internal fun rememberBookshelfInfoSheetWrapperState(
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: BookshelfInfoSheetWrapperViewModel = hiltViewModel(),
 ): BookshelfInfoSheetWrapperState {
-    return remember {
+    return remember(bookshelfId) {
         BookshelfInfoSheetWrapperStateImpl(
             bookshelfId = bookshelfId,
             bookshelfInfoUseCase = viewModel.bookshelfInfoUseCase,

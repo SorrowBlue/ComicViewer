@@ -25,6 +25,7 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteListContents
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListContentsAction
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 
 interface FavoriteListNavigator {
@@ -62,6 +63,9 @@ private fun FavoriteListScreen(
             when (it) {
                 is FavoriteListContentsAction.EditClick -> navigator.navigateToEdit(it.favoriteId)
                 is FavoriteListContentsAction.FavoriteClick -> navigator.navigateToFavorite(it.favoriteId)
+                is FavoriteListContentsAction.DeleteClick -> {
+                    state.delete(it.favoriteId)
+                }
             }
         }
     )
@@ -92,6 +96,7 @@ private fun FavoriteListScreen(
             )
         },
         contentWindowInsets = WindowInsets.safeDrawing,
+        containerColor = ComicTheme.colorScheme.surface,
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         FavoriteListContents(

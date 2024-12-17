@@ -50,6 +50,23 @@ fun PaddingValues.add(
 }
 
 @Composable
+fun PaddingValues.plus(
+    paddingValues: PaddingValues,
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
+): PaddingValues {
+    return PaddingValues(
+        start = calculateStartPadding(layoutDirection) + paddingValues.calculateStartPadding(
+            layoutDirection
+        ),
+        top = calculateTopPadding() + paddingValues.calculateTopPadding(),
+        end = calculateEndPadding(layoutDirection) + paddingValues.calculateEndPadding(
+            layoutDirection
+        ),
+        bottom = calculateBottomPadding() + paddingValues.calculateBottomPadding(),
+    )
+}
+
+@Composable
 fun PaddingValues.copy(
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     start: Dp = calculateStartPadding(layoutDirection),

@@ -29,7 +29,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.copyWhenZero
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
@@ -87,7 +86,7 @@ fun <T : File> FileLazyVerticalGrid(
         state = state,
         contentPadding = when (contentType) {
             FileContentType.List -> contentPadding
-            FileContentType.ListMedium -> contentPadding.copyWhenZero()
+            FileContentType.ListMedium -> contentPadding
             is FileContentType.Grid -> contentPadding
         },
         verticalArrangement = when (contentType) {
@@ -100,7 +99,9 @@ fun <T : File> FileLazyVerticalGrid(
         },
         horizontalArrangement = when (contentType) {
             FileContentType.List -> Arrangement.Start
-            FileContentType.ListMedium -> Arrangement.Start
+            FileContentType.ListMedium ->
+                Arrangement.spacedBy(ComicTheme.dimension.padding, Alignment.Start)
+
             is FileContentType.Grid ->
                 Arrangement.spacedBy(ComicTheme.dimension.padding, Alignment.Start)
         },
@@ -131,7 +132,7 @@ fun <T : File> FileLazyVerticalGrid(
                                 Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
                             } else {
                                 Modifier
-                            }
+                            }.animateItem()
                         )
                     }
 
@@ -148,7 +149,7 @@ fun <T : File> FileLazyVerticalGrid(
                                 Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
                             } else {
                                 Modifier
-                            }
+                            }.animateItem()
                         )
                     }
 
@@ -164,7 +165,7 @@ fun <T : File> FileLazyVerticalGrid(
                             Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
                         } else {
                             Modifier
-                        }
+                        }.animateItem()
                     )
                 }
             }
