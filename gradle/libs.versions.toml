@@ -22,7 +22,7 @@ mikepenz-aboutlibraries = "11.2.3"
 koin = "4.0.0"
 compose-destinations = "2.1.0-beta14"
 
-dokka = "1.9.20"
+dokka = "2.0.0"
 airbnb-android-showkase = "1.0.3"
 
 [plugins]
