@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.feature.search.component
 
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -36,7 +36,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalTopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
-import com.sorrowblue.comicviewer.framework.ui.material3.TopAppBarBottom
 import com.sorrowblue.comicviewer.feature.folder.R as FolderR
 
 internal sealed interface SearchTopAppBarAction {
@@ -91,34 +90,32 @@ internal fun SearchTopAppBar(
     searchCondition: SearchCondition,
     onAction: (SearchTopAppBarAction) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
+    scrollableState: ScrollableState,
 ) {
-    Column {
-        CanonicalTopAppBar(
-            title = {
-                val skc = LocalSoftwareKeyboardController.current
-                TextField(
-                    value = searchCondition.query,
-                    onValueChange = { onAction(SearchTopAppBarAction.QueryChange(it)) },
-                    placeholder = { Text(text = stringResource(R.string.search_label_search)) },
-                    maxLines = 1,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent
-                    ),
-                    keyboardActions = KeyboardActions(onSearch = { skc?.hide() }),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            navigationIcon = {
-                BackIconButton(onClick = { onAction(SearchTopAppBarAction.BackClick) })
-            },
-            actions = {
-                SettingsIconButton(onClick = { onAction(SearchTopAppBarAction.Settings) })
-            },
-            scrollBehavior = scrollBehavior
-        )
-        TopAppBarBottom(scrollBehavior = scrollBehavior) {
+    CanonicalTopAppBar(
+        title = {
+            val skc = LocalSoftwareKeyboardController.current
+            TextField(
+                value = searchCondition.query,
+                onValueChange = { onAction(SearchTopAppBarAction.QueryChange(it)) },
+                placeholder = { Text(text = stringResource(R.string.search_label_search)) },
+                maxLines = 1,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent
+                ),
+                keyboardActions = KeyboardActions(onSearch = { skc?.hide() }),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        navigationIcon = {
+            BackIconButton(onClick = { onAction(SearchTopAppBarAction.BackClick) })
+        },
+        actions = {
+            SettingsIconButton(onClick = { onAction(SearchTopAppBarAction.Settings) })
+        },
+        bottomComponent = {
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
@@ -158,8 +155,10 @@ internal fun SearchTopAppBar(
                     }
                 )
             }
-        }
-    }
+        },
+        scrollBehavior = scrollBehavior,
+        scrollableState = scrollableState
+    )
 }
 
 private val SearchCondition.Period.displayText

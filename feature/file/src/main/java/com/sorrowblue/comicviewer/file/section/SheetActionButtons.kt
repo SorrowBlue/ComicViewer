@@ -32,6 +32,7 @@ internal fun SheetActionButtons(
         )
         OutlinedButton(
             onClick = { onAction(FileInfoSheetAction.Favorite) },
+            contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = ComicTheme.dimension.minPadding * 4)
@@ -43,6 +44,7 @@ internal fun SheetActionButtons(
         if (uiState.isOpenFolderEnabled) {
             OutlinedButton(
                 onClick = { onAction(FileInfoSheetAction.OpenFolder) },
+                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = ComicTheme.dimension.minPadding * 4)

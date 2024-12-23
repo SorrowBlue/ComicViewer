@@ -72,7 +72,8 @@ internal interface FileDao {
 
         val comparison =
             if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) ">=" else "<="
-        val order = if (sortType.isAsc) "ASC" else "DESC"
+        val order = if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) "ASC" else "DESC"
+        logcat { "$path, isNext: $isNext, sortType.isAsc: ${sortType.isAsc}" }
         return flowPrevNextFile(
             SimpleSQLiteQuery(
                 """

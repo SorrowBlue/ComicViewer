@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.file.component.FileThumbnailAsyncImage
+import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 
 @Composable
 internal fun BookshelfBookThumbnailsCarousel(
@@ -26,7 +27,7 @@ internal fun BookshelfBookThumbnailsCarousel(
         state = carouselState,
         itemWidth = 186.dp,
         itemSpacing = 8.dp,
-        contentPadding = PaddingValues(horizontal = 8.dp),
+        contentPadding = PaddingValues(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
         modifier = modifier
     ) { index ->
         if (pagingItems.itemCount <= 0) return@HorizontalUncontainedCarousel

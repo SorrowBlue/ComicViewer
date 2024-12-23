@@ -25,6 +25,7 @@ internal fun ReadlaterButton(uiState: ReadLaterUiState, onClick: () -> Unit) {
         FilledTonalButton(
             onClick = onClick,
             enabled = !uiState.loading,
+            contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = ComicTheme.dimension.minPadding * 4)
@@ -42,6 +43,7 @@ internal fun ReadlaterButton(uiState: ReadLaterUiState, onClick: () -> Unit) {
         OutlinedButton(
             onClick = onClick,
             enabled = !uiState.loading,
+            contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = ComicTheme.dimension.minPadding * 4)

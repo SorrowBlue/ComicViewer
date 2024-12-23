@@ -33,7 +33,6 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 interface ReadLaterScreenNavigator {
@@ -102,12 +101,13 @@ private fun ReadLaterScreen(
         topBar = {
             ReadLaterTopAppBar(
                 onAction = onTopAppBarAction,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                scrollableState = lazyGridState
             )
         },
-        extraPane = { content ->
+        extraPane = { contentKey ->
             FileInfoSheet(
-                fileKey = content,
+                fileKey = contentKey,
                 onAction = onFileInfoSheetAction,
                 isOpenFolderEnabled = true
             )
@@ -148,17 +148,15 @@ private fun ReadLaterContents(
                 .padding(contentPadding)
         )
     } else {
-        val (paddings, margins) = calculatePaddingMargins(contentPadding)
         FileLazyVerticalGrid(
             uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
             lazyPagingItems = lazyPagingItems,
-            contentPadding = paddings,
+            contentPadding = contentPadding,
             onItemClick = { onAction(ReadLaterContentsAction.File(it)) },
             onItemInfoClick = { onAction(ReadLaterContentsAction.FileInfo(it)) },
             state = lazyGridState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(margins)
         )
     }
 }

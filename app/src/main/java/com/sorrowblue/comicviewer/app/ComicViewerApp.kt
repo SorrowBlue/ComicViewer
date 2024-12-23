@@ -35,7 +35,6 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.ramcosta.composedestinations.scope.DestinationScope
 import com.ramcosta.composedestinations.wrapper.DestinationWrapper
-import com.sorrowblue.comicviewer.app.component.BuildTypeStatusBar
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffold
 import com.sorrowblue.comicviewer.app.navigation.MainDependencies
 import com.sorrowblue.comicviewer.domain.model.AddOn
@@ -93,8 +92,6 @@ internal fun ComicViewerApp(
             },
         )
     }
-    BuildTypeStatusBar(BuildConfig.BUILD_TYPE)
-
     rememberSlideDistance().let { slideDistance ->
         LaunchedEffect(slideDistance) {
             DestinationTransitions.slideDistance = slideDistance

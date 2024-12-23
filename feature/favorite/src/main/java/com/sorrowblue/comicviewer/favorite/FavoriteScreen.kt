@@ -124,12 +124,13 @@ private fun FavoriteScreen(
             FavoriteTopAppBar(
                 uiState = uiState.favoriteAppBarUiState,
                 onAction = onFavoriteTopAppBarAction,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                scrollableState = lazyGridState
             )
         },
-        extraPane = { content ->
+        extraPane = { contentKey ->
             FileInfoSheet(
-                fileKey = content,
+                fileKey = contentKey,
                 onAction = onFileInfoSheetAction,
                 isOpenFolderEnabled = true
             )

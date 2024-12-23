@@ -11,7 +11,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -29,15 +28,14 @@ import com.sorrowblue.comicviewer.feature.search.section.SearchContentsAction
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsUiState
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.file.component.FileContentType
-import com.sorrowblue.comicviewer.file.component.rememberFileContentType
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.animatedMainContentPadding
+import com.sorrowblue.comicviewer.framework.ui.adaptive.animateMainContentPaddingValues
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewCompliantNavigation
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import kotlinx.coroutines.delay
@@ -81,15 +79,11 @@ internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenS
     val currentNavigator by rememberUpdatedState(navigator)
     LaunchedEventEffect(state.event) {
         when (it) {
-            is SearchScreenEvent.Favorite -> currentNavigator.onFavoriteClick(
-                it.bookshelfId,
-                it.path
-            )
+            is SearchScreenEvent.Favorite ->
+                currentNavigator.onFavoriteClick(it.bookshelfId, it.path)
 
-            is SearchScreenEvent.OpenFolder -> currentNavigator.onOpenFolderClick(
-                it.bookshelfId,
-                it.parent
-            )
+            is SearchScreenEvent.OpenFolder ->
+                currentNavigator.onOpenFolderClick(it.bookshelfId, it.parent)
 
             SearchScreenEvent.Back -> currentNavigator.navigateUp()
             is SearchScreenEvent.File -> currentNavigator.onFileClick(it.file)
@@ -147,21 +141,21 @@ private fun SearchScreen(
             SearchTopAppBar(
                 searchCondition = uiState.searchCondition,
                 onAction = onSearchTopAppBarAction,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                scrollableState = lazyGridState
             )
         },
-        extraPane = { content ->
-            FileInfoSheet(fileKey = content, onAction = onFileInfoSheetAction)
+        extraPane = { contentKey ->
+            FileInfoSheet(
+                fileKey = contentKey,
+                onAction = onFileInfoSheetAction,
+                isOpenFolderEnabled = true
+            )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
-        val contentType by rememberFileContentType(
-            fileListDisplay = uiState.searchContentsUiState.fileLazyVerticalGridUiState.fileListDisplay,
-            gridColumnSize = uiState.searchContentsUiState.fileLazyVerticalGridUiState.columnSize
-        )
-        val additionalPadding by animatedMainContentPadding(
-            navigator = navigator,
-            fillWidth = contentType is FileContentType.List
+        val additionalPadding by animateMainContentPaddingValues(
+            true
         )
         SearchContents(
             uiState = uiState.searchContentsUiState,
@@ -175,10 +169,10 @@ private fun SearchScreen(
 
 private const val WaitLoadPage = 350L
 
-@Preview
+@PreviewMultiScreen
 @Composable
 private fun SearchScreenPreview() {
-    PreviewTheme2 {
+    PreviewCompliantNavigation {
         val pagingDataFlow = PagingData.flowData<File> { fakeBookFile(it) }
         val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
         SearchScreen(

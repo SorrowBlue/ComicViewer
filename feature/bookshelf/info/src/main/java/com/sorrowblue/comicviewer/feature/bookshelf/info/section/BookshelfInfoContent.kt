@@ -37,7 +37,6 @@ internal fun BookshelfInfoContent(
             overlineContent = { Text(text = stringResource(id = R.string.bookshelf_info_label_display_name)) },
             headlineContent = { Text(text = bookshelf.displayName) },
         )
-
         when (bookshelf) {
             is InternalStorage -> {
                 ListItem(
