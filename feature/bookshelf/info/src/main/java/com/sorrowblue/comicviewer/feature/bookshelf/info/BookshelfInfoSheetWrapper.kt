@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffoldExtraPaneScope
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 
 internal sealed interface BookshelfInfoSheetWrapperUiState {
@@ -19,9 +18,8 @@ internal sealed interface BookshelfInfoSheetWrapperUiState {
     data class Loaded(val bookshelfFolder: BookshelfFolder) : BookshelfInfoSheetWrapperUiState
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun CanonicalScaffoldExtraPaneScope.BookshelfInfoSheetWrapper(
+internal fun BookshelfInfoSheetWrapper(
     bookshelfId: BookshelfId,
     content: @Composable (BookshelfFolder) -> Unit,
 ) {
@@ -36,7 +34,7 @@ internal fun CanonicalScaffoldExtraPaneScope.BookshelfInfoSheetWrapper(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun CanonicalScaffoldExtraPaneScope.LoadingScreen() {
+internal fun LoadingScreen() {
     ExtraPaneScaffold(title = {}, onCloseClick = {}) {
         Box(
             modifier = Modifier

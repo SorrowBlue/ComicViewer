@@ -1,12 +1,12 @@
 package com.sorrowblue.comicviewer.folder.section
 
 import android.os.Parcelable
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -48,8 +48,9 @@ internal sealed interface FolderTopAppBarAction {
 internal fun FolderAppBar(
     uiState: FolderAppBarUiState,
     onAction: (FolderTopAppBarAction) -> Unit,
+    scrollableState: ScrollableState,
+    scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     CanonicalTopAppBar(
         title = { Text(text = uiState.title) },
@@ -84,6 +85,7 @@ internal fun FolderAppBar(
             }
         },
         scrollBehavior = scrollBehavior,
+        scrollableState = scrollableState,
         modifier = modifier
     )
 }

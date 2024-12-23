@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.bookshelf.section
 
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 internal fun BookshelfAppBar(
     onSettingsClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
+    scrollableState: ScrollableState,
     modifier: Modifier = Modifier,
 ) {
     CanonicalTopAppBar(
@@ -23,6 +25,7 @@ internal fun BookshelfAppBar(
             SettingsIconButton(onClick = onSettingsClick)
         },
         scrollBehavior = scrollBehavior,
+        scrollableState = scrollableState,
         modifier = modifier,
     )
 }

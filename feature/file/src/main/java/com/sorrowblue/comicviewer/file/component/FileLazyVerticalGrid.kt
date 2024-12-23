@@ -1,27 +1,24 @@
 package com.sorrowblue.comicviewer.file.component
 
 import android.os.Parcelable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
@@ -29,8 +26,9 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.LazyPagingColumn
+import com.sorrowblue.comicviewer.framework.ui.adaptive.LazyPagingColumnType
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
-import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
@@ -58,11 +56,6 @@ fun <T : File> FileLazyVerticalGrid(
     state: LazyGridState = rememberLazyGridState(),
     contentPadding: PaddingValues = PaddingValues(),
 ) {
-    var spanCount by remember { mutableIntStateOf(1) }
-    val contentType by rememberFileContentType(
-        fileListDisplay = uiState.fileListDisplay,
-        gridColumnSize = uiState.columnSize
-    )
     val contentScale by remember(uiState.imageScale) {
         mutableStateOf(
             when (uiState.imageScale) {
@@ -81,95 +74,104 @@ fun <T : File> FileLazyVerticalGrid(
             }
         )
     }
-    LazyVerticalGrid(
-        columns = contentType.columns,
+    val type by rememberLazyPagingColumnType(
+        fileListDisplay = uiState.fileListDisplay,
+        gridColumnSize = uiState.columnSize
+    )
+    LazyPagingColumn(
         state = state,
-        contentPadding = when (contentType) {
-            FileContentType.List -> contentPadding
-            FileContentType.ListMedium -> contentPadding
-            is FileContentType.Grid -> contentPadding
-        },
-        verticalArrangement = when (contentType) {
-            FileContentType.List -> Arrangement.Top
-            FileContentType.ListMedium ->
-                Arrangement.spacedBy(ComicTheme.dimension.padding, Alignment.Top)
-
-            is FileContentType.Grid ->
-                Arrangement.spacedBy(ComicTheme.dimension.padding, Alignment.Top)
-        },
-        horizontalArrangement = when (contentType) {
-            FileContentType.List -> Arrangement.Start
-            FileContentType.ListMedium ->
-                Arrangement.spacedBy(ComicTheme.dimension.padding, Alignment.Start)
-
-            is FileContentType.Grid ->
-                Arrangement.spacedBy(ComicTheme.dimension.padding, Alignment.Start)
-        },
+        lazyPagingItems = lazyPagingItems,
+        contentPadding = contentPadding,
+        type = type,
         modifier = modifier
-            .drawVerticalScrollbar(state, spanCount),
-    ) {
-        items(
-            count = lazyPagingItems.itemCount,
-            span = {
-                spanCount = maxLineSpan
-                GridItemSpan(1)
-            },
-            key = lazyPagingItems.itemKey { it.path },
-            contentType = { contentType }
-        ) {
-            lazyPagingItems[it]?.let { item ->
-                when (contentType) {
-                    FileContentType.List -> {
-                        ListFile(
-                            file = item,
-                            onClick = { onItemClick(item) },
-                            onLongClick = { onItemInfoClick(item) },
-                            showThumbnail = uiState.showThumbnails,
-                            fontSize = uiState.fontSize,
-                            contentScale = contentScale,
-                            filterQuality = filterQuality,
-                            modifier = if (item.path == emphasisPath) {
-                                Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
-                            } else {
-                                Modifier
-                            }.animateItem()
-                        )
-                    }
-
-                    FileContentType.ListMedium -> {
-                        ListFileCard(
-                            file = item,
-                            onClick = { onItemClick(item) },
-                            onLongClick = { onItemInfoClick(item) },
-                            showThumbnail = uiState.showThumbnails,
-                            fontSize = uiState.fontSize,
-                            contentScale = contentScale,
-                            filterQuality = filterQuality,
-                            modifier = if (item.path == emphasisPath) {
-                                Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
-                            } else {
-                                Modifier
-                            }.animateItem()
-                        )
-                    }
-
-                    is FileContentType.Grid -> GridFile(
-                        file = item,
-                        onClick = { onItemClick(item) },
-                        onInfoClick = { onItemInfoClick(item) },
-                        showThumbnail = uiState.showThumbnails,
-                        fontSize = uiState.fontSize,
-                        contentScale = contentScale,
-                        filterQuality = filterQuality,
-                        modifier = if (item.path == emphasisPath) {
-                            Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
-                        } else {
-                            Modifier
-                        }.animateItem()
-                    )
-                }
+    ) { _, item ->
+        when (type) {
+            LazyPagingColumnType.List -> {
+                ListFile(
+                    file = item,
+                    onClick = { onItemClick(item) },
+                    onLongClick = { onItemInfoClick(item) },
+                    showThumbnail = uiState.showThumbnails,
+                    fontSize = uiState.fontSize,
+                    contentScale = contentScale,
+                    filterQuality = filterQuality,
+                    modifier = if (item.path == emphasisPath) {
+                        Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
+                    } else {
+                        Modifier
+                    }.animateItem()
+                )
             }
+
+            LazyPagingColumnType.ListMedium -> {
+                ListFileCard(
+                    file = item,
+                    onClick = { onItemClick(item) },
+                    onLongClick = { onItemInfoClick(item) },
+                    showThumbnail = uiState.showThumbnails,
+                    fontSize = uiState.fontSize,
+                    contentScale = contentScale,
+                    filterQuality = filterQuality,
+                    modifier = if (item.path == emphasisPath) {
+                        Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
+                    } else {
+                        Modifier
+                    }.animateItem()
+                )
+            }
+
+            is LazyPagingColumnType.Grid -> GridFile(
+                file = item,
+                onClick = { onItemClick(item) },
+                onInfoClick = { onItemInfoClick(item) },
+                showThumbnail = uiState.showThumbnails,
+                fontSize = uiState.fontSize,
+                contentScale = contentScale,
+                filterQuality = filterQuality,
+                modifier = if (item.path == emphasisPath) {
+                    Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
+                } else {
+                    Modifier
+                }.animateItem()
+            )
         }
+    }
+}
+
+@Composable
+fun rememberLazyPagingColumnType(
+    fileListDisplay: FileListDisplay,
+    gridColumnSize: GridColumnSize,
+): State<LazyPagingColumnType> {
+    val scaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
+    val widthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    return remember(fileListDisplay, gridColumnSize) {
+        mutableStateOf(
+            when (fileListDisplay) {
+                FileListDisplay.List -> if (scaffoldDirective.maxHorizontalPartitions == 1) LazyPagingColumnType.List else LazyPagingColumnType.ListMedium
+                FileListDisplay.Grid -> when (widthSizeClass) {
+                    WindowWidthSizeClass.COMPACT -> when (gridColumnSize) {
+                        GridColumnSize.Medium -> 120
+                        GridColumnSize.Large -> 180
+                    }
+
+                    WindowWidthSizeClass.MEDIUM -> when (gridColumnSize) {
+                        GridColumnSize.Medium -> 160
+                        GridColumnSize.Large -> 200
+                    }
+
+                    WindowWidthSizeClass.EXPANDED -> when (gridColumnSize) {
+                        GridColumnSize.Medium -> 160
+                        GridColumnSize.Large -> 200
+                    }
+
+                    else -> when (gridColumnSize) {
+                        GridColumnSize.Medium -> 120
+                        GridColumnSize.Large -> 180
+                    }
+                }.let(LazyPagingColumnType::Grid)
+            }
+        )
     }
 }
 

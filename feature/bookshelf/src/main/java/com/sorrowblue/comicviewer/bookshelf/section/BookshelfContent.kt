@@ -1,41 +1,37 @@
 package com.sorrowblue.comicviewer.bookshelf.section
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemKey
-import com.sorrowblue.comicviewer.bookshelf.component.BookshelfCard
+import com.sorrowblue.comicviewer.bookshelf.component.BookshelfListItem
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookshelves
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
-import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
+import com.sorrowblue.comicviewer.framework.ui.adaptive.LazyPagingColumn
+import com.sorrowblue.comicviewer.framework.ui.adaptive.LazyPagingColumnType
+import com.sorrowblue.comicviewer.framework.ui.adaptive.animateMainContentPaddingValues
+import com.sorrowblue.comicviewer.framework.ui.adaptive.union
+import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
 
 @Composable
 internal fun BookshelfMainSheet(
@@ -81,49 +77,27 @@ private fun BookshelfListContents(
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
     contentPadding: PaddingValues,
 ) {
-    val navigationState = LocalNavigationState.current
-    val gridCells by remember(navigationState) {
-        mutableStateOf(
-            if (navigationState is NavigationState.NavigationBar) {
-                GridCells.Fixed(1)
-            } else {
-                GridCells.Adaptive(280.dp)
-            }
-        )
-    }
-    var spanCount by remember { mutableIntStateOf(1) }
-    LazyVerticalGrid(
-        columns = gridCells,
+    val addPadding by animateMainContentPaddingValues(false)
+    ScrollbarBox(
         state = lazyGridState,
-        contentPadding = contentPadding,
-        verticalArrangement = Arrangement.spacedBy(
-            ComicTheme.dimension.minPadding * 2,
-            alignment = Alignment.Top
-        ),
-        horizontalArrangement = Arrangement.spacedBy(
-            ComicTheme.dimension.minPadding * 2,
-            alignment = Alignment.Start
-        ),
-        modifier = Modifier
-            .fillMaxSize()
-            .drawVerticalScrollbar(lazyGridState, spanCount)
+        itemsAvailable = lazyPagingItems.itemCount,
+        scrollbarWindowInsets =
+        WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
+            union contentPadding.asWindowInsets().only(WindowInsetsSides.Top)
     ) {
-        items(
-            count = lazyPagingItems.itemCount,
-            span = {
-                spanCount = maxLineSpan
-                GridItemSpan(1)
-            },
-            key = lazyPagingItems.itemKey { it.bookshelf.id.value }
-        ) {
-            lazyPagingItems[it]?.let { item ->
-                BookshelfCard(
-                    state = navigationState,
-                    bookshelfFolder = item,
-                    onClick = { onBookshelfClick(item.bookshelf.id, item.folder.path) },
-                    onInfoClick = { onBookshelfInfoClick(item) },
-                )
-            }
+        LazyPagingColumn(
+            contentPadding = contentPadding.add(addPadding),
+            lazyPagingItems = lazyPagingItems,
+            state = lazyGridState,
+            type = LazyPagingColumnType.Grid(400),
+            modifier = Modifier.fillMaxSize()
+        ) { _, item ->
+            BookshelfListItem(
+                bookshelfFolder = item,
+                onClick = { onBookshelfClick(item.bookshelf.id, item.folder.path) },
+                onInfoClick = { onBookshelfInfoClick(item) },
+                modifier = Modifier.animateItem()
+            )
         }
     }
 }

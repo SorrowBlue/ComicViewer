@@ -1,8 +1,14 @@
 package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
@@ -21,8 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -35,14 +44,10 @@ import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.feature.folder.destinations.SortTypeDialogDestination
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.file.component.FileContentType
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
-import com.sorrowblue.comicviewer.file.component.rememberFileContentType
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
-import com.sorrowblue.comicviewer.folder.section.FolderFab
-import com.sorrowblue.comicviewer.folder.section.FolderFabAction
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
@@ -50,9 +55,10 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.animatedMainContentPadding
+import com.sorrowblue.comicviewer.framework.ui.adaptive.animateMainContentPaddingValues
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
@@ -60,6 +66,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.flowEmptyData
+import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
 
 internal data class FolderScreenUiState(
     val bookshelfId: BookshelfId = BookshelfId(),
@@ -83,7 +90,6 @@ fun FolderScreen(
         onFolderTopAppBarAction = state::onFolderTopAppBarAction,
         onFileInfoSheetAction = state::onFileInfoSheetAction,
         onFolderContentsAction = state::onFolderContentsAction,
-        onFolderFabAction = state::onFolderFabAction,
         lazyGridState = state.lazyGridState,
         pullRefreshState = state.pullRefreshState,
         snackbarHostState = state.snackbarHostState,
@@ -123,7 +129,6 @@ private fun FolderScreen(
     onFolderTopAppBarAction: (FolderTopAppBarAction) -> Unit,
     onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onFolderContentsAction: (FolderContentsAction) -> Unit,
-    onFolderFabAction: (FolderFabAction) -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
@@ -135,30 +140,19 @@ private fun FolderScreen(
             FolderAppBar(
                 uiState = uiState.folderAppBarUiState,
                 onAction = onFolderTopAppBarAction,
+                scrollableState = lazyGridState,
                 scrollBehavior = scrollBehavior,
             )
         },
-        extraPane = { content ->
-            FileInfoSheet(fileKey = content, onAction = onFileInfoSheetAction)
-        },
-        floatingActionButton = {
-            FolderFab(
-                scrollTop = lazyGridState.canScrollBackward,
-                scrollDown = lazyGridState.canScrollForward,
-                onAction = onFolderFabAction,
+        extraPane = { contentKey ->
+            FileInfoSheet(
+                fileKey = contentKey,
+                onAction = onFileInfoSheetAction,
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
-        val contentType by rememberFileContentType(
-            fileListDisplay = uiState.fileLazyVerticalGridUiState.fileListDisplay,
-            gridColumnSize = uiState.fileLazyVerticalGridUiState.columnSize
-        )
-        val additionalPadding by animatedMainContentPadding(
-            navigator = navigator,
-            fillWidth = contentType is FileContentType.List
-        )
         FolderContents(
             title = uiState.folderAppBarUiState.title,
             fileLazyVerticalGridUiState = uiState.fileLazyVerticalGridUiState,
@@ -166,7 +160,7 @@ private fun FolderScreen(
             lazyGridState = lazyGridState,
             pullRefreshState = pullRefreshState,
             onAction = onFolderContentsAction,
-            contentPadding = contentPadding.add(additionalPadding),
+            contentPadding = contentPadding,
             emphasisPath = uiState.emphasisPath
         )
     }
@@ -213,17 +207,37 @@ private fun FolderContents(
                 text = stringResource(R.string.folder_text_nothing_in_folder, title)
             )
         } else {
-            FileLazyVerticalGrid(
-                modifier = Modifier
-                    .fillMaxSize(),
-                uiState = fileLazyVerticalGridUiState,
-                lazyPagingItems = lazyPagingItems,
-                contentPadding = contentPadding,
-                onItemClick = { onAction(FolderContentsAction.File(it)) },
-                onItemInfoClick = { onAction(FolderContentsAction.FileInfo(it)) },
+            val addPadding by animateMainContentPaddingValues(false)
+            ScrollbarBox(
                 state = lazyGridState,
-                emphasisPath = emphasisPath
-            )
+                itemsAvailable = lazyPagingItems.itemCount,
+                scrollbarWindowInsets = contentPadding
+                    .asWindowInsets()
+                    .only(WindowInsetsSides.Top)
+                    .union(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Vertical + WindowInsetsSides.End
+                        )
+                    ),
+                padding = PaddingValues(
+                    end = max(
+                        addPadding.calculateEndPadding(LocalLayoutDirection.current) - 12.dp,
+                        0.dp
+                    ) / 2
+                )
+            ) {
+                FileLazyVerticalGrid(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    uiState = fileLazyVerticalGridUiState,
+                    lazyPagingItems = lazyPagingItems,
+                    contentPadding = contentPadding.add(addPadding),
+                    onItemClick = { onAction(FolderContentsAction.File(it)) },
+                    onItemInfoClick = { onAction(FolderContentsAction.FileInfo(it)) },
+                    state = lazyGridState,
+                    emphasisPath = emphasisPath
+                )
+            }
         }
     }
 }
@@ -243,7 +257,6 @@ private fun PreviewFolderScreen() {
             onFileInfoSheetAction = {},
             onFolderTopAppBarAction = {},
             onFolderContentsAction = {},
-            onFolderFabAction = {}
         )
     }
 }
@@ -261,7 +274,6 @@ private fun PreviewFolderScreenEmpty() {
             onFileInfoSheetAction = {},
             onFolderTopAppBarAction = {},
             onFolderContentsAction = {},
-            onFolderFabAction = {}
         )
     }
 }

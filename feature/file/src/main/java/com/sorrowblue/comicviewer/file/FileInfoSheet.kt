@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
@@ -31,9 +31,12 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -44,13 +47,13 @@ import com.sorrowblue.comicviewer.file.section.FileInfoList
 import com.sorrowblue.comicviewer.file.section.FileInfoThumbnail
 import com.sorrowblue.comicviewer.file.section.SheetActionButtons
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffoldExtraPaneScope
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewCanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -115,7 +118,7 @@ private class FileKeyStateImpl(
 }
 
 @Composable
-fun CanonicalScaffoldExtraPaneScope.FileInfoSheet(
+fun FileInfoSheet(
     fileKey: File.Key,
     onAction: (FileInfoSheetNavigator) -> Unit,
     isOpenFolderEnabled: Boolean = false,
@@ -127,7 +130,7 @@ fun CanonicalScaffoldExtraPaneScope.FileInfoSheet(
 }
 
 @Composable
-fun CanonicalScaffoldExtraPaneScope.FileInfoSheet(
+fun FileInfoSheet(
     file: File,
     onAction: (FileInfoSheetNavigator) -> Unit,
     isOpenFolderEnabled: Boolean = false,
@@ -148,7 +151,7 @@ fun CanonicalScaffoldExtraPaneScope.FileInfoSheet(
 }
 
 @Composable
-internal fun CanonicalScaffoldExtraPaneScope.FileInfoSheet(
+internal fun FileInfoSheet(
     uiState: FileInfoUiState,
     onAction: (FileInfoSheetAction) -> Unit,
     modifier: Modifier = Modifier,
@@ -178,10 +181,13 @@ internal fun CanonicalScaffoldExtraPaneScope.FileInfoSheet(
                 SheetActionButtons(
                     uiState = uiState,
                     onAction = onAction,
-                    modifier = Modifier.padding(
-                        layoutDirection = LocalLayoutDirection.current,
-                        horizontal = contentPadding
-                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            layoutDirection = LocalLayoutDirection.current,
+                            horizontal = contentPadding
+                        )
+                        .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
                 )
                 FileInfoList(
                     file = file,
@@ -189,20 +195,24 @@ internal fun CanonicalScaffoldExtraPaneScope.FileInfoSheet(
                         layoutDirection = LocalLayoutDirection.current,
                         horizontal = contentPadding
                     )
+                        .padding(horizontal = 8.dp),
                 )
                 uiState.attribute?.let {
                     FileAttributeChips(
                         it,
-                        modifier = Modifier.padding(
-                            layoutDirection = LocalLayoutDirection.current,
-                            horizontal = contentPadding
-                        )
+                        modifier = Modifier
+                            .padding(
+                                layoutDirection = LocalLayoutDirection.current,
+                                horizontal = contentPadding
+                            )
+                            .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
                     )
                 }
-                Spacer(modifier = Modifier.size(contentPadding.calculateBottomPadding()))
-            }
-            if (scrollState.canScrollBackward) {
-                HorizontalDivider(modifier = Modifier.padding(top = contentPadding.calculateTopPadding()))
+                Spacer(
+                    modifier = Modifier.height(
+                        contentPadding.calculateBottomPadding() + ExtraPaneScaffoldDefaults.HorizontalPadding
+                    )
+                )
             }
         }
     }
@@ -226,26 +236,26 @@ private fun Modifier.padding(
 private fun PreviewFileInfoSheet(
     @PreviewParameter(FileInfoUiStateProvider::class) uiState: FileInfoUiState,
 ) {
-    PreviewTheme2 {
-        val screenState = rememberScrollState()
-        CanonicalScaffold(
-            navigator = rememberSupportingPaneScaffoldNavigator(
-                initialDestinationHistory = listOf(
-                    ThreePaneScaffoldDestinationItem(
-                        SupportingPaneScaffoldRole.Extra,
-                        uiState
-                    )
+    PreviewCanonicalScaffold(
+        navigator = rememberSupportingPaneScaffoldNavigator(
+            initialDestinationHistory = listOf(
+                ThreePaneScaffoldDestinationItem(
+                    SupportingPaneScaffoldRole.Extra,
+                    uiState
                 )
-            ),
-            extraPane = { content ->
-                FileInfoSheet(
-                    uiState = content,
-                    onAction = {},
-                    scrollState = screenState
-                )
-            }
-        ) {
+            )
+        ),
+        extraPane = { contentKey ->
+            val screenState = rememberScrollState()
+            val lazyPagingItems = PagingData.flowData(10) { BookThumbnail.from(fakeBookFile(it)) }
+            FileInfoSheet(
+                uiState = contentKey,
+                onAction = {},
+                scrollState = screenState,
+                lazyPagingItems = lazyPagingItems.collectAsLazyPagingItems()
+            )
         }
+    ) {
     }
 }
 
