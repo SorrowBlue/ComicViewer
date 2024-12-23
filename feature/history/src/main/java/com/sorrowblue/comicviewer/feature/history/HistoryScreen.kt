@@ -110,11 +110,12 @@ private fun HistoryScreen(
             HistoryTopAppBar(
                 onAction = onHistoryTopAppBarAction,
                 scrollBehavior = scrollBehavior,
+                scrollableState = lazyGridState
             )
         },
-        extraPane = { content ->
+        extraPane = { contentKey ->
             FileInfoSheet(
-                fileKey = content,
+                fileKey = contentKey,
                 onAction = onFileInfoSheetAction,
                 isOpenFolderEnabled = true
             )

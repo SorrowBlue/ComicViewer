@@ -38,7 +38,7 @@ import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
 
 /**
@@ -170,7 +170,7 @@ private fun GridFileIcon(file: File) {
 @Preview(widthDp = 200, apiLevel = 34)
 @Composable
 internal fun PreviewFileGrid() {
-    PreviewTheme2(showDeviceFrame = false) {
+    PreviewTheme {
         GridFile(
             file = fakeBookFile(),
             onClick = {},

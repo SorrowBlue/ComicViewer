@@ -84,8 +84,9 @@ private fun FavoriteListScreen(
     Scaffold(
         topBar = {
             FavoriteListAppBar(
+                onSettingsClick = onSettingsClick,
                 scrollBehavior = appBarScrollBehavior,
-                onSettingsClick = onSettingsClick
+                scrollableState = lazyListState
             )
         },
         floatingActionButton = {
