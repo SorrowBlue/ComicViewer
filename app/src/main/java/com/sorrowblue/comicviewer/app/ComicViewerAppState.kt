@@ -54,6 +54,9 @@ import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
 
+/**
+ * Comic viewer app state
+ */
 internal interface ComicViewerAppState : SaveableScreenState {
 
     val navController: NavHostController
@@ -65,6 +68,17 @@ internal interface ComicViewerAppState : SaveableScreenState {
     fun refreshAddOnList()
 }
 
+/**
+ * Remember comic viewer app state
+ *
+ * @param scope
+ * @param lifecycle
+ * @param navController
+ * @param mainViewModel
+ * @param navTabHandler
+ * @param viewModel
+ * @return
+ */
 @Composable
 internal fun rememberComicViewerAppState(
     scope: CoroutineScope = rememberCoroutineScope(),
@@ -87,6 +101,21 @@ internal fun rememberComicViewerAppState(
     )
 }
 
+/**
+ * Comic viewer app state impl
+ *
+ * @property savedStateHandle
+ * @property navController
+ * @property scope
+ * @property mainViewModel
+ * @property navTabHandler
+ * @property getNavigationHistoryUseCase
+ * @property manageDisplaySettingsUseCase
+ * @property getInstalledModulesUseCase
+ * @constructor
+ *
+ * @param lifecycle
+ */
 @SuppressLint("RestrictedApi")
 @OptIn(SavedStateHandleSaveableApi::class)
 private class ComicViewerAppStateImpl(
@@ -259,7 +288,17 @@ private class ComicViewerAppStateImpl(
     }
 }
 
-fun cancelJob(
+/**
+ * Cancel job
+ *
+ * @param scope
+ * @param waitTimeMillis
+ * @param onCancel
+ * @param action
+ * @receiver
+ * @receiver
+ */
+private fun cancelJob(
     scope: CoroutineScope,
     waitTimeMillis: Long,
     onCancel: () -> Unit,

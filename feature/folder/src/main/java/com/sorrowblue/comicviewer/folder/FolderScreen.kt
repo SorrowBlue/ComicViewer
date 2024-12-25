@@ -63,9 +63,9 @@ import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContai
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
-import com.sorrowblue.comicviewer.framework.ui.preview.flowEmptyData
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowEmptyData
 import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
 
 internal data class FolderScreenUiState(

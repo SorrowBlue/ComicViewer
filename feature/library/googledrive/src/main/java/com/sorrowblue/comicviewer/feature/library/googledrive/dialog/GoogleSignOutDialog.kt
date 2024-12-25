@@ -27,8 +27,7 @@ import com.sorrowblue.comicviewer.feature.library.googledrive.R
 import com.sorrowblue.comicviewer.feature.library.googledrive.navigation.GoogleDriveGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.nextLoremIpsum
-import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.nextLoremIpsum
 
 internal data class GoogleSignOutDialogUiState(
     val photoUrl: String = "",
@@ -74,7 +73,6 @@ private fun GoogleSignOutDialog(
             AsyncImage(
                 model = uiState.photoUrl,
                 contentDescription = null,
-                error = previewPlaceholder(),
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)

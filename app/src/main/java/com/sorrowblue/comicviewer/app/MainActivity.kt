@@ -25,6 +25,9 @@ import org.koin.compose.KoinApplication
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
+/**
+ * Main activity
+ */
 @AndroidEntryPoint
 internal class MainActivity : AppCompatActivity() {
 
@@ -57,6 +60,9 @@ internal class MainActivity : AppCompatActivity() {
     }
 }
 
+/**
+ * Start shrinking animation
+ */
 private fun SplashScreenViewProvider.startShrinkingAnimation() {
     kotlin.runCatching {
         ObjectAnimator.ofFloat(view, View.SCALE_X, 1f, 0f).apply {
@@ -74,6 +80,9 @@ private fun SplashScreenViewProvider.startShrinkingAnimation() {
     }.onFailure { remove() }
 }
 
+/**
+ * App module
+ */
 @Suppress("InjectDispatcher")
 private val appModule = module {
     single(named<IoDispatcher>()) { Dispatchers.IO }

@@ -38,13 +38,13 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.LocalDestinationScopeWi
 import com.sorrowblue.comicviewer.feature.bookshelf.info.LocalSnackbarHostState
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewCompliantNavigation
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeFolder
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeInternalStorage
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
-import com.sorrowblue.comicviewer.framework.ui.preview.flowEmptyData
-import com.sorrowblue.comicviewer.framework.ui.preview.flowLoadingData
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowEmptyData
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowLoadingData
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 

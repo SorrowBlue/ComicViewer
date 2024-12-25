@@ -35,8 +35,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFavorite
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
 data class FavoriteAddArgs(
     val bookshelfId: BookshelfId,

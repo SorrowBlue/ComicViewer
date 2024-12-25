@@ -38,12 +38,12 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewCanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeFolder
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeSmbServer
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold
 
 @Composable
 fun BookshelfInfoSheet(

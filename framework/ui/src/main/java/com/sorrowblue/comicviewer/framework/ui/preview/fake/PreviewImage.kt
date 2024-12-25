@@ -1,10 +1,11 @@
-package com.sorrowblue.comicviewer.framework.ui.preview
+package com.sorrowblue.comicviewer.framework.ui.preview.fake
 
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import coil3.Image
+import com.sorrowblue.comicviewer.framework.ui.R
 
 internal class PreviewImage(context: Context) : Image {
     private val bitmap =
@@ -24,6 +25,13 @@ internal class PreviewImage(context: Context) : Image {
     override fun draw(canvas: coil3.Canvas) {
         canvas.drawBitmap(bitmap, 0f, 0f, null)
     }
+
+    private val nextSampleAvatar
+        get() = avatarList[AvatarIndex++].apply {
+            if (AvatarIndex >= avatarList.size) {
+                AvatarIndex = 0
+            }
+        }
 
     private val Bitmap.allocationByteCountCompat: Int
         get() {
@@ -48,3 +56,24 @@ internal class PreviewImage(context: Context) : Image {
             else -> 4
         }
 }
+
+private var AvatarIndex = 0
+
+private val avatarList = listOf(
+    R.drawable.avatar_1,
+    R.drawable.avatar_2,
+    R.drawable.avatar_3,
+    R.drawable.avatar_4,
+    R.drawable.avatar_5,
+    R.drawable.avatar_6,
+    R.drawable.avatar_7,
+    R.drawable.avatar_8,
+    R.drawable.avatar_9,
+    R.drawable.avatar_10,
+    R.drawable.avatar_11,
+    R.drawable.avatar_12,
+    R.drawable.avatar_13,
+    R.drawable.avatar_14,
+    R.drawable.avatar_15,
+    R.drawable.avatar_16,
+)

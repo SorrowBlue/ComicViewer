@@ -44,11 +44,11 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.add
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewCanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewConfig
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
-import com.sorrowblue.comicviewer.framework.ui.preview.scratch
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 import com.sorrowblue.comicviewer.framework.ui.scrollbar.DraggableScrollbar
 import com.sorrowblue.comicviewer.framework.ui.scrollbar.rememberDraggableScroller
 import com.sorrowblue.comicviewer.framework.ui.scrollbar.scrollbarState
@@ -151,7 +151,7 @@ private fun LazyPagingColumnPreview(
             ) { index, item ->
                 when (type) {
                     is LazyPagingColumnType.List -> {
-                        Column(modifier = Modifier.scratch(Color.Red.copy(0.1f))) {
+                        Column(modifier = Modifier.scratch(Color.Red)) {
                             ListItem(
                                 headlineContent = { Text("List: $item") },
                                 supportingContent = { Text("supportingContent") }
@@ -163,7 +163,7 @@ private fun LazyPagingColumnPreview(
                     }
 
                     is LazyPagingColumnType.ListMedium -> {
-                        Card(modifier = Modifier.scratch(Color.Red.copy(0.1f))) {
+                        Card(modifier = Modifier.scratch(Color.Red)) {
                             ListItem(
                                 headlineContent = { Text(item) },
                                 supportingContent = { Text("supportingContent") },
@@ -173,7 +173,7 @@ private fun LazyPagingColumnPreview(
                     }
 
                     is LazyPagingColumnType.Grid -> {
-                        Card(modifier = Modifier.scratch(Color.Red.copy(0.1f))) {
+                        Card(modifier = Modifier.scratch(Color.Red)) {
                             Spacer(
                                 Modifier
                                     .fillMaxWidth()

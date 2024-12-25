@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 
 object ExtraPaneScaffoldDefaults {
     val HorizontalPadding = 24.dp
@@ -53,7 +54,7 @@ fun ExtraPaneScaffold(
         mutableStateOf(scaffoldDirective.maxHorizontalPartitions == 1)
     }
     Scaffold(
-        containerColor = if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainer,
+        containerColor = if (singlePane) LocalContainerColor.current else ComicTheme.colorScheme.surfaceContainer,
         topBar = {
             TopAppBar(
                 title = title,

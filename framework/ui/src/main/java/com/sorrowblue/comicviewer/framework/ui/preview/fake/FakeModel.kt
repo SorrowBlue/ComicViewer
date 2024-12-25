@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui.preview
+package com.sorrowblue.comicviewer.framework.ui.preview.fake
 
 import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -9,37 +9,6 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import kotlin.random.Random
-
-val LoremIpsum = listOf(
-    "Lorem ipsum dolor",
-    "Vivamus vitae sapien sodales",
-    "Pellentesque non justo faucibus",
-    "Donec ut eros",
-    "Donec venenatis nisl eget sapien lacinia",
-    "Fusce laoreet sapien vel nisi porta",
-    "Nullam vestibulum",
-    "Curabitur mollis eros",
-    "Nam quis eros quis risus",
-    "Nulla vehicula leo vel faucibus egestas",
-    "Vivamus vel mauris dignissim",
-    "Maecenas semper risus at imperdiet auctor",
-    "Praesent",
-    "Pellentesque dignissim",
-    "Suspendisse",
-    "Nam sit amet",
-    "Suspendisse",
-    "Vivamus pretium dui",
-    "Suspendisse eu ante",
-    "Nam ac nisl ac tellus pellentesque"
-)
-
-fun nextLoremIpsum() = LoremIpsum[LoremIpsumIndex++].also {
-    if (LoremIpsumIndex >= LoremIpsum.size) LoremIpsumIndex = 0
-}
-
-private var LoremIpsumIndex = 0
-
-private var size = 100L
 
 @OptIn(ExperimentalIdValue::class)
 fun fakeInternalStorage(bookshelfId: Int = 0, name: String = nextLoremIpsum()) =
@@ -80,9 +49,11 @@ fun fakeFolder(bookshelfId: BookshelfId = BookshelfId()) =
 
 fun fakeFavorite(favoriteId: Int = 0, exist: Boolean = Random(1).nextBoolean()) =
     Favorite(
-        @OptIn(ExperimentalIdValue::class) FavoriteId(favoriteId),
+        @OptIn(ExperimentalIdValue::class) (FavoriteId(favoriteId)),
         nextLoremIpsum(),
         Random(1).nextInt(5, 999),
         exist,
         Random(1).nextLong()
     )
+
+private var size = 100L
