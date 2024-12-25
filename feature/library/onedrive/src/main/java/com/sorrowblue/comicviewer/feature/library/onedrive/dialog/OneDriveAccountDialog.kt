@@ -30,7 +30,6 @@ import com.sorrowblue.comicviewer.feature.library.onedrive.R
 import com.sorrowblue.comicviewer.feature.library.onedrive.navigation.OneDriveGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
 import java.io.InputStream
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +82,6 @@ private fun OneDriveAccountDialog(
             AsyncImage(
                 model = inputStream,
                 contentDescription = null,
-                placeholder = previewPlaceholder(),
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)

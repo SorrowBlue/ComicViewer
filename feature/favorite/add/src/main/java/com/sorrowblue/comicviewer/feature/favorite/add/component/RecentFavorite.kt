@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.favorite.add.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,8 +22,7 @@ import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
-import com.sorrowblue.comicviewer.framework.ui.preview.previewPainter
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFavorite
 
 @Composable
 internal fun RecentFavorite(
@@ -46,19 +43,11 @@ internal fun RecentFavorite(
                 modifier = Modifier
                     .size(72.dp),
                 error = {
-                    if (LocalInspectionMode.current) {
-                        Image(
-                            painter = previewPainter(),
-                            contentDescription = null,
-                            contentScale = contentScale,
-                        )
-                    } else {
-                        Icon(
-                            imageVector = ComicIcons.Image,
-                            contentDescription = null,
-                            modifier = Modifier.wrapContentSize()
-                        )
-                    }
+                    Icon(
+                        imageVector = ComicIcons.Image,
+                        contentDescription = null,
+                        modifier = Modifier.wrapContentSize()
+                    )
                 }
             )
             if (favorite.exist) {

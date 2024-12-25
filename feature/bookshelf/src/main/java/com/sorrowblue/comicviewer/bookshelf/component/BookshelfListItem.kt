@@ -46,8 +46,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeFolder
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeSmbServer
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
 
 @Composable
 internal fun BookshelfListItem(

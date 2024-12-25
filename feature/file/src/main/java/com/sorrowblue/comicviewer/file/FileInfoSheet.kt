@@ -50,10 +50,10 @@ import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewCanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope

@@ -21,10 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewCompliantNavigation
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewConfig
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.scratch
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 
 @Composable
 internal fun AnimatedExtraPaneScaffold(
@@ -83,9 +83,9 @@ private fun AnimatedExtraPaneScaffoldPreview(
                     Box(
                         Modifier
                             .fillMaxSize()
-                            .scratch(Color.Green.copy(0.5f))
+                            .scratch(Color.Green)
                             .padding(it)
-                            .scratch(Color.Cyan.copy(0.5f))
+                            .scratch(Color.Cyan)
                     )
                 }
             },
@@ -94,9 +94,9 @@ private fun AnimatedExtraPaneScaffoldPreview(
                 Box(
                     Modifier
                         .fillMaxSize()
-                        .scratch(Color.Red.copy(0.5f))
+                        .scratch(Color.Red)
                         .padding(it)
-                        .scratch(Color.Blue.copy(0.5f))
+                        .scratch(Color.Blue)
                 )
             }
         }

@@ -24,7 +24,7 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeInternalStorage
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
 
 @Composable
 internal fun BookshelfImageCacheInfoItem(

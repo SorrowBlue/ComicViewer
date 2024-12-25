@@ -1,11 +1,8 @@
 package com.sorrowblue.comicviewer.favorite.section
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DropdownMenu
@@ -22,9 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
@@ -38,10 +33,6 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.ResponsiveLazyColumn
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
 
 internal sealed interface FavoriteListContentsAction {
     data class FavoriteClick(val favoriteId: FavoriteId) : FavoriteListContentsAction
@@ -115,19 +106,5 @@ internal fun FavoriteListContents(
                 }
             }
         }
-    }
-}
-
-@Composable
-@PreviewMultiScreen
-private fun FavoriteListContentsPreview() {
-    val lazyPagingItems =
-        PagingData.flowData { fakeFavorite(favoriteId = it) }.collectAsLazyPagingItems()
-    PreviewTheme2 {
-        FavoriteListContents(
-            lazyPagingItems = lazyPagingItems,
-            onAction = {},
-            contentPadding = WindowInsets.safeDrawing.asPaddingValues()
-        )
     }
 }

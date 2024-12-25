@@ -44,14 +44,14 @@ import com.sorrowblue.comicviewer.framework.designsystem.animation.fabEnter
 import com.sorrowblue.comicviewer.framework.designsystem.animation.fabExit
 import com.sorrowblue.comicviewer.framework.designsystem.animation.topAppBarAnimation
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.add
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewCompliantNavigation
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewConfig
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.scratch
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 import kotlinx.coroutines.launch
 
 @Composable
@@ -120,7 +120,7 @@ fun <T : Any> CanonicalScaffold(
             },
             snackbarHost = snackbarHost,
             contentWindowInsets = WindowInsets.safeDrawing,
-            containerColor = ComicTheme.colorScheme.surface,
+            containerColor = LocalContainerColor.current,
             modifier = modifier
         ) { contentPadding ->
             val navigationState = LocalNavigationState.current
@@ -218,9 +218,9 @@ private fun CanonicalScaffoldPreview(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxSize()
-                            .scratch(Color.Red.copy(0.25f))
+                            .scratch(Color.Red)
                             .padding(it)
-                            .scratch(Color.Blue.copy(0.25f))
+                            .scratch(Color.Blue)
                     ) {
                         Text("Extra pane body")
                     }
@@ -234,11 +234,11 @@ private fun CanonicalScaffoldPreview(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .scratch(Color.Red.copy(0.25f))
+                    .scratch(Color.Red)
                     .padding(contentPadding)
-                    .scratch(Color.Blue.copy(0.25f))
+                    .scratch(Color.Blue)
                     .padding(additionalPadding)
-                    .scratch(Color.Green.copy(0.25f))
+                    .scratch(Color.Green)
             ) {
                 Text("Main pane body")
             }

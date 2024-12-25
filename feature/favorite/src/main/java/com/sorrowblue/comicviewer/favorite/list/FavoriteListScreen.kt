@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.favorite.list
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -25,8 +27,12 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteListContents
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListContentsAction
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFavorite
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
 
 interface FavoriteListNavigator {
     fun onSettingsClick()
@@ -97,7 +103,7 @@ private fun FavoriteListScreen(
             )
         },
         contentWindowInsets = WindowInsets.safeDrawing,
-        containerColor = ComicTheme.colorScheme.surface,
+        containerColor = LocalContainerColor.current,
         modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         FavoriteListContents(
@@ -105,6 +111,22 @@ private fun FavoriteListScreen(
             onAction = onContentsAction,
             lazyListState = lazyListState,
             contentPadding = innerPadding,
+        )
+    }
+}
+
+@PreviewMultiScreen
+@Composable
+private fun FavoriteListScreenPreview() {
+    val lazyPagingItems =
+        PagingData.flowData { fakeFavorite(favoriteId = it) }.collectAsLazyPagingItems()
+    PreviewCompliantNavigation {
+        FavoriteListScreen(
+            lazyPagingItems = lazyPagingItems,
+            lazyListState = rememberLazyListState(),
+            onSettingsClick = {},
+            onCreateFavoriteClick = {},
+            onContentsAction = {}
         )
     }
 }

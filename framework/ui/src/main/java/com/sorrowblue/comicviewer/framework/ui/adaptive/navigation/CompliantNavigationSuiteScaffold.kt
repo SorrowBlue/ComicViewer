@@ -17,6 +17,7 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -30,11 +31,11 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewConfig
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewDevice
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.nextLoremIpsum
-import com.sorrowblue.comicviewer.framework.ui.preview.scratch
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.nextLoremIpsum
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewDevice
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 
 @Immutable
 sealed interface NavigationState {
@@ -90,7 +91,7 @@ fun NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo2(
  */
 @Composable
 fun CompliantNavigationSuiteScaffold(
-    navigationSuiteItems: androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope.() -> Unit,
+    navigationSuiteItems: NavigationSuiteScope.() -> Unit,
     modifier: Modifier = Modifier,
     navigationState: NavigationState =
         NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo2(currentWindowAdaptiveInfo()),
@@ -137,16 +138,14 @@ fun CompliantNavigationSuiteScaffold(
 @PreviewMultiScreen
 @Composable
 private fun CompliantNavigationSuiteScaffoldPreview(
-    @PreviewParameter(
-        PreviewConfigProvider::class
-    ) config: PreviewConfig,
+    @PreviewParameter(PreviewConfigProvider::class) config: PreviewConfig,
 ) {
     PreviewDevice(config = config) {
         CompliantNavigationSuiteScaffold(
             navigationSuiteItems = {
                 repeat(5) {
                     item(
-                        selected = it == 1,
+                        selected = it == 0,
                         onClick = {},
                         icon = { Icon(ComicIcons.Edit, null) },
                         label = { Text(nextLoremIpsum().take(8)) }
@@ -161,9 +160,9 @@ private fun CompliantNavigationSuiteScaffoldPreview(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .scratch(Color.Red.copy(0.5f))
+                        .scratch(Color.Red)
                         .padding(contentPadding)
-                        .scratch(Color.Blue.copy(0.5f))
+                        .scratch(Color.Blue)
                 )
             }
         }

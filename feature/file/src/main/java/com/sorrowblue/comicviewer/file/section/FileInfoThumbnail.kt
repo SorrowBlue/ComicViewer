@@ -25,7 +25,7 @@ import com.sorrowblue.comicviewer.file.component.FolderThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
 @Composable
 internal fun FileInfoThumbnail(
