@@ -15,6 +15,11 @@ import com.sorrowblue.comicviewer.feature.search.navgraphs.SearchNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navgraphs.SettingsNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
 
+/**
+ * Main graph
+ *
+ * @constructor Create empty Main graph
+ */
 @NavHostGraph
 internal annotation class MainGraph {
 

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui.preview
+package com.sorrowblue.comicviewer.framework.ui.preview.fake
 
 import androidx.paging.LoadState
 import androidx.paging.LoadStates

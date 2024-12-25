@@ -42,7 +42,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 
 /**
  * ファイル情報をリストアイテムで表示する

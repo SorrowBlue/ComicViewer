@@ -27,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
 import java.io.InputStream
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +68,6 @@ internal fun OneDriveTopAppBar(
         actions = {
             AsyncImage(
                 model = inputStream,
-                placeholder = previewPlaceholder(),
                 contentDescription = null,
                 modifier = Modifier
                     .size(48.dp)

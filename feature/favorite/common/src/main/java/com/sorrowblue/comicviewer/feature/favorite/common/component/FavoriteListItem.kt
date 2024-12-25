@@ -31,7 +31,7 @@ import com.sorrowblue.comicviewer.feature.favorite.common.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFavorite
 
 @Composable
 fun FavoriteListItem(

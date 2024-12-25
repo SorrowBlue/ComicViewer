@@ -22,7 +22,7 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigato
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeInternalStorage
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
 import kotlin.math.floor
 
 internal data class ThumbnailScreenUiState(
