@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.drawscope.inset
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 
 @Composable
 fun Modifier.scratch(color: Color, strokeWidth: Dp = 1.dp, alpha: Float = 0.25f): Modifier {
@@ -57,7 +58,7 @@ fun Modifier.scratch(color: Color, strokeWidth: Dp = 1.dp, alpha: Float = 0.25f)
             )
 
             // Draw diagonal line
-            val max = Math.round(size.width / 100)
+            val max = (size.width / 100).roundToInt()
             with(density) {
                 for (i in 0..max) {
                     drawLine(

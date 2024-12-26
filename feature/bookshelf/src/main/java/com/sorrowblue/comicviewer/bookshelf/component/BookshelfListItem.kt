@@ -57,7 +57,7 @@ internal fun BookshelfListItem(
     modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints {
-        if (maxWidth > 360.dp) {
+        if (this.maxWidth > 360.dp) {
             BookshelfRowItem(bookshelfFolder, onClick, onInfoClick, modifier)
         } else {
             BookshelfColumnItem(bookshelfFolder, onClick, onInfoClick, modifier)

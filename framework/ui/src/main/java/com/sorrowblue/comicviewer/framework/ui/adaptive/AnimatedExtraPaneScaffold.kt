@@ -26,6 +26,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNa
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 
+// This declaration is opt-in and its usage should be marked with @androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi or @OptIn(markerClass = androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi.class)
 @Composable
 internal fun AnimatedExtraPaneScaffold(
     navigator: ThreePaneScaffoldNavigator<*>,
