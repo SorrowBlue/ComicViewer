@@ -61,7 +61,7 @@ fun ScrollbarBox(
     scrollbarWindowInsets: WindowInsets = WindowInsets.safeDrawing.only(
         WindowInsetsSides.Vertical + WindowInsetsSides.End
     ),
-    padding: PaddingValues = PaddingValues(horizontal = 2.dp),
+    padding: PaddingValues = PaddingValues(horizontal = 4.dp),
     alignment: Alignment = Alignment.CenterEnd,
     content: @Composable () -> Unit,
 ) {

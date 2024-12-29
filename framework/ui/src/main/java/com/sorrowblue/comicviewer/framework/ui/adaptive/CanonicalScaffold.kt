@@ -47,7 +47,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
-import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
@@ -140,7 +140,7 @@ fun <T : Any> CanonicalScaffold(
                 )
             }
             CompositionLocalProvider(LocalCanonicalScaffoldBound provides scaffoldBound) {
-                content(contentPadding.add(PaddingValues(bottom = fabHeight)))
+                content(contentPadding + PaddingValues(bottom = fabHeight))
             }
         }
     }
