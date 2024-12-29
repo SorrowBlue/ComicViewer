@@ -30,9 +30,7 @@ import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.animateMainContentPaddingValues
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
-import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
@@ -154,15 +152,12 @@ private fun SearchScreen(
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
-        val additionalPadding by animateMainContentPaddingValues(
-            true
-        )
         SearchContents(
             uiState = uiState.searchContentsUiState,
             lazyPagingItems = lazyPagingItems,
             lazyListState = lazyGridState,
             onAction = onSearchContentsAction,
-            contentPadding = contentPadding.add(additionalPadding),
+            contentPadding = contentPadding
         )
     }
 }

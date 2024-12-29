@@ -156,18 +156,13 @@ private fun FavoriteContents(
                 .padding(contentPadding)
         )
     } else {
-        val padding = if (isCompactWindowClass()) {
-            contentPadding.copy(start = 0.dp, end = 0.dp)
-        } else {
-            contentPadding
-        }
         FileLazyVerticalGrid(
             uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
             state = lazyGridState,
             lazyPagingItems = lazyPagingItems,
             onItemClick = { onAction(HistoryContentsAction.Book(it)) },
             onItemInfoClick = { onAction(HistoryContentsAction.FileInfo(it)) },
-            contentPadding = padding,
+            contentPadding = contentPadding,
             modifier = Modifier.fillMaxSize()
         )
     }
