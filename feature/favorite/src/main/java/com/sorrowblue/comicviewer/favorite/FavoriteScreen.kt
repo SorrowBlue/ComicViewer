@@ -40,7 +40,6 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.calculatePaddingMargins
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import kotlinx.parcelize.Parcelize
 
@@ -175,14 +174,12 @@ private fun FavoriteContents(
                 .padding(contentPadding)
         )
     } else {
-        val (paddings, margins) = calculatePaddingMargins(contentPadding)
         FileLazyVerticalGrid(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(margins),
+                .fillMaxSize(),
             uiState = fileLazyVerticalGridUiState,
             lazyPagingItems = lazyPagingItems,
-            contentPadding = paddings,
+            contentPadding = contentPadding,
             onItemClick = { onAction(FavoriteContentsAction.File(it)) },
             onItemInfoClick = { onAction(FavoriteContentsAction.FileInfo(it)) },
             state = lazyGridState

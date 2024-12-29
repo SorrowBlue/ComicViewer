@@ -1,7 +1,9 @@
 package com.sorrowblue.comicviewer.framework.ui.adaptive
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -48,7 +50,8 @@ fun ExtraPaneScaffold(
     actions: @Composable (RowScope.() -> Unit)? = null,
     scaffoldDirective: PaneScaffoldDirective =
         calculatePaneScaffoldDirective(currentWindowAdaptiveInfo()),
-    content: @Composable (PaddingValues) -> Unit,
+    scrollState: ScrollState? = null,
+    content: @Composable ColumnScope.(PaddingValues) -> Unit,
 ) {
     val singlePane by remember(scaffoldDirective.maxHorizontalPartitions) {
         mutableStateOf(scaffoldDirective.maxHorizontalPartitions == 1)
@@ -56,22 +59,29 @@ fun ExtraPaneScaffold(
     Scaffold(
         containerColor = if (singlePane) LocalContainerColor.current else ComicTheme.colorScheme.surfaceContainer,
         topBar = {
-            TopAppBar(
-                title = title,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainer
-                ),
-                actions = {
-                    IconButton(onClick = onCloseClick) {
-                        Icon(ComicIcons.Close, null)
+            Column {
+                TopAppBar(
+                    title = title,
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainer
+                    ),
+                    actions = {
+                        IconButton(onClick = onCloseClick) {
+                            Icon(ComicIcons.Close, null)
+                        }
+                    },
+                    windowInsets = if (singlePane) {
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+                    } else {
+                        WindowInsets(0)
+                    },
+                )
+                if (scrollState != null) {
+                    if (scrollState.canScrollBackward) {
+                        HorizontalDivider()
                     }
-                },
-                windowInsets = if (singlePane) {
-                    WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
-                } else {
-                    WindowInsets(0)
-                },
-            )
+                }
+            }
         },
         contentWindowInsets = WindowInsets.safeDrawing,
         modifier = if (singlePane) {

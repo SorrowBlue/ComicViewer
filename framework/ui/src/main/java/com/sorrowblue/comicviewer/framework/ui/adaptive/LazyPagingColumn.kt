@@ -43,7 +43,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
-import com.sorrowblue.comicviewer.framework.ui.add
+import com.sorrowblue.comicviewer.framework.ui.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold
@@ -75,6 +75,7 @@ fun <T : Any> LazyPagingColumn(
     lazyPagingItems: LazyPagingItems<T>,
     type: LazyPagingColumnType,
     modifier: Modifier = Modifier,
+    autoPadding: Boolean = true,
     state: LazyGridState = rememberLazyGridState(),
     contentPadding: PaddingValues = PaddingValues(),
     fillWidth: Boolean = type is LazyPagingColumnType.List,
@@ -82,10 +83,15 @@ fun <T : Any> LazyPagingColumn(
     contentType: (index: Int) -> Any? = { type },
     itemContent: @Composable (LazyGridItemScope.(index: Int, item: T) -> Unit),
 ) {
+    val padding = if (autoPadding) {
+        animateMainContentPaddingValues(type == LazyPagingColumnType.List).value
+    } else {
+        PaddingValues()
+    }
     LazyVerticalGrid(
         columns = type.columns,
         state = state,
-        contentPadding = contentPadding,
+        contentPadding = contentPadding + padding,
         verticalArrangement = if (fillWidth) Arrangement.Top else Arrangement.spacedBy(ComicTheme.dimension.padding),
         horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding),
         modifier = modifier
@@ -145,7 +151,7 @@ private fun LazyPagingColumnPreview(
                 state = state,
                 lazyPagingItems = lazyPagingItems,
                 type = type,
-                contentPadding = it.add(addPadding),
+                contentPadding = it + addPadding,
                 fillWidth = fillWidth,
                 modifier = Modifier.fillMaxSize()
             ) { index, item ->

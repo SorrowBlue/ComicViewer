@@ -31,8 +31,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoDat
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ResponsiveLazyColumn
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
-import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.plus
 
 internal sealed interface FavoriteListContentsAction {
     data class FavoriteClick(val favoriteId: FavoriteId) : FavoriteListContentsAction
@@ -60,7 +60,7 @@ internal fun FavoriteListContents(
         val isCompact = isCompactWindowClass()
         ResponsiveLazyColumn(
             state = lazyListState,
-            contentPadding = contentPadding.add(PaddingValues(bottom = 88.dp)),
+            contentPadding = contentPadding + PaddingValues(bottom = 88.dp),
             modifier = modifier
         ) {
             items(

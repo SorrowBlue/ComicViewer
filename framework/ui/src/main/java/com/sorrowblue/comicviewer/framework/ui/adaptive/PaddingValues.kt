@@ -55,32 +55,24 @@ fun PaddingValues.copyWhenZero(
 }
 
 @Composable
-fun animatePaddingValuesAsState(
-    targetValue: PaddingValues,
-    animationSpec: AnimationSpec<PaddingValues> = paddingValuesDefaultSpring,
-    label: String = "PaddingValuesAnimation",
-    finishedListener: ((PaddingValues) -> Unit)? = null,
+fun animateMainContentPaddingValues(
+    ignore: Boolean = false,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
+    animationSpec: AnimationSpec<PaddingValues> = paddingValuesDefaultSpring,
+    finishedListener: ((PaddingValues) -> Unit)? = null,
 ): State<PaddingValues> {
-    return animateValueAsState(
-        targetValue,
-        paddingValuesToVector(layoutDirection),
-        animationSpec,
-        label = label,
-        finishedListener = finishedListener
-    )
-}
-
-@Composable
-fun animateMainContentPaddingValues(ignore: Boolean = false): State<PaddingValues> {
     val bound = LocalCanonicalScaffoldBound.current
-    return animatePaddingValuesAsState(
-        PaddingValues(
+    return animateValueAsState(
+        targetValue = PaddingValues(
             start = if (ignore || !bound.start) 0.dp else ComicTheme.dimension.margin,
             top = if (ignore || !bound.top) 0.dp else ComicTheme.dimension.margin,
             end = if (ignore || !bound.end) 0.dp else ComicTheme.dimension.margin,
             bottom = if (ignore || !bound.bottom) 0.dp else ComicTheme.dimension.margin
-        )
+        ),
+        typeConverter = paddingValuesToVector(layoutDirection),
+        animationSpec = animationSpec,
+        label = "PaddingValuesAnimation",
+        finishedListener = finishedListener
     )
 }
 
