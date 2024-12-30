@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.file.component.FileThumbnailAsyncImage
-import com.sorrowblue.comicviewer.file.component.FolderThumbnailsCarousel
+import com.sorrowblue.comicviewer.file.component.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
@@ -36,7 +36,7 @@ internal fun FileInfoThumbnail(
     val navigationState = LocalNavigationState.current
     Box(modifier = modifier) {
         if (lazyPagingItems != null) {
-            FolderThumbnailsCarousel(
+            FileThumbnailsCarousel(
                 lazyPagingItems = lazyPagingItems,
                 modifier = Modifier.height(186.dp)
             )
