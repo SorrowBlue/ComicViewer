@@ -25,6 +25,12 @@ import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraphDepen
 import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialGraphDependencies
 
+/**
+ * Main dependencies
+ *
+ * @param onRestoreComplete
+ * @receiver
+ */
 @Composable
 internal fun DependenciesContainerBuilder<*>.MainDependencies(
     onRestoreComplete: () -> Unit,

@@ -35,7 +35,6 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.ramcosta.composedestinations.scope.DestinationScope
 import com.ramcosta.composedestinations.wrapper.DestinationWrapper
-import com.sorrowblue.comicviewer.app.component.BuildTypeStatusBar
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffold
 import com.sorrowblue.comicviewer.app.navigation.MainDependencies
 import com.sorrowblue.comicviewer.domain.model.AddOn
@@ -63,11 +62,19 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import logcat.logcat
 
+/**
+ * Comic viewer app
+ *
+ * @param state
+ */
 @Destination<RootGraph>(
     start = true,
     visibility = CodeGenVisibility.INTERNAL,
     wrappers = [RootScreenWrapper::class]
 )
+/**
+ *
+ */
 @Composable
 internal fun ComicViewerApp(
     state: ComicViewerAppState = rememberComicViewerAppState(),
@@ -93,8 +100,6 @@ internal fun ComicViewerApp(
             },
         )
     }
-    BuildTypeStatusBar(BuildConfig.BUILD_TYPE)
-
     rememberSlideDistance().let { slideDistance ->
         LaunchedEffect(slideDistance) {
             DestinationTransitions.slideDistance = slideDistance
@@ -103,6 +108,14 @@ internal fun ComicViewerApp(
     LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME, onEvent = state::refreshAddOnList)
 }
 
+/**
+ * Root screen wrapper view model
+ *
+ * @property loadSettingsUseCase
+ * @constructor
+ *
+ * @param manageSecuritySettingsUseCase
+ */
 @HiltViewModel
 internal class RootScreenWrapperViewModel @Inject constructor(
     manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
@@ -122,6 +135,11 @@ internal class RootScreenWrapperViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 }
 
+/**
+ * Root screen wrapper
+ *
+ * @constructor Create empty Root screen wrapper
+ */
 internal object RootScreenWrapper : DestinationWrapper {
 
     @Composable
@@ -175,6 +193,11 @@ internal object RootScreenWrapper : DestinationWrapper {
     }
 }
 
+/**
+ * Find nav graph
+ *
+ * @return
+ */
 fun AddOn.findNavGraph(): AddOnNavGraph? {
     return when (this) {
         AddOn.Document -> null
@@ -185,6 +208,10 @@ fun AddOn.findNavGraph(): AddOnNavGraph? {
     }
 }
 
+/**
+ * Error alert dialog
+ *
+ */
 @Preview
 @Composable
 private fun ErrorAlertDialog() {

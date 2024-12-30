@@ -14,6 +14,6 @@ internal class BookshelfViewModel @Inject constructor(
 ) : ViewModel() {
 
     val pagingDataFlow =
-        pagingBookshelfFolderUseCase.execute(PagingBookshelfFolderUseCase.Request(PagingConfig(20)))
+        pagingBookshelfFolderUseCase(PagingBookshelfFolderUseCase.Request(PagingConfig(20)))
             .cachedIn(viewModelScope)
 }

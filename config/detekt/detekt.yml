@@ -66,8 +66,9 @@ Compose:
     active: true
     allowedCompositionLocals:
       - 'LocalDimension'
-      - 'LocalComponentColors'
+      - 'LocalContainerColor'
       - 'LocalNavigationState'
+      - 'LocalCanonicalScaffoldBound'
       - 'LocalDestinationScopeWithNoDependencies'
       - 'LocalSnackbarHostState'
     # You can optionally define a list of CompositionLocals that are allowed here

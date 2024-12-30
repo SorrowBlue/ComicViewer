@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 abstract class PagingUseCase<R : BaseRequest, S : Any> {
 
-    fun execute(request: R): Flow<PagingData<S>> {
+    operator fun invoke(request: R): Flow<PagingData<S>> {
         return run(request)
     }
 

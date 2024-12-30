@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -29,28 +29,32 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.BookshelfR
 import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.NotificationRequestDialogDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navtype.notificationRequestResultEnumNavType
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfBookThumbnailsCarousel
-import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoActionButtons
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoActionChips
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContent
+import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BottomActions
 import com.sorrowblue.comicviewer.feature.bookshelf.notification.NotificationRequestResult
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalExtraPaneScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeFolder
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeSmbServer
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold
 
 @Composable
-fun BookshelfInfoSheet(bookshelfId: BookshelfId, navigator: BookshelfInfoSheetNavigator) {
+fun BookshelfInfoSheet(
+    bookshelfId: BookshelfId,
+    navigator: BookshelfInfoSheetNavigator,
+) {
     BookshelfInfoSheetWrapper(bookshelfId = bookshelfId) {
-        BookshelfInfoSheet(bookshelfFolder = it, navigator = navigator)
+        BookshelfInfoSheet(
+            bookshelfFolder = it,
+            navigator = navigator,
+        )
     }
 }
 
@@ -111,15 +115,22 @@ private fun BookshelfInfoSheet(
     onAction: (BookshelfInfoSheetAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    CanonicalExtraPaneScaffold(
+    ExtraPaneScaffold(
         title = { Text(text = stringResource(id = R.string.bookshelf_info_title)) },
         onCloseClick = { onAction(BookshelfInfoSheetAction.Close) },
+        actions = {
+            BottomActions(
+                enabled = uiState.enabled,
+                onEditClick = { onAction(BookshelfInfoSheetAction.Edit) },
+                onRemoveClick = { onAction(BookshelfInfoSheetAction.Remove) },
+            )
+        },
         modifier = modifier,
     ) {
         Column(
             Modifier
-                .fillMaxHeight()
-                .padding(top = it.calculateTopPadding())
+                .fillMaxSize()
+                .padding(it)
         ) {
             val scrollState = rememberScrollState()
             if (LocalNavigationState.current !is NavigationState.NavigationBar && scrollState.canScrollBackward) {
@@ -143,24 +154,10 @@ private fun BookshelfInfoSheet(
                     onReThumbnailsClick = { onAction(BookshelfInfoSheetAction.ThumbnailRegeneration) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 24.dp)
                 )
                 BookshelfInfoContent(bookshelf = uiState.bookshelf, folder = uiState.folder)
             }
-            if (scrollState.canScrollForward) {
-                HorizontalDivider()
-            }
-            BookshelfInfoActionButtons(
-                enabled = uiState.enabled,
-                onRemoveClick = { onAction(BookshelfInfoSheetAction.Remove) },
-                onEditClick = { onAction(BookshelfInfoSheetAction.Edit) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = ComicTheme.dimension.margin,
-                        vertical = ComicTheme.dimension.targetSpacing
-                    )
-            )
         }
     }
 }
@@ -168,33 +165,49 @@ private fun BookshelfInfoSheet(
 @Composable
 @PreviewMultiScreen
 private fun BookshelfInfoSheetPreview() {
-    PreviewTheme2 {
-        val lazyPagingItems =
-            PagingData.flowData { BookThumbnail.from(fakeBookFile(it)) }.collectAsLazyPagingItems()
-
-        val navigator = rememberSupportingPaneScaffoldNavigator(
-            initialDestinationHistory = listOf(
-                ThreePaneScaffoldDestinationItem(
-                    SupportingPaneScaffoldRole.Extra,
-                    BookshelfFolder(fakeSmbServer(), fakeFolder())
-                )
+    val navigator = rememberSupportingPaneScaffoldNavigator(
+        initialDestinationHistory = listOf(
+            ThreePaneScaffoldDestinationItem(
+                SupportingPaneScaffoldRole.Extra,
+                BookshelfFolder(fakeSmbServer(), fakeFolder())
             )
         )
-        CanonicalScaffold(
-            navigator = navigator,
-            extraPane = { content ->
-                BookshelfInfoSheet(
-                    uiState = BookshelfInfoSheetUiState(
-                        bookshelf = content.bookshelf,
-                        folder = content.folder,
-                        enabled = true,
-                        isProgressScan = false
-                    ),
-                    lazyPagingItems = lazyPagingItems,
-                    onAction = {},
-                )
-            },
-        ) {
+    )
+    PreviewCanonicalScaffold(
+        navigator = navigator,
+        extraPane = { contentKey ->
+            val lazyPagingItems =
+                PagingData.flowData { BookThumbnail.from(fakeBookFile(it)) }
+                    .collectAsLazyPagingItems()
+            BookshelfInfoSheet(
+                uiState = BookshelfInfoSheetUiState(
+                    bookshelf = contentKey.bookshelf,
+                    folder = contentKey.folder,
+                    enabled = true,
+                    isProgressScan = false
+                ),
+                lazyPagingItems = lazyPagingItems,
+                onAction = {},
+            )
         }
-    }
+    ) {}
+}
+
+@Composable
+@PreviewMultiScreen
+private fun BookshelfInfoSheet2Preview() {
+    val navigator = rememberSupportingPaneScaffoldNavigator(
+        initialDestinationHistory = listOf(
+            ThreePaneScaffoldDestinationItem(
+                SupportingPaneScaffoldRole.Extra,
+                BookshelfFolder(fakeSmbServer(), fakeFolder())
+            )
+        )
+    )
+    PreviewCanonicalScaffold(
+        navigator = navigator,
+        extraPane = {
+            LoadingScreen()
+        }
+    ) {}
 }

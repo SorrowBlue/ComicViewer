@@ -9,6 +9,15 @@ import com.sorrowblue.comicviewer.feature.library.navgraphs.LibraryNavGraph
 import com.sorrowblue.comicviewer.feature.readlater.navgraphs.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+/**
+ * Main screen tab
+ *
+ * @property navGraph
+ * @property label
+ * @property icon
+ * @property contentDescription
+ * @constructor Create empty Main screen tab
+ */
 enum class MainScreenTab(
     val navGraph: NavGraphSpec,
     val label: Int,

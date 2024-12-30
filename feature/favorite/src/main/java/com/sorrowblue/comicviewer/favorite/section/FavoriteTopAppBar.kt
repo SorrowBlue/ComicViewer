@@ -1,10 +1,10 @@
 package com.sorrowblue.comicviewer.favorite.section
 
 import android.os.Parcelable
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -43,7 +43,8 @@ internal sealed interface FavoriteTopAppBarAction {
 internal fun FavoriteTopAppBar(
     uiState: FavoriteAppBarUiState,
     onAction: (FavoriteTopAppBarAction) -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    scrollBehavior: TopAppBarScrollBehavior,
+    scrollableState: ScrollableState,
 ) {
     CanonicalTopAppBar(
         title = { Text(text = uiState.title) },
@@ -77,5 +78,6 @@ internal fun FavoriteTopAppBar(
             }
         },
         scrollBehavior = scrollBehavior,
+        scrollableState = scrollableState
     )
 }

@@ -1,11 +1,26 @@
 package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.union
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 
-fun WindowInsets.nonZero(insets: WindowInsets): WindowInsets = NonZeroInsets(this, insets)
+fun LayoutDirection.WindowInsets(
+    start: Dp = 0.dp,
+    top: Dp = 0.dp,
+    end: Dp = 0.dp,
+    bottom: Dp = 0.dp,
+): WindowInsets {
+    return when (this) {
+        LayoutDirection.Ltr -> WindowInsets(left = start, top = top, right = end, bottom = bottom)
+        LayoutDirection.Rtl -> WindowInsets(left = end, top = top, right = start, bottom = bottom)
+    }
+}
+
+infix fun WindowInsets.union(insets: WindowInsets): WindowInsets = this.union(insets)
 
 @Stable
 private class NonZeroInsets(

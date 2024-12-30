@@ -40,8 +40,9 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySett
 import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 
 /**
  * ファイル情報をリストアイテムで表示する
@@ -76,7 +77,7 @@ fun ListFile(
                     modifier = Modifier
                         .size(64.dp)
                         .clip(CardDefaults.shape)
-                        .background(ComicTheme.colorScheme.surfaceContainerHigh)
+                        .background(ComicTheme.colorScheme.imageBackground(ListItemDefaults.containerColor))
                 )
             } else {
                 Box(
@@ -159,7 +160,8 @@ fun ListFileCard(
     filterQuality: FilterQuality,
     modifier: Modifier = Modifier,
 ) {
-    Card(onClick = onClick, modifier = modifier) {
+    val colors = CardDefaults.cardColors()
+    Card(onClick = onClick, colors = colors, modifier = modifier) {
         ListItem(
             leadingContent = {
                 if (showThumbnail) {
@@ -170,7 +172,7 @@ fun ListFileCard(
                         modifier = Modifier
                             .size(64.dp)
                             .clip(CardDefaults.shape)
-                            .background(ComicTheme.colorScheme.surfaceContainerHigh)
+                            .background(ComicTheme.colorScheme.imageBackground(colors.containerColor))
                     )
                 } else {
                     Box(

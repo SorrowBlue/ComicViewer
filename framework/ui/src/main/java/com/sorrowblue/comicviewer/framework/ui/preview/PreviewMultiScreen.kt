@@ -8,30 +8,31 @@ import androidx.compose.ui.tooling.preview.Preview
     AnnotationTarget.FUNCTION
 )
 @Preview(
-    name = "Phone",
+    name = "1 Phone - Portrait",
     group = "Phone",
-    device = "spec:parent=pixel_8",
+    device = "spec:parent=pixel_9",
     showBackground = true,
     apiLevel = 34
 )
 @Preview(
-    name = "Phone - Landscape",
+    name = "2 Phone - Landscape",
     group = "Phone",
-    device = "spec:parent=pixel_8,orientation=landscape",
+    device = "spec:parent=pixel_9,orientation=landscape",
     showBackground = true,
     apiLevel = 34
 )
 @Preview(
-    name = "Unfolded Foldable",
+    name = "3 Tablet - Landscape",
+    group = "Tablet",
+    device = "id:pixel_tablet",
     showBackground = true,
-    apiLevel = 34,
-    device = "spec:width=673dp,height=841dp"
+    apiLevel = 34
 )
-@Preview(name = "Tablet", device = "id:pixel_tablet", showBackground = true, apiLevel = 34)
 @Preview(
-    name = "Desktop",
+    name = "3 Tablet - Portrait",
+    group = "Tablet",
+    device = "spec:parent=pixel_tablet,orientation=portrait",
     showBackground = true,
-    apiLevel = 34,
-    device = "id:desktop_medium"
+    apiLevel = 34
 )
 annotation class PreviewMultiScreen

@@ -12,6 +12,24 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.ui.graphics.TransformOrigin
 import com.sorrowblue.comicviewer.framework.designsystem.theme.MotionTokens
 
+fun fabEnter() = fadeIn(
+    animationSpec = tween(
+        durationMillis = MotionTokens.DurationLong2,
+        delayMillis = 0,
+        easing = MotionTokens.EasingEmphasizedInterpolator
+    ),
+    initialAlpha = 0f
+)
+
+fun fabExit() = fadeOut(
+    animationSpec = tween(
+        durationMillis = MotionTokens.DurationShort3,
+        delayMillis = 0,
+        easing = MotionTokens.EasingEmphasizedAccelerateInterpolator
+    ),
+    targetAlpha = 0f
+)
+
 fun AnimatedContentTransitionScope<*>.fabAnimation(): ContentTransform =
     fadeIn(
         animationSpec = tween(

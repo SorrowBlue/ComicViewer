@@ -24,7 +24,7 @@ internal class BookshelfInfoSheetViewModel @Inject constructor(
         if (bookshelfThumbnailPagingDataFlow?.first == id) {
             bookshelfThumbnailPagingDataFlow?.second!!
         } else {
-            pagingBookshelfBookUseCase.execute(
+            pagingBookshelfBookUseCase(
                 PagingBookshelfBookUseCase.Request(id, PagingConfig(10))
             ).cachedIn(viewModelScope).also {
                 bookshelfThumbnailPagingDataFlow = id to it
