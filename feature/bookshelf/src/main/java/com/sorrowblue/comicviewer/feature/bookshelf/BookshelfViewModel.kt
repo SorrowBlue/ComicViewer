@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.bookshelf
+package com.sorrowblue.comicviewer.feature.bookshelf
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

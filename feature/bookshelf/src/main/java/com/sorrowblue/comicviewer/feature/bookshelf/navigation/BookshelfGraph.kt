@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.bookshelf.navigation
+package com.sorrowblue.comicviewer.feature.bookshelf.navigation
 
 import com.ramcosta.composedestinations.annotation.ExternalDestination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
