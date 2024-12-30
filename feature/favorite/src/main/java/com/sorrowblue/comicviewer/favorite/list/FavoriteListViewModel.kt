@@ -16,13 +16,7 @@ internal class FavoriteListViewModel @Inject constructor(
     val deleteFavoriteUseCase: DeleteFavoriteUseCase,
 ) : ViewModel() {
 
-    val pagingDataFlow =
-        pagingFavoriteUseCase.execute(
-            PagingFavoriteUseCase.Request(
-                PagingConfig(20),
-                BookshelfId(),
-                ""
-            )
-        )
-            .cachedIn(viewModelScope)
+    val pagingDataFlow = pagingFavoriteUseCase(
+        PagingFavoriteUseCase.Request(PagingConfig(20), BookshelfId(), "")
+    ).cachedIn(viewModelScope)
 }

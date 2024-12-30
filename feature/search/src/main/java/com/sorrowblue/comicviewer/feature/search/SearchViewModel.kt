@@ -29,7 +29,7 @@ internal class SearchViewModel @Inject constructor(
             SearchCondition.Period.None,
             SortType.Name(true)
         )
-    val pagingDataFlow = pagingQueryFileUseCase.execute(
+    val pagingDataFlow = pagingQueryFileUseCase(
         PagingQueryFileUseCase.Request(PagingConfig(100), args.bookshelfId) { searchCondition }
     ).cachedIn(viewModelScope)
 }

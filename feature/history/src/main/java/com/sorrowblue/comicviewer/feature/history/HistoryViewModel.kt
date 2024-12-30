@@ -15,7 +15,7 @@ internal class HistoryViewModel @Inject constructor(
     val clearAllHistoryUseCase: ClearAllHistoryUseCase,
 ) : ViewModel() {
 
-    val pagingDataFlow = pagingHistoryBookUseCase
-        .execute(PagingHistoryBookUseCase.Request(PagingConfig(20)))
-        .cachedIn(viewModelScope)
+    val pagingDataFlow =
+        pagingHistoryBookUseCase(PagingHistoryBookUseCase.Request(PagingConfig(20)))
+            .cachedIn(viewModelScope)
 }

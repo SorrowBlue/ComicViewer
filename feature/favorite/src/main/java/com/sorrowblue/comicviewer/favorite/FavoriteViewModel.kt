@@ -24,7 +24,7 @@ internal class FavoriteViewModel @Inject constructor(
 
     private val args = FavoriteScreenDestination.argsFrom(savedStateHandle)
 
-    val pagingDataFlow = pagingFavoriteFileUseCase
-        .execute(PagingFavoriteFileUseCase.Request(PagingConfig(20), (args.favoriteId)))
-        .cachedIn(viewModelScope)
+    val pagingDataFlow = pagingFavoriteFileUseCase(
+        PagingFavoriteFileUseCase.Request(PagingConfig(20), args.favoriteId)
+    ).cachedIn(viewModelScope)
 }
