@@ -12,16 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
+import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 
 @Composable
-internal fun FolderThumbnailsCarousel(
-    lazyPagingItems: LazyPagingItems<BookThumbnail>,
+fun FileThumbnailsCarousel(
+    lazyPagingItems: LazyPagingItems<out FileThumbnail>,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     carouselState: CarouselState = rememberCarouselState(itemCount = lazyPagingItems::itemCount),
 ) {
     val navigationState = LocalNavigationState.current
@@ -29,7 +29,7 @@ internal fun FolderThumbnailsCarousel(
         state = carouselState,
         preferredItemWidth = ItemWidth,
         itemSpacing = ItemSpacing,
-        contentPadding = PaddingValues(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
+        contentPadding = contentPadding,
         modifier = modifier
     ) { index ->
         if (0 < lazyPagingItems.itemCount) {
