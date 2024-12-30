@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.bookshelf
+package com.sorrowblue.comicviewer.feature.bookshelf
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState

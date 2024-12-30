@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.bookshelf.section
+package com.sorrowblue.comicviewer.feature.bookshelf.section
 
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.material3.Text

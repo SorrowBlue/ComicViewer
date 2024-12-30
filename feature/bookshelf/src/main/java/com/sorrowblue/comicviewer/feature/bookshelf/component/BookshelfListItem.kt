@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.bookshelf.component
+package com.sorrowblue.comicviewer.feature.bookshelf.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background

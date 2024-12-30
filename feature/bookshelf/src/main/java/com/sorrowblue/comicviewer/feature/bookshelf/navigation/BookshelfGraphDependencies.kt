@@ -1,10 +1,10 @@
-package com.sorrowblue.comicviewer.bookshelf.navigation
+package com.sorrowblue.comicviewer.feature.bookshelf.navigation
 
 import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navGraph
-import com.sorrowblue.comicviewer.bookshelf.BookshelfScreenNavigator
+import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenNavigator
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.file.Book

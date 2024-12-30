@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.bookshelf.component
+package com.sorrowblue.comicviewer.feature.bookshelf.component
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides

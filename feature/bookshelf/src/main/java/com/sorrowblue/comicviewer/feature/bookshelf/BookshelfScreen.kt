@@ -1,6 +1,5 @@
-package com.sorrowblue.comicviewer.bookshelf
+package com.sorrowblue.comicviewer.feature.bookshelf
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHost
@@ -24,17 +23,15 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
-import com.ramcosta.composedestinations.scope.DestinationScope
-import com.ramcosta.composedestinations.wrapper.DestinationWrapper
-import com.sorrowblue.comicviewer.bookshelf.component.BookshelfFab
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraph
-import com.sorrowblue.comicviewer.bookshelf.section.BookshelfAppBar
-import com.sorrowblue.comicviewer.bookshelf.section.BookshelfMainSheet
+import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfFab
+import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfGraph
+import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfAppBar
+import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfMainSheet
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoSheet
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoSheetNavigator
-import com.sorrowblue.comicviewer.feature.bookshelf.info.LocalDestinationScopeWithNoDependencies
+import com.sorrowblue.comicviewer.feature.bookshelf.info.DefaultDestinationScopeWrapper
 import com.sorrowblue.comicviewer.feature.bookshelf.info.LocalSnackbarHostState
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
@@ -55,22 +52,9 @@ internal interface BookshelfScreenNavigator : BookshelfInfoSheetNavigator {
     fun onEditClick(bookshelfId: BookshelfId)
 }
 
-object BookshelfScreenWrapper : DestinationWrapper {
-    @Composable
-    override fun <T> DestinationScope<T>.Wrap(
-        @SuppressLint(
-            "ComposableLambdaParameterNaming"
-        ) screenContent: @Composable () -> Unit,
-    ) {
-        CompositionLocalProvider(LocalDestinationScopeWithNoDependencies provides this) {
-            screenContent()
-        }
-    }
-}
-
 @Destination<BookshelfGraph>(
     start = true,
-    wrappers = [BookshelfScreenWrapper::class],
+    wrappers = [DefaultDestinationScopeWrapper::class],
     visibility = CodeGenVisibility.INTERNAL
 )
 @Composable
