@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -56,6 +57,7 @@ fun ExtraPaneScaffold(
     val singlePane by remember(scaffoldDirective.maxHorizontalPartitions) {
         mutableStateOf(scaffoldDirective.maxHorizontalPartitions == 1)
     }
+    val scrollBehavior = if (singlePane) TopAppBarDefaults.pinnedScrollBehavior() else null
     Scaffold(
         containerColor = if (singlePane) LocalContainerColor.current else ComicTheme.colorScheme.surfaceContainer,
         topBar = {
@@ -75,8 +77,9 @@ fun ExtraPaneScaffold(
                     } else {
                         WindowInsets(0)
                     },
+                    scrollBehavior = scrollBehavior
                 )
-                if (scrollState != null) {
+                if (scrollState != null && scrollBehavior == null) {
                     if (scrollState.canScrollBackward) {
                         HorizontalDivider()
                     }
@@ -84,8 +87,8 @@ fun ExtraPaneScaffold(
             }
         },
         contentWindowInsets = WindowInsets.safeDrawing,
-        modifier = if (singlePane) {
-            modifier
+        modifier = if (scrollBehavior != null) {
+            modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         } else {
             val marginWindowInsets = with(LocalLayoutDirection.current) {
                 with(ComicTheme.dimension) {
