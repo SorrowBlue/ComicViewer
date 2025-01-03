@@ -96,7 +96,7 @@ private class BookshelfEditScreenStateImpl(
 
     fun fetch(bookshelfId: BookshelfId) {
         scope.launch {
-            delay(2000)
+            delay(250)
             getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId)).first().fold(
                 onSuccess = {
                     when (val bookshelf = it.bookshelf) {

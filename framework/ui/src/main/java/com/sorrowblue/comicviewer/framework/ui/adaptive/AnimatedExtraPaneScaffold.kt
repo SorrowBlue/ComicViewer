@@ -13,6 +13,7 @@ import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
+import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.NavigableSupportingPaneScaffold
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
@@ -26,7 +27,6 @@ import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNa
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 
-// This declaration is opt-in and its usage should be marked with @androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi or @OptIn(markerClass = androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi.class)
 @Composable
 internal fun AnimatedExtraPaneScaffold(
     navigator: ThreePaneScaffoldNavigator<*>,
@@ -36,6 +36,7 @@ internal fun AnimatedExtraPaneScaffold(
 ) {
     NavigableSupportingPaneScaffold(
         navigator = navigator,
+        defaultBackBehavior = BackNavigationBehavior.PopUntilScaffoldValueChange,
         mainPane = {
             AnimatedPane(
                 modifier = if (navigator.scaffoldDirective.maxHorizontalPartitions != 1 && navigator.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
