@@ -16,13 +16,11 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 @Composable
 internal fun RowScope.BottomActions(
-    enabled: Boolean,
     onRemoveClick: () -> Unit,
     onEditClick: () -> Unit,
 ) {
     OutlinedButton(
         onClick = onRemoveClick,
-        enabled = enabled,
         contentPadding = ButtonDefaults.ButtonWithIconContentPadding
     ) {
         Icon(imageVector = ComicIcons.Delete, contentDescription = null)
@@ -31,7 +29,6 @@ internal fun RowScope.BottomActions(
     }
     FilledTonalButton(
         onClick = onEditClick,
-        enabled = enabled,
         contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
     ) {
         Icon(imageVector = ComicIcons.Edit, contentDescription = null)

@@ -10,10 +10,10 @@
     <string name="bookshelf_info_btn_remove_thumbnail">Remove thumbnail</string>
     <string name="bookshelf_info_btn_edit">Edit</string>
     <string name="bookshelf_info_btn_remove">Remove</string>
-    <string name="bookshelf_info_btn_scan">Scan file</string>
-    <string name="bookshelf_info_btn_regenerate_thumbnails">Regenerate thumbnails</string>
+    <string name="bookshelf_info_btn_scan_file">Scan file</string>
+    <string name="bookshelf_info_btn_scan_thumbnail">Scan thumbnail</string>
     <string name="bookshelf_info_label_bookshelf_type">Bookshelf type</string>
-    <string name="bookshelf_info_msg_remove">“%1$s” has been deleted.</string>
+    <string name="bookshelf_info_msg_remove">You deleted the bookshelf</string>
     <string name="bookshelf_info_title_scan">scanning bookshelf</string>
 
     <string name="bookshelf_info_label_auth_method">Authentication method</string>

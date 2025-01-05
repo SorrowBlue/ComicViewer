@@ -36,10 +36,7 @@ internal fun FileInfoThumbnail(
     val navigationState = LocalNavigationState.current
     Box(modifier = modifier) {
         if (lazyPagingItems != null) {
-            FileThumbnailsCarousel(
-                lazyPagingItems = lazyPagingItems,
-                modifier = Modifier.height(186.dp)
-            )
+            FileThumbnailsCarousel(lazyPagingItems = lazyPagingItems)
         } else {
             FileThumbnailAsyncImage(
                 fileThumbnail = FileThumbnail.from(file),

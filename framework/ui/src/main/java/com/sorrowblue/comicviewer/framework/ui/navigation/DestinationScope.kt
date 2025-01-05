@@ -1,6 +1,6 @@
-package com.sorrowblue.comicviewer.feature.bookshelf.info
+package com.sorrowblue.comicviewer.framework.ui.navigation
 
-import androidx.compose.material3.SnackbarHostState
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -14,8 +14,6 @@ import com.ramcosta.composedestinations.wrapper.DestinationWrapper
 val LocalDestinationScope =
     compositionLocalOf<DestinationScope<*>?> { null }
 
-val LocalSnackbarHostState = compositionLocalOf { SnackbarHostState() }
-
 @Composable
 inline fun <reified D : DestinationSpec, R> resultRecipient(
     resultNavType: DestinationsNavType<in R>,
@@ -28,7 +26,11 @@ object DefaultDestinationScopeWrapper : DestinationScopeWrapper
 
 interface DestinationScopeWrapper : DestinationWrapper {
     @Composable
-    override fun <T> DestinationScope<T>.Wrap(screenContent: @Composable () -> Unit) {
+    override fun <T> DestinationScope<T>.Wrap(
+        @SuppressLint(
+            "ComposableLambdaParameterNaming"
+        ) screenContent: @Composable () -> Unit,
+    ) {
         CompositionLocalProvider(LocalDestinationScope provides this) {
             screenContent()
         }

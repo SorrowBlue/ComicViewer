@@ -53,8 +53,8 @@ internal class RegenerateThumbnailsWorker @AssistedInject constructor(
             logcat { "catch: ${e.asLog()}" }
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("本棚のスキャン")
-                    .setContentText("スキャンはキャンセルされました。")
+                    .setContentTitle("サムネイルのスキャン")
+                    .setContentText("サムネイルのスキャンはキャンセルされました。")
                     .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(R.drawable.ic_sync_cancel_24dp)
                     .setOngoing(false)
@@ -78,7 +78,7 @@ internal class RegenerateThumbnailsWorker @AssistedInject constructor(
         return regenerateThumbnailsUseCase(useCaseRequest).first().fold({
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("本棚のスキャンが完了しました")
+                    .setContentTitle("サムネイルのスキャンが完了しました")
                     .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(R.drawable.ic_sync_done_24dp)
                     .setOngoing(false)

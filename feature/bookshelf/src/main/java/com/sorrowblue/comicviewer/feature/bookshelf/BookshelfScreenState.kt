@@ -26,7 +26,7 @@ internal interface BookshelfScreenState {
 
     fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder)
     fun onNavClick()
-    fun back()
+    fun onSheetCloseClick()
 }
 
 @Composable
@@ -62,7 +62,7 @@ private class BookshelfScreenStateImpl(
         }
     }
 
-    override fun back() {
+    override fun onSheetCloseClick() {
         scope.launch {
             navigator.navigateBack()
         }

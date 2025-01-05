@@ -8,7 +8,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -23,18 +22,17 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
+import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfFab
+import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoSheet
+import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoSheetNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfAppBar
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfMainSheet
-import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoSheet
-import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoSheetNavigator
-import com.sorrowblue.comicviewer.feature.bookshelf.info.DefaultDestinationScopeWrapper
-import com.sorrowblue.comicviewer.feature.bookshelf.info.LocalSnackbarHostState
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.navigation.DefaultDestinationScopeWrapper
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
@@ -49,7 +47,6 @@ internal interface BookshelfScreenNavigator : BookshelfInfoSheetNavigator {
     fun onSettingsClick()
     fun onFabClick()
     fun onBookshelfClick(bookshelfId: BookshelfId, path: String)
-    fun onEditClick(bookshelfId: BookshelfId)
 }
 
 @Destination<BookshelfGraph>(
@@ -72,25 +69,12 @@ internal fun BookshelfScreen(
         onBookshelfClick = navigator::onBookshelfClick,
         onBookshelfInfoClick = state::onBookshelfInfoClick,
     ) { contentKey ->
-        CompositionLocalProvider(LocalSnackbarHostState provides state.snackbarHostState) {
-            val currentNavigator = remember(navigator) {
-                object : BookshelfInfoSheetNavigator {
-                    override fun notificationRequest() = navigator.notificationRequest()
-
-                    override fun edit(id: BookshelfId) = navigator.edit(id)
-
-                    override fun remove(bookshelfId: BookshelfId) = navigator.remove(bookshelfId)
-
-                    override fun navigateBack() {
-                        state.back()
-                    }
-                }
-            }
-            BookshelfInfoSheet(
-                bookshelfId = contentKey,
-                navigator = currentNavigator,
-            )
-        }
+        BookshelfInfoSheet(
+            bookshelfId = contentKey,
+            onCloseClick = state::onSheetCloseClick,
+            navigator = navigator,
+            snackbarHostState = state.snackbarHostState,
+        )
     }
 
     NavTabHandler(onClick = state::onNavClick)
