@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.bookshelf.remove
+package com.sorrowblue.comicviewer.feature.bookshelf.delete
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.size
@@ -18,45 +18,46 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.info.R
-import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.nextLoremIpsum
 
-data class BookshelfRemoveDialogArgs(
+data class BookshelfDeleteScreenArgs(
     val bookshelfId: BookshelfId,
 )
 
 @Destination<ExternalModuleGraph>(
     style = DestinationStyle.Dialog::class,
-    navArgs = BookshelfRemoveDialogArgs::class
+    navArgs = BookshelfDeleteScreenArgs::class
 )
 @Composable
-internal fun BookshelfRemoveDialog(
-    navArgs: BookshelfRemoveDialogArgs,
+internal fun BookshelfDeleteScreen(
+    navArgs: BookshelfDeleteScreenArgs,
     destinationsNavigator: ResultBackNavigator<Boolean>,
-    state: BookshelfRemoveDialogState = rememberBookshelfRemoveDialogState(navArgs = navArgs),
+    state: BookshelfDeleteScreenState = rememberBookshelfDeleteScreenState(navArgs = navArgs),
 ) {
-    BookshelfRemoveDialog(
+    BookshelfDeleteScreen(
         uiState = state.uiState,
         onDismissRequest = destinationsNavigator::navigateBack,
         onDismissClick = { destinationsNavigator.navigateBack(false) },
-        onConfirmClick = state::remove
+        onConfirmClick = state::onConfirmClick
     )
-    LaunchedEventEffect(state.event) {
+    EventEffect(state.events) {
         when (it) {
-            BookshelfRemoveDialogEvent.RemoveSuccess -> destinationsNavigator.navigateBack(true)
+            BookshelfDeleteScreenEvent.RemoveSuccess -> destinationsNavigator.navigateBack(true)
         }
     }
 }
 
-internal data class BookshelfRemoveDialogUiState(
+internal data class BookshelfDeleteScreenUiState(
     val title: String = "",
     val isProcessing: Boolean = false,
 )
 
 @Composable
-private fun BookshelfRemoveDialog(
-    uiState: BookshelfRemoveDialogUiState,
+private fun BookshelfDeleteScreen(
+    uiState: BookshelfDeleteScreenUiState,
     onDismissRequest: () -> Unit,
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit,
@@ -64,10 +65,10 @@ private fun BookshelfRemoveDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(text = stringResource(id = R.string.bookshelf_info_title_remove))
+            Text(text = stringResource(id = R.string.bookshelf_info_delete_title))
         },
         text = {
-            Text(text = stringResource(id = R.string.bookshelf_info_text_remove, uiState.title))
+            Text(text = stringResource(id = R.string.bookshelf_info_delete_text, uiState.title))
         },
         confirmButton = {
             TextButton(onClick = onConfirmClick, enabled = !uiState.isProcessing) {
@@ -78,7 +79,7 @@ private fun BookshelfRemoveDialog(
                             modifier = Modifier.size(ButtonDefaults.IconSize),
                         )
                     } else {
-                        Text(stringResource(id = R.string.bookshelf_info_btn_remove))
+                        Text(stringResource(id = R.string.bookshelf_info_delete_btn_delete))
                     }
                 }
             }
@@ -101,10 +102,10 @@ private fun BookshelfRemoveDialog(
 
 @PreviewMultiScreen
 @Composable
-private fun BookshelfRemoveDialogPreview() {
+private fun BookshelfDeleteScreenPreview() {
     PreviewTheme {
-        BookshelfRemoveDialog(
-            uiState = BookshelfRemoveDialogUiState(),
+        BookshelfDeleteScreen(
+            uiState = BookshelfDeleteScreenUiState(title = nextLoremIpsum()),
             onDismissRequest = {},
             onDismissClick = {},
             onConfirmClick = {}

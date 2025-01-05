@@ -16,7 +16,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfScreen
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.destinations.BookshelfEditScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.BookshelfRemoveDialogDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.BookshelfDeleteScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.NotificationRequestDialogDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.destinations.BookshelfSelectionScreenDestination
@@ -83,7 +83,7 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
 
             override fun onRemoveClick(bookshelfId: BookshelfId) {
                 navigator.navigate(
-                    BookshelfRemoveDialogDestination(bookshelfId)
+                    BookshelfDeleteScreenDestination(bookshelfId)
                 )
             }
 

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.bookshelf.remove
+package com.sorrowblue.comicviewer.feature.bookshelf.delete
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -7,36 +7,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
-import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
-import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
+import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-internal sealed interface BookshelfRemoveDialogEvent {
-    data object RemoveSuccess : BookshelfRemoveDialogEvent
-}
-
-internal interface BookshelfRemoveDialogState : ScreenStateEvent<BookshelfRemoveDialogEvent> {
-    val uiState: BookshelfRemoveDialogUiState
-    fun remove()
-}
-
 @Composable
-internal fun rememberBookshelfRemoveDialogState(
-    navArgs: BookshelfRemoveDialogArgs,
+internal fun rememberBookshelfDeleteScreenState(
+    navArgs: BookshelfDeleteScreenArgs,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: BookshelfRemoveDialogViewModel = hiltViewModel(),
-): BookshelfRemoveDialogState {
+    viewModel: BookshelfDeleteViewModel = hiltViewModel(),
+): BookshelfDeleteScreenState {
     return remember {
-        BookshelfRemoveDialogStateImpl(
+        BookshelfDeleteScreenStateImpl(
             bookshelfInfoUseCase = viewModel.bookshelfInfoUseCase,
             scope = scope,
             navArgs = navArgs,
@@ -45,16 +35,26 @@ internal fun rememberBookshelfRemoveDialogState(
     }
 }
 
-private class BookshelfRemoveDialogStateImpl(
+internal sealed interface BookshelfDeleteScreenEvent {
+    data object RemoveSuccess : BookshelfDeleteScreenEvent
+}
+
+internal interface BookshelfDeleteScreenState {
+    val uiState: BookshelfDeleteScreenUiState
+    val events: EventFlow<BookshelfDeleteScreenEvent>
+    fun onConfirmClick()
+}
+
+private class BookshelfDeleteScreenStateImpl(
     bookshelfInfoUseCase: GetBookshelfInfoUseCase,
-    override val scope: CoroutineScope,
-    private val navArgs: BookshelfRemoveDialogArgs,
+    private val scope: CoroutineScope,
+    private val navArgs: BookshelfDeleteScreenArgs,
     private val removeBookshelfUseCase: RemoveBookshelfUseCase,
-) : BookshelfRemoveDialogState {
+) : BookshelfDeleteScreenState {
 
-    override val event = MutableSharedFlow<BookshelfRemoveDialogEvent>()
+    override val events = EventFlow<BookshelfDeleteScreenEvent>()
 
-    override var uiState by mutableStateOf(BookshelfRemoveDialogUiState())
+    override var uiState by mutableStateOf(BookshelfDeleteScreenUiState())
         private set
 
     init {
@@ -65,18 +65,20 @@ private class BookshelfRemoveDialogStateImpl(
             }.launchIn(scope)
     }
 
-    override fun remove() {
+    override fun onConfirmClick() {
         scope.launch {
             uiState = uiState.copy(isProcessing = true)
             delay(300)
-            removeBookshelfUseCase(RemoveBookshelfUseCase.Request(navArgs.bookshelfId)).fold(
-                onSuccess = {
-                    sendEvent(BookshelfRemoveDialogEvent.RemoveSuccess)
-                },
-                onError = {
+            when (removeBookshelfUseCase(RemoveBookshelfUseCase.Request(navArgs.bookshelfId))) {
+                is Resource.Error -> {
                     uiState = uiState.copy(isProcessing = false)
                 }
-            )
+
+                is Resource.Success -> {
+                    events.tryEmit(BookshelfDeleteScreenEvent.RemoveSuccess)
+                    uiState = uiState.copy(isProcessing = false)
+                }
+            }
         }
     }
 }
