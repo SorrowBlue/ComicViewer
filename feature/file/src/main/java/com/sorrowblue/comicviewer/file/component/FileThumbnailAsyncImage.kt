@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,6 +28,7 @@ import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import logcat.logcat
 
 @Composable
 fun FileThumbnailAsyncImage(
@@ -45,6 +47,9 @@ fun FileThumbnailAsyncImage(
     alignment: Alignment = Alignment.Center,
     contentScale: ContentScale = ContentScale.Fit,
 ) {
+    LaunchedEffect(fileThumbnail) {
+        logcat { "fileThumbnail: $fileThumbnail" }
+    }
     SubcomposeAsyncImage(
         model = fileThumbnail,
         contentDescription = null,

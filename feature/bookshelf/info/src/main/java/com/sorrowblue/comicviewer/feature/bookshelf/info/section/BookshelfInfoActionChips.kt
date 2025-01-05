@@ -22,10 +22,10 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun BookshelfInfoActionChips(
-    isProgressScan: Boolean,
-    enabled: Boolean,
-    onScanClick: () -> Unit,
-    onReThumbnailsClick: () -> Unit,
+    isScanningFile: Boolean,
+    isScanningThumbnail: Boolean,
+    onScanFileClick: () -> Unit,
+    onScanThumbnailClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FlowRow(
@@ -33,11 +33,11 @@ internal fun BookshelfInfoActionChips(
         modifier = modifier
     ) {
         AssistChip(
-            onClick = onScanClick,
-            enabled = enabled && !isProgressScan,
-            label = { Text(text = stringResource(id = R.string.bookshelf_info_btn_scan)) },
+            onClick = onScanFileClick,
+            enabled = !isScanningFile && !isScanningThumbnail,
+            label = { Text(text = stringResource(id = R.string.bookshelf_info_btn_scan_file)) },
             leadingIcon = {
-                if (isProgressScan) {
+                if (isScanningFile) {
                     CircularProgressIndicator(
                         strokeWidth = 2.dp,
                         modifier = Modifier.size(AssistChipDefaults.IconSize)
@@ -48,10 +48,19 @@ internal fun BookshelfInfoActionChips(
             }
         )
         AssistChip(
-            onClick = onReThumbnailsClick,
-            enabled = enabled,
-            label = { Text(text = stringResource(id = R.string.bookshelf_info_btn_regenerate_thumbnails)) },
-            leadingIcon = { Icon(imageVector = ComicIcons.ImageSync, contentDescription = null) }
+            onClick = onScanThumbnailClick,
+            enabled = !isScanningFile && !isScanningThumbnail,
+            label = { Text(text = stringResource(id = R.string.bookshelf_info_btn_scan_thumbnail)) },
+            leadingIcon = {
+                if (isScanningThumbnail) {
+                    CircularProgressIndicator(
+                        strokeWidth = 2.dp,
+                        modifier = Modifier.size(AssistChipDefaults.IconSize)
+                    )
+                } else {
+                    Icon(imageVector = ComicIcons.ImageSync, contentDescription = null)
+                }
+            }
         )
     }
 }

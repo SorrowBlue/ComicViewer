@@ -4,12 +4,12 @@ import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navGraph
-import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenNavigator
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.NavGraphs
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfFolderScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfScreenDestination
@@ -73,24 +73,19 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
                     BookshelfFolderScreenDestination(bookshelfId, path, null)
                 )
 
-            override fun onEditClick(bookshelfId: BookshelfId) =
-                navigator.navigate(BookshelfEditScreenDestination(BookshelfEditMode.Edit(bookshelfId)))
-
             override fun notificationRequest() {
                 navigator.navigate(NotificationRequestDialogDestination)
             }
 
-            override fun edit(id: BookshelfId) {
+            override fun onEditClick(id: BookshelfId) {
                 navigator.navigate(BookshelfEditScreenDestination(BookshelfEditMode.Edit(id)))
             }
 
-            override fun remove(bookshelfId: BookshelfId) {
+            override fun onRemoveClick(bookshelfId: BookshelfId) {
                 navigator.navigate(
                     BookshelfRemoveDialogDestination(bookshelfId)
                 )
             }
-
-            override fun navigateBack() = Unit
 
             override fun onSourceClick(bookshelfType: BookshelfType) {
                 navigator.navigate(

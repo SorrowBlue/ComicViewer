@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info
 
-import android.Manifest
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
@@ -16,21 +16,32 @@ interface NotificationPermissionRequest {
         when {
             ContextCompat.checkSelfPermission(
                 activity,
-                Manifest.permission.POST_NOTIFICATIONS
+                POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED -> action()
 
             ActivityCompat.shouldShowRequestPermissionRationale(
                 activity,
-                Manifest.permission.POST_NOTIFICATIONS
+                POST_NOTIFICATIONS
             ) -> showInContextUI()
 
             else -> launchNotification()
         }
     }
 
+    fun checkNotificationPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                activity,
+                POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            return true
+        }
+    }
+
     fun launchNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            permissionLauncher.launch(POST_NOTIFICATIONS)
         }
     }
 }
