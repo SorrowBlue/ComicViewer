@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.bookshelf.remove
+package com.sorrowblue.comicviewer.feature.bookshelf.delete
 
 import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class BookshelfRemoveDialogViewModel @Inject constructor(
+internal class BookshelfDeleteViewModel @Inject constructor(
     val removeBookshelfUseCase: RemoveBookshelfUseCase,
     val bookshelfInfoUseCase: GetBookshelfInfoUseCase,
 ) : ViewModel()
