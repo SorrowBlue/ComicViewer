@@ -146,7 +146,7 @@ slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.
 
 artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.2" }
 squareup-logcat = { group = "com.squareup.logcat", name = "logcat", version = "0.1" }
-squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.9.1" }
+squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.10.2" }
 
 squareup-okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version = "4.12.0" }
 fasterxml-jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version = "2.18.2" }
