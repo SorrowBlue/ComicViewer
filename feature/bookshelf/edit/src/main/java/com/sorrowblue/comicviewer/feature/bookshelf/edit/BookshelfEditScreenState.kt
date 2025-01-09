@@ -116,7 +116,7 @@ private class BookshelfEditScreenStateImpl(
                                     displayName = bookshelf.displayName,
                                     host = bookshelf.host,
                                     port = bookshelf.port,
-                                    path = it.folder.path.removeSurrounding("/"),
+                                    path = it.folder.path.removePrefix("/").removeSuffix("/"),
                                     auth = when (bookshelf.auth) {
                                         is SmbServer.Auth.Guest -> SmbEditScreenForm.Auth.Guest
                                         is SmbServer.Auth.UsernamePassword ->
@@ -149,7 +149,7 @@ private class BookshelfEditScreenStateImpl(
 
     override suspend fun onSubmit(form: BookshelfEditForm) {
         logcat { "onSubmit(form: $form)" }
-        delay(2000)
+        delay(300)
         val (bookshelf, path) = when (form) {
             is InternalStorageEditScreenForm ->
                 when (navArgs.editMode) {
