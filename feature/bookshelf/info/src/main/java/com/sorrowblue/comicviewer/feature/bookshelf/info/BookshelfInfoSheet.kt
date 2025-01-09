@@ -30,6 +30,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoMa
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BottomActions
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.ErrorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.LoadingContents
+import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.navigation.resultRecipient
@@ -40,7 +41,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold
 
 interface BookshelfInfoSheetNavigator {
-    fun notificationRequest()
+    fun notificationRequest(type: ScanType)
     fun onEditClick(id: BookshelfId)
     fun onRemoveClick(bookshelfId: BookshelfId)
 }

@@ -10,12 +10,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -30,7 +29,7 @@ internal fun rememberBookshelfDeleteScreenState(
             bookshelfInfoUseCase = viewModel.bookshelfInfoUseCase,
             scope = scope,
             navArgs = navArgs,
-            removeBookshelfUseCase = viewModel.removeBookshelfUseCase
+            updateDeletionFlagUseCase = viewModel.updateDeletionFlagUseCase
         )
     }
 }
@@ -49,7 +48,7 @@ private class BookshelfDeleteScreenStateImpl(
     bookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val scope: CoroutineScope,
     private val navArgs: BookshelfDeleteScreenArgs,
-    private val removeBookshelfUseCase: RemoveBookshelfUseCase,
+    private val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
 ) : BookshelfDeleteScreenState {
 
     override val events = EventFlow<BookshelfDeleteScreenEvent>()
@@ -59,17 +58,20 @@ private class BookshelfDeleteScreenStateImpl(
 
     init {
         bookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = navArgs.bookshelfId))
-            .mapNotNull { it.dataOrNull() }
             .onEach {
-                uiState = uiState.copy(title = it.bookshelf.displayName)
+                uiState = uiState.copy(title = it.dataOrNull()?.bookshelf?.displayName)
             }.launchIn(scope)
     }
 
     override fun onConfirmClick() {
+        uiState = uiState.copy(isProcessing = true)
         scope.launch {
-            uiState = uiState.copy(isProcessing = true)
             delay(300)
-            when (removeBookshelfUseCase(RemoveBookshelfUseCase.Request(navArgs.bookshelfId))) {
+            when (
+                updateDeletionFlagUseCase(
+                    UpdateDeletionFlagUseCase.Request(navArgs.bookshelfId, true)
+                )
+            ) {
                 is Resource.Error -> {
                     uiState = uiState.copy(isProcessing = false)
                 }

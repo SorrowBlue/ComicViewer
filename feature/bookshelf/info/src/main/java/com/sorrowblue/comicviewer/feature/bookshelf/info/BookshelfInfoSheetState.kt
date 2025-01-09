@@ -6,12 +6,13 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,9 +20,10 @@ import com.ramcosta.composedestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalCoroutineScope
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -46,13 +48,14 @@ internal fun rememberBookshelfInfoSheetState(
     bookshelfId: BookshelfId,
     snackbarHostState: SnackbarHostState,
     context: Context = LocalContext.current,
-    scope: CoroutineScope = rememberCoroutineScope(),
+    scope: CoroutineScope = LocalCoroutineScope.current,
     viewModel: BookshelfInfoSheetViewModel = hiltViewModel(),
 ): BookshelfInfoSheetState {
     val stateImpl = remember(bookshelfId) {
         BookshelfInfoSheetStateImpl(
             bookshelfId = bookshelfId,
             bookshelfInfoUseCase = viewModel.bookshelfInfoUseCase,
+            updateDeletionFlagUseCase = viewModel.updateDeletionFlagUseCase,
             context = context,
             snackbarHostState = snackbarHostState,
             scope = scope,
@@ -65,6 +68,7 @@ internal fun rememberBookshelfInfoSheetState(
 
 private class BookshelfInfoSheetStateImpl(
     bookshelfInfoUseCase: GetBookshelfInfoUseCase,
+    private val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
     private val bookshelfId: BookshelfId,
     private val context: Context,
     private val snackbarHostState: SnackbarHostState,
@@ -79,7 +83,6 @@ private class BookshelfInfoSheetStateImpl(
     init {
         bookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
             .onEach {
-                delay(250)
                 uiState = when (it) {
                     is Resource.Error -> BookshelfInfoSheetUiState.Error
                     is Resource.Success -> BookshelfInfoSheetUiState.Loaded(it.data)
@@ -108,10 +111,24 @@ private class BookshelfInfoSheetStateImpl(
             NavResult.Canceled -> Unit
             is NavResult.Value -> {
                 if (result.value) {
+                    showDeletionCompleteSnackbar()
                     events.tryEmit(BookshelfInfoSheetStateEvent.Back)
-                    scope.launch {
-                        snackbarHostState.showSnackbar(context.getString(R.string.bookshelf_info_msg_remove))
-                    }
+                }
+            }
+        }
+    }
+
+    private fun showDeletionCompleteSnackbar() {
+        scope.launch {
+            val snackbarResult = snackbarHostState.showSnackbar(
+                message = context.getString(R.string.bookshelf_info_msg_remove),
+                actionLabel = context.getString(R.string.bookshelf_info_label_undo),
+                duration = SnackbarDuration.Long
+            )
+            when (snackbarResult) {
+                SnackbarResult.Dismissed -> Unit
+                SnackbarResult.ActionPerformed -> {
+                    updateDeletionFlagUseCase(UpdateDeletionFlagUseCase.Request(bookshelfId, false))
                 }
             }
         }

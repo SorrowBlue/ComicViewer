@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,12 +23,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.work.Constraints
-import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OutOfQuotaPolicy
-import androidx.work.WorkManager
 import com.ramcosta.composedestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -37,11 +30,13 @@ import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.info.IntentLauncher
 import com.sorrowblue.comicviewer.feature.bookshelf.info.NotificationPermissionRequest
-import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.FileScanRequest
-import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.FileScanWorker
+import com.sorrowblue.comicviewer.feature.bookshelf.info.R
 import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.RegenerateThumbnailsWorker
+import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.ScanFileWorker
 import com.sorrowblue.comicviewer.feature.bookshelf.notification.NotificationRequestResult
+import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalCoroutineScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +49,7 @@ internal fun rememberBookshelfInfoMainContentsState(
     bookshelfFolder: BookshelfFolder,
     snackbarHostState: SnackbarHostState,
     context: Context = LocalContext.current,
-    scope: CoroutineScope = rememberCoroutineScope(),
+    scope: CoroutineScope = LocalCoroutineScope.current,
     viewModel: BookshelfInfoMainContentsViewModel = hiltViewModel(),
 ): BookshelfInfoMainContentsState {
     val stateImpl = remember(bookshelfFolder, viewModel) {
@@ -79,7 +74,6 @@ internal fun rememberBookshelfInfoMainContentsState(
 internal interface BookshelfInfoMainContentsState {
     val uiState: BookshelfInfoMainContentsUiState
     val pagingDataFlow: Flow<PagingData<BookThumbnail>>
-
     val events: EventFlow<BookshelfInfoMainContentsEvent>
 
     fun onScanFileClick()
@@ -94,6 +88,8 @@ private class BookshelfInfoMainContentsStateImpl(
     private val scope: CoroutineScope,
     override val pagingDataFlow: Flow<PagingData<BookThumbnail>>,
 ) : BookshelfInfoMainContentsState, NotificationPermissionRequest, IntentLauncher {
+
+    private lateinit var currentScanType: ScanType
 
     override val activity = context as Activity
 
@@ -111,36 +107,44 @@ private class BookshelfInfoMainContentsStateImpl(
         private set
 
     override fun onScanFileClick() {
-        requestType = NotificationRequestType.ScanFile
+        currentScanType = ScanType.File
         requestPermission(
             action = ::scanFile,
-            showInContextUI = { events.tryEmit(BookshelfInfoMainContentsEvent.ShowNotificationPermissionRationale) }
+            showInContextUI = {
+                events.tryEmit(
+                    BookshelfInfoMainContentsEvent.ShowNotificationPermissionRationale(
+                        ScanType.File
+                    )
+                )
+            }
         )
     }
 
     override fun onScanThumbnailClick() {
-        requestType = NotificationRequestType.ScanThumbnail
+        currentScanType = ScanType.Thumbnail
         requestPermission(
             action = ::scanThumbnail,
-            showInContextUI = { events.tryEmit(BookshelfInfoMainContentsEvent.ShowNotificationPermissionRationale) }
+            showInContextUI = {
+                events.tryEmit(
+                    BookshelfInfoMainContentsEvent.ShowNotificationPermissionRationale(
+                        ScanType.Thumbnail
+                    )
+                )
+            }
         )
     }
 
-    private var requestType: NotificationRequestType? = null
-
     fun onNotificationResult(result: Boolean) {
-        logcat { "onNotificationResult(result: $result) requestType: $requestType" }
+        logcat { "onNotificationResult(result: $result) notificationRequestType: $currentScanType" }
         if (result) {
-            // 通知権限が許可された
-            when (requestType ?: return) {
-                NotificationRequestType.ScanFile -> onScanFileClick()
-                NotificationRequestType.ScanThumbnail -> onScanThumbnailClick()
+            when (currentScanType) {
+                ScanType.File -> onScanFileClick()
+                ScanType.Thumbnail -> onScanThumbnailClick()
             }
         } else {
-            // 通知権限が許可されていない
-            when (requestType ?: return) {
-                NotificationRequestType.ScanFile -> scanFile()
-                NotificationRequestType.ScanThumbnail -> scanThumbnail()
+            when (currentScanType) {
+                ScanType.File -> scanFile()
+                ScanType.Thumbnail -> scanThumbnail()
             }
         }
     }
@@ -152,58 +156,44 @@ private class BookshelfInfoMainContentsStateImpl(
             is NavResult.Value -> when (result.value) {
                 NotificationRequestResult.Ok -> launchNotification()
                 NotificationRequestResult.Cancel -> Unit
-                NotificationRequestResult.NotAllowed -> when (requestType ?: return) {
-                    NotificationRequestType.ScanFile -> onScanFileClick()
-                    NotificationRequestType.ScanThumbnail -> onScanThumbnailClick()
+                NotificationRequestResult.NotAllowed -> when (currentScanType) {
+                    ScanType.File -> scanFile()
+                    ScanType.Thumbnail -> scanThumbnail()
                 }
             }
         }
     }
 
     private fun scanFile() {
-        scope.launch {
-            if (checkNotificationPermission()) {
-                snackbarHostState.showSnackbar("本棚のスキャンを開始します。")
-            } else {
-                val result = snackbarHostState.showSnackbar(
-                    "本棚のスキャンを開始します。\n通知を許可すると進捗が確認できます。",
-                    actionLabel = "通知設定",
-                    duration = SnackbarDuration.Long
-                )
-                when (result) {
-                    SnackbarResult.Dismissed -> Unit
-                    SnackbarResult.ActionPerformed -> {
-                        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                        }
-                        launchIntent(intent)
-                    }
-                }
-            }
-        }
-        val constraints = Constraints.Builder().apply {
-            // 有効なネットワーク接続が必要
-            setRequiredNetworkType(NetworkType.CONNECTED)
-            // ユーザーのデバイスの保存容量が少なすぎる場合以外
-            setRequiresStorageNotLow(true)
-        }.build()
-        val myWorkRequest = OneTimeWorkRequest.Builder(FileScanWorker::class.java)
-            .setConstraints(constraints)
-            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-            .setInputData(FileScanRequest(uiState.bookshelf.id).toWorkData())
-            .build()
-        WorkManager.getInstance(context)
-            .enqueueUniqueWork("scan", ExistingWorkPolicy.KEEP, myWorkRequest)
+        showSnackbar()
+        ScanFileWorker.enqueueUniqueWork(context, uiState.bookshelf.id)
     }
 
     private fun scanThumbnail() {
+        showSnackbar()
+        RegenerateThumbnailsWorker.enqueueUniqueWork(context, uiState.bookshelf.id)
+    }
+
+    private fun showSnackbar() {
         scope.launch {
             if (checkNotificationPermission()) {
-                snackbarHostState.showSnackbar("サムネイルのスキャンを開始します。")
+                snackbarHostState.showSnackbar(
+                    context.getString(
+                        when (currentScanType) {
+                            ScanType.File -> R.string.bookshelf_info_label_scanning_file
+                            ScanType.Thumbnail -> R.string.bookshelf_info_label_scanning_thumbnails
+                        }
+                    )
+                )
             } else {
                 val result = snackbarHostState.showSnackbar(
-                    "サムネイルのスキャンを開始します。\n通知を許可すると進捗が確認できます。",
-                    actionLabel = "通知設定",
+                    message = context.getString(
+                        when (currentScanType) {
+                            ScanType.File -> R.string.bookshelf_info_label_scanning_file_no_notification
+                            ScanType.Thumbnail -> R.string.bookshelf_info_label_scanning_thumbnails_no_notification
+                        }
+                    ),
+                    actionLabel = context.getString(R.string.bookshelf_info_label_notification_settings),
                     duration = SnackbarDuration.Long
                 )
                 when (result) {
@@ -217,24 +207,6 @@ private class BookshelfInfoMainContentsStateImpl(
                 }
             }
         }
-        val constraints = Constraints.Builder().apply {
-            // 有効なネットワーク接続が必要
-            setRequiredNetworkType(NetworkType.CONNECTED)
-            // ユーザーのデバイスの保存容量が少なすぎる場合以外
-            setRequiresStorageNotLow(true)
-        }.build()
-        val myWorkRequest = OneTimeWorkRequest.Builder(RegenerateThumbnailsWorker::class.java)
-            .setConstraints(constraints)
-            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-            .setInputData(FileScanRequest(uiState.bookshelf.id).toWorkData())
-            .build()
-        WorkManager.getInstance(context)
-            .enqueueUniqueWork("scan2", ExistingWorkPolicy.KEEP, myWorkRequest)
-    }
-
-    private enum class NotificationRequestType {
-        ScanFile,
-        ScanThumbnail,
     }
 }
 

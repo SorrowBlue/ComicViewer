@@ -23,7 +23,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.selection.section.BookshelfS
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewDevice
 
 interface BookshelfSelectionScreenNavigator {
     fun navigateUp()
@@ -101,7 +101,7 @@ private fun BookshelfSelectionScreen(
 @Preview
 @Composable
 private fun BookshelfSelectionScreenPreview() {
-    PreviewTheme {
+    PreviewDevice {
         BookshelfSelectionScreen(
             uiState = BookshelfSelectionScreenUiState(),
             onBackClick = {},

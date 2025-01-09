@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.Regenerate
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RegisterBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.RemoveBookshelfInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.ScanBookshelfInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.bookshelf.UpdateDeletionFlagInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.AddFavoriteFileInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.CreateFavoriteInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.favorite.DeleteFavoriteInteractor
@@ -51,6 +52,7 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsU
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.AddFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.CreateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
@@ -91,6 +93,9 @@ internal interface ViewModelBindsModule {
 
     @Binds
     fun bindRegisterBookshelfUseCase(interactor: RegisterBookshelfInteractor): RegisterBookshelfUseCase
+
+    @Binds
+    fun bindUpdateDeletionFlagUseCase(interactor: UpdateDeletionFlagInteractor): UpdateDeletionFlagUseCase
 
     @Binds
     fun bindScanBookshelfUseCase(interactor: ScanBookshelfInteractor): ScanBookshelfUseCase

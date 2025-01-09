@@ -25,7 +25,7 @@ internal fun RowScope.BottomActions(
     ) {
         Icon(imageVector = ComicIcons.Delete, contentDescription = null)
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-        Text(text = stringResource(id = R.string.bookshelf_info_btn_remove))
+        Text(text = stringResource(id = R.string.bookshelf_info_btn_delete))
     }
     FilledTonalButton(
         onClick = onEditClick,
