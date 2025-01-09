@@ -18,9 +18,10 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.NotificationRequestDialogDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.NotificationRequestScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navtype.notificationRequestResultEnumNavType
 import com.sorrowblue.comicviewer.feature.bookshelf.notification.NotificationRequestResult
+import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
 import com.sorrowblue.comicviewer.file.component.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
@@ -31,7 +32,7 @@ import com.sorrowblue.comicviewer.framework.ui.only
 import com.sorrowblue.comicviewer.framework.ui.plus
 
 internal sealed interface BookshelfInfoMainContentsEvent {
-    data object ShowNotificationPermissionRationale : BookshelfInfoMainContentsEvent
+    data class ShowNotificationPermissionRationale(val type: ScanType) : BookshelfInfoMainContentsEvent
 }
 
 data class BookshelfInfoMainContentsUiState(
@@ -44,11 +45,11 @@ data class BookshelfInfoMainContentsUiState(
 @Composable
 internal fun BookshelfInfoMainContents(
     bookshelfFolder: BookshelfFolder,
-    showNotificationPermissionRationale: () -> Unit,
+    showNotificationPermissionRationale: (ScanType) -> Unit,
     snackbarHostState: SnackbarHostState,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    notificationResultRecipient: ResultRecipient<NotificationRequestDialogDestination, NotificationRequestResult> =
+    notificationResultRecipient: ResultRecipient<NotificationRequestScreenDestination, NotificationRequestResult> =
         resultRecipient(notificationRequestResultEnumNavType),
     state: BookshelfInfoMainContentsState = rememberBookshelfInfoMainContentsState(
         bookshelfFolder = bookshelfFolder,
@@ -69,7 +70,9 @@ internal fun BookshelfInfoMainContents(
 
     EventEffect(state.events) {
         when (it) {
-            BookshelfInfoMainContentsEvent.ShowNotificationPermissionRationale -> showNotificationPermissionRationale()
+            is BookshelfInfoMainContentsEvent.ShowNotificationPermissionRationale -> showNotificationPermissionRationale(
+                it.type
+            )
         }
     }
 }

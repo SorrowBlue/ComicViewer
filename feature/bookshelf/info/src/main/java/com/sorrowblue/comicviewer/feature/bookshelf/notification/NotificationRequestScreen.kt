@@ -27,10 +27,19 @@ enum class NotificationRequestResult {
     NotAllowed,
 }
 
+enum class ScanType {
+    File,
+    Thumbnail,
+}
+
 @Destination<ExternalModuleGraph>(style = DestinationStyle.Dialog::class)
 @Composable
-internal fun NotificationRequestDialog(resultNavigator: ResultBackNavigator<NotificationRequestResult>) {
-    NotificationRequestDialog(
+internal fun NotificationRequestScreen(
+    type: ScanType,
+    resultNavigator: ResultBackNavigator<NotificationRequestResult>,
+) {
+    NotificationRequestScreen(
+        type = type,
         onDismissRequest = { resultNavigator.navigateBack(result = NotificationRequestResult.Cancel) },
         onConfirmClick = { resultNavigator.navigateBack(result = NotificationRequestResult.Ok) },
         onNotAllowedClick = { resultNavigator.navigateBack(result = NotificationRequestResult.NotAllowed) },
@@ -39,7 +48,8 @@ internal fun NotificationRequestDialog(resultNavigator: ResultBackNavigator<Noti
 }
 
 @Composable
-private fun NotificationRequestDialog(
+private fun NotificationRequestScreen(
+    type: ScanType,
     onDismissRequest: () -> Unit,
     onConfirmClick: () -> Unit,
     onNotAllowedClick: () -> Unit,
@@ -54,7 +64,7 @@ private fun NotificationRequestDialog(
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 TextButton(onClick = onNotAllowedClick) {
-                    Text(text = "Not allowed")
+                    Text(text = stringResource(R.string.bookshelf_info_notification_btn_not_allowed))
                 }
                 Spacer(modifier = Modifier.size(ComicTheme.dimension.targetSpacing))
                 Button(onClick = onConfirmClick) {
@@ -63,22 +73,27 @@ private fun NotificationRequestDialog(
             }
         },
         title = {
-            Text(text = stringResource(R.string.bookshelf_info_title_notification_permission))
+            Text(text = stringResource(R.string.bookshelf_info_notification_title))
         },
         icon = {
             Icon(imageVector = ComicIcons.Notifications, contentDescription = null)
         },
         text = {
-            Text(text = stringResource(R.string.bookshelf_info_text_notification_permission))
+            val id = when (type) {
+                ScanType.File -> R.string.bookshelf_info_notification_text_scan_file
+                ScanType.Thumbnail -> R.string.bookshelf_info_notification_text_scan_thumbnail
+            }
+            Text(text = stringResource(id))
         }
     )
 }
 
 @PreviewMultiScreen
 @Composable
-private fun PreviewNotificationRequestDialog() {
+private fun NotificationRequestScreenPreview() {
     PreviewTheme {
-        NotificationRequestDialog(
+        NotificationRequestScreen(
+            type = ScanType.File,
             onDismissRequest = {},
             onConfirmClick = {},
             onNotAllowedClick = {},

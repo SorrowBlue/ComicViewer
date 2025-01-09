@@ -15,6 +15,7 @@ internal data class BookshelfEntity(
     @ColumnInfo(ID) val id: BookshelfId,
     @ColumnInfo("display_name") val displayName: String,
     val type: Type,
+    @ColumnInfo(name = "deleted", defaultValue = "false") val deleted: Boolean,
     /*↓SmbServer↓*/
     val host: String,
     val port: Int,
@@ -31,6 +32,7 @@ internal data class BookshelfEntity(
                 id = model.id,
                 displayName = model.displayName,
                 type = Type.INTERNAL,
+                deleted = false,
                 host = "",
                 port = 0,
                 domain = "",
@@ -42,6 +44,7 @@ internal data class BookshelfEntity(
                 id = model.id,
                 displayName = model.displayName,
                 type = Type.SMB,
+                deleted = false,
                 host = model.host,
                 port = model.port,
                 domain = when (val auth = model.auth) {
@@ -62,6 +65,7 @@ internal data class BookshelfEntity(
                 id = model.id,
                 displayName = model.displayName,
                 type = Type.SHARE_CONTENTS,
+                deleted = false,
                 host = "",
                 port = 0,
                 domain = "",
@@ -77,12 +81,14 @@ internal data class BookshelfEntity(
         Type.INTERNAL -> InternalStorage(
             id = id,
             displayName = displayName,
-            fileCount = fileCount
+            fileCount = fileCount,
+            isDeleted = deleted
         )
 
         Type.SMB -> SmbServer(
             id = id,
             displayName = displayName,
+            isDeleted = deleted,
             host = host,
             port = port,
             auth = if (username.isEmpty()) {

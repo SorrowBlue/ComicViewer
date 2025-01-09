@@ -16,7 +16,7 @@ import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteFileEnti
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEntity
 
-internal const val DATABASE_VERSION = 5
+internal const val DATABASE_VERSION = 6
 
 @Database(
     entities = [BookshelfEntity::class, FileEntity::class, FavoriteEntity::class, FavoriteFileEntity::class, ReadLaterFileEntity::class],
@@ -26,6 +26,7 @@ internal const val DATABASE_VERSION = 5
         AutoMigration(2, 3),
         AutoMigration(3, 4),
         AutoMigration(4, 5),
+        AutoMigration(5, 6),
     ]
 )
 @TypeConverters(PasswordConverters::class)

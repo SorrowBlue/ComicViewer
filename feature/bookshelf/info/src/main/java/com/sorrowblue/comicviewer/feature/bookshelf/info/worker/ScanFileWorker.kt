@@ -8,12 +8,19 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
+import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
@@ -29,7 +36,7 @@ import logcat.logcat
 import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 
 @HiltWorker
-internal class FileScanWorker @AssistedInject constructor(
+internal class ScanFileWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
@@ -44,9 +51,10 @@ internal class FileScanWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
-        val request = FileScanRequest.fromWorkData(inputData) ?: return Result.failure()
+        @OptIn(ExperimentalIdValue::class)
+        val bookshelfId = BookshelfId(inputData.getInt(BOOKSHELF_ID, 0))
         val bookshelfInfo =
-            getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(request.bookshelfId))
+            getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
                 .first().dataOrNull() ?: return Result.failure()
         setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, "", true))
         return try {
@@ -135,5 +143,25 @@ internal class FileScanWorker @AssistedInject constructor(
             notification,
             ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
         )
+    }
+
+    companion object {
+        const val BOOKSHELF_ID = "BOOKSHELF_ID"
+
+        fun enqueueUniqueWork(context: Context, bookshelfId: BookshelfId) {
+            val constraints = Constraints.Builder().apply {
+                // 有効なネットワーク接続が必要
+                setRequiredNetworkType(NetworkType.CONNECTED)
+                // ユーザーのデバイスの保存容量が少なすぎる場合以外
+                setRequiresStorageNotLow(true)
+            }.build()
+            val myWorkRequest = OneTimeWorkRequest.Builder(ScanFileWorker::class.java)
+                .setConstraints(constraints)
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .setInputData(workDataOf(BOOKSHELF_ID to bookshelfId.value))
+                .build()
+            WorkManager.getInstance(context)
+                .enqueueUniqueWork("scan", ExistingWorkPolicy.KEEP, myWorkRequest)
+        }
     }
 }

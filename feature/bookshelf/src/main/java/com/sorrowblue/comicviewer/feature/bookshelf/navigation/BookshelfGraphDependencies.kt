@@ -17,7 +17,8 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.destinations.BookshelfEditScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.BookshelfDeleteScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.NotificationRequestDialogDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.NotificationRequestScreenDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.destinations.BookshelfSelectionScreenDestination
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
@@ -73,8 +74,8 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
                     BookshelfFolderScreenDestination(bookshelfId, path, null)
                 )
 
-            override fun notificationRequest() {
-                navigator.navigate(NotificationRequestDialogDestination)
+            override fun notificationRequest(type: ScanType) {
+                navigator.navigate(NotificationRequestScreenDestination(type))
             }
 
             override fun onEditClick(id: BookshelfId) {

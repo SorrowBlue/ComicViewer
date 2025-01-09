@@ -47,12 +47,17 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
+import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+
+val LocalCoroutineScope = compositionLocalOf { CoroutineScope(EmptyCoroutineContext) }
 
 @Composable
 fun <T : Any> CanonicalScaffold(
@@ -66,19 +71,15 @@ fun <T : Any> CanonicalScaffold(
 ) {
     var fabHeight by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
-    AnimatedExtraPaneScaffold(
-        navigator = navigator,
-        extraPane = {
-            if (extraPane != null) {
-                navigator.currentDestination?.contentKey?.let { contentKey ->
-                    extraPane(contentKey)
-                }
-            }
-        },
-    ) {
+    CompositionLocalProvider(LocalCoroutineScope provides rememberCoroutineScope()) {
         Scaffold(
             floatingActionButton = {
-                AnimatedVisibility(true, enter = fabEnter(), exit = fabExit(), label = "fab") {
+                AnimatedVisibility(
+                    navigator.scaffoldState.targetState.tertiary == PaneAdaptedValue.Hidden,
+                    enter = fabEnter(),
+                    exit = fabExit(),
+                    label = "fab"
+                ) {
                     Box(
                         modifier = Modifier
                             .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.End))
@@ -92,55 +93,70 @@ fun <T : Any> CanonicalScaffold(
                     }
                 }
             },
-            topBar = if (topBar != null) {
-                {
-                    AnimatedContent(
-                        targetState = navigator.scaffoldValue.primary == PaneAdaptedValue.Expanded,
-                        transitionSpec = { topAppBarAnimation() },
-                        contentAlignment = Alignment.TopCenter,
-                        label = "topBar",
-                    ) {
-                        if (it) {
-                            topBar()
-                        } else {
-                            Spacer(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .windowInsetsPadding(
-                                        WindowInsets.safeDrawing.only(
-                                            WindowInsetsSides.Horizontal + WindowInsetsSides.Top
-                                        )
-                                    )
-                            )
+            contentWindowInsets = WindowInsets.safeDrawing,
+            snackbarHost = snackbarHost,
+            modifier = modifier
+        ) { padding ->
+            AnimatedExtraPaneScaffold(
+                navigator = navigator,
+                extraPane = {
+                    if (extraPane != null) {
+                        navigator.currentDestination?.contentKey?.let { contentKey ->
+                            extraPane(contentKey)
                         }
                     }
-                }
-            } else {
-                {}
-            },
-            snackbarHost = snackbarHost,
-            contentWindowInsets = WindowInsets.safeDrawing,
-            containerColor = LocalContainerColor.current,
-            modifier = modifier
-        ) { contentPadding ->
-            val navigationState = LocalNavigationState.current
-            val scaffoldBound by remember(
-                navigator.scaffoldDirective.maxHorizontalPartitions,
-                navigator.scaffoldState.targetState.tertiary,
-                navigationState,
-                topBar
+                },
             ) {
-                mutableStateOf(
-                    CanonicalScaffoldBound(
-                        start = navigationState is NavigationState.NavigationBar || !navigationState.visible,
-                        top = topBar == null,
-                        end = navigator.scaffoldDirective.maxHorizontalPartitions == 1 || navigator.scaffoldState.targetState.tertiary != PaneAdaptedValue.Expanded,
-                        bottom = true
-                    )
-                )
-            }
-            CompositionLocalProvider(LocalCanonicalScaffoldBound provides scaffoldBound) {
-                content(contentPadding + PaddingValues(bottom = fabHeight))
+                Scaffold(
+                    topBar = if (topBar != null) {
+                        {
+                            AnimatedContent(
+                                targetState = navigator.scaffoldValue.primary == PaneAdaptedValue.Expanded,
+                                transitionSpec = { topAppBarAnimation() },
+                                contentAlignment = Alignment.TopCenter,
+                                label = "topBar",
+                            ) {
+                                if (it) {
+                                    topBar()
+                                } else {
+                                    Spacer(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .windowInsetsPadding(
+                                                WindowInsets.safeDrawing.only(
+                                                    WindowInsetsSides.Horizontal + WindowInsetsSides.Top
+                                                )
+                                            )
+                                    )
+                                }
+                            }
+                        }
+                    } else {
+                        {}
+                    },
+                    contentWindowInsets = padding.asWindowInsets(),
+                    containerColor = LocalContainerColor.current
+                ) { contentPadding ->
+                    val navigationState = LocalNavigationState.current
+                    val scaffoldBound by remember(
+                        navigator.scaffoldDirective.maxHorizontalPartitions,
+                        navigator.scaffoldState.targetState.tertiary,
+                        navigationState,
+                        topBar
+                    ) {
+                        mutableStateOf(
+                            CanonicalScaffoldBound(
+                                start = navigationState is NavigationState.NavigationBar || !navigationState.visible,
+                                top = topBar == null,
+                                end = navigator.scaffoldDirective.maxHorizontalPartitions == 1 || navigator.scaffoldState.targetState.tertiary != PaneAdaptedValue.Expanded,
+                                bottom = true
+                            )
+                        )
+                    }
+                    CompositionLocalProvider(LocalCanonicalScaffoldBound provides scaffoldBound) {
+                        content(contentPadding + PaddingValues(bottom = fabHeight))
+                    }
+                }
             }
         }
     }

@@ -7,6 +7,7 @@ data class SmbServer(
     val port: Int,
     val auth: Auth,
     override val fileCount: Int,
+    override val isDeleted: Boolean = false,
 ) : Bookshelf {
 
     constructor(displayName: String, host: String, port: Int, auth: Auth) : this(
