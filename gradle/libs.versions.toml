@@ -18,7 +18,7 @@ google-dagger = "2.55"
 android-gradle = "8.8.0"
 coil-kt = "3.0.4"
 detekt = "1.23.7"
-mikepenz-aboutlibraries = "11.2.3"
+mikepenz-aboutlibraries = "11.4.0"
 koin = "4.0.0"
 compose-destinations = "2.1.0-beta15"
 
