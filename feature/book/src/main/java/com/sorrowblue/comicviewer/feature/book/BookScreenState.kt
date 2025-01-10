@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import logcat.logcat
 
 @Composable
 internal fun rememberBookScreenState(
@@ -119,7 +120,7 @@ private class BookScreenStateImpl(
         ).first().dataOrNull()?.let {
             nextBookList.add(NextBook.Folder(it))
         }
-        return NextPage(nextBookList)
+        return NextPage(isNext, nextBookList)
     }
 
     init {

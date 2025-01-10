@@ -6,10 +6,9 @@ sealed interface PageItem {
     val key: String
 }
 
-data class NextPage(val nextBooks: List<NextBook>) : PageItem {
+data class NextPage(val isNext: Boolean, val nextBooks: List<NextBook>) : PageItem {
 
-    override val key =
-        nextBooks.joinToString { "next:${it.book.bookshelfId.value}:${it.book.path}" }
+    override val key = "next:$isNext"
 }
 
 sealed interface NextBook {
