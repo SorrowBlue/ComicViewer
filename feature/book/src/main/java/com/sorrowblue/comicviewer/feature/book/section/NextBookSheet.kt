@@ -124,7 +124,7 @@ private fun PreviewNextBookSheet() {
     PreviewTheme {
         Surface(Modifier.fillMaxSize()) {
             NextBookSheet(
-                NextPage(nextBooks = listOf(NextBook.Folder(fakeBookFile()))),
+                NextPage(isNext = true, nextBooks = listOf(NextBook.Folder(fakeBookFile()))),
                 {}
             )
         }
