@@ -1,5 +1,11 @@
 package logcat
 
+import kotlinx.atomicfu.AtomicRef
+import kotlinx.atomicfu.atomic
+import kotlinx.atomicfu.locks.SynchronizedObject
+import kotlinx.atomicfu.locks.synchronized
+import kotlinx.atomicfu.update
+
 interface LogcatLogger {
 
     /**
@@ -15,14 +21,19 @@ interface LogcatLogger {
         message: String,
     )
 
-    companion object {
-        @Volatile
-        @PublishedApi
-        internal var logger: LogcatLogger = NoLog
-            private set
+    companion object : SynchronizedObject() {
 
-        @Volatile
-        private var installedThrowable: Throwable? = null
+        private var aLogger: AtomicRef<LogcatLogger> = atomic(NoLog)
+
+        @PublishedApi
+        internal var logger: LogcatLogger
+            get() = aLogger.value
+            private set(value) = aLogger.update { value }
+
+        private var aInstalledThrowable: AtomicRef<Throwable?> = atomic(null)
+        private var installedThrowable: Throwable?
+            get() = aInstalledThrowable.value
+            set(value) = aInstalledThrowable.update { value }
 
         val isInstalled: Boolean
             get() = installedThrowable != null

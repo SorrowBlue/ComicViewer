@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.android.kotlinMultiplatform)
+    id("org.jetbrains.kotlinx.atomicfu") version "0.27.0"
 }
 
 android {

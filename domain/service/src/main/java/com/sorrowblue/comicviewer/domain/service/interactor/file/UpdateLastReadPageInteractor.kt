@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.domain.service.interactor.file
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
-import java.time.ZoneOffset
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,7 +16,7 @@ internal class UpdateLastReadPageInteractor @Inject constructor(
                 request.path,
                 request.bookshelfId,
                 request.lastReadPage,
-                request.timestamp.toEpochSecond(ZoneOffset.UTC) * 1000
+                request.timestamp
             )
             emit(Resource.Success(Unit))
         }
