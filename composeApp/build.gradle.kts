@@ -18,8 +18,6 @@ kotlin {
         }
     }
 
-    val xcFramework = XCFramework()
-
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -27,7 +25,6 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            xcFramework.add(this)
         }
     }
 
@@ -119,25 +116,22 @@ kotlin {
 }
 
 android {
-    namespace = "com.sorrowblue.comicviewer.multiplatform"
+    namespace = "com.sorrowblue.comicviewer.app"
 
     defaultConfig {
-        applicationId = "com.sorrowblue.comicviewer.multiplatform"
+        applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-    }
-    packaging {
-        resources {
-//            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
     }
     packaging {
         resources.excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+        }
+        all {
+            applicationIdSuffix = ".kmp"
         }
     }
     compileOptions {
@@ -153,11 +147,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.sorrowblue.comicviewer.multiplatform.MainKt"
+        mainClass = "com.sorrowblue.comicviewer.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.sorrowblue.comicviewer.multiplatform"
+            packageName = "com.sorrowblue.comicviewer"
             packageVersion = "1.0.0"
         }
     }

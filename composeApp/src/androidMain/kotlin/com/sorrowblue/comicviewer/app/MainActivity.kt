@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.multiplatform
+package com.sorrowblue.comicviewer.app
 
 import android.animation.ObjectAnimator
 import android.graphics.Color
@@ -13,13 +13,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
+import com.sorrowblue.comicviewer.MainViewModel
+import com.sorrowblue.comicviewer.RootScreenWrapper
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import dagger.hilt.android.AndroidEntryPoint
 

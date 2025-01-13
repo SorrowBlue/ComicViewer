@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.multiplatform
+package com.sorrowblue.comicviewer
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically

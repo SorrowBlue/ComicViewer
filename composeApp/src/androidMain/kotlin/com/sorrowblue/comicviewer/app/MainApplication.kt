@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.multiplatform
+package com.sorrowblue.comicviewer.app
 
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration

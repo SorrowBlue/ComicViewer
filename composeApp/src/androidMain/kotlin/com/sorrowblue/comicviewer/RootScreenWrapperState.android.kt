@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.multiplatform
+package com.sorrowblue.comicviewer
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel

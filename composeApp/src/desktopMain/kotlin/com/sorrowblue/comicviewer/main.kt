@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.multiplatform
+package com.sorrowblue.comicviewer
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "KotlinProject",
+        title = "ComicViewer",
     ) {
         val viewmodel = viewModel<MainViewModel>()
         RootScreenWrapper(viewModel = viewmodel, finishApp = ::exitApplication) {
