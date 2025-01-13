@@ -12,9 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -22,8 +20,6 @@ import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffold
 import com.sorrowblue.comicviewer.app.navigation.MainDependencies
 import com.sorrowblue.comicviewer.domain.model.AddOn
-import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import com.sorrowblue.comicviewer.feature.library.serviceloader.AddOnNavGraph
 import com.sorrowblue.comicviewer.feature.library.serviceloader.BoxNavGraph
 import com.sorrowblue.comicviewer.feature.library.serviceloader.DropBoxNavGraph
@@ -32,13 +28,8 @@ import com.sorrowblue.comicviewer.feature.library.serviceloader.OneDriveNavGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.DestinationTransitions
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 /**
  * Comic viewer app
@@ -63,6 +54,12 @@ internal fun ComicViewerApp(
             navController = state.navController,
             engine = rememberCustomNavHostEngine(),
             dependenciesContainerBuilder = {
+                EventEffect(state.events) {
+                    when (it) {
+                        is ComicViewerAppEvent.Navigate ->
+                            destinationsNavigator.navigate(it.direction, it.navOptions)
+                    }
+                }
                 MainDependencies(onRestoreComplete = state::onNavigationHistoryRestore)
 
                 state.addOnList.forEach { addOn ->
