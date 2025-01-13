@@ -28,6 +28,11 @@ internal object SingletonProvidesModule {
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @Suppress("InjectDispatcher")
+    @di.IoDispatcher
+    @Provides
+    fun provideIoDispatcherForKmp(): CoroutineDispatcher = Dispatchers.IO
+
+    @Suppress("InjectDispatcher")
     @DefaultDispatcher
     @Provides
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default

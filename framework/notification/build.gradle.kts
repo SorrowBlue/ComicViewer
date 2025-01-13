@@ -7,8 +7,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.common)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.startup.runtime)
 }

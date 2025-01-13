@@ -9,15 +9,9 @@ android {
 
 kotlin {
     sourceSets {
-        commonMain {
-            dependencies {
-                api(projects.domain.model)
-
-                implementation(libs.androidx.paging.common)
-            }
-        }
         androidMain {
             dependencies {
+                implementation(libs.google.dagger.hilt.android)
                 implementation(libs.androidx.startup.runtime)
             }
         }

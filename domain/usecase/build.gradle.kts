@@ -15,7 +15,6 @@ kotlin {
 
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
-                implementation(projects.framework.common)
                 implementation(libs.androidx.paging.common)
             }
         }

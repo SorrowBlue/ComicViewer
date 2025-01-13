@@ -9,7 +9,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.common)
     implementation(projects.domain.service)
     implementation(projects.domain.reader)
 

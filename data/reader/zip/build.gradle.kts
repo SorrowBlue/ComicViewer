@@ -13,7 +13,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.framework.common)
     implementation(projects.data.storage.client)
 
     implementation(libs.androidx.startup.runtime)
