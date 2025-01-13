@@ -1,5 +1,3 @@
-package com.sorrowblue.comicviewer.multiplatform
-
 import androidx.compose.ui.window.ComposeUIViewController
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
