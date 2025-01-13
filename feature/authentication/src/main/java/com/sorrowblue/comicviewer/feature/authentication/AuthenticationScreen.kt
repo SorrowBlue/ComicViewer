@@ -128,7 +128,6 @@ internal sealed interface AuthenticationScreenUiState {
         )
     }
 
-
     sealed interface Register : AuthenticationScreenUiState {
         data class Input(
             override val pin: String,

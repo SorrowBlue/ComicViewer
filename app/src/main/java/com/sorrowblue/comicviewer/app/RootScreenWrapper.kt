@@ -45,7 +45,9 @@ internal object RootScreenWrapper : DestinationWrapper {
         val state = rememberRootScreenWrapperState()
 
         LaunchedEffect(state.tutorialRequired, state.authStatus, isInitialized) {
-            logcat(tag = RootScreenWrapper::class.simpleName) { "tutorialRequired=${state.tutorialRequired}, authStatus=${state.authStatus}, isInitialized=$isInitialized" }
+            logcat(tag = RootScreenWrapper::class.simpleName) {
+                "tutorialRequired=${state.tutorialRequired}, authStatus=${state.authStatus}, isInitialized=$isInitialized"
+            }
         }
         if (state.tutorialRequired) {
             TutorialScreen(navigator = state::onTutorialComplete)
