@@ -31,6 +31,11 @@ internal class AndroidKotlinMultiplatformConventionPlugin : Plugin<Project> {
                     publishAllLibraryVariants()
                 }
                 jvm()
+
+                // iPhone ipad
+                iosArm64()
+                // ios Simulator on Apple silicon
+                iosSimulatorArm64()
             }
         }
     }

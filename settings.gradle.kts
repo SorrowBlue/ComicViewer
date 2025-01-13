@@ -51,6 +51,7 @@ dependencyResolutionManagement {
 rootProject.name = "comicviewer"
 
 include(":app")
+include(":composeApp")
 include(":catalog")
 
 include(":framework:common")
