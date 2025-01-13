@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.history.section
 
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -21,7 +22,8 @@ internal sealed interface HistoryTopAppBarAction {
 @Composable
 internal fun HistoryTopAppBar(
     onAction: (HistoryTopAppBarAction) -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
+    scrollBehavior: TopAppBarScrollBehavior,
+    scrollableState: ScrollableState,
 ) {
     CanonicalTopAppBar(
         title = { Text(stringResource(R.string.history_title)) },
@@ -32,6 +34,7 @@ internal fun HistoryTopAppBar(
             }
             SettingsIconButton(onClick = { onAction(HistoryTopAppBarAction.Settings) })
         },
-        scrollBehavior = scrollBehavior
+        scrollBehavior = scrollBehavior,
+        scrollableState = scrollableState
     )
 }

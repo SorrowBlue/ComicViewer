@@ -14,6 +14,14 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CompliantNavi
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.calculateFromAdaptiveInfo2
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Comic viewer scaffold ui state
+ *
+ * @property isAuthenticating
+ * @property currentTab
+ * @property tabs
+ * @constructor Create empty Comic viewer scaffold ui state
+ */
 @Parcelize
 internal data class ComicViewerScaffoldUiState(
     val isAuthenticating: Boolean = false,
@@ -21,6 +29,15 @@ internal data class ComicViewerScaffoldUiState(
     val tabs: List<MainScreenTab> = MainScreenTab.entries,
 ) : Parcelable
 
+/**
+ * Comic viewer scaffold
+ *
+ * @param uiState
+ * @param onTabSelect
+ * @param content
+ * @receiver
+ * @receiver
+ */
 @Composable
 internal fun ComicViewerScaffold(
     uiState: ComicViewerScaffoldUiState,

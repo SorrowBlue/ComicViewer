@@ -1,48 +1,41 @@
 package com.sorrowblue.comicviewer.framework.ui.adaptive.navigation
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationRail
-import androidx.compose.material3.NavigationRailItem
-import androidx.compose.material3.PermanentDrawerSheet
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteColors
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItemColors
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collection.MutableVector
-import androidx.compose.runtime.collection.mutableVectorOf
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.movableContentOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComponentColors
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalComponentColors
-import com.sorrowblue.comicviewer.framework.ui.adaptive.nonZero
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.nextLoremIpsum
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewDevice
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 
 @Immutable
 sealed interface NavigationState {
@@ -53,7 +46,6 @@ sealed interface NavigationState {
             when (this) {
                 is NavigationBar -> NavigationSuiteType.NavigationBar
                 is NavigationRail -> NavigationSuiteType.NavigationRail
-                is NavigationDrawer -> NavigationSuiteType.NavigationDrawer
             }
         } else {
             NavigationSuiteType.None
@@ -64,9 +56,6 @@ sealed interface NavigationState {
 
     @Immutable
     data class NavigationRail(override val visible: Boolean) : NavigationState
-
-    @Immutable
-    data class NavigationDrawer(override val visible: Boolean) : NavigationState
 }
 
 val LocalNavigationState =
@@ -97,20 +86,9 @@ fun NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo2(
     }
 }
 
-@Composable
-fun NavigationState.containerColor() = if (this is NavigationState.NavigationBar) {
-    ComicTheme.colorScheme.surface
-} else {
-    ComicTheme.colorScheme.surfaceContainer
-}
-
-@Composable
-fun NavigationState.contentColor() = if (this is NavigationState.NavigationBar) {
-    ComicTheme.colorScheme.surfaceContainerHighest
-} else {
-    ComicTheme.colorScheme.surface
-}
-
+/**
+ * @see [androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold]
+ */
 @Composable
 fun CompliantNavigationSuiteScaffold(
     navigationSuiteItems: NavigationSuiteScope.() -> Unit,
@@ -119,245 +97,86 @@ fun CompliantNavigationSuiteScaffold(
         NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo2(currentWindowAdaptiveInfo()),
     content: @Composable () -> Unit,
 ) {
-    val componentColors = ComponentColors(
-        containerColor = navigationState.containerColor(),
-        contentColor = navigationState.contentColor()
-    )
-    CompositionLocalProvider(
-        LocalComponentColors provides componentColors,
-        LocalNavigationState provides navigationState
-    ) {
-        Surface(
-            modifier = modifier,
-            color = componentColors.containerColor,
-            contentColor = componentColors.contentColor
-        ) {
-            NavigationSuiteScaffoldLayout(
-                navigationSuite = {
-                    NavigationSuite(
-                        layoutType = navigationState.suiteType,
-                        content = navigationSuiteItems
-                    )
-                },
-                layoutType = navigationState.suiteType,
-                content = {
-                    Box(
-                        Modifier.consumeWindowInsets(
-                            if (navigationState.visible) {
-                                when (navigationState) {
-                                    is NavigationState.NavigationBar ->
-                                        WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
+    val navigationSuiteColors = NavigationSuiteDefaults.colors()
+    NavigationSuiteScaffold(
+        navigationSuiteItems = navigationSuiteItems,
+        layoutType = navigationState.suiteType,
+        navigationSuiteColors = navigationSuiteColors,
+        containerColor = ComicTheme.colorScheme.surface,
+        contentColor = ComicTheme.colorScheme.onSurface,
+        modifier = modifier
+            .background(
+                when (navigationState) {
+                    is NavigationState.NavigationBar -> navigationSuiteColors.navigationBarContainerColor
+                    is NavigationState.NavigationRail -> navigationSuiteColors.navigationRailContainerColor
+                }
+            )
+            .windowInsetsPadding(
+                if (navigationState.visible) {
+                    when (navigationState) {
+                        is NavigationState.NavigationBar ->
+                            WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
 
-                                    is NavigationState.NavigationRail ->
-                                        WindowInsets.safeDrawing.only(WindowInsetsSides.Start)
-
-                                    is NavigationState.NavigationDrawer ->
-                                        WindowInsets.safeDrawing.only(WindowInsetsSides.Start)
-                                }
-                            } else {
-                                WindowInsets(0)
-                            }
-                        )
-                    ) {
-                        content()
+                        is NavigationState.NavigationRail ->
+                            WindowInsets.safeDrawing.only(WindowInsetsSides.Start)
                     }
+                } else {
+                    WindowInsets(0)
                 }
-            )
-        }
-    }
-}
-
-@Composable
-private fun NavigationSuite(
-    modifier: Modifier = Modifier,
-    layoutType: NavigationSuiteType =
-        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo()),
-    colors: NavigationSuiteColors = NavigationSuiteDefaults.compliantColors(),
-    content: NavigationSuiteScope.() -> Unit,
-) {
-    val scope by rememberStateOfItems(content)
-    // Define defaultItemColors here since we can't set NavigationSuiteDefaults.itemColors() as a
-    // default for the colors param of the NavigationSuiteScope.item non-composable function.
-    val defaultItemColors = NavigationSuiteDefaults.itemColors()
-    when (layoutType) {
-        NavigationSuiteType.NavigationBar -> {
-            NavigationBar(
-                modifier = modifier,
-                containerColor = colors.navigationBarContainerColor,
-                contentColor = colors.navigationBarContentColor,
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
+            ),
+        content = {
+            CompositionLocalProvider(
+                LocalContainerColor provides ComicTheme.colorScheme.surface,
+                LocalNavigationState provides navigationState
             ) {
-                scope.itemList.forEach {
-                    NavigationBarItem(
-                        modifier = it.modifier,
-                        selected = it.selected,
-                        onClick = it.onClick,
-                        icon = { NavigationItemIcon(icon = it.icon, badge = it.badge) },
-                        enabled = it.enabled,
-                        label = it.label,
-                        alwaysShowLabel = it.alwaysShowLabel,
-                        colors =
-                        it.colors?.navigationBarItemColors
-                            ?: defaultItemColors.navigationBarItemColors,
-                        interactionSource = it.interactionSource
-                    )
-                }
+                content()
             }
         }
-
-        NavigationSuiteType.NavigationRail -> {
-            NavigationRail(
-                modifier = modifier,
-                containerColor = colors.navigationRailContainerColor,
-                contentColor = colors.navigationRailContentColor,
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical)
-            ) {
-                Spacer(Modifier.weight(1f))
-                scope.itemList.forEach {
-                    NavigationRailItem(
-                        modifier = it.modifier,
-                        selected = it.selected,
-                        onClick = it.onClick,
-                        icon = { NavigationItemIcon(icon = it.icon, badge = it.badge) },
-                        enabled = it.enabled,
-                        label = it.label,
-                        alwaysShowLabel = it.alwaysShowLabel,
-                        colors =
-                        it.colors?.navigationRailItemColors
-                            ?: defaultItemColors.navigationRailItemColors,
-                        interactionSource = it.interactionSource
-                    )
-                }
-                Spacer(Modifier.weight(1f))
-            }
-        }
-
-        NavigationSuiteType.NavigationDrawer -> {
-            PermanentDrawerSheet(
-                modifier = modifier,
-                drawerContainerColor = colors.navigationDrawerContainerColor,
-                drawerContentColor = colors.navigationDrawerContentColor,
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical)
-                    .nonZero(WindowInsets(top = ComicTheme.dimension.margin))
-            ) {
-                scope.itemList.forEach {
-                    NavigationDrawerItem(
-                        modifier = it.modifier,
-                        selected = it.selected,
-                        onClick = it.onClick,
-                        icon = it.icon,
-                        badge = it.badge,
-                        label = { it.label?.invoke() ?: Text("") },
-                        colors =
-                        it.colors?.navigationDrawerItemColors
-                            ?: defaultItemColors.navigationDrawerItemColors,
-                        interactionSource = it.interactionSource
-                    )
-                }
-            }
-        }
-
-        NavigationSuiteType.None -> {
-            /* Do nothing. */
-        }
-    }
-}
-
-@Composable
-private fun NavigationSuiteDefaults.compliantColors() =
-    colors(
-        navigationBarContainerColor = ComicTheme.colorScheme.surfaceContainer,
-        navigationRailContainerColor = ComicTheme.colorScheme.surfaceContainer,
-        navigationDrawerContainerColor = ComicTheme.colorScheme.surfaceContainer
-    )
-
-@Composable
-private fun rememberStateOfItems(
-    content: NavigationSuiteScope.() -> Unit,
-): State<NavigationSuiteItemProvider> {
-    val latestContent = rememberUpdatedState(content)
-    return remember { derivedStateOf { NavigationSuiteScopeImpl().apply(latestContent.value) } }
-}
-
-@Composable
-private fun NavigationItemIcon(
-    icon: @Composable () -> Unit,
-    badge: (@Composable () -> Unit)? = null,
-) {
-    val iconContent = remember { movableContentOf(icon) }
-    if (badge != null) {
-        BadgedBox(badge = { badge.invoke() }) { iconContent() }
-    } else {
-        iconContent()
-    }
-}
-
-private interface NavigationSuiteItemProvider {
-    val itemsCount: Int
-    val itemList: MutableVector<NavigationSuiteItem>
-}
-
-private class NavigationSuiteItem(
-    val selected: Boolean,
-    val onClick: () -> Unit,
-    val icon: @Composable () -> Unit,
-    val modifier: Modifier,
-    val enabled: Boolean,
-    val label: @Composable (() -> Unit)?,
-    val alwaysShowLabel: Boolean,
-    val badge: (@Composable () -> Unit)?,
-    val colors: NavigationSuiteItemColors?,
-    val interactionSource: MutableInteractionSource?,
-)
-
-sealed interface NavigationSuiteScope {
-
-    fun item(
-        selected: Boolean,
-        onClick: () -> Unit,
-        icon: @Composable () -> Unit,
-        modifier: Modifier = Modifier,
-        enabled: Boolean = true,
-        label: @Composable (() -> Unit)? = null,
-        alwaysShowLabel: Boolean = true,
-        badge: (@Composable () -> Unit)? = null,
-        colors: NavigationSuiteItemColors? = null,
-        interactionSource: MutableInteractionSource? = null,
     )
 }
 
-private class NavigationSuiteScopeImpl : NavigationSuiteScope, NavigationSuiteItemProvider {
+@PreviewMultiScreen
+@Composable
+private fun CompliantNavigationSuiteScaffoldPreview(
+    @PreviewParameter(PreviewConfigProvider::class) config: PreviewConfig,
+) {
+    PreviewDevice(config = config) {
+        CompliantNavigationSuiteScaffold(
+            navigationSuiteItems = {
+                repeat(5) {
+                    item(
+                        selected = it == 0,
+                        onClick = {},
+                        icon = { Icon(ComicIcons.Edit, null) },
+                        label = { Text(nextLoremIpsum().take(8)) }
+                    )
+                }
+            },
+        ) {
+            Scaffold(
+                contentWindowInsets = WindowInsets.safeDrawing,
+                containerColor = LocalContainerColor.current,
+            ) { contentPadding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .scratch(Color.Red)
+                        .padding(contentPadding)
+                        .scratch(Color.Blue)
+                )
+            }
+        }
+    }
+}
 
-    override fun item(
-        selected: Boolean,
-        onClick: () -> Unit,
-        icon: @Composable () -> Unit,
-        modifier: Modifier,
-        enabled: Boolean,
-        label: @Composable (() -> Unit)?,
-        alwaysShowLabel: Boolean,
-        badge: (@Composable () -> Unit)?,
-        colors: NavigationSuiteItemColors?,
-        interactionSource: MutableInteractionSource?,
-    ) {
-        itemList.add(
-            NavigationSuiteItem(
-                selected = selected,
-                onClick = onClick,
-                icon = icon,
-                modifier = modifier,
-                enabled = enabled,
-                label = label,
-                alwaysShowLabel = alwaysShowLabel,
-                badge = badge,
-                colors = colors,
-                interactionSource = interactionSource
-            )
+private class PreviewConfigProvider : PreviewParameterProvider<PreviewConfig> {
+    override val values
+        get() = sequenceOf(
+            PreviewConfig(isInvertedOrientation = false, cutout = true, systemBar = true),
+            PreviewConfig(isInvertedOrientation = true, cutout = true, systemBar = true),
+            PreviewConfig(isInvertedOrientation = false, cutout = true, systemBar = false),
+            PreviewConfig(isInvertedOrientation = true, cutout = true, systemBar = false),
+            PreviewConfig(isInvertedOrientation = false, cutout = false, systemBar = true),
+            PreviewConfig(isInvertedOrientation = false, cutout = false, systemBar = false),
         )
-    }
-
-    override val itemList: MutableVector<NavigationSuiteItem> = mutableVectorOf()
-
-    override val itemsCount: Int
-        get() = itemList.size
 }

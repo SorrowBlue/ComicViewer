@@ -32,8 +32,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawTaken
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 
 @Composable
 internal fun NextBookSheet(
@@ -92,7 +91,6 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
         )
         AsyncImage(
             model = FileThumbnail.from(nextBook.book),
-            error = previewPlaceholder(),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -126,7 +124,7 @@ private fun PreviewNextBookSheet() {
     PreviewTheme {
         Surface(Modifier.fillMaxSize()) {
             NextBookSheet(
-                NextPage(nextBooks = listOf(NextBook.Folder(fakeBookFile()))),
+                NextPage(isNext = true, nextBooks = listOf(NextBook.Folder(fakeBookFile()))),
                 {}
             )
         }

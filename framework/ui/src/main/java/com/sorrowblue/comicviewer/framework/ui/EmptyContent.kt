@@ -4,8 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -16,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalComponentColors
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 
 @Composable
@@ -39,6 +40,7 @@ fun EmptyContent(
                     .sizeIn(maxWidth = 300.dp, maxHeight = 300.dp)
                     .fillMaxSize(0.5f)
             )
+            Spacer(modifier = Modifier.padding(ComicTheme.dimension.padding))
             Text(
                 text = text,
                 style = MaterialTheme.typography.titleLarge
@@ -47,7 +49,7 @@ fun EmptyContent(
     } else {
         Surface(
             modifier = modifier,
-            color = LocalComponentColors.current.contentColor,
+            color = ComicTheme.colorScheme.surface,
             shape = ComicTheme.shapes.large
         ) {
             Row(
@@ -58,7 +60,7 @@ fun EmptyContent(
                     imageVector = imageVector,
                     contentDescription = null,
                     modifier = Modifier
-                        .sizeIn(maxWidth = 300.dp, maxHeight = 300.dp)
+                        .sizeIn(maxWidth = 180.dp, maxHeight = 180.dp)
                         .fillMaxWidth(0.8f)
                 )
                 Text(

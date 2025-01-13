@@ -21,7 +21,6 @@ import coil3.compose.AsyncImage
 import com.sorrowblue.comicviewer.feature.library.box.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -49,7 +48,6 @@ internal fun BoxAccountDialog(
             AsyncImage(
                 model = uiState.photoUrl,
                 contentDescription = null,
-                placeholder = previewPlaceholder(),
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)

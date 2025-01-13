@@ -9,19 +9,37 @@
     <string name="bookshelf_info_label_port">Port</string>
     <string name="bookshelf_info_btn_remove_thumbnail">Remove thumbnail</string>
     <string name="bookshelf_info_btn_edit">Edit</string>
-    <string name="bookshelf_info_btn_remove">Remove</string>
-    <string name="bookshelf_info_btn_scan">Scan file</string>
-    <string name="bookshelf_info_btn_regenerate_thumbnails">Regenerate thumbnails</string>
+    <string name="bookshelf_info_btn_delete">Delete</string>
+    <string name="bookshelf_info_btn_scan_file">Scan file</string>
+    <string name="bookshelf_info_btn_scan_thumbnail">Scan thumbnail</string>
     <string name="bookshelf_info_label_bookshelf_type">Bookshelf type</string>
-    <string name="bookshelf_info_msg_remove">“%1$s” has been deleted.</string>
+    <string name="bookshelf_info_msg_remove">You deleted the bookshelf</string>
     <string name="bookshelf_info_title_scan">scanning bookshelf</string>
 
     <string name="bookshelf_info_label_auth_method">Authentication method</string>
     <string name="bookshelf_info_label_guest">Guest</string>
     <string name="bookshelf_info_label_Id_password">ID / Password</string>
-    <string name="bookshelf_info_title_notification_permission">Notification permission</string>
-    <string name="bookshelf_info_text_notification_permission">You can check the progress of the bookshelf scan from the notification. \nBookshelves without notification permission will be scanned.</string>
 
-    <string name="bookshelf_info_title_remove">Delete bookshelf</string>
-    <string name="bookshelf_info_text_remove">Do you want to remove %1$s?</string>
-</resources>
+    <!--<editor-fold desc="Bookshelf info sheet">-->
+    <string name="bookshelf_info_label_scanning_file">Scanning file</string>
+    <string name="bookshelf_info_label_scanning_file_no_notification">File scan started\nYou can check the progress with notifications</string>
+    <string name="bookshelf_info_label_scanning_thumbnails">Scanning thumbnails</string>
+    <string name="bookshelf_info_label_scanning_thumbnails_no_notification">Scanning thumbnails\nCheck progress with notifications</string>
+    <string name="bookshelf_info_label_notification_settings">Notification settings</string>
+    <string name="bookshelf_info_label_undo">Undo</string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="Notification Request dialog">-->
+    <string name="bookshelf_info_notification_title">Confirm with notification</string>
+    <string name="bookshelf_info_notification_text_scan_file">You can check status of file scan in notification.\nIf you select “Not allowed”, file will be scanned without notification.</string>
+    <string name="bookshelf_info_notification_text_scan_thumbnail">You can check status of thumbnail scan in the notification.\nIf you select “Not allowed”, thumbnail will be scanned without notification.</string>
+    <string name="bookshelf_info_notification_btn_not_allowed">Not allowed</string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="Delete dialog">-->
+    <string name="bookshelf_info_delete_title">Delete bookshelf</string>
+    <string name="bookshelf_info_delete_text">Do you want to delete \“%1$s\”?</string>
+    <string name="bookshelf_info_delete_text_null">Do you want to delete bookshelf?</string>
+    <string name="bookshelf_info_delete_btn_delete">Delete</string>
+    <!--</editor-fold>-->
+ </resources>

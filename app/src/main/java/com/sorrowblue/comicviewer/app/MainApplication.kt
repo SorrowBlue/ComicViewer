@@ -6,6 +6,9 @@ import com.google.android.play.core.splitcompat.SplitCompatApplication
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
+/**
+ * Main application
+ */
 @HiltAndroidApp
 internal class MainApplication : SplitCompatApplication(), Configuration.Provider {
 

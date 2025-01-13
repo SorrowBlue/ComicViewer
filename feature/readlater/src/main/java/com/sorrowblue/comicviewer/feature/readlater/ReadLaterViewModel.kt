@@ -15,7 +15,7 @@ internal class ReadLaterViewModel @Inject constructor(
     val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
 ) : ViewModel() {
 
-    val pagingDataFlow = pagingReadLaterFileUseCase
-        .execute(PagingReadLaterFileUseCase.Request(PagingConfig(20)))
-        .cachedIn(viewModelScope)
+    val pagingDataFlow =
+        pagingReadLaterFileUseCase(PagingReadLaterFileUseCase.Request(PagingConfig(20)))
+            .cachedIn(viewModelScope)
 }

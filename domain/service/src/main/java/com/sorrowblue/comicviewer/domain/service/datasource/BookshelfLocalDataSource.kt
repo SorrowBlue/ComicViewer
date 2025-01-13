@@ -25,4 +25,5 @@ interface BookshelfLocalDataSource {
     ): Flow<PagingData<BookThumbnail>>
 
     fun allBookshelf(): Resource<Flow<List<Bookshelf>>, Resource.SystemError>
+    suspend fun updateDeleted(bookshelfId: BookshelfId, isDeleted: Boolean)
 }

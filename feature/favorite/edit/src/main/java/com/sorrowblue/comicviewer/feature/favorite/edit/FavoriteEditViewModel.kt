@@ -24,7 +24,7 @@ internal class FavoriteEditViewModel @Inject constructor(
 
     private val args = FavoriteEditScreenDestination.argsFrom(savedStateHandle)
 
-    val pagingDataFlow = pagingFavoriteFileUseCase.execute(
+    val pagingDataFlow = pagingFavoriteFileUseCase(
         PagingFavoriteFileUseCase.Request(PagingConfig(20), args.favoriteId)
     ).cachedIn(viewModelScope)
 }

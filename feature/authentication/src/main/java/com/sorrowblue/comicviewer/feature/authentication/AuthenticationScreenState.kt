@@ -100,7 +100,7 @@ private class AuthenticationScreenStateImpl(
         }
     }
 
-    override var uiState by savedStateHandle.saveable {
+    override var uiState by savedStateHandle.saveable(stateSaver = AuthenticationScreenUiState.stateSaver()) {
         mutableStateOf(
             when (args.mode) {
                 Mode.Register -> AuthenticationScreenUiState.Register.Input("", View.NO_ID)

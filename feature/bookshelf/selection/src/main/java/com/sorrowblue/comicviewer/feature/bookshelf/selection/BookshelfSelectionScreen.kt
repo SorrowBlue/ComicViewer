@@ -11,7 +11,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -24,7 +23,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.selection.section.BookshelfS
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewDevice
 
 interface BookshelfSelectionScreenNavigator {
     fun navigateUp()
@@ -70,8 +69,8 @@ private fun BookshelfSelectionScreen(
     onBackClick: () -> Unit,
     onSourceClick: (BookshelfType) -> Unit,
     lazyListState: LazyListState = rememberLazyListState(),
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -102,7 +101,7 @@ private fun BookshelfSelectionScreen(
 @Preview
 @Composable
 private fun BookshelfSelectionScreenPreview() {
-    PreviewTheme {
+    PreviewDevice {
         BookshelfSelectionScreen(
             uiState = BookshelfSelectionScreenUiState(),
             onBackClick = {},

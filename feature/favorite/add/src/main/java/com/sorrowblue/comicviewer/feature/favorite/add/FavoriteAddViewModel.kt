@@ -22,11 +22,11 @@ internal class FavoriteAddViewModel @Inject constructor(
 
     private val args = FavoriteAddDialogScreenDestination.argsFrom(savedStateHandle)
 
-    val pagingDataFlow = pagingFavoriteUseCase.execute(
+    val pagingDataFlow = pagingFavoriteUseCase(
         PagingFavoriteUseCase.Request(PagingConfig(20), args.bookshelfId, args.path)
     ).cachedIn(viewModelScope)
 
-    val recentPagingDataFlow = pagingFavoriteUseCase.execute(
+    val recentPagingDataFlow = pagingFavoriteUseCase(
         PagingFavoriteUseCase.Request(
             PagingConfig(pageSize = 10),
             args.bookshelfId,

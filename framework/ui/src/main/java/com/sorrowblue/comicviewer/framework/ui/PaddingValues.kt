@@ -2,50 +2,44 @@ package com.sorrowblue.comicviewer.framework.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Measurable
-import androidx.compose.ui.layout.MeasureResult
-import androidx.compose.ui.layout.MeasureScope
-import androidx.compose.ui.node.LayoutModifierNode
-import androidx.compose.ui.node.ModifierNodeElement
-import androidx.compose.ui.platform.InspectorInfo
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.constrainHeight
-import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.offset
-import com.sorrowblue.comicviewer.framework.designsystem.theme.Dimension
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 
+/**
+ * [PaddingValues] を [WindowInsets] に変換します。
+ *
+ * @param layoutDirection LayoutDirection
+ */
 @Composable
-fun PaddingValues.asWindowInsets(localLayoutDirection: LayoutDirection = LocalLayoutDirection.current) =
+fun PaddingValues.asWindowInsets(layoutDirection: LayoutDirection = LocalLayoutDirection.current) =
     WindowInsets(
-        left = calculateLeftPadding(localLayoutDirection),
+        left = calculateLeftPadding(layoutDirection),
         top = calculateTopPadding(),
-        right = calculateRightPadding(localLayoutDirection),
+        right = calculateRightPadding(layoutDirection),
         bottom = calculateBottomPadding()
     )
 
+/**
+ * Add the other [PaddingValues] to this [PaddingValues].
+ *
+ * @param other
+ * @return
+ */
 @Composable
-fun PaddingValues.add(
-    paddingValues: PaddingValues,
-    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
-): PaddingValues {
+operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
+    val layoutDirection = LocalLayoutDirection.current
     return PaddingValues(
-        start = calculateStartPadding(layoutDirection) + paddingValues.calculateStartPadding(
-            layoutDirection
-        ),
-        top = calculateTopPadding() + paddingValues.calculateTopPadding(),
-        end = calculateEndPadding(layoutDirection) + paddingValues.calculateEndPadding(
-            layoutDirection
-        ),
-        bottom = calculateBottomPadding() + paddingValues.calculateBottomPadding(),
+        start = calculateStartPadding(layoutDirection) + other.calculateStartPadding(layoutDirection),
+        top = calculateTopPadding() + other.calculateTopPadding(),
+        end = calculateEndPadding(layoutDirection) + other.calculateEndPadding(layoutDirection),
+        bottom = calculateBottomPadding() + other.calculateBottomPadding(),
     )
 }
 
@@ -58,134 +52,113 @@ fun PaddingValues.copy(
     bottom: Dp = calculateBottomPadding(),
 ) = PaddingValues(start = start, top = top, end = end, bottom = bottom)
 
-fun Modifier.marginPadding(
-    dimension: Dimension,
-    horizontal: Boolean = false,
-    vertical: Boolean = false,
-    start: Boolean = false,
-    top: Boolean = false,
-    end: Boolean = false,
-    bottom: Boolean = false,
-) = this then PaddingElement(
-    start = if (horizontal || start) dimension.margin else 0.dp,
-    top = if (vertical || top) dimension.margin else 0.dp,
-    end = if (horizontal || end) dimension.margin else 0.dp,
-    bottom = if (vertical || bottom) dimension.margin else 0.dp,
-    rtlAware = true,
-    inspectorInfo = {
-        name = "padding"
-        properties["start"] = start
-        properties["top"] = top
-        properties["end"] = end
-        properties["bottom"] = bottom
+@JvmInline
+value class PaddingValuesSides private constructor(private val value: Int) {
+    /** Returns a [WindowInsetsSides] containing sides defied in [sides] and the sides in `this`. */
+    operator fun plus(sides: PaddingValuesSides): PaddingValuesSides =
+        PaddingValuesSides(value or sides.value)
+
+    internal fun hasAny(sides: PaddingValuesSides): Boolean = (value and sides.value) != 0
+
+    override fun toString(): String = "PaddingValuesSides(${valueToString()})"
+
+    private fun valueToString(): String = buildString {
+        fun appendPlus(text: String) {
+            if (isNotEmpty()) append('+')
+            append(text)
+        }
+
+        if (value and Start.value == Start.value) appendPlus("Start")
+        if (value and Left.value == Left.value) appendPlus("Left")
+        if (value and Top.value == Top.value) appendPlus("Top")
+        if (value and End.value == End.value) appendPlus("End")
+        if (value and Right.value == Right.value) appendPlus("Right")
+        if (value and Bottom.value == Bottom.value) appendPlus("Bottom")
     }
-)
 
-private class PaddingElement(
-    var start: Dp = 0.dp,
-    var top: Dp = 0.dp,
-    var end: Dp = 0.dp,
-    var bottom: Dp = 0.dp,
-    var rtlAware: Boolean,
-    val inspectorInfo: InspectorInfo.() -> Unit,
-) : ModifierNodeElement<PaddingNode>() {
+    companion object {
 
-    init {
-        require(
-            (start.value >= 0f || start == Dp.Unspecified) &&
-                (top.value >= 0f || top == Dp.Unspecified) &&
-                (end.value >= 0f || end == Dp.Unspecified) &&
-                (bottom.value >= 0f || bottom == Dp.Unspecified)
-        ) {
-            "Padding must be non-negative"
+        internal val AllowLeftInLtr = PaddingValuesSides(1 shl 3)
+        internal val AllowRightInLtr = PaddingValuesSides(1 shl 2)
+        internal val AllowLeftInRtl = PaddingValuesSides(1 shl 1)
+        internal val AllowRightInRtl = PaddingValuesSides(1 shl 0)
+
+        val Start = AllowLeftInLtr + AllowRightInRtl
+
+        val End = AllowRightInLtr + AllowLeftInRtl
+
+        val Top = PaddingValuesSides(1 shl 4)
+
+        val Bottom = PaddingValuesSides(1 shl 5)
+
+        val Left = AllowLeftInLtr + AllowLeftInRtl
+
+        val Right = AllowRightInLtr + AllowRightInRtl
+
+        val Horizontal = Left + Right
+
+        val Vertical = Top + Bottom
+    }
+}
+
+fun PaddingValues.only(sides: PaddingValuesSides): PaddingValues = LimitPaddingValues(this, sides)
+
+@Stable
+private class LimitPaddingValues(val paddingValues: PaddingValues, val sides: PaddingValuesSides) :
+    PaddingValues {
+    override fun calculateLeftPadding(layoutDirection: LayoutDirection): Dp {
+        val layoutDirectionSide =
+            if (layoutDirection == LayoutDirection.Ltr) {
+                PaddingValuesSides.AllowLeftInLtr
+            } else {
+                PaddingValuesSides.AllowLeftInRtl
+            }
+        val allowLeft = sides.hasAny(layoutDirectionSide)
+        return if (allowLeft) {
+            paddingValues.calculateLeftPadding(layoutDirection)
+        } else {
+            0.dp
         }
     }
 
-    override fun create(): PaddingNode {
-        return PaddingNode(start, top, end, bottom, rtlAware)
+    override fun calculateTopPadding(): Dp {
+        return if (sides.hasAny(PaddingValuesSides.Top)) paddingValues.calculateTopPadding() else 0.dp
     }
 
-    override fun update(node: PaddingNode) {
-        node.start = start
-        node.top = top
-        node.end = end
-        node.bottom = bottom
-        node.rtlAware = rtlAware
+    override fun calculateRightPadding(layoutDirection: LayoutDirection): Dp {
+        val layoutDirectionSide =
+            if (layoutDirection == LayoutDirection.Ltr) {
+                PaddingValuesSides.AllowRightInLtr
+            } else {
+                PaddingValuesSides.AllowRightInRtl
+            }
+        val allowRight = sides.hasAny(layoutDirectionSide)
+        return if (allowRight) {
+            paddingValues.calculateRightPadding(layoutDirection)
+        } else {
+            0.dp
+        }
     }
 
-    override fun hashCode(): Int {
-        var result = start.hashCode()
-        result = 31 * result + top.hashCode()
-        result = 31 * result + end.hashCode()
-        result = 31 * result + bottom.hashCode()
-        result = 31 * result + rtlAware.hashCode()
-        return result
+    override fun calculateBottomPadding(): Dp {
+        return if (sides.hasAny(PaddingValuesSides.Bottom)) paddingValues.calculateBottomPadding() else 0.dp
     }
 
     override fun equals(other: Any?): Boolean {
-        val otherModifierElement = other as? PaddingElement
-            ?: return false
-        return start == otherModifierElement.start &&
-            top == otherModifierElement.top &&
-            end == otherModifierElement.end &&
-            bottom == otherModifierElement.bottom &&
-            rtlAware == otherModifierElement.rtlAware
-    }
-
-    override fun InspectorInfo.inspectableProperties() {
-        inspectorInfo()
-    }
-}
-
-private class PaddingNode(
-    var start: Dp = 0.dp,
-    var top: Dp = 0.dp,
-    var end: Dp = 0.dp,
-    var bottom: Dp = 0.dp,
-    var rtlAware: Boolean,
-) : LayoutModifierNode, Modifier.Node() {
-
-    override fun MeasureScope.measure(
-        measurable: Measurable,
-        constraints: Constraints,
-    ): MeasureResult {
-        val horizontal = start.roundToPx() + end.roundToPx()
-        val vertical = top.roundToPx() + bottom.roundToPx()
-
-        val placeable = measurable.measure(constraints.offset(-horizontal, -vertical))
-
-        val width = constraints.constrainWidth(placeable.width + horizontal)
-        val height = constraints.constrainHeight(placeable.height + vertical)
-        return layout(width, height) {
-            if (rtlAware) {
-                placeable.placeRelative(start.roundToPx(), top.roundToPx())
-            } else {
-                placeable.place(start.roundToPx(), top.roundToPx())
-            }
+        if (this === other) {
+            return true
         }
+        if (other !is LimitPaddingValues) {
+            return false
+        }
+        return paddingValues == other.paddingValues && sides == other.sides
     }
-}
 
-@Composable
-fun calculatePaddingMargins(contentPadding: PaddingValues): Pair<PaddingValues, PaddingValues> {
-    val isCompact = isCompactWindowClass()
-    val paddings = if (isCompact) {
-        contentPadding.copy(
-            top = 0.dp,
-            bottom = 0.dp
-        )
-    } else {
-        contentPadding.copy(top = 0.dp)
+    override fun hashCode(): Int {
+        var result = paddingValues.hashCode()
+        result = 31 * result + sides.hashCode()
+        return result
     }
-    val margins = if (isCompact) {
-        PaddingValues(
-            top = contentPadding.calculateTopPadding(),
-            bottom = contentPadding.calculateBottomPadding()
-        )
-    } else {
-        PaddingValues(
-            top = contentPadding.calculateTopPadding(),
-        )
-    }
-    return paddings to margins
+
+    override fun toString(): String = "($paddingValues only $sides)"
 }

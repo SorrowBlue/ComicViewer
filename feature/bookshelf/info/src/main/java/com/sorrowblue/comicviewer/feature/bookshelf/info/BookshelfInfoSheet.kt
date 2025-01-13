@@ -1,12 +1,13 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
@@ -14,187 +15,189 @@ import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.navargs.primitives.booleanNavType
 import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.BookshelfRemoveDialogDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.NotificationRequestDialogDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.info.navtype.notificationRequestResultEnumNavType
-import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfBookThumbnailsCarousel
-import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoActionButtons
-import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoActionChips
-import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContent
-import com.sorrowblue.comicviewer.feature.bookshelf.notification.NotificationRequestResult
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalExtraPaneScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
-import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
+import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.BookshelfDeleteScreenDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoMainContents
+import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoMainContentsUiState
+import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BottomActions
+import com.sorrowblue.comicviewer.feature.bookshelf.info.section.ErrorContents
+import com.sorrowblue.comicviewer.feature.bookshelf.info.section.LoadingContents
+import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
+import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
+import com.sorrowblue.comicviewer.framework.ui.navigation.resultRecipient
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeFolder
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeSmbServer
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
-
-@Composable
-fun BookshelfInfoSheet(bookshelfId: BookshelfId, navigator: BookshelfInfoSheetNavigator) {
-    BookshelfInfoSheetWrapper(bookshelfId = bookshelfId) {
-        BookshelfInfoSheet(bookshelfFolder = it, navigator = navigator)
-    }
-}
-
-internal data class BookshelfInfoSheetUiState(
-    val bookshelf: Bookshelf,
-    val folder: Folder,
-    val enabled: Boolean = true,
-    val isProgressScan: Boolean = false,
-)
-
-internal sealed interface BookshelfInfoSheetAction {
-    data object Remove : BookshelfInfoSheetAction
-    data object Edit : BookshelfInfoSheetAction
-    data object Scan : BookshelfInfoSheetAction
-    data object ThumbnailRegeneration : BookshelfInfoSheetAction
-    data object Close : BookshelfInfoSheetAction
-}
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold
 
 interface BookshelfInfoSheetNavigator {
-    fun notificationRequest()
-    fun edit(id: BookshelfId)
-    fun remove(bookshelfId: BookshelfId)
-    fun navigateBack()
+    fun notificationRequest(type: ScanType)
+    fun onEditClick(id: BookshelfId)
+    fun onRemoveClick(bookshelfId: BookshelfId)
 }
 
 @Composable
-private fun BookshelfInfoSheet(
-    bookshelfFolder: BookshelfFolder,
+fun BookshelfInfoSheet(
+    bookshelfId: BookshelfId,
+    onCloseClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     navigator: BookshelfInfoSheetNavigator,
-    removeDialogResultRecipient: ResultRecipient<BookshelfRemoveDialogDestination, Boolean> =
+    modifier: Modifier = Modifier,
+    removeDialogResultRecipient: ResultRecipient<BookshelfDeleteScreenDestination, Boolean> =
         resultRecipient(booleanNavType),
-    notificationResultRecipient: ResultRecipient<NotificationRequestDialogDestination, NotificationRequestResult> =
-        resultRecipient(notificationRequestResultEnumNavType),
-    state: BookshelfInfoSheetState = rememberBookshelfInfoSheetState(bookshelfFolder = bookshelfFolder),
 ) {
-    BookshelfInfoSheet(
-        uiState = state.uiState,
-        onAction = state::onAction,
-        lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
+    val state = rememberBookshelfInfoSheetState(
+        bookshelfId = bookshelfId,
+        snackbarHostState = snackbarHostState
     )
-    removeDialogResultRecipient.onNavResult(state::onRemoveResult)
-    notificationResultRecipient.onNavResult(state::onNotificationRequestResult)
+    val scrollState = rememberScrollState()
+    BookshelfInfoSheet(
+        onAction = state::onAction,
+        scrollState = scrollState,
+        modifier = modifier,
+    ) { contentPadding ->
+        when (val uiState = state.uiState) {
+            is BookshelfInfoSheetUiState.Loaded ->
+                BookshelfInfoMainContents(
+                    bookshelfFolder = uiState.bookshelfFolder,
+                    showNotificationPermissionRationale = navigator::notificationRequest,
+                    snackbarHostState = snackbarHostState,
+                    contentPadding = contentPadding,
+                    modifier = Modifier.verticalScroll(scrollState)
+                )
 
-    LaunchedEventEffect(state.event) {
+            BookshelfInfoSheetUiState.Loading ->
+                LoadingContents(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                )
+
+            BookshelfInfoSheetUiState.Error ->
+                ErrorContents(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                )
+        }
+    }
+
+    removeDialogResultRecipient.onNavResult(state::onRemoveResult)
+
+    EventEffect(state.events) {
         when (it) {
-            is BookshelfInfoSheetStateEvent.Edit -> navigator.edit(it.id)
-            is BookshelfInfoSheetStateEvent.ShowRequestPermissionRationale -> navigator.notificationRequest()
-            is BookshelfInfoSheetStateEvent.Remove -> navigator.remove(it.bookshelfId)
-            BookshelfInfoSheetStateEvent.Back -> navigator.navigateBack()
+            is BookshelfInfoSheetStateEvent.Edit -> navigator.onEditClick(it.id)
+            is BookshelfInfoSheetStateEvent.Remove -> navigator.onRemoveClick(it.bookshelfId)
+            BookshelfInfoSheetStateEvent.Back -> onCloseClick()
         }
     }
 }
 
+internal sealed interface BookshelfInfoSheetUiState {
+    data object Loading : BookshelfInfoSheetUiState
+    data object Error : BookshelfInfoSheetUiState
+    data class Loaded(val bookshelfFolder: BookshelfFolder) : BookshelfInfoSheetUiState
+}
+
+internal sealed interface BookshelfInfoSheetAction {
+    data object Close : BookshelfInfoSheetAction
+    data object Edit : BookshelfInfoSheetAction
+    data object Remove : BookshelfInfoSheetAction
+}
+
 @Composable
 private fun BookshelfInfoSheet(
-    uiState: BookshelfInfoSheetUiState,
-    lazyPagingItems: LazyPagingItems<BookThumbnail>,
     onAction: (BookshelfInfoSheetAction) -> Unit,
     modifier: Modifier = Modifier,
+    scrollState: ScrollState = rememberScrollState(),
+    content: @Composable ColumnScope.(PaddingValues) -> Unit,
 ) {
-    CanonicalExtraPaneScaffold(
+    ExtraPaneScaffold(
         title = { Text(text = stringResource(id = R.string.bookshelf_info_title)) },
         onCloseClick = { onAction(BookshelfInfoSheetAction.Close) },
-        modifier = modifier,
-    ) {
-        Column(
-            Modifier
-                .fillMaxHeight()
-                .padding(top = it.calculateTopPadding())
-        ) {
-            val scrollState = rememberScrollState()
-            if (LocalNavigationState.current !is NavigationState.NavigationBar && scrollState.canScrollBackward) {
-                HorizontalDivider()
-            }
-            Column(
-                Modifier
-                    .weight(1f)
-                    .drawVerticalScrollbar(scrollState)
-                    .verticalScroll(scrollState)
-            ) {
-                BookshelfBookThumbnailsCarousel(
-                    pagingItems = lazyPagingItems,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                )
-                BookshelfInfoActionChips(
-                    isProgressScan = uiState.isProgressScan,
-                    enabled = uiState.enabled,
-                    onScanClick = { onAction(BookshelfInfoSheetAction.Scan) },
-                    onReThumbnailsClick = { onAction(BookshelfInfoSheetAction.ThumbnailRegeneration) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                )
-                BookshelfInfoContent(bookshelf = uiState.bookshelf, folder = uiState.folder)
-            }
-            if (scrollState.canScrollForward) {
-                HorizontalDivider()
-            }
-            BookshelfInfoActionButtons(
-                enabled = uiState.enabled,
-                onRemoveClick = { onAction(BookshelfInfoSheetAction.Remove) },
+        scrollState = scrollState,
+        actions = {
+            BottomActions(
                 onEditClick = { onAction(BookshelfInfoSheetAction.Edit) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = ComicTheme.dimension.margin,
-                        vertical = ComicTheme.dimension.targetSpacing
-                    )
+                onRemoveClick = { onAction(BookshelfInfoSheetAction.Remove) }
             )
+        },
+        content = content,
+        modifier = modifier
+    )
+}
+
+@PreviewMultiScreen
+@Composable
+private fun BookshelfInfoSheetPreview(
+    @PreviewParameter(BookshelfInfoSheetConfig::class) uiState: BookshelfInfoSheetUiState,
+) {
+    val navigator = rememberSupportingPaneScaffoldNavigator(
+        initialDestinationHistory = listOf(
+            ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, "")
+        )
+    )
+    PreviewCanonicalScaffold(
+        navigator = navigator,
+        extraPane = {
+            BookshelfInfoSheet(onAction = {}) { contentPadding ->
+                when (uiState) {
+                    BookshelfInfoSheetUiState.Loading ->
+                        LoadingContents(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(contentPadding)
+                        )
+
+                    BookshelfInfoSheetUiState.Error ->
+                        ErrorContents(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(contentPadding)
+                        )
+
+                    is BookshelfInfoSheetUiState.Loaded ->
+                        BookshelfInfoMainContents(
+                            uiState = BookshelfInfoMainContentsUiState(
+                                uiState.bookshelfFolder.bookshelf,
+                                uiState.bookshelfFolder.folder
+                            ),
+                            lazyPagingItems = PagingData.flowData(10) {
+                                BookThumbnail(
+                                    BookshelfId(),
+                                    "$it",
+                                    0,
+                                    0,
+                                    0
+                                )
+                            }.collectAsLazyPagingItems(),
+                            onScanFileClick = {},
+                            onScanThumbnailClick = {},
+                            contentPadding = contentPadding,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        )
+                }
+            }
         }
+    ) {
     }
 }
 
-@Composable
-@PreviewMultiScreen
-private fun BookshelfInfoSheetPreview() {
-    PreviewTheme2 {
-        val lazyPagingItems =
-            PagingData.flowData { BookThumbnail.from(fakeBookFile(it)) }.collectAsLazyPagingItems()
-
-        val navigator = rememberSupportingPaneScaffoldNavigator(
-            initialDestinationHistory = listOf(
-                ThreePaneScaffoldDestinationItem(
-                    SupportingPaneScaffoldRole.Extra,
-                    BookshelfFolder(fakeSmbServer(), fakeFolder())
-                )
-            )
-        )
-        CanonicalScaffold(
-            navigator = navigator,
-            extraPane = { content ->
-                BookshelfInfoSheet(
-                    uiState = BookshelfInfoSheetUiState(
-                        bookshelf = content.bookshelf,
-                        folder = content.folder,
-                        enabled = true,
-                        isProgressScan = false
-                    ),
-                    lazyPagingItems = lazyPagingItems,
-                    onAction = {},
-                )
-            },
-        ) {
-        }
-    }
+private class BookshelfInfoSheetConfig : PreviewParameterProvider<BookshelfInfoSheetUiState> {
+    override val values: Sequence<BookshelfInfoSheetUiState> = sequenceOf(
+        BookshelfInfoSheetUiState.Loading,
+        BookshelfInfoSheetUiState.Error,
+        BookshelfInfoSheetUiState.Loaded(BookshelfFolder(fakeSmbServer(), fakeFolder()))
+    )
 }

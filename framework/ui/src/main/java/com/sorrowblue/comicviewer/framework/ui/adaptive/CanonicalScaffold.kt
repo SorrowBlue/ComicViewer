@@ -1,12 +1,12 @@
 package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
@@ -17,13 +17,15 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,24 +34,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.framework.designsystem.animation.extendFabAnimation
+import com.sorrowblue.comicviewer.framework.designsystem.animation.fabEnter
+import com.sorrowblue.comicviewer.framework.designsystem.animation.fabExit
 import com.sorrowblue.comicviewer.framework.designsystem.animation.topAppBarAnimation
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalComponentColors
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
-import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
-import com.sorrowblue.comicviewer.framework.ui.copy
-import com.sorrowblue.comicviewer.framework.ui.preview.EdgeToEdgeTemplate
+import com.sorrowblue.comicviewer.framework.ui.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme2
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+
+val LocalCoroutineScope = compositionLocalOf { CoroutineScope(EmptyCoroutineContext) }
 
 @Composable
 fun <T : Any> CanonicalScaffold(
@@ -59,138 +67,143 @@ fun <T : Any> CanonicalScaffold(
     extraPane: @Composable ((T) -> Unit)? = null,
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
-    alwaysVisibleFloatingActionButton: Boolean = false,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     var fabHeight by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
-    Scaffold(
-        floatingActionButton = {
-            AnimatedContent(
-                targetState = alwaysVisibleFloatingActionButton || navigator.scaffoldValue.tertiary == PaneAdaptedValue.Hidden,
-                transitionSpec = { extendFabAnimation() },
-                contentAlignment = Alignment.BottomEnd,
-                label = "fab"
-            ) {
-                if (it) {
+    CompositionLocalProvider(LocalCoroutineScope provides rememberCoroutineScope()) {
+        Scaffold(
+            floatingActionButton = {
+                AnimatedVisibility(
+                    navigator.scaffoldState.targetState.tertiary == PaneAdaptedValue.Hidden,
+                    enter = fabEnter(),
+                    exit = fabExit(),
+                    label = "fab"
+                ) {
                     Box(
                         modifier = Modifier
                             .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.End))
                             .onGloballyPositioned {
                                 with(density) {
-                                    fabHeight = it.size.height.toDp() + 32.dp
+                                    fabHeight = it.size.height.toDp() + FabSpacing
                                 }
                             }
                     ) {
                         floatingActionButton()
                     }
-                } else {
-                    fabHeight = 0.dp
                 }
-            }
-        },
-        topBar = {
-            AnimatedContent(
-                targetState = topBar != null && navigator.scaffoldValue.primary == PaneAdaptedValue.Expanded,
-                transitionSpec = { topAppBarAnimation() },
-                contentAlignment = Alignment.TopCenter,
-                label = "topBar",
+            },
+            contentWindowInsets = WindowInsets.safeDrawing,
+            snackbarHost = snackbarHost,
+            modifier = modifier
+        ) { padding ->
+            AnimatedExtraPaneScaffold(
+                navigator = navigator,
+                extraPane = {
+                    if (extraPane != null) {
+                        navigator.currentDestination?.contentKey?.let { contentKey ->
+                            extraPane(contentKey)
+                        }
+                    }
+                },
             ) {
-                if (it && topBar != null) {
-                    topBar()
-                } else {
-                    Spacer(
-                        Modifier
-                            .fillMaxWidth()
-                            .windowInsetsPadding(
-                                WindowInsets.safeDrawing.only(
-                                    WindowInsetsSides.Horizontal + WindowInsetsSides.Top
-                                )
-                            )
-                    )
-                }
-            }
-        },
-        snackbarHost = snackbarHost,
-        contentWindowInsets = WindowInsets.safeDrawing,
-        containerColor = LocalComponentColors.current.containerColor,
-        modifier = modifier
-    ) { contentPadding ->
-        @Suppress("UNCHECKED_CAST")
-        AnimatedExtraPaneScaffold(
-            navigator = navigator as ThreePaneScaffoldNavigator<Any>,
-            extraPane = {
-                if (extraPane != null) {
-                    var contentKey by remember {
-                        mutableStateOf(navigator.currentDestination?.contentKey)
-                    }
-                    LaunchedEffect(navigator.currentDestination?.contentKey) {
-                        if (navigator.currentDestination?.contentKey != null) {
-                            contentKey = navigator.currentDestination?.contentKey
-                        }
-                    }
-                    if (contentKey != null) {
-                        val (consumeWindowInsets, top) =
-                            if (LocalNavigationState.current is NavigationState.NavigationBar) {
-                                WindowInsets(0) to 0.dp
-                            } else {
-                                contentPadding.asWindowInsets()
-                                    .only(WindowInsetsSides.Start + WindowInsetsSides.Top) to contentPadding.calculateTopPadding()
+                Scaffold(
+                    topBar = if (topBar != null) {
+                        {
+                            AnimatedContent(
+                                targetState = navigator.scaffoldValue.primary == PaneAdaptedValue.Expanded,
+                                transitionSpec = { topAppBarAnimation() },
+                                contentAlignment = Alignment.TopCenter,
+                                label = "topBar",
+                            ) {
+                                if (it) {
+                                    topBar()
+                                } else {
+                                    Spacer(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .windowInsetsPadding(
+                                                WindowInsets.safeDrawing.only(
+                                                    WindowInsetsSides.Horizontal + WindowInsetsSides.Top
+                                                )
+                                            )
+                                    )
+                                }
                             }
-                        Box(
-                            Modifier
-                                .padding(top = top)
-                                .consumeWindowInsets(consumeWindowInsets)
-                        ) {
-                            extraPane.invoke(contentKey!!)
                         }
+                    } else {
+                        {}
+                    },
+                    contentWindowInsets = padding.asWindowInsets(),
+                    containerColor = LocalContainerColor.current
+                ) { contentPadding ->
+                    val navigationState = LocalNavigationState.current
+                    val scaffoldBound by remember(
+                        navigator.scaffoldDirective.maxHorizontalPartitions,
+                        navigator.scaffoldState.targetState.tertiary,
+                        navigationState,
+                        topBar
+                    ) {
+                        mutableStateOf(
+                            CanonicalScaffoldBound(
+                                start = navigationState is NavigationState.NavigationBar || !navigationState.visible,
+                                top = topBar == null,
+                                end = navigator.scaffoldDirective.maxHorizontalPartitions == 1 || navigator.scaffoldState.targetState.tertiary != PaneAdaptedValue.Expanded,
+                                bottom = true
+                            )
+                        )
+                    }
+                    CompositionLocalProvider(LocalCanonicalScaffoldBound provides scaffoldBound) {
+                        content(contentPadding + PaddingValues(bottom = fabHeight))
                     }
                 }
             }
-        ) {
-            val skipStart = when (val navigationState = LocalNavigationState.current) {
-                is NavigationState.NavigationBar -> false
-                is NavigationState.NavigationDrawer -> navigationState.visible
-                is NavigationState.NavigationRail -> navigationState.visible
-            }
-            val contentPadding1 =
-                if (navigator.scaffoldDirective.maxHorizontalPartitions > 1 && navigator.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
-                    contentPadding.asWindowInsets().only(WindowInsetsSides.End)
-                    contentPadding.copy(end = 0.dp)
-                } else {
-                    contentPadding
-                }
-            val animatePaddingValues by animatePaddingValuesAsState(
-                contentPadding1.copyWhenZero(
-                    skipStart = skipStart,
-                    skipTop = topBar != null,
-                    skipEnd = navigator.scaffoldDirective.maxHorizontalPartitions > 1 && navigator.scaffoldValue.tertiary == PaneAdaptedValue.Expanded
-                )
-                    .add(PaddingValues(bottom = fabHeight))
-            )
-            content(animatePaddingValues)
         }
     }
 }
 
-@Composable
+/**
+ * 境界が必要な場合はtrue
+ */
+internal data class CanonicalScaffoldBound(
+    val start: Boolean = false,
+    val top: Boolean = false,
+    val end: Boolean = false,
+    val bottom: Boolean = false,
+)
+
+internal val LocalCanonicalScaffoldBound = compositionLocalOf { CanonicalScaffoldBound() }
+
+private val FabSpacing = 16.dp
+
 @PreviewMultiScreen
+@Composable
 private fun CanonicalScaffoldPreview(
-    @PreviewParameter(NavigationProvider::class) item: CanonicalScaffoldPreviewItem,
+    @PreviewParameter(CanonicalScaffoldPreviewParameterProvider::class) item: CanonicalScaffoldPreviewParameter,
 ) {
-    PreviewTheme2(showNavigation = item.showNavigation, template = item.edgeToEdgeTemplate) {
+    PreviewCompliantNavigation(
+        config = PreviewConfig(
+            navigation = item.showNavigation,
+            systemBar = item.systemBar,
+            isInvertedOrientation = true
+        )
+    ) {
         val navigator = rememberSupportingPaneScaffoldNavigator(
             initialDestinationHistory = listOf(item.destinationItem)
         )
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         val scope = rememberCoroutineScope()
         CanonicalScaffold(
             navigator = navigator,
-            topBar = {
-                CanonicalTopAppBar(
-                    title = {
-                        Text("TopAppBar")
-                    },
-                )
+            topBar = if (item.topAppBar) {
+                {
+                    CanonicalTopAppBar(
+                        title = { Text("TopAppBar") },
+                        scrollBehavior = scrollBehavior,
+                    )
+                }
+            } else {
+                null
             },
             floatingActionButton = {
                 ExtendedFloatingActionButton(
@@ -203,76 +216,81 @@ private fun CanonicalScaffoldPreview(
                             }
                         } else {
                             scope.launch {
-                                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, "extra")
+                                navigator.navigateTo(
+                                    SupportingPaneScaffoldRole.Extra,
+                                    "extra"
+                                )
                             }
                         }
                     }
                 )
             },
             extraPane = { contentKey ->
-                CanonicalExtraPaneScaffold(
+                ExtraPaneScaffold(
                     title = { Text(contentKey) },
                     onCloseClick = {},
                 ) {
-                    ScratchBox(
-                        color = Color.Green,
+                    Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
-                            .padding(it)
                             .fillMaxSize()
-                    )
+                            .scratch(Color.Red)
+                            .padding(it)
+                            .scratch(Color.Blue)
+                    ) {
+                        Text("Extra pane body")
+                    }
                 }
-            }
-        ) {
-            ScratchBox(
-                color = Color.Red,
+            },
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        ) { contentPadding ->
+            val fillWidth = false
+            val additionalPadding by animateMainContentPaddingValues(ignore = fillWidth)
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .padding(it)
                     .fillMaxSize()
-            )
+                    .scratch(Color.Red)
+                    .padding(contentPadding)
+                    .scratch(Color.Blue)
+                    .padding(additionalPadding)
+                    .scratch(Color.Green)
+            ) {
+                Text("Main pane body")
+            }
         }
     }
 }
 
-private data class CanonicalScaffoldPreviewItem(
+private data class CanonicalScaffoldPreviewParameter(
     val topAppBar: Boolean,
+    val showNavigation: Boolean,
+    val systemBar: Boolean,
     val destinationItem: ThreePaneScaffoldDestinationItem<String>,
-    val edgeToEdgeTemplate: EdgeToEdgeTemplate,
-    val showNavigation: Boolean = true,
 )
 
-private class NavigationProvider : PreviewParameterProvider<CanonicalScaffoldPreviewItem> {
+private class CanonicalScaffoldPreviewParameterProvider :
+    PreviewParameterProvider<CanonicalScaffoldPreviewParameter> {
 
-    override val values = sequenceOf(
-        CanonicalScaffoldPreviewItem(
-            true,
-            ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
-            EdgeToEdgeTemplate()
-        ),
-        CanonicalScaffoldPreviewItem(
-            false,
-            ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
-            EdgeToEdgeTemplate(isStatusBarVisible = false),
-            showNavigation = false
-        ),
-        CanonicalScaffoldPreviewItem(
-            true,
-            ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, "extra"),
-            EdgeToEdgeTemplate()
-        ),
-        CanonicalScaffoldPreviewItem(
-            true,
-            ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
-            EdgeToEdgeTemplate(isInvertedOrientation = true)
-        ),
-        CanonicalScaffoldPreviewItem(
-            false,
-            ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
-            EdgeToEdgeTemplate(isInvertedOrientation = true, isStatusBarVisible = false)
-        ),
-        CanonicalScaffoldPreviewItem(
-            true,
-            ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, "extra"),
-            EdgeToEdgeTemplate(isInvertedOrientation = true)
-        ),
-    )
+    override val values: Sequence<CanonicalScaffoldPreviewParameter> =
+        listOf(true, false).flatMap { topAppBar ->
+            listOf(true, false).flatMap { showNavigation ->
+                listOf(true, false).flatMap { systemBar ->
+                    listOf(
+                        ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
+                        ThreePaneScaffoldDestinationItem(
+                            SupportingPaneScaffoldRole.Extra,
+                            "Extra pane"
+                        )
+                    ).map { destinationItem ->
+                        CanonicalScaffoldPreviewParameter(
+                            topAppBar = topAppBar,
+                            showNavigation = showNavigation,
+                            systemBar = systemBar,
+                            destinationItem = destinationItem
+                        )
+                    }
+                }
+            }
+        }.asSequence()
 }
