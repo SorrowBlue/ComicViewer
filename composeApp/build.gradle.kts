@@ -1,6 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -19,6 +18,7 @@ kotlin {
     }
 
     listOf(
+        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
@@ -30,14 +30,9 @@ kotlin {
 
     jvm("desktop")
 
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
-        val koinMain by creating {
-            dependsOn(commonMain.get())
-            dependencies {
-                implementation(project.dependencies.platform(libs.koin.bom))
-                implementation(libs.koin.compose)
-            }
-        }
         commonMain {
             dependencies {
                 implementation(projects.framework.common)
@@ -96,14 +91,14 @@ kotlin {
             }
         }
 
+        val koinMain by creating {
+            dependsOn(commonMain.get())
+            dependencies {
+                implementation(project.dependencies.platform(libs.koin.bom))
+                implementation(libs.koin.compose)
+            }
+        }
         iosMain {
-            dependsOn(koinMain)
-        }
-        iosArm64Main {
-            dependsOn(koinMain)
-        }
-
-        iosSimulatorArm64Main {
             dependsOn(koinMain)
         }
         val desktopMain by getting {

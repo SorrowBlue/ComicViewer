@@ -36,6 +36,8 @@ internal class AndroidKotlinMultiplatformConventionPlugin : Plugin<Project> {
                 iosArm64()
                 // ios Simulator on Apple silicon
                 iosSimulatorArm64()
+                // MacOS
+                iosX64()
             }
         }
     }

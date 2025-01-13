@@ -1,8 +1,7 @@
-package com.sorrowblue.comicviewer.multiplatform
+package com.sorrowblue.comicviewer
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
-import com.sorrowblue.comicviewer.RootScreenWrapperState
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
@@ -11,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 internal actual fun rememberRootScreenWrapperState(): RootScreenWrapperState {
-    return com.sorrowblue.comicviewer.rememberRootScreenWrapperState(viewModel = com.sorrowblue.comicviewer.RootScreenWrapperViewModel(
+    return rememberRootScreenWrapperState(viewModel = RootScreenWrapperViewModel(
         object : ManageSecuritySettingsUseCase {
             override val settings = MutableStateFlow(SecuritySettings())
 
