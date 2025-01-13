@@ -23,14 +23,14 @@ interface LogcatLogger {
 
     companion object : SynchronizedObject() {
 
-        private var aLogger: AtomicRef<LogcatLogger> = atomic(NoLog)
+        private val aLogger = atomic<LogcatLogger>(NoLog)
 
         @PublishedApi
         internal var logger: LogcatLogger
             get() = aLogger.value
             private set(value) = aLogger.update { value }
 
-        private var aInstalledThrowable: AtomicRef<Throwable?> = atomic(null)
+        private val aInstalledThrowable = atomic<Throwable?>(null)
         private var installedThrowable: Throwable?
             get() = aInstalledThrowable.value
             set(value) = aInstalledThrowable.update { value }

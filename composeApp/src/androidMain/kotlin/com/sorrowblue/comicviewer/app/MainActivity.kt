@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.animation.doOnEnd
@@ -48,7 +48,7 @@ internal class MainActivity : AppCompatActivity() {
         setContent {
             // TODO("ComicTheme {")
             ComicTheme {
-                RootScreenWrapper(viewModel = viewModel, finishApp = ::finish) {
+                RootScreenWrapper(finishApp = ::finish) {
                     Column(
                         Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,

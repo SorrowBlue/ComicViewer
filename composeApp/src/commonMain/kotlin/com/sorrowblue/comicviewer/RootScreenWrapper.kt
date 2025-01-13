@@ -22,6 +22,9 @@ import logcat.logcat
 private const val TAG = "RootScreenWrapper"
 
 @Composable
+internal expect fun RootScreenWrapper(finishApp: () -> Unit, content: @Composable () -> Unit)
+
+@Composable
 internal fun RootScreenWrapper(
     viewModel: MainViewModel,
     finishApp: () -> Unit,

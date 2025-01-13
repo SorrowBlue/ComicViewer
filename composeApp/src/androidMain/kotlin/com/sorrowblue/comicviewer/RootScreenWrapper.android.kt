@@ -4,13 +4,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.ComposeUIViewController
-import platform.posix.exit
+import androidx.hilt.navigation.compose.hiltViewModel
 
-fun MainViewController() = ComposeUIViewController {
-    RootScreenWrapper(finishApp = { exit(0) }) {
+@Composable
+internal actual fun RootScreenWrapper(
+    finishApp: () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
+    RootScreenWrapper(viewModel = viewModel, finishApp = finishApp) {
         Column(
             Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
