@@ -1,11 +1,11 @@
 package com.sorrowblue.comicviewer.feature.readlater.section
 
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.readlater.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -20,8 +20,8 @@ internal sealed interface ReadLaterTopAppBarAction {
 @Composable
 internal fun ReadLaterTopAppBar(
     onAction: (ReadLaterTopAppBarAction) -> Unit,
-    modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
+    scrollBehavior: TopAppBarScrollBehavior,
+    scrollableState: ScrollableState,
 ) {
     CanonicalTopAppBar(
         title = {
@@ -37,6 +37,6 @@ internal fun ReadLaterTopAppBar(
             SettingsIconButton(onClick = { onAction(ReadLaterTopAppBarAction.Settings) })
         },
         scrollBehavior = scrollBehavior,
-        modifier = modifier
+        scrollableState = scrollableState,
     )
 }

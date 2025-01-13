@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenUiState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.R
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.marginPadding
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import soil.form.Submission
@@ -90,7 +89,11 @@ internal fun EditScreen(
                 .drawVerticalScrollbar(scrollState)
                 .verticalScroll(scrollState)
                 .padding(contentPadding)
-                .marginPadding(dimension = ComicTheme.dimension, horizontal = true, bottom = true)
+                .padding(
+                    start = ComicTheme.dimension.margin,
+                    end = ComicTheme.dimension.margin,
+                    bottom = ComicTheme.dimension.margin
+                )
         ) {
             content(this)
         }

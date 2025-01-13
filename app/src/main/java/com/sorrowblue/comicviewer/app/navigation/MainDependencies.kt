@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
-import com.sorrowblue.comicviewer.bookshelf.navigation.BookshelfGraphDependencies
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -12,6 +11,7 @@ import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphDependencies
 import com.sorrowblue.comicviewer.feature.book.BookArgs
 import com.sorrowblue.comicviewer.feature.book.navgraphs.BookNavGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.BookGraphDependencies
+import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfGraphDependencies
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
 import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddDialogScreenDestination
 import com.sorrowblue.comicviewer.feature.favorite.create.destinations.FavoriteCreateDialogScreenDestination
@@ -25,6 +25,12 @@ import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraphDepen
 import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialGraphDependencies
 
+/**
+ * Main dependencies
+ *
+ * @param onRestoreComplete
+ * @receiver
+ */
 @Composable
 internal fun DependenciesContainerBuilder<*>.MainDependencies(
     onRestoreComplete: () -> Unit,

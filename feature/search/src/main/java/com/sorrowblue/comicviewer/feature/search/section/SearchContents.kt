@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.feature.search.R
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
@@ -53,7 +54,7 @@ internal fun SearchContents(
         )
     } else {
         FileLazyVerticalGrid(
-            uiState = uiState.fileLazyVerticalGridUiState,
+            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
             state = lazyListState,
             contentPadding = contentPadding,
             lazyPagingItems = lazyPagingItems,

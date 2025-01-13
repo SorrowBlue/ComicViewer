@@ -3,13 +3,19 @@ package com.sorrowblue.comicviewer.feature.authentication.section
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 internal sealed interface AuthenticationContentsAction {
     data object OnBackClick : AuthenticationContentsAction
@@ -65,7 +71,27 @@ internal fun AuthenticationColumnContents(
                 Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
             }
         }
-        HeaderContents()
+
+        Icon(
+            imageVector = ComicIcons.Launcher,
+            contentDescription = null,
+            modifier = Modifier.size(56.dp)
+        )
+        Spacer(Modifier.size(ComicTheme.dimension.padding))
+        Text(
+            text =
+            when (uiState) {
+                is AuthenticationScreenUiState.Authentication -> "パスコードロック中"
+                is AuthenticationScreenUiState.Change.Confirm -> "パスコードを変更する"
+                is AuthenticationScreenUiState.Change.ConfirmOld -> "パスコードを変更する"
+                is AuthenticationScreenUiState.Change.Input -> "パスコードを変更する"
+                is AuthenticationScreenUiState.Erase -> "パスコードロックを無効化する"
+                is AuthenticationScreenUiState.Register.Confirm -> "パスコードロックを有効化する"
+                is AuthenticationScreenUiState.Register.Input -> "パスコードロックを有効化する"
+            },
+            style = ComicTheme.typography.titleMedium,
+            textAlign = TextAlign.Center,
+        )
         Spacer(modifier = Modifier.weight(1f))
         InputContents(
             uiState = uiState,

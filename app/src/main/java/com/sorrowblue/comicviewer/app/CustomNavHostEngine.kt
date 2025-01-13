@@ -21,6 +21,12 @@ import com.ramcosta.composedestinations.spec.TypedDestinationSpec
 import com.sorrowblue.comicviewer.framework.ui.AnimatedOrDialog
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 
+/**
+ * Remember custom nav host engine
+ *
+ * @param navHostContentAlignment
+ * @return
+ */
 @Composable
 internal fun rememberCustomNavHostEngine(
     navHostContentAlignment: Alignment = Alignment.Center,
@@ -34,6 +40,13 @@ internal fun rememberCustomNavHostEngine(
     }
 }
 
+/**
+ * Custom nav host engine
+ *
+ * @property isCompact
+ * @property navHostContentAlignment
+ * @constructor Create empty Custom nav host engine
+ */
 internal class CustomNavHostEngine(
     val isCompact: Boolean,
     private val navHostContentAlignment: Alignment,

@@ -23,11 +23,14 @@ internal interface BookshelfDao {
     @Query("DELETE FROM bookshelf WHERE id = :bookshelfId")
     suspend fun delete(bookshelfId: BookshelfId): Int
 
+    @Query("UPDATE bookshelf SET deleted = :deleted WHERE id = :bookshelfId")
+    fun updateDeleted(bookshelfId: Int, deleted: Int)
+
     @Query("SELECT * FROM bookshelf WHERE id = :bookshelfId")
     fun flow(bookshelfId: Int): Flow<BookshelfEntity?>
 
     @Query(
-        "SELECT bookshelf.*, file.*, (SELECT COUNT(*) FROM file file2 WHERE bookshelf.id = file2.bookshelf_id AND file2.file_type = 'FILE') file_count FROM bookshelf LEFT OUTER JOIN file ON bookshelf.id = file.bookshelf_id AND file.parent = '' ORDER BY bookshelf.id"
+        "SELECT bookshelf.*, file.*, (SELECT COUNT(*) FROM file file2 WHERE bookshelf.id = file2.bookshelf_id AND file2.file_type = 'FILE') file_count FROM (SELECT * FROM bookshelf WHERE bookshelf.deleted = 0) bookshelf LEFT OUTER JOIN file ON bookshelf.id = file.bookshelf_id AND file.parent = '' ORDER BY bookshelf.id"
     )
     fun pagingSource(): PagingSource<Int, EmbeddedBookshelfFileCountEntity>
 

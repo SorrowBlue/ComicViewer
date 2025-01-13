@@ -21,7 +21,6 @@ import coil3.compose.AsyncImage
 import com.sorrowblue.comicviewer.feature.library.dropbox.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.previewPlaceholder
 import kotlinx.parcelize.Parcelize
 
 internal sealed interface DropBoxDialogUiState : Parcelable {
@@ -72,7 +71,6 @@ private fun DropBoxAccountDialog(
             AsyncImage(
                 model = uiState.photoUrl,
                 contentDescription = null,
-                placeholder = previewPlaceholder(),
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)

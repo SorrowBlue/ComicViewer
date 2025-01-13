@@ -66,10 +66,11 @@ Compose:
     active: true
     allowedCompositionLocals:
       - 'LocalDimension'
-      - 'LocalComponentColors'
+      - 'LocalContainerColor'
       - 'LocalNavigationState'
-      - 'LocalDestinationScopeWithNoDependencies'
-      - 'LocalSnackbarHostState'
+      - 'LocalCanonicalScaffoldBound'
+      - 'LocalDestinationScope'
+      - 'LocalCoroutineScope'
     # You can optionally define a list of CompositionLocals that are allowed here
     # allowedCompositionLocals: LocalSomething,LocalSomethingElse
   ContentEmitterReturningValues:

@@ -8,11 +8,19 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
+import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
@@ -42,9 +50,10 @@ internal class RegenerateThumbnailsWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
-        val request = FileScanRequest.fromWorkData(inputData) ?: return Result.failure()
+        @OptIn(ExperimentalIdValue::class)
+        val bookshelfId = BookshelfId(inputData.getInt(BOOKSHELF_ID, 0))
         val bookshelfInfo =
-            getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(request.bookshelfId))
+            getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
                 .first().dataOrNull() ?: return Result.failure()
         setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, 0, 0, true))
         return try {
@@ -53,8 +62,8 @@ internal class RegenerateThumbnailsWorker @AssistedInject constructor(
             logcat { "catch: ${e.asLog()}" }
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("本棚のスキャン")
-                    .setContentText("スキャンはキャンセルされました。")
+                    .setContentTitle("サムネイルのスキャン")
+                    .setContentText("サムネイルのスキャンはキャンセルされました。")
                     .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(R.drawable.ic_sync_cancel_24dp)
                     .setOngoing(false)
@@ -78,7 +87,7 @@ internal class RegenerateThumbnailsWorker @AssistedInject constructor(
         return regenerateThumbnailsUseCase(useCaseRequest).first().fold({
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("本棚のスキャンが完了しました")
+                    .setContentTitle("サムネイルのスキャンが完了しました")
                     .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(R.drawable.ic_sync_done_24dp)
                     .setOngoing(false)
@@ -133,5 +142,25 @@ internal class RegenerateThumbnailsWorker @AssistedInject constructor(
             notification,
             ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
         )
+    }
+
+    companion object {
+        const val BOOKSHELF_ID = "BOOKSHELF_ID"
+
+        fun enqueueUniqueWork(context: Context, bookshelfId: BookshelfId) {
+            val constraints = Constraints.Builder().apply {
+                // 有効なネットワーク接続が必要
+                setRequiredNetworkType(NetworkType.CONNECTED)
+                // ユーザーのデバイスの保存容量が少なすぎる場合以外
+                setRequiresStorageNotLow(true)
+            }.build()
+            val myWorkRequest = OneTimeWorkRequest.Builder(RegenerateThumbnailsWorker::class.java)
+                .setConstraints(constraints)
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .setInputData(workDataOf(BOOKSHELF_ID to bookshelfId.value))
+                .build()
+            WorkManager.getInstance(context)
+                .enqueueUniqueWork("scan2", ExistingWorkPolicy.KEEP, myWorkRequest)
+        }
     }
 }

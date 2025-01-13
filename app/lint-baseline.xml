@@ -22,11 +22,11 @@
 
     <issue id="TrustAllX509TrustManager"
         message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
-        <location file="google-http-client-1.45.0.jar" />
+        <location file="google-http-client-1.45.2.jar" />
     </issue>
 
     <issue id="TrustAllX509TrustManager"
         message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
-        <location file="google-http-client-1.45.0.jar" />
+        <location file="google-http-client-1.45.2.jar" />
     </issue>
 </issues>

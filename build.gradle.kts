@@ -1,6 +1,5 @@
 import dev.iurysouza.modulegraph.Orientation
 import java.util.Locale
-import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 plugins {
     alias(libs.plugins.detekt)
@@ -23,8 +22,56 @@ plugins {
     alias(libs.plugins.aboutlibraries) apply false
 }
 
-tasks.register("clean", Delete::class) {
-    delete(rootProject.layout.buildDirectory)
+dependencies {
+    dokka(projects.app)
+    dokka(projects.catalog)
+    dokka(projects.data.coil)
+    dokka(projects.data.database)
+    dokka(projects.data.datastore)
+    dokka(projects.data.di)
+    dokka(projects.data.reader.document)
+    dokka(projects.data.reader.zip)
+    dokka(projects.data.storage.client)
+    dokka(projects.data.storage.device)
+    dokka(projects.data.storage.smb)
+    dokka(projects.domain.model)
+    dokka(projects.domain.reader)
+    dokka(projects.domain.service)
+    dokka(projects.domain.usecase)
+    dokka(projects.feature.authentication)
+    dokka(projects.feature.book)
+    dokka(projects.feature.bookshelf)
+    dokka(projects.feature.bookshelf.edit)
+    dokka(projects.feature.bookshelf.info)
+    dokka(projects.feature.bookshelf.selection)
+    dokka(projects.feature.favorite)
+    dokka(projects.feature.favorite.add)
+    dokka(projects.feature.favorite.common)
+    dokka(projects.feature.favorite.create)
+    dokka(projects.feature.favorite.edit)
+    dokka(projects.feature.file)
+    dokka(projects.feature.folder)
+    dokka(projects.feature.history)
+    dokka(projects.feature.library)
+    dokka(projects.feature.library.box)
+    dokka(projects.feature.library.common)
+    dokka(projects.feature.library.dropbox)
+    dokka(projects.feature.library.googledrive)
+    dokka(projects.feature.library.onedrive)
+    dokka(projects.feature.readlater)
+    dokka(projects.feature.search)
+    dokka(projects.feature.settings)
+    dokka(projects.feature.settings.common)
+    dokka(projects.feature.settings.display)
+    dokka(projects.feature.settings.folder)
+    dokka(projects.feature.settings.info)
+    dokka(projects.feature.settings.security)
+    dokka(projects.feature.settings.viewer)
+    dokka(projects.feature.tutorial)
+    dokka(projects.framework.common)
+    dokka(projects.framework.designsystem)
+    dokka(projects.framework.notification)
+    dokka(projects.framework.ui)
 }
 
 fun isNonStable(version: String): Boolean {
@@ -44,25 +91,10 @@ tasks.named(
     }
 }
 
-val reportMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+tasks.register("reportMerge", io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
     output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
 }
 
-subprojects {
-    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-        finalizedBy(reportMerge)
-    }
-
-    reportMerge {
-        input.from(tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().map { it.sarifReportFile })
-    }
-}
-plugins.withId("org.jetbrains.dokka") {
-    tasks.withType<DokkaMultiModuleTask>().configureEach {
-        notCompatibleWithConfigurationCache("https://github.com/Kotlin/dokka/issues/1217")
-        outputDirectory.set(layout.projectDirectory.dir("docs/dokka"))
-    }
-}
 afterEvaluate {
     val task = tasks.named("createModuleGraph")
     task.configure {

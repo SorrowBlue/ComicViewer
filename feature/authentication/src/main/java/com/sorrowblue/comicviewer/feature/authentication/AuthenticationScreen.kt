@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.authentication
 
 import android.content.res.Configuration
-import android.os.Parcelable
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -28,7 +28,6 @@ import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import kotlinx.parcelize.Parcelize
 
 interface AuthenticationScreenNavigator {
     fun navigateUp()
@@ -80,6 +79,55 @@ internal sealed interface AuthenticationScreenUiState {
 
     fun copyPin(pin: String): AuthenticationScreenUiState
 
+    companion object {
+        fun stateSaver() = mapSaver(
+            save = {
+                mapOf(
+                    "class" to it::class.simpleName,
+                    "pin" to it.pin,
+                    "error" to it.error,
+                    "loading" to it.loading
+                )
+            },
+            restore = {
+                val pin = it["pin"] as String
+                val error = it["error"] as Int
+                val loading = it["loading"] as Boolean
+                when (it.get("class")) {
+                    Register.Input::class.simpleName -> {
+                        Register.Input(pin, error, loading)
+                    }
+
+                    Register.Confirm::class.simpleName -> {
+                        Register.Confirm(pin, error, loading)
+                    }
+
+                    Authentication::class.simpleName -> {
+                        Authentication(pin, error, loading)
+                    }
+
+                    Change.ConfirmOld::class.simpleName -> {
+                        Change.ConfirmOld(pin, error, loading)
+                    }
+
+                    Change.Input::class.simpleName -> {
+                        Change.Input(pin, error, loading)
+                    }
+
+                    Change.Confirm::class.simpleName -> {
+                        Change.Confirm(pin, error, loading)
+                    }
+
+                    Erase::class.simpleName -> {
+                        Erase(pin, error, loading)
+                    }
+
+                    else -> null
+                }
+            }
+        )
+    }
+
     sealed interface Register : AuthenticationScreenUiState {
         data class Input(
             override val pin: String,
@@ -98,12 +146,11 @@ internal sealed interface AuthenticationScreenUiState {
         }
     }
 
-    @Parcelize
     data class Authentication(
         override val pin: String,
         override val error: Int,
         override val loading: Boolean = false,
-    ) : AuthenticationScreenUiState, Parcelable {
+    ) : AuthenticationScreenUiState {
         override fun copyPin(pin: String) = copy(pin = pin)
     }
 

@@ -26,28 +26,28 @@ fun PaddingValues.copyWhenZero(
     val start = calculateStartPadding(LocalLayoutDirection.current).let { startPadding ->
         when {
             skipStart -> startPadding
-            startPadding > 0.dp -> startPadding
+            startPadding > ZeroDP -> startPadding
             else -> ComicTheme.dimension.margin
         }
     }
     val top = calculateTopPadding().let { topPadding ->
         when {
             skipTop -> topPadding
-            topPadding > 0.dp -> topPadding
+            topPadding > ZeroDP -> topPadding
             else -> ComicTheme.dimension.margin
         }
     }
     val end = calculateEndPadding(LocalLayoutDirection.current).let { endPadding ->
         when {
             skipEnd -> endPadding
-            endPadding > 0.dp -> endPadding
+            endPadding > ZeroDP -> endPadding
             else -> ComicTheme.dimension.margin
         }
     }
     val bottom = calculateBottomPadding().let { bottomPadding ->
         when {
             skipBottom -> bottomPadding
-            bottomPadding > 0.dp -> bottomPadding
+            bottomPadding > ZeroDP -> bottomPadding
             else -> ComicTheme.dimension.margin
         }
     }
@@ -55,18 +55,23 @@ fun PaddingValues.copyWhenZero(
 }
 
 @Composable
-fun animatePaddingValuesAsState(
-    targetValue: PaddingValues,
-    animationSpec: AnimationSpec<PaddingValues> = paddingValuesDefaultSpring,
-    label: String = "PaddingValuesAnimation",
-    finishedListener: ((PaddingValues) -> Unit)? = null,
+fun animateMainContentPaddingValues(
+    ignore: Boolean = false,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
+    animationSpec: AnimationSpec<PaddingValues> = paddingValuesDefaultSpring,
+    finishedListener: ((PaddingValues) -> Unit)? = null,
 ): State<PaddingValues> {
+    val bound = LocalCanonicalScaffoldBound.current
     return animateValueAsState(
-        targetValue,
-        paddingValuesToVector(layoutDirection),
-        animationSpec,
-        label = label,
+        targetValue = PaddingValues(
+            start = if (ignore || !bound.start) 0.dp else ComicTheme.dimension.margin,
+            top = if (ignore || !bound.top) 0.dp else ComicTheme.dimension.margin,
+            end = if (ignore || !bound.end) 0.dp else ComicTheme.dimension.margin,
+            bottom = if (ignore || !bound.bottom) 0.dp else ComicTheme.dimension.margin
+        ),
+        typeConverter = paddingValuesToVector(layoutDirection),
+        animationSpec = animationSpec,
+        label = "PaddingValuesAnimation",
         finishedListener = finishedListener
     )
 }
@@ -90,6 +95,8 @@ private fun paddingValuesToVector(layoutDirection: LayoutDirection): TwoWayConve
             )
         }
     )
+
+private val ZeroDP = 0.dp
 
 private val paddingValuesVisibilityThreshold = PaddingValues(1.dp)
 

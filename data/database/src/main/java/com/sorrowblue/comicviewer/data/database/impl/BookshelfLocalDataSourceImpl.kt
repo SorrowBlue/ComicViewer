@@ -30,6 +30,12 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
     private val dao: BookshelfDao,
 ) : BookshelfLocalDataSource {
 
+    override suspend fun updateDeleted(bookshelfId: BookshelfId, isDeleted: Boolean) {
+        withContext(dispatcher) {
+            dao.updateDeleted(bookshelfId.value, if (isDeleted) 1 else 0)
+        }
+    }
+
     override suspend fun updateOrCreate(bookshelf: Bookshelf): Bookshelf? {
         val entity = BookshelfEntity.fromModel(bookshelf)
         return dao.upsert(entity).let {

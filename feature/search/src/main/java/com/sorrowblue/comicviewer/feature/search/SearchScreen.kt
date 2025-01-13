@@ -11,7 +11,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -33,9 +32,10 @@ import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
 import kotlinx.coroutines.delay
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -77,15 +77,11 @@ internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenS
     val currentNavigator by rememberUpdatedState(navigator)
     LaunchedEventEffect(state.event) {
         when (it) {
-            is SearchScreenEvent.Favorite -> currentNavigator.onFavoriteClick(
-                it.bookshelfId,
-                it.path
-            )
+            is SearchScreenEvent.Favorite ->
+                currentNavigator.onFavoriteClick(it.bookshelfId, it.path)
 
-            is SearchScreenEvent.OpenFolder -> currentNavigator.onOpenFolderClick(
-                it.bookshelfId,
-                it.parent
-            )
+            is SearchScreenEvent.OpenFolder ->
+                currentNavigator.onOpenFolderClick(it.bookshelfId, it.parent)
 
             SearchScreenEvent.Back -> currentNavigator.navigateUp()
             is SearchScreenEvent.File -> currentNavigator.onFileClick(it.file)
@@ -143,30 +139,35 @@ private fun SearchScreen(
             SearchTopAppBar(
                 searchCondition = uiState.searchCondition,
                 onAction = onSearchTopAppBarAction,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                scrollableState = lazyGridState
             )
         },
-        extraPane = { content ->
-            FileInfoSheet(fileKey = content, onAction = onFileInfoSheetAction)
+        extraPane = { contentKey ->
+            FileInfoSheet(
+                fileKey = contentKey,
+                onAction = onFileInfoSheetAction,
+                isOpenFolderEnabled = true
+            )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) { innerPadding ->
+    ) { contentPadding ->
         SearchContents(
             uiState = uiState.searchContentsUiState,
             lazyPagingItems = lazyPagingItems,
             lazyListState = lazyGridState,
             onAction = onSearchContentsAction,
-            contentPadding = innerPadding,
+            contentPadding = contentPadding
         )
     }
 }
 
 private const val WaitLoadPage = 350L
 
-@Preview
+@PreviewMultiScreen
 @Composable
 private fun SearchScreenPreview() {
-    PreviewTheme {
+    PreviewCompliantNavigation {
         val pagingDataFlow = PagingData.flowData<File> { fakeBookFile(it) }
         val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
         SearchScreen(

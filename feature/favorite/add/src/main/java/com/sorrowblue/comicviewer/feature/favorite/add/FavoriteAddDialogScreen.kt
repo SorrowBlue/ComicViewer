@@ -9,14 +9,12 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
@@ -32,13 +30,13 @@ import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.feature.favorite.add.component.FavoriteAddButton
 import com.sorrowblue.comicviewer.feature.favorite.add.component.FavoriteAddTopAppBar
 import com.sorrowblue.comicviewer.feature.favorite.add.section.RecentFavoriteSheet
-import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteItem
+import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteListItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.add
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
-import com.sorrowblue.comicviewer.framework.ui.preview.fakeFavorite
-import com.sorrowblue.comicviewer.framework.ui.preview.flowData
+import com.sorrowblue.comicviewer.framework.ui.plus
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFavorite
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
 data class FavoriteAddArgs(
     val bookshelfId: BookshelfId,
@@ -112,9 +110,7 @@ private fun FavoriteAddDialogScreen(
         ) { contentPadding ->
             LazyColumn(
                 state = lazyListState,
-                contentPadding = contentPadding.add(
-                    PaddingValues(bottom = BottomButtonMargin * 2 + ButtonDefaults.MinHeight)
-                ),
+                contentPadding = contentPadding + PaddingValues(bottom = BottomButtonMargin * 2 + ButtonDefaults.MinHeight),
                 modifier = Modifier
                     .fillMaxSize()
                     .drawVerticalScrollbar(lazyListState)
@@ -133,11 +129,7 @@ private fun FavoriteAddDialogScreen(
                     key = lazyPagingItems.itemKey { it.id.value }
                 ) { index ->
                     lazyPagingItems[index]?.let { item ->
-                        FavoriteItem(
-                            favorite = item,
-                            onClick = { onClick(item) },
-                            color = ListItemDefaults.colors(containerColor = Color.Transparent)
-                        ) {
+                        FavoriteListItem(favorite = item, onClick = { onClick(item) }) {
                             if (item.exist) {
                                 Icon(imageVector = ComicIcons.Check, contentDescription = null)
                             }
@@ -154,7 +146,8 @@ private val BottomButtonMargin = 16.dp
 @Composable
 @Preview
 private fun PreviewFavoriteAddDialogScreen() {
-    val lazyPagingItems = PagingData.flowData { fakeFavorite(it) }.collectAsLazyPagingItems()
+    val lazyPagingItems = PagingData.flowData { fakeFavorite(it).copy(exist = it % 3 == 0) }
+        .collectAsLazyPagingItems()
     FavoriteAddDialogScreen(
         lazyPagingItems = lazyPagingItems,
         recentFavorites = lazyPagingItems,

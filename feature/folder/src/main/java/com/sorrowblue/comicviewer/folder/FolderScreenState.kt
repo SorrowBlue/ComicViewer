@@ -33,7 +33,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.folder.section.FolderFabAction
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
@@ -82,7 +81,6 @@ internal interface FolderScreenState :
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onFolderContentsAction(action: FolderContentsAction)
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
-    fun onFolderFabAction(action: FolderFabAction)
 }
 
 @Composable
@@ -263,18 +261,6 @@ private class FolderScreenStateImpl(
                         is PagingException.NotFound -> snackbarHostState.showSnackbar("見つかりませんでした")
                     }
                 }
-            }
-        }
-    }
-
-    override fun onFolderFabAction(action: FolderFabAction) {
-        scope.launch {
-            when (action) {
-                FolderFabAction.Down -> while (lazyGridState.canScrollForward) {
-                    lazyGridState.scrollToItem(lazyPagingItems.itemCount)
-                }
-
-                FolderFabAction.Up -> lazyGridState.scrollToItem(0)
             }
         }
     }

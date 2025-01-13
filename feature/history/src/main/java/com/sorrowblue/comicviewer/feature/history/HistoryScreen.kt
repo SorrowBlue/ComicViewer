@@ -13,7 +13,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
@@ -36,8 +35,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResum
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
-import com.sorrowblue.comicviewer.framework.ui.copy
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 interface HistoryScreenNavigator {
@@ -110,11 +107,12 @@ private fun HistoryScreen(
             HistoryTopAppBar(
                 onAction = onHistoryTopAppBarAction,
                 scrollBehavior = scrollBehavior,
+                scrollableState = lazyGridState
             )
         },
-        extraPane = { content ->
+        extraPane = { contentKey ->
             FileInfoSheet(
-                fileKey = content,
+                fileKey = contentKey,
                 onAction = onFileInfoSheetAction,
                 isOpenFolderEnabled = true
             )
@@ -155,18 +153,13 @@ private fun FavoriteContents(
                 .padding(contentPadding)
         )
     } else {
-        val padding = if (isCompactWindowClass()) {
-            contentPadding.copy(start = 0.dp, end = 0.dp)
-        } else {
-            contentPadding
-        }
         FileLazyVerticalGrid(
             uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
             state = lazyGridState,
             lazyPagingItems = lazyPagingItems,
             onItemClick = { onAction(HistoryContentsAction.Book(it)) },
             onItemInfoClick = { onAction(HistoryContentsAction.FileInfo(it)) },
-            contentPadding = padding,
+            contentPadding = contentPadding,
             modifier = Modifier.fillMaxSize()
         )
     }

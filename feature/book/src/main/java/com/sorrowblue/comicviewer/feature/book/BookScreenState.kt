@@ -119,7 +119,7 @@ private class BookScreenStateImpl(
         ).first().dataOrNull()?.let {
             nextBookList.add(NextBook.Folder(it))
         }
-        return NextPage(nextBookList)
+        return NextPage(isNext, nextBookList)
     }
 
     init {

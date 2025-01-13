@@ -7,6 +7,14 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsU
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+/**
+ * Comic viewer app view model
+ *
+ * @property getNavigationHistoryUseCase
+ * @property manageDisplaySettingsUseCase
+ * @property getInstalledModulesUseCase
+ * @constructor Create empty Comic viewer app view model
+ */
 @HiltViewModel
 internal class ComicViewerAppViewModel @Inject constructor(
     val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
