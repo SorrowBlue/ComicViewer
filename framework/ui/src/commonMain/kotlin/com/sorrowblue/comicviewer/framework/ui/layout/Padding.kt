@@ -1,8 +1,7 @@
-package com.sorrowblue.comicviewer.framework.ui
+package com.sorrowblue.comicviewer.framework.ui.layout
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.Composable
@@ -11,20 +10,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-
-/**
- * [PaddingValues] を [WindowInsets] に変換します。
- *
- * @param layoutDirection LayoutDirection
- */
-@Composable
-fun PaddingValues.asWindowInsets(layoutDirection: LayoutDirection = LocalLayoutDirection.current) =
-    WindowInsets(
-        left = calculateLeftPadding(layoutDirection),
-        top = calculateTopPadding(),
-        right = calculateRightPadding(layoutDirection),
-        bottom = calculateBottomPadding()
-    )
+import kotlin.jvm.JvmInline
 
 /**
  * Add the other [PaddingValues] to this [PaddingValues].
@@ -43,6 +29,20 @@ operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
     )
 }
 
+/**
+ * [PaddingValues] を [WindowInsets] に変換します。
+ *
+ * @param layoutDirection LayoutDirection
+ */
+@Composable
+fun PaddingValues.asWindowInsets(layoutDirection: LayoutDirection = LocalLayoutDirection.current) =
+    WindowInsets(
+        left = calculateLeftPadding(layoutDirection),
+        top = calculateTopPadding(),
+        right = calculateRightPadding(layoutDirection),
+        bottom = calculateBottomPadding()
+    )
+
 @Composable
 fun PaddingValues.copy(
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
@@ -54,7 +54,7 @@ fun PaddingValues.copy(
 
 @JvmInline
 value class PaddingValuesSides private constructor(private val value: Int) {
-    /** Returns a [WindowInsetsSides] containing sides defied in [sides] and the sides in `this`. */
+    /** Returns a [PaddingValuesSides] containing sides defied in [sides] and the sides in `this`. */
     operator fun plus(sides: PaddingValuesSides): PaddingValuesSides =
         PaddingValuesSides(value or sides.value)
 

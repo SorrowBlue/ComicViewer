@@ -74,7 +74,7 @@ internal actual fun NavigableExtraPaneScaffold(
 @Composable
 @PreviewMultiScreen
 private fun NavigableExtraPaneScaffoldPreview(
-    @PreviewParameter(ConfigProvider::class) parameter: NavigableExtraPaneScaffoldConfig,
+    @PreviewParameter(NavigableExtraPaneScaffoldConfigProvider::class) parameter: NavigableExtraPaneScaffoldConfig,
 ) {
     PreviewCompliantNavigation(
         config = PreviewConfig(
@@ -118,7 +118,8 @@ private data class NavigableExtraPaneScaffoldConfig(
     val isInvertedOrientation: Boolean,
 )
 
-private class ConfigProvider : PreviewParameterProvider<NavigableExtraPaneScaffoldConfig> {
+private class NavigableExtraPaneScaffoldConfigProvider :
+    PreviewParameterProvider<NavigableExtraPaneScaffoldConfig> {
     override val values: Sequence<NavigableExtraPaneScaffoldConfig> =
         sequenceOf(
             NavigableExtraPaneScaffoldConfig(

@@ -30,7 +30,7 @@ import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsViewMo
 import com.sorrowblue.comicviewer.feature.settings.display.R
 import com.sorrowblue.comicviewer.feature.settings.display.label
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavGraph
-import com.sorrowblue.comicviewer.framework.ui.copy
+import com.sorrowblue.comicviewer.framework.ui.layout.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn

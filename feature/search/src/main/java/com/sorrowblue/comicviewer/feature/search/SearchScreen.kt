@@ -29,7 +29,7 @@ import com.sorrowblue.comicviewer.feature.search.section.SearchContentsUiState
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
@@ -37,7 +37,6 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
 import kotlinx.coroutines.delay
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 interface SearchScreenNavigator {

@@ -25,11 +25,11 @@ import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
 import com.sorrowblue.comicviewer.file.component.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.PaddingValuesSides
+import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.navigation.resultRecipient
-import com.sorrowblue.comicviewer.framework.ui.only
-import com.sorrowblue.comicviewer.framework.ui.plus
+import com.sorrowblue.comicviewer.framework.ui.layout.only
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 
 internal sealed interface BookshelfInfoMainContentsEvent {
     data class ShowNotificationPermissionRationale(val type: ScanType) : BookshelfInfoMainContentsEvent

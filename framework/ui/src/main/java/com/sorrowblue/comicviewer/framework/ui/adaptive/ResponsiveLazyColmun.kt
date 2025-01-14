@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
-import com.sorrowblue.comicviewer.framework.ui.copy
+import com.sorrowblue.comicviewer.framework.ui.layout.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 
 @Composable

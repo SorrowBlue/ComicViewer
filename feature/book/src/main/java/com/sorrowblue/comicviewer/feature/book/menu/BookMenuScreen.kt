@@ -18,7 +18,7 @@ import com.sorrowblue.comicviewer.feature.book.R
 import com.sorrowblue.comicviewer.feature.book.navigation.BookGraph
 import com.sorrowblue.comicviewer.feature.book.section.PageFormat2
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ExposedDropdownMenu
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

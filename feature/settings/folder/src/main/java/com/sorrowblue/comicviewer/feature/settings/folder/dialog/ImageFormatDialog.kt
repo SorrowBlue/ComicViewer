@@ -25,7 +25,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySett
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.feature.settings.folder.R
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsGraph
-import com.sorrowblue.comicviewer.framework.ui.copy
+import com.sorrowblue.comicviewer.framework.ui.layout.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 

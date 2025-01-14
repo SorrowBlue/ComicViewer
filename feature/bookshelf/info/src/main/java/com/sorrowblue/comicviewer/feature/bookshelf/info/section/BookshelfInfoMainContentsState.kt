@@ -36,7 +36,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.ScanFileWorker
 import com.sorrowblue.comicviewer.feature.bookshelf.notification.NotificationRequestResult
 import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalCoroutineScope
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope

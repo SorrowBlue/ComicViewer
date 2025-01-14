@@ -31,7 +31,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfAppBar
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfMainSheet
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.navigation.DefaultDestinationScopeWrapper
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder

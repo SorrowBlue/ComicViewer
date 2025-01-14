@@ -34,7 +34,7 @@ import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteList
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
-import com.sorrowblue.comicviewer.framework.ui.plus
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFavorite
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 

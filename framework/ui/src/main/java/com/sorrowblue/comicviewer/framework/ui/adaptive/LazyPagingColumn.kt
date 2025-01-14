@@ -43,7 +43,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
-import com.sorrowblue.comicviewer.framework.ui.plus
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold

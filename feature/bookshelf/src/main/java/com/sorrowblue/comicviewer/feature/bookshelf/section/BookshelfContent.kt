@@ -26,7 +26,7 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.LazyPagingColumn
 import com.sorrowblue.comicviewer.framework.ui.adaptive.LazyPagingColumnType
 import com.sorrowblue.comicviewer.framework.ui.adaptive.union
-import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
 

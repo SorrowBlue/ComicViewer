@@ -32,7 +32,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveB
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 interface ReadLaterScreenNavigator {
