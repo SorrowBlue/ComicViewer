@@ -7,7 +7,7 @@ import di.Inject
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Singleton
 
-@Singleton(binds = [LoadSettingsUseCase::class])
+@Singleton
 internal class LoadSettingsInteractor @Inject constructor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : LoadSettingsUseCase {

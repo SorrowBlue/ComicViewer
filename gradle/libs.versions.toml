@@ -39,7 +39,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
-
+kotlinx-atomicfu = { id = "org.jetbrains.kotlinx.atomicfu", version = "0.27.0" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
 
@@ -62,6 +62,11 @@ comicviewer-detekt = { id = "comicviewer.android.detekt" }
 comicviewer-android-feature = { id = "comicviewer.android.feature" }
 comicviewer-android-featureDynamicFeature = { id = "comicviewer.android.feature-dynamic-feature" }
 comicviewer-dokka = { id = "comicviewer.android.dokka" }
+
+comicviewer-kotlinMultiplatform-base = { id = "comicviewer.kotlinMultiplatform.base" }
+comicviewer-kotlinMultiplatform-application = { id = "comicviewer.kotlinMultiplatform.application" }
+comicviewer-kotlinMultiplatform-library = { id = "comicviewer.kotlinMultiplatform.library" }
+comicviewer-kotlinMultiplatform-di = { id = "comicviewer.kotlinMultiplatform.di" }
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
@@ -95,6 +100,7 @@ androidx-credentials = { group = "androidx.credentials", name = "credentials", v
 androidx-credentials-playServicesAuth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "androidx-credentials" }
 
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version = "1.1.1" }
+androidx-datastoreCoreOkio = { group = "androidx.datastore", name = "datastore-core-okio", version = "1.1.1" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version = "1.0.1" }
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version = "1.3.7" }
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version = "1.2.0" }

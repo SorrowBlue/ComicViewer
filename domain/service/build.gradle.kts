@@ -1,7 +1,6 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.kotlinMultiplatform)
-    alias(libs.plugins.google.dagger.hilt)
-    alias(libs.plugins.google.ksp)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
 }
 
 android {
@@ -22,13 +21,8 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation(libs.google.dagger.hilt.android)
                 implementation(libs.google.android.play.feature.delivery.ktx)
             }
         }
     }
-}
-
-dependencies {
-    add("kspAndroid", libs.google.dagger.hilt.compiler)
 }

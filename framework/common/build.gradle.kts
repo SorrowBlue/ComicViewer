@@ -1,6 +1,7 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.kotlinMultiplatform)
-    id("org.jetbrains.kotlinx.atomicfu") version "0.27.0"
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
+    alias(libs.plugins.kotlinx.atomicfu)
 }
 
 android {
@@ -11,7 +12,6 @@ kotlin {
     sourceSets {
         androidMain {
             dependencies {
-                implementation(libs.google.dagger.hilt.android)
                 implementation(libs.androidx.startup.runtime)
             }
         }

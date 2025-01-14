@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.ViewModelFactoryDsl
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
@@ -28,6 +29,7 @@ internal actual fun rememberRootScreenWrapperState(): RootScreenWrapperState {
     ))
 }
 
+@KoinViewModel
 internal actual class RootScreenWrapperViewModel(
     actual val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
     actual val loadSettingsUseCase: LoadSettingsUseCase,

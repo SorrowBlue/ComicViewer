@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.kotlinMultiplatform)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
 }
 
 android {
@@ -7,14 +7,12 @@ android {
 }
 
 kotlin {
-
     sourceSets {
         commonMain {
             dependencies {
                 api(projects.domain.model)
 
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
-
+                implementation(libs.kotlinx.datetime)
                 implementation(libs.androidx.paging.common)
             }
         }

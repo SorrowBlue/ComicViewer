@@ -1,22 +1,14 @@
+import com.sorrowblue.comicviewer.ComicBuildType
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.application)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.google.dagger.hilt)
-    alias(libs.plugins.google.ksp)
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
-    }
-
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,17 +20,13 @@ kotlin {
         }
     }
 
-    jvm("desktop")
-
-    applyDefaultHierarchyTemplate()
-
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.framework.common)
+                implementation(projects.domain.usecase)
+                implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(compose.runtime)
                 implementation(compose.foundation)
-                implementation(compose.material)
                 implementation(compose.material3)
                 implementation(compose.material3AdaptiveNavigationSuite)
                 implementation(compose.materialIconsExtended)
@@ -46,18 +34,14 @@ kotlin {
                 implementation(compose.ui)
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
-                implementation(libs.androidx.lifecycle.viewmodel)
-                implementation(projects.domain.usecase)
             }
         }
 
         androidMain {
             dependencies {
-
                 implementation(projects.framework.ui)
                 implementation(projects.framework.notification)
                 implementation(projects.framework.designsystem)
-
                 implementation(projects.data.di)
                 implementation(projects.domain.usecase)
                 implementation(projects.feature.authentication)
@@ -76,8 +60,6 @@ kotlin {
                 implementation(compose.preview)
                 implementation(libs.google.dagger.hilt.android)
                 implementation(libs.androidx.hilt.navigationCompose)
-
-
                 implementation(libs.androidx.activity)
                 implementation(libs.androidx.biometric)
                 implementation(libs.androidx.browser)
@@ -86,58 +68,74 @@ kotlin {
                 implementation(libs.google.android.play.review.ktx)
                 implementation(libs.google.android.play.feature.delivery.ktx)
                 implementation(libs.androidx.appcompat)
-
                 implementation(libs.google.android.billingclient.billingKtx)
             }
         }
 
-        val koinMain by creating {
-            dependsOn(commonMain.get())
-            dependencies {
-                implementation(project.dependencies.platform(libs.koin.bom))
-                implementation(libs.koin.compose)
-            }
-        }
-        iosMain {
-            dependsOn(koinMain)
-        }
         val desktopMain by getting {
-            dependsOn(koinMain)
             dependencies {
                 implementation(compose.desktop.currentOs)
             }
         }
     }
 }
+val versionNameGit = "1.0.0"
 
 android {
     namespace = "com.sorrowblue.comicviewer.app"
-
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = versionNameGit
+        logger.lifecycle("versionName=$versionName")
     }
+    androidResources {
+        generateLocaleConfig = true
+    }
+
+    buildTypes {
+        // TODO(Remove suffix .kmp)
+        val suffix = ".kmp"
+        release {
+            applicationIdSuffix = ComicBuildType.RELEASE.applicationIdSuffix + suffix
+            isMinifyEnabled = ComicBuildType.RELEASE.isMinifyEnabled
+            isShrinkResources = ComicBuildType.RELEASE.isShrinkResources
+            signingConfig = signingConfigs.findByName(name)
+        }
+        getByName(ComicBuildType.PRERELEASE.display) {
+            initWith(getByName(ComicBuildType.RELEASE.display))
+            applicationIdSuffix = ComicBuildType.PRERELEASE.applicationIdSuffix + suffix
+            isMinifyEnabled = ComicBuildType.PRERELEASE.isMinifyEnabled
+            isShrinkResources = ComicBuildType.PRERELEASE.isShrinkResources
+            signingConfig = signingConfigs.findByName(name)
+        }
+        getByName(ComicBuildType.INTERNAL.display) {
+            initWith(getByName(ComicBuildType.RELEASE.display))
+            applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix + suffix
+            isMinifyEnabled = ComicBuildType.INTERNAL.isMinifyEnabled
+            isShrinkResources = ComicBuildType.INTERNAL.isShrinkResources
+            signingConfig = signingConfigs.findByName(name)
+        }
+        debug {
+            applicationIdSuffix = ComicBuildType.DEBUG.applicationIdSuffix + suffix
+            isMinifyEnabled = ComicBuildType.DEBUG.isMinifyEnabled
+            isShrinkResources = ComicBuildType.DEBUG.isShrinkResources
+            signingConfig = signingConfigs.findByName(name)
+        }
+    }
+
+    // TODO(dynamicFeatures)
+
+    buildFeatures.buildConfig = true
+
     packaging {
         resources.excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
-    }
-    buildTypes {
-        getByName("release") {
-        }
-        all {
-            applicationIdSuffix = ".kmp"
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
     }
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
-    add("kspAndroid", libs.google.dagger.hilt.compiler)
 }
 
 compose.desktop {
@@ -147,7 +145,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.sorrowblue.comicviewer"
-            packageVersion = "1.0.0"
+            packageVersion = versionNameGit
         }
     }
 }
