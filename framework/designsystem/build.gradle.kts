@@ -7,18 +7,17 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(project.dependencies.platform(libs.androidx.compose.bom))
-                api(compose.material3)
                 implementation(compose.materialIconsExtended)
-                implementation(compose.components.uiToolingPreview)
                 implementation(compose.material3AdaptiveNavigationSuite)
             }
         }
 
         androidMain {
             dependencies {
-                implementation(libs.androidx.compose.material3.adaptive.layout)
+                api(project.dependencies.platform(libs.androidx.compose.bom))
+
                 implementation(libs.androidx.appcompat)
+                implementation(libs.androidx.compose.material3.adaptive.layout)
             }
         }
     }
@@ -26,8 +25,4 @@ kotlin {
 
 android {
     namespace = "com.sorrowblue.comicviewer.framework.designsystem"
-}
-
-dependencies {
-    debugImplementation(compose.uiTooling)
 }
