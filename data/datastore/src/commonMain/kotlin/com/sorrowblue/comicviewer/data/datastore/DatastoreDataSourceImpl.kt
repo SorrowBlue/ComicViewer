@@ -10,9 +10,11 @@ import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
-import javax.inject.Inject
+import di.Inject
 import kotlinx.coroutines.flow.Flow
+import org.koin.core.annotation.Singleton
 
+@Singleton
 internal class DatastoreDataSourceImpl @Inject constructor(
     private val settingsDataStore: DataStore<Settings>,
     private val displaySettingsDataStore: DataStore<DisplaySettings>,

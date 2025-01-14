@@ -2,11 +2,13 @@ package com.sorrowblue.comicviewer.data.datastore.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
+import androidx.datastore.dataStoreFile
+import com.sorrowblue.comicviewer.data.datastore.createDataStore
 import com.sorrowblue.comicviewer.data.datastore.serializer.BookSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.DisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.FolderDisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.FolderSettingsSerializer
+import com.sorrowblue.comicviewer.data.datastore.serializer.KOkioSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SecuritySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerOperationSettingsSerializer
@@ -25,92 +27,60 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-import kotlinx.serialization.ExperimentalSerializationApi
+import okio.FileSystem
+import okio.Path.Companion.toPath
 
-@OptIn(ExperimentalSerializationApi::class)
 @Module
 @InstallIn(SingletonComponent::class)
 internal object SingletonProvidesModule {
 
-    private val Context.folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings> by dataStore(
-        fileName = "folder_display_settings.pb",
-        serializer = FolderDisplaySettingsSerializer()
-    )
-
-    private val Context.folderSettingsDataStore: DataStore<FolderSettings> by dataStore(
-        fileName = "folder_settings.pb",
-        serializer = FolderSettingsSerializer()
-    )
-
-    private val Context.settingsDataStore: DataStore<Settings> by dataStore(
-        fileName = "settings.pb",
-        serializer = SettingsSerializer()
-    )
-
-    private val Context.displaySettingsDataStore: DataStore<DisplaySettings> by dataStore(
-        fileName = "displaySettings.pb",
-        serializer = DisplaySettingsSerializer()
-    )
-
-    private val Context.viewerSettingsDataStore: DataStore<ViewerSettings> by dataStore(
-        fileName = "viewerSettings.pb",
-        serializer = ViewerSettingsSerializer()
-    )
-
-    private val Context.bookSettingsDataStore: DataStore<BookSettings> by dataStore(
-        fileName = "bookSettings.pb",
-        serializer = BookSettingsSerializer()
-    )
-
-    private val Context.viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings> by dataStore(
-        fileName = "viewerOperationSettings.pb",
-        serializer = ViewerOperationSettingsSerializer()
-    )
-
-    private val Context.securitySettingsDataStore: DataStore<SecuritySettings> by dataStore(
-        fileName = "securitySettings.pb",
-        serializer = SecuritySettingsSerializer()
-    )
-
     @Singleton
     @Provides
     fun provideFolderDisplaySettingsDataStore(@ApplicationContext context: Context): DataStore<FolderDisplaySettings> =
-        context.folderDisplaySettingsDataStore
+        context.dataStore(FolderDisplaySettingsSerializer)
 
     @Singleton
     @Provides
     fun provideFolderSettingsDataStore(@ApplicationContext context: Context): DataStore<FolderSettings> =
-        context.folderSettingsDataStore
+        context.dataStore(FolderSettingsSerializer)
 
     @Singleton
     @Provides
     fun provideSettingsDataStore(@ApplicationContext context: Context): DataStore<Settings> =
-        context.settingsDataStore
+        context.dataStore(SettingsSerializer)
 
     @Singleton
     @Provides
     fun provideDisplaySettingsDataStore(@ApplicationContext context: Context): DataStore<DisplaySettings> =
-        context.displaySettingsDataStore
+        context.dataStore(DisplaySettingsSerializer)
 
     @Singleton
     @Provides
     fun provideViewerSettingsDataStore(@ApplicationContext context: Context): DataStore<ViewerSettings> =
-        context.viewerSettingsDataStore
+        context.dataStore(ViewerSettingsSerializer)
 
     @Singleton
     @Provides
     fun provideBookSettingsDataStore(@ApplicationContext context: Context): DataStore<BookSettings> =
-        context.bookSettingsDataStore
+        context.dataStore(BookSettingsSerializer)
 
     @Singleton
     @Provides
-    fun provideViewerOperationSettingsDataStore(
-        @ApplicationContext context: Context,
-    ): DataStore<ViewerOperationSettings> =
-        context.viewerOperationSettingsDataStore
+    fun provideViewerOperationSettingsDataStore(@ApplicationContext context: Context): DataStore<ViewerOperationSettings> =
+        context.dataStore(ViewerOperationSettingsSerializer)
 
     @Singleton
     @Provides
     fun provideSecuritySettingsDataStore(@ApplicationContext context: Context): DataStore<SecuritySettings> =
-        context.securitySettingsDataStore
+        context.dataStore(SecuritySettingsSerializer)
+
+    private fun <T : Any> Context.dataStore(serializer: KOkioSerializer<T>): DataStore<T> {
+        val producePath =
+            { applicationContext.dataStoreFile(serializer.fileName).absolutePath.toPath() }
+        return createDataStore(
+            fileSystem = FileSystem.SYSTEM,
+            serializer = serializer,
+            producePath = producePath
+        )
+    }
 }

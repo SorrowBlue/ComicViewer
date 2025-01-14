@@ -1,18 +1,23 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.library)
-    alias(libs.plugins.comicviewer.android.hilt)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer.data.datastore"
 }
 
-dependencies {
-    implementation(projects.domain.service)
+kotlin {
+    sourceSets.commonMain.dependencies {
+        implementation(projects.domain.service)
+        implementation(libs.androidx.datastore)
+        implementation(libs.androidx.datastoreCoreOkio)
+        implementation(libs.kotlinx.serialization.protobuf)
+    }
 
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.datastore)
-    implementation(libs.androidx.startup.runtime)
-    implementation(libs.google.android.play.feature.delivery.ktx)
-    implementation(libs.kotlinx.serialization.protobuf)
+    sourceSets.androidMain.dependencies {
+        implementation(libs.androidx.appcompat)
+        implementation(libs.androidx.startup.runtime)
+        implementation(libs.google.android.play.feature.delivery.ktx)
+    }
 }
