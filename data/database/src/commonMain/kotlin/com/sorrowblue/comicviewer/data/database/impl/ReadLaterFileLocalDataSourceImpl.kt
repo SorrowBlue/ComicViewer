@@ -11,10 +11,12 @@ import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
-import javax.inject.Inject
+import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Singleton
 
+@Singleton
 internal class ReadLaterFileLocalDataSourceImpl @Inject constructor(
     private val readLaterFileDao: ReadLaterFileDao,
 ) : ReadLaterFileLocalDataSource {
@@ -58,7 +60,7 @@ internal class ReadLaterFileLocalDataSourceImpl @Inject constructor(
     }
 
     override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<File>> {
-        return Pager(pagingConfig) { readLaterFileDao.pagingSource() }.flow
+        return Pager(pagingConfig) { readLaterFileDao.pagingSourceReadLaterFile() }.flow
             .map { it.map(FileEntity::toModel) }
     }
 }

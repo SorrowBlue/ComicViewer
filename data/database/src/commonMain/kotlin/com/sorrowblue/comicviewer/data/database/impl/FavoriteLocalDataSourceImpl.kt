@@ -13,12 +13,14 @@ import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSourceError
-import javax.inject.Inject
+import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Singleton
 
+@Singleton
 internal class FavoriteLocalDataSourceImpl @Inject constructor(
     private val favoriteDao: FavoriteDao,
 ) : FavoriteLocalDataSource {
@@ -47,7 +49,7 @@ internal class FavoriteLocalDataSourceImpl @Inject constructor(
             if (isRecent) {
                 favoriteDao.pagingSourceRecent(bookshelfId.value, path)
             } else {
-                favoriteDao.pagingSource(bookshelfId.value, path)
+                favoriteDao.pagingSourceFileOnFolder(bookshelfId.value, path)
             }
         }.flow.map { pagingData ->
             pagingData.map(QueryFavoriteFileWithCountEntity::toModel)

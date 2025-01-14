@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.data.database.entity.file
 
 import androidx.room.Embedded
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -15,7 +16,7 @@ internal class QueryFileWithCountEntity(
         return when (fileEntity.fileType) {
             FileEntity.Type.FILE -> BookFile(
                 path = fileEntity.path,
-                bookshelfId = fileEntity.bookshelfId,
+                bookshelfId = BookshelfId(fileEntity.bookshelfId),
                 parent = fileEntity.parent,
                 name = fileEntity.name,
                 size = fileEntity.size,
@@ -30,7 +31,7 @@ internal class QueryFileWithCountEntity(
 
             FileEntity.Type.FOLDER -> Folder(
                 path = fileEntity.path,
-                bookshelfId = fileEntity.bookshelfId,
+                bookshelfId = BookshelfId(fileEntity.bookshelfId),
                 name = fileEntity.name,
                 parent = fileEntity.parent,
                 size = fileEntity.size,
@@ -42,7 +43,7 @@ internal class QueryFileWithCountEntity(
 
             FileEntity.Type.IMAGE_FOLDER -> BookFolder(
                 path = fileEntity.path,
-                bookshelfId = fileEntity.bookshelfId,
+                bookshelfId = BookshelfId(fileEntity.bookshelfId),
                 name = fileEntity.name,
                 parent = fileEntity.parent,
                 size = fileEntity.size,

@@ -14,10 +14,10 @@ import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
-import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import di.Assisted
+import di.AssistedFactory
+import di.AssistedInject
+import di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext

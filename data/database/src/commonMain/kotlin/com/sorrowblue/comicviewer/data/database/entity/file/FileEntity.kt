@@ -27,7 +27,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 )
 internal data class FileEntity(
     @ColumnInfo(PATH) val path: String,
-    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: BookshelfId,
+    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: Int,
     val name: String,
     val parent: String,
     val size: Long,
@@ -48,7 +48,7 @@ internal data class FileEntity(
             when (model) {
                 is BookFile -> FileEntity(
                     path = model.path,
-                    bookshelfId = model.bookshelfId,
+                    bookshelfId = model.bookshelfId.value,
                     name = model.name,
                     parent = model.parent,
                     size = model.size,
@@ -62,7 +62,7 @@ internal data class FileEntity(
 
                 is Folder -> FileEntity(
                     path = model.path,
-                    bookshelfId = model.bookshelfId,
+                    bookshelfId = model.bookshelfId.value,
                     name = model.name,
                     parent = model.parent,
                     size = model.size,
@@ -76,7 +76,7 @@ internal data class FileEntity(
 
                 is BookFolder -> FileEntity(
                     path = model.path,
-                    bookshelfId = model.bookshelfId,
+                    bookshelfId = model.bookshelfId.value,
                     name = model.name,
                     parent = model.parent,
                     size = model.size,
@@ -94,7 +94,7 @@ internal data class FileEntity(
         return when (fileType) {
             Type.FILE -> BookFile(
                 path = path,
-                bookshelfId = bookshelfId,
+                bookshelfId = BookshelfId(bookshelfId),
                 parent = parent,
                 name = name,
                 size = size,
@@ -109,7 +109,7 @@ internal data class FileEntity(
 
             Type.FOLDER -> Folder(
                 path = path,
-                bookshelfId = bookshelfId,
+                bookshelfId = BookshelfId(bookshelfId),
                 name = name,
                 parent = parent,
                 size = size,
@@ -120,7 +120,7 @@ internal data class FileEntity(
 
             Type.IMAGE_FOLDER -> BookFolder(
                 path = path,
-                bookshelfId = bookshelfId,
+                bookshelfId = BookshelfId(bookshelfId),
                 name = name,
                 parent = parent,
                 size = size,

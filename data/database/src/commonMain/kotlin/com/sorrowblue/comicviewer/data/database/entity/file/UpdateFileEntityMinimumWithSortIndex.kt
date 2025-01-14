@@ -35,5 +35,16 @@ internal class UpdateFileEntityMinimumWithSortIndex(
             },
             sortIndex = model.sortIndex
         )
+        fun fromFileEntity(entity: FileEntity) = UpdateFileEntityMinimumWithSortIndex(
+            path = entity.path,
+            bookshelfId = BookshelfId(entity.bookshelfId),
+            name = entity.name,
+            parent = entity.parent,
+            size = entity.size,
+            lastModified = entity.lastModified,
+            isHidden = entity.isHidden,
+            fileEntityType = entity.fileType,
+            sortIndex = entity.sortIndex
+        )
     }
 }

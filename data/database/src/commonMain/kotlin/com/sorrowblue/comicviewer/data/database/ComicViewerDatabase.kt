@@ -1,8 +1,10 @@
 package com.sorrowblue.comicviewer.data.database
 
 import androidx.room.AutoMigration
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
@@ -29,6 +31,7 @@ internal const val DATABASE_VERSION = 6
         AutoMigration(5, 6),
     ]
 )
+@ConstructedBy(ComicViewerDatabaseConstructor::class)
 @TypeConverters(PasswordConverters::class)
 internal abstract class ComicViewerDatabase : RoomDatabase() {
 
@@ -42,3 +45,10 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
 
     abstract fun readLaterFileDao(): ReadLaterFileDao
 }
+
+@Suppress("NO_ACTUAL_FOR_EXPECT")
+internal expect object ComicViewerDatabaseConstructor :
+    RoomDatabaseConstructor<ComicViewerDatabase> {
+    override fun initialize(): ComicViewerDatabase
+}
+internal const val DATABASE_NAME = "comic_viewer_database"

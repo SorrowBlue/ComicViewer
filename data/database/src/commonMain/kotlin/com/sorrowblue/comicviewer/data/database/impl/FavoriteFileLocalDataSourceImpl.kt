@@ -5,6 +5,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteFileDao
+import com.sorrowblue.comicviewer.data.database.dao.flowPrevNext
+import com.sorrowblue.comicviewer.data.database.dao.pagingSource
 import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.domain.model.Resource
@@ -14,10 +16,12 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
-import javax.inject.Inject
+import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Singleton
 
+@Singleton
 internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
     private val favoriteFileDao: FavoriteFileDao,
 ) : FavoriteFileLocalDataSource {
@@ -28,7 +32,7 @@ internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
         sortType: () -> SortType,
     ): Flow<PagingData<File>> {
         return Pager(pagingConfig) {
-            favoriteFileDao.pagingSource(favoriteModelId.value, sortType.invoke())
+            favoriteFileDao.pagingSource(favoriteModelId.value, sortType())
         }.flow.map { it.map(FileEntity::toModel) }
     }
 

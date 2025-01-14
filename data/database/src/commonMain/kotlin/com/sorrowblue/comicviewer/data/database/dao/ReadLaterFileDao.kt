@@ -24,8 +24,6 @@ internal interface ReadLaterFileDao {
     @Query("SELECT EXISTS(SELECT * FROM read_later_file WHERE bookshelf_id=:bookshelfId AND file_path=:path)")
     fun exists(bookshelfId: Int, path: String): Flow<Boolean>
 
-    @Query(
-        "SELECT file.* FROM read_later_file INNER JOIN file ON read_later_file.bookshelf_id = file.bookshelf_id AND read_later_file.file_path = file.path ORDER BY read_later_file.modified_date ASC"
-    )
-    fun pagingSource(): PagingSource<Int, FileEntity>
+    @Query("SELECT file.* FROM read_later_file INNER JOIN file ON read_later_file.bookshelf_id = file.bookshelf_id AND read_later_file.file_path = file.path ORDER BY read_later_file.modified_date ASC")
+    fun pagingSourceReadLaterFile(): PagingSource<Int, FileEntity>
 }

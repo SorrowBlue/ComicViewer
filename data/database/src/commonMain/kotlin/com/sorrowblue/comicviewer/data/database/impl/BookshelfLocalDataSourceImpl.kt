@@ -15,8 +15,8 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
-import javax.inject.Inject
+import di.Inject
+import di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -24,10 +24,12 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Singleton
 
+@Singleton
 internal class BookshelfLocalDataSourceImpl @Inject constructor(
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val dao: BookshelfDao,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : BookshelfLocalDataSource {
 
     override suspend fun updateDeleted(bookshelfId: BookshelfId, isDeleted: Boolean) {
@@ -50,7 +52,7 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
     override suspend fun delete(bookshelfId: BookshelfId): Resource<Unit, Resource.SystemError> {
         return runCatching {
             withContext(dispatcher) {
-                dao.delete(bookshelfId)
+                dao.delete(bookshelfId.value)
             }
         }.fold(
             onSuccess = { Resource.Success(Unit) },
@@ -67,7 +69,7 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
     }
 
     override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>> {
-        return Pager(pagingConfig) { dao.pagingSource() }.flow.map { pagingData ->
+        return Pager(pagingConfig) { dao.pagingSourceNoDeleted() }.flow.map { pagingData ->
             pagingData.map {
                 BookshelfFolder(it.entity.toModel(it.fileCount), it.fileEntity.toModel() as Folder)
             }
@@ -78,7 +80,7 @@ internal class BookshelfLocalDataSourceImpl @Inject constructor(
         bookshelfId: BookshelfId,
         pagingConfig: PagingConfig,
     ): Flow<PagingData<BookThumbnail>> {
-        return Pager(pagingConfig) { dao.pagingSource(bookshelfId) }.flow.map { pagingData ->
+        return Pager(pagingConfig) { dao.pagingSourceFileOnBookshelf(bookshelfId.value) }.flow.map { pagingData ->
             pagingData.map { BookThumbnail.from(it.toModel() as Book) }
         }
     }
