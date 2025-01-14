@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui.adaptive
+package com.sorrowblue.comicviewer.framework.ui.adaptive.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
+import androidx.compose.material3.adaptive.layout.PaneExpansionState
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldScope
 import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.NavigableSupportingPaneScaffold
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
@@ -28,15 +30,17 @@ import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewConfig
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 
 @Composable
-internal fun AnimatedExtraPaneScaffold(
+internal actual fun NavigableExtraPaneScaffold(
     navigator: ThreePaneScaffoldNavigator<*>,
     extraPane: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
+    defaultBackBehavior: BackNavigationBehavior,
+    paneExpansionDragHandle: (@Composable ThreePaneScaffoldScope.(PaneExpansionState) -> Unit)?,
+    paneExpansionState: PaneExpansionState,
     content: @Composable () -> Unit,
 ) {
     NavigableSupportingPaneScaffold(
         navigator = navigator,
-        defaultBackBehavior = BackNavigationBehavior.PopUntilScaffoldValueChange,
         mainPane = {
             AnimatedPane(
                 modifier = if (navigator.scaffoldDirective.maxHorizontalPartitions != 1 && navigator.scaffoldValue.tertiary == PaneAdaptedValue.Expanded) {
@@ -60,14 +64,17 @@ internal fun AnimatedExtraPaneScaffold(
                 extraPane()
             }
         },
+        defaultBackBehavior = defaultBackBehavior,
+        paneExpansionDragHandle = paneExpansionDragHandle,
+        paneExpansionState = paneExpansionState,
         modifier = modifier
     )
 }
 
 @Composable
 @PreviewMultiScreen
-private fun AnimatedExtraPaneScaffoldPreview(
-    @PreviewParameter(ConfigProvider::class) parameter: AnimatedExtraPaneScaffoldConfig,
+private fun NavigableExtraPaneScaffoldPreview(
+    @PreviewParameter(ConfigProvider::class) parameter: NavigableExtraPaneScaffoldConfig,
 ) {
     PreviewCompliantNavigation(
         config = PreviewConfig(
@@ -78,7 +85,7 @@ private fun AnimatedExtraPaneScaffoldPreview(
         val navigator = rememberSupportingPaneScaffoldNavigator<Any>(
             initialDestinationHistory = listOf(parameter.item)
         )
-        AnimatedExtraPaneScaffold(
+        NavigableExtraPaneScaffold(
             navigator = navigator,
             extraPane = {
                 Scaffold(contentWindowInsets = WindowInsets.safeDrawing) {
@@ -105,51 +112,51 @@ private fun AnimatedExtraPaneScaffoldPreview(
     }
 }
 
-private data class AnimatedExtraPaneScaffoldConfig(
+private data class NavigableExtraPaneScaffoldConfig(
     val item: ThreePaneScaffoldDestinationItem<String>,
     val navigation: Boolean,
     val isInvertedOrientation: Boolean,
 )
 
-private class ConfigProvider : PreviewParameterProvider<AnimatedExtraPaneScaffoldConfig> {
-    override val values: Sequence<AnimatedExtraPaneScaffoldConfig> =
+private class ConfigProvider : PreviewParameterProvider<NavigableExtraPaneScaffoldConfig> {
+    override val values: Sequence<NavigableExtraPaneScaffoldConfig> =
         sequenceOf(
-            AnimatedExtraPaneScaffoldConfig(
+            NavigableExtraPaneScaffoldConfig(
                 ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
                 navigation = true,
                 isInvertedOrientation = false,
             ),
-            AnimatedExtraPaneScaffoldConfig(
+            NavigableExtraPaneScaffoldConfig(
                 ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
                 navigation = true,
                 isInvertedOrientation = true,
             ),
-            AnimatedExtraPaneScaffoldConfig(
+            NavigableExtraPaneScaffoldConfig(
                 ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
                 navigation = false,
                 isInvertedOrientation = false,
             ),
-            AnimatedExtraPaneScaffoldConfig(
+            NavigableExtraPaneScaffoldConfig(
                 ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
                 navigation = false,
                 isInvertedOrientation = true,
             ),
-            AnimatedExtraPaneScaffoldConfig(
+            NavigableExtraPaneScaffoldConfig(
                 ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, "extra"),
                 navigation = true,
                 isInvertedOrientation = false,
             ),
-            AnimatedExtraPaneScaffoldConfig(
+            NavigableExtraPaneScaffoldConfig(
                 ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, "extra"),
                 navigation = true,
                 isInvertedOrientation = true,
             ),
-            AnimatedExtraPaneScaffoldConfig(
+            NavigableExtraPaneScaffoldConfig(
                 ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, "extra"),
                 navigation = false,
                 isInvertedOrientation = false,
             ),
-            AnimatedExtraPaneScaffoldConfig(
+            NavigableExtraPaneScaffoldConfig(
                 ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, "extra"),
                 navigation = false,
                 isInvertedOrientation = true,

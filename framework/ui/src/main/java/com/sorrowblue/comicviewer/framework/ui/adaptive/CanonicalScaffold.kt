@@ -46,6 +46,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.animation.topAppBarAnim
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigableExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.plus
@@ -97,7 +98,7 @@ fun <T : Any> CanonicalScaffold(
             snackbarHost = snackbarHost,
             modifier = modifier
         ) { padding ->
-            AnimatedExtraPaneScaffold(
+            NavigableExtraPaneScaffold(
                 navigator = navigator,
                 extraPane = {
                     if (extraPane != null) {

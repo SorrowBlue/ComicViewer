@@ -72,6 +72,9 @@ internal class ComposeConventionPlugin : Plugin<Project> {
                 testImplementation(platform(libs.androidx.compose.bom))
                 testImplementation(libs.androidx.compose.ui.testManifest)
                 testImplementation(libs.androidx.compose.ui.testJunit4)
+
+                implementation(libs.coil3.compose)
+                implementation(libs.coil3.networkKtor)
             }
 
             ksp {

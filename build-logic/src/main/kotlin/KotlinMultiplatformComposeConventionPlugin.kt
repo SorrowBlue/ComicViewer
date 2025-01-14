@@ -22,10 +22,12 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
 
             kotlin<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
-                    implementation(libs.kotlinx.serialization.json)
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
                     implementation(compose.material3)
                     implementation(compose.components.uiToolingPreview)
+
+                    implementation(libs.coil3.compose)
+                    implementation(libs.coil3.networkKtor)
                 }
 
                 compilerOptions {

@@ -22,13 +22,15 @@ internal class GetNavigationHistoryInteractor @Inject constructor(
 ) : GetNavigationHistoryUseCase() {
     override fun run(request: EmptyRequest): Flow<Resource<NavigationHistory, Error>> {
         return fileLocalDataSource.lastHistory().map { file ->
-            val bookshelf = bookshelfLocalDataSource.flow(file.bookshelfId).first()
-            if (bookshelf != null) {
-                val book = fileLocalDataSource.findBy(file.bookshelfId, file.path) as? Book
-                if (book != null) {
-                    return@map Resource.Success(
-                        NavigationHistory(getFolderList(bookshelf, book.parent), book)
-                    )
+            if (file != null) {
+                val bookshelf = bookshelfLocalDataSource.flow(file.bookshelfId).first()
+                if (bookshelf != null) {
+                    val book = fileLocalDataSource.findBy(file.bookshelfId, file.path) as? Book
+                    if (book != null) {
+                        return@map Resource.Success(
+                            NavigationHistory(getFolderList(bookshelf, book.parent), book)
+                        )
+                    }
                 }
             }
             return@map Resource.Error(Error.System)
