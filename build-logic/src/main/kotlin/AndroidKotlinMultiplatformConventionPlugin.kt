@@ -59,7 +59,7 @@ internal class AndroidKotlinMultiplatformConventionPlugin : Plugin<Project> {
                     kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
                 }
 
-                val koinMain by sourceSets.creating {
+                val noAndroid by sourceSets.creating {
                     dependsOn(sourceSets.commonMain.get())
                     dependencies {
                         implementation(project.dependencies.platform(libs.koin.bom))
@@ -70,10 +70,10 @@ internal class AndroidKotlinMultiplatformConventionPlugin : Plugin<Project> {
                     implementation(libs.google.dagger.hilt.android)
                 }
                 sourceSets.iosMain {
-                    dependsOn(koinMain)
+                    dependsOn(noAndroid)
                 }
                 val desktopMain by sourceSets.getting {
-                    dependsOn(koinMain)
+                    dependsOn(noAndroid)
                 }
             }
 

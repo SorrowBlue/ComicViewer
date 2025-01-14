@@ -30,7 +30,7 @@ class KotlinMultiplatformDiConventionPlugin : Plugin<Project> {
                     kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
                 }
 
-                val koinMain by sourceSets.getting {
+                val noAndroid by sourceSets.getting {
                     dependencies {
                         implementation(project.dependencies.platform(libs.koin.bom))
                         implementation(libs.koin.core)

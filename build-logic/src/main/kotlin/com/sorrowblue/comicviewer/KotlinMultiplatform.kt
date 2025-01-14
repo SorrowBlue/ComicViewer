@@ -35,16 +35,16 @@ internal fun Project.configureKotlinMultiplatform() {
 
         applyDefaultHierarchyTemplate()
 
-        val koinMain by sourceSets.creating {
+        val noAndroid by sourceSets.creating {
             dependsOn(sourceSets.commonMain.get())
         }
 
         sourceSets.iosMain {
-            dependsOn(koinMain)
+            dependsOn(noAndroid)
         }
 
         val desktopMain by sourceSets.getting {
-            dependsOn(koinMain)
+            dependsOn(noAndroid)
         }
     }
 }
