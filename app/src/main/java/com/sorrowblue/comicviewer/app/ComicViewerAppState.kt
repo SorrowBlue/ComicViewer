@@ -23,6 +23,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.ramcosta.composedestinations.navigation.DestinationsNavOptionsBuilder
 import com.ramcosta.composedestinations.spec.Direction
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffoldUiState
 import com.sorrowblue.comicviewer.app.component.MainScreenTab
@@ -56,6 +57,11 @@ import logcat.logcat
 internal sealed interface ComicViewerAppEvent {
 
     data class Navigate(
+        val direction: Direction,
+        val builder: DestinationsNavOptionsBuilder.() -> Unit = {},
+    ) : ComicViewerAppEvent
+
+    data class Navigate2(
         val direction: Direction,
         val navOptions: NavOptions? = null,
     ) : ComicViewerAppEvent
@@ -182,7 +188,7 @@ private class ComicViewerAppStateImpl(
             navTabHandler.click.tryEmit(Unit)
         } else if (navGraph is Direction) {
             events.tryEmit(
-                ComicViewerAppEvent.Navigate(
+                ComicViewerAppEvent.Navigate2(
                     navGraph,
                     navOptions {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -211,10 +217,11 @@ private class ComicViewerAppStateImpl(
         return scope.launch {
             val history = getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
             events.tryEmit(
-                ComicViewerAppEvent.Navigate(
-                    BookshelfNavGraph,
-                    navOptions { popUpTo(MainNavGraph) { inclusive = true } }
-                )
+                ComicViewerAppEvent.Navigate(BookshelfNavGraph) {
+                    popUpTo(MainNavGraph) {
+                        inclusive = true
+                    }
+                }
             )
             if (history?.folderList.isNullOrEmpty()) {
                 completeRestoreHistory()

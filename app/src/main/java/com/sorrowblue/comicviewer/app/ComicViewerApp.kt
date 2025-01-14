@@ -57,6 +57,9 @@ internal fun ComicViewerApp(
                 EventEffect(state.events) {
                     when (it) {
                         is ComicViewerAppEvent.Navigate ->
+                            destinationsNavigator.navigate(it.direction) { with(it) { builder() } }
+
+                        is ComicViewerAppEvent.Navigate2 ->
                             destinationsNavigator.navigate(it.direction, it.navOptions)
                     }
                 }

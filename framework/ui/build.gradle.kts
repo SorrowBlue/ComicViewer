@@ -18,7 +18,7 @@ dependencies {
     implementation(projects.domain.model)
     implementation(projects.framework.designsystem)
 
-    api(libs.androidx.window)
+    api(libs.androidx.windowCore)
     api(libs.androidx.compose.material3.adaptive.layout)
     api(libs.androidx.compose.material3.adaptive.navigation)
     api(libs.androidx.compose.material3.adaptiveNavigationSuite)

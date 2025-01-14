@@ -27,6 +27,7 @@ dependencies {
     compileOnly(libs.google.ksp.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
     compileOnly(libs.dokka.gradlePlugin)
+    compileOnly(libs.compose.gradlePlugin)
     compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
     detektPlugins(libs.nlopez.compose.rules.detekt)
     detektPlugins(libs.arturbosch.detektFormatting)
@@ -97,6 +98,9 @@ gradlePlugin {
         }
         register(libs.plugins.comicviewer.kotlinMultiplatform.di) {
             implementationClass = "KotlinMultiplatformDiConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.kotlinMultiplatform.compose) {
+            implementationClass = "KotlinMultiplatformComposeConventionPlugin"
         }
     }
 }

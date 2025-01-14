@@ -1,6 +1,27 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.library)
-    alias(libs.plugins.comicviewer.android.compose)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                api(project.dependencies.platform(libs.androidx.compose.bom))
+                api(compose.material3)
+                implementation(compose.materialIconsExtended)
+                implementation(compose.components.uiToolingPreview)
+                implementation(compose.material3AdaptiveNavigationSuite)
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation(libs.androidx.compose.material3.adaptive.layout)
+                implementation(libs.androidx.appcompat)
+            }
+        }
+    }
 }
 
 android {
@@ -8,13 +29,5 @@ android {
 }
 
 dependencies {
-    api(platform(libs.androidx.compose.bom))
-    api(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material.iconsExtended)
-    implementation(libs.androidx.compose.material3.adaptive.layout)
-
-    implementation(libs.androidx.appcompat)
-
-    implementation(libs.androidx.compose.ui.toolingPreview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(compose.uiTooling)
 }
