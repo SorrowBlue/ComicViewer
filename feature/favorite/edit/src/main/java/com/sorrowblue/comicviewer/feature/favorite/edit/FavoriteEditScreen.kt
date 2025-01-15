@@ -36,6 +36,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameField
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
@@ -170,7 +171,7 @@ private fun FavoriteEditScreen(
                             ListItem(
                                 headlineContent = { Text(item.name) },
                                 leadingContent = {
-                                    AsyncImage(model = item, null, Modifier.size(56.dp))
+                                    AsyncImage(model = FileThumbnail.from(item), null, Modifier.size(56.dp))
                                 },
                                 trailingContent = {
                                     IconButton(onClick = { onDeleteClick(item) }) {

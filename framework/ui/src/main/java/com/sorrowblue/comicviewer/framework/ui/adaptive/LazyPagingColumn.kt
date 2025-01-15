@@ -41,6 +41,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.layout.plus

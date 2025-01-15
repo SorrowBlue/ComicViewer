@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.favorite
 
-import android.os.Parcelable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -41,7 +40,6 @@ import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import kotlinx.parcelize.Parcelize
 
 interface FavoriteScreenNavigator {
     fun navigateUp()
@@ -100,11 +98,10 @@ private fun FavoriteScreen(
     NavTabHandler(onClick = state::onNavClick)
 }
 
-@Parcelize
 internal data class FavoriteScreenUiState(
     val favoriteAppBarUiState: FavoriteAppBarUiState = FavoriteAppBarUiState(),
     val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
-) : Parcelable
+)
 
 @Composable
 private fun FavoriteScreen(

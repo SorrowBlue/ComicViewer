@@ -13,7 +13,7 @@ import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.serialization.Serializable
 

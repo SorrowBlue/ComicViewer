@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.file.component.FileThumbnailAsyncImage
-import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
 
 @Composable
 internal fun BookshelfBookThumbnailsCarousel(

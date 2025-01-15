@@ -31,7 +31,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.EditDialog
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.EditScreen
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import kotlinx.parcelize.Parcelize

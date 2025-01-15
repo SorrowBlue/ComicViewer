@@ -47,8 +47,8 @@ import com.sorrowblue.comicviewer.file.section.FileInfoList
 import com.sorrowblue.comicviewer.file.section.FileInfoThumbnail
 import com.sorrowblue.comicviewer.file.section.SheetActionButtons
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
@@ -59,10 +59,8 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class ReadLaterUiState(val checked: Boolean = false, val loading: Boolean = false) : Parcelable
+data class ReadLaterUiState(val checked: Boolean = false, val loading: Boolean = false)
 
 data class FileInfoUiState(
     val file: File,

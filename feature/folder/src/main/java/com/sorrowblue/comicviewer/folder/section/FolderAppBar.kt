@@ -18,12 +18,11 @@ import com.sorrowblue.comicviewer.feature.folder.R
 import com.sorrowblue.comicviewer.file.component.FileListDisplayItem
 import com.sorrowblue.comicviewer.file.component.GridSizeItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalTopAppBar
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalTopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuScope
-import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -56,10 +55,8 @@ internal fun FolderAppBar(
         title = { Text(text = uiState.title) },
         navigationIcon = { BackIconButton(onClick = { onAction(FolderTopAppBarAction.Back) }) },
         actions = {
-            PlainTooltipBox(tooltipContent = { Text(stringResource(R.string.folder_action_search)) }) {
-                IconButton(onClick = { onAction(FolderTopAppBarAction.Search) }) {
-                    Icon(ComicIcons.Search, stringResource(R.string.folder_action_search))
-                }
+            IconButton(onClick = { onAction(FolderTopAppBarAction.Search) }) {
+                Icon(ComicIcons.Search, stringResource(R.string.folder_action_search))
             }
             IconButton(onClick = { onAction(FolderTopAppBarAction.Sort) }) {
                 Icon(ComicIcons.SortByAlpha, "sort")

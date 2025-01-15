@@ -19,7 +19,7 @@ import com.ramcosta.composedestinations.spec.NavGraphSpec
 import com.ramcosta.composedestinations.spec.NavHostEngine
 import com.ramcosta.composedestinations.spec.TypedDestinationSpec
 import com.sorrowblue.comicviewer.framework.ui.AnimatedOrDialog
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 
 /**
  * Remember custom nav host engine

@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme

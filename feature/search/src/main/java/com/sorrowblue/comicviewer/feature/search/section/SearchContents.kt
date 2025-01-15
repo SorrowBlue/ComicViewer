@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.search.section
 
-import android.os.Parcelable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -19,7 +18,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileSearching
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import kotlinx.parcelize.Parcelize
 
 internal sealed interface SearchContentsAction {
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
@@ -29,11 +27,10 @@ internal sealed interface SearchContentsAction {
         SearchContentsAction
 }
 
-@Parcelize
 internal data class SearchContentsUiState(
     val query: String = "",
     val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
-) : Parcelable
+)
 
 @Composable
 internal fun SearchContents(

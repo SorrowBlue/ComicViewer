@@ -32,7 +32,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.section.ErrorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.LoadingContents
 import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.navigation.resultRecipient
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder

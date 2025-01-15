@@ -10,17 +10,20 @@ kotlin {
             dependencies {
                 implementation(projects.framework.designsystem)
 
-
                 implementation(compose.material3)
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha01")
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive-layout:1.1.0-alpha01")
-                implementation("org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.1.0-alpha01")
+                api("org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.1.0-alpha01")
                 implementation("org.jetbrains.compose.material3:material3-window-size-class:1.7.3")
                 implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha11")
                 implementation(compose.material3AdaptiveNavigationSuite)
 
                 implementation(compose.components.uiToolingPreview)
                 implementation(compose.uiUtil)
+
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.androidx.paging.common)
+                implementation(libs.androidx.lifecycle.viewmodel)
             }
         }
 
@@ -48,8 +51,15 @@ kotlin {
 
                 implementation(libs.koin.compose)
                 implementation(libs.koin.android)
-                implementation(libs.compose.destinations.core)
                 implementation(libs.kotlinx.serialization.json)
+            }
+        }
+
+        val noAndroid by getting {
+            dependencies {
+                implementation(project.dependencies.platform(libs.koin.bom))
+                implementation(libs.koin.composeViewModel)
+                implementation(libs.koin.composeViewModelNavigation)
             }
         }
     }
@@ -59,11 +69,6 @@ android {
     namespace = "com.sorrowblue.comicviewer.framework.ui"
 }
 
-dependencies {
-    add("kspAndroid", libs.compose.destinations.ksp)
-}
-
 ksp {
-    arg("compose-destinations.codeGenPackageName", "com.sorrowblue.comicviewer.framework.ui}")
     arg("KOIN_CONFIG_CHECK", "false")
 }

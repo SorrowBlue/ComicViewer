@@ -16,6 +16,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.sorrowblue.comicviewer.data.di.DiModule
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.compose.KoinApplication
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.koin.ksp.generated.*
 
 /**
  * Main activity
@@ -49,6 +51,8 @@ internal class MainActivity : AppCompatActivity() {
         setContent {
             KoinApplication(application = {
                 modules(appModule)
+                modules(defaultModule)
+                modules(DiModule().module)
                 androidLogger()
                 androidContext(this@MainActivity)
             }) {

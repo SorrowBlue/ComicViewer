@@ -24,12 +24,13 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Singleton
 
 @Singleton
 internal class BookshelfLocalDataSourceImpl @Inject constructor(
     private val dao: BookshelfDao,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : BookshelfLocalDataSource {
 
     override suspend fun updateDeleted(bookshelfId: BookshelfId, isDeleted: Boolean) {

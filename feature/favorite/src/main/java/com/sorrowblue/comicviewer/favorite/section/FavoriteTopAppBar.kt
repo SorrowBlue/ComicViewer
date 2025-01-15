@@ -15,11 +15,10 @@ import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.component.FileListDisplayItem
 import com.sorrowblue.comicviewer.file.component.GridSizeItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalTopAppBar
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalTopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
-import com.sorrowblue.comicviewer.framework.ui.material3.PlainTooltipBox
 import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
 import kotlinx.parcelize.Parcelize
 
@@ -50,10 +49,8 @@ internal fun FavoriteTopAppBar(
         title = { Text(text = uiState.title) },
         navigationIcon = { BackIconButton(onClick = { onAction(FavoriteTopAppBarAction.Back) }) },
         actions = {
-            PlainTooltipBox(tooltipContent = { Text(stringResource(R.string.favorite_title_edit)) }) {
-                IconButton(onClick = { onAction(FavoriteTopAppBarAction.Edit) }) {
-                    Icon(ComicIcons.Edit, stringResource(R.string.favorite_title_edit))
-                }
+            IconButton(onClick = { onAction(FavoriteTopAppBarAction.Edit) }) {
+                Icon(ComicIcons.Edit, stringResource(R.string.favorite_title_edit))
             }
 
             OverflowMenu(state = rememberOverflowMenuState()) {

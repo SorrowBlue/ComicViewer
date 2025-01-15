@@ -29,7 +29,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.rememberSlideDistance
+import com.sorrowblue.comicviewer.framework.ui.animation.rememberSlideDistance
 
 /**
  * Comic viewer app

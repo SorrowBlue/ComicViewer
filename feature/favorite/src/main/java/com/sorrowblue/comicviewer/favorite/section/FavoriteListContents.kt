@@ -30,7 +30,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ResponsiveLazyColumn
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 
@@ -81,11 +81,17 @@ internal fun FavoriteListContents(
                             ) {
                                 DropdownMenuItem(
                                     text = { Text("Edit") },
-                                    onClick = { onAction(FavoriteListContentsAction.EditClick(it.id)) }
+                                    onClick = {
+                                        expanded = false
+                                        onAction(FavoriteListContentsAction.EditClick(it.id))
+                                    }
                                 )
                                 DropdownMenuItem(
                                     text = { Text("Delete") },
-                                    onClick = { onAction(FavoriteListContentsAction.DeleteClick(it.id)) }
+                                    onClick = {
+                                        expanded = false
+                                        onAction(FavoriteListContentsAction.DeleteClick(it.id))
+                                    }
                                 )
                             }
                         }

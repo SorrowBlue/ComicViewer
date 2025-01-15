@@ -51,7 +51,7 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberCanonicalScaffoldNavigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData

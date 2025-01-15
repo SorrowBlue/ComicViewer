@@ -21,7 +21,7 @@ import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.section.BookshelfSourceList
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewDevice
 

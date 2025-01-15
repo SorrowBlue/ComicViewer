@@ -1,5 +1,19 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.feature)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(projects.framework.designsystem)
+                implementation(projects.framework.ui)
+                implementation(projects.domain.model)
+                implementation(projects.domain.usecase)
+            }
+        }
+    }
 }
 
 android {

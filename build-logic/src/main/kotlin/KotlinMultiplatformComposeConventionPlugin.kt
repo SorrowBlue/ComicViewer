@@ -1,7 +1,9 @@
 import com.sorrowblue.comicviewer.composeCompiler
 import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.kotlin
+import com.sorrowblue.comicviewer.ksp
 import com.sorrowblue.comicviewer.libs
+import com.sorrowblue.comicviewer.parentName
 import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -18,16 +20,31 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
             plugins {
                 id(libs.plugins.composeMultiplatform)
                 id(libs.plugins.kotlin.compose)
+                id(libs.plugins.kotlin.serialization)
+                id(libs.plugins.google.ksp)
             }
 
             kotlin<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
                     implementation(compose.material3)
+                    implementation(compose.components.resources)
                     implementation(compose.components.uiToolingPreview)
 
                     implementation(libs.coil3.compose)
                     implementation(libs.coil3.networkKtor)
+                    implementation(libs.kotlinx.serialization.core)
+
+                    implementation(project.dependencies.platform(libs.koin.bom))
+                    implementation(libs.koin.compose)
+                    implementation(libs.koin.composeViewModel)
+                    implementation(libs.koin.composeViewModelNavigation)
+                }
+
+                sourceSets.androidMain.dependencies {
+                    // TODO Remove
+                    implementation(libs.compose.destinations.core)
+                    implementation(libs.kotlinx.serialization.json)
                 }
 
                 compilerOptions {
@@ -47,7 +64,15 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                add("debugImplementation", extensions.getByType<ComposePlugin.Dependencies>().uiTooling)
+                add(
+                    "debugImplementation",
+                    extensions.getByType<ComposePlugin.Dependencies>().uiTooling
+                )
+                add("kspAndroid", libs.compose.destinations.ksp)
+            }
+            // TODO Remove
+            ksp {
+                arg("compose-destinations.codeGenPackageName", "com.sorrowblue.${parentName()}")
             }
         }
     }

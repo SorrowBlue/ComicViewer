@@ -33,9 +33,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 data class FileLazyVerticalGridUiState(
     val fileListDisplay: FileListDisplay = FolderDisplaySettingsDefaults.fileListDisplay,
     val columnSize: GridColumnSize = FolderDisplaySettingsDefaults.gridColumnSize,
@@ -43,7 +41,7 @@ data class FileLazyVerticalGridUiState(
     val fontSize: Int = FolderDisplaySettingsDefaults.fontSize,
     val imageScale: ImageScale = FolderDisplaySettingsDefaults.imageScale,
     val imageFilterQuality: ImageFilterQuality = FolderDisplaySettingsDefaults.imageFilterQuality,
-) : Parcelable
+)
 
 @Composable
 fun <T : File> FileLazyVerticalGrid(

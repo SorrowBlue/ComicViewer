@@ -10,6 +10,14 @@ import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.ramcosta.composedestinations.spec.RouteOrDirection
 import com.ramcosta.composedestinations.utils.destination
+import com.sorrowblue.comicviewer.framework.ui.animation.materialContainerTransformIn
+import com.sorrowblue.comicviewer.framework.ui.animation.materialContainerTransformOut
+import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
+import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
+import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisXIn
+import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisXOut
+import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisYIn
+import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisYOut
 
 @Immutable
 data class TransitionsConfigure(

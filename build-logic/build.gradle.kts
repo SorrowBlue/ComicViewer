@@ -102,6 +102,9 @@ gradlePlugin {
         register(libs.plugins.comicviewer.kotlinMultiplatform.compose) {
             implementationClass = "KotlinMultiplatformComposeConventionPlugin"
         }
+        register(libs.plugins.comicviewer.kotlinMultiplatform.koin) {
+            implementationClass = "KotlinMultiplatformKoinConventionPlugin"
+        }
     }
 }
 

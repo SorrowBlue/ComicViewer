@@ -74,19 +74,19 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
                     BookshelfFolderScreenDestination(bookshelfId, path, null)
                 )
 
-            override fun notificationRequest(type: ScanType) {
-                navigator.navigate(NotificationRequestScreenDestination(type))
-            }
-
-            override fun onEditClick(id: BookshelfId) {
-                navigator.navigate(BookshelfEditScreenDestination(BookshelfEditMode.Edit(id)))
-            }
-
-            override fun onRemoveClick(bookshelfId: BookshelfId) {
-                navigator.navigate(
-                    BookshelfDeleteScreenDestination(bookshelfId)
-                )
-            }
+//            override fun notificationRequest(type: ScanType) {
+//                navigator.navigate(NotificationRequestScreenDestination(type))
+//            }
+//
+//            override fun onEditClick(id: BookshelfId) {
+//                navigator.navigate(BookshelfEditScreenDestination(BookshelfEditMode.Edit(id)))
+//            }
+//
+//            override fun onRemoveClick(bookshelfId: BookshelfId) {
+//                navigator.navigate(
+//                    BookshelfDeleteScreenDestination(bookshelfId)
+//                )
+//            }
 
             override fun onSourceClick(bookshelfType: BookshelfType) {
                 navigator.navigate(

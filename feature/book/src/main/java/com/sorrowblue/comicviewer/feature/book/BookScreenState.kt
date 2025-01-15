@@ -26,7 +26,7 @@ import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
-import com.sorrowblue.comicviewer.framework.ui.adaptive.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged

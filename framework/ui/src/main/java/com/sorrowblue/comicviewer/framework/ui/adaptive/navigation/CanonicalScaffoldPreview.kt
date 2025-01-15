@@ -20,8 +20,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalTopAppBar
-import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.animateMainContentPaddingValues
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation

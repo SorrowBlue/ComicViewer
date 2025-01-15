@@ -49,13 +49,7 @@ internal class MainActivity : AppCompatActivity() {
             // TODO("ComicTheme {")
             ComicTheme {
                 RootScreenWrapper(finishApp = ::finish) {
-                    Column(
-                        Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("Main content")
-                    }
+                    ComicViewerApp()
                 }
             }
         }

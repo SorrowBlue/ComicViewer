@@ -12,7 +12,10 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.HingePolicy
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.material3.adaptive.occludingVerticalHingeBounds
 import androidx.compose.material3.adaptive.separatingVerticalHingeBounds
 import androidx.compose.runtime.Composable
@@ -27,7 +30,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberFixListDetailPaneScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -124,6 +126,19 @@ internal fun rememberSettingsScreenState(
         scope = scope,
     )
 }
+
+@Composable
+private fun <T> rememberFixListDetailPaneScaffoldNavigator(
+    scaffoldDirective: PaneScaffoldDirective = calculatePaneScaffoldDirective(
+        currentWindowAdaptiveInfo()
+    ),
+    initialDestinationHistory: List<ThreePaneScaffoldDestinationItem<T>> = listOf(
+        ThreePaneScaffoldDestinationItem(ListDetailPaneScaffoldRole.List)
+    ),
+) = rememberListDetailPaneScaffoldNavigator(
+    scaffoldDirective = scaffoldDirective,
+    initialDestinationHistory = initialDestinationHistory
+)
 
 @Stable
 private class SettingsScreenStateImpl(

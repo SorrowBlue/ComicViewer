@@ -67,6 +67,7 @@ comicviewer-kotlinMultiplatform-base = { id = "comicviewer.kotlinMultiplatform.b
 comicviewer-kotlinMultiplatform-application = { id = "comicviewer.kotlinMultiplatform.application" }
 comicviewer-kotlinMultiplatform-library = { id = "comicviewer.kotlinMultiplatform.library" }
 comicviewer-kotlinMultiplatform-di = { id = "comicviewer.kotlinMultiplatform.di" }
+comicviewer-kotlinMultiplatform-koin = { id = "comicviewer.kotlinMultiplatform.koin" }
 comicviewer-kotlinMultiplatform-compose = { id = "comicviewer.kotlinMultiplatform.compose" }
 
 [libraries]
@@ -191,9 +192,10 @@ arturbosch-detektFormatting = { group = "io.gitlab.arturbosch.detekt", name = "d
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose" }
+koin-composeViewModel = { group = "io.insert-koin", name = "koin-compose-viewmodel" }
+koin-composeViewModelNavigation = { group = "io.insert-koin", name = "koin-compose-viewmodel-navigation" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
 koin-android = { group = "io.insert-koin", name = "koin-android" }
-koin-annotationsBom = { group = "io.insert-koin", name = "koin-annotations-bom", version.ref = "koin-annotations" }
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
 koin-kspCompiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }
 

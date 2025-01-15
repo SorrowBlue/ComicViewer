@@ -12,7 +12,6 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.getting
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 @Suppress("unused")
 internal class AndroidKotlinMultiplatformConventionPlugin : Plugin<Project> {
@@ -87,11 +86,11 @@ internal class AndroidKotlinMultiplatformConventionPlugin : Plugin<Project> {
             }
 
             // Trigger Common Metadata Generation from Native tasks
-            project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-                if (name != "kspCommonMainKotlinMetadata") {
-                    dependsOn("kspCommonMainKotlinMetadata")
-                }
-            }
+//            project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
+//                if (name != "kspCommonMainKotlinMetadata") {
+//                    dependsOn("kspCommonMainKotlinMetadata")
+//                }
+//            }
         }
     }
 }

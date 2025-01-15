@@ -33,7 +33,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.search.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalTopAppBar
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalTopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import com.sorrowblue.comicviewer.feature.folder.R as FolderR

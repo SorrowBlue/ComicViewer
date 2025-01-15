@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.sorrowblue.comicviewer.feature.history.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.adaptive.CanonicalTopAppBar
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalTopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 
