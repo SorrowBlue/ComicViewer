@@ -151,7 +151,7 @@ squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.10.2"
 squareup-okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version = "4.12.0" }
 fasterxml-jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version = "2.18.2" }
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version = "3.0.3" }
-bouncycastle-bcprovJdk18on = { group = "org.bouncycastle", name = "bcprov-jdk18on", version = "1.79" }
+bouncycastle-bcprovJdk18on = { group = "org.bouncycastle", name = "bcprov-jdk18on", version = "1.80" }
 
 google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "google-dagger" }
 google-dagger-hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "google-dagger" }
