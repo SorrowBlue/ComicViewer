@@ -5,11 +5,11 @@ import com.google.android.play.core.ktx.requestSessionStates
 import com.google.android.play.core.ktx.status
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-internal class LibraryViewModel @Inject constructor(
+
+@KoinViewModel
+internal class LibraryViewModel(
     val splitInstallManager: SplitInstallManager,
 ) : ViewModel()
 

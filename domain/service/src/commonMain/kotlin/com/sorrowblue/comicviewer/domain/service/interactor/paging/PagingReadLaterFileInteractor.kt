@@ -4,12 +4,11 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.readlater.PagingReadLaterFileUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class PagingReadLaterFileInteractor @Inject constructor(
+internal class PagingReadLaterFileInteractor(
     private val readLaterFileLocalDataSource: ReadLaterFileLocalDataSource,
 ) : PagingReadLaterFileUseCase() {
 

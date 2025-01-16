@@ -4,7 +4,7 @@ import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
 import com.ramcosta.composedestinations.result.NavResult
@@ -51,7 +51,7 @@ internal fun rememberHistoryScreenState(
     clearAllResult: ResultRecipient<ClearAllHistoryDialogDestination, Boolean>,
     navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: HistoryViewModel = hiltViewModel(),
+    viewModel: HistoryViewModel = koinViewModel(),
 ): HistoryScreenState {
     val state = rememberSaveableScreenState {
         HistoryScreenStateImpl(

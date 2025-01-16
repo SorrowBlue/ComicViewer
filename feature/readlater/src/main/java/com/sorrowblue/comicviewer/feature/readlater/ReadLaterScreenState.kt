@@ -6,7 +6,7 @@ import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -53,7 +53,7 @@ internal fun rememberReadLaterScreenState(
     navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: ReadLaterViewModel = hiltViewModel(),
+    viewModel: ReadLaterViewModel = koinViewModel(),
 ): ReadLaterScreenState = rememberSaveableScreenState {
     ReadLaterScreenStateImpl(
         savedStateHandle = it,

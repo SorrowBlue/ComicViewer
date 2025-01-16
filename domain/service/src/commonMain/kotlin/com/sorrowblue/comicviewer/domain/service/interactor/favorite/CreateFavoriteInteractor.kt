@@ -6,13 +6,12 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSourceError
 import com.sorrowblue.comicviewer.domain.usecase.favorite.CreateFavoriteUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class CreateFavoriteInteractor @Inject constructor(
+internal class CreateFavoriteInteractor(
     private val favoriteLocalDataSource: FavoriteLocalDataSource,
 ) : CreateFavoriteUseCase() {
 

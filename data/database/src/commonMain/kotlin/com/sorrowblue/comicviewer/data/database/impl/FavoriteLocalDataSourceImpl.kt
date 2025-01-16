@@ -13,7 +13,6 @@ import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSourceError
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -21,7 +20,7 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class FavoriteLocalDataSourceImpl @Inject constructor(
+internal class FavoriteLocalDataSourceImpl(
     private val favoriteDao: FavoriteDao,
 ) : FavoriteLocalDataSource {
 

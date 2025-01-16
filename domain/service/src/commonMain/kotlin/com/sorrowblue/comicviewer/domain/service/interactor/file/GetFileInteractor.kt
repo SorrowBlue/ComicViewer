@@ -4,13 +4,12 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class GetFileInteractor @Inject constructor(
+internal class GetFileInteractor(
     private val fileLocalDataSource: FileLocalDataSource,
 ) : GetFileUseCase() {
 

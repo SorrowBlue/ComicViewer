@@ -11,16 +11,16 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flattenConcat
 import kotlinx.coroutines.flow.map
 
-@HiltViewModel
-internal class FolderViewModel @Inject constructor(
+@KoinViewModel
+internal class FolderViewModel(
     val getFileUseCase: GetFileUseCase,
     val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     private val pagingFileUseCase: PagingFileUseCase,

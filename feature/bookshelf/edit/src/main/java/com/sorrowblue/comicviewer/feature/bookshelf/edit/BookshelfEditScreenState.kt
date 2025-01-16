@@ -10,7 +10,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
@@ -42,7 +42,7 @@ internal fun rememberBookshelfEditScreenState(
     navArgs: BookshelfEditArgs,
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: BookshelfEditScreenViewModel = hiltViewModel(),
+    viewModel: BookshelfEditScreenViewModel = koinViewModel(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ): BookshelfEditScreenState {
     return remember {

@@ -69,9 +69,6 @@ gradlePlugin {
         register(libs.plugins.comicviewer.android.kotlinMultiplatform) {
             implementationClass = "AndroidKotlinMultiplatformConventionPlugin"
         }
-        register(libs.plugins.comicviewer.android.hilt) {
-            implementationClass = "DaggerHiltConventionPlugin"
-        }
         register(libs.plugins.comicviewer.detekt) {
             implementationClass = "DetektConventionPlugin"
         }
@@ -95,9 +92,6 @@ gradlePlugin {
         }
         register(libs.plugins.comicviewer.kotlinMultiplatform.library) {
             implementationClass = "KotlinMultiplatformAndroidLibraryConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.kotlinMultiplatform.di) {
-            implementationClass = "KotlinMultiplatformDiConventionPlugin"
         }
         register(libs.plugins.comicviewer.kotlinMultiplatform.compose) {
             implementationClass = "KotlinMultiplatformComposeConventionPlugin"

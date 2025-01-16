@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings.PageFormat
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookSettingsUseCase
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun rememberBookMenuScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: BookMenuViewModel = hiltViewModel(),
+    viewModel: BookMenuViewModel = koinViewModel(),
 ): BookMenuScreenState {
     return remember {
         BookMenuScreenStateImpl(

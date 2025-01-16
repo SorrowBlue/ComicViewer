@@ -24,7 +24,6 @@ internal class AndroidKotlinMultiplatformConventionPlugin : Plugin<Project> {
                 id(libs.plugins.comicviewer.android.lint)
                 id(libs.plugins.comicviewer.detekt)
                 id(libs.plugins.comicviewer.dokka)
-                id(libs.plugins.google.dagger.hilt)
                 id(libs.plugins.google.ksp)
             }
 
@@ -65,9 +64,6 @@ internal class AndroidKotlinMultiplatformConventionPlugin : Plugin<Project> {
                         implementation(libs.koin.core)
                     }
                 }
-                sourceSets.androidMain.dependencies {
-                    implementation(libs.google.dagger.hilt.android)
-                }
                 sourceSets.iosMain {
                     dependsOn(noAndroid)
                 }
@@ -82,7 +78,6 @@ internal class AndroidKotlinMultiplatformConventionPlugin : Plugin<Project> {
                 add("kspIosArm64", libs.koin.kspCompiler)
                 add("kspIosSimulatorArm64", libs.koin.kspCompiler)
                 add("kspDesktop", libs.koin.kspCompiler)
-                add("kspAndroid", libs.google.dagger.hilt.compiler)
             }
 
             // Trigger Common Metadata Generation from Native tasks

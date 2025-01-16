@@ -16,13 +16,12 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class FavoriteFileLocalDataSourceImpl @Inject constructor(
+internal class FavoriteFileLocalDataSourceImpl(
     private val favoriteFileDao: FavoriteFileDao,
 ) : FavoriteFileLocalDataSource {
 

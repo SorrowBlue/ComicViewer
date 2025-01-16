@@ -7,10 +7,9 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Singleton
 
 @Module
-@ComponentScan("com.sorrowblue.comicviewer.data.storage.client")
-class DataStorageClientModule {
+// @ComponentScan("com.sorrowblue.comicviewer.data.storage.client")
+class DataStorageClientModule
 
     @ImageExtension2
     @Singleton
     fun bindSupportedImage(): Set<String> = SUPPORTED_IMAGE
-}

@@ -4,14 +4,14 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Stable
-@HiltViewModel
-internal class AuthenticationViewModel @Inject constructor(
+@KoinViewModel
+internal class AuthenticationViewModel(
     private val securitySettingsUseCase: ManageSecuritySettingsUseCase,
 ) : ViewModel() {
 

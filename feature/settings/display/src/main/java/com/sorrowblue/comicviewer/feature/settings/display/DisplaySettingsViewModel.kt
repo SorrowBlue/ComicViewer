@@ -3,12 +3,12 @@ package com.sorrowblue.comicviewer.feature.settings.display
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-internal class DisplaySettingsViewModel @Inject constructor(
+@KoinViewModel
+internal class DisplaySettingsViewModel(
     val displaySettingsUseCase: ManageDisplaySettingsUseCase,
 ) : ViewModel() {
 

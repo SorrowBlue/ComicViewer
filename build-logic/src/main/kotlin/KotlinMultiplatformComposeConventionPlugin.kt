@@ -36,6 +36,7 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     implementation(libs.kotlinx.serialization.core)
 
                     implementation(project.dependencies.platform(libs.koin.bom))
+                    implementation(libs.koin.annotations)
                     implementation(libs.koin.compose)
                     implementation(libs.koin.composeViewModel)
                     implementation(libs.koin.composeViewModelNavigation)
@@ -69,10 +70,18 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     extensions.getByType<ComposePlugin.Dependencies>().uiTooling
                 )
                 add("kspAndroid", libs.compose.destinations.ksp)
+                add("kspCommonMainMetadata", libs.koin.kspCompiler)
+                add("kspAndroid", libs.koin.kspCompiler)
+                add("kspIosX64", libs.koin.kspCompiler)
+                add("kspIosArm64", libs.koin.kspCompiler)
+                add("kspIosSimulatorArm64", libs.koin.kspCompiler)
+                add("kspDesktop", libs.koin.kspCompiler)
             }
             // TODO Remove
             ksp {
                 arg("compose-destinations.codeGenPackageName", "com.sorrowblue.${parentName()}")
+                arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
+                arg("KOIN_CONFIG_CHECK", "false")
             }
         }
     }

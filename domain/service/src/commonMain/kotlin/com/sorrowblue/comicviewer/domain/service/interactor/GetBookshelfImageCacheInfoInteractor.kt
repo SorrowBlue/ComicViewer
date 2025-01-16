@@ -9,14 +9,13 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.usecase.GetBookshelfImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class GetBookshelfImageCacheInfoInteractor @Inject constructor(
+internal class GetBookshelfImageCacheInfoInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val imageCacheDataSource: ImageCacheDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,

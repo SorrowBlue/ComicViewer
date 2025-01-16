@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
@@ -27,7 +27,7 @@ internal interface FavoriteListScreenState {
 internal fun rememberFavoriteListScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyListState: LazyListState = rememberLazyListState(),
-    viewModel: FavoriteListViewModel = hiltViewModel(),
+    viewModel: FavoriteListViewModel = koinViewModel(),
 ): FavoriteListScreenState = remember {
     FavoriteListScreenStateImpl(
         scope = scope,

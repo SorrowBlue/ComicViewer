@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -53,8 +53,8 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -85,8 +85,8 @@ interface FileKeyState {
     val file: File?
 }
 
-@HiltViewModel
-internal class FileKeyViewModel @Inject constructor(
+@KoinViewModel
+internal class FileKeyViewModel(
     val getFileUseCase: GetFileUseCase,
 ) : ViewModel()
 
@@ -94,7 +94,7 @@ internal class FileKeyViewModel @Inject constructor(
 internal fun rememberFileKeyState(
     fileKey: File.Key,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FileKeyViewModel = hiltViewModel(),
+    viewModel: FileKeyViewModel = koinViewModel(),
 ): FileKeyState {
     return remember(fileKey) { FileKeyStateImpl(fileKey, scope, viewModel.getFileUseCase) }
 }

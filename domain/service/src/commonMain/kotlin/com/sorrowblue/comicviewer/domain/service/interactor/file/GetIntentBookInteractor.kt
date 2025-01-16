@@ -5,14 +5,13 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import logcat.logcat
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class GetIntentBookInteractor @Inject constructor(
+internal class GetIntentBookInteractor(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : GetIntentBookUseCase() {
 

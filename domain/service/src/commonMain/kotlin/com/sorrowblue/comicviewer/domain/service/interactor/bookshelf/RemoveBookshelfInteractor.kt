@@ -10,11 +10,10 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
-import di.Inject
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class RemoveBookshelfInteractor @Inject constructor(
+internal class RemoveBookshelfInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val imageCacheDataSource: ImageCacheDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,

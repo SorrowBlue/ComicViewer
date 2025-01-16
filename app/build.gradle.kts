@@ -1,11 +1,12 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import com.sorrowblue.comicviewer.ComicBuildType
+import org.gradle.accessors.dm.Feature_HistoryProjectDependency
+import org.gradle.accessors.dm.RootProjectAccessor
 
 plugins {
     alias(libs.plugins.comicviewer.android.application)
     alias(libs.plugins.comicviewer.android.compose)
-    alias(libs.plugins.comicviewer.android.hilt)
     alias(libs.plugins.comicviewer.koin)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.aboutlibraries)
@@ -96,11 +97,13 @@ dependencies {
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.androidx.hilt.work)
     implementation(libs.google.android.play.review.ktx)
     implementation(libs.google.android.play.feature.delivery.ktx)
     implementation(libs.androidx.appcompat)
-    implementation("io.insert-koin:koin-androidx-startup:4.1.0-Beta4")
+    implementation(libs.koin.androidxStartup)
+    implementation(libs.koin.androidxWorkmanager)
+
+    implementation(projects.feature.history)
 
     implementation(libs.google.android.billingclient.billingKtx)
 }

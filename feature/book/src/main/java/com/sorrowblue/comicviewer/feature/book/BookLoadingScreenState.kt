@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
@@ -24,7 +24,7 @@ internal interface BookLoadingScreenState {
 internal fun rememberBookLoadingScreenState(
     args: BookArgs,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: BookViewModel = hiltViewModel(),
+    viewModel: BookViewModel = koinViewModel(),
 ): BookLoadingScreenState = remember {
     BookLoadingScreenStateImpl(
         args = args,

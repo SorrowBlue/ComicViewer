@@ -3,11 +3,10 @@ package com.sorrowblue.comicviewer.domain.service.interactor.settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
-import di.Inject
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class ManageViewerOperationSettingsInteractor @Inject constructor(
+internal class ManageViewerOperationSettingsInteractor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : ManageViewerOperationSettingsUseCase {
 

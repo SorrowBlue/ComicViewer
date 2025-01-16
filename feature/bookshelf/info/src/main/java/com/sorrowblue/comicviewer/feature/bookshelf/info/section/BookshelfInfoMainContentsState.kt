@@ -17,7 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
@@ -37,8 +37,8 @@ import com.sorrowblue.comicviewer.feature.bookshelf.notification.NotificationReq
 import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -50,7 +50,7 @@ internal fun rememberBookshelfInfoMainContentsState(
     snackbarHostState: SnackbarHostState,
     context: Context = LocalContext.current,
     scope: CoroutineScope = LocalCoroutineScope.current,
-    viewModel: BookshelfInfoMainContentsViewModel = hiltViewModel(),
+    viewModel: BookshelfInfoMainContentsViewModel = koinViewModel(),
 ): BookshelfInfoMainContentsState {
     val stateImpl = remember(bookshelfFolder, viewModel) {
         BookshelfInfoMainContentsStateImpl(
@@ -210,8 +210,8 @@ private class BookshelfInfoMainContentsStateImpl(
     }
 }
 
-@HiltViewModel
-internal class BookshelfInfoMainContentsViewModel @Inject constructor(
+@KoinViewModel
+internal class BookshelfInfoMainContentsViewModel(
     private val pagingBookshelfBookUseCase: PagingBookshelfBookUseCase,
 ) : ViewModel() {
 

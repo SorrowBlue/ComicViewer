@@ -11,7 +11,5 @@ dependencies {
     implementation(projects.framework.notification)
     implementation(projects.feature.file)
 
-    implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.work.runtime)
-    ksp(libs.androidx.hilt.compiler)
 }

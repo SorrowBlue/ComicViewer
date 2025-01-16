@@ -17,14 +17,13 @@ import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Singleton
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Settings as GlobalSettings
 
 @Singleton
-internal class DatastoreDataSourceImpl @Inject constructor(
+internal class DatastoreDataSourceImpl(
     @Qualifier(GlobalSettings::class) private val settingsDataStore: DataStore<Settings>,
     @Qualifier(Display::class) private val displaySettingsDataStore: DataStore<DisplaySettings>,
     @Qualifier(Viewer::class) private val viewerSettingsDataStore: DataStore<ViewerSettings>,

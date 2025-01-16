@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -100,7 +100,7 @@ internal fun rememberComicViewerAppState(
     navController: NavHostController = rememberNavController(),
     mainViewModel: MainViewModel = viewModel(LocalContext.current as ComponentActivity),
     navTabHandler: NavTabHandler = viewModel(LocalContext.current as ComponentActivity),
-    viewModel: ComicViewerAppViewModel = hiltViewModel(),
+    viewModel: ComicViewerAppViewModel = koinViewModel(),
 ): ComicViewerAppState = rememberSaveableScreenState {
     ComicViewerAppStateImpl(
         lifecycle = lifecycle,

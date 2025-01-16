@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFileUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -17,7 +16,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class PagingFileInteractor @Inject constructor(
+internal class PagingFileInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,

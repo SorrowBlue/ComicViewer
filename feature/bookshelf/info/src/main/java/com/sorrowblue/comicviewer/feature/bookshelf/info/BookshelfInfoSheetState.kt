@@ -15,7 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.ramcosta.composedestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -49,7 +49,7 @@ internal fun rememberBookshelfInfoSheetState(
     snackbarHostState: SnackbarHostState,
     context: Context = LocalContext.current,
     scope: CoroutineScope = LocalCoroutineScope.current,
-    viewModel: BookshelfInfoSheetViewModel = hiltViewModel(),
+    viewModel: BookshelfInfoSheetViewModel = koinViewModel(),
 ): BookshelfInfoSheetState {
     val stateImpl = remember(bookshelfId) {
         BookshelfInfoSheetStateImpl(

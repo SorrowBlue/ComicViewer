@@ -14,7 +14,6 @@ internal class AndroidFeatureConventionPlugin : Plugin<Project> {
             plugins {
                 id(libs.plugins.comicviewer.android.library)
                 id(libs.plugins.comicviewer.android.compose)
-                id(libs.plugins.comicviewer.android.hilt)
                 id(libs.plugins.kotlin.parcelize)
             }
 

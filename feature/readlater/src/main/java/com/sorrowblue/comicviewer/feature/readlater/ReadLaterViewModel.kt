@@ -6,11 +6,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.PagingReadLaterFileUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-internal class ReadLaterViewModel @Inject constructor(
+
+@KoinViewModel
+internal class ReadLaterViewModel(
     pagingReadLaterFileUseCase: PagingReadLaterFileUseCase,
     val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
 ) : ViewModel() {

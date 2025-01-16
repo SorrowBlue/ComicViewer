@@ -4,13 +4,12 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.favorite.UpdateFavoriteUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class UpdateFavoriteInteractor @Inject constructor(
+internal class UpdateFavoriteInteractor(
     private val favoriteLocalDataSource: FavoriteLocalDataSource,
 ) : UpdateFavoriteUseCase() {
 

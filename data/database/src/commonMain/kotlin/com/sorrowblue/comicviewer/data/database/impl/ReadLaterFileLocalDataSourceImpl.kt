@@ -11,13 +11,12 @@ import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class ReadLaterFileLocalDataSourceImpl @Inject constructor(
+internal class ReadLaterFileLocalDataSourceImpl(
     private val readLaterFileDao: ReadLaterFileDao,
 ) : ReadLaterFileLocalDataSource {
 

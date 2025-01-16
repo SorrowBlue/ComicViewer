@@ -5,14 +5,13 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
-import di.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class PagingQueryFileInteractor @Inject constructor(
+internal class PagingQueryFileInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
 ) : PagingQueryFileUseCase() {

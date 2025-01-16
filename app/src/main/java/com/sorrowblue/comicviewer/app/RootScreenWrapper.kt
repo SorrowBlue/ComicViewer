@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.ramcosta.composedestinations.scope.DestinationScope
@@ -28,6 +27,7 @@ import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNav
 import com.sorrowblue.comicviewer.feature.authentication.Mode
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreen
 import logcat.logcat
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * Root screen wrapper
@@ -40,7 +40,8 @@ internal object RootScreenWrapper : DestinationWrapper {
     override fun <T> DestinationScope<T>.Wrap(
         @SuppressLint("ComposableLambdaParameterNaming") screenContent: @Composable () -> Unit,
     ) {
-        val mainViewModel = hiltViewModel<MainViewModel>(LocalContext.current as ComponentActivity)
+        val mainViewModel =
+            koinViewModel<MainViewModel>(viewModelStoreOwner = LocalContext.current as ComponentActivity)
         val isInitialized by mainViewModel.isInitialized.collectAsState()
         val state = rememberRootScreenWrapperState()
 

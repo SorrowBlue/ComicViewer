@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.ramcosta.composedestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
@@ -42,7 +42,7 @@ internal interface FolderSettingsScreenState {
 @Composable
 internal fun rememberFolderSettingsScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FolderSettingsViewModel = hiltViewModel(),
+    viewModel: FolderSettingsViewModel = koinViewModel(),
 ): FolderSettingsScreenState = remember {
     FolderSettingsScreenStateImpl(
         scope = scope,

@@ -11,13 +11,12 @@ import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
-import di.Inject
 import logcat.asLog
 import logcat.logcat
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class RegisterBookshelfInteractor @Inject constructor(
+internal class RegisterBookshelfInteractor(
     private val fileLocalDataSource: FileLocalDataSource,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,

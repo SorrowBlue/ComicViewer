@@ -3,12 +3,12 @@ package com.sorrowblue.comicviewer.feature.settings.security
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-internal class SecuritySettingsViewModel @Inject constructor(
+@KoinViewModel
+internal class SecuritySettingsViewModel(
     private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
 ) : ViewModel() {
 

@@ -3,11 +3,11 @@ package com.sorrowblue.comicviewer.feature.favorite.create
 import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.usecase.favorite.AddFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.CreateFavoriteUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-internal class FavoriteCreateDialogScreenViewModel @Inject constructor(
+
+@KoinViewModel
+internal class FavoriteCreateDialogScreenViewModel(
     val createFavoriteUseCase: CreateFavoriteUseCase,
     val addFavoriteFileUseCase: AddFavoriteFileUseCase,
 ) : ViewModel()

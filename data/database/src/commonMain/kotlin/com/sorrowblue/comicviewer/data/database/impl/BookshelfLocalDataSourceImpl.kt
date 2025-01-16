@@ -15,7 +15,6 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
-import di.Inject
 import di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +27,7 @@ import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class BookshelfLocalDataSourceImpl @Inject constructor(
+internal class BookshelfLocalDataSourceImpl(
     private val dao: BookshelfDao,
     @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : BookshelfLocalDataSource {

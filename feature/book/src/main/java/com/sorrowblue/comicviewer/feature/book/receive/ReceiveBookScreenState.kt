@@ -15,7 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.model.Resource
@@ -30,8 +30,8 @@ import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import logcat.logcat
@@ -48,8 +48,8 @@ internal interface ReceiveBookScreenState : SaveableScreenState {
     fun onPageLoaded(split: UnratedPage, bitmap: Bitmap)
 }
 
-@HiltViewModel
-internal class ReceiveBookViewModel @Inject constructor(val getIntentBookUseCase: GetIntentBookUseCase) :
+@KoinViewModel
+internal class ReceiveBookViewModel(val getIntentBookUseCase: GetIntentBookUseCase) :
     ViewModel()
 
 @Composable
@@ -59,7 +59,7 @@ internal fun rememberReceiveBookScreenState(
     currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() },
     pagerState: PagerState = rememberPagerState(initialPage = 0, pageCount = { currentList.size }),
     systemUiController: SystemUiController = rememberSystemUiController(),
-    viewModel: ReceiveBookViewModel = hiltViewModel(),
+    viewModel: ReceiveBookViewModel = koinViewModel(),
 ): ReceiveBookScreenState {
     return rememberSaveableScreenState {
         ReceiveBookScreenStateImpl(

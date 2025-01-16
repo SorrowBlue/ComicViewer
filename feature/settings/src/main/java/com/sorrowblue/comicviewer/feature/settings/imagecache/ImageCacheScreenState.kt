@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
 import com.sorrowblue.comicviewer.domain.model.ImageCache
 import com.sorrowblue.comicviewer.domain.model.OtherImageCache
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun rememberImageCacheScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: ImageCacheScreenViewModel = hiltViewModel(),
+    viewModel: ImageCacheScreenViewModel = koinViewModel(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ): ImageCacheScreenState = remember {
     ImageCacheScreenStateImpl(

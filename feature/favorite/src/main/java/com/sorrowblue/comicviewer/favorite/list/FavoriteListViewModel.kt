@@ -7,11 +7,11 @@ import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-internal class FavoriteListViewModel @Inject constructor(
+
+@KoinViewModel
+internal class FavoriteListViewModel(
     pagingFavoriteUseCase: PagingFavoriteUseCase,
     val deleteFavoriteUseCase: DeleteFavoriteUseCase,
 ) : ViewModel() {

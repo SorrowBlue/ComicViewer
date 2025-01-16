@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.google.android.play.core.ktx.bytesDownloaded
 import com.google.android.play.core.ktx.moduleNames
 import com.google.android.play.core.ktx.requestInstall
@@ -117,7 +117,7 @@ internal class TutorialScreenState(
 @Composable
 internal fun rememberTutorialScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: TutorialViewModel = hiltViewModel(),
+    viewModel: TutorialViewModel = koinViewModel(),
     pageState: PagerState = rememberPagerState { TutorialSheet.entries.size },
 ) = remember {
     TutorialScreenState(scope, viewModel, pageState)

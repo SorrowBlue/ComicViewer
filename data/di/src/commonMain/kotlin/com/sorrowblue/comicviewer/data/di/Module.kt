@@ -12,16 +12,16 @@ import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 
 @Module(
-    includes = [
-        DomainServiceModule::class,
-        DataCoilModule::class,
-        DataDatabaseModule::class,
-        DataDataStoreModule::class,
-        DataReaderZipModule::class,
-        DataStorageClientModule::class,
-        DataStorageSmbModule::class,
-        DataStorageDeviceModule::class,
-    ]
+//    includes = [
+//        DomainServiceModule::class,
+//        DataCoilModule::class,
+//        DataDatabaseModule::class,
+//        DataDataStoreModule::class,
+//        DataReaderZipModule::class,
+//        DataStorageClientModule::class,
+//        DataStorageSmbModule::class,
+//        DataStorageDeviceModule::class,
+//    ]
 )
-@ComponentScan("com.sorrowblue.comicviewer.data.di")
+ @ComponentScan("com.sorrowblue.comicviewer")
 class DiModule

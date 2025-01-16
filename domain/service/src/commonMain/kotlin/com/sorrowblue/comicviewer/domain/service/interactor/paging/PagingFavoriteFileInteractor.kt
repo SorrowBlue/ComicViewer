@@ -5,14 +5,13 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class PagingFavoriteFileInteractor @Inject constructor(
+internal class PagingFavoriteFileInteractor(
     private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : PagingFavoriteFileUseCase() {

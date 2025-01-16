@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal actual fun RootScreenWrapper(

@@ -10,11 +10,11 @@ import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.favorite.destinations.FavoriteScreenDestination
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-internal class FavoriteViewModel @Inject constructor(
+
+@KoinViewModel
+internal class FavoriteViewModel(
     savedStateHandle: SavedStateHandle,
     pagingFavoriteFileUseCase: PagingFavoriteFileUseCase,
     val getFavoriteUseCase: GetFavoriteUseCase,

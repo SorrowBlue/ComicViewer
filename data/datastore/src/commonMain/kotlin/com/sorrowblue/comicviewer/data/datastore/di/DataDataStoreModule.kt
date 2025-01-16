@@ -22,8 +22,8 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Singleton
 
 @Module
-@ComponentScan("com.sorrowblue.comicviewer.data.datastore")
-class DataDataStoreModule {
+// @ComponentScan("com.sorrowblue.comicviewer.data.datastore")
+class DataDataStoreModule
 
     @Singleton
     @Book
@@ -64,4 +64,3 @@ class DataDataStoreModule {
     @Viewer
     internal fun viewerSettingsDataStore(dataStoreMaker: DataStoreMaker) =
         dataStoreMaker.createDataStore(ViewerSettingsSerializer)
-}

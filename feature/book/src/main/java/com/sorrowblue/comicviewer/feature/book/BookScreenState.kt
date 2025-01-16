@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
@@ -48,7 +48,7 @@ internal fun rememberBookScreenState(
     ),
     scope: CoroutineScope = rememberCoroutineScope(),
     systemUiController: SystemUiController = rememberSystemUiController(),
-    viewModel: BookViewModel = hiltViewModel(),
+    viewModel: BookViewModel = koinViewModel(),
 ): BookScreenState {
     val isCompactWindowClass = isCompactWindowClass()
     return remember(isCompactWindowClass) {

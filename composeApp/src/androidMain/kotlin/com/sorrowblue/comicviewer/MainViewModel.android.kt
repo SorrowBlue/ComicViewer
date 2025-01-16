@@ -1,15 +1,15 @@
 package com.sorrowblue.comicviewer
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * Main view model
  */
-@HiltViewModel
-internal actual class MainViewModel @Inject constructor() : ViewModel() {
+@KoinViewModel
+internal actual class MainViewModel() : ViewModel() {
     actual val shouldKeepSplash = MutableStateFlow(true)
     actual val isInitialized = MutableStateFlow(false)
 }

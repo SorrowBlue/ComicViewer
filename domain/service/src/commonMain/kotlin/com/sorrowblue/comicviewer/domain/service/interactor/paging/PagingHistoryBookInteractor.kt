@@ -4,12 +4,11 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingHistoryBookUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class PagingHistoryBookInteractor @Inject constructor(
+internal class PagingHistoryBookInteractor(
     private val fileLocalDataSource: FileLocalDataSource,
 ) : PagingHistoryBookUseCase() {
 

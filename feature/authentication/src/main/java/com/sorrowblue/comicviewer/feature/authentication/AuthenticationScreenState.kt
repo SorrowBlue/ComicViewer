@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
@@ -43,7 +43,7 @@ internal fun rememberAuthenticationScreenState(
     activity: FragmentActivity = LocalContext.current as FragmentActivity,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: AuthenticationViewModel = hiltViewModel(),
+    viewModel: AuthenticationViewModel = koinViewModel(),
 ): AuthenticationScreenState = rememberSaveableScreenState {
     AuthenticationScreenStateImpl(
         activity = activity,

@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
@@ -29,7 +29,7 @@ internal fun rememberFavoriteCreateDialogScreenState(
     navArgs: FavoriteCreateDialogScreenArgs,
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FavoriteCreateDialogScreenViewModel = hiltViewModel(),
+    viewModel: FavoriteCreateDialogScreenViewModel = koinViewModel(),
 ): FavoriteCreateDialogScreenState = rememberSaveableScreenState {
     FavoriteCreateDialogScreenStateImpl(
         savedStateHandle = it,

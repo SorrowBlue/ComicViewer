@@ -5,13 +5,12 @@ import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class GetFileAttributeInteractor @Inject constructor(
+internal class GetFileAttributeInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : GetFileAttributeUseCase() {

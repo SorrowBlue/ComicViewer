@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDat
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
-import di.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -20,7 +19,7 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class GetNextBookInteractor @Inject constructor(
+internal class GetNextBookInteractor(
     private val datastoreDataSource: DatastoreDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
     private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,

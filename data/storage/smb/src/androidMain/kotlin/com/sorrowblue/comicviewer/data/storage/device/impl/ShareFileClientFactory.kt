@@ -4,11 +4,10 @@ import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.fileClient
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ShareFileClient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
-import di.Inject
 import org.koin.core.component.KoinComponent
 
 // TODO dagger用なので削除
-internal class ShareFileClientFactory @Inject constructor() :
+internal class ShareFileClientFactory() :
     FileClient.Factory<ShareContents>,
     KoinComponent {
     override fun create(bookshelfModel: ShareContents): FileClient<ShareContents> {

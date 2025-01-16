@@ -14,12 +14,7 @@ import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
-import di.Assisted
-import di.AssistedFactory
-import di.AssistedInject
-import di.Inject
 import di.IoDispatcher
-import koin.get
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -33,7 +28,7 @@ import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 
 @Singleton(binds = [FileModelRemoteMediator.Factory::class])
-internal class FileModelRemoteMediatorFactory @Inject constructor() :
+internal class FileModelRemoteMediatorFactory :
     FileModelRemoteMediator.Factory, KoinComponent {
     override fun create(bookshelf: Bookshelf, file: File): FileModelRemoteMediator {
         return get<FileModelRemoteMediator> { parametersOf(bookshelf, file) }
@@ -42,18 +37,16 @@ internal class FileModelRemoteMediatorFactory @Inject constructor() :
 
 @OptIn(ExperimentalPagingApi::class)
 @Factory
-internal class FileModelRemoteMediator @AssistedInject constructor(
+internal class FileModelRemoteMediator(
     remoteDataSourceFactory: RemoteDataSource.Factory,
     datastoreDataSource: DatastoreDataSource,
-    @Assisted @InjectedParam private val bookshelf: Bookshelf,
-    @Assisted @InjectedParam private val file: File,
-    @IoDispatcher @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
+    @InjectedParam private val bookshelf: Bookshelf,
+    @InjectedParam private val file: File,
+    @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
     private val fileLocalDataSource: FileLocalDataSource,
 ) : RemoteMediator<Int, QueryFileWithCountEntity>() {
 
-    @AssistedFactory
     interface Factory {
-
         fun create(bookshelf: Bookshelf, file: File): FileModelRemoteMediator
     }
 

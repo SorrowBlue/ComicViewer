@@ -3,13 +3,12 @@ package com.sorrowblue.comicviewer.domain.service.interactor.favorite
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.favorite.DeleteFavoriteUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class DeleteFavoriteInteractor @Inject constructor(
+internal class DeleteFavoriteInteractor(
     private val favoriteLocalDataSource: FavoriteLocalDataSource,
 ) : DeleteFavoriteUseCase() {
 

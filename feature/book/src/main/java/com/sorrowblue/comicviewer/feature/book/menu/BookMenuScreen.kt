@@ -20,16 +20,16 @@ import com.sorrowblue.comicviewer.feature.book.section.PageFormat2
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ExposedDropdownMenu
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 
 internal data class BookMenuScreenUiState(
     val pageFormat2: PageFormat2 = PageFormat2.Default,
     val pageScale: PageScale = PageScale.Fit,
 )
 
-@HiltViewModel
-internal class BookMenuViewModel @Inject constructor(
+@KoinViewModel
+internal class BookMenuViewModel(
     val manageBookSettingsUseCase: ManageBookSettingsUseCase,
 ) : ViewModel()
 

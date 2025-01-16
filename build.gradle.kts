@@ -12,7 +12,6 @@ plugins {
     alias(libs.plugins.android.dynamicFeature) apply false
     alias(libs.plugins.androidx.navigation.safeargs.kotlin) apply false
     alias(libs.plugins.androidx.room) apply false
-    alias(libs.plugins.google.dagger.hilt) apply false
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.kotlin.android) apply false

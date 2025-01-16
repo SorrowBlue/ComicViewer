@@ -10,8 +10,8 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Singleton
 
 @Module
-@ComponentScan("com.sorrowblue.comicviewer.data.database")
-class DataDatabaseModule {
+// @ComponentScan("com.sorrowblue.comicviewer.data.database")
+class DataDatabaseModule
 
     @Singleton
     internal fun provideBookshelfDao(database: ComicViewerDatabase) = database.bookshelfDao()
@@ -37,4 +37,3 @@ class DataDatabaseModule {
             .setQueryCoroutineContext(Dispatchers.IO)
             .build()
     }
-}

@@ -27,7 +27,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOr
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.LocalDataSourceQueryError
-import di.Inject
 import di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -39,12 +38,10 @@ import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class FileModelLocalDataSourceImpl @Inject constructor(
+internal class FileModelLocalDataSourceImpl(
     private val dao: FileDao,
     private val factory: FileModelRemoteMediator.Factory,
-    @Qualifier(IoDispatcher::class)
-    @IoDispatcher
-    private val dispatcher: CoroutineDispatcher,
+    @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : FileLocalDataSource {
 
     override suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File> {

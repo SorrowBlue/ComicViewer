@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.feature.favorite.add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -36,7 +36,7 @@ internal interface FavoriteAddScreenState : ScreenStateEvent<FavoriteAddScreenSt
 internal fun rememberFavoriteAddScreenState(
     navBackStackEntry: NavBackStackEntry,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FavoriteAddViewModel = hiltViewModel(),
+    viewModel: FavoriteAddViewModel = koinViewModel(),
 ): FavoriteAddScreenState = remember {
     FavoriteAddScreenStateImpl(
         args = FavoriteAddDialogScreenDestination.argsFrom(navBackStackEntry),

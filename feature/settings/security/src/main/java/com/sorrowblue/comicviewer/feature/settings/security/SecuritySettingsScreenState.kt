@@ -19,7 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
@@ -71,7 +71,7 @@ private class SecuritySettingsScreenStateImpl(
 internal fun rememberChildSecuritySettingsScreenState(
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: SecuritySettingsViewModel = hiltViewModel(),
+    viewModel: SecuritySettingsViewModel = koinViewModel(),
 ): SecuritySettingsScreenState = remember {
     ChildSecuritySettingsScreenState(context = context, scope = scope, viewModel = viewModel)
 }

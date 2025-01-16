@@ -7,22 +7,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.koin.android.annotation.KoinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
-@HiltViewModel
-class NavTabHandler @Inject constructor() : ViewModel() {
+@KoinViewModel
+class NavTabHandler : ViewModel() {
     val click = MutableSharedFlow<Unit>(
         replay = 0,
         extraBufferCapacity = 1,
@@ -35,7 +34,7 @@ fun NavTabHandler(
     lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModelStoreOwner: ViewModelStoreOwner = LocalContext.current as ComponentActivity,
-    viewModel: NavTabHandler = hiltViewModel<NavTabHandler>(viewModelStoreOwner = viewModelStoreOwner),
+    viewModel: NavTabHandler = koinViewModel<NavTabHandler>(viewModelStoreOwner = viewModelStoreOwner),
     onClick: () -> Unit,
 ) {
     val currentOnClick by rememberUpdatedState(onClick)

@@ -6,14 +6,13 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class ExistsReadlaterInteractor @Inject constructor(
+internal class ExistsReadlaterInteractor(
     private val readLaterFileLocalDataSource: ReadLaterFileLocalDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : ExistsReadlaterUseCase() {

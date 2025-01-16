@@ -6,12 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -29,7 +29,7 @@ sealed interface AuthStatus {
 
 @Composable
 internal fun rememberRootScreenWrapperState(
-    viewModel: RootScreenWrapperViewModel = hiltViewModel(),
+    viewModel: RootScreenWrapperViewModel = koinViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
 ): RootScreenWrapperState {
     return remember {
@@ -96,8 +96,8 @@ private class RootScreenWrapperStateImpl(
     }
 }
 
-@HiltViewModel
-internal class RootScreenWrapperViewModel @Inject constructor(
+@KoinViewModel
+internal class RootScreenWrapperViewModel(
     val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
     val loadSettingsUseCase: LoadSettingsUseCase,
 ) : ViewModel()

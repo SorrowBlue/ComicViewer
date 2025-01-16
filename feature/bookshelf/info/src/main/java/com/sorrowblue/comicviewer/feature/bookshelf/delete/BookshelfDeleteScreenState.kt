@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 internal fun rememberBookshelfDeleteScreenState(
     navArgs: BookshelfDeleteScreenArgs,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: BookshelfDeleteViewModel = hiltViewModel(),
+    viewModel: BookshelfDeleteViewModel = koinViewModel(),
 ): BookshelfDeleteScreenState {
     return remember {
         BookshelfDeleteScreenStateImpl(

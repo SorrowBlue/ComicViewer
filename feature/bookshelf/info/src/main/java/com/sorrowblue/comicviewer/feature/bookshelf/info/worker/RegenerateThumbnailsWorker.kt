@@ -7,7 +7,6 @@ import android.content.pm.ServiceInfo
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -27,17 +26,15 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCa
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.R
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import kotlin.random.Random
 import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
 
-@HiltWorker
-internal class RegenerateThumbnailsWorker @AssistedInject constructor(
-    @Assisted appContext: Context,
-    @Assisted workerParams: WorkerParameters,
+// TODO add to module workOf
+internal class RegenerateThumbnailsWorker(
+    appContext: Context,
+    workerParams: WorkerParameters,
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
 ) : CoroutineWorker(appContext, workerParams) {

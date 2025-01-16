@@ -14,7 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
@@ -89,7 +89,7 @@ internal fun rememberFolderScreenState(
     navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    viewModel: FolderViewModel = hiltViewModel(),
+    viewModel: FolderViewModel = koinViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ): FolderScreenState {

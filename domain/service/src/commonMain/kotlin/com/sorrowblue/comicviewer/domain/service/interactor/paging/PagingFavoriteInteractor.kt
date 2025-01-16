@@ -4,12 +4,11 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class PagingFavoriteInteractor @Inject constructor(
+internal class PagingFavoriteInteractor(
     private val favoriteLocalDataSource: FavoriteLocalDataSource,
 ) : PagingFavoriteUseCase() {
 

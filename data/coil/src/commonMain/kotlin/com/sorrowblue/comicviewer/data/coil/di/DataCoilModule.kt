@@ -7,11 +7,10 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Singleton
 
 @Module
-@ComponentScan("com.sorrowblue.comicviewer.data.coil")
-class DataCoilModule {
+// @ComponentScan("com.sorrowblue.comicviewer.data.coil")
+class DataCoilModule
 
     @Singleton
     fun provideImageCacheDiskCacheDiskCache(coilDiskCache: CoilDiskCache): DiskCache {
         return DiskCache.Builder().directory(coilDiskCache.resolve("image_cache")).build()
     }
-}

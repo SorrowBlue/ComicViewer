@@ -10,7 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
@@ -60,7 +60,7 @@ internal interface SearchScreenState :
 @Composable
 internal fun rememberSearchScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: SearchViewModel = hiltViewModel(),
+    viewModel: SearchViewModel = koinViewModel(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
 ): SearchScreenState = rememberSaveableScreenState {

@@ -9,7 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.google.android.play.core.ktx.errorCode
 import com.google.android.play.core.ktx.moduleNames
 import com.google.android.play.core.ktx.requestInstall
@@ -40,7 +40,7 @@ internal interface LibraryScreenState {
 internal fun rememberLibraryScreenState(
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: LibraryViewModel = hiltViewModel(),
+    viewModel: LibraryViewModel = koinViewModel(),
 ): LibraryScreenState = remember {
     LibraryScreenStateImpl(
         context = context,

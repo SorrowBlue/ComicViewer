@@ -17,7 +17,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -25,7 +24,6 @@ import org.koin.dsl.module
 /**
  * Main activity
  */
-@AndroidEntryPoint
 internal class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()

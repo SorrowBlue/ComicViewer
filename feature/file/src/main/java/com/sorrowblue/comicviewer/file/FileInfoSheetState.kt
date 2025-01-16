@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
@@ -46,7 +46,7 @@ internal fun rememberFileInfoSheetState(
     file: File,
     isOpenFolderEnabled: Boolean = false,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FileInfoSheetViewModel = hiltViewModel(),
+    viewModel: FileInfoSheetViewModel = koinViewModel(),
 ): FileInfoSheetState {
     val lazyPagingItems = when (file) {
         is Book -> null

@@ -13,7 +13,6 @@ import com.sorrowblue.comicviewer.domain.service.datasource.LocalDataSourceQuery
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageFolderSettingsInteractor
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -22,7 +21,7 @@ import logcat.logcat
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class GetBookInteractor @Inject constructor(
+internal class GetBookInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,

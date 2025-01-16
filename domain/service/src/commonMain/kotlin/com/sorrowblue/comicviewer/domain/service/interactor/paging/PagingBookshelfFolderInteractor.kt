@@ -6,12 +6,11 @@ import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfFolderUseCase
-import di.Inject
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class PagingBookshelfFolderInteractor @Inject constructor(
+internal class PagingBookshelfFolderInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : PagingBookshelfFolderUseCase() {
 
@@ -21,7 +20,7 @@ internal class PagingBookshelfFolderInteractor @Inject constructor(
 }
 
 @Singleton
-internal class PagingBookshelfBookInteractor @Inject constructor(
+internal class PagingBookshelfBookInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : PagingBookshelfBookUseCase() {
     override fun run(request: Request): Flow<PagingData<BookThumbnail>> {

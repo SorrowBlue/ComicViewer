@@ -5,11 +5,10 @@ import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
-import di.Inject
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class ManageViewerSettingsInteractor @Inject constructor(
+internal class ManageViewerSettingsInteractor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : ManageViewerSettingsUseCase {
 
@@ -21,7 +20,7 @@ internal class ManageViewerSettingsInteractor @Inject constructor(
 }
 
 @Singleton
-internal class ManageBookSettingsInteractor @Inject constructor(
+internal class ManageBookSettingsInteractor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : ManageBookSettingsUseCase {
 

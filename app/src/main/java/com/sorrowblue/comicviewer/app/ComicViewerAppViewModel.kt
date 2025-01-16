@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
+
 
 /**
  * Comic viewer app view model
@@ -15,8 +15,8 @@ import javax.inject.Inject
  * @property getInstalledModulesUseCase
  * @constructor Create empty Comic viewer app view model
  */
-@HiltViewModel
-internal class ComicViewerAppViewModel @Inject constructor(
+@KoinViewModel
+internal class ComicViewerAppViewModel(
     val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     val getInstalledModulesUseCase: GetInstalledModulesUseCase,

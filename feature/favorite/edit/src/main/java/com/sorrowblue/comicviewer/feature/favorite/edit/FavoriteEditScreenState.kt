@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
@@ -42,7 +42,7 @@ internal interface FavoriteEditScreenState :
 internal fun rememberFavoriteEditScreenState(
     args: FavoriteEditArgs,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FavoriteEditViewModel = hiltViewModel(),
+    viewModel: FavoriteEditViewModel = koinViewModel(),
 ): FavoriteEditScreenState = rememberSaveableScreenState {
     FavoriteEditScreenStateImpl(
         viewModel = viewModel,

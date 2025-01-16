@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -30,7 +30,7 @@ internal interface ViewerSettingsScreenState {
 @Composable
 internal fun rememberViewerSettingsScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: ViewerSettingsViewModel = hiltViewModel(),
+    viewModel: ViewerSettingsViewModel = koinViewModel(),
 ): ViewerSettingsScreenState = remember {
     ViewerSettingsScreenStateImpl(scope = scope, viewModel = viewModel)
 }

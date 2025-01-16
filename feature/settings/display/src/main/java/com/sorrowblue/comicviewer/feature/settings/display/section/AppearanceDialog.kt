@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -45,7 +45,7 @@ interface AppearanceDialogState {
 @Composable
 internal fun rememberAppearanceDialogState(
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: DisplaySettingsViewModel = hiltViewModel(),
+    viewModel: DisplaySettingsViewModel = koinViewModel(),
 ): AppearanceDialogState = remember {
     AppearanceDialogStateImpl(
         scope = scope,

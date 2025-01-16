@@ -4,11 +4,10 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
-import di.Inject
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class DeleteReadLaterInteractor @Inject constructor(
+internal class DeleteReadLaterInteractor(
     private val readLaterFileLocalDataSource: ReadLaterFileLocalDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : DeleteReadLaterUseCase() {

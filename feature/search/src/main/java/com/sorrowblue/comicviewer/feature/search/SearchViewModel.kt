@@ -10,11 +10,11 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.search.destinations.SearchScreenDestination
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-internal class SearchViewModel @Inject constructor(
+
+@KoinViewModel
+internal class SearchViewModel(
     savedStateHandle: SavedStateHandle,
     pagingQueryFileUseCase: PagingQueryFileUseCase,
     val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
