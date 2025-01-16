@@ -14,7 +14,7 @@ import okio.use
 
 internal class ImageFolderFileReader(
     private val dispatcher: CoroutineDispatcher,
-    private val fileClient: FileClient,
+    private val fileClient: FileClient<*>,
     private val file: File,
 ) : FileReader {
 

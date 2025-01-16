@@ -6,7 +6,6 @@ import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClient
 import com.sorrowblue.comicviewer.data.storage.smb.ntStatusString
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
@@ -49,9 +48,8 @@ private val mutex = Mutex()
 @Factory
 @SmbFileClient
 internal actual class SmbFileClient(
-    @InjectedParam override val bookshelf: Bookshelf,
-) : FileClient {
-    private val smbServer = bookshelf as SmbServer
+    @InjectedParam override val bookshelf: SmbServer,
+) : FileClient<SmbServer> {
 
     override suspend fun bufferedSource(file: File): BufferedSource {
         return runCommand {
@@ -196,7 +194,7 @@ internal actual class SmbFileClient(
         ) {
             return BookFolder(
                 path = url.path,
-                bookshelfId = smbServer.id,
+                bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent.toString() + "/",
                 size = 0,
@@ -207,7 +205,7 @@ internal actual class SmbFileClient(
         return if (isDirectory) {
             Folder(
                 path = url.path,
-                bookshelfId = smbServer.id,
+                bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent?.toString().orEmpty().removeSuffix("/") + "/",
                 size = 0,
@@ -217,7 +215,7 @@ internal actual class SmbFileClient(
         } else {
             BookFile(
                 path = url.path,
-                bookshelfId = smbServer.id,
+                bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent?.toString().orEmpty().removeSuffix("/") + "/",
                 size = length(),
@@ -244,7 +242,7 @@ internal actual class SmbFileClient(
 
     private fun SmbFile.isSame(path: String): Boolean {
         val credentials = context.credentials
-        val bookshelfAuth = smbServer.auth
+        val bookshelfAuth = this@SmbFileClient.bookshelf.auth
         val sameAuth = if (credentials !is NtlmPasswordAuthenticator) {
             false
         } else {
@@ -259,7 +257,9 @@ internal actual class SmbFileClient(
                 }
             }
         }
-        return sameAuth && server == smbServer.host && share == smbServer.smbFile(path).share
+        return sameAuth && server == this@SmbFileClient.bookshelf.host && share == this@SmbFileClient.bookshelf.smbFile(
+            path
+        ).share
     }
 
     private suspend fun smbFile(path: String): SmbFile {
@@ -272,9 +272,9 @@ internal actual class SmbFileClient(
                     null
                 }
             } ?: run {
-                val smbFile = smbServer.smbFile(path)
+                val smbFile = this.bookshelf.smbFile(path)
                 smbFile.share?.let { share ->
-                    smbServer.smbFile("/$share/").let {
+                    this.bookshelf.smbFile("/$share/").let {
                         rootSmbFile = it
                         val nPath = path.removePrefix("/${smbFile.share}/")
                         if (nPath.isEmpty() || nPath == "/") it else it.resolve(nPath) as SmbFile
@@ -296,7 +296,7 @@ internal actual class SmbFileClient(
             setProperty("jcifs.smb.client.connTimeout", "5000")
         }
         val context = BaseContext(PropertyConfiguration(prop))
-        return when (val auth = smbServer.auth) {
+        return when (val auth = this.bookshelf.auth) {
             SmbServer.Auth.Guest -> context.withGuestCrendentials()
             is SmbServer.Auth.UsernamePassword -> context.withCredentials(
                 NtlmPasswordAuthenticator(auth.domain, auth.username, auth.password)

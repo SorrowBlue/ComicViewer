@@ -1,12 +1,11 @@
-package com.sorrowblue.comicviewer.data.storage.device
+package com.sorrowblue.comicviewer.data.storage.device.impl
 
 import android.content.Context
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 
-internal class DeviceSeekableInputStream(context: Context, uri: Uri) :
-    SeekableInputStream {
+internal class DeviceSeekableInputStream(context: Context, uri: Uri) : SeekableInputStream {
 
     private val input = ParcelFileDescriptor.AutoCloseInputStream(
         context.contentResolver.openFileDescriptor(uri, "r")

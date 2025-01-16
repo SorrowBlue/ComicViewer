@@ -12,6 +12,7 @@ kotlin {
     sourceSets.androidMain.dependencies {
         implementation(libs.jcifs.ng)
         implementation(libs.slf4j.android)
+        implementation(libs.androidx.documentfile)
     }
 }
 

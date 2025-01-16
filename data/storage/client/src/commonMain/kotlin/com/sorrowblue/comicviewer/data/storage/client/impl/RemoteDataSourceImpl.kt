@@ -31,16 +31,16 @@ import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.qualifier
 
-@Factory
+@Factory(binds = [RemoteDataSource::class])
 internal class RemoteDataSourceImpl(
     @InjectedParam private val bookshelf: Bookshelf,
     @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : RemoteDataSource, KoinComponent {
 
     private val fileClient = when (bookshelf) {
-        is InternalStorage -> fileClient<DeviceFileClient>(bookshelf)
-        is SmbServer -> fileClient<SmbFileClient>(bookshelf)
-        ShareContents -> fileClient<ShareFileClient>(bookshelf)
+        is InternalStorage -> fileClient<DeviceFileClient, InternalStorage>(bookshelf)
+        is SmbServer -> fileClient<SmbFileClient, SmbServer>(bookshelf)
+        ShareContents -> fileClient<ShareFileClient, ShareContents>(bookshelf)
     }
 
     override suspend fun connect(path: String) {

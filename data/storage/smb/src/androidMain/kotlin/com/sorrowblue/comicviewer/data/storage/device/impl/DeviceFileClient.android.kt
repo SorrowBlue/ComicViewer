@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.storage.device
+package com.sorrowblue.comicviewer.data.storage.device.impl
 
 import android.content.Context
 import android.os.ParcelFileDescriptor
@@ -7,6 +7,7 @@ import androidx.documentfile.provider.DocumentFile
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.DeviceFileClient
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.extension
@@ -15,24 +16,18 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.InputStream
 import okio.BufferedSource
 import okio.buffer
 import okio.source
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.InjectedParam
 
-internal class DeviceFileClient @AssistedInject constructor(
-    @Assisted override val bookshelf: InternalStorage,
-    @ApplicationContext private val context: Context,
-) : FileClient {
-
-    @AssistedFactory
-    interface Factory : FileClient.Factory<InternalStorage> {
-        override fun create(bookshelfModel: InternalStorage): DeviceFileClient
-    }
+@Factory
+@DeviceFileClient
+internal actual class DeviceFileClient(
+    @InjectedParam override val bookshelf: InternalStorage,
+    private val context: Context,
+) : FileClient<InternalStorage> {
 
     private val contentResolver = context.contentResolver
 

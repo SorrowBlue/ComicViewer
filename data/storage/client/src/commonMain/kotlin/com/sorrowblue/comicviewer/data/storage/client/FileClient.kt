@@ -9,9 +9,9 @@ import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.qualifier
 
-interface FileClient {
+interface FileClient<T: Bookshelf> {
 
-    val bookshelf: Bookshelf
+    val bookshelf: T
 
     suspend fun listFiles(
         file: File,
@@ -27,7 +27,7 @@ interface FileClient {
     suspend fun seekableInputStream(file: File): SeekableInputStream
 
     interface Factory<T : Bookshelf> {
-        fun create(bookshelfModel: T): FileClient
+        fun create(bookshelfModel: T): FileClient<T>
     }
 
     suspend fun connect(path: String)
@@ -35,6 +35,6 @@ interface FileClient {
 }
 
 
-inline fun <reified Q> KoinComponent.fileClient(bookshelf: Bookshelf): FileClient {
-    return get<FileClient>(qualifier<Q>()) { parametersOf(bookshelf) }
+inline fun <reified Q, T : Bookshelf> KoinComponent.fileClient(bookshelf: Bookshelf): FileClient<T> {
+    return get<FileClient<T>>(qualifier<Q>()) { parametersOf(bookshelf) }
 }

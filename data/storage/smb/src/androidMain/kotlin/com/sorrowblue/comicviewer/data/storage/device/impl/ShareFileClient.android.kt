@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.storage.device
+package com.sorrowblue.comicviewer.data.storage.device.impl
 
 import android.content.Context
 import android.os.ParcelFileDescriptor
@@ -7,27 +7,23 @@ import androidx.documentfile.provider.DocumentFile
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.ShareFileClient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ApplicationContext
 import okio.BufferedSource
 import okio.buffer
 import okio.source
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.InjectedParam
 
-internal class ShareFileClient @AssistedInject constructor(
-    @Assisted override val bookshelf: ShareContents,
-    @ApplicationContext private val context: Context,
-) : FileClient {
-
-    @AssistedFactory
-    interface Factory : FileClient.Factory<ShareContents> {
-        override fun create(bookshelfModel: ShareContents): ShareFileClient
-    }
+@Factory
+@ShareFileClient
+internal actual class ShareFileClient(
+    @InjectedParam override val bookshelf: ShareContents,
+    private val context: Context,
+) : FileClient<ShareContents> {
 
     private val contentResolver = context.contentResolver
 

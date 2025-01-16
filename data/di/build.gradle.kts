@@ -9,18 +9,18 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.domain.service)
+                implementation(projects.data.coil)
                 implementation(projects.data.database)
                 implementation(projects.data.datastore)
-                implementation(projects.data.coil)
-                implementation(projects.data.storage.client)
                 implementation(projects.data.reader.zip)
+                implementation(projects.data.storage.client)
+                implementation(projects.data.storage.device)
                 implementation(projects.data.storage.smb)
             }
         }
 
         androidMain {
             dependencies {
-                implementation(projects.data.storage.device)
                 // :feature:library:box :feature:library:onedrive
                 implementation(libs.squareup.okhttp3)
                 implementation(libs.bouncycastle.bcprovJdk18on)
