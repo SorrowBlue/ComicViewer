@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.storage.smb
+package com.sorrowblue.comicviewer.data.storage.smb.di
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClientFactory
@@ -14,5 +14,5 @@ internal interface SingletonBindsModule {
 
     @SmbFileClientFactory
     @Binds
-    fun bindSmbFileClientFactory(factory: SmbFileClient.Factory): FileClient.Factory<SmbServer>
+    fun bindSmbFileClientFactory(factory: com.sorrowblue.comicviewer.data.storage.smb.impl.SmbFileClientFactory): FileClient.Factory<SmbServer>
 }

@@ -1,9 +1,12 @@
-package com.sorrowblue.comicviewer.data.storage.smb
+package com.sorrowblue.comicviewer.data.storage.smb.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClient
+import com.sorrowblue.comicviewer.data.storage.smb.ntStatusString
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
@@ -11,10 +14,6 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import java.io.InputStream
 import java.net.URI
 import java.net.URISyntaxException
 import java.net.URLDecoder
@@ -38,22 +37,25 @@ import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
+import okio.BufferedSource
+import okio.buffer
+import okio.source
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.InjectedParam
 
-var rootSmbFile: SmbFile? = null
-val mutex = Mutex()
+private var rootSmbFile: SmbFile? = null
+private val mutex = Mutex()
 
-internal class SmbFileClient @AssistedInject constructor(
-    @Assisted override val bookshelf: SmbServer,
+@Factory
+@SmbFileClient
+internal actual class SmbFileClient(
+    @InjectedParam override val bookshelf: Bookshelf,
 ) : FileClient {
+    private val smbServer = bookshelf as SmbServer
 
-    @AssistedFactory
-    interface Factory : FileClient.Factory<SmbServer> {
-        override fun create(bookshelfModel: SmbServer): SmbFileClient
-    }
-
-    override suspend fun inputStream(file: File): InputStream {
+    override suspend fun bufferedSource(file: File): BufferedSource {
         return runCommand {
-            smbFile(file.path).openInputStream()
+            smbFile(file.path).openInputStream().source().buffer()
         }
     }
 
@@ -111,7 +113,7 @@ internal class SmbFileClient @AssistedInject constructor(
         }
     }
 
-    override suspend fun getAttribute(path: String): FileAttribute {
+    override suspend fun getAttribute(path: String): FileAttribute? {
         return runCommand {
             smbFile(path).run {
                 FileAttribute(
@@ -194,7 +196,7 @@ internal class SmbFileClient @AssistedInject constructor(
         ) {
             return BookFolder(
                 path = url.path,
-                bookshelfId = bookshelf.id,
+                bookshelfId = smbServer.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent.toString() + "/",
                 size = 0,
@@ -205,7 +207,7 @@ internal class SmbFileClient @AssistedInject constructor(
         return if (isDirectory) {
             Folder(
                 path = url.path,
-                bookshelfId = bookshelf.id,
+                bookshelfId = smbServer.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent?.toString().orEmpty().removeSuffix("/") + "/",
                 size = 0,
@@ -215,7 +217,7 @@ internal class SmbFileClient @AssistedInject constructor(
         } else {
             BookFile(
                 path = url.path,
-                bookshelfId = bookshelf.id,
+                bookshelfId = smbServer.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent?.toString().orEmpty().removeSuffix("/") + "/",
                 size = length(),
@@ -242,7 +244,7 @@ internal class SmbFileClient @AssistedInject constructor(
 
     private fun SmbFile.isSame(path: String): Boolean {
         val credentials = context.credentials
-        val bookshelfAuth = bookshelf.auth
+        val bookshelfAuth = smbServer.auth
         val sameAuth = if (credentials !is NtlmPasswordAuthenticator) {
             false
         } else {
@@ -257,7 +259,7 @@ internal class SmbFileClient @AssistedInject constructor(
                 }
             }
         }
-        return sameAuth && server == bookshelf.host && share == bookshelf.smbFile(path).share
+        return sameAuth && server == smbServer.host && share == smbServer.smbFile(path).share
     }
 
     private suspend fun smbFile(path: String): SmbFile {
@@ -270,9 +272,9 @@ internal class SmbFileClient @AssistedInject constructor(
                     null
                 }
             } ?: run {
-                val smbFile = bookshelf.smbFile(path)
+                val smbFile = smbServer.smbFile(path)
                 smbFile.share?.let { share ->
-                    bookshelf.smbFile("/$share/").let {
+                    smbServer.smbFile("/$share/").let {
                         rootSmbFile = it
                         val nPath = path.removePrefix("/${smbFile.share}/")
                         if (nPath.isEmpty() || nPath == "/") it else it.resolve(nPath) as SmbFile
@@ -294,11 +296,46 @@ internal class SmbFileClient @AssistedInject constructor(
             setProperty("jcifs.smb.client.connTimeout", "5000")
         }
         val context = BaseContext(PropertyConfiguration(prop))
-        return when (val auth = bookshelf.auth) {
+        return when (val auth = smbServer.auth) {
             SmbServer.Auth.Guest -> context.withGuestCrendentials()
             is SmbServer.Auth.UsernamePassword -> context.withCredentials(
                 NtlmPasswordAuthenticator(auth.domain, auth.username, auth.password)
             )
         }
+    }
+}
+
+internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) :
+    SeekableInputStream {
+
+    private val file = kotlin.runCatching {
+        if (write) {
+            smbFile.openRandomAccess("rw", SmbConstants.DEFAULT_SHARING)
+        } else {
+            smbFile.openRandomAccess("r", SmbConstants.DEFAULT_SHARING)
+        }
+    }.onFailure {
+        it.printStackTrace()
+    }.getOrThrow()
+
+    override fun seek(offset: Long, whence: Int): Long {
+        when (whence) {
+            SeekableInputStream.SEEK_SET -> file.seek(offset)
+            SeekableInputStream.SEEK_CUR -> file.seek(file.filePointer + offset)
+            SeekableInputStream.SEEK_END -> file.seek(file.length() + offset)
+        }
+        return file.filePointer
+    }
+
+    override fun position(): Long {
+        return file.filePointer
+    }
+
+    override fun read(buf: ByteArray): Int {
+        return file.read(buf)
+    }
+
+    override fun close() {
+        file.close()
     }
 }
