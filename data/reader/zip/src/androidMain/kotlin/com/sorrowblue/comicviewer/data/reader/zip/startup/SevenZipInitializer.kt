@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.reader.zip
+package com.sorrowblue.comicviewer.data.reader.zip.startup
 
 import android.content.Context
 import androidx.startup.Initializer
@@ -15,5 +15,7 @@ internal class SevenZipInitializer : Initializer<Unit> {
         logcat(LogPriority.INFO) { "Initialized SevenZip. ${SevenZip.getSevenZipJBindingVersion()}." }
     }
 
-    override fun dependencies() = listOf(LogcatInitializer::class.java)
+    override fun dependencies(): List<Class<out Initializer<*>>> {
+        return listOf(LogcatInitializer::class.java)
+    }
 }

@@ -1,6 +1,18 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.library)
-    alias(libs.plugins.comicviewer.android.hilt)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
+}
+
+kotlin {
+    sourceSets.commonMain.dependencies {
+        implementation(projects.data.storage.client)
+    }
+
+    sourceSets.androidMain.dependencies {
+        implementation(libs.androidx.startup.runtime)
+        implementation(libs.com.sorrowblue.sevenzipjbinding)
+    }
 }
 
 android {
@@ -10,11 +22,4 @@ android {
             useLegacyPackaging = false
         }
     }
-}
-
-dependencies {
-    implementation(projects.data.storage.client)
-
-    implementation(libs.androidx.startup.runtime)
-    implementation(libs.com.sorrowblue.sevenzipjbinding)
 }

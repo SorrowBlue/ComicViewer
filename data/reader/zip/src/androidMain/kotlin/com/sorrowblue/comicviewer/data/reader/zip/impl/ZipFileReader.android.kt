@@ -1,15 +1,11 @@
-package com.sorrowblue.comicviewer.data.reader.zip
+package com.sorrowblue.comicviewer.data.reader.zip.impl
 
 import android.icu.text.Collator
 import android.icu.text.RuleBasedCollator
-import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension2
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReader
 import com.sorrowblue.comicviewer.domain.reader.FileReader
-import com.sorrowblue.comicviewer.domain.service.di.IoDispatcher
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import java.util.Locale
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
@@ -20,18 +16,17 @@ import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import okio.Sink
 import okio.buffer
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.InjectedParam
+import org.koin.core.annotation.Qualifier
 
-internal class ZipFileReader @AssistedInject constructor(
-    @Assisted private val seekableInputStream: SeekableInputStream,
-    @ImageExtension supportedException: Set<String>,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+@ZipFileReader
+@Factory
+internal actual class ZipFileReader(
+    @InjectedParam actual val seekableInputStream: SeekableInputStream,
+    @Qualifier(ImageExtension2::class) supportedException: Set<String>,
+    @Qualifier(di.IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
-
-    @AssistedFactory
-    interface Factory : FileReaderFactory {
-
-        override fun create(seekableInputStream: SeekableInputStream): ZipFileReader
-    }
 
     private val zipFile = SevenZip.openInArchive(null, IInStreamImpl(seekableInputStream))
 
@@ -81,6 +76,6 @@ internal class ZipFileReader @AssistedInject constructor(
     private fun ISimpleInArchiveItem.extractSlow2(function: (data: ByteArray) -> Int) {
         extractSlow { function.invoke(it) }
     }
-}
 
-fun String.extension() = substringAfterLast('.', "").lowercase()
+    private fun String.extension() = substringAfterLast('.', "").lowercase()
+}
