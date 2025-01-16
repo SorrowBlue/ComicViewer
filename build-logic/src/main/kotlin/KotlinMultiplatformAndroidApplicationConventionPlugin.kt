@@ -1,5 +1,4 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.android.build.api.dsl.LibraryExtension
 import com.sorrowblue.comicviewer.ComicBuildType
 import com.sorrowblue.comicviewer.android
 import com.sorrowblue.comicviewer.configureAndroid
@@ -31,7 +30,6 @@ class KotlinMultiplatformAndroidApplicationConventionPlugin : Plugin<Project> {
             configureAndroid<ApplicationExtension>()
 
             kotlin<KotlinMultiplatformExtension> {
-
                 sourceSets.commonMain.dependencies {
                     if (project.name != "common" || project.parent?.name != "framework") {
                         implementation(project(":framework:common"))

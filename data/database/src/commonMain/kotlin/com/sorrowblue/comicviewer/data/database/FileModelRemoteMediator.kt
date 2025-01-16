@@ -19,7 +19,6 @@ import di.AssistedFactory
 import di.AssistedInject
 import di.Inject
 import di.IoDispatcher
-import koin.FixKoinComponent
 import koin.get
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.app
 
-import androidx.compose.animation.EnterTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,7 +49,7 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(Second  ::class.qualifiedName.orEmpty())
+                        Text(Second::class.qualifiedName.orEmpty())
                         Button(onClick = { state.navController.popBackStack() }) {
                             Text("Back")
                         }

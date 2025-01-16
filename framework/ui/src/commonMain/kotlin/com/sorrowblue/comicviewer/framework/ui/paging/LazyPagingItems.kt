@@ -186,7 +186,6 @@ private val InitialLoadStates = LoadStates(
 fun <T : Any> Flow<PagingData<T>>.collectAsLazyPagingItems(
     context: CoroutineContext = EmptyCoroutineContext,
 ): LazyPagingItems<T> {
-
     val lazyPagingItems = remember(this) { LazyPagingItems(this) }
 
     LaunchedEffect(lazyPagingItems) {
@@ -211,7 +210,6 @@ fun <T : Any> Flow<PagingData<T>>.collectAsLazyPagingItems(
 
     return lazyPagingItems
 }
-
 
 val <T : Any> LazyPagingItems<T>.isEmptyData
     get() =

@@ -8,7 +8,8 @@ import di.Inject
 import org.koin.core.component.KoinComponent
 
 // TODO dagger用なので削除
-internal class DeviceFileClientFactory @Inject constructor() : FileClient.Factory<InternalStorage>,
+internal class DeviceFileClientFactory @Inject constructor() :
+    FileClient.Factory<InternalStorage>,
     KoinComponent {
     override fun create(bookshelfModel: InternalStorage): FileClient<InternalStorage> {
         return fileClient<DeviceFileClient, InternalStorage>(bookshelfModel)

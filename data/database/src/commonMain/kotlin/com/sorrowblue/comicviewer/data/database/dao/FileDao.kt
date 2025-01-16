@@ -91,21 +91,27 @@ internal interface FileDao {
     @RawQuery(observedEntities = [FileEntity::class])
     fun pagingSourceFileSearch(query: RoomRawQuery): PagingSource<Int, QueryFileWithCountEntity>
 
-    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit")
+    @Query(
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit"
+    )
     suspend fun findCacheKeyOrderSortIndex(
         bookshelfId: Int,
         parent: String,
         limit: Int,
     ): List<String>
 
-    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit")
+    @Query(
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit"
+    )
     suspend fun findCacheKeyOrderLastModified(
         bookshelfId: Int,
         parent: String,
         limit: Int,
     ): List<String>
 
-    @Query("SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit")
+    @Query(
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit"
+    )
     suspend fun findCacheKeysOrderLastRead(
         bookshelfId: Int,
         parent: String,
@@ -139,7 +145,9 @@ internal interface FileDao {
     @Query("SELECT cache_key FROM file WHERE bookshelf_id = :id")
     suspend fun cacheKeyList(id: Int): List<String>
 
-    @Query("SELECT * FROM file WHERE bookshelf_id = :id AND file_type = 'FILE' ORDER BY path LIMIT :limit OFFSET :offset")
+    @Query(
+        "SELECT * FROM file WHERE bookshelf_id = :id AND file_type = 'FILE' ORDER BY path LIMIT :limit OFFSET :offset"
+    )
     fun fileList(id: Int, limit: Int, offset: Long): Flow<List<FileEntity>>
 
     @Query("SELECT Count(*) FROM file WHERE bookshelf_id = :id AND file_type = 'FILE'")
@@ -209,7 +217,7 @@ internal fun FileDao.pagingSourceFileSearch(
                   $selectionStr
                 ORDER BY
                   $orderBy
-            """.trimIndent()
+        """.trimIndent()
     ) {
         bindArgs.forEachIndexed { index, any ->
             when (any) {

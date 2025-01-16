@@ -6,7 +6,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteFileDao
@@ -18,9 +17,6 @@ import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteEntity
 import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import org.koin.core.annotation.Singleton
 
 internal const val DATABASE_VERSION = 6
 internal const val DATABASE_NAME = "comic_viewer_database"
@@ -56,4 +52,3 @@ internal expect object ComicViewerDatabaseConstructor :
     RoomDatabaseConstructor<ComicViewerDatabase> {
     override fun initialize(): ComicViewerDatabase
 }
-

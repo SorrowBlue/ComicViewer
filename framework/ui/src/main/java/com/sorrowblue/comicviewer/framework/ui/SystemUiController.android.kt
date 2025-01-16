@@ -18,7 +18,6 @@ actual fun rememberSystemUiController(): SystemUiController {
     return rememberSystemUiControllerAndroid()
 }
 
-
 /**
  * Remembers a [SystemUiController] for the given [window].
  *

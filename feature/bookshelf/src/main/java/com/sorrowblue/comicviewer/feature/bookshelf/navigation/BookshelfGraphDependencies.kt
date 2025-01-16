@@ -16,9 +16,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfScreen
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.destinations.BookshelfEditScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.BookshelfDeleteScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.NotificationRequestScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.destinations.BookshelfSelectionScreenDestination
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator

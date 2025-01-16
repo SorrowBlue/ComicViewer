@@ -75,7 +75,6 @@ internal class FavoriteThumbnailFetcher(
     }
 }
 
-
 @Singleton
 @com.sorrowblue.comicviewer.data.coil.FavoriteFetcher
 internal class FavoriteThumbnailFetcherFactory(

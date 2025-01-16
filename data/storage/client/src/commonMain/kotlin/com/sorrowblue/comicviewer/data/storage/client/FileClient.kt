@@ -9,7 +9,7 @@ import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.qualifier
 
-interface FileClient<T: Bookshelf> {
+interface FileClient<T : Bookshelf> {
 
     val bookshelf: T
 
@@ -33,7 +33,6 @@ interface FileClient<T: Bookshelf> {
     suspend fun connect(path: String)
     suspend fun getAttribute(path: String): FileAttribute?
 }
-
 
 inline fun <reified Q, T : Bookshelf> KoinComponent.fileClient(bookshelf: Bookshelf): FileClient<T> {
     return get<FileClient<T>>(qualifier<Q>()) { parametersOf(bookshelf) }

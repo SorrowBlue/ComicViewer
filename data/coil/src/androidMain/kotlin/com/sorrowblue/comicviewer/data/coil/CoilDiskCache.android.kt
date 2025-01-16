@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.data.coil
 
 import android.content.Context
-import coil3.PlatformContext
 import okio.Path
 import okio.Path.Companion.toOkioPath
 import org.koin.core.annotation.Singleton
@@ -13,5 +12,5 @@ actual class CoilDiskCache(val context: Context) {
     }
 }
 //
-//@Singleton
-//fun providePlatformContext(context: Context): PlatformContext = context
+// @Singleton
+// fun providePlatformContext(context: Context): PlatformContext = context

@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.framework.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
 
 /**
  * A class which provides easy-to-use utilities for updating the System UI

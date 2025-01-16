@@ -88,7 +88,6 @@ internal class FolderThumbnailFetcher(
             }
         } ?: getThumbnailCache(folderThumbnailOrder)
     }
-
 }
 
 @Singleton

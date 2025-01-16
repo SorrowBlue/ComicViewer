@@ -28,7 +28,9 @@ internal interface BookshelfDao {
     @Query("SELECT * FROM bookshelf WHERE id = :bookshelfId")
     fun flow(bookshelfId: Int): Flow<BookshelfEntity?>
 
-    @Query("SELECT bookshelf.*, file.*, (SELECT COUNT(*) FROM file file2 WHERE bookshelf.id = file2.bookshelf_id AND file2.file_type = 'FILE') file_count FROM (SELECT * FROM bookshelf WHERE bookshelf.deleted = 0) bookshelf LEFT OUTER JOIN file ON bookshelf.id = file.bookshelf_id AND file.parent = '' ORDER BY bookshelf.id")
+    @Query(
+        "SELECT bookshelf.*, file.*, (SELECT COUNT(*) FROM file file2 WHERE bookshelf.id = file2.bookshelf_id AND file2.file_type = 'FILE') file_count FROM (SELECT * FROM bookshelf WHERE bookshelf.deleted = 0) bookshelf LEFT OUTER JOIN file ON bookshelf.id = file.bookshelf_id AND file.parent = '' ORDER BY bookshelf.id"
+    )
     fun pagingSourceNoDeleted(): PagingSource<Int, EmbeddedBookshelfFileCountEntity>
 
     @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND file_type != 'FOLDER'")

@@ -13,7 +13,7 @@
           <option value=":build-logic:detektMain" />
           <option value="detektRelease" />
           <option value="detektAndroidRelease" />
-          <option value="detektJvmMain" />
+          <option value="detektDesktopMain" />
           <option value="detektMetadataCommonMain" />
           <option value="app:lintRelease" />
         </list>

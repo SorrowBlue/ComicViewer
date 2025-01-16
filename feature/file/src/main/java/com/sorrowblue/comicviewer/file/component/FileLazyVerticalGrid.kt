@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.file.component
 
-import android.os.Parcelable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState

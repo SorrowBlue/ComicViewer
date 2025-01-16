@@ -23,7 +23,7 @@ import kotlin.jvm.JvmSuppressWildcards
  * item with the given key will be kept as the first visible one.
  */
 fun <T : Any> LazyPagingItems<T>.itemKey(
-    key: ((item: @JvmSuppressWildcards T) -> Any)? = null
+    key: ((item: @JvmSuppressWildcards T) -> Any)? = null,
 ): (index: Int) -> Any {
     return { index ->
         if (key == null) {

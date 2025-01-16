@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.data.coil.di
 
-
 import android.content.Context
 import coil3.PlatformContext
 import coil3.disk.DiskCache
@@ -44,9 +43,7 @@ internal object SingletonProvidesModule {
     @Provides
     fun provideCoilDiskCache(@ApplicationContext context: Context) = CoilDiskCache(context)
 
-
     @Singleton
     @Provides
     fun providePlatformContext(@ApplicationContext context: Context): PlatformContext = context
-
 }

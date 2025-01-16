@@ -61,7 +61,6 @@ fun PaddingValues.copy(
     bottom: Dp = calculateBottomPadding(),
 ) = PaddingValues(start = start, top = top, end = end, bottom = bottom)
 
-
 @Composable
 fun animateMainContentPaddingValues(
     ignore: Boolean = false,
@@ -110,7 +109,6 @@ private val paddingValuesVisibilityThreshold = PaddingValues(1.dp)
 
 private val paddingValuesDefaultSpring =
     spring(visibilityThreshold = paddingValuesVisibilityThreshold)
-
 
 @JvmInline
 value class PaddingValuesSides private constructor(private val value: Int) {

@@ -24,7 +24,10 @@ sealed class MainScreenTab(
     companion object {
         val entries: List<MainScreenTab>
             get() = listOf(
-                Bookshelf(""), Favorite(""), Readlater(""), Library("")
+                Bookshelf(""),
+                Favorite(""),
+                Readlater(""),
+                Library("")
             )
     }
 }

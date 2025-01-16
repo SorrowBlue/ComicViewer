@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.file
 
-import android.os.Parcelable
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

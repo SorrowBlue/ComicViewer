@@ -25,7 +25,9 @@ internal interface FavoriteFileDao {
     @Delete
     suspend fun delete(favoriteFileEntity: FavoriteFileEntity): Int
 
-    @Query("SELECT file.bookshelf_id, file.cache_key FROM favorite_file INNER JOIN file ON favorite_file.favorite_id = :favoriteId AND favorite_file.bookshelf_id == file.bookshelf_id AND favorite_file.file_path == file.path WHERE file_type != 'FOLDER' AND cache_key != '' LIMIT :limit")
+    @Query(
+        "SELECT file.bookshelf_id, file.cache_key FROM favorite_file INNER JOIN file ON favorite_file.favorite_id = :favoriteId AND favorite_file.bookshelf_id == file.bookshelf_id AND favorite_file.file_path == file.path WHERE file_type != 'FOLDER' AND cache_key != '' LIMIT :limit"
+    )
     suspend fun findCacheKey(favoriteId: Int, limit: Int): List<BookshelfIdCacheKey>
 
     @RawQuery(observedEntities = [FavoriteFileEntity::class, FileEntity::class])
@@ -59,13 +61,12 @@ internal fun FavoriteFileDao.pagingSource(
                   favorite_id = :favoriteId
                 ORDER BY
                   $orderBy
-                """.trimIndent()
+            """.trimIndent()
         ) {
             it.bindLong(1, favoriteId.toLong())
         }
     )
 }
-
 
 internal fun FavoriteFileDao.flowPrevNext(
     favoriteId: FavoriteId,
@@ -103,7 +104,7 @@ internal fun FavoriteFileDao.flowPrevNext(
                         ORDER BY $column $order
                         LIMIT 1
                         ;
-                    """.trimIndent()
+            """.trimIndent()
         ) {
             it.bindLong(1, favoriteId.value.toLong())
             it.bindLong(2, bookshelfId.value.toLong())

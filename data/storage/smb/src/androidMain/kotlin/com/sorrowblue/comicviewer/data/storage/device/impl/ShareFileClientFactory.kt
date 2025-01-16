@@ -8,7 +8,8 @@ import di.Inject
 import org.koin.core.component.KoinComponent
 
 // TODO dagger用なので削除
-internal class ShareFileClientFactory @Inject constructor() : FileClient.Factory<ShareContents>,
+internal class ShareFileClientFactory @Inject constructor() :
+    FileClient.Factory<ShareContents>,
     KoinComponent {
     override fun create(bookshelfModel: ShareContents): FileClient<ShareContents> {
         return fileClient<ShareFileClient, ShareContents>(bookshelfModel)

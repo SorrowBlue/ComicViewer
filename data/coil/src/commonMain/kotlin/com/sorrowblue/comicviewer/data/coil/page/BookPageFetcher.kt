@@ -101,7 +101,6 @@ internal class BookPageFetcher(
         get() = options.diskCacheKey
             ?: "id:${data.book.bookshelfId.value},path:${data.book.path},index:${data.pageIndex}".encodeUtf8()
                 .sha256().hex()
-
 }
 
 @Singleton

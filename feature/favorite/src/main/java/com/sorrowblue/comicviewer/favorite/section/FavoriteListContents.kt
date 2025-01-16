@@ -31,8 +31,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoDat
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ResponsiveLazyColumn
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
-import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
+import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 
 internal sealed interface FavoriteListContentsAction {
     data class FavoriteClick(val favoriteId: FavoriteId) : FavoriteListContentsAction

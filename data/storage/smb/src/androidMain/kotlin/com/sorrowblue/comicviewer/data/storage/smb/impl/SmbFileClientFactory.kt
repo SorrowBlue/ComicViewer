@@ -8,7 +8,8 @@ import di.Inject
 import org.koin.core.component.KoinComponent
 
 // TODO dagger用なので削除
-internal class SmbFileClientFactory @Inject constructor() : FileClient.Factory<SmbServer>,
+internal class SmbFileClientFactory @Inject constructor() :
+    FileClient.Factory<SmbServer>,
     KoinComponent {
     override fun create(bookshelfModel: SmbServer): FileClient<SmbServer> {
         return fileClient<SmbFileClient, SmbServer>(bookshelfModel)

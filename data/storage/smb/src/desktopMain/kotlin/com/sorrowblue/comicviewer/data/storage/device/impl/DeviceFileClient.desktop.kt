@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.data.storage.device.impl
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.DeviceFileClient
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import okio.BufferedSource
@@ -13,8 +13,8 @@ import org.koin.core.annotation.InjectedParam
 @Factory
 @DeviceFileClient
 internal actual class DeviceFileClient(
-    @InjectedParam override val bookshelf: Bookshelf,
-) : FileClient {
+    @InjectedParam override val bookshelf: InternalStorage,
+) : FileClient<InternalStorage> {
     override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
         TODO("Not yet implemented")
     }
@@ -42,5 +42,4 @@ internal actual class DeviceFileClient(
     override suspend fun getAttribute(path: String): FileAttribute? {
         TODO("Not yet implemented")
     }
-
 }

@@ -33,8 +33,8 @@ import com.sorrowblue.comicviewer.feature.favorite.add.section.RecentFavoriteShe
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteListItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
+import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFavorite
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 

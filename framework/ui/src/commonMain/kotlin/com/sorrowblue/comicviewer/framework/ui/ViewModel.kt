@@ -10,5 +10,5 @@ expect inline fun <reified VM : ViewModel> viewModels(
     viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
         "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
     },
-    key: String? = null
+    key: String? = null,
 ): VM
