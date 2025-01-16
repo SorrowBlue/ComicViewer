@@ -1,7 +1,5 @@
 package com.sorrowblue.comicviewer.data.database.di
 
-import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
-import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediatorFactory
 import com.sorrowblue.comicviewer.data.database.impl.BookshelfLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.FavoriteFileLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.FavoriteLocalDataSourceImpl

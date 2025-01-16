@@ -9,7 +9,7 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Singleton
 
 @Module
-@ComponentScan
+@ComponentScan("com.sorrowblue.comicviewer.domain.service")
 class DomainServiceModule {
 
     @IoDispatcher

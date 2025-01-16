@@ -1,19 +1,16 @@
 package com.sorrowblue.comicviewer.data.storage.client.di
 
-import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
-import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.data.storage.client.impl.RemoteDataSourceFactory
+import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object SingletonProvidesModule {
+internal interface SingletonBindsModule {
 
-    @ImageExtension
-    @Singleton
-    @Provides
-    fun bindSupportedImage(): Set<String> = SUPPORTED_IMAGE
+    @Binds
+    fun bindFileModelRemoteDataSourceFactory(factory: RemoteDataSourceFactory): RemoteDataSource.Factory
 }

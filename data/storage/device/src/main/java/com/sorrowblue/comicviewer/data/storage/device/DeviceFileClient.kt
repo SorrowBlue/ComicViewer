@@ -20,6 +20,9 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStream
+import okio.BufferedSource
+import okio.buffer
+import okio.source
 
 internal class DeviceFileClient @AssistedInject constructor(
     @Assisted override val bookshelf: InternalStorage,
@@ -33,11 +36,11 @@ internal class DeviceFileClient @AssistedInject constructor(
 
     private val contentResolver = context.contentResolver
 
-    override suspend fun inputStream(file: File): InputStream {
+    override suspend fun bufferedSource(file: File): BufferedSource {
         return kotlin.runCatching {
             ParcelFileDescriptor.AutoCloseInputStream(
                 contentResolver.openFileDescriptor(file.uri, "r")
-            )
+            ).source().buffer()
         }.getOrElse {
             it.printStackTrace()
             when (it) {

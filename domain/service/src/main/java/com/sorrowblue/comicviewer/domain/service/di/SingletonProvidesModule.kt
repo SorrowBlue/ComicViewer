@@ -12,12 +12,13 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import org.koin.core.annotation.Named
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal object SingletonProvidesModule {
 
+    // TODO koinで定義済み いらない
+    // com.sorrowblue.comicviewer.data.datastore.startup.ExtensionInitializerKt.provideSplitInstallManager
     @Singleton
     @Provides
     fun splitInstallManager(@ApplicationContext context: Context): SplitInstallManager =

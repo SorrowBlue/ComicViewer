@@ -40,8 +40,4 @@ class DataDatabaseModule {
             .setQueryCoroutineContext(Dispatchers.IO)
             .build()
     }
-
-    @Named(type = IoDispatcher::class)
-    @Singleton
-    fun provideIoDispatcherForKmp(): CoroutineDispatcher = Dispatchers.IO
 }

@@ -5,11 +5,11 @@ import com.sorrowblue.comicviewer.data.storage.client.fileClient
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import di.Inject
-import koin.FixKoinComponent
+import org.koin.core.component.KoinComponent
 
 // TODO dagger用なので削除
 internal class SmbFileClientFactory @Inject constructor() : FileClient.Factory<SmbServer>,
-    FixKoinComponent {
+    KoinComponent {
     override fun create(bookshelfModel: SmbServer): FileClient {
         return fileClient<SmbFileClient>(bookshelfModel)
     }

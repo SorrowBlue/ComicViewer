@@ -46,5 +46,9 @@ internal fun Project.configureKotlinMultiplatform() {
         val desktopMain by sourceSets.getting {
             dependsOn(noAndroid)
         }
+
+        compilerOptions {
+            freeCompilerArgs.add("-Xexpect-actual-classes")
+        }
     }
 }

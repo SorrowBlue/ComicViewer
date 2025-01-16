@@ -20,7 +20,7 @@ kotlin {
         implementation(libs.coil3.networkKtor)
         implementation(libs.ktor.client.okhttp)
         implementation(libs.jcifs.ng)
-        implementation("io.insert-koin:koin-androidx-startup:4.1.0-Beta4")
+        implementation(libs.koin.androidxStartup)
     }
 }
 

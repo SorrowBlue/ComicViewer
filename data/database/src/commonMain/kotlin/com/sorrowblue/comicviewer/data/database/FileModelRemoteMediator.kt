@@ -19,6 +19,8 @@ import di.AssistedFactory
 import di.AssistedInject
 import di.Inject
 import di.IoDispatcher
+import koin.FixKoinComponent
+import koin.get
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -31,7 +33,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 
-@Singleton
+@Singleton(binds = [FileModelRemoteMediator.Factory::class])
 internal class FileModelRemoteMediatorFactory @Inject constructor() :
     FileModelRemoteMediator.Factory, KoinComponent {
     override fun create(bookshelf: Bookshelf, file: File): FileModelRemoteMediator {

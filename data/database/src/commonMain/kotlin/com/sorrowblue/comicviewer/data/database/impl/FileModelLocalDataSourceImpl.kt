@@ -42,7 +42,9 @@ import org.koin.core.annotation.Singleton
 internal class FileModelLocalDataSourceImpl @Inject constructor(
     private val dao: FileDao,
     private val factory: FileModelRemoteMediator.Factory,
-    @IoDispatcher @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
+    @Qualifier(IoDispatcher::class)
+    @IoDispatcher
+    private val dispatcher: CoroutineDispatcher,
 ) : FileLocalDataSource {
 
     override suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File> {

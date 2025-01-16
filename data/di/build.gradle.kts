@@ -13,15 +13,14 @@ kotlin {
                 implementation(projects.data.datastore)
                 implementation(projects.data.coil)
                 implementation(projects.data.storage.client)
+                implementation(projects.data.reader.zip)
+                implementation(projects.data.storage.smb)
             }
         }
 
         androidMain {
             dependencies {
-                implementation(projects.data.reader.zip)
                 implementation(projects.data.storage.device)
-                implementation(projects.data.storage.smb)
-
                 // :feature:library:box :feature:library:onedrive
                 implementation(libs.squareup.okhttp3)
                 implementation(libs.bouncycastle.bcprovJdk18on)
@@ -30,7 +29,6 @@ kotlin {
                 // :feature:library:googledrive :feature:library:onedrive
                 implementation(libs.google.code.gson)
                 implementation(libs.androidx.credentials.playServicesAuth)
-
                 // :feature:library:googledrive
                 // Type com.google.common.util.concurrent.ListenableFuture is defined multiple times:
                 implementation(libs.google.guava)
