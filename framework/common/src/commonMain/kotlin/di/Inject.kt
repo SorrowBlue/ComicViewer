@@ -18,6 +18,12 @@ expect annotation class AssistedInject()
 @OptionalExpectation
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.SOURCE)
+expect annotation class ApplicationContext()
+
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.SOURCE)
 expect annotation class Assisted()
 
 @OptIn(ExperimentalMultiplatform::class)
@@ -28,11 +34,17 @@ expect annotation class AssistedFactory()
 
 @OptIn(ExperimentalMultiplatform::class)
 @OptionalExpectation
+@Target(AnnotationTarget.ANNOTATION_CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+expect annotation class Qualifier()
+
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
 expect annotation class HiltViewModel()
 
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.BINARY)
 @Named
 annotation class IoDispatcher

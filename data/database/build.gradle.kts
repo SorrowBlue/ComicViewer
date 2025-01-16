@@ -17,6 +17,7 @@ android {
 kotlin {
     compilerOptions {
         freeCompilerArgs.add("-opt-in=com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue")
+        freeCompilerArgs.add("-opt-in=androidx.paging.ExperimentalPagingApi")
     }
 
     sourceSets.commonMain.dependencies {

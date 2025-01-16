@@ -35,13 +35,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import logcat.logcat
+import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Singleton
 
 @Singleton
 internal class FileModelLocalDataSourceImpl @Inject constructor(
     private val dao: FileDao,
     private val factory: FileModelRemoteMediator.Factory,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    @IoDispatcher @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : FileLocalDataSource {
 
     override suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File> {

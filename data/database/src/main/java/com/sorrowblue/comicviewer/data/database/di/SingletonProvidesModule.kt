@@ -3,6 +3,9 @@ package com.sorrowblue.comicviewer.data.database.di
 import android.content.Context
 import androidx.room.Room
 import com.sorrowblue.comicviewer.data.database.ComicViewerDatabase
+import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
+import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediatorFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,4 +42,9 @@ internal object SingletonProvidesModule {
     @Singleton
     @Provides
     fun provideReadLaterFileDao(db: ComicViewerDatabase) = db.readLaterFileDao()
+
+    @Singleton
+    @Provides
+    fun bindFileModelRemoteMediator(factory: FileModelRemoteMediator.Factory): FileModelRemoteMediatorFactory = factory as FileModelRemoteMediatorFactory
+
 }

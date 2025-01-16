@@ -16,16 +16,11 @@ import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.sorrowblue.comicviewer.data.di.DiModule
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.compose.KoinApplication
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.koin.ksp.generated.*
 
 /**
  * Main activity
@@ -49,16 +44,8 @@ internal class MainActivity : AppCompatActivity() {
         ComposeUiFlags.isSemanticAutofillEnabled = true
 
         setContent {
-            KoinApplication(application = {
-                modules(appModule)
-                modules(defaultModule)
-                modules(DiModule().module)
-                androidLogger()
-                androidContext(this@MainActivity)
-            }) {
-                ComicTheme {
-                    DestinationsNavHost(navGraph = NavGraphs.root)
-                }
+            ComicTheme {
+                DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
     }
@@ -88,7 +75,7 @@ private fun SplashScreenViewProvider.startShrinkingAnimation() {
  * App module
  */
 @Suppress("InjectDispatcher")
-private val appModule = module {
+val appModule = module {
     single(named<IoDispatcher>()) { Dispatchers.IO }
     single(named<DefaultDispatcher>()) { Dispatchers.Default }
 }

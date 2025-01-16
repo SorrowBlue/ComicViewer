@@ -21,7 +21,13 @@ import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfFab
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
+import di.IoDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import logcat.logcat
+import org.koin.compose.koinInject
+import org.koin.core.qualifier.named
 
 internal interface BookshelfScreenNavigator {
     fun onSettingsClick()

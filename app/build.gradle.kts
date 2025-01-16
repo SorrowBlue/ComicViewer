@@ -100,6 +100,7 @@ dependencies {
     implementation(libs.google.android.play.review.ktx)
     implementation(libs.google.android.play.feature.delivery.ktx)
     implementation(libs.androidx.appcompat)
+    implementation("io.insert-koin:koin-androidx-startup:4.1.0-Beta4")
 
     implementation(libs.google.android.billingclient.billingKtx)
 }

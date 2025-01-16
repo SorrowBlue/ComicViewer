@@ -17,19 +17,36 @@ import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
 import di.Assisted
 import di.AssistedFactory
 import di.AssistedInject
+import di.Inject
 import di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import logcat.logcat
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.InjectedParam
+import org.koin.core.annotation.Qualifier
+import org.koin.core.annotation.Singleton
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.parameter.parametersOf
+
+@Singleton
+internal class FileModelRemoteMediatorFactory @Inject constructor() :
+    FileModelRemoteMediator.Factory, KoinComponent {
+    override fun create(bookshelf: Bookshelf, file: File): FileModelRemoteMediator {
+        return get<FileModelRemoteMediator> { parametersOf(bookshelf, file) }
+    }
+}
 
 @OptIn(ExperimentalPagingApi::class)
+@Factory
 internal class FileModelRemoteMediator @AssistedInject constructor(
     remoteDataSourceFactory: RemoteDataSource.Factory,
     datastoreDataSource: DatastoreDataSource,
-    @Assisted private val bookshelf: Bookshelf,
-    @Assisted private val file: File,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    @Assisted @InjectedParam private val bookshelf: Bookshelf,
+    @Assisted @InjectedParam private val file: File,
+    @IoDispatcher @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
     private val fileLocalDataSource: FileLocalDataSource,
 ) : RemoteMediator<Int, QueryFileWithCountEntity>() {
 

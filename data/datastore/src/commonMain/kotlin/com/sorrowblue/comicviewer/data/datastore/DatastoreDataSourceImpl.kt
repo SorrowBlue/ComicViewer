@@ -12,18 +12,19 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySett
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import di.Inject
 import kotlinx.coroutines.flow.Flow
+import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Singleton
 
 @Singleton
 internal class DatastoreDataSourceImpl @Inject constructor(
-    private val settingsDataStore: DataStore<Settings>,
-    private val displaySettingsDataStore: DataStore<DisplaySettings>,
-    private val viewerSettingsDataStore: DataStore<ViewerSettings>,
-    private val bookSettingsDataStore: DataStore<BookSettings>,
-    private val folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings>,
-    private val folderSettingsDataStore: DataStore<FolderSettings>,
-    private val viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings>,
-    private val securitySettingsDataStore: DataStore<SecuritySettings>,
+    @Qualifier(com.sorrowblue.comicviewer.data.datastore.di.Settings::class) private val settingsDataStore: DataStore<Settings>,
+    @Qualifier(com.sorrowblue.comicviewer.data.datastore.di.Display::class) private val displaySettingsDataStore: DataStore<DisplaySettings>,
+    @Qualifier(com.sorrowblue.comicviewer.data.datastore.di.Viewer::class) private val viewerSettingsDataStore: DataStore<ViewerSettings>,
+    @Qualifier(com.sorrowblue.comicviewer.data.datastore.di.Book::class) private val bookSettingsDataStore: DataStore<BookSettings>,
+    @Qualifier(com.sorrowblue.comicviewer.data.datastore.di.FolderDisplay::class) private val folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings>,
+    @Qualifier(com.sorrowblue.comicviewer.data.datastore.di.Folder::class) private val folderSettingsDataStore: DataStore<FolderSettings>,
+    @Qualifier(com.sorrowblue.comicviewer.data.datastore.di.ViewerOperation::class) private val viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings>,
+    @Qualifier(com.sorrowblue.comicviewer.data.datastore.di.Security::class) private val securitySettingsDataStore: DataStore<SecuritySettings>,
 ) : DatastoreDataSource {
 
     override val settings = settingsDataStore.data

@@ -12,6 +12,7 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import org.koin.core.annotation.Named
 
 @Module
 @InstallIn(SingletonComponent::class)

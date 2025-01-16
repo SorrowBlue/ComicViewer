@@ -73,14 +73,54 @@ internal object SingletonProvidesModule {
     @Provides
     fun provideSecuritySettingsDataStore(@ApplicationContext context: Context): DataStore<SecuritySettings> =
         context.dataStore(SecuritySettingsSerializer)
+}
 
-    private fun <T : Any> Context.dataStore(serializer: KOkioSerializer<T>): DataStore<T> {
-        val producePath =
-            { applicationContext.dataStoreFile(serializer.fileName).absolutePath.toPath() }
-        return createDataStore(
-            fileSystem = FileSystem.SYSTEM,
-            serializer = serializer,
-            producePath = producePath
-        )
-    }
+@org.koin.core.annotation.Singleton
+@FolderDisplay
+internal fun provideFolderDisplaySettingsDataStore(@ApplicationContext context: Context): DataStore<FolderDisplaySettings> =
+    context.dataStore(FolderDisplaySettingsSerializer)
+
+@org.koin.core.annotation.Singleton
+@Folder
+internal fun provideFolderSettingsDataStore(@ApplicationContext context: Context): DataStore<FolderSettings> =
+    context.dataStore(FolderSettingsSerializer)
+
+@org.koin.core.annotation.Singleton
+@com.sorrowblue.comicviewer.data.datastore.di.Settings
+internal fun provideSettingsDataStore(@ApplicationContext context: Context): DataStore<Settings> =
+    context.dataStore(SettingsSerializer)
+
+@org.koin.core.annotation.Singleton
+@Display
+internal fun provideDisplaySettingsDataStore(@ApplicationContext context: Context): DataStore<DisplaySettings> =
+    context.dataStore(DisplaySettingsSerializer)
+
+@org.koin.core.annotation.Singleton
+@Viewer
+internal fun provideViewerSettingsDataStore(@ApplicationContext context: Context): DataStore<ViewerSettings> =
+    context.dataStore(ViewerSettingsSerializer)
+
+@org.koin.core.annotation.Singleton
+@Book
+internal fun provideBookSettingsDataStore(@ApplicationContext context: Context): DataStore<BookSettings> =
+    context.dataStore(BookSettingsSerializer)
+
+@org.koin.core.annotation.Singleton
+@ViewerOperation
+internal fun provideViewerOperationSettingsDataStore(@ApplicationContext context: Context): DataStore<ViewerOperationSettings> =
+    context.dataStore(ViewerOperationSettingsSerializer)
+
+@org.koin.core.annotation.Singleton
+@Security
+internal fun provideSecuritySettingsDataStore(@ApplicationContext context: Context): DataStore<SecuritySettings> =
+    context.dataStore(SecuritySettingsSerializer)
+
+private fun <T : Any> Context.dataStore(serializer: KOkioSerializer<T>): DataStore<T> {
+    val producePath =
+        { applicationContext.dataStoreFile(serializer.fileName).absolutePath.toPath() }
+    return createDataStore(
+        fileSystem = FileSystem.SYSTEM,
+        serializer = serializer,
+        producePath = producePath
+    )
 }

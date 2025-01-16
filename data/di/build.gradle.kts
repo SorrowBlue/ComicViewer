@@ -11,12 +11,13 @@ kotlin {
                 implementation(projects.domain.service)
                 implementation(projects.data.database)
                 implementation(projects.data.datastore)
+                implementation(projects.data.coil)
+                implementation(projects.data.storage.client)
             }
         }
 
         androidMain {
             dependencies {
-                implementation(projects.data.coil)
                 implementation(projects.data.reader.zip)
                 implementation(projects.data.storage.device)
                 implementation(projects.data.storage.smb)
