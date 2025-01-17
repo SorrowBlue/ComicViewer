@@ -99,6 +99,9 @@ gradlePlugin {
         register(libs.plugins.comicviewer.kotlinMultiplatform.koin) {
             implementationClass = "KotlinMultiplatformKoinConventionPlugin"
         }
+        register(libs.plugins.comicviewer.kotlinMultiplatform.dynamicfeature) {
+            implementationClass = "KotlinMultiplatformAndroidDynamicFeatureConventionPlugin"
+        }
     }
 }
 

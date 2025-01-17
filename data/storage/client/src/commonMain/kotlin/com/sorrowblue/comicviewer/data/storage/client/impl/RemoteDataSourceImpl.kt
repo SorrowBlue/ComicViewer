@@ -2,9 +2,9 @@ package com.sorrowblue.comicviewer.data.storage.client.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderException
-import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.fileClient
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.DeviceFileClient
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.DocumentFileReader
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ShareFileClient
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClient
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReader
@@ -130,7 +130,10 @@ internal class RemoteDataSourceImpl(
                     is BookFile -> {
                         val seekableInputStream = fileClient.seekableInputStream(book)
                         when (book.extension) {
-                            "pdf", "epub", "xps", "oxps", "mobi", "fb2" -> TODO("Not yet implemented")
+                            "pdf", "epub", "xps", "oxps", "mobi", "fb2" ->
+                                get<FileReader>(qualifier<DocumentFileReader>()) {
+                                    parametersOf(book.extension, seekableInputStream)
+                                }
 
                             else -> get<FileReader>(qualifier<ZipFileReader>()) {
                                 parametersOf(seekableInputStream)
@@ -177,10 +180,4 @@ internal class RemoteDataSourceImpl(
             }
         }
     }
-
-    private fun documentReader(
-        extension: String,
-        seekableInputStream: SeekableInputStream,
-        dispatcher: CoroutineDispatcher,
-    ): FileReader = TODO()
 }

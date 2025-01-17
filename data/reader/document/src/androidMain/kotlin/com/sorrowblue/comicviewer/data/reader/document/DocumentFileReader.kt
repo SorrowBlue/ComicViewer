@@ -9,7 +9,9 @@ import androidx.core.content.ContextCompat
 import com.artifex.mupdf.fitz.Document
 import com.artifex.mupdf.fitz.android.AndroidDrawDevice
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.DocumentFileReader
 import com.sorrowblue.comicviewer.domain.reader.FileReader
+import di.IoDispatcher
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
@@ -18,15 +20,21 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import okio.Sink
 import okio.buffer
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.InjectedParam
+import org.koin.core.annotation.Qualifier
 
 private val COMPRESS_FORMAT = Bitmap.CompressFormat.WEBP_LOSSY
 
+@Suppress("unused")
 @Keep
-open class DocumentFileReader(
+@Factory
+@DocumentFileReader
+internal actual class DocumentFileReader(
+    @InjectedParam mimeType: String,
+    @InjectedParam private val seekableInputStream: SeekableInputStream,
     context: Context,
-    mimeType: String,
-    private val seekableInputStream: SeekableInputStream,
-    private val dispatcher: CoroutineDispatcher,
+    @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
 
     private val width by lazy {

@@ -13,6 +13,10 @@ annotation class ZipFileReader
 
 @Named
 @Retention(AnnotationRetention.BINARY)
+annotation class DocumentFileReader
+
+@Named
+@Retention(AnnotationRetention.BINARY)
 annotation class SmbFileClient
 
 @Named

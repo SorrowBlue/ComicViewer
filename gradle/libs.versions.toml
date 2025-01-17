@@ -64,6 +64,7 @@ comicviewer-kotlinMultiplatform-base = { id = "comicviewer.kotlinMultiplatform.b
 comicviewer-kotlinMultiplatform-application = { id = "comicviewer.kotlinMultiplatform.application" }
 comicviewer-kotlinMultiplatform-library = { id = "comicviewer.kotlinMultiplatform.library" }
 comicviewer-kotlinMultiplatform-koin = { id = "comicviewer.kotlinMultiplatform.koin" }
+comicviewer-kotlinMultiplatform-dynamicfeature = { id = "comicviewer.kotlinMultiplatform.dynamicfeature" }
 comicviewer-kotlinMultiplatform-compose = { id = "comicviewer.kotlinMultiplatform.compose" }
 
 [libraries]
