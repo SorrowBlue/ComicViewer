@@ -40,7 +40,6 @@ internal class MainActivity : AppCompatActivity() {
 //        ComposeUiFlags.isSemanticAutofillEnabled = true
 
         setContent {
-            // TODO("ComicTheme {")
             ComicTheme {
                 RootScreenWrapper(finishApp = ::finish) {
                     ComicViewerApp()

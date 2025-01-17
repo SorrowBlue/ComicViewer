@@ -2,10 +2,9 @@ package com.sorrowblue.comicviewer.data.storage.client.qualifier
 
 import org.koin.core.annotation.Named
 
-// TODO Rename -> ImageExtension
 @Named
 @Retention(AnnotationRetention.BINARY)
-annotation class ImageExtension2
+annotation class ImageExtension
 
 @Named
 @Retention(AnnotationRetention.BINARY)

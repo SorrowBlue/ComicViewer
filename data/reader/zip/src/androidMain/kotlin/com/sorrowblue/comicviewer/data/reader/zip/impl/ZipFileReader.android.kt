@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.data.reader.zip.impl
 import android.icu.text.Collator
 import android.icu.text.RuleBasedCollator
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension2
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReader
 import com.sorrowblue.comicviewer.domain.reader.FileReader
 import java.util.Locale
@@ -24,7 +24,7 @@ import org.koin.core.annotation.Qualifier
 @Factory
 internal actual class ZipFileReader(
     @InjectedParam actual val seekableInputStream: SeekableInputStream,
-    @Qualifier(ImageExtension2::class) supportedException: Set<String>,
+    @Qualifier(ImageExtension::class) supportedException: Set<String>,
     @Qualifier(di.IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
 
