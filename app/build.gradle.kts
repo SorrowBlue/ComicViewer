@@ -1,8 +1,6 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import com.sorrowblue.comicviewer.ComicBuildType
-import org.gradle.accessors.dm.Feature_HistoryProjectDependency
-import org.gradle.accessors.dm.RootProjectAccessor
 
 plugins {
     alias(libs.plugins.comicviewer.android.application)

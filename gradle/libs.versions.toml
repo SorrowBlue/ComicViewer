@@ -124,6 +124,7 @@ kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "ko
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.6.1" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-jsonOkio = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-okio", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 
 google-android-play-feature-delivery-ktx = { group = "com.google.android.play", name = "feature-delivery-ktx", version = "2.1.0" }
@@ -191,7 +192,7 @@ koin-annotations = { group = "io.insert-koin", name = "koin-annotations", versio
 koin-kspCompiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }
 koin-androidxStartup = { group = "io.insert-koin", name = "koin-androidx-startup", version = "4.1.0-Beta4" }
 koin-androidxWorkmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version = "4.1.0-Beta4" }
-
+koin-androidxCompose = { group = "io.insert-koin", name = "koin-androidx-compose", version = "4.1.0-Beta4" }
 compose-destinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "compose-destinations" }
 compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "compose-destinations" }
 

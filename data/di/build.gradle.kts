@@ -45,10 +45,8 @@ kotlin {
                     projects.feature.library.googledrive,
                     projects.feature.library.onedrive,
                 ).map { it.test() }
-                logger.lifecycle("projects.feature.history.group: ${projects.feature.history.test()}")
                 rootProject.subprojects {
                     if (!this.project.isModuleEmpty() && !skipModule.contains(this.project.parentName())) {
-                        logger.lifecycle("${this.project.parentName()}")
                         dh.implementation(this.project)
                     }
                 }

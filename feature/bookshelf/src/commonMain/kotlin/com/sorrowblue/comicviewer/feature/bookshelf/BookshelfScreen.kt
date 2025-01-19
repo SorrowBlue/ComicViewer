@@ -14,26 +14,94 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.navigation.NavController
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfAppBar
 import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfFab
+import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
+import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
+import com.sorrowblue.comicviewer.framework.annotation.NestedNavGraph
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import kotlinx.coroutines.delay
+import kotlinx.serialization.Serializable
+import org.koin.compose.currentKoinScope
+import org.koin.compose.koinInject
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Singleton
 
-internal interface BookshelfScreenNavigator {
+@Serializable
+data object BookshelfNav
+
+@Serializable
+data class TypedBookshelf(
+    val bookshelfId: BookshelfId,
+    val s: String,
+    val sl: List<String>,
+    val sa: Array<String>,
+    val i: Int,
+    val il: List<Int>,
+    val ia: IntArray,
+    val l: Long,
+    val ll: List<Long>,
+    val la: LongArray,
+    val f: Float,
+    val fl: List<Float>,
+    val fa: FloatArray,
+    val b: Boolean,
+    val bl: List<Boolean>,
+    val ba: BooleanArray,
+)
+
+@Factory
+class BookshelfNavGraphNavigator(val navController: NavController) : BookshelfScreenNavigator {
+    override fun onSettingsClick() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onFabClick() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onBookshelfClick(bookshelfId: BookshelfId, path: String) {
+        TODO("Not yet implemented")
+    }
+}
+
+interface BookshelfScreenNavigator {
     fun onSettingsClick()
     fun onFabClick()
     fun onBookshelfClick(bookshelfId: BookshelfId, path: String)
 }
 
+@com.sorrowblue.comicviewer.framework.annotation.NavGraph<BookshelfNav>(
+    startDestination = Bookshelf2::class,
+)
+class BookshelfNavigation {
+    @DestinationInGraph<Bookshelf2>
+    @DestinationInGraph<BookshelfDelete>
+    companion object
+}
+
+@Serializable
+data object Bookshelf2
+
+@Destination<Bookshelf2>
 @Composable
-internal fun BookshelfScreen2(
-    navigator: BookshelfScreenNavigator,
-    state: BookshelfScreenState = rememberBookshelfScreenState(),
+fun BookshelfScreen2() {
+    BookshelfScreen()
+}
+
+@Destination<TypedBookshelf>()
+@Composable
+fun BookshelfScreen(
 ) {
+    val navigator: BookshelfScreenNavigator = koinInject(scope = currentKoinScope())
+    val state: BookshelfScreenState = rememberBookshelfScreenState()
     BookshelfScreen(
         navigator = state.navigator,
         lazyPagingItems = state.pagingItems,

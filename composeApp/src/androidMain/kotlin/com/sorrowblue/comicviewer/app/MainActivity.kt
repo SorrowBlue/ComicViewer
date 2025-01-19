@@ -10,18 +10,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
+import com.sorrowblue.comicviewer.App
 import com.sorrowblue.comicviewer.MainViewModel
-import com.sorrowblue.comicviewer.RootScreenWrapper
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.compose.KoinAndroidContext
+import org.koin.compose.KoinApplication
 
 /**
  * Main activity
  */
-@AndroidEntryPoint
 internal class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
@@ -41,9 +42,15 @@ internal class MainActivity : AppCompatActivity() {
 
         setContent {
             ComicTheme {
-                RootScreenWrapper(finishApp = ::finish) {
-                    ComicViewerApp()
+                KoinAndroidContext  {
+                    App()
                 }
+                LaunchedEffect(Unit) {
+                    viewModel.shouldKeepSplash.value = false
+                }
+//                RootScreenWrapper(finishApp = ::finish) {
+//                    ComicViewerApp()
+//                }
             }
         }
     }

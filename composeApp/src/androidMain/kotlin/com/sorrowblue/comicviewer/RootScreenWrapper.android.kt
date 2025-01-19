@@ -8,7 +8,7 @@ internal actual fun RootScreenWrapper(
     finishApp: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
+    val viewModel: MainViewModel = koinViewModel()
     RootScreenWrapper(viewModel = viewModel, finishApp = finishApp) {
         content()
     }

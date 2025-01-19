@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui.navigation
+package com.sorrowblue.comicviewer.framework.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -15,7 +15,7 @@ inline fun <reified R : @Serializable Any> NavController.navResultSender(screen:
 @Composable
 internal fun <R : @Serializable Any> navResultSender(
     currentNavScreen: KClass<out Any>,
-    serializerType: KSerializerType<R>,
+    serializerType: KSerializerByteArray<R>,
     navController: NavController,
 ): NavResultSender<R> {
     val sender = remember(navController, currentNavScreen, serializerType) {
@@ -34,7 +34,7 @@ interface NavResultSender<R : @Serializable Any> {
 private class NavResultSenderImpl<R : @Serializable Any>(
     private val navController: NavController,
     currentNavScreen: KClass<out Any>,
-    private val serializerType: KSerializerType<R>,
+    private val serializerType: KSerializerByteArray<R>,
 ) : NavResultSender<R> {
 
     private val resultKey = resultKey(currentNavScreen, serializerType)
@@ -71,14 +71,14 @@ private class NavResultSenderImpl<R : @Serializable Any>(
 
 internal fun resultKey(
     currentNavScreen: KClass<out Any>,
-    navResultType: KSerializerType<out Any>,
+    navResultType: KSerializerByteArray<out Any>,
 ): String {
     return "nav-result-value@${currentNavScreen.qualifiedName}@${navResultType::class.qualifiedName}"
 }
 
 internal fun cancelKey(
     currentNavScreen: KClass<out Any>,
-    navResultType: KSerializerType<out Any>,
+    navResultType: KSerializerByteArray<out Any>,
 ): String {
     return "nav-result-cancel@${currentNavScreen.qualifiedName}@${navResultType::class.qualifiedName}"
 }

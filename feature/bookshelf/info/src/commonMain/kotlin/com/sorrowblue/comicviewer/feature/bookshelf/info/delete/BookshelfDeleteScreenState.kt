@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.bookshelf.delete
+package com.sorrowblue.comicviewer.feature.bookshelf.info.delete
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import org.koin.compose.viewmodel.koinViewModel
 import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
@@ -17,10 +17,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun rememberBookshelfDeleteScreenState(
-    navArgs: BookshelfDeleteScreenArgs,
+    bookshelfId: BookshelfId,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: BookshelfDeleteViewModel = koinViewModel(),
 ): BookshelfDeleteScreenState {
@@ -28,7 +29,7 @@ internal fun rememberBookshelfDeleteScreenState(
         BookshelfDeleteScreenStateImpl(
             bookshelfInfoUseCase = viewModel.bookshelfInfoUseCase,
             scope = scope,
-            navArgs = navArgs,
+            bookshelfId = bookshelfId,
             updateDeletionFlagUseCase = viewModel.updateDeletionFlagUseCase
         )
     }
@@ -47,7 +48,7 @@ internal interface BookshelfDeleteScreenState {
 private class BookshelfDeleteScreenStateImpl(
     bookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val scope: CoroutineScope,
-    private val navArgs: BookshelfDeleteScreenArgs,
+    private val bookshelfId: BookshelfId,
     private val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
 ) : BookshelfDeleteScreenState {
 
@@ -57,7 +58,7 @@ private class BookshelfDeleteScreenStateImpl(
         private set
 
     init {
-        bookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = navArgs.bookshelfId))
+        bookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
             .onEach {
                 uiState = uiState.copy(title = it.dataOrNull()?.bookshelf?.displayName)
             }.launchIn(scope)
@@ -69,7 +70,7 @@ private class BookshelfDeleteScreenStateImpl(
             delay(300)
             when (
                 updateDeletionFlagUseCase(
-                    UpdateDeletionFlagUseCase.Request(navArgs.bookshelfId, true)
+                    UpdateDeletionFlagUseCase.Request(bookshelfId, true)
                 )
             ) {
                 is Resource.Error -> {

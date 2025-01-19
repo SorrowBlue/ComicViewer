@@ -26,6 +26,8 @@ kotlin {
                 implementation(projects.framework.ui)
                 implementation(projects.framework.designsystem)
                 implementation(projects.domain.usecase)
+                implementation(projects.feature.bookshelf)
+                implementation(projects.feature.bookshelf.info)
 
                 implementation(compose.material3)
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha01")
@@ -75,6 +77,8 @@ kotlin {
                 implementation(libs.google.android.play.review.ktx)
                 implementation(libs.google.android.play.feature.delivery.ktx)
                 implementation(libs.androidx.appcompat)
+                implementation(libs.koin.androidxCompose)
+                implementation(libs.koin.androidxStartup)
                 implementation(libs.google.android.billingclient.billingKtx)
             }
         }
@@ -143,6 +147,12 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    add("kspCommonMainMetadata", projects.framework.navigation.kspCompiler)
+    add("kspAndroid", projects.framework.navigation.kspCompiler)
+    add("kspIosX64", projects.framework.navigation.kspCompiler)
+    add("kspIosArm64", projects.framework.navigation.kspCompiler)
+    add("kspIosSimulatorArm64", projects.framework.navigation.kspCompiler)
+    add("kspDesktop", projects.framework.navigation.kspCompiler)
 }
 
 compose.desktop {

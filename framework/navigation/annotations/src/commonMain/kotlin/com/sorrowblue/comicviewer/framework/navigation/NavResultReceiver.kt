@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui.navigation
+package com.sorrowblue.comicviewer.framework.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
@@ -29,9 +29,9 @@ inline fun <reified N : Any, reified R : @Serializable Any> NavBackStackEntry.na
 internal fun <N : Any, R : @Serializable Any> navResultReceiver(
     backStackEntry: NavBackStackEntry,
     originalNavScreen: KClass<out Any>,
-    kSerializerType: KSerializerType<R>,
-): NavResultReceiver<N, R> = remember(backStackEntry, originalNavScreen, kSerializerType) {
-    NavResultReceiverImpl(backStackEntry, originalNavScreen, kSerializerType)
+    kSerializerByteArray: KSerializerByteArray<R>,
+): NavResultReceiver<N, R> = remember(backStackEntry, originalNavScreen, kSerializerByteArray) {
+    NavResultReceiverImpl(backStackEntry, originalNavScreen, kSerializerByteArray)
 }
 
 interface NavResultReceiver<N, R : @Serializable Any> {
@@ -43,10 +43,10 @@ interface NavResultReceiver<N, R : @Serializable Any> {
 private class NavResultReceiverImpl<N : Any, R : @Serializable Any>(
     private val backStackEntry: NavBackStackEntry,
     originalNavScreen: KClass<out Any>,
-    private val kSerializerType: KSerializerType<R>,
+    private val kSerializerByteArray: KSerializerByteArray<R>,
 ) : NavResultReceiver<N, R> {
-    private val resultKey = resultKey(originalNavScreen, kSerializerType)
-    private val canceledKey = cancelKey(originalNavScreen, kSerializerType)
+    private val resultKey = resultKey(originalNavScreen, kSerializerByteArray)
+    private val canceledKey = cancelKey(originalNavScreen, kSerializerByteArray)
 
     @Composable
     override fun onNavResult(listener: (NavResult<R>) -> Unit) {
@@ -73,7 +73,7 @@ private class NavResultReceiverImpl<N : Any, R : @Serializable Any>(
             listener(NavResult.Canceled)
         } else if (backStackEntry.savedStateHandle.contains(resultKey)) {
             val result = backStackEntry.savedStateHandle.get<ByteArray>(resultKey)?.let {
-                kSerializerType.fromByteArray(it)
+                kSerializerByteArray.fromByteArray(it)
             }!!
             backStackEntry.savedStateHandle.remove<Any?>(resultKey)
             listener(NavResult.Value(result))

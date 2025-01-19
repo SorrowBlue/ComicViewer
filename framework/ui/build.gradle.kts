@@ -9,6 +9,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.framework.designsystem)
+                api(projects.framework.navigation.annotations)
 
                 implementation(compose.material3)
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha01")
@@ -22,6 +23,7 @@ kotlin {
                 implementation(compose.uiUtil)
 
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.serialization.jsonOkio)
                 implementation(libs.androidx.paging.common)
                 implementation(libs.androidx.lifecycle.viewmodel)
             }
