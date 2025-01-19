@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info
 
-import android.content.Context
 import android.content.Intent
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -14,49 +13,34 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import org.koin.compose.viewmodel.koinViewModel
-import com.ramcosta.composedestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
+import com.sorrowblue.comicviewer.framework.navigation.NavResult
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
+import comicviewer.feature.bookshelf.info.generated.resources.Res
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_undo
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_msg_remove
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.logcat
-
-internal sealed interface BookshelfInfoSheetStateEvent {
-    data object Back : BookshelfInfoSheetStateEvent
-    data class Edit(val id: BookshelfId) : BookshelfInfoSheetStateEvent
-    data class Remove(val bookshelfId: BookshelfId) : BookshelfInfoSheetStateEvent
-}
-
-internal interface BookshelfInfoSheetState {
-    val uiState: BookshelfInfoSheetUiState
-    val events: EventFlow<BookshelfInfoSheetStateEvent>
-
-    fun onAction(action: BookshelfInfoSheetAction)
-    fun onRemoveResult(result: NavResult<Boolean>)
-}
+import org.jetbrains.compose.resources.getString
 
 @Composable
-internal fun rememberBookshelfInfoSheetState(
+internal actual fun rememberBookshelfInfoSheetState(
     bookshelfId: BookshelfId,
     snackbarHostState: SnackbarHostState,
-    context: Context = LocalContext.current,
-    scope: CoroutineScope = LocalCoroutineScope.current,
-    viewModel: BookshelfInfoSheetViewModel = koinViewModel(),
+    scope: CoroutineScope,
+    viewModel: BookshelfInfoSheetViewModel,
 ): BookshelfInfoSheetState {
     val stateImpl = remember(bookshelfId) {
         BookshelfInfoSheetStateImpl(
             bookshelfId = bookshelfId,
             bookshelfInfoUseCase = viewModel.bookshelfInfoUseCase,
             updateDeletionFlagUseCase = viewModel.updateDeletionFlagUseCase,
-            context = context,
             snackbarHostState = snackbarHostState,
             scope = scope,
         )
@@ -70,7 +54,6 @@ private class BookshelfInfoSheetStateImpl(
     bookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
     private val bookshelfId: BookshelfId,
-    private val context: Context,
     private val snackbarHostState: SnackbarHostState,
     private val scope: CoroutineScope,
 ) : BookshelfInfoSheetState, IntentLauncher {
@@ -121,8 +104,8 @@ private class BookshelfInfoSheetStateImpl(
     private fun showDeletionCompleteSnackbar() {
         scope.launch {
             val snackbarResult = snackbarHostState.showSnackbar(
-                message = context.getString(R.string.bookshelf_info_msg_remove),
-                actionLabel = context.getString(R.string.bookshelf_info_label_undo),
+                message = getString(Res.string.bookshelf_info_msg_remove),
+                actionLabel = getString(Res.string.bookshelf_info_label_undo),
                 duration = SnackbarDuration.Long
             )
             when (snackbarResult) {

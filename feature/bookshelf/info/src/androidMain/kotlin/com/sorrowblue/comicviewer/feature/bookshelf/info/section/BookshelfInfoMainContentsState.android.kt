@@ -17,47 +17,37 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import org.koin.compose.viewmodel.koinViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.ramcosta.composedestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.info.IntentLauncher
 import com.sorrowblue.comicviewer.feature.bookshelf.info.NotificationPermissionRequest
 import com.sorrowblue.comicviewer.feature.bookshelf.info.R
+import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequestResult
+import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.RegenerateThumbnailsWorker
 import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.ScanFileWorker
-import com.sorrowblue.comicviewer.feature.bookshelf.notification.NotificationRequestResult
-import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
+import com.sorrowblue.comicviewer.framework.navigation.NavResult
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
-import org.koin.android.annotation.KoinViewModel
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import logcat.logcat
 
 @Composable
-internal fun rememberBookshelfInfoMainContentsState(
+internal actual fun rememberBookshelfInfoMainContentsState(
     bookshelfFolder: BookshelfFolder,
     snackbarHostState: SnackbarHostState,
-    context: Context = LocalContext.current,
-    scope: CoroutineScope = LocalCoroutineScope.current,
-    viewModel: BookshelfInfoMainContentsViewModel = koinViewModel(),
+    coroutineScope: CoroutineScope,
+    viewModel: BookshelfInfoMainContentsViewModel,
 ): BookshelfInfoMainContentsState {
+    val context = LocalContext.current
     val stateImpl = remember(bookshelfFolder, viewModel) {
         BookshelfInfoMainContentsStateImpl(
             bookshelfFolder = bookshelfFolder,
             context = context,
             snackbarHostState = snackbarHostState,
-            scope = scope,
+            scope = coroutineScope,
             pagingDataFlow = viewModel.pagingDataFlow(bookshelfFolder.bookshelf.id)
         )
     }
@@ -69,16 +59,7 @@ internal fun rememberBookshelfInfoMainContentsState(
     stateImpl.intentLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     return stateImpl
-}
 
-internal interface BookshelfInfoMainContentsState {
-    val uiState: BookshelfInfoMainContentsUiState
-    val pagingDataFlow: Flow<PagingData<BookThumbnail>>
-    val events: EventFlow<BookshelfInfoMainContentsEvent>
-
-    fun onScanFileClick()
-    fun onNotificationRequestResult(result: NavResult<NotificationRequestResult>)
-    fun onScanThumbnailClick()
 }
 
 private class BookshelfInfoMainContentsStateImpl(
@@ -208,24 +189,4 @@ private class BookshelfInfoMainContentsStateImpl(
             }
         }
     }
-}
-
-@KoinViewModel
-internal class BookshelfInfoMainContentsViewModel(
-    private val pagingBookshelfBookUseCase: PagingBookshelfBookUseCase,
-) : ViewModel() {
-
-    private var bookshelfThumbnailPagingDataFlow: Pair<BookshelfId, Flow<PagingData<BookThumbnail>>>? =
-        null
-
-    fun pagingDataFlow(id: BookshelfId) =
-        if (bookshelfThumbnailPagingDataFlow?.first == id) {
-            bookshelfThumbnailPagingDataFlow?.second!!
-        } else {
-            pagingBookshelfBookUseCase(
-                PagingBookshelfBookUseCase.Request(id, PagingConfig(10))
-            ).cachedIn(viewModelScope).also {
-                bookshelfThumbnailPagingDataFlow = id to it
-            }
-        }
 }

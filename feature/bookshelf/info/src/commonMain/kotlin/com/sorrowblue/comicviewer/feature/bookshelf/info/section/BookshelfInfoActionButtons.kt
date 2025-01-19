@@ -10,9 +10,11 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.sorrowblue.comicviewer.feature.bookshelf.info.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import comicviewer.feature.bookshelf.info.generated.resources.Res
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_btn_delete
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_btn_edit
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun RowScope.BottomActions(
@@ -25,7 +27,7 @@ internal fun RowScope.BottomActions(
     ) {
         Icon(imageVector = ComicIcons.Delete, contentDescription = null)
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-        Text(text = stringResource(id = R.string.bookshelf_info_btn_delete))
+        Text(text = stringResource(Res.string.bookshelf_info_btn_delete))
     }
     FilledTonalButton(
         onClick = onEditClick,
@@ -33,6 +35,6 @@ internal fun RowScope.BottomActions(
     ) {
         Icon(imageVector = ComicIcons.Edit, contentDescription = null)
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-        Text(text = stringResource(id = R.string.bookshelf_info_btn_edit))
+        Text(text = stringResource(Res.string.bookshelf_info_btn_edit))
     }
 }

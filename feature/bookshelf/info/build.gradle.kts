@@ -14,6 +14,7 @@ kotlin {
                 implementation(projects.feature.file)
                 implementation(projects.domain.model)
                 implementation(projects.domain.usecase)
+                implementation(libs.androidx.paging.common)
             }
         }
 
@@ -22,6 +23,7 @@ kotlin {
                 implementation(projects.framework.notification)
 
                 implementation(libs.androidx.work.runtime)
+                implementation(libs.koin.androidxWorkmanager)
             }
         }
     }

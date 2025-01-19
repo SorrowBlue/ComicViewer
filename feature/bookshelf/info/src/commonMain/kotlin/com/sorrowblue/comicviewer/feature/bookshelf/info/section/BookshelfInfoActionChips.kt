@@ -11,13 +11,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.feature.bookshelf.info.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.ImageSync
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.ShelvesSync
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import comicviewer.feature.bookshelf.info.generated.resources.Res
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_btn_scan_file
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_btn_scan_thumbnail
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -35,7 +37,7 @@ internal fun BookshelfInfoActionChips(
         AssistChip(
             onClick = onScanFileClick,
             enabled = !isScanningFile && !isScanningThumbnail,
-            label = { Text(text = stringResource(id = R.string.bookshelf_info_btn_scan_file)) },
+            label = { Text(text = stringResource(Res.string.bookshelf_info_btn_scan_file)) },
             leadingIcon = {
                 if (isScanningFile) {
                     CircularProgressIndicator(
@@ -50,7 +52,7 @@ internal fun BookshelfInfoActionChips(
         AssistChip(
             onClick = onScanThumbnailClick,
             enabled = !isScanningFile && !isScanningThumbnail,
-            label = { Text(text = stringResource(id = R.string.bookshelf_info_btn_scan_thumbnail)) },
+            label = { Text(text = stringResource(Res.string.bookshelf_info_btn_scan_thumbnail)) },
             leadingIcon = {
                 if (isScanningThumbnail) {
                     CircularProgressIndicator(

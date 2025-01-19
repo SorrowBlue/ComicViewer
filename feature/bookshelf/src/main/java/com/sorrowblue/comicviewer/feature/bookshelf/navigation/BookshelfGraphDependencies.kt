@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.NavGraphs
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfFolderScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
+import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionNavigator
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 
@@ -69,6 +70,18 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
                 navigator.navigate(
                     BookshelfFolderScreenDestination(bookshelfId, path, null)
                 )
+
+            override fun notificationRequest(type: ScanType) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onEditClick(id: BookshelfId) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onRemoveClick(bookshelfId: BookshelfId) {
+                TODO("Not yet implemented")
+            }
 
 //            override fun notificationRequest(type: ScanType) {
 //                navigator.navigate(NotificationRequestScreenDestination(type))

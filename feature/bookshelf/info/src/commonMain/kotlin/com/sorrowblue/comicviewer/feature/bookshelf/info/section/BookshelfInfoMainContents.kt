@@ -11,28 +11,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.NotificationRequestScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.info.navtype.notificationRequestResultEnumNavType
-import com.sorrowblue.comicviewer.feature.bookshelf.notification.NotificationRequestResult
-import com.sorrowblue.comicviewer.feature.bookshelf.notification.ScanType
+import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequest
+import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequestResult
+import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.file.component.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
-import com.sorrowblue.comicviewer.framework.ui.navigation.resultRecipient
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 
 internal sealed interface BookshelfInfoMainContentsEvent {
-    data class ShowNotificationPermissionRationale(val type: ScanType) : BookshelfInfoMainContentsEvent
+    data class ShowNotificationPermissionRationale(val type: ScanType) :
+        BookshelfInfoMainContentsEvent
 }
 
 data class BookshelfInfoMainContentsUiState(
@@ -49,8 +48,7 @@ internal fun BookshelfInfoMainContents(
     snackbarHostState: SnackbarHostState,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    notificationResultRecipient: ResultRecipient<NotificationRequestScreenDestination, NotificationRequestResult> =
-        resultRecipient(notificationRequestResultEnumNavType),
+    notificationNavResultReceiver: NavResultReceiver<NotificationRequest, NotificationRequestResult>,
     state: BookshelfInfoMainContentsState = rememberBookshelfInfoMainContentsState(
         bookshelfFolder = bookshelfFolder,
         snackbarHostState = snackbarHostState
@@ -66,7 +64,7 @@ internal fun BookshelfInfoMainContents(
         modifier = modifier
     )
 
-    notificationResultRecipient.onNavResult(state::onNotificationRequestResult)
+    notificationNavResultReceiver.onNavResult(state::onNotificationRequestResult)
 
     EventEffect(state.events) {
         when (it) {

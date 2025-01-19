@@ -30,8 +30,9 @@ import kotlin.random.Random
 import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
+import org.koin.android.annotation.KoinWorker
 
-// TODO add to module workOf
+@KoinWorker
 internal class RegenerateThumbnailsWorker(
     appContext: Context,
     workerParams: WorkerParameters,

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.bookshelf.notification
+package com.sorrowblue.comicviewer.feature.bookshelf.info.notification
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,16 +10,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
-import com.ramcosta.composedestinations.result.ResultBackNavigator
-import com.ramcosta.composedestinations.spec.DestinationStyle
-import com.sorrowblue.comicviewer.feature.bookshelf.info.R
+import com.sorrowblue.comicviewer.framework.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
+import com.sorrowblue.comicviewer.framework.navigation.NavResultSender
+import comicviewer.feature.bookshelf.info.generated.resources.Res
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_btn_cancel
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_btn_not_allowed
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_btn_ok
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_text_scan_file
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_text_scan_thumbnail
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title
+import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.stringResource
 
 enum class NotificationRequestResult {
     Ok,
@@ -32,11 +36,14 @@ enum class ScanType {
     Thumbnail,
 }
 
-@Destination<ExternalModuleGraph>(style = DestinationStyle.Dialog::class)
+@Serializable
+data class NotificationRequest(val scanType: ScanType)
+
+@Destination<NotificationRequest>(style = DestinationStyle.Dialog::class)
 @Composable
 internal fun NotificationRequestScreen(
     type: ScanType,
-    resultNavigator: ResultBackNavigator<NotificationRequestResult>,
+    resultNavigator: NavResultSender<NotificationRequestResult>,
 ) {
     NotificationRequestScreen(
         type = type,
@@ -48,7 +55,7 @@ internal fun NotificationRequestScreen(
 }
 
 @Composable
-private fun NotificationRequestScreen(
+internal fun NotificationRequestScreen(
     type: ScanType,
     onDismissRequest: () -> Unit,
     onConfirmClick: () -> Unit,
@@ -60,44 +67,30 @@ private fun NotificationRequestScreen(
         confirmButton = {
             Row {
                 TextButton(onClick = onCancelClick) {
-                    Text(text = stringResource(id = android.R.string.cancel))
+                    Text(text = stringResource(Res.string.bookshelf_info_notification_btn_cancel))
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 TextButton(onClick = onNotAllowedClick) {
-                    Text(text = stringResource(R.string.bookshelf_info_notification_btn_not_allowed))
+                    Text(text = stringResource(Res.string.bookshelf_info_notification_btn_not_allowed))
                 }
                 Spacer(modifier = Modifier.size(ComicTheme.dimension.targetSpacing))
                 Button(onClick = onConfirmClick) {
-                    Text(text = stringResource(id = android.R.string.ok))
+                    Text(text = stringResource(Res.string.bookshelf_info_notification_btn_ok))
                 }
             }
         },
         title = {
-            Text(text = stringResource(R.string.bookshelf_info_notification_title))
+            Text(text = stringResource(Res.string.bookshelf_info_notification_title))
         },
         icon = {
             Icon(imageVector = ComicIcons.Notifications, contentDescription = null)
         },
         text = {
             val id = when (type) {
-                ScanType.File -> R.string.bookshelf_info_notification_text_scan_file
-                ScanType.Thumbnail -> R.string.bookshelf_info_notification_text_scan_thumbnail
+                ScanType.File -> Res.string.bookshelf_info_notification_text_scan_file
+                ScanType.Thumbnail -> Res.string.bookshelf_info_notification_text_scan_thumbnail
             }
             Text(text = stringResource(id))
         }
     )
-}
-
-@PreviewMultiScreen
-@Composable
-private fun NotificationRequestScreenPreview() {
-    PreviewTheme {
-        NotificationRequestScreen(
-            type = ScanType.File,
-            onDismissRequest = {},
-            onConfirmClick = {},
-            onNotAllowedClick = {},
-            onCancelClick = {}
-        )
-    }
 }

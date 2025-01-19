@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCa
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
 import org.koin.android.annotation.KoinViewModel
 
-
 @KoinViewModel
 internal class BookshelfInfoSheetViewModel(
     val bookshelfInfoUseCase: GetBookshelfInfoUseCase,

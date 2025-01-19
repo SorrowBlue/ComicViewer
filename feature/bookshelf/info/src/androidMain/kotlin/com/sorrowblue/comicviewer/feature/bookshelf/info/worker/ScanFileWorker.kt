@@ -30,9 +30,10 @@ import kotlin.random.Random
 import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
+import org.koin.android.annotation.KoinWorker
 import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 
-// TODO add to module workOf
+@KoinWorker
 internal class ScanFileWorker(
     appContext: Context,
     workerParams: WorkerParameters,

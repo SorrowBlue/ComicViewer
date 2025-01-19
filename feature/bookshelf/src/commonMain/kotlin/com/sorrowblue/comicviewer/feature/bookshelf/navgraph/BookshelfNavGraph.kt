@@ -9,6 +9,8 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEdit
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
+import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequest
+import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionNavigator
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
@@ -42,7 +44,19 @@ internal class BookshelfNavGraphNavigator(val navController: NavController) :
     }
 
     override fun onBookshelfClick(bookshelfId: BookshelfId, path: String) {
-        navController.navigate(BookshelfEdit(BookshelfEditMode.Edit(bookshelfId)))
+//        navController.navigate(BookshelfEdit(BookshelfEditMode.Edit(bookshelfId)))
+    }
+
+    override fun notificationRequest(type: ScanType) {
+        navController.navigate(NotificationRequest(type))
+    }
+
+    override fun onEditClick(id: BookshelfId) {
+        navController.navigate(BookshelfEdit(BookshelfEditMode.Edit(id)))
+    }
+
+    override fun onRemoveClick(bookshelfId: BookshelfId) {
+        navController.navigate(BookshelfDelete(bookshelfId))
     }
 
     override fun navigateUp() {

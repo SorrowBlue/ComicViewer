@@ -18,19 +18,23 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfAppBar
 import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfFab
+import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoSheet
+import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoSheetNavigator
+import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
+import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequest
+import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequestResult
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
 import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
-import org.koin.compose.currentKoinScope
-import org.koin.compose.koinInject
 
 @Serializable
 data object Bookshelf
 
-interface BookshelfScreenNavigator {
+interface BookshelfScreenNavigator : BookshelfInfoSheetNavigator {
     fun onSettingsClick()
     fun onFabClick()
     fun onBookshelfClick(bookshelfId: BookshelfId, path: String)
@@ -39,7 +43,9 @@ interface BookshelfScreenNavigator {
 @Destination<Bookshelf>()
 @Composable
 internal fun BookshelfScreen(
-    navigator: BookshelfScreenNavigator = koinInject(scope = currentKoinScope()),
+    navigator: BookshelfScreenNavigator,
+    deleteNavResultReceiver: NavResultReceiver<BookshelfDelete, Boolean>,
+    notificationNavResultReceiver: NavResultReceiver<NotificationRequest, NotificationRequestResult>,
     state: BookshelfScreenState = rememberBookshelfScreenState(),
 ) {
     BookshelfScreen(
@@ -52,15 +58,17 @@ internal fun BookshelfScreen(
         onBookshelfClick = navigator::onBookshelfClick,
         onBookshelfInfoClick = state::onBookshelfInfoClick,
     ) { contentKey ->
-//        BookshelfInfoSheet(
-//            bookshelfId = contentKey,
-//            onCloseClick = state::onSheetCloseClick,
-//            navigator = navigator,
-//            snackbarHostState = state.snackbarHostState,
-//        )
+        BookshelfInfoSheet(
+            bookshelfId = contentKey,
+            onCloseClick = state::onSheetCloseClick,
+            navigator = navigator,
+            snackbarHostState = state.snackbarHostState,
+            deleteNavResultReceiver = deleteNavResultReceiver,
+            notificationNavResultReceiver = notificationNavResultReceiver,
+        )
     }
 
-//    NavTabHandler(onClick = state::onNavClick)
+//    TODO NavTabHandler(onClick = state::onNavClick)
 }
 
 @Composable

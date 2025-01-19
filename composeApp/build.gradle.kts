@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.ide.kmp.KotlinAndroidSourceSetMarker.Companion.android
 import com.sorrowblue.comicviewer.ComicBuildType
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
@@ -79,6 +80,7 @@ kotlin {
                 implementation(libs.androidx.appcompat)
                 implementation(libs.koin.androidxCompose)
                 implementation(libs.koin.androidxStartup)
+                implementation(libs.koin.androidxWorkmanager)
                 implementation(libs.google.android.billingclient.billingKtx)
             }
         }

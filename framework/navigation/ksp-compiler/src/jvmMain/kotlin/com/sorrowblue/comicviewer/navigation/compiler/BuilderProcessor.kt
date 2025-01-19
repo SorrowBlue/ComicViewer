@@ -152,6 +152,8 @@ fun DestinationResolver(
                                     val senderType =
                                         it.second.resolve().arguments.first().type!!.resolve().declaration.qualifiedName!!.asString()
                                     "${it.first}=navController.navResultSender<$senderType>(${routeType.declaration.qualifiedName!!.asString()}::class)"
+                                } else if (it.second.resolve().declaration.qualifiedName?.asString() == "com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver") {
+                                    "${it.first}=navResultReceiver()"
                                 } else if (routeType.declaration.qualifiedName!!.asString() == it.second.resolve().declaration.qualifiedName!!.asString()) {
                                     "${it.first}=toRoute()"
                                 } else {
@@ -173,6 +175,7 @@ fun DestinationResolver(
                 .addImport("androidx.navigation", "toRoute")
                 .addImport("org.koin.compose", "koinInject")
                 .addImport("com.sorrowblue.comicviewer.framework.navigation", "navResultSender")
+                .addImport("com.sorrowblue.comicviewer.framework.navigation", "navResultReceiver")
                 .addType(clazz)
                 .build()
                 .writeTo(codeGenerator, Dependencies(true))
@@ -328,7 +331,8 @@ fun NavGraphResolver(
                     }.build()
                 )
                 .build()
-            val rootPackage = if (isRoot) root.declaration.packageName.asString() else route.declaration.packageName.asString()
+            val rootPackage =
+                if (isRoot) root.declaration.packageName.asString() else route.declaration.packageName.asString()
             FileSpec.builder(rootPackage, "$className.nav")
                 .indent("    ")
                 .addKotlinDefaultImports()

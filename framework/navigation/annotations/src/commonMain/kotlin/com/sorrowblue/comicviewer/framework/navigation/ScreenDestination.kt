@@ -17,6 +17,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.get
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import org.koin.compose.koinInject
 import org.koin.compose.module.rememberKoinModules
 import org.koin.compose.scope.KoinScope
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -48,7 +49,7 @@ interface ScreenDestination<T : Any> {
     val style: DestinationStyle
     val navController: NavController
         @Composable
-        get() = LocalNavController.current
+        get() = koinInject()
 
     @Composable
     fun NavBackStackEntry.Content()
