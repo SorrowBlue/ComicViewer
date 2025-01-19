@@ -14,15 +14,14 @@ kotlin {
                 implementation(projects.domain.usecase)
                 implementation(projects.feature.file)
                 implementation(projects.feature.bookshelf.info)
-
+                implementation(projects.feature.bookshelf.edit)
+                implementation(projects.feature.bookshelf.selection)
                 implementation(libs.androidx.paging.common)
             }
         }
 
         androidMain {
             dependencies {
-                implementation(projects.feature.bookshelf.edit)
-                implementation(projects.feature.bookshelf.selection)
                 implementation(projects.feature.file)
                 implementation(projects.feature.folder)
             }

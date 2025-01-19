@@ -268,14 +268,13 @@ private fun <T> destinationItemSaver(
 internal val DefaultSupportingPaneHistory: List<ThreePaneScaffoldDestinationItem<Nothing>> =
     listOf(ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main))
 
-private typealias SerializableSaver<Original> = Saver<Original, String>
+private typealias SerializableSaver<Original> = Saver<Original, Any>
 
-@PublishedApi
-internal inline fun <reified Original : @Serializable Any> serializableSaver() =
-    object : SerializableSaver<Original> {
+inline fun <reified Original : @Serializable Any> serializableSaver() =
+    object : Saver<Original, Any> {
 
-        override fun restore(value: String) =
-            kotlin.runCatching { Json.decodeFromString<Original>(value) }.getOrNull()
+        override fun restore(value: Any) =
+            kotlin.runCatching { Json.decodeFromString<Original>(value as String) }.getOrNull()
 
         override fun SaverScope.save(value: Original) =
             kotlin.runCatching { Json.Default.encodeToString(value) }.getOrNull()

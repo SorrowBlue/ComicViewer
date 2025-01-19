@@ -12,12 +12,9 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.NavGraphs
 import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfFolderScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.destinations.BookshelfEditScreenDestination
-import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionScreenNavigator
-import com.sorrowblue.comicviewer.feature.bookshelf.selection.destinations.BookshelfSelectionScreenDestination
+import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionNavigator
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 
 @Composable
@@ -31,7 +28,7 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
     navGraph(NavGraphs.bookshelf) {
         dependency(object :
             BookshelfScreenNavigator,
-            BookshelfSelectionScreenNavigator,
+            BookshelfSelectionNavigator,
             BookshelfEditScreenNavigator,
             FolderScreenNavigator {
 
@@ -56,15 +53,17 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
                     is BookshelfEditMode.Edit ->
                         navigator.navigateUp()
 
-                    is BookshelfEditMode.Register ->
-                        navigator.navigate(BookshelfSelectionScreenDestination) {
-                            popUpTo(BookshelfScreenDestination)
-                        }
+                    is BookshelfEditMode.Register -> {
+//                        TODO
+//                    navigator.navigate(BookshelfSelectionScreenDestination) {
+//                            popUpTo(BookshelfScreenDestination)
+                    }
                 }
             }
 
-            override fun onFabClick() =
-                navigator.navigate(BookshelfSelectionScreenDestination)
+            override fun onFabClick() {
+//                navigator.navigate(BookshelfSelectionScreenDestination)
+            }
 
             override fun onBookshelfClick(bookshelfId: BookshelfId, path: String) =
                 navigator.navigate(
@@ -86,21 +85,21 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
 //            }
 
             override fun onSourceClick(bookshelfType: BookshelfType) {
-                navigator.navigate(
-                    BookshelfEditScreenDestination(BookshelfEditMode.Register(bookshelfType))
-                ) {
-                    popUpTo(BookshelfScreenDestination)
-                }
+//                navigator.navigate(
+//                    BookshelfEditScreenDestination(BookshelfEditMode.Register(bookshelfType))
+//                ) {
+//                    popUpTo(BookshelfScreenDestination)
+//                }
             }
 
             override fun onComplete() {
-                if (!navigator.popBackStack(
-                        BookshelfSelectionScreenDestination,
-                        true
-                    )
-                ) {
-                    navigator.popBackStack()
-                }
+//                if (!navigator.popBackStack(
+//                        BookshelfSelectionScreenDestination,
+//                        true
+//                    )
+//                ) {
+//                    navigator.popBackStack()
+//                }
             }
 
             override fun onFileClick(file: File) {

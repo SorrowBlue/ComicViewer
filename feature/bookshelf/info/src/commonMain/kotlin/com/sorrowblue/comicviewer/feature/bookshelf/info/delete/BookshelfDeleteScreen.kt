@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
 import com.sorrowblue.comicviewer.framework.navigation.NavResultSender
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import comicviewer.feature.bookshelf.info.generated.resources.Res
@@ -26,10 +27,6 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_del
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
-data class BookshelfDeleteScreenArgs(
-    val bookshelfId: BookshelfId,
-)
-
 internal data class BookshelfDeleteScreenUiState(
     val title: String? = null,
     val isProcessing: Boolean = false,
@@ -40,7 +37,7 @@ data class BookshelfDelete(
     val bookshelfId: BookshelfId,
 )
 
-@Destination<BookshelfDelete>
+@Destination<BookshelfDelete>(style = DestinationStyle.Dialog::class)
 @Composable
 internal fun BookshelfDeleteScreen(
     route: BookshelfDelete,

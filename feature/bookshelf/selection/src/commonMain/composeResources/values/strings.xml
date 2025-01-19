@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bookshelf_selection_title">Selection of bookshelves</string>
+
+    <string name="bookshelf_selection_label_smb" translatable="false">SMB/LAN</string>
+    <string name="bookshelf_selection_label_smb_detail">Folders shared by Windows, NAS, etc. can be added as bookshelves.</string>
+    <string name="bookshelf_selection_label_device" translatable="false">Device</string>
+    <string name="bookshelf_selection_label_device_detail">Add a folder on this terminal as a bookshelf.</string>
+</resources>

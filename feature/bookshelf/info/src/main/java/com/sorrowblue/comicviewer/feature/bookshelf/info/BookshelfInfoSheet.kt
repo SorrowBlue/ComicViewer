@@ -24,7 +24,6 @@ import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.feature.bookshelf.info.destinations.BookshelfDeleteScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoMainContents
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoMainContentsUiState
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BottomActions
@@ -53,8 +52,8 @@ fun BookshelfInfoSheet(
     snackbarHostState: SnackbarHostState,
     navigator: BookshelfInfoSheetNavigator,
     modifier: Modifier = Modifier,
-    removeDialogResultRecipient: ResultRecipient<BookshelfDeleteScreenDestination, Boolean> =
-        resultRecipient(booleanNavType),
+//    removeDialogResultRecipient: ResultRecipient<BookshelfDeleteScreenDestination, Boolean> =
+//        resultRecipient(booleanNavType),
 ) {
     val state = rememberBookshelfInfoSheetState(
         bookshelfId = bookshelfId,
@@ -92,7 +91,7 @@ fun BookshelfInfoSheet(
         }
     }
 
-    removeDialogResultRecipient.onNavResult(state::onRemoveResult)
+//    removeDialogResultRecipient.onNavResult(state::onRemoveResult)
 
     EventEffect(state.events) {
         when (it) {
