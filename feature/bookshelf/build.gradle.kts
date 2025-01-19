@@ -19,13 +19,6 @@ kotlin {
                 implementation(libs.androidx.paging.common)
             }
         }
-
-        androidMain {
-            dependencies {
-                implementation(projects.feature.file)
-                implementation(projects.feature.folder)
-            }
-        }
     }
 }
 
