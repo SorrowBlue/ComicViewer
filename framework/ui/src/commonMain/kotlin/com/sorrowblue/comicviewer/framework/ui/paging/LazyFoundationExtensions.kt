@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.framework.ui.paging
 
 import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import kotlin.jvm.JvmSuppressWildcards
 
 /**
@@ -34,3 +36,6 @@ fun <T : Any> LazyPagingItems<T>.itemKey(
         }
     }
 }
+
+val CombinedLoadStates.isLoading
+    get() = refresh is LoadState.Loading

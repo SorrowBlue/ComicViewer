@@ -11,13 +11,15 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.file.FileInfoSheetAction
 import com.sorrowblue.comicviewer.file.FileInfoUiState
 import com.sorrowblue.comicviewer.file.component.ReadlaterButton
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import comicviewer.feature.file.generated.resources.Res
+import comicviewer.feature.file.generated.resources.file_info_label_add_favourites
+import comicviewer.feature.file.generated.resources.file_info_label_open_folder
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SheetActionButtons(
@@ -39,7 +41,7 @@ internal fun SheetActionButtons(
         ) {
             Icon(imageVector = ComicIcons.Favorite, contentDescription = null)
             Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-            Text(text = stringResource(id = R.string.file_info_label_add_favourites))
+            Text(text = stringResource(Res.string.file_info_label_add_favourites))
         }
         if (uiState.isOpenFolderEnabled) {
             OutlinedButton(
@@ -51,7 +53,7 @@ internal fun SheetActionButtons(
             ) {
                 Icon(imageVector = ComicIcons.FolderOpen, contentDescription = null)
                 Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text = stringResource(id = R.string.file_info_label_open_folder))
+                Text(text = stringResource(Res.string.file_info_label_open_folder))
             }
         }
     }

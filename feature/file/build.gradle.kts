@@ -11,6 +11,8 @@ kotlin {
                 implementation(projects.framework.ui)
                 implementation(projects.domain.model)
                 implementation(projects.domain.usecase)
+                implementation(libs.androidx.paging.common)
+                implementation(libs.kotlinx.datetime)
             }
         }
     }

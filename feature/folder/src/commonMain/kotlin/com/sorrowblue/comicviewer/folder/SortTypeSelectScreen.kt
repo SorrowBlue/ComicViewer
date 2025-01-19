@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.folder.section
+package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
@@ -16,28 +16,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.ExternalModuleGraph
-import com.ramcosta.composedestinations.result.ResultBackNavigator
-import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.feature.folder.R
+import com.sorrowblue.comicviewer.framework.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
+import com.sorrowblue.comicviewer.framework.navigation.NavResultSender
+import comicviewer.feature.folder.generated.resources.Res
+import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_asc
+import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_desc
+import comicviewer.feature.folder.generated.resources.folder_sorttype_label_name_asc
+import comicviewer.feature.folder.generated.resources.folder_sorttype_label_name_desc
+import comicviewer.feature.folder.generated.resources.folder_sorttype_label_size_asc
+import comicviewer.feature.folder.generated.resources.folder_sorttype_label_size_desc
+import comicviewer.feature.folder.generated.resources.folder_sorttype_title_sort_by
+import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.stringResource
 
-@Destination<ExternalModuleGraph>(style = DestinationStyle.Dialog::class)
+@Serializable
+data class SortTypeSelect(val sortType: SortType)
+
+@Destination<SortTypeSelect>(style = DestinationStyle.Dialog::class)
 @Composable
-internal fun SortTypeDialog(fileSort: SortType, resultNavigator: ResultBackNavigator<SortType>) {
-    SortTypeDialog(
-        currentSortType = fileSort,
+internal fun SortTypeSelectScreen(
+    route: SortTypeSelect,
+    resultNavigator: NavResultSender<SortType>,
+) {
+    SortTypeSelectScreen(
+        currentSortType = route.sortType,
         onDismissRequest = resultNavigator::navigateBack,
         onClick = resultNavigator::navigateBack
     )
 }
 
 @Composable
-private fun SortTypeDialog(
+private fun SortTypeSelectScreen(
     currentSortType: SortType,
     onDismissRequest: () -> Unit,
     onClick: (SortType) -> Unit,
@@ -49,7 +62,7 @@ private fun SortTypeDialog(
         contentWindowInsets = { WindowInsets(0) }
     ) {
         Text(
-            text = stringResource(R.string.folder_sorttype_title_sort_by),
+            text = stringResource(Res.string.folder_sorttype_title_sort_by),
             style = ComicTheme.typography.titleLarge,
             modifier = Modifier
                 .padding(horizontal = ComicTheme.dimension.margin)
@@ -61,7 +74,7 @@ private fun SortTypeDialog(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(id = item.displayText()),
+                            text = stringResource(item.displayText()),
                         )
                     },
                     trailingContent = {
@@ -79,7 +92,7 @@ private fun SortTypeDialog(
 }
 
 private fun SortType.displayText() = when (this) {
-    is SortType.Date -> if (isAsc) R.string.folder_sorttype_label_date_asc else R.string.folder_sorttype_label_date_desc
-    is SortType.Name -> if (isAsc) R.string.folder_sorttype_label_name_asc else R.string.folder_sorttype_label_name_desc
-    is SortType.Size -> if (isAsc) R.string.folder_sorttype_label_size_asc else R.string.folder_sorttype_label_size_desc
+    is SortType.Date -> if (isAsc) Res.string.folder_sorttype_label_date_asc else Res.string.folder_sorttype_label_date_desc
+    is SortType.Name -> if (isAsc) Res.string.folder_sorttype_label_name_asc else Res.string.folder_sorttype_label_name_desc
+    is SortType.Size -> if (isAsc) Res.string.folder_sorttype_label_size_asc else Res.string.folder_sorttype_label_size_desc
 }

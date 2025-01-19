@@ -26,23 +26,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
-import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import comicviewer.feature.file.generated.resources.Res
+import comicviewer.feature.file.generated.resources.file_desc_open_file_info
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * ファイル情報をリストアイテムで表示する
@@ -129,7 +124,7 @@ fun ListFile(
             IconButton(onClick = onLongClick) {
                 Icon(
                     imageVector = ComicIcons.MoreVert,
-                    contentDescription = stringResource(R.string.file_desc_open_file_info)
+                    contentDescription = stringResource(Res.string.file_desc_open_file_info)
                 )
             }
         },
@@ -202,51 +197,11 @@ fun ListFileCard(
                 IconButton(onClick = onLongClick) {
                     Icon(
                         imageVector = ComicIcons.MoreVert,
-                        contentDescription = stringResource(R.string.file_desc_open_file_info)
+                        contentDescription = stringResource(Res.string.file_desc_open_file_info)
                     )
                 }
             },
             colors = ListItemDefaults.colors(containerColor = Color.Transparent)
         )
     }
-}
-
-@PreviewLightDark
-@Composable
-private fun PreviewFileList(
-    @PreviewParameter(BooleanProvider::class) showThumbnail: Boolean,
-) {
-    PreviewTheme {
-        ListFile(
-            file = fakeBookFile(name = "Fake book name"),
-            onClick = {},
-            onLongClick = {},
-            showThumbnail = showThumbnail,
-            fontSize = FolderDisplaySettingsDefaults.fontSize,
-            contentScale = ContentScale.Crop,
-            filterQuality = FilterQuality.None
-        )
-    }
-}
-
-@PreviewLightDark
-@Composable
-private fun PreviewFileListCard(
-    @PreviewParameter(BooleanProvider::class) showThumbnail: Boolean,
-) {
-    PreviewTheme {
-        ListFileCard(
-            file = fakeBookFile(name = "Fake book name"),
-            onClick = {},
-            onLongClick = {},
-            showThumbnail = showThumbnail,
-            fontSize = FolderDisplaySettingsDefaults.fontSize,
-            contentScale = ContentScale.Crop,
-            filterQuality = FilterQuality.None
-        )
-    }
-}
-
-private class BooleanProvider : PreviewParameterProvider<Boolean> {
-    override val values = sequenceOf(true, false)
 }

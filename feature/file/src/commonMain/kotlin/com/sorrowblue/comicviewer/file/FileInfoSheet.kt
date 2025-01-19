@@ -14,9 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
-import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
-import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,16 +23,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -45,19 +36,15 @@ import com.sorrowblue.comicviewer.file.component.FileAttributeChips
 import com.sorrowblue.comicviewer.file.section.FileInfoList
 import com.sorrowblue.comicviewer.file.section.FileInfoThumbnail
 import com.sorrowblue.comicviewer.file.section.SheetActionButtons
-import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
-import com.sorrowblue.comicviewer.framework.ui.material3.drawVerticalScrollbar
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
-import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold
-import org.koin.android.annotation.KoinViewModel
-
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.koin.android.annotation.KoinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 data class ReadLaterUiState(val checked: Boolean = false, val loading: Boolean = false)
 
@@ -67,12 +54,6 @@ data class FileInfoUiState(
     val readLaterUiState: ReadLaterUiState = ReadLaterUiState(),
     val isOpenFolderEnabled: Boolean = false,
 )
-
-sealed interface FileInfoSheetNavigator {
-    data object Back : FileInfoSheetNavigator
-    data class Favorite(val file: File) : FileInfoSheetNavigator
-    data class OpenFolder(val file: File) : FileInfoSheetNavigator
-}
 
 internal sealed interface FileInfoSheetAction {
     data object Close : FileInfoSheetAction
@@ -138,7 +119,8 @@ fun FileInfoSheet(
         lazyPagingItems = state.lazyPagingItems,
         onAction = state::onAction,
     )
-    LaunchedEventEffect(state.event) {
+
+    EventEffect(state.events) {
         when (it) {
             FileInfoSheetStateEvent.Close -> onAction(FileInfoSheetNavigator.Back)
             is FileInfoSheetStateEvent.Favorite -> onAction(FileInfoSheetNavigator.Favorite(it.file))
@@ -165,7 +147,7 @@ internal fun FileInfoSheet(
             Column(
                 Modifier
                     .fillMaxSize()
-                    .drawVerticalScrollbar(scrollState)
+//                    TODO .drawVerticalScrollbar(scrollState)
                     .verticalScroll(scrollState)
                     .padding(top = contentPadding.calculateTopPadding())
             ) {
@@ -226,74 +208,4 @@ private fun Modifier.padding(
         end = horizontal.calculateEndPadding(this)
     }
     return this.padding(start = start, end = end)
-}
-
-@PreviewMultiScreen
-@Composable
-private fun PreviewFileInfoSheet(
-    @PreviewParameter(FileInfoUiStateProvider::class) uiState: FileInfoUiState,
-) {
-    PreviewCanonicalScaffold(
-        navigator = rememberSupportingPaneScaffoldNavigator(
-            initialDestinationHistory = listOf(
-                ThreePaneScaffoldDestinationItem(
-                    SupportingPaneScaffoldRole.Extra,
-                    uiState
-                )
-            )
-        ),
-        extraPane = { contentKey ->
-            val screenState = rememberScrollState()
-            val lazyPagingItems = PagingData.flowData(10) { BookThumbnail.from(fakeBookFile(it)) }
-            FileInfoSheet(
-                uiState = contentKey,
-                onAction = {},
-                scrollState = screenState,
-                lazyPagingItems = lazyPagingItems.collectAsLazyPagingItems()
-            )
-        }
-    ) {
-    }
-}
-
-private class FileInfoUiStateProvider : PreviewParameterProvider<FileInfoUiState> {
-    val attribute = FileAttribute(
-        archive = true,
-        compressed = true,
-        hidden = true,
-        normal = true,
-        directory = true,
-        readonly = true,
-        sharedRead = true,
-        system = true,
-        temporary = true,
-        volume = true,
-    )
-    override val values: Sequence<FileInfoUiState>
-        get() = sequenceOf(
-            FileInfoUiState(
-                fakeBookFile(),
-                attribute = attribute,
-                readLaterUiState = ReadLaterUiState(checked = false, loading = true),
-                isOpenFolderEnabled = true
-            ),
-            FileInfoUiState(
-                fakeBookFile(),
-                attribute = attribute,
-                readLaterUiState = ReadLaterUiState(checked = false, loading = false),
-                isOpenFolderEnabled = true
-            ),
-            FileInfoUiState(
-                fakeBookFile(),
-                attribute = attribute,
-                readLaterUiState = ReadLaterUiState(checked = true, loading = true),
-                isOpenFolderEnabled = true
-            ),
-            FileInfoUiState(
-                fakeBookFile(),
-                attribute = attribute,
-                readLaterUiState = ReadLaterUiState(checked = true, loading = false),
-                isOpenFolderEnabled = true
-            ),
-        )
 }

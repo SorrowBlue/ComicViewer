@@ -50,13 +50,13 @@ internal fun SearchContents(
                 .imePadding()
         )
     } else {
-        FileLazyVerticalGrid(
-            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
-            state = lazyListState,
-            contentPadding = contentPadding,
-            lazyPagingItems = lazyPagingItems,
-            onItemClick = { onAction(SearchContentsAction.File(it)) },
-            onItemInfoClick = { onAction(SearchContentsAction.FileInfo(it)) }
-        )
+//        FileLazyVerticalGrid(
+//            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
+//            state = lazyListState,
+//            contentPadding = contentPadding,
+//            lazyPagingItems = lazyPagingItems,
+//            onItemClick = { onAction(SearchContentsAction.File(it)) },
+//            onItemInfoClick = { onAction(SearchContentsAction.FileInfo(it)) }
+//        )
     }
 }

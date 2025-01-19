@@ -18,15 +18,12 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraphTransitions
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBar
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
-import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
@@ -148,15 +145,15 @@ private fun ReadLaterContents(
                 .padding(contentPadding)
         )
     } else {
-        FileLazyVerticalGrid(
-            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
-            lazyPagingItems = lazyPagingItems,
-            contentPadding = contentPadding,
-            onItemClick = { onAction(ReadLaterContentsAction.File(it)) },
-            onItemInfoClick = { onAction(ReadLaterContentsAction.FileInfo(it)) },
-            state = lazyGridState,
-            modifier = Modifier
-                .fillMaxSize()
-        )
+//        FileLazyVerticalGrid(
+//            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
+//            lazyPagingItems = lazyPagingItems,
+//            contentPadding = contentPadding,
+//            onItemClick = { onAction(ReadLaterContentsAction.File(it)) },
+//            onItemInfoClick = { onAction(ReadLaterContentsAction.FileInfo(it)) },
+//            state = lazyGridState,
+//            modifier = Modifier
+//                .fillMaxSize()
+//        )
     }
 }

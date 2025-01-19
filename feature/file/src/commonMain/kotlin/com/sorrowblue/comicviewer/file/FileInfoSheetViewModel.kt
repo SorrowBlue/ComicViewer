@@ -13,13 +13,12 @@ import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFolderBookThumbnai
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
-import org.koin.android.annotation.KoinViewModel
-
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flattenConcat
 import kotlinx.coroutines.flow.map
+import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 internal class FileInfoSheetViewModel(

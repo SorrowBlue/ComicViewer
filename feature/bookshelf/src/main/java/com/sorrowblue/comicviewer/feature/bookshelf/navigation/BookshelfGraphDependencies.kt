@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.NavGraphs
-import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfFolderScreenDestination
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
@@ -33,7 +32,7 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
             BookshelfEditScreenNavigator,
             FolderScreenNavigator {
 
-            override val navigator get() = destinationsNavigator
+            private val navigator get() = destinationsNavigator
 
             override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) =
                 onFavoriteClick(bookshelfId, path)
@@ -66,10 +65,11 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
 //                navigator.navigate(BookshelfSelectionScreenDestination)
             }
 
-            override fun onBookshelfClick(bookshelfId: BookshelfId, path: String) =
-                navigator.navigate(
-                    BookshelfFolderScreenDestination(bookshelfId, path, null)
-                )
+            override fun onBookshelfClick(bookshelfId: BookshelfId, path: String) {
+//                navigator.navigate(
+//                    BookshelfFolderScreenDestination(bookshelfId, path, null)
+//                )
+            }
 
             override fun notificationRequest(type: ScanType) {
                 TODO("Not yet implemented")
@@ -118,9 +118,11 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
             override fun onFileClick(file: File) {
                 when (file) {
                     is Book -> onBookClick(file)
-                    is Folder -> navigator.navigate(
-                        BookshelfFolderScreenDestination(file.bookshelfId, file.path, null)
-                    )
+                    is Folder -> {
+//                        navigator.navigate(
+//                            BookshelfFolderScreenDestination(file.bookshelfId, file.path, null)
+//                        )
+                    }
                 }
             }
         })

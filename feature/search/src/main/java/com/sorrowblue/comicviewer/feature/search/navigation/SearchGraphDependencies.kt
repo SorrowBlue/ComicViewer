@@ -22,7 +22,7 @@ fun DependenciesContainerBuilder<*>.SearchGraphDependencies(
 ) {
     navGraph(NavGraphs.search) {
         dependency(object : SearchScreenNavigator, FolderScreenNavigator {
-            override val navigator get() = destinationsNavigator
+            private val navigator get() = destinationsNavigator
 
             override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) =
                 onFavoriteClick(bookshelfId, path)

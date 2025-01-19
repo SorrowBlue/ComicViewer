@@ -14,14 +14,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.ramcosta.composedestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -34,21 +30,24 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
+import com.sorrowblue.comicviewer.framework.navigation.NavResult
+import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.asLog
 import logcat.logcat
+import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface FolderScreenEvent {
     data class Favorite(val bookshelfId: BookshelfId, val path: String) : FolderScreenEvent
@@ -65,11 +64,10 @@ internal sealed interface FolderScreenEvent {
 }
 
 @Stable
-internal interface FolderScreenState :
-    SaveableScreenState,
-    ScreenStateEvent<FolderScreenEvent> {
+internal interface FolderScreenState : SaveableScreenState {
 
     val navigator: ThreePaneScaffoldNavigator<File.Key>
+    val events: EventFlow<FolderScreenEvent>
     val snackbarHostState: SnackbarHostState
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
@@ -78,6 +76,7 @@ internal interface FolderScreenState :
     fun onNavClick()
     fun onNavResult(navResult: NavResult<SortType>)
     fun onFolderTopAppBarAction(action: FolderTopAppBarAction)
+
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onFolderContentsAction(action: FolderContentsAction)
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
@@ -85,7 +84,7 @@ internal interface FolderScreenState :
 
 @Composable
 internal fun rememberFolderScreenState(
-    args: FolderArgs,
+    args: Folder,
     navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
@@ -119,15 +118,15 @@ private class FolderScreenStateImpl(
     override val lazyGridState: LazyGridState,
     override val snackbarHostState: SnackbarHostState,
     override val pullRefreshState: PullToRefreshState,
-    override val scope: CoroutineScope,
-    private val args: FolderArgs,
+    private val scope: CoroutineScope,
+    private val args: Folder,
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     getFileUseCase: GetFileUseCase,
 ) : FolderScreenState {
 
     private var isRestored by savedStateHandle.saveable { mutableStateOf(false) }
 
-    override val event = MutableSharedFlow<FolderScreenEvent>()
+    override val events = EventFlow<FolderScreenEvent>()
 
     override var uiState by mutableStateOf(FolderScreenUiState(bookshelfId = args.bookshelfId))
         private set
@@ -169,7 +168,7 @@ private class FolderScreenStateImpl(
         when (action) {
             FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
             is FileInfoSheetNavigator.Favorite -> navigator.currentDestination!!.contentKey!!.let {
-                sendEvent(FolderScreenEvent.Favorite(it.bookshelfId, it.path))
+                events.tryEmit(FolderScreenEvent.Favorite(it.bookshelfId, it.path))
             }
 
             is FileInfoSheetNavigator.OpenFolder -> Unit
@@ -178,7 +177,7 @@ private class FolderScreenStateImpl(
 
     override fun onFolderContentsAction(action: FolderContentsAction) {
         when (action) {
-            is FolderContentsAction.File -> sendEvent(FolderScreenEvent.File(action.file))
+            is FolderContentsAction.File -> events.tryEmit(FolderScreenEvent.File(action.file))
             is FolderContentsAction.FileInfo -> scope.launch {
                 navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file.key())
             }
@@ -193,7 +192,7 @@ private class FolderScreenStateImpl(
 
     override fun onFolderTopAppBarAction(action: FolderTopAppBarAction) {
         when (action) {
-            FolderTopAppBarAction.Back -> sendEvent(FolderScreenEvent.Back)
+            FolderTopAppBarAction.Back -> events.tryEmit(FolderScreenEvent.Back)
 
             FolderTopAppBarAction.FileListDisplay ->
                 updateFolderDisplaySettings {
@@ -223,10 +222,10 @@ private class FolderScreenStateImpl(
                 }
 
             FolderTopAppBarAction.Search ->
-                sendEvent(FolderScreenEvent.Search(args.bookshelfId, args.path))
+                events.tryEmit(FolderScreenEvent.Search(args.bookshelfId, args.path))
 
-            FolderTopAppBarAction.Settings -> sendEvent(FolderScreenEvent.Settings)
-            FolderTopAppBarAction.Sort -> sendEvent(FolderScreenEvent.Sort(uiState.sortType))
+            FolderTopAppBarAction.Settings -> events.tryEmit(FolderScreenEvent.Settings)
+            FolderTopAppBarAction.Sort -> events.tryEmit(FolderScreenEvent.Sort(uiState.sortType))
         }
     }
 
@@ -243,9 +242,9 @@ private class FolderScreenStateImpl(
                 }.onFailure {
                     logcat { it.asLog() }
                 }
-                sendEvent(FolderScreenEvent.Restore)
+                events.tryEmit(FolderScreenEvent.Restore)
             } else if (!lazyPagingItems.loadState.isLoading) {
-                sendEvent(FolderScreenEvent.Restore)
+                events.tryEmit(FolderScreenEvent.Restore)
             }
         }
         if (lazyPagingItems.loadState.refresh is LoadState.Error) {

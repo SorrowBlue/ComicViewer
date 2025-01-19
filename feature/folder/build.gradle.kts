@@ -13,6 +13,7 @@ kotlin {
                 implementation(projects.domain.model)
                 implementation(projects.domain.usecase)
                 implementation(projects.feature.file)
+                implementation(libs.androidx.paging.common)
             }
         }
     }

@@ -12,12 +12,13 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.file.ReadLaterUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import comicviewer.feature.file.generated.resources.Res
+import comicviewer.feature.file.generated.resources.file_info_label_add_read_later
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun ReadlaterButton(uiState: ReadLaterUiState, onClick: () -> Unit) {
@@ -37,7 +38,7 @@ internal fun ReadlaterButton(uiState: ReadLaterUiState, onClick: () -> Unit) {
                 Icon(imageVector = ComicIcons.WatchLater, contentDescription = null)
             }
             Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-            Text(text = stringResource(id = R.string.file_info_label_add_read_later))
+            Text(text = stringResource(Res.string.file_info_label_add_read_later))
         }
     } else {
         OutlinedButton(
@@ -55,7 +56,7 @@ internal fun ReadlaterButton(uiState: ReadLaterUiState, onClick: () -> Unit) {
                 Icon(imageVector = ComicIcons.WatchLater, contentDescription = null)
             }
             Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-            Text(text = stringResource(id = R.string.file_info_label_add_read_later))
+            Text(text = stringResource(Res.string.file_info_label_add_read_later))
         }
     }
 }

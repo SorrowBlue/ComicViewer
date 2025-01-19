@@ -31,7 +31,6 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteTopAppBarAction
 import com.sorrowblue.comicviewer.feature.favorite.R
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
@@ -171,15 +170,15 @@ private fun FavoriteContents(
                 .padding(contentPadding)
         )
     } else {
-        FileLazyVerticalGrid(
-            modifier = Modifier
-                .fillMaxSize(),
-            uiState = fileLazyVerticalGridUiState,
-            lazyPagingItems = lazyPagingItems,
-            contentPadding = contentPadding,
-            onItemClick = { onAction(FavoriteContentsAction.File(it)) },
-            onItemInfoClick = { onAction(FavoriteContentsAction.FileInfo(it)) },
-            state = lazyGridState
-        )
+//        FileLazyVerticalGrid(
+//            modifier = Modifier
+//                .fillMaxSize(),
+//            uiState = fileLazyVerticalGridUiState,
+//            lazyPagingItems = lazyPagingItems,
+//            contentPadding = contentPadding,
+//            onItemClick = { onAction(FavoriteContentsAction.File(it)) },
+//            onItemInfoClick = { onAction(FavoriteContentsAction.FileInfo(it)) },
+//            state = lazyGridState
+//        )
     }
 }

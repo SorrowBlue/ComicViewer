@@ -6,9 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import org.koin.compose.viewmodel.koinViewModel
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
@@ -19,7 +16,9 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
-import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
+import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -28,6 +27,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 sealed interface FileInfoSheetStateEvent {
     data class Favorite(val file: File) : FileInfoSheetStateEvent
@@ -35,8 +35,9 @@ sealed interface FileInfoSheetStateEvent {
     data object Close : FileInfoSheetStateEvent
 }
 
-internal interface FileInfoSheetState : ScreenStateEvent<FileInfoSheetStateEvent> {
+internal interface FileInfoSheetState {
     val uiState: FileInfoUiState
+    val events: EventFlow<FileInfoSheetStateEvent>
     val lazyPagingItems: LazyPagingItems<BookThumbnail>?
     fun onAction(action: FileInfoSheetAction)
 }
@@ -75,11 +76,11 @@ private class FileInfoSheetStateImpl(
     private val file: File,
     private val deleteReadLaterUseCase: DeleteReadLaterUseCase,
     private val addReadLaterUseCase: AddReadLaterUseCase,
-    override val scope: CoroutineScope,
+    private val scope: CoroutineScope,
     override val lazyPagingItems: LazyPagingItems<BookThumbnail>?,
 ) : FileInfoSheetState {
 
-    override val event: SharedFlow<FileInfoSheetStateEvent> = MutableSharedFlow()
+    override val events = EventFlow<FileInfoSheetStateEvent>()
 
     override var uiState: FileInfoUiState by mutableStateOf(
         FileInfoUiState(file = file, isOpenFolderEnabled = isOpenFolderEnabled)
@@ -121,9 +122,9 @@ private class FileInfoSheetStateImpl(
 
     override fun onAction(action: FileInfoSheetAction) {
         when (action) {
-            FileInfoSheetAction.Close -> sendEvent(FileInfoSheetStateEvent.Close)
-            FileInfoSheetAction.Favorite -> sendEvent(FileInfoSheetStateEvent.Favorite(file))
-            FileInfoSheetAction.OpenFolder -> sendEvent(FileInfoSheetStateEvent.OpenFolder(file))
+            FileInfoSheetAction.Close -> events.tryEmit(FileInfoSheetStateEvent.Close)
+            FileInfoSheetAction.Favorite -> events.tryEmit(FileInfoSheetStateEvent.Favorite(file))
+            FileInfoSheetAction.OpenFolder -> events.tryEmit(FileInfoSheetStateEvent.OpenFolder(file))
             FileInfoSheetAction.ReadLater -> updateReadLater()
         }
     }

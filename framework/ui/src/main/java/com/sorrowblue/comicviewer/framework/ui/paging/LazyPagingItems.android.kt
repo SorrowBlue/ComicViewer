@@ -22,7 +22,4 @@ fun <T : Any> androidx.paging.compose.LazyPagingItems<T>.indexOf(op: (T?) -> Boo
     return -1
 }
 
-val CombinedLoadStates.isLoading
-    get() = refresh is LoadState.Loading
-
 internal actual val mainDispatcher: CoroutineContext get() = AndroidUiDispatcher.Main

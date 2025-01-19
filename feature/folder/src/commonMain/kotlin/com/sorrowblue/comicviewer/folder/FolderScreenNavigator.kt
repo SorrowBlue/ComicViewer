@@ -1,15 +1,14 @@
 package com.sorrowblue.comicviewer.folder
 
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import androidx.navigation.NavController
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.feature.folder.destinations.SortTypeDialogDestination
 
 /** フォルダ画面のナビゲータ */
 interface FolderScreenNavigator {
 
-    val navigator: DestinationsNavigator
+    val navController: NavController get() = TODO("Not yet implemented")
 
     /** ナビゲートを行う */
     fun navigateUp()
@@ -41,7 +40,7 @@ interface FolderScreenNavigator {
     fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
 
     fun onSortClick(sortType: SortType) {
-        navigator.navigate(SortTypeDialogDestination(sortType))
+        navController.navigate(SortTypeSelect(sortType))
     }
 
     fun onRestoreComplete() {

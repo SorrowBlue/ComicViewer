@@ -26,18 +26,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.feature.folder.R
-import com.sorrowblue.comicviewer.feature.folder.destinations.SortTypeDialogDestination
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
@@ -47,20 +39,32 @@ import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowEmptyData
 import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
+import comicviewer.feature.folder.generated.resources.Res
+import comicviewer.feature.folder.generated.resources.folder_text_nothing_in_folder
+import org.jetbrains.compose.resources.stringResource
+
+/**
+ * フォルダ画面の引数
+ *
+ * @param bookshelfId 本棚ID
+ * @param path フォルダのパス
+ * @param restorePath 復元するパス (nullの場合は復元しない)
+ */
+interface Folder {
+    val bookshelfId: BookshelfId
+    val path: String
+    val restorePath: String?
+}
 
 internal data class FolderScreenUiState(
     val bookshelfId: BookshelfId = BookshelfId(),
@@ -72,11 +76,11 @@ internal data class FolderScreenUiState(
 
 @Composable
 fun FolderScreen(
-    args: FolderArgs,
+    route: Folder,
     navigator: FolderScreenNavigator,
-    sortTypeResultRecipient: ResultRecipient<SortTypeDialogDestination, SortType>,
+    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
 ) {
-    val state = rememberFolderScreenState(args = args)
+    val state = rememberFolderScreenState(args = route)
     FolderScreen(
         uiState = state.uiState,
         navigator = state.navigator,
@@ -90,7 +94,7 @@ fun FolderScreen(
     )
 
     val currentNavigator by rememberUpdatedState(navigator)
-    LaunchedEventEffect(state.event) {
+    EventEffect(state.events) {
         when (it) {
             FolderScreenEvent.Back -> currentNavigator.navigateUp()
             is FolderScreenEvent.Favorite -> currentNavigator.onFavoriteClick(
@@ -110,13 +114,13 @@ fun FolderScreen(
         state.onLoadStateChange(state.lazyPagingItems)
     }
 
-    sortTypeResultRecipient.onNavResult(state::onNavResult)
+    sortTypeResultReceiver.onNavResult(state::onNavResult)
 
-    NavTabHandler(onClick = state::onNavClick)
+//    TODO NavTabHandler(onClick = state::onNavClick)
 }
 
 @Composable
-private fun FolderScreen(
+internal fun FolderScreen(
     navigator: ThreePaneScaffoldNavigator<File.Key>,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
@@ -198,7 +202,7 @@ private fun FolderContents(
                     .verticalScroll(rememberScrollState())
                     .padding(contentPadding),
                 imageVector = ComicIcons.UndrawResumeFolder,
-                text = stringResource(R.string.folder_text_nothing_in_folder, title)
+                text = stringResource(Res.string.folder_text_nothing_in_folder, title)
             )
         } else {
             ScrollbarBox(
@@ -226,41 +230,5 @@ private fun FolderContents(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewFolderScreen() {
-    val pagingDataFlow = PagingData.flowData<File> {
-        fakeBookFile(it)
-    }
-    val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
-    PreviewTheme {
-        FolderScreen(
-            navigator = rememberCanonicalScaffoldNavigator(),
-            uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
-            lazyPagingItems = lazyPagingItems,
-            onFileInfoSheetAction = {},
-            onFolderTopAppBarAction = {},
-            onFolderContentsAction = {},
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewFolderScreenEmpty() {
-    val pagingDataFlow = PagingData.flowEmptyData<File>()
-    val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
-    PreviewTheme {
-        FolderScreen(
-            navigator = rememberCanonicalScaffoldNavigator(),
-            uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
-            lazyPagingItems = lazyPagingItems,
-            onFileInfoSheetAction = {},
-            onFolderTopAppBarAction = {},
-            onFolderContentsAction = {},
-        )
     }
 }

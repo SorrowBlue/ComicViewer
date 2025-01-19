@@ -21,15 +21,12 @@ import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.feature.history.destinations.ClearAllHistoryDialogDestination
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryGraph
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
-import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
@@ -153,14 +150,14 @@ private fun FavoriteContents(
                 .padding(contentPadding)
         )
     } else {
-        FileLazyVerticalGrid(
-            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
-            state = lazyGridState,
-            lazyPagingItems = lazyPagingItems,
-            onItemClick = { onAction(HistoryContentsAction.Book(it)) },
-            onItemInfoClick = { onAction(HistoryContentsAction.FileInfo(it)) },
-            contentPadding = contentPadding,
-            modifier = Modifier.fillMaxSize()
-        )
+//        FileLazyVerticalGrid(
+//            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
+//            state = lazyGridState,
+//            lazyPagingItems = lazyPagingItems,
+//            onItemClick = { onAction(HistoryContentsAction.Book(it)) },
+//            onItemInfoClick = { onAction(HistoryContentsAction.FileInfo(it)) },
+//            contentPadding = contentPadding,
+//            modifier = Modifier.fillMaxSize()
+//        )
     }
 }

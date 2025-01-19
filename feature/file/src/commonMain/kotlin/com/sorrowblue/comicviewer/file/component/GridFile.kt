@@ -24,22 +24,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
-import com.sorrowblue.comicviewer.feature.file.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import comicviewer.feature.file.generated.resources.Res
+import comicviewer.feature.file.generated.resources.file_desc_open_file_info
+import org.jetbrains.compose.resources.stringResource
+
 
 /**
  * ファイル情報をグリッドアイテムで表示する
@@ -89,7 +87,7 @@ fun GridFile(
             ) {
                 Icon(
                     imageVector = ComicIcons.MoreVert,
-                    contentDescription = stringResource(R.string.file_desc_open_file_info),
+                    contentDescription = stringResource(Res.string.file_desc_open_file_info),
                 )
             }
         }
@@ -161,24 +159,5 @@ private fun GridFileIcon(file: File) {
                     .padding(ComicTheme.dimension.margin)
             )
         }
-    }
-}
-
-@Preview(widthDp = 120, apiLevel = 34)
-@Preview(widthDp = 160, apiLevel = 34)
-@Preview(widthDp = 180, apiLevel = 34)
-@Preview(widthDp = 200, apiLevel = 34)
-@Composable
-internal fun PreviewFileGrid() {
-    PreviewTheme {
-        GridFile(
-            file = fakeBookFile(),
-            onClick = {},
-            onInfoClick = {},
-            showThumbnail = true,
-            fontSize = FolderDisplaySettingsDefaults.fontSize,
-            contentScale = ContentScale.Fit,
-            filterQuality = FilterQuality.None
-        )
     }
 }

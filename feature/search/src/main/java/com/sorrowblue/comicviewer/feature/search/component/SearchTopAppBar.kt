@@ -138,11 +138,11 @@ internal fun SearchTopAppBar(
                     Text(stringResource(it.displayText))
                 }
                 DropdownMenuChip(
-                    text = stringResource(searchCondition.sortType.displayText),
+                    text = "stringResource(searchCondition.sortType.displayText)",
                     onChangeSelect = { onAction(SearchTopAppBarAction.SortTypeClick(it)) },
                     menus = remember { SortType.entries }
                 ) {
-                    Text(stringResource(it.displayText))
+                    // Text(stringResource(it.displayText))
                 }
                 FilterChip(
                     selected = searchCondition.showHidden,
@@ -174,6 +174,7 @@ private val SearchCondition.Range.displayText
         is SearchCondition.Range.InFolder -> R.string.search_label_in_folder
         is SearchCondition.Range.SubFolder -> R.string.search_label_sub_folder
     }
+/*
 
 private val SortType.displayText
     get() = when (this) {
@@ -181,3 +182,4 @@ private val SortType.displayText
         is SortType.Name -> if (isAsc) FolderR.string.folder_sorttype_label_name_asc else FolderR.string.folder_sorttype_label_name_desc
         is SortType.Size -> if (isAsc) FolderR.string.folder_sorttype_label_size_asc else FolderR.string.folder_sorttype_label_size_desc
     }
+*/

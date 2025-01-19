@@ -3,7 +3,11 @@ package com.sorrowblue.comicviewer.feature.bookshelf.navgraph
 import androidx.navigation.NavController
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEdit
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
@@ -13,6 +17,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.Notificati
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionNavigator
+import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import kotlinx.serialization.Serializable
@@ -26,17 +31,41 @@ internal class BookshelfNavigation {
     @DestinationInGraph<Bookshelf>
     @DestinationInGraph<BookshelfDelete>
     @DestinationInGraph<BookshelfEdit>
+    @DestinationInGraph<BookshelfFolder>
     @DestinationInGraph<BookshelfSelection>
     companion object
 }
 
 @Factory
-internal class BookshelfNavGraphNavigator(val navController: NavController) :
+internal class BookshelfNavGraphNavigator(override val navController: NavController) :
     BookshelfScreenNavigator,
     BookshelfSelectionNavigator,
-    BookshelfEditScreenNavigator {
+    BookshelfEditScreenNavigator,
+    FolderScreenNavigator {
+
     override fun onSettingsClick() {
         TODO("Not yet implemented")
+    }
+
+    override fun onFileClick(file: File) {
+        when (file) {
+            is Book -> {
+//           TODO     onBookClick(file)
+            }
+
+            is Folder -> {
+                navController.navigate(
+                    BookshelfFolder(file.bookshelfId, file.path, null)
+                )
+            }
+        }
+    }
+
+    override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) {
+        // TODO onFavoriteClick(bookshelfId, path)
+    }
+    override fun onRestoreComplete() {
+        // TODO onRestoreComplete()
     }
 
     override fun onFabClick() {
@@ -44,7 +73,7 @@ internal class BookshelfNavGraphNavigator(val navController: NavController) :
     }
 
     override fun onBookshelfClick(bookshelfId: BookshelfId, path: String) {
-//        navController.navigate(BookshelfEdit(BookshelfEditMode.Edit(bookshelfId)))
+        navController.navigate(BookshelfFolder(bookshelfId, path, null))
     }
 
     override fun notificationRequest(type: ScanType) {
@@ -61,6 +90,10 @@ internal class BookshelfNavGraphNavigator(val navController: NavController) :
 
     override fun navigateUp() {
         navController.navigateUp()
+    }
+
+    override fun onSearchClick(bookshelfId: BookshelfId, path: String) {
+        TODO("Not yet implemented")
     }
 
     override fun onSourceClick(bookshelfType: BookshelfType) {

@@ -43,7 +43,7 @@ fun DependenciesContainerBuilder<*>.HistoryGraphDependencies(
                     destinationsNavigator.navigate(ClearAllHistoryDialogDestination)
                 }
 
-                override val navigator get() = destinationsNavigator
+                private val navigator get() = destinationsNavigator
 
                 override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) =
                     onFavoriteClick(bookshelfId, path)

@@ -68,7 +68,7 @@ internal fun FavoriteTopAppBar(
                     onClick = { onAction(FavoriteTopAppBarAction.Delete) }
                 )
                 OverflowMenuItem(
-                    text = stringResource(com.sorrowblue.comicviewer.feature.folder.R.string.folder_action_settings),
+                    text = "stringResource(com.sorrowblue.comicviewer.feature.folder.R.string.folder_action_settings)",
                     icon = ComicIcons.Settings,
                     onClick = { onAction(FavoriteTopAppBarAction.Settings) }
                 )

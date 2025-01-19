@@ -9,16 +9,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
-import com.sorrowblue.comicviewer.feature.file.R
-import com.sorrowblue.comicviewer.file.asDateTime
-import com.sorrowblue.comicviewer.file.asFileSize
+import comicviewer.feature.file.generated.resources.Res
+import comicviewer.feature.file.generated.resources.file_label_modified_date
+import comicviewer.feature.file.generated.resources.file_text_page_count
+import kotlin.math.pow
+import kotlin.math.roundToInt
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
@@ -44,7 +51,7 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
             colors = transparentColor
         )
         ListItem(
-            overlineContent = { Text(text = stringResource(R.string.file_label_modified_date)) },
+            overlineContent = { Text(text = stringResource(Res.string.file_label_modified_date)) },
             headlineContent = { Text(text = file.lastModifier.asDateTime) },
             colors = transparentColor
         )
@@ -54,8 +61,7 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
                 headlineContent = {
                     Text(
                         text = pluralStringResource(
-                            id = R.plurals.file_text_page_count,
-                            count = file.totalPageCount,
+                            Res.plurals.file_text_page_count,
                             file.totalPageCount
                         )
                     )
@@ -70,3 +76,31 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
         }
     }
 }
+
+val Long.asFileSize: String
+    get() {
+        var a = this / 1024f
+        return if (a < 1024) {
+            "${a.format()} KB"
+        } else {
+            a /= 1024f
+            if (a < 1024) {
+                "${a.format()} MB"
+            } else {
+                a /= 1024f
+                "${a.format()} GB"
+            }
+        }
+    }
+
+private fun Float.format(decimalPlaces: Int = 2): String {
+    val multiplier = 10.0.pow(decimalPlaces.toDouble())
+    return ((this * multiplier).roundToInt() / multiplier).toString()
+}
+
+val Long.asDateTime: String
+    get() = Instant.fromEpochMilliseconds(this)
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+        .format(LocalDateTime.Format {
+            // TODO
+        })

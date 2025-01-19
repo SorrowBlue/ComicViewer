@@ -16,6 +16,7 @@ kotlin {
                 implementation(projects.feature.bookshelf.info)
                 implementation(projects.feature.bookshelf.edit)
                 implementation(projects.feature.bookshelf.selection)
+                implementation(projects.feature.folder)
                 implementation(libs.androidx.paging.common)
             }
         }

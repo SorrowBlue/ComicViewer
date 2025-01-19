@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.file.component
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
@@ -14,9 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -25,13 +21,10 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.LazyPagingColumn
-import com.sorrowblue.comicviewer.framework.ui.adaptive.LazyPagingColumnType
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumnType
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 
 data class FileLazyVerticalGridUiState(
     val fileListDisplay: FileListDisplay = FolderDisplaySettingsDefaults.fileListDisplay,
@@ -169,22 +162,5 @@ fun rememberLazyPagingColumnType(
                 }.let(LazyPagingColumnType::Grid)
             }
         )
-    }
-}
-
-@PreviewMultiScreen
-@Composable
-private fun PreviewGridFileLazyGrid() {
-    val lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }.collectAsLazyPagingItems()
-    PreviewTheme {
-        Scaffold {
-            FileLazyVerticalGrid(
-                uiState = FileLazyVerticalGridUiState(),
-                lazyPagingItems = lazyPagingItems,
-                onItemClick = {},
-                onItemInfoClick = {},
-                contentPadding = it
-            )
-        }
     }
 }
