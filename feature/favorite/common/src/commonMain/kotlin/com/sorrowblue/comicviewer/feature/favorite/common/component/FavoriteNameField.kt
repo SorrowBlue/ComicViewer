@@ -5,11 +5,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.sorrowblue.comicviewer.feature.favorite.common.R
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import comicviewer.feature.favorite.common.generated.resources.Res
+import comicviewer.feature.favorite.common.generated.resources.favorite_common_label_favorite_name
+import comicviewer.feature.favorite.common.generated.resources.favorite_common_message_error
+import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Controller
 import soil.form.compose.FieldControl
 import soil.form.compose.FormScope
@@ -49,9 +51,9 @@ fun FormScope<String>.FavoriteNameField(
 
 @Composable
 private fun FormScope<String>.rememberNameFieldControl(): FieldControl<String> {
-    val notBlankMessage = stringResource(R.string.favorite_common_message_error)
+    val notBlankMessage = stringResource(Res.string.favorite_common_message_error)
     return rememberFieldRuleControl(
-        name = stringResource(R.string.favorite_common_label_favorite_name),
+        name = stringResource(Res.string.favorite_common_label_favorite_name),
         select = { this },
         update = { it }
     ) {

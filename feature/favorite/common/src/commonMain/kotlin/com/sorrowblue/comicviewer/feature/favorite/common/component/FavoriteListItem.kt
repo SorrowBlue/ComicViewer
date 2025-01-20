@@ -21,17 +21,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
-import com.sorrowblue.comicviewer.feature.favorite.common.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFavorite
+import comicviewer.feature.favorite.common.generated.resources.Res
+import comicviewer.feature.favorite.common.generated.resources.favorite_common_label_file_count
+import org.jetbrains.compose.resources.pluralStringResource
 
 @Composable
 fun FavoriteListItem(
@@ -118,9 +116,8 @@ private fun FavoriteListItem(
         },
         supportingContent = {
             Text(
-                pluralStringResource(
-                    id = R.plurals.favorite_common_label_file_count,
-                    count = favorite.count,
+                text = pluralStringResource(
+                    Res.plurals.favorite_common_label_file_count,
                     favorite.count
                 )
             )
@@ -128,20 +125,4 @@ private fun FavoriteListItem(
         trailingContent = content,
         modifier = modifier
     )
-}
-
-@PreviewLightDark
-@Composable
-private fun FavoriteItemPreview() {
-    PreviewTheme {
-        FavoriteListItem(fakeFavorite(), onClick = {})
-    }
-}
-
-@PreviewLightDark
-@Composable
-private fun FavoriteItemCardPreview() {
-    PreviewTheme {
-        FavoriteListCardItem(fakeFavorite(), onClick = {})
-    }
 }
