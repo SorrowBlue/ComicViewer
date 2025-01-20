@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
+import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolderScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEdit
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
@@ -17,11 +18,10 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.Notificati
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionNavigator
-import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Single
 
 @Serializable
 data object BookshelfNavGraph
@@ -44,14 +44,14 @@ interface BookshelfNavGraphNavigator {
     fun onSearchClick(bookshelfId: BookshelfId, path: String)
 }
 
-@Factory
+@Single
 internal class BookshelfNavGraphNavigatorImpl(
     val navigator: BookshelfNavGraphNavigator,
     override val navController: NavController,
 ) : BookshelfScreenNavigator,
     BookshelfSelectionNavigator,
     BookshelfEditScreenNavigator,
-    FolderScreenNavigator {
+    BookshelfFolderScreenNavigator {
 
     override fun onSettingsClick() {
         navigator.onSettingsClick()

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_label_bookshelf">Bookshelf</string>
+    <string name="app_label_favorite">Favorite</string>
+    <string name="app_label_read_later">Read Later</string>
+    <string name="app_label_library">Library</string>
+</resources>

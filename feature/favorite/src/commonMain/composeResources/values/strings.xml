@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorite_action_delete">Delete</string>
+    <string name="favorite_label_no_favorites">No favorites</string>
+    <string name="favorite_list_label_no_favorites">Favorites list is empty</string>
+    <string name="favorite_title_edit">Edit</string>
+    <string name="favorite_title_list">Favorite</string>
+    <string name="favorite_btn_create">Create</string>
+</resources>

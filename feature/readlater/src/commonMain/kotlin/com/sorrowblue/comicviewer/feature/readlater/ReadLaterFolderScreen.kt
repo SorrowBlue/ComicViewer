@@ -18,11 +18,13 @@ data class ReadLaterFolder(
     override val restorePath: String?,
 ) : Folder
 
+internal interface ReadLaterFolderScreenNavigator : FolderScreenNavigator
+
 @Destination<ReadLaterFolder>
 @Composable
 internal fun ReadLaterFolderScreen(
     route: ReadLaterFolder,
-    navigator: FolderScreenNavigator,
+    navigator: ReadLaterFolderScreenNavigator,
     sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
 ) {
     FolderScreen(

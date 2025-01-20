@@ -11,13 +11,14 @@ kotlin {
                 implementation(projects.framework.ui)
                 implementation(projects.domain.model)
                 implementation(projects.domain.usecase)
-                implementation(libs.androidx.paging.common)
                 api(libs.soil.form)
             }
         }
     }
 }
-
+compose.resources {
+    publicResClass = true
+}
 android {
     namespace = "com.sorrowblue.comicviewer.feature.favorite.common"
     resourcePrefix("favorite_common")

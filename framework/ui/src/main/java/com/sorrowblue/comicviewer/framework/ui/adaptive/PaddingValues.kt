@@ -18,44 +18,6 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCanonica
 import kotlin.math.max
 
 @Composable
-fun PaddingValues.copyWhenZero(
-    skipStart: Boolean = false,
-    skipTop: Boolean = false,
-    skipEnd: Boolean = false,
-    skipBottom: Boolean = false,
-): PaddingValues {
-    val start = calculateStartPadding(LocalLayoutDirection.current).let { startPadding ->
-        when {
-            skipStart -> startPadding
-            startPadding > ZeroDP -> startPadding
-            else -> ComicTheme.dimension.margin
-        }
-    }
-    val top = calculateTopPadding().let { topPadding ->
-        when {
-            skipTop -> topPadding
-            topPadding > ZeroDP -> topPadding
-            else -> ComicTheme.dimension.margin
-        }
-    }
-    val end = calculateEndPadding(LocalLayoutDirection.current).let { endPadding ->
-        when {
-            skipEnd -> endPadding
-            endPadding > ZeroDP -> endPadding
-            else -> ComicTheme.dimension.margin
-        }
-    }
-    val bottom = calculateBottomPadding().let { bottomPadding ->
-        when {
-            skipBottom -> bottomPadding
-            bottomPadding > ZeroDP -> bottomPadding
-            else -> ComicTheme.dimension.margin
-        }
-    }
-    return PaddingValues(start, top, end, bottom)
-}
-
-@Composable
 fun animateMainContentPaddingValues(
     ignore: Boolean = false,
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,

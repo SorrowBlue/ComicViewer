@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 
 @PreviewLightDark
 @Composable
-private fun PreviewFileList(
+private fun FileListPreview(
     @PreviewParameter(BooleanProvider::class) showThumbnail: Boolean,
 ) {
     PreviewTheme {
@@ -30,7 +30,7 @@ private fun PreviewFileList(
 
 @PreviewLightDark
 @Composable
-private fun PreviewFileListCard(
+private fun FileListCardPreview(
     @PreviewParameter(BooleanProvider::class) showThumbnail: Boolean,
 ) {
     PreviewTheme {

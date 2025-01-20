@@ -7,8 +7,8 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.readlater.ReadLater
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterFolder
+import com.sorrowblue.comicviewer.feature.readlater.ReadLaterFolderScreenNavigator
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreenNavigator
-import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import kotlinx.serialization.Serializable
@@ -28,7 +28,7 @@ interface ReadLaterNavGraphNavigator {
 internal class ReadLaterNavGraphNavigatorImpl(
     override val navController: NavController,
     private val navigator: ReadLaterNavGraphNavigator,
-) : ReadLaterScreenNavigator, FolderScreenNavigator {
+) : ReadLaterScreenNavigator, ReadLaterFolderScreenNavigator {
     override fun navigateUp() {
         navController.navigateUp()
     }

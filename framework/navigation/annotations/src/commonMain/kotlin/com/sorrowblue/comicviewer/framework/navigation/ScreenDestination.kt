@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.framework.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
@@ -18,6 +17,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.get
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 import org.koin.compose.module.rememberKoinModules
 import org.koin.compose.scope.KoinScope
@@ -60,6 +60,9 @@ fun navigationModule(navController: NavHostController): Module {
     return module { single<NavController> { navController } }
 }
 
+@Serializable
+data object Root
+
 @Suppress("OPT_IN_USAGE")
 @Composable
 fun NavGraphNavHost(
@@ -77,6 +80,7 @@ fun NavGraphNavHost(
         startDestination = navGraph.startDestination,
         modifier = modifier,
         contentAlignment = contentAlignment,
+        route = Root::class
     ) {
         navGraph.nestedNavGraphs.forEach {
             navGraphNavigation(it, isCompact)
@@ -135,7 +139,7 @@ private fun NavGraphBuilder.addComposable(screenDestination: ScreenDestination<*
             screenDestination.route,
             screenDestination.typeMap
         ) {
-            KoinScope<Unit>(screenDestination::class.qualifiedName!!) {
+            KoinScope<Unit>(screenDestination.route::class.qualifiedName!!) {
                 with(screenDestination) {
                     it.Content()
                 }
@@ -153,7 +157,7 @@ private fun NavGraphBuilder.addDialog(screenDestination: ScreenDestination<*>) {
             typeMap = screenDestination.typeMap,
             dialogProperties = DialogProperties(),
         ) {
-            KoinScope<Unit>(screenDestination::class.qualifiedName!!) {
+            KoinScope<Unit>(screenDestination.route::class.qualifiedName!!) {
                 with(screenDestination) {
                     it.Content()
                 }

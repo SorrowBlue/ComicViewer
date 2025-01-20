@@ -1,5 +1,4 @@
 import com.sorrowblue.comicviewer.id
-import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.kotlin
 import com.sorrowblue.comicviewer.ksp
 import com.sorrowblue.comicviewer.libs
@@ -7,7 +6,6 @@ import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getValue
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
@@ -24,7 +22,7 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
                     implementation(project.dependencies.platform(libs.koin.bom))
                     implementation(libs.koin.core)
 
-                    implementation(libs.koin.annotations)
+                    api(libs.koin.annotations)
                 }
 
                 sourceSets.commonMain.configure {

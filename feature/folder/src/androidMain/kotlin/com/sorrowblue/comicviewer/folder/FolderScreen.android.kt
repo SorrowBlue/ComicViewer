@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowEmptyData
 
 @Preview
 @Composable
-private fun PreviewFolderScreen() {
+private fun FolderScreenPreview() {
     val pagingDataFlow = PagingData.flowData<File> {
         fakeBookFile(it)
     }
@@ -33,7 +33,7 @@ private fun PreviewFolderScreen() {
 
 @Preview
 @Composable
-private fun PreviewFolderScreenEmpty() {
+private fun FolderScreenEmptyPreview() {
     val pagingDataFlow = PagingData.flowEmptyData<File>()
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {

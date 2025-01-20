@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CompliantNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.calculateFromAdaptiveInfo2
+import org.jetbrains.compose.resources.stringResource
 
 internal data class ComicViewerScaffoldUiState(
     val currentTab: MainScreenTab? = null,
@@ -38,8 +39,13 @@ internal fun ComicViewerScaffold(
                 item(
                     selected = it == uiState.currentTab,
                     onClick = { onTabSelect(it) },
-                    icon = { Icon(imageVector = it.icon, contentDescription = it.label) },
-                    label = { Text(text = it.label) }
+                    icon = {
+                        Icon(
+                            imageVector = it.icon,
+                            contentDescription = stringResource(it.label)
+                        )
+                    },
+                    label = { Text(text = stringResource(it.label)) }
                 )
             }
         },

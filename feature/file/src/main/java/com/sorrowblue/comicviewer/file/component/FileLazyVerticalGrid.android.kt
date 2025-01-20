@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
 @PreviewMultiScreen
 @Composable
-private fun PreviewGridFileLazyGrid() {
+private fun GridFileLazyGridPreview() {
     val lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }.collectAsLazyPagingItems()
     PreviewTheme {
         Scaffold {

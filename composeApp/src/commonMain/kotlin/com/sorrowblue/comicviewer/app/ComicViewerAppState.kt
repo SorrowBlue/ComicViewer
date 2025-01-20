@@ -66,25 +66,25 @@ private class ComicViewerAppStateImpl(
     override var uiState: ComicViewerScaffoldUiState by mutableStateOf(ComicViewerScaffoldUiState())
         private set
 
-    override val events =  EventFlow<ComicViewerAppEvent>()
+    override val events = EventFlow<ComicViewerAppEvent>()
+
 
     init {
-        uiState = uiState.copy(currentTab = MainScreenTab.Bookshelf(""))
-//        navController.currentBackStackEntryFlow.onEach { backStackEntry ->
-//            val hierarchy = backStackEntry.destination.hierarchy
-//            val currentTab = MainScreenTab.entries.find { tab ->
-//                hierarchy.any { it.hasRoute(tab.navGraph::class) }
-//            }
-//            uiState = uiState.copy(currentTab = currentTab)
-//            logcat {
-//                "destination.hierarchy=${
-//                    hierarchy.joinToString(",") {
-//                        it.route?.split('/')?.firstOrNull().orEmpty().ifEmpty { "null" }
-//                    }
-//                }"
-//            }
-//        }.flowWithLifecycle(lifecycle)
-//            .launchIn(scope)
+        navController.currentBackStackEntryFlow.onEach { backStackEntry ->
+            val hierarchy = backStackEntry.destination.hierarchy
+            logcat {
+                "destination.hierarchy=${
+                    hierarchy.joinToString(",") {
+                        it.route?.split('/')?.firstOrNull().orEmpty().ifEmpty { "null" }
+                    }
+                }"
+            }
+            val currentTab = MainScreenTab.entries.find { tab ->
+                hierarchy.any { it.hasRoute(tab.navGraph::class) }
+            }
+            uiState = uiState.copy(currentTab = currentTab)
+        }.flowWithLifecycle(lifecycle)
+            .launchIn(scope)
     }
 
     override fun onTabSelect(tab: MainScreenTab) {
@@ -93,16 +93,15 @@ private class ComicViewerAppStateImpl(
         if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.hasRoute(navGraph::class) } == true) {
 //            navTabHandler.click.tryEmit(Unit)
         } else {
-            uiState = uiState.copy(currentTab = tab)
             events.tryEmit(
                 ComicViewerAppEvent.Navigate(
                     navGraph,
                     navOptions {
-//                        popUpTo(navController.graph.findStartDestination().id) {
-//                            saveState = true
-//                        }
-//                        launchSingleTop = true
-//                        restoreState = true
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
                     }
                 )
             )

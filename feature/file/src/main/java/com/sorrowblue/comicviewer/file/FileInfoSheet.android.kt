@@ -18,7 +18,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalSc
 
 @PreviewMultiScreen
 @Composable
-private fun PreviewFileInfoSheet(
+private fun FileInfoSheetPreview(
     @PreviewParameter(FileInfoUiStateProvider::class) uiState: FileInfoUiState,
 ) {
     PreviewCanonicalScaffold(

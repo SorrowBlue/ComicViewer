@@ -18,11 +18,13 @@ data class BookshelfFolder(
     override val restorePath: String?,
 ) : Folder
 
+internal interface BookshelfFolderScreenNavigator : FolderScreenNavigator
+
 @Destination<BookshelfFolder>
 @Composable
 internal fun BookshelfFolderScreen(
     route: BookshelfFolder,
-    navigator: FolderScreenNavigator,
+    navigator: BookshelfFolderScreenNavigator,
     sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
 ) {
     FolderScreen(
