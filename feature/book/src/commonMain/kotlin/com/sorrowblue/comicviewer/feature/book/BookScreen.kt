@@ -58,7 +58,7 @@ data class Book(
 @Composable
 internal fun BookScreen(route: Book, navigator: BookScreenNavigator) {
     BookScreen(
-        args = route,
+        route = route,
         onBackClick = navigator::navigateUp,
         onSettingsClick = navigator::onSettingsClick,
         onNextBookClick = navigator::onNextBookClick,
@@ -68,12 +68,12 @@ internal fun BookScreen(route: Book, navigator: BookScreenNavigator) {
 
 @Composable
 private fun BookScreen(
-    args: Book,
+    route: Book,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onNextBookClick: (BookFile, FavoriteId) -> Unit,
     onContainerLongClick: () -> Unit,
-    loadingState: BookLoadingScreenState = rememberBookLoadingScreenState(args = args),
+    loadingState: BookLoadingScreenState = rememberBookLoadingScreenState(route = route),
 ) {
     when (val uiState = loadingState.uiState) {
         is BookScreenUiState.Loading ->
@@ -89,7 +89,7 @@ private fun BookScreen(
                 pagerState = state.pagerState,
                 currentList = state.currentList,
                 onBackClick = onBackClick,
-                onNextBookClick = { onNextBookClick(it, args.favoriteId) },
+                onNextBookClick = { onNextBookClick(it, route.favoriteId) },
                 onContainerClick = state::toggleTooltip,
                 onContainerLongClick = onContainerLongClick,
                 onPageChange = state::onPageChange,

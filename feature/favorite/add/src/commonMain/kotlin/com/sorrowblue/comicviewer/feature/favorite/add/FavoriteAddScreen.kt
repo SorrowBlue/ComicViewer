@@ -24,6 +24,7 @@ import com.sorrowblue.comicviewer.feature.favorite.add.section.RecentFavoriteShe
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteListItem
 import com.sorrowblue.comicviewer.framework.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
@@ -39,7 +40,7 @@ interface FavoriteAddScreenNavigator {
     fun navigateToCreateFavorite(bookshelfId: BookshelfId, path: String)
 }
 
-@Destination<FavoriteAdd>
+@Destination<FavoriteAdd>(style = DestinationStyle.Dialog::class)
 @Composable
 internal fun FavoriteAddDialogScreen(
     route: FavoriteAdd,

@@ -19,6 +19,10 @@ kotlin {
     }
 }
 
+compose.resources {
+    publicResClass = true
+}
+
 android {
     namespace = "com.sorrowblue.comicviewer.feature.folder"
     resourcePrefix("folder")

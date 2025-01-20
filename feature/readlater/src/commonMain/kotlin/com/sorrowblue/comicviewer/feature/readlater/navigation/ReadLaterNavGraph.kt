@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreenNavigator
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Singleton
 
 @Serializable
 data object ReadLaterNavGraph
@@ -24,7 +24,7 @@ interface ReadLaterNavGraphNavigator {
     fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
 }
 
-@Factory(binds = [ReadLaterScreenNavigator::class])
+@Singleton
 internal class ReadLaterNavGraphNavigatorImpl(
     override val navController: NavController,
     private val navigator: ReadLaterNavGraphNavigator,

@@ -20,7 +20,6 @@ import kotlin.reflect.KType
 import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 import org.koin.compose.module.rememberKoinModules
-import org.koin.compose.scope.KoinScope
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -120,7 +119,6 @@ fun NavGraphBuilder.screenDestination(
         DestinationStyle.Dialog ->
             addDialog(screenDestination = screenDestination)
 
-
         DestinationStyle.Auto -> {
             if (isCompact) {
                 addComposable(screenDestination)
@@ -139,10 +137,9 @@ private fun NavGraphBuilder.addComposable(screenDestination: ScreenDestination<*
             screenDestination.route,
             screenDestination.typeMap
         ) {
-            KoinScope<Unit>(screenDestination.route::class.qualifiedName!!) {
-                with(screenDestination) {
-                    it.Content()
-                }
+            rememberKoinModules { listOf(module { single { screenDestination.typeMap } }) }
+            with(screenDestination) {
+                it.Content()
             }
         }
     )
@@ -157,10 +154,9 @@ private fun NavGraphBuilder.addDialog(screenDestination: ScreenDestination<*>) {
             typeMap = screenDestination.typeMap,
             dialogProperties = DialogProperties(),
         ) {
-            KoinScope<Unit>(screenDestination.route::class.qualifiedName!!) {
-                with(screenDestination) {
-                    it.Content()
-                }
+            rememberKoinModules { listOf(module { single { screenDestination.typeMap } }) }
+            with(screenDestination) {
+                it.Content()
             }
         }
     )

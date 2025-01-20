@@ -6,15 +6,9 @@ import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphDependencies
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfGraphDependencies
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
-import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddDialogScreenDestination
-import com.sorrowblue.comicviewer.feature.favorite.create.destinations.FavoriteCreateDialogScreenDestination
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGraphDependencies
-import com.sorrowblue.comicviewer.feature.search.SearchArgs
-import com.sorrowblue.comicviewer.feature.search.navgraphs.SearchNavGraph
-import com.sorrowblue.comicviewer.feature.search.navigation.SearchGraphDependencies
 import com.sorrowblue.comicviewer.feature.settings.navgraphs.SettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraphDependencies
 import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
@@ -46,10 +40,10 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
 //        )
         }
     val onFavoriteClick = { bookshelfId: BookshelfId, path: String ->
-        destinationsNavigator.navigate(FavoriteAddDialogScreenDestination(bookshelfId, path))
+//        destinationsNavigator.navigate(FavoriteAddDialogScreenDestination(bookshelfId, path))
     }
     val onSearchClick = { bookshelfId: BookshelfId, path: String ->
-        destinationsNavigator.navigate(SearchNavGraph(SearchArgs(bookshelfId, path)))
+//        destinationsNavigator.navigate(SearchNavGraph(Search(bookshelfId, path)))
     }
 
     dependency(object : FavoriteAddScreenNavigator {
@@ -59,9 +53,9 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
 
         override fun navigateToCreateFavorite(bookshelfId: BookshelfId, path: String) {
             destinationsNavigator.navigateUp()
-            destinationsNavigator.navigate(
-                FavoriteCreateDialogScreenDestination(bookshelfId, path)
-            )
+//            destinationsNavigator.navigate(
+//                FavoriteCreateDialogScreenDestination(bookshelfId, path)
+//            )
         }
     })
 
@@ -71,7 +65,7 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
         onBookClick = { onBookClick(it, null) },
         onFavoriteClick = onFavoriteClick,
         onSearchClick = { bookshelfId, path ->
-            destinationsNavigator.navigate(SearchNavGraph(SearchArgs(bookshelfId, path)))
+//            destinationsNavigator.navigate(SearchNavGraph(Search(bookshelfId, path)))
         },
         onRestoreComplete = onRestoreComplete,
         onSettingsClick = onSettingsClick
@@ -84,22 +78,22 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
 //        onSettingsClick = onSettingsClick
 //    )
 
-    SearchGraphDependencies(
-        onBookClick = { onBookClick(it, null) },
-        onFavoriteClick = onFavoriteClick,
-        onSearchClick = onSearchClick,
-        onSettingsClick = onSettingsClick
-    )
-
-    FavoriteGraphDependencies(
-        onBookClick = onBookClick,
-        onFavoriteClick = onFavoriteClick,
-        onSearchClick = onSearchClick,
-        onSettingsClick = onSettingsClick,
-        onNewFavoriteClick = {
-            destinationsNavigator.navigate(FavoriteCreateDialogScreenDestination())
-        }
-    )
+//    SearchGraphDependencies(
+//        onBookClick = { onBookClick(it, null) },
+//        onFavoriteClick = onFavoriteClick,
+//        onSearchClick = onSearchClick,
+//        onSettingsClick = onSettingsClick
+//    )
+//
+//    FavoriteGraphDependencies(
+//        onBookClick = onBookClick,
+//        onFavoriteClick = onFavoriteClick,
+//        onSearchClick = onSearchClick,
+//        onSettingsClick = onSettingsClick,
+//        onNewFavoriteClick = {
+//            destinationsNavigator.navigate(FavoriteCreateDialogScreenDestination())
+//        }
+//    )
 
     SettingsGraphDependencies(
         onStartTutorialClick = {

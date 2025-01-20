@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
@@ -23,16 +22,16 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySet
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBarAction
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
+import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface SearchScreenEvent {
     data object Back : SearchScreenEvent
@@ -43,10 +42,9 @@ internal sealed interface SearchScreenEvent {
 }
 
 @Stable
-internal interface SearchScreenState :
-    SaveableScreenState,
-    ScreenStateEvent<SearchScreenEvent> {
+internal interface SearchScreenState : SaveableScreenState {
     val lazyGridState: LazyGridState
+    val events: EventFlow<SearchScreenEvent>
     val uiState: SearchScreenUiState
     val lazyPagingItems: Flow<PagingData<File>>
     var isSkipFirstRefresh: Boolean
@@ -79,12 +77,12 @@ private class SearchScreenStateImpl(
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<File.Key>,
-    override val scope: CoroutineScope,
     override val lazyGridState: LazyGridState,
+    private val scope: CoroutineScope,
     private val viewModel: SearchViewModel,
 ) : SearchScreenState {
 
-    override val event = MutableSharedFlow<SearchScreenEvent>()
+    override val events = EventFlow<SearchScreenEvent>()
     override val lazyPagingItems = viewModel.pagingDataFlow
 
     override var uiState by savedStateHandle.saveable(stateSaver = SearchScreenUiState.Saver) {
@@ -120,7 +118,7 @@ private class SearchScreenStateImpl(
 
     override fun onSearchTopAppBarAction(action: SearchTopAppBarAction) {
         when (action) {
-            SearchTopAppBarAction.BackClick -> sendEvent(SearchScreenEvent.Back)
+            SearchTopAppBarAction.BackClick -> events.tryEmit(SearchScreenEvent.Back)
             is SearchTopAppBarAction.PeriodClick ->
                 uiState = copySearchCondition { it.copy(period = action.period) }
 
@@ -149,7 +147,7 @@ private class SearchScreenStateImpl(
             is SearchTopAppBarAction.ShowHiddenClick ->
                 uiState = copySearchCondition { it.copy(showHidden = action.value) }
 
-            SearchTopAppBarAction.Settings -> sendEvent(SearchScreenEvent.Settings)
+            SearchTopAppBarAction.Settings -> events.tryEmit(SearchScreenEvent.Settings)
         }
         update()
     }
@@ -167,19 +165,19 @@ private class SearchScreenStateImpl(
             }
 
             is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
-                sendEvent(SearchScreenEvent.Favorite(it.bookshelfId, it.path))
+                events.tryEmit(SearchScreenEvent.Favorite(it.bookshelfId, it.path))
             }
 
             is FileInfoSheetNavigator.OpenFolder ->
                 navigator.currentDestination?.contentKey?.let {
-                    sendEvent(SearchScreenEvent.OpenFolder(it.bookshelfId, it.parent))
+                    events.tryEmit(SearchScreenEvent.OpenFolder(it.bookshelfId, it.parent))
                 }
         }
     }
 
     override fun onSearchContentsAction(action: SearchContentsAction) {
         when (action) {
-            is SearchContentsAction.File -> sendEvent(SearchScreenEvent.File(action.file))
+            is SearchContentsAction.File -> events.tryEmit(SearchScreenEvent.File(action.file))
             is SearchContentsAction.FileInfo -> scope.launch {
                 navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file.key())
             }

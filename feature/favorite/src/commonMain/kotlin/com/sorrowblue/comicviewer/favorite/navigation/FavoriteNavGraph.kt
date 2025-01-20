@@ -26,13 +26,14 @@ data object FavoriteNavGraph
 internal annotation class FavoriteNavigation {
 
     @DestinationInGraph<Favorite>
+    @DestinationInGraph<FavoriteFolder>
     @DestinationInGraph<FavoriteEdit>
     @DestinationInGraph<FavoriteList>
     companion object
 }
 
 interface FavoriteNavGraphNavigator {
-    fun onBookClick(file: Book, favoriteId: FavoriteId?)
+    fun onBookClick(file: Book, favoriteId: FavoriteId = FavoriteId())
     fun onNewFavoriteClick()
     fun onSettingsClick()
     fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
@@ -98,7 +99,7 @@ internal class FavoriteNavGraphNavigatorImpl(
 
     override fun onFileClick(file: File) {
         when (file) {
-            is Book -> navigator.onBookClick(file, null)
+            is Book -> navigator.onBookClick(file)
             is Folder -> navController.navigate(FavoriteFolder(file.bookshelfId, file.path, null))
         }
     }

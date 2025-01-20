@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.search
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
@@ -11,32 +10,24 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBar
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBarAction
-import com.sorrowblue.comicviewer.feature.search.navigation.SearchGraph
-import com.sorrowblue.comicviewer.feature.search.navigation.SearchGraphTransitions
 import com.sorrowblue.comicviewer.feature.search.section.SearchContents
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsAction
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsUiState
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
+import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
-import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
 import kotlinx.coroutines.delay
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 interface SearchScreenNavigator {
@@ -44,24 +35,18 @@ interface SearchScreenNavigator {
     fun onFileClick(file: File)
     fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
     fun onOpenFolderClick(bookshelfId: BookshelfId, parent: String)
-    fun onNavigateSettings()
+    fun onSettingsClick()
 }
 
-data class SearchArgs(val bookshelfId: BookshelfId, val path: String)
+@Serializable
+data class Search(val bookshelfId: BookshelfId, val path: String)
 
-@Destination<SearchGraph>(
-    start = true,
-    navArgs = SearchArgs::class,
-    style = SearchGraphTransitions::class,
-    visibility = CodeGenVisibility.INTERNAL
-)
+@Destination<Search>
 @Composable
-internal fun SearchScreen(navigator: SearchScreenNavigator) {
-    SearchScreen(navigator = navigator, state = rememberSearchScreenState())
-}
-
-@Composable
-internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenState) {
+internal fun SearchScreen(
+    navigator: SearchScreenNavigator,
+    state: SearchScreenState = rememberSearchScreenState(),
+) {
     val lazyPagingItems = state.lazyPagingItems.collectAsLazyPagingItems()
     SearchScreen(
         uiState = state.uiState,
@@ -74,7 +59,7 @@ internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenS
     )
 
     val currentNavigator by rememberUpdatedState(navigator)
-    LaunchedEventEffect(state.event) {
+    EventEffect(state.events) {
         when (it) {
             is SearchScreenEvent.Favorite ->
                 currentNavigator.onFavoriteClick(it.bookshelfId, it.path)
@@ -84,7 +69,7 @@ internal fun SearchScreen(navigator: SearchScreenNavigator, state: SearchScreenS
 
             SearchScreenEvent.Back -> currentNavigator.navigateUp()
             is SearchScreenEvent.File -> currentNavigator.onFileClick(it.file)
-            SearchScreenEvent.Settings -> currentNavigator.onNavigateSettings()
+            SearchScreenEvent.Settings -> currentNavigator.onSettingsClick()
         }
     }
 
@@ -122,7 +107,7 @@ internal data class SearchScreenUiState(
 }
 
 @Composable
-private fun SearchScreen(
+internal fun SearchScreen(
     uiState: SearchScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     navigator: ThreePaneScaffoldNavigator<File.Key>,
@@ -162,21 +147,3 @@ private fun SearchScreen(
 }
 
 private const val WaitLoadPage = 350L
-
-@PreviewMultiScreen
-@Composable
-private fun SearchScreenPreview() {
-    PreviewCompliantNavigation {
-        val pagingDataFlow = PagingData.flowData<File> { fakeBookFile(it) }
-        val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
-        SearchScreen(
-            uiState = SearchScreenUiState(),
-            lazyPagingItems = lazyPagingItems,
-            navigator = rememberCanonicalScaffoldNavigator(),
-            lazyGridState = rememberLazyGridState(),
-            onSearchTopAppBarAction = {},
-            onFileInfoSheetAction = {},
-            onSearchContentsAction = {}
-        )
-    }
-}

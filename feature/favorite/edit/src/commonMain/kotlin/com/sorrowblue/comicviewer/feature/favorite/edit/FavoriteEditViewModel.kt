@@ -7,27 +7,24 @@ import androidx.navigation.NavType
 import androidx.navigation.toRoute
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.usecase.favorite.GetFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.RemoveFavoriteFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.favorite.UpdateFavoriteUseCase
 import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFavoriteFileUseCase
-import com.sorrowblue.comicviewer.framework.navigation.kSerializableType
-import kotlin.reflect.typeOf
+import kotlin.reflect.KType
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 internal class FavoriteEditViewModel(
     savedStateHandle: SavedStateHandle,
+    typeMap: Map<KType, NavType<*>>,
     pagingFavoriteFileUseCase: PagingFavoriteFileUseCase,
     val getFavoriteUseCase: GetFavoriteUseCase,
     val removeFavoriteFileUseCase: RemoveFavoriteFileUseCase,
     val updateFavoriteUseCase: UpdateFavoriteUseCase,
 ) : ViewModel() {
 
-    private val args = savedStateHandle.toRoute<FavoriteEdit>(mapOf(
-        typeOf<FavoriteId>() to NavType.kSerializableType<FavoriteId>()
-    ))
+    private val args = savedStateHandle.toRoute<FavoriteEdit>(typeMap)
 
     val pagingDataFlow = pagingFavoriteFileUseCase(
         PagingFavoriteFileUseCase.Request(PagingConfig(20), args.favoriteId)

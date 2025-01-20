@@ -22,42 +22,42 @@ internal interface BookLoadingScreenState {
 
 @Composable
 internal fun rememberBookLoadingScreenState(
-    args: Book,
+    route: Book,
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: BookViewModel = koinViewModel(),
 ): BookLoadingScreenState = remember {
     BookLoadingScreenStateImpl(
-        args = args,
+        route = route,
         scope = scope,
         viewModel = viewModel
     )
 }
 
 private class BookLoadingScreenStateImpl(
-    args: Book,
+    route: Book,
     scope: CoroutineScope,
     viewModel: BookViewModel,
 ) : BookLoadingScreenState {
 
-    override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(args.name))
+    override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(route.name))
         private set
 
     init {
-        viewModel.getBookUseCase(GetBookUseCase.Request(args.bookshelfId, args.path)).onEach {
+        viewModel.getBookUseCase(GetBookUseCase.Request(route.bookshelfId, route.path)).onEach {
             uiState = when (it) {
                 is Resource.Success ->
                     BookScreenUiState.Loaded(
                         it.data,
-                        args.favoriteId,
+                        route.favoriteId,
                         BookSheetUiState(it.data)
                     )
 
                 is Resource.Error -> when (it.error) {
                     GetBookUseCase.Error.NotFound ->
-                        BookScreenUiState.Error(args.name)
+                        BookScreenUiState.Error(route.name)
 
                     GetBookUseCase.Error.ReportedSystemError ->
-                        BookScreenUiState.Error(args.name)
+                        BookScreenUiState.Error(route.name)
                 }
             }
         }.launchIn(scope)

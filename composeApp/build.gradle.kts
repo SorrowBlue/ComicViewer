@@ -34,6 +34,7 @@ kotlin {
                 implementation(projects.feature.favorite)
                 implementation(projects.feature.favorite.add)
                 implementation(projects.feature.favorite.create)
+                implementation(projects.feature.search)
 
                 implementation(compose.material3)
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha01")
@@ -63,7 +64,6 @@ kotlin {
                 implementation(projects.data.di)
                 implementation(projects.domain.usecase)
                 implementation(projects.feature.authentication)
-                implementation(projects.feature.search)
                 implementation(projects.feature.settings)
                 implementation(projects.feature.settings.security)
                 implementation(projects.feature.tutorial)

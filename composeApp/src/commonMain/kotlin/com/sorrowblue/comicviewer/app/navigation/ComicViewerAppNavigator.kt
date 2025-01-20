@@ -7,26 +7,37 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAdd
+import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
 import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreate
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
+import com.sorrowblue.comicviewer.feature.search.Search
+import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
 import org.koin.core.annotation.Factory
+import com.sorrowblue.comicviewer.feature.book.Book as BookRoute
 
 @Factory
 internal class ComicViewerAppNavigator(
     private val navController: NavController,
-) : BookshelfNavGraphNavigator, ReadLaterNavGraphNavigator, FavoriteNavGraphNavigator {
-    override fun onBookClick(book: Book) {
-        navController.navigate(
-            com.sorrowblue.comicviewer.feature.book.Book(
-                book.bookshelfId,
-                book.path,
-                book.name
-            )
-        )
+) : BookshelfNavGraphNavigator,
+    ReadLaterNavGraphNavigator,
+    FavoriteNavGraphNavigator,
+    SearchNavGraphNavigator,
+    FavoriteAddScreenNavigator {
+
+    override fun navigateToCreateFavorite(bookshelfId: BookshelfId, path: String) {
+        navController.navigate(FavoriteCreate(bookshelfId, path))
     }
 
-    override fun onBookClick(file: Book, favoriteId: FavoriteId?) {
-        TODO("Not yet implemented")
+    override fun navigateUp() {
+        navController.navigateUp()
+    }
+
+    override fun onBookClick(book: Book) {
+        navController.navigate(BookRoute(book.bookshelfId, book.path, book.name))
+    }
+
+    override fun onBookClick(book: Book, favoriteId: FavoriteId) {
+        navController.navigate(BookRoute(book.bookshelfId, book.path, book.name, favoriteId))
     }
 
     override fun onNewFavoriteClick() {
@@ -46,6 +57,6 @@ internal class ComicViewerAppNavigator(
     }
 
     override fun onSearchClick(bookshelfId: BookshelfId, path: String) {
-        TODO("Not yet implemented")
+        navController.navigate(Search(bookshelfId, path))
     }
 }
