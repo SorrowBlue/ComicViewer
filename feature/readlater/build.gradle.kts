@@ -14,6 +14,7 @@ kotlin {
                 implementation(projects.domain.usecase)
                 implementation(projects.feature.file)
                 implementation(projects.feature.folder)
+                implementation(libs.androidx.paging.common)
             }
         }
     }

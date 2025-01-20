@@ -30,6 +30,7 @@ kotlin {
                 implementation(projects.feature.bookshelf)
                 implementation(projects.feature.bookshelf.info)
                 implementation(projects.feature.book)
+                implementation(projects.feature.readlater)
 
                 implementation(compose.material3)
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha01")
@@ -61,10 +62,8 @@ kotlin {
                 implementation(projects.feature.authentication)
                 implementation(projects.feature.bookshelf)
                 implementation(projects.feature.favorite)
-                implementation(projects.feature.folder)
                 implementation(projects.feature.favorite.add)
                 implementation(projects.feature.favorite.create)
-                implementation(projects.feature.readlater)
                 implementation(projects.feature.search)
                 implementation(projects.feature.settings)
                 implementation(projects.feature.settings.security)

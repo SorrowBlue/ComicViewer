@@ -6,11 +6,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import com.sorrowblue.comicviewer.feature.readlater.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalTopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
+import comicviewer.feature.readlater.generated.resources.Res
+import comicviewer.feature.readlater.generated.resources.readlater_action_clear_read_later
+import comicviewer.feature.readlater.generated.resources.readlater_title
+import org.jetbrains.compose.resources.stringResource
 
 internal sealed interface ReadLaterTopAppBarAction {
     data object ClearAll : ReadLaterTopAppBarAction
@@ -25,13 +27,13 @@ internal fun ReadLaterTopAppBar(
 ) {
     CanonicalTopAppBar(
         title = {
-            Text(text = stringResource(id = R.string.readlater_title))
+            Text(text = stringResource(Res.string.readlater_title))
         },
         actions = {
             IconButton(onClick = { onAction(ReadLaterTopAppBarAction.ClearAll) }) {
                 Icon(
                     imageVector = ComicIcons.ClearAll,
-                    contentDescription = stringResource(R.string.readlater_action_clear_read_later)
+                    contentDescription = stringResource(Res.string.readlater_action_clear_read_later)
                 )
             }
             SettingsIconButton(onClick = { onAction(ReadLaterTopAppBarAction.Settings) })

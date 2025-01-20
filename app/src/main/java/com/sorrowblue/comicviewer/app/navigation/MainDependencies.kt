@@ -7,14 +7,11 @@ import com.ramcosta.composedestinations.navigation.dependency
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphDependencies
-import com.sorrowblue.comicviewer.feature.book.navgraphs.BookNavGraph
-import com.sorrowblue.comicviewer.feature.book.navigation.BookGraphDependencies
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfGraphDependencies
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
 import com.sorrowblue.comicviewer.feature.favorite.add.destinations.FavoriteAddDialogScreenDestination
 import com.sorrowblue.comicviewer.feature.favorite.create.destinations.FavoriteCreateDialogScreenDestination
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGraphDependencies
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraphDependencies
 import com.sorrowblue.comicviewer.feature.search.SearchArgs
 import com.sorrowblue.comicviewer.feature.search.navgraphs.SearchNavGraph
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchGraphDependencies
@@ -35,18 +32,19 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
 ) {
     val onSettingsClick =
         remember(destinationsNavigator) { { destinationsNavigator.navigate(SettingsNavGraph) } }
-    val onBookClick = { book: com.sorrowblue.comicviewer.domain.model.file.Book, favoriteId: FavoriteId? ->
-        destinationsNavigator.navigate(
-            BookNavGraph(
-                com.sorrowblue.comicviewer.feature.book.Book(
-                    book.bookshelfId,
-                    book.path,
-                    book.name,
-                    favoriteId ?: FavoriteId()
-                )
-            )
-        )
-    }
+    val onBookClick =
+        { book: com.sorrowblue.comicviewer.domain.model.file.Book, favoriteId: FavoriteId? ->
+//        destinationsNavigator.navigate(
+//            BookNavGraph(
+//                com.sorrowblue.comicviewer.feature.book.Book(
+//                    book.bookshelfId,
+//                    book.path,
+//                    book.name,
+//                    favoriteId ?: FavoriteId()
+//                )
+//            )
+//        )
+        }
     val onFavoriteClick = { bookshelfId: BookshelfId, path: String ->
         destinationsNavigator.navigate(FavoriteAddDialogScreenDestination(bookshelfId, path))
     }
@@ -67,7 +65,7 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
         }
     })
 
-    BookGraphDependencies(onSettingsClick = onSettingsClick)
+//    BookGraphDependencies(onSettingsClick = onSettingsClick)
 
     BookshelfGraphDependencies(
         onBookClick = { onBookClick(it, null) },
@@ -79,12 +77,12 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
         onSettingsClick = onSettingsClick
     )
 
-    ReadLaterGraphDependencies(
-        onBookClick = { onBookClick(it, null) },
-        onFavoriteClick = onFavoriteClick,
-        onSearchClick = onSearchClick,
-        onSettingsClick = onSettingsClick
-    )
+//    ReadLaterGraphDependencies(
+//        onBookClick = { onBookClick(it, null) },
+//        onFavoriteClick = onFavoriteClick,
+//        onSearchClick = onSearchClick,
+//        onSettingsClick = onSettingsClick
+//    )
 
     SearchGraphDependencies(
         onBookClick = { onBookClick(it, null) },

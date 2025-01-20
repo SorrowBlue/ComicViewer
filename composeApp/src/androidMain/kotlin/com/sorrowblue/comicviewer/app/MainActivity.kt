@@ -18,6 +18,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.navigation.compose.rememberNavController
 import com.sorrowblue.comicviewer.MainViewModel
+import com.sorrowblue.comicviewer.RootScreenWrapper
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.navigation.NavGraphNavHost
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
@@ -46,18 +47,10 @@ internal class MainActivity : AppCompatActivity() {
         setContent {
             ComicTheme {
                 KoinAndroidContext {
-                    NavGraphNavHost(
-                        navGraph = com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraphImpl(),
-                        isCompact = isCompactWindowClass(),
-                        navController = rememberNavController()
-                    )
+                    RootScreenWrapper(finishApp = ::finish) {
+                        ComicViewerApp()
+                    }
                 }
-                LaunchedEffect(Unit) {
-                    viewModel.shouldKeepSplash.value = false
-                }
-//                RootScreenWrapper(finishApp = ::finish) {
-//                    ComicViewerApp()
-//                }
             }
         }
     }

@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteAllReadLaterUse
 import com.sorrowblue.comicviewer.domain.usecase.readlater.PagingReadLaterFileUseCase
 import org.koin.android.annotation.KoinViewModel
 
-
 @KoinViewModel
 internal class ReadLaterViewModel(
     pagingReadLaterFileUseCase: PagingReadLaterFileUseCase,

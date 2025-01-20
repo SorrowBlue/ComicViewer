@@ -11,26 +11,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraph
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterGraphTransitions
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBar
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
+import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
+import com.sorrowblue.comicviewer.framework.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
-import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import comicviewer.feature.readlater.generated.resources.Res
+import comicviewer.feature.readlater.generated.resources.readlater_label_nothing_to_read_later
+import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.stringResource
 
 interface ReadLaterScreenNavigator {
     fun onSettingsClick()
@@ -39,23 +41,14 @@ interface ReadLaterScreenNavigator {
     fun onOpenFolderClick(file: File)
 }
 
-@Destination<ReadLaterGraph>(
-    start = true,
-    style = ReadLaterGraphTransitions::class,
-    visibility = CodeGenVisibility.INTERNAL
-)
-@Composable
-internal fun ReadLaterScreen(navigator: ReadLaterScreenNavigator) {
-    ReadLaterScreen(
-        navigator = navigator,
-        state = rememberReadLaterScreenState(),
-    )
-}
+@Serializable
+data object ReadLater
 
+@Destination<ReadLater>
 @Composable
-private fun ReadLaterScreen(
+internal fun ReadLaterScreen(
     navigator: ReadLaterScreenNavigator,
-    state: ReadLaterScreenState,
+    state: ReadLaterScreenState = rememberReadLaterScreenState(),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     ReadLaterScreen(
@@ -68,19 +61,17 @@ private fun ReadLaterScreen(
     )
 
     val currentNavigator by rememberUpdatedState(navigator)
-    LaunchedEventEffect(state.event) {
+    EventEffect(state.events) {
         when (it) {
-            is ReadLaterScreenEvent.Favorite -> currentNavigator.onFavoriteClick(
-                it.bookshelfId,
-                it.path
-            )
+            is ReadLaterScreenEvent.Favorite ->
+                currentNavigator.onFavoriteClick(it.bookshelfId, it.path)
 
             is ReadLaterScreenEvent.File -> currentNavigator.onFileClick(it.file)
             is ReadLaterScreenEvent.OpenFolder -> currentNavigator.onOpenFolderClick(it.file)
             ReadLaterScreenEvent.Settings -> currentNavigator.onSettingsClick()
         }
     }
-    NavTabHandler(onClick = state::onNavClick)
+//    TODO NavTabHandler(onClick = state::onNavClick)
 }
 
 @Composable
@@ -139,21 +130,21 @@ private fun ReadLaterContents(
     if (lazyPagingItems.isEmptyData) {
         EmptyContent(
             imageVector = ComicIcons.UndrawSaveBookmarks,
-            text = stringResource(id = R.string.readlater_label_nothing_to_read_later),
+            text = stringResource(Res.string.readlater_label_nothing_to_read_later),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
         )
     } else {
-//        FileLazyVerticalGrid(
-//            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
-//            lazyPagingItems = lazyPagingItems,
-//            contentPadding = contentPadding,
-//            onItemClick = { onAction(ReadLaterContentsAction.File(it)) },
-//            onItemInfoClick = { onAction(ReadLaterContentsAction.FileInfo(it)) },
-//            state = lazyGridState,
-//            modifier = Modifier
-//                .fillMaxSize()
-//        )
+        FileLazyVerticalGrid(
+            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
+            lazyPagingItems = lazyPagingItems,
+            contentPadding = contentPadding,
+            onItemClick = { onAction(ReadLaterContentsAction.File(it)) },
+            onItemInfoClick = { onAction(ReadLaterContentsAction.FileInfo(it)) },
+            state = lazyGridState,
+            modifier = Modifier
+                .fillMaxSize()
+        )
     }
 }

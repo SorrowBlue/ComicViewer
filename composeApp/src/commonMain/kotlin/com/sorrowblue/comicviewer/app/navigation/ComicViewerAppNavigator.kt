@@ -4,12 +4,13 @@ import androidx.navigation.NavController
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraphNavigator
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import org.koin.core.annotation.Factory
 
 @Factory
 internal class ComicViewerAppNavigator(
     private val navController: NavController,
-) : BookshelfNavGraphNavigator {
+) : BookshelfNavGraphNavigator, ReadLaterNavGraphNavigator {
     override fun onBookClick(book: Book) {
         navController.navigate(
             com.sorrowblue.comicviewer.feature.book.Book(
