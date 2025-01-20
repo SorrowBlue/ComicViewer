@@ -36,36 +36,41 @@ internal class BookshelfNavigation {
     companion object
 }
 
+interface BookshelfNavGraphNavigator {
+    fun onBookClick(book: Book)
+    fun onSettingsClick()
+    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onRestoreComplete()
+    fun onSearchClick(bookshelfId: BookshelfId, path: String)
+}
+
 @Factory
-internal class BookshelfNavGraphNavigator(override val navController: NavController) :
-    BookshelfScreenNavigator,
+internal class BookshelfNavGraphNavigatorImpl(
+    val navigator: BookshelfNavGraphNavigator,
+    override val navController: NavController,
+) : BookshelfScreenNavigator,
     BookshelfSelectionNavigator,
     BookshelfEditScreenNavigator,
     FolderScreenNavigator {
 
     override fun onSettingsClick() {
-        TODO("Not yet implemented")
+        navigator.onSettingsClick()
     }
 
     override fun onFileClick(file: File) {
         when (file) {
-            is Book -> {
-//           TODO     onBookClick(file)
-            }
+            is Book -> navigator.onBookClick(file)
 
-            is Folder -> {
-                navController.navigate(
-                    BookshelfFolder(file.bookshelfId, file.path, null)
-                )
-            }
+            is Folder -> navController.navigate(BookshelfFolder(file.bookshelfId, file.path, null))
         }
     }
 
     override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) {
-        // TODO onFavoriteClick(bookshelfId, path)
+        navigator.onFavoriteClick(bookshelfId, path)
     }
+
     override fun onRestoreComplete() {
-        // TODO onRestoreComplete()
+        navigator.onRestoreComplete()
     }
 
     override fun onFabClick() {
@@ -93,7 +98,7 @@ internal class BookshelfNavGraphNavigator(override val navController: NavControl
     }
 
     override fun onSearchClick(bookshelfId: BookshelfId, path: String) {
-        TODO("Not yet implemented")
+        navigator.onSearchClick(bookshelfId, path)
     }
 
     override fun onSourceClick(bookshelfType: BookshelfType) {

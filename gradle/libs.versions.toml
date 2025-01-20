@@ -24,6 +24,7 @@ compose-destinations = "2.1.0-beta15"
 
 dokka = "2.0.0"
 airbnb-android-showkase = "1.0.3"
+uiAndroid = "1.7.6"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
@@ -199,6 +200,7 @@ compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations",
 airbnb-android-showkase = { group = "com.airbnb.android", name = "showkase", version.ref = "airbnb-android-showkase" }
 airbnb-android-showkase-annotation = { group = "com.airbnb.android", name = "showkase-annotation", version.ref = "airbnb-android-showkase" }
 airbnb-android-showkase-processor = { group = "com.airbnb.android", name = "showkase-processor", version.ref = "airbnb-android-showkase" }
+androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx", "androidx-room-paging"]

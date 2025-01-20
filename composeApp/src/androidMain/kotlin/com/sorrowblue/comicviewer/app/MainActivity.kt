@@ -11,14 +11,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.ComposeUiFlags
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import com.sorrowblue.comicviewer.App
+import androidx.navigation.compose.rememberNavController
 import com.sorrowblue.comicviewer.MainViewModel
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.navigation.NavGraphNavHost
+import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import org.koin.androidx.compose.KoinAndroidContext
-import org.koin.compose.KoinApplication
 
 /**
  * Main activity
@@ -37,13 +40,17 @@ internal class MainActivity : AppCompatActivity() {
             setKeepOnScreenCondition(viewModel.shouldKeepSplash::value)
         }
 
-//        @OptIn(ExperimentalComposeUiApi::class)
-//        ComposeUiFlags.isSemanticAutofillEnabled = true
+        @OptIn(ExperimentalComposeUiApi::class)
+        ComposeUiFlags.isSemanticAutofillEnabled = true
 
         setContent {
             ComicTheme {
-                KoinAndroidContext  {
-                    App()
+                KoinAndroidContext {
+                    NavGraphNavHost(
+                        navGraph = com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraphImpl(),
+                        isCompact = isCompactWindowClass(),
+                        navController = rememberNavController()
+                    )
                 }
                 LaunchedEffect(Unit) {
                     viewModel.shouldKeepSplash.value = false

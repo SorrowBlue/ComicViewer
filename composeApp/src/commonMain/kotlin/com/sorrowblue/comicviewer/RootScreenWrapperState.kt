@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.koin.android.annotation.KoinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 sealed interface AuthStatus {
     data object Unknown : AuthStatus
@@ -24,12 +26,10 @@ sealed interface AuthStatus {
     data object NoAuthRequired : AuthStatus
 }
 
-@Composable
-internal expect fun rememberRootScreenWrapperState(): RootScreenWrapperState
 
 @Composable
 internal fun rememberRootScreenWrapperState(
-    viewModel: RootScreenWrapperViewModel,
+    viewModel: RootScreenWrapperViewModel = koinViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
 ): RootScreenWrapperState {
     return remember {
@@ -96,7 +96,8 @@ private class RootScreenWrapperStateImpl(
     }
 }
 
-internal expect class RootScreenWrapperViewModel : ViewModel {
-    val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase
-    val loadSettingsUseCase: LoadSettingsUseCase
-}
+@KoinViewModel
+internal class RootScreenWrapperViewModel(
+    val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
+    val loadSettingsUseCase: LoadSettingsUseCase,
+) : ViewModel()

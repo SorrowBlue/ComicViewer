@@ -18,16 +18,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import logcat.logcat
+import org.koin.compose.viewmodel.koinViewModel
 
 private const val TAG = "RootScreenWrapper"
 
 @Composable
-internal expect fun RootScreenWrapper(finishApp: () -> Unit, content: @Composable () -> Unit)
-
-@Composable
 internal fun RootScreenWrapper(
-    viewModel: MainViewModel,
     finishApp: () -> Unit,
+    viewModel: MainViewModel = koinViewModel(),
     content: @Composable () -> Unit,
 ) {
     val isInitialized by viewModel.isInitialized.collectAsState()

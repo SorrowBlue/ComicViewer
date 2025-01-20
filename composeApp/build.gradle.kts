@@ -29,6 +29,7 @@ kotlin {
                 implementation(projects.domain.usecase)
                 implementation(projects.feature.bookshelf)
                 implementation(projects.feature.bookshelf.info)
+                implementation(projects.feature.book)
 
                 implementation(compose.material3)
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha01")
@@ -58,7 +59,6 @@ kotlin {
                 implementation(projects.data.di)
                 implementation(projects.domain.usecase)
                 implementation(projects.feature.authentication)
-                implementation(projects.feature.book)
                 implementation(projects.feature.bookshelf)
                 implementation(projects.feature.favorite)
                 implementation(projects.feature.folder)

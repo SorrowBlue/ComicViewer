@@ -23,6 +23,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.ui.android)
     add("kspCommonMainMetadata", projects.framework.navigation.kspCompiler)
     add("kspAndroid", projects.framework.navigation.kspCompiler)
     add("kspIosX64", projects.framework.navigation.kspCompiler)

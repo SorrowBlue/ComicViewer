@@ -6,9 +6,7 @@ import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
-import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteGraphDependencies
-import com.sorrowblue.comicviewer.feature.book.BookArgs
 import com.sorrowblue.comicviewer.feature.book.navgraphs.BookNavGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.BookGraphDependencies
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfGraphDependencies
@@ -37,10 +35,10 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
 ) {
     val onSettingsClick =
         remember(destinationsNavigator) { { destinationsNavigator.navigate(SettingsNavGraph) } }
-    val onBookClick = { book: Book, favoriteId: FavoriteId? ->
+    val onBookClick = { book: com.sorrowblue.comicviewer.domain.model.file.Book, favoriteId: FavoriteId? ->
         destinationsNavigator.navigate(
             BookNavGraph(
-                BookArgs(
+                com.sorrowblue.comicviewer.feature.book.Book(
                     book.bookshelfId,
                     book.path,
                     book.name,
