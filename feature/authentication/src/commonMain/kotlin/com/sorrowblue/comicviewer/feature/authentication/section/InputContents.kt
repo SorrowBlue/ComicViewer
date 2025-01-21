@@ -14,11 +14,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenUiState
-import com.sorrowblue.comicviewer.feature.authentication.R
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import comicviewer.feature.authentication.generated.resources.Res
+import comicviewer.feature.authentication.generated.resources.authentication_text_enter_new_pin
+import comicviewer.feature.authentication.generated.resources.authentication_text_enter_pin
+import comicviewer.feature.authentication.generated.resources.authentication_text_reenter_pin
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun InputContents(
@@ -33,17 +36,14 @@ internal fun InputContents(
     ) {
         Text(
             text = stringResource(
-                id = when (uiState) {
-                    is AuthenticationScreenUiState.Authentication -> R.string.authentication_text_enter_pin
-
-                    is AuthenticationScreenUiState.Register.Input -> R.string.authentication_text_enter_new_pin
-                    is AuthenticationScreenUiState.Register.Confirm -> R.string.authentication_text_reenter_pin
-
-                    is AuthenticationScreenUiState.Change.ConfirmOld -> R.string.authentication_text_enter_pin
-                    is AuthenticationScreenUiState.Change.Input -> R.string.authentication_text_enter_new_pin
-                    is AuthenticationScreenUiState.Change.Confirm -> R.string.authentication_text_reenter_pin
-
-                    is AuthenticationScreenUiState.Erase -> R.string.authentication_text_enter_pin
+                when (uiState) {
+                    is AuthenticationScreenUiState.Authentication -> Res.string.authentication_text_enter_pin
+                    is AuthenticationScreenUiState.Register.Input -> Res.string.authentication_text_enter_new_pin
+                    is AuthenticationScreenUiState.Register.Confirm -> Res.string.authentication_text_reenter_pin
+                    is AuthenticationScreenUiState.Change.ConfirmOld -> Res.string.authentication_text_enter_pin
+                    is AuthenticationScreenUiState.Change.Input -> Res.string.authentication_text_enter_new_pin
+                    is AuthenticationScreenUiState.Change.Confirm -> Res.string.authentication_text_reenter_pin
+                    is AuthenticationScreenUiState.Erase -> Res.string.authentication_text_enter_pin
                 }
             ),
             style = MaterialTheme.typography.titleSmall
@@ -63,10 +63,10 @@ internal fun InputContents(
         if (uiState is AuthenticationScreenUiState.Authentication && uiState.loading) {
             LinearProgressIndicator()
         }
-        AnimatedVisibility(visible = 0 < uiState.error) {
-            if (0 < uiState.error) {
+        AnimatedVisibility(visible = uiState.error != null) {
+            if (uiState.error != null) {
                 Text(
-                    text = stringResource(id = uiState.error),
+                    text = stringResource(uiState.error!!),
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = ComicTheme.dimension.padding)

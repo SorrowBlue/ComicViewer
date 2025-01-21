@@ -17,11 +17,11 @@ import androidx.compose.ui.layout.ContentScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
-fun PinDrawable(
+internal actual fun PinDrawable(
     index: Int,
-    modifier: Modifier = Modifier,
-    animate: Boolean = true,
-    enabled: Boolean = true,
+    modifier: Modifier,
+    animate: Boolean,
+    enabled: Boolean,
 ) {
     val resource = when (index % 4) {
         0 -> R.drawable.authentication_avd_favorite_circle

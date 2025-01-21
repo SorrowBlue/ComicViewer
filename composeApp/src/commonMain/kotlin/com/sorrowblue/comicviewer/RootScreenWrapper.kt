@@ -3,23 +3,29 @@ package com.sorrowblue.comicviewer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
+import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavigator
+import com.sorrowblue.comicviewer.feature.authentication.Authentication
+import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreen
+import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNavigator
+import com.sorrowblue.comicviewer.feature.authentication.Mode
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreen
 import logcat.logcat
+import org.koin.compose.module.rememberKoinModules
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.dsl.module
 
 private const val TAG = "RootScreenWrapper"
 
@@ -43,15 +49,11 @@ internal fun RootScreenWrapper(
             viewModel.shouldKeepSplash.value = false
         }
     } else {
-//        LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
-//            state.onStop()
-//        }
+        LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
+            state.onStop()
+        }
         if (isInitialized || state.authStatus is AuthStatus.NoAuthRequired || (state.authStatus is AuthStatus.AuthRequired && (state.authStatus as AuthStatus.AuthRequired).authed)) {
             content()
-            // TODO Removed
-            SideEffect {
-                viewModel.shouldKeepSplash.value = false
-            }
         }
         when (val authStatus = state.authStatus) {
             is AuthStatus.AuthRequired -> {
@@ -60,31 +62,15 @@ internal fun RootScreenWrapper(
                     enter = slideInVertically { it },
                     exit = slideOutVertically { it }
                 ) {
-//                    val activity = LocalContext.current as Activity
-//                    AuthenticationScreen(
-//                        args = AuthenticationArgs(Mode.Authentication),
-//                        navigator = object : AuthenticationScreenNavigator {
-//                            override fun navigateUp() {
-//                                activity.finish()
-//                            }
-//
-//                            override fun onCompleted() {
-//                                state.onAuthComplete()
-//                            }
-//                        }
-//                    )
-                    Column(
-                        Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Button(onClick = { finishApp() }) {
-                            Text("navigateUp")
+                    AuthenticationScreen(
+                        route = Authentication(Mode.Authentication),
+                        navigator = remember {
+                            object : AuthenticationScreenNavigator {
+                                override fun navigateUp() = finishApp()
+                                override fun onCompleted() = state.onAuthComplete()
+                            }
                         }
-                        Button(onClick = { state.onAuthComplete() }) {
-                            Text("onCompleted")
-                        }
-                    }
+                    )
                     SideEffect {
                         viewModel.shouldKeepSplash.value = false
                     }

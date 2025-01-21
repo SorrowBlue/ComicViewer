@@ -21,7 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.ramcosta.composedestinations.scope.DestinationScope
 import com.ramcosta.composedestinations.wrapper.DestinationWrapper
-import com.sorrowblue.comicviewer.feature.authentication.AuthenticationArgs
+import com.sorrowblue.comicviewer.feature.authentication.Authentication
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreen
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNavigator
 import com.sorrowblue.comicviewer.feature.authentication.Mode
@@ -71,7 +71,7 @@ internal object RootScreenWrapper : DestinationWrapper {
                     ) {
                         val activity = LocalContext.current as Activity
                         AuthenticationScreen(
-                            args = AuthenticationArgs(Mode.Authentication),
+                            route = Authentication(Mode.Authentication),
                             navigator = object : AuthenticationScreenNavigator {
                                 override fun navigateUp() {
                                     activity.finish()

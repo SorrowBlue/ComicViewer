@@ -1,27 +1,28 @@
 package com.sorrowblue.comicviewer.feature.authentication
 
-import android.view.View
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
-import androidx.fragment.app.FragmentActivity
-import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationContentsAction
+import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
+import comicviewer.feature.authentication.generated.resources.Res
+import comicviewer.feature.authentication.generated.resources.authentication_error_Invalid_pin
+import comicviewer.feature.authentication.generated.resources.authentication_error_pin_4_more
+import comicviewer.feature.authentication.generated.resources.authentication_error_pin_not_match
+import comicviewer.feature.authentication.generated.resources.authentication_msg_auth_failed
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface AuthenticationScreenEvent {
     data object Back : AuthenticationScreenEvent
@@ -29,84 +30,81 @@ internal sealed interface AuthenticationScreenEvent {
 }
 
 @Stable
-internal interface AuthenticationScreenState :
-    SaveableScreenState,
-    ScreenStateEvent<AuthenticationScreenEvent> {
+internal interface AuthenticationScreenState : SaveableScreenState {
     val uiState: AuthenticationScreenUiState
+    val events: EventFlow<AuthenticationScreenEvent>
     val snackbarHostState: SnackbarHostState
     fun onContentsAction(action: AuthenticationContentsAction)
 }
 
 @Composable
 internal fun rememberAuthenticationScreenState(
-    args: AuthenticationArgs,
-    activity: FragmentActivity = LocalContext.current as FragmentActivity,
+    args: Authentication,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
+    biometricManager: BiometricManager = rememberBiometricManager(),
     viewModel: AuthenticationViewModel = koinViewModel(),
 ): AuthenticationScreenState = rememberSaveableScreenState {
     AuthenticationScreenStateImpl(
-        activity = activity,
         savedStateHandle = it,
         snackbarHostState = snackbarHostState,
         args = args,
         scope = scope,
+        biometricManager = biometricManager,
         viewModel = viewModel
     )
 }
 
+internal expect class BiometricManager {
+    suspend fun authenticate(): AuthenticationResult
+
+
+}
+
+@Composable internal expect fun rememberBiometricManager(): BiometricManager
+
+internal sealed interface AuthenticationResult {
+    data object Success : AuthenticationResult
+    data object Failed : AuthenticationResult
+    data class Error(val message: String) : AuthenticationResult
+}
+
 @OptIn(SavedStateHandleSaveableApi::class)
 private class AuthenticationScreenStateImpl(
-    activity: FragmentActivity,
     override val savedStateHandle: SavedStateHandle,
     override val snackbarHostState: SnackbarHostState,
-    override val scope: CoroutineScope,
-    private val args: AuthenticationArgs,
+    private val scope: CoroutineScope,
+    private val args: Authentication,
+    val biometricManager: BiometricManager,
     private val viewModel: AuthenticationViewModel,
 ) : AuthenticationScreenState {
 
-    override val event = MutableSharedFlow<AuthenticationScreenEvent>()
-
-    val authenticationCallback = object : BiometricPrompt.AuthenticationCallback() {
-
-        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-            super.onAuthenticationSucceeded(result)
-            sendEvent(AuthenticationScreenEvent.Complete)
-        }
-
-        override fun onAuthenticationFailed() {
-            super.onAuthenticationFailed()
-            scope.launch {
-                snackbarHostState.showSnackbar(activity.getString(R.string.authentication_msg_auth_failed))
-            }
-        }
-
-        override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-            super.onAuthenticationError(errorCode, errString)
-            scope.launch {
-                snackbarHostState.showSnackbar(errString.toString())
-            }
-        }
-    }
+    override val events = EventFlow<AuthenticationScreenEvent>()
 
     init {
         viewModel.useBiometrics(args.mode) {
-            val info = BiometricPrompt.PromptInfo.Builder()
-                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-                .setTitle(activity.getString(R.string.authentication_title_fingerprint_auth))
-                .setNegativeButtonText(activity.getString(android.R.string.cancel))
-                .build()
-            BiometricPrompt(activity, authenticationCallback).authenticate(info)
+            scope.launch {
+                when (val result = biometricManager.authenticate()) {
+                    AuthenticationResult.Success ->
+                        events.tryEmit(AuthenticationScreenEvent.Complete)
+
+                    AuthenticationResult.Failed ->
+                        snackbarHostState.showSnackbar(getString(Res.string.authentication_msg_auth_failed))
+
+                    is AuthenticationResult.Error ->
+                        snackbarHostState.showSnackbar(result.message)
+                }
+            }
         }
     }
 
     override var uiState by savedStateHandle.saveable(stateSaver = AuthenticationScreenUiState.stateSaver()) {
         mutableStateOf(
             when (args.mode) {
-                Mode.Register -> AuthenticationScreenUiState.Register.Input("", View.NO_ID)
-                Mode.Change -> AuthenticationScreenUiState.Change.ConfirmOld("", View.NO_ID)
-                Mode.Erase -> AuthenticationScreenUiState.Erase("", View.NO_ID)
-                Mode.Authentication -> AuthenticationScreenUiState.Authentication("", View.NO_ID)
+                Mode.Register -> AuthenticationScreenUiState.Register.Input("")
+                Mode.Change -> AuthenticationScreenUiState.Change.ConfirmOld("")
+                Mode.Erase -> AuthenticationScreenUiState.Erase("")
+                Mode.Authentication -> AuthenticationScreenUiState.Authentication("")
             }
         )
     }
@@ -116,7 +114,7 @@ private class AuthenticationScreenStateImpl(
 
     override fun onContentsAction(action: AuthenticationContentsAction) {
         when (action) {
-            AuthenticationContentsAction.OnBackClick -> sendEvent(AuthenticationScreenEvent.Back)
+            AuthenticationContentsAction.OnBackClick -> events.tryEmit(AuthenticationScreenEvent.Back)
             AuthenticationContentsAction.OnNextClick -> onNextClick()
             is AuthenticationContentsAction.OnPinChange ->
                 uiState =
@@ -131,12 +129,12 @@ private class AuthenticationScreenStateImpl(
                     uiState.pin,
                     onSuccess = {
                         uiState = currentUiState.copy(loading = true)
-                        sendEvent(AuthenticationScreenEvent.Complete)
+                        events.tryEmit(AuthenticationScreenEvent.Complete)
                     },
                     onError = {
                         uiState = AuthenticationScreenUiState.Authentication(
                             pin = "",
-                            error = R.string.authentication_error_Invalid_pin
+                            error = Res.string.authentication_error_Invalid_pin
                         )
                     }
                 )
@@ -146,12 +144,12 @@ private class AuthenticationScreenStateImpl(
                 viewModel.check(
                     uiState.pin,
                     onSuccess = {
-                        uiState = AuthenticationScreenUiState.Change.Input("", View.NO_ID)
+                        uiState = AuthenticationScreenUiState.Change.Input("")
                     },
                     onError = {
                         uiState = AuthenticationScreenUiState.Change.ConfirmOld(
                             pin = "",
-                            error = R.string.authentication_error_Invalid_pin
+                            error = Res.string.authentication_error_Invalid_pin
                         )
                     }
                 )
@@ -160,11 +158,11 @@ private class AuthenticationScreenStateImpl(
             is AuthenticationScreenUiState.Change.Input -> {
                 if (4 <= uiState.pin.count()) {
                     pinHistory = uiState.pin
-                    uiState = AuthenticationScreenUiState.Change.Confirm("", View.NO_ID)
+                    uiState = AuthenticationScreenUiState.Change.Confirm("")
                 } else {
                     uiState = AuthenticationScreenUiState.Change.Input(
                         pin = "",
-                        error = R.string.authentication_error_pin_4_more
+                        error = Res.string.authentication_error_pin_4_more
                     )
                 }
             }
@@ -173,12 +171,12 @@ private class AuthenticationScreenStateImpl(
                 if (uiState.pin == pinHistory) {
                     viewModel.change(uiState.pin) {
                         uiState = currentUiState.copy(loading = true)
-                        sendEvent(AuthenticationScreenEvent.Complete)
+                        events.tryEmit(AuthenticationScreenEvent.Complete)
                     }
                 } else {
                     uiState = AuthenticationScreenUiState.Change.Input(
                         pin = "",
-                        error = R.string.authentication_error_Invalid_pin
+                        error = Res.string.authentication_error_Invalid_pin
                     )
                 }
             }
@@ -188,12 +186,12 @@ private class AuthenticationScreenStateImpl(
                     uiState.pin,
                     onSuccess = {
                         uiState = currentUiState.copy(loading = true)
-                        sendEvent(AuthenticationScreenEvent.Complete)
+                        events.tryEmit(AuthenticationScreenEvent.Complete)
                     },
                     onError = {
                         uiState = AuthenticationScreenUiState.Erase(
                             pin = "",
-                            error = R.string.authentication_error_Invalid_pin
+                            error = Res.string.authentication_error_Invalid_pin
                         )
                     }
                 )
@@ -203,11 +201,11 @@ private class AuthenticationScreenStateImpl(
                 if (4 <= uiState.pin.count()) {
                     pinHistory = uiState.pin
                     uiState =
-                        AuthenticationScreenUiState.Register.Confirm("", View.NO_ID)
+                        AuthenticationScreenUiState.Register.Confirm("")
                 } else {
                     uiState = AuthenticationScreenUiState.Register.Input(
                         pin = "",
-                        error = R.string.authentication_error_pin_4_more
+                        error = Res.string.authentication_error_pin_4_more
                     )
                 }
             }
@@ -216,12 +214,12 @@ private class AuthenticationScreenStateImpl(
                 if (uiState.pin == pinHistory) {
                     viewModel.register(uiState.pin)
                     uiState = currentUiState.copy(loading = true)
-                    sendEvent(AuthenticationScreenEvent.Complete)
+                    events.tryEmit(AuthenticationScreenEvent.Complete)
                 } else {
                     pinHistory = ""
                     uiState = AuthenticationScreenUiState.Register.Input(
                         pin = "",
-                        error = R.string.authentication_error_pin_not_match
+                        error = Res.string.authentication_error_pin_not_match
                     )
                 }
             }

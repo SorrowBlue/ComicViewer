@@ -10,9 +10,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfGraphDep
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGraphDependencies
 import com.sorrowblue.comicviewer.feature.settings.navgraphs.SettingsNavGraph
-import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsGraphDependencies
-import com.sorrowblue.comicviewer.feature.tutorial.navgraphs.TutorialNavGraph
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialGraphDependencies
 
 /**
  * Main dependencies
@@ -101,7 +98,7 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
 //        }
 //    )
 
-    TutorialGraphDependencies(destinationsNavigator::navigateUp)
+//    TutorialGraphDependencies(destinationsNavigator::navigateUp)
 
     LibraryGraphDependencies(
         navigateToBook = onBookClick,
