@@ -21,4 +21,5 @@ fun AutoCloseable.closeQuietly() {
     }
 }
 
+@Suppress("NO_ACTUAL_FOR_EXPECT")
 expect suspend fun resizeImage(buffer: Buffer, sink: BufferedSink, imageFormat: ImageFormat, quality: Int)

@@ -54,7 +54,7 @@ internal class ComicViewerAppNavigator(
     }
 
     override fun onRestoreComplete() {
-        onRestoreComplete()
+        this.onRestoreComplete.invoke()
     }
 
     override fun onSearchClick(bookshelfId: BookshelfId, path: String) {

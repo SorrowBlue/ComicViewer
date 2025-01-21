@@ -14,7 +14,6 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySet
 import kotlin.reflect.KType
 import org.koin.android.annotation.KoinViewModel
 
-
 @KoinViewModel
 internal class SearchViewModel(
     savedStateHandle: SavedStateHandle,

@@ -14,14 +14,14 @@ import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Singleton
 
-@Serializable
-data object SearchNavGraph
 
-@NavGraph<SearchNavGraph>(startDestination = Search::class)
-internal class SearchNavigation {
+
+@NavGraph(startDestination = Search::class)
+@Serializable
+data object SearchNavGraph {
     @DestinationInGraph<Search>
     @DestinationInGraph<SearchFolder>
-    companion object
+    object Include
 }
 
 interface SearchNavGraphNavigator {

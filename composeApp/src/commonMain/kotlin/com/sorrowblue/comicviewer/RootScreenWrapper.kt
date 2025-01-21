@@ -16,16 +16,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavigator
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.sorrowblue.comicviewer.feature.authentication.Authentication
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreen
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNavigator
 import com.sorrowblue.comicviewer.feature.authentication.Mode
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreen
 import logcat.logcat
-import org.koin.compose.module.rememberKoinModules
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.dsl.module
 
 private const val TAG = "RootScreenWrapper"
 
@@ -35,6 +33,7 @@ internal fun RootScreenWrapper(
     viewModel: MainViewModel = koinViewModel(),
     content: @Composable () -> Unit,
 ) {
+    logcat("RootScreenWrapper") { "LocalViewModelStoreOwner: ${LocalViewModelStoreOwner.current}" }
     val isInitialized by viewModel.isInitialized.collectAsState()
     val state = rememberRootScreenWrapperState()
 

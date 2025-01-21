@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import org.koin.compose.viewmodel.koinViewModel
 import com.google.android.play.core.ktx.errorCode
 import com.google.android.play.core.ktx.moduleNames
 import com.google.android.play.core.ktx.requestInstall
@@ -23,6 +22,7 @@ import com.sorrowblue.comicviewer.feature.library.component.AddOnItemState
 import com.sorrowblue.comicviewer.feature.library.section.Feature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 @Stable
 internal interface LibraryScreenState {

@@ -36,5 +36,5 @@ annotation class IoDispatcher
 annotation class DefaultDispatcher
 
 @Module
- @ComponentScan("com.sorrowblue.comicviewer")
+@ComponentScan("com.sorrowblue.comicviewer")
 class AppModule

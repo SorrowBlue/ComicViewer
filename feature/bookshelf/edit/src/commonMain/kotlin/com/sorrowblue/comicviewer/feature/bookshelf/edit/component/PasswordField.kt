@@ -79,7 +79,6 @@ internal expect fun Modifier.semanticsPasswordForAndroid(): Modifier
 @Suppress("NO_ACTUAL_FOR_EXPECT")
 internal expect fun Modifier.semanticsUsernameForAndroid(): Modifier
 
-
 @Composable
 private fun FormScope<SmbEditScreenForm>.rememberPasswordFieldControl(): FieldControl<String> {
     val notBlankMessage = stringResource(Res.string.bookshelf_edit_smb_input_error_password)

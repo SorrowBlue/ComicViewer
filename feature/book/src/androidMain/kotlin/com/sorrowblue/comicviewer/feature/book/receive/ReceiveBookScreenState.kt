@@ -1,41 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book.receive
 
-import android.app.Activity
-import android.content.Context
-import android.graphics.Bitmap
-import android.widget.Toast
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.platform.LocalContext
-import org.koin.compose.viewmodel.koinViewModel
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import com.sorrowblue.comicviewer.domain.model.Resource
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
-import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
-import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
-import com.sorrowblue.comicviewer.feature.book.section.BookPage
-import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
-import com.sorrowblue.comicviewer.feature.book.section.PageItem
-import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.SystemUiController
-import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
-import org.koin.android.annotation.KoinViewModel
-
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import logcat.logcat
-
+/*
 internal interface ReceiveBookScreenState : SaveableScreenState {
 
     val uiState: BookScreenUiState
@@ -194,3 +159,4 @@ private class ReceiveBookScreenStateImpl(
         currentList.addAll(newList)
     }
 }
+*/

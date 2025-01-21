@@ -19,12 +19,17 @@ kotlin {
         freeCompilerArgs.add("-opt-in=androidx.paging.ExperimentalPagingApi")
     }
 
-    sourceSets.commonMain.dependencies {
-        implementation(projects.domain.service)
-        implementation(libs.androidx.room.runtime)
-        implementation(libs.androidx.room.paging)
-        implementation(libs.androidx.sqlite.bundled)
-        implementation(libs.androidx.paging.common)
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(projects.domain.service)
+                implementation(libs.androidx.room.runtime)
+                implementation(libs.androidx.room.paging)
+                implementation(libs.androidx.sqlite.bundled)
+                implementation(libs.androidx.paging.common)
+            }
+        }
     }
 }
 
@@ -34,7 +39,7 @@ dependencies {
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspDesktop", libs.androidx.room.compiler)
     add("kspAndroid", libs.androidx.room.compiler)
-//    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.androidx.room.testing)
 }
 
 ksp {

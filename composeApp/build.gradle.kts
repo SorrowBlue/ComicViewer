@@ -37,6 +37,7 @@ kotlin {
                 implementation(projects.feature.favorite.create)
                 implementation(projects.feature.search)
                 implementation(projects.feature.tutorial)
+                implementation(projects.feature.folder)
 
                 implementation(compose.material3)
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha01")

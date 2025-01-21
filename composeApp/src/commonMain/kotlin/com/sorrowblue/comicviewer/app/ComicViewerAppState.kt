@@ -18,6 +18,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.sorrowblue.comicviewer.MainViewModel
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffoldUiState
 import com.sorrowblue.comicviewer.app.component.MainScreenTab
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraph
@@ -42,6 +43,7 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface ComicViewerAppEvent {
 
@@ -58,11 +60,13 @@ internal fun rememberComicViewerAppState(
     navTabHandler: NavTabHandler = koinInject(),
     manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase = koinInject(),
     getNavigationHistoryUseCase: GetNavigationHistoryUseCase = koinInject(),
+    mainViewModel: MainViewModel = koinViewModel(),
     navController: NavHostController = rememberNavController(),
 ): ComicViewerAppState {
     return rememberSaveableScreenState {
         ComicViewerAppStateImpl(
             lifecycle = lifecycle,
+            mainViewModel = mainViewModel,
             scope = scope,
             navTabHandler = navTabHandler,
             manageDisplaySettingsUseCase = manageDisplaySettingsUseCase,
@@ -86,6 +90,7 @@ internal interface ComicViewerAppState : SaveableScreenState {
 
 private class ComicViewerAppStateImpl(
     lifecycle: Lifecycle,
+    private val mainViewModel: MainViewModel,
     private val scope: CoroutineScope,
     private val navTabHandler: NavTabHandler,
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
@@ -110,6 +115,9 @@ private class ComicViewerAppStateImpl(
                 val hierarchy = backStackEntry.destination.hierarchy
                 val currentTab = MainScreenTab.entries.find { tab ->
                     hierarchy.any { it.hasRoute(tab.navGraph::class) }
+                }
+                if (currentTab == null) {
+                    delay(250)
                 }
                 uiState = uiState.copy(currentTab = currentTab)
                 logcat {
@@ -159,12 +167,14 @@ private class ComicViewerAppStateImpl(
         return scope.launch {
             val history = getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
             events.tryEmit(
-                ComicViewerAppEvent.Navigate(BookshelfNavGraph, navOptions {
-                    popUpTo(ComicViewerAppNavGraph) {
-                        inclusive = true
+                ComicViewerAppEvent.Navigate(
+                    BookshelfNavGraph,
+                    navOptions {
+                        popUpTo(ComicViewerAppNavGraph) {
+                            inclusive = true
+                        }
                     }
-
-                })
+                )
             )
             if (history?.folderList.isNullOrEmpty()) {
                 completeRestoreHistory()
@@ -229,15 +239,14 @@ private class ComicViewerAppStateImpl(
         }
     }
 
-
     override fun onNavigationHistoryRestore() {
         logcat { "onNavigationHistoryRestore" }
         completeRestoreHistory()
     }
 
     private fun completeRestoreHistory() {
-//        mainViewModel.shouldKeepSplash.value = false
-//        mainViewModel.isInitialized.value = true
+        mainViewModel.shouldKeepSplash.value = false
+        mainViewModel.isInitialized.value = true
         isNavigationRestored = true
     }
 

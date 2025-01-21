@@ -1,17 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book.receive
 
-import android.content.Intent
-import androidx.activity.ComponentActivity
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.annotation.parameters.DeepLink
-import com.sorrowblue.comicviewer.feature.book.BookScreen
-import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
-import com.sorrowblue.comicviewer.feature.book.navigation.BookGraphTransitions
-import logcat.logcat
-
+/*
 @Destination<RootGraph>(
     start = true,
     style = BookGraphTransitions::class,
@@ -50,3 +39,4 @@ internal fun ReceiveBookScreen() {
         )
     }
 }
+*/

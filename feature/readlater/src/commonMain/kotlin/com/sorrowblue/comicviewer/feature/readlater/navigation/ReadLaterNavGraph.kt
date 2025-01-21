@@ -14,8 +14,7 @@ import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Singleton
 
-@Serializable
-data object ReadLaterNavGraph
+
 
 interface ReadLaterNavGraphNavigator {
     fun onSearchClick(bookshelfId: BookshelfId, path: String)
@@ -57,10 +56,11 @@ internal class ReadLaterNavGraphNavigatorImpl(
     }
 }
 
-@NavGraph<ReadLaterNavGraph>(startDestination = ReadLater::class)
-internal class ReadLaterNavigation {
+@NavGraph(startDestination = ReadLater::class)
+@Serializable
+data object ReadLaterNavGraph {
 
     @DestinationInGraph<ReadLater>
     @DestinationInGraph<ReadLaterFolder>
-    companion object
+    object Include
 }

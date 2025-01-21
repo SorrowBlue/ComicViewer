@@ -21,7 +21,6 @@ import comicviewer.feature.authentication.generated.resources.authentication_msg
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface AuthenticationScreenEvent {
@@ -57,8 +56,6 @@ internal fun rememberAuthenticationScreenState(
 
 internal expect class BiometricManager {
     suspend fun authenticate(): AuthenticationResult
-
-
 }
 
 @Composable internal expect fun rememberBiometricManager(): BiometricManager

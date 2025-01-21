@@ -6,7 +6,6 @@ import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
-import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfGraphDependencies
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
 import com.sorrowblue.comicviewer.feature.library.navigation.LibraryGraphDependencies
 import com.sorrowblue.comicviewer.feature.settings.navgraphs.SettingsNavGraph
@@ -58,15 +57,15 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
 
 //    BookGraphDependencies(onSettingsClick = onSettingsClick)
 
-    BookshelfGraphDependencies(
-        onBookClick = { onBookClick(it, null) },
-        onFavoriteClick = onFavoriteClick,
-        onSearchClick = { bookshelfId, path ->
+//    BookshelfGraphDependencies(
+//        onBookClick = { onBookClick(it, null) },
+//        onFavoriteClick = onFavoriteClick,
+//        onSearchClick = { bookshelfId, path ->
 //            destinationsNavigator.navigate(SearchNavGraph(Search(bookshelfId, path)))
-        },
-        onRestoreComplete = onRestoreComplete,
-        onSettingsClick = onSettingsClick
-    )
+//        },
+//        onRestoreComplete = onRestoreComplete,
+//        onSettingsClick = onSettingsClick
+//    )
 
 //    ReadLaterGraphDependencies(
 //        onBookClick = { onBookClick(it, null) },

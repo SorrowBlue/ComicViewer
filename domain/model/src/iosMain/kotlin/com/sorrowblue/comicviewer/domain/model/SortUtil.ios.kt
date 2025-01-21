@@ -17,5 +17,4 @@ actual object SortUtil {
     actual fun sortedIndex(list: List<File>): List<File> {
         TODO("Not yet implemented")
     }
-
 }

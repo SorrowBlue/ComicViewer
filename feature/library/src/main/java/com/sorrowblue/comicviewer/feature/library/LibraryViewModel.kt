@@ -7,7 +7,6 @@ import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import org.koin.android.annotation.KoinViewModel
 
-
 @KoinViewModel
 internal class LibraryViewModel(
     val splitInstallManager: SplitInstallManager,

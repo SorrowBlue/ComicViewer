@@ -18,6 +18,6 @@ actual class CoilDiskCache {
             create = false,
             error = null,
         )
-        return "${requireNotNull(documentDirectory).path}/${folder}".toPath()
+        return "${requireNotNull(documentDirectory).path}/$folder".toPath()
     }
 }

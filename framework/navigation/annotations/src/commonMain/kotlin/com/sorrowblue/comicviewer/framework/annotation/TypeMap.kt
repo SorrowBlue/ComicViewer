@@ -2,19 +2,16 @@ package com.sorrowblue.comicviewer.framework.annotation
 
 import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
 import kotlin.reflect.KClass
-import org.koin.core.annotation.Named
-import org.koin.core.annotation.Scope
+import kotlinx.serialization.Serializable
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class Destination<T : Any>(
+annotation class Destination<T : @Serializable Any>(
     val style: KClass<out DestinationStyle> = DestinationStyle.Composable::class,
 )
 
-@Named
-annotation class DestinationImpl
 
-annotation class NavGraph<T : Any>(
+annotation class NavGraph(
     val startDestination: KClass<*>,
     val root: KClass<*> = Nothing::class,
 )

@@ -120,6 +120,5 @@ moduleGraphConfig {
 }
 
 tasks.updateDaemonJvm {
-    logger.lifecycle("${libs.versions.java.get()::class}")
     jvmVersion = JavaLanguageVersion.of(libs.versions.java.get())
 }

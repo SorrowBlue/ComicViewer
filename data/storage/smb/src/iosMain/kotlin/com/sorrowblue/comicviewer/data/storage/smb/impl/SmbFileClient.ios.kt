@@ -42,5 +42,4 @@ internal actual class SmbFileClient(
     override suspend fun getAttribute(path: String): FileAttribute? {
         TODO("Not yet implemented")
     }
-
 }

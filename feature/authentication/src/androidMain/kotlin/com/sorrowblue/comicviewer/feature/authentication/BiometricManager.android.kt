@@ -40,7 +40,6 @@ internal actual class BiometricManager(
                 .build()
             biometricPrompt.authenticate(promptInfo)
         }
-
 }
 
 @Composable

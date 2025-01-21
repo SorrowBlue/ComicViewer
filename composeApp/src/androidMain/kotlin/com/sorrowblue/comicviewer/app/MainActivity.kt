@@ -10,18 +10,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ComposeUiFlags
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import androidx.navigation.compose.rememberNavController
 import com.sorrowblue.comicviewer.MainViewModel
 import com.sorrowblue.comicviewer.RootScreenWrapper
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.navigation.NavGraphNavHost
-import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import org.koin.androidx.compose.KoinAndroidContext
 
 /**

@@ -38,7 +38,6 @@ import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_desc_open_file_info
 import org.jetbrains.compose.resources.stringResource
 
-
 /**
  * ファイル情報をグリッドアイテムで表示する
  *

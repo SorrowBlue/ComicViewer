@@ -26,7 +26,6 @@ sealed interface AuthStatus {
     data object NoAuthRequired : AuthStatus
 }
 
-
 @Composable
 internal fun rememberRootScreenWrapperState(
     viewModel: RootScreenWrapperViewModel = koinViewModel(),

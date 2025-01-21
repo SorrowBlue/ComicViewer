@@ -59,8 +59,6 @@ private fun paddingValuesToVector(layoutDirection: LayoutDirection): TwoWayConve
         }
     )
 
-private val ZeroDP = 0.dp
-
 private val paddingValuesVisibilityThreshold = PaddingValues(1.dp)
 
 private val paddingValuesDefaultSpring =

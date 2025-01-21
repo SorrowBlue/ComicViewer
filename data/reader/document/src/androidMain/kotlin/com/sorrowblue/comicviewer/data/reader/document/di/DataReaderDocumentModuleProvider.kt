@@ -11,4 +11,3 @@ class DataReaderDocumentModuleProvider : DynamicFeatureModuleProvider {
         return DataReaderDocumentModule().module
     }
 }
-

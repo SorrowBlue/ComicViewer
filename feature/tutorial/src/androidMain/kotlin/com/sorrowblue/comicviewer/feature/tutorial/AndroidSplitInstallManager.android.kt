@@ -23,7 +23,7 @@ internal actual class AndroidSplitInstallManager(
 
     private var listener: ((DocumentSheetUiState) -> Unit)? = null
 
-    private var stateUpdatedListener = SplitInstallStateUpdatedListener {
+    private val stateUpdatedListener = SplitInstallStateUpdatedListener {
         if (installedModulesSet.contains(DocumentModule)) {
             when (it.status) {
                 SplitInstallSessionStatus.CANCELED -> DocumentSheetUiState.CANCELED

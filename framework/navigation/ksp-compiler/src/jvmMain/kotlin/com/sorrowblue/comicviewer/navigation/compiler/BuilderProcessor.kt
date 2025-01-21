@@ -30,7 +30,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 private const val Destination = "com.sorrowblue.comicviewer.framework.annotation.Destination"
-private const val Serializable = "kotlinx.serialization.Serializable"
+private val Serializable = ClassName("kotlinx.serialization", "Serializable")
 private val ScreenDestination =
     ClassName("com.sorrowblue.comicviewer.framework.navigation", "ScreenDestination")
 private val NavGraph = ClassName("com.sorrowblue.comicviewer.framework.navigation", "NavGraph")
@@ -43,8 +43,6 @@ private val NestedNavGraph =
     ClassName("com.sorrowblue.comicviewer.framework.annotation", "NestedNavGraph")
 private val DestinationStyle =
     ClassName("com.sorrowblue.comicviewer.framework.navigation", "DestinationStyle")
-private val DestinationImpl =
-    ClassName("com.sorrowblue.comicviewer.framework.navigation", "DestinationImpl")
 private val Composable = ClassName("androidx.compose.runtime", "Composable")
 private val NavBackStackEntry = ClassName("androidx.navigation", "NavBackStackEntry")
 private val KoinScope = ClassName("org.koin.compose.scope", "KoinScope")
@@ -67,16 +65,14 @@ fun DestinationResolver(
             val styleType: KSType
             symbol.annotations.filter { it.annotationType.resolve().declaration.qualifiedName?.asString() == Destination }
                 .first().let {
-                    it.annotationType.resolve().arguments.first().let {
-                        it.type?.resolve()!!
-                    }.let {
+                    it.annotationType.resolve().arguments.first().type?.resolve()!!.let {
                         logger.warn("    route")
                         routeType = it
                         val routeTypeName = routeType.declaration.qualifiedName?.asString()
                         logger.warn("      class=$routeTypeName")
                         if (routeType.declaration.annotations.any {
                                 it.annotationType.resolve()
-                                    .toClassName().canonicalName == Serializable
+                                    .toClassName() == Serializable
                             }) {
                             logger.warn(
                                 """
@@ -85,7 +81,7 @@ fun DestinationResolver(
                             """.trimIndent()
                             )
                             if (!routeType.isObjectClass) {
-                                RouteResolver(
+                                generateTypeMap(
                                     codeGenerator,
                                     logger,
                                     routeType.declaration as KSClassDeclaration
@@ -194,26 +190,27 @@ fun NavGraphResolver(
     val symbols = resolver.getSymbolsWithAnnotation(NavGraphAnnotation.canonicalName)
     val skipSymbols = mutableListOf<KSAnnotated>()
     symbols.forEach { symbol ->
-        logger.warn("NavGraph ${symbol}")
+        logger.warn("  symbol is ${symbol}")
         if (symbol is KSClassDeclaration) {
             val route: KSType
             val startDestination: KSType
             val root: KSType
+            logger.warn("  isCompanionObject ${symbol.isCompanionObject}")
 
-            // @NavGraph<Route>(startDestination=XXX::class)
+            // @NavGraph(startDestination=XXX::class)
+            route = symbol.asType(emptyList())
             symbol.annotations.first { it.annotationType.resolve().declaration.qualifiedName?.asString() == NavGraphAnnotation.canonicalName }
                 .let {
-                    route =
-                        it.annotationType.resolve().arguments.first().let { it.type?.resolve()!! }
                     startDestination =
                         it.arguments.first { it.name?.asString() == "startDestination" }.value as KSType
                     logger.warn("${(it.arguments.first { it.name?.asString() == "root" }.value)}")
                     root = it.arguments.first { it.name?.asString() == "root" }.value as KSType
                 }
 
+
             // data class Route(val value: String)
             if (!route.isObjectClass) {
-                RouteResolver(codeGenerator, logger, route.declaration as KSClassDeclaration)
+                generateTypeMap(codeGenerator, logger, route.declaration as KSClassDeclaration)
             }
             logger.warn("  route=$route")
             logger.warn("  startDestination=$startDestination")
@@ -223,8 +220,9 @@ fun NavGraphResolver(
             // @DestinationInGraph
             // @NestedNavGraph
             // companion object
-            symbol.declarations.filterIsInstance<KSClassDeclaration>()
-                .first { it.classKind == ClassKind.OBJECT && it.isCompanionObject }.annotations
+            val includeObject = symbol.declarations.filterIsInstance<KSClassDeclaration>()
+                .first { it.classKind == ClassKind.OBJECT }
+            includeObject.annotations
                 .forEach {
                     logger.warn("  companion object annotation=${it.shortName.asString()}")
                     val resolved = it.annotationType.resolve()
@@ -295,7 +293,8 @@ fun NavGraphResolver(
                             )
                         ),
                         KModifier.OVERRIDE
-                    ).apply {
+                    ).addKdoc("Retrieved from [${(includeObject.parent as KSClassDeclaration).simpleName.asString()}.${includeObject.simpleName.asString()}]")
+                        .apply {
                         if (inGraphRoute.isEmpty()) {
                             initializer("emptyList()")
                         } else {
@@ -338,6 +337,7 @@ fun NavGraphResolver(
                 .addKotlinDefaultImports()
                 .addImport(ScreenDestination, "")
                 .addImport(KoinScope, "")
+                .addImport(route.toClassName(), "")
                 .addType(clazz)
                 .build()
                 .writeTo(codeGenerator, Dependencies(true))
@@ -346,15 +346,14 @@ fun NavGraphResolver(
     return skipSymbols
 }
 
-fun RouteResolver(
+fun generateTypeMap(
     codeGenerator: CodeGenerator,
     logger: KSPLogger,
     routeType: KSClassDeclaration,
 ) {
-    logger.warn("RouteResolver.. start ${routeType}")
+    logger.info("GenerateTypeMap... ${routeType.qualifiedName?.asString()}")
     val className = routeType.simpleName.asString()
     val packageName = routeType.packageName.asString()
-    logger.warn("${packageName}.${className}")
     val types = routeType.primaryConstructor?.parameters?.mapNotNull {
         val ksType = it.type.resolve()
         when (ksType.toTypeName()) {
@@ -393,8 +392,7 @@ fun RouteResolver(
 
             else -> {
                 if (ksType.declaration.annotations.any {
-                        it.annotationType.resolve()
-                            .toClassName().canonicalName == "kotlinx.serialization.Serializable"
+                        it.annotationType.resolve().toClassName() == Serializable
                     }) {
                     ksType to "NavType.kSerializableType<${
                         it.type.resolve().toClassName().canonicalName

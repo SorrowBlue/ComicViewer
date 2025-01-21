@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
-import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -35,9 +34,7 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.feature.bookshelf.navgraphs.BookshelfNavGraph
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
@@ -51,6 +48,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
+import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface ComicViewerAppEvent {
 
@@ -210,68 +208,68 @@ private class ComicViewerAppStateImpl(
     private fun restoreNavigation(): Job {
         return scope.launch {
             val history = getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
-            events.tryEmit(
-                ComicViewerAppEvent.Navigate(BookshelfNavGraph) {
-                    popUpTo(MainNavGraph) {
-                        inclusive = true
-                    }
-                }
-            )
+//            events.tryEmit(
+//                ComicViewerAppEvent.Navigate(BookshelfNavGraph) {
+//                    popUpTo(MainNavGraph) {
+//                        inclusive = true
+//                    }
+//                }
+//            )
             if (history?.folderList.isNullOrEmpty()) {
                 completeRestoreHistory()
             } else {
                 val (folderList, book) = history.value
                 val bookshelfId = folderList.first().bookshelfId
                 if (folderList.size == 1) {
-                    events.tryEmit(
-                        ComicViewerAppEvent.Navigate(
-                            BookshelfFolderScreenDestination(
-                                bookshelfId = bookshelfId,
-                                path = folderList.first().path,
-                                restorePath = book.path
-                            )
-                        )
-                    )
+//                    events.tryEmit(
+//                        ComicViewerAppEvent.Navigate(
+//                            BookshelfFolderScreenDestination(
+//                                bookshelfId = bookshelfId,
+//                                path = folderList.first().path,
+//                                restorePath = book.path
+//                            )
+//                        )
+//                    )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                 } else {
-                    events.tryEmit(
-                        ComicViewerAppEvent.Navigate(
-                            BookshelfFolderScreenDestination(
-                                bookshelfId = bookshelfId,
-                                path = folderList.first().path,
-                                restorePath = null
-                            )
-                        )
-                    )
+//                    events.tryEmit(
+//                        ComicViewerAppEvent.Navigate(
+//                            BookshelfFolderScreenDestination(
+//                                bookshelfId = bookshelfId,
+//                                path = folderList.first().path,
+//                                restorePath = null
+//                            )
+//                        )
+//                    )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                     folderList.drop(1).dropLast(1).forEach { folder ->
-                        events.tryEmit(
-                            ComicViewerAppEvent.Navigate(
-                                BookshelfFolderScreenDestination(
-                                    bookshelfId = bookshelfId,
-                                    path = folder.path,
-                                    restorePath = null
-                                )
-                            )
-                        )
+//                        events.tryEmit(
+//                            ComicViewerAppEvent.Navigate(
+//                                BookshelfFolderScreenDestination(
+//                                    bookshelfId = bookshelfId,
+//                                    path = folder.path,
+//                                    restorePath = null
+//                                )
+//                            )
+//                        )
                         logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                             "-> folder(${folder.path})"
                         }
                     }
 
-                    events.tryEmit(
-                        ComicViewerAppEvent.Navigate(
-                            BookshelfFolderScreenDestination(
-                                bookshelfId = bookshelfId,
-                                path = folderList.last().path,
-                                restorePath = book.path
-                            )
-                        )
-                    )
+//                    events.tryEmit(
+//                        ComicViewerAppEvent.Navigate(
+//                            BookshelfFolderScreenDestination(
+//                                bookshelfId = bookshelfId,
+//                                path = folderList.last().path,
+//                                restorePath = book.path
+//                            )
+//                        )
+//                    )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "-> folder${folderList.last().path}, ${book.path}"
                     }

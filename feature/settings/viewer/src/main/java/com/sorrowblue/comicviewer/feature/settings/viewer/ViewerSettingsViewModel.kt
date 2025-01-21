@@ -3,10 +3,9 @@ package com.sorrowblue.comicviewer.feature.settings.viewer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
-import org.koin.android.annotation.KoinViewModel
-
 import kotlinx.coroutines.launch
 import logcat.logcat
+import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 internal class ViewerSettingsViewModel(

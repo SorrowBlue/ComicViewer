@@ -59,7 +59,6 @@ internal actual fun rememberBookshelfInfoMainContentsState(
     stateImpl.intentLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     return stateImpl
-
 }
 
 private class BookshelfInfoMainContentsStateImpl(

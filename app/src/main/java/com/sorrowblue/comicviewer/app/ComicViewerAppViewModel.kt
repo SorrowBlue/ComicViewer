@@ -6,7 +6,6 @@ import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import org.koin.android.annotation.KoinViewModel
 
-
 /**
  * Comic viewer app view model
  *

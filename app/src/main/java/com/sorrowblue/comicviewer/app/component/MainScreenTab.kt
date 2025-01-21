@@ -5,10 +5,7 @@ import androidx.navigation.NavDestination
 import com.ramcosta.composedestinations.spec.NavGraphSpec
 import com.ramcosta.composedestinations.utils.findDestination
 import com.sorrowblue.comicviewer.app.R
-import com.sorrowblue.comicviewer.feature.bookshelf.navgraphs.BookshelfNavGraph
-import com.sorrowblue.comicviewer.feature.favorite.navgraphs.FavoriteNavGraph
 import com.sorrowblue.comicviewer.feature.library.navgraphs.LibraryNavGraph
-import com.sorrowblue.comicviewer.feature.readlater.navgraphs.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.DestinationTransitions
 
@@ -28,21 +25,21 @@ enum class MainScreenTab(
     val contentDescription: Int,
 ) {
     Bookshelf(
-        BookshelfNavGraph,
+        LibraryNavGraph,
         R.string.app_label_bookshelf,
         ComicIcons.Book,
         R.string.app_label_bookshelf
     ),
 
     Favorite(
-        FavoriteNavGraph,
+        LibraryNavGraph,
         R.string.app_label_favorite,
         ComicIcons.Favorite,
         R.string.app_label_favorite
     ),
 
     Readlater(
-        ReadLaterNavGraph,
+        LibraryNavGraph,
         R.string.app_label_read_later,
         ComicIcons.WatchLater,
         R.string.app_label_read_later

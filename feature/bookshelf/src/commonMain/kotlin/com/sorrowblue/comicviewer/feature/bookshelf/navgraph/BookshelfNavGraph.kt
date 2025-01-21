@@ -21,19 +21,19 @@ import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import kotlinx.serialization.Serializable
+import logcat.logcat
 import org.koin.core.annotation.Single
 
 @Serializable
-data object BookshelfNavGraph
+@NavGraph(startDestination = Bookshelf::class)
+data object BookshelfNavGraph {
 
-@NavGraph<BookshelfNavGraph>(startDestination = Bookshelf::class)
-internal class BookshelfNavigation {
     @DestinationInGraph<Bookshelf>
     @DestinationInGraph<BookshelfDelete>
     @DestinationInGraph<BookshelfEdit>
     @DestinationInGraph<BookshelfFolder>
     @DestinationInGraph<BookshelfSelection>
-    companion object
+    object Include
 }
 
 interface BookshelfNavGraphNavigator {
@@ -126,4 +126,3 @@ internal class BookshelfNavGraphNavigatorImpl(
         }
     }
 }
-

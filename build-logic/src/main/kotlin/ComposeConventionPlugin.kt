@@ -76,7 +76,6 @@ internal class ComposeConventionPlugin : Plugin<Project> {
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.networkKtor)
 
-
                 implementation(platform(libs.koin.bom))
                 ksp(libs.koin.kspCompiler)
                 implementation(libs.koin.core)

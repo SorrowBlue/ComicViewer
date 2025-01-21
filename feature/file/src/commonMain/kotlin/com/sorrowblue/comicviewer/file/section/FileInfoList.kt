@@ -101,6 +101,8 @@ private fun Float.format(decimalPlaces: Int = 2): String {
 val Long.asDateTime: String
     get() = Instant.fromEpochMilliseconds(this)
         .toLocalDateTime(TimeZone.currentSystemDefault())
-        .format(LocalDateTime.Format {
-            // TODO
-        })
+        .format(
+            LocalDateTime.Format {
+                // TODO
+            }
+        )

@@ -4,7 +4,6 @@ import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
 import com.ramcosta.composedestinations.result.NavResult
@@ -24,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface HistoryScreenEvent {
     data class Favorite(val bookshelfId: BookshelfId, val path: String) : HistoryScreenEvent

@@ -19,17 +19,15 @@ import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Single
 
+@NavGraph(startDestination = FavoriteList::class)
 @Serializable
-data object FavoriteNavGraph
-
-@NavGraph<FavoriteNavGraph>(startDestination = FavoriteList::class)
-internal annotation class FavoriteNavigation {
+data object FavoriteNavGraph {
 
     @DestinationInGraph<Favorite>
     @DestinationInGraph<FavoriteFolder>
     @DestinationInGraph<FavoriteEdit>
     @DestinationInGraph<FavoriteList>
-    companion object
+    object Include
 }
 
 interface FavoriteNavGraphNavigator {

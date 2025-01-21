@@ -7,8 +7,6 @@ import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Factory
 
-@Serializable
-data object TutorialNavGraph
 
 interface TutorialNavGraphNavigator {
     fun onCompleteTutorial()
@@ -22,9 +20,10 @@ internal class TutorilaNavGraphNavigatorImpl(
     override fun onCompleteTutorial() = navigator.onCompleteTutorial()
 }
 
-@NavGraph<TutorialNavGraph>(startDestination = Tutorial::class)
-internal class TutorialNavigation {
+@NavGraph(startDestination = Tutorial::class)
+@Serializable
+data object TutorialNavGraph {
 
     @DestinationInGraph<Tutorial>
-    companion object
+    object Include
 }

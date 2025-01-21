@@ -20,5 +20,5 @@ enum class MainScreenTab(
     Bookshelf(BookshelfNavGraph, Res.string.app_label_bookshelf, ComicIcons.Book),
     Favorite(FavoriteNavGraph, Res.string.app_label_favorite, ComicIcons.Favorite),
     Readlater(ReadLaterNavGraph, Res.string.app_label_read_later, ComicIcons.WatchLater),
-    Library(Unit, Res.string.app_label_library, ComicIcons.LibraryBooks)
+    Library(Unit, Res.string.app_label_library, ComicIcons.LibraryBooks),
 }

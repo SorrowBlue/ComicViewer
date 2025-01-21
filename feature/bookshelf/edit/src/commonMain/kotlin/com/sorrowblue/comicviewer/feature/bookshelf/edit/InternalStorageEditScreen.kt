@@ -29,7 +29,6 @@ import soil.form.compose.Controller
 import soil.form.compose.Form
 import soil.form.compose.rememberSubmissionRuleAutoControl
 
-
 internal data class InternalStorageEditScreenUiState(
     val form: InternalStorageEditScreenForm,
     override val editMode: BookshelfEditMode,

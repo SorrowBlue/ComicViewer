@@ -6,7 +6,6 @@ import com.sorrowblue.comicviewer.domain.usecase.GetBookshelfImageCacheInfoUseCa
 import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
 import org.koin.android.annotation.KoinViewModel
 
-
 @KoinViewModel
 internal class ImageCacheScreenViewModel(
     val getBookshelfImageCacheInfoUseCase: GetBookshelfImageCacheInfoUseCase,

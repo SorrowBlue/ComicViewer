@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.book
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -68,7 +67,6 @@ internal fun rememberBookScreenState(
     }
 }
 
-@Stable
 internal interface BookScreenState {
 
     val currentList: SnapshotStateList<PageItem>

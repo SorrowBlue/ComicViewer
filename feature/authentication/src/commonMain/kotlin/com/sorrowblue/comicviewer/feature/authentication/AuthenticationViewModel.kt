@@ -4,10 +4,9 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import org.koin.android.annotation.KoinViewModel
-
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
 @Stable
 @KoinViewModel

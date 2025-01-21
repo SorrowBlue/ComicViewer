@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySet
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
 import org.koin.android.annotation.KoinViewModel
 
-
 @KoinViewModel
 class FolderSettingsViewModel(
     val manageFolderSettingsUseCase: ManageFolderSettingsUseCase,

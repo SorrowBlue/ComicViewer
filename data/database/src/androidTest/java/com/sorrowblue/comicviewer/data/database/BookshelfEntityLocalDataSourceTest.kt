@@ -60,6 +60,7 @@ class BookshelfEntityLocalDataSourceTest {
         BookshelfId(id),
         "TestDisplayName_$id",
         BookshelfEntity.Type.SMB,
+        false,
         "192.168.0.$id",
         445,
         "domain_$id",

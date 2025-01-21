@@ -1,21 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.navigation
 
-import androidx.compose.runtime.Composable
-import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
-import com.ramcosta.composedestinations.navigation.dependency
-import com.ramcosta.composedestinations.navigation.navGraph
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenNavigator
-import com.sorrowblue.comicviewer.feature.bookshelf.NavGraphs
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
-import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
-import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionNavigator
-import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
+/*
 
 @Composable
 fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
@@ -128,3 +113,4 @@ fun DependenciesContainerBuilder<*>.BookshelfGraphDependencies(
         })
     }
 }
+*/

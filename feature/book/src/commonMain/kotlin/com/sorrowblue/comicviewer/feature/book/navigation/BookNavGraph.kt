@@ -10,14 +10,12 @@ import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Factory
 
+@NavGraph(startDestination = Book::class)
 @Serializable
-data object BookNavGraph
-
-@NavGraph<BookNavGraph>(startDestination = Book::class)
-internal class BookNavigation {
+data object BookNavGraph {
 
     @DestinationInGraph<Book>
-    companion object
+    object Include
 }
 
 @Factory

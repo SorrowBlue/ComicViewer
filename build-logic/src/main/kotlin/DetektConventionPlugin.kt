@@ -42,9 +42,15 @@ internal class DetektConventionPlugin : Plugin<Project> {
                     xml.required.set(false)
                 }
                 finalizedBy(reportMerge)
+                exclude {
+                    it.file.path.contains("generated")
+                }
             }
             reportMerge.configureEach {
                 input.from(tasks.withType<Detekt>().map(Detekt::sarifReportFile))
+            }
+            tasks.register("detektAll") {
+                dependsOn(tasks.withType<Detekt>())
             }
         }
     }

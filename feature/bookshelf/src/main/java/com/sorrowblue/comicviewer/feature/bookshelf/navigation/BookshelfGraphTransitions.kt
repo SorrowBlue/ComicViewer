@@ -1,11 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.navigation
 
-import com.ramcosta.composedestinations.spec.DestinationSpec
-import com.sorrowblue.comicviewer.feature.bookshelf.NavGraphs
-import com.sorrowblue.comicviewer.feature.bookshelf.destinations.BookshelfScreenDestination
-import com.sorrowblue.comicviewer.framework.ui.AnimatedOrDialog
-import com.sorrowblue.comicviewer.framework.ui.DestinationTransitions
-import com.sorrowblue.comicviewer.framework.ui.TransitionsConfigure
+/*
 
 internal object BookshelfGraphTransitions : DestinationTransitions() {
 
@@ -88,3 +83,4 @@ internal object BookshelfGraphTransitionsWithDialog : AnimatedOrDialog() {
         )
     )
 }
+*/

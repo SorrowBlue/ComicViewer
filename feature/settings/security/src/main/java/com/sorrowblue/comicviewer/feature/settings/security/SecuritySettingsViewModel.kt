@@ -3,9 +3,8 @@ package com.sorrowblue.comicviewer.feature.settings.security
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import org.koin.android.annotation.KoinViewModel
-
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 internal class SecuritySettingsViewModel(

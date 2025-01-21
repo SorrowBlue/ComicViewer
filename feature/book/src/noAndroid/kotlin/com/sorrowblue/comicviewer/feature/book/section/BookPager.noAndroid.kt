@@ -17,7 +17,6 @@ internal actual fun org.jetbrains.skia.Bitmap.createSplitBitmap(isLeft: Boolean)
     return leftHalfBitmap
 }
 
-
 internal actual fun Bitmap.asImageBitmap(): ImageBitmap {
     return asComposeImageBitmap()
 }

@@ -15,5 +15,5 @@ import org.koin.core.annotation.Module
 //        DataStorageDeviceModule::class,
 //    ]
 )
- @ComponentScan("com.sorrowblue.comicviewer")
+@ComponentScan("com.sorrowblue.comicviewer")
 class DiModule
