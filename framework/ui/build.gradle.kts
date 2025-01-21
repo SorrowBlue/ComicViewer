@@ -66,6 +66,10 @@ kotlin {
     }
 }
 
+compose.resources {
+    publicResClass = true
+}
+
 android {
     namespace = "com.sorrowblue.comicviewer.framework.ui"
 }

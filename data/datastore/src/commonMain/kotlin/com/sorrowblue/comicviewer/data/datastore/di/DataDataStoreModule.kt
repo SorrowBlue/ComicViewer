@@ -17,50 +17,44 @@ import com.sorrowblue.comicviewer.data.datastore.serializer.SecuritySettingsSeri
 import com.sorrowblue.comicviewer.data.datastore.serializer.SettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerOperationSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerSettingsSerializer
-import org.koin.core.annotation.ComponentScan
-import org.koin.core.annotation.Module
 import org.koin.core.annotation.Singleton
 
-@Module
-// @ComponentScan("com.sorrowblue.comicviewer.data.datastore")
-class DataDataStoreModule
+@Singleton
+@Book
+internal fun bookSettingsDataStore(dataStoreMaker: DataStoreMaker) =
+    dataStoreMaker.createDataStore(BookSettingsSerializer)
 
-    @Singleton
-    @Book
-    internal fun bookSettingsDataStore(dataStoreMaker: DataStoreMaker) =
-        dataStoreMaker.createDataStore(BookSettingsSerializer)
+@Singleton
+@Display
+internal fun displaySettingsDataStore(dataStoreMaker: DataStoreMaker) =
+    dataStoreMaker.createDataStore(DisplaySettingsSerializer)
 
-    @Singleton
-    @Display
-    internal fun displaySettingsDataStore(dataStoreMaker: DataStoreMaker) =
-        dataStoreMaker.createDataStore(DisplaySettingsSerializer)
+@Singleton
+@FolderDisplay
+internal fun folderDisplaySettingsDataStore(dataStoreMaker: DataStoreMaker) =
+    dataStoreMaker.createDataStore(FolderDisplaySettingsSerializer)
 
-    @Singleton
-    @FolderDisplay
-    internal fun folderDisplaySettingsDataStore(dataStoreMaker: DataStoreMaker) =
-        dataStoreMaker.createDataStore(FolderDisplaySettingsSerializer)
+@Singleton
+@Folder
+internal fun folderSettingsDataStore(dataStoreMaker: DataStoreMaker) =
+    dataStoreMaker.createDataStore(FolderSettingsSerializer)
 
-    @Singleton
-    @Folder
-    internal fun folderSettingsDataStore(dataStoreMaker: DataStoreMaker) =
-        dataStoreMaker.createDataStore(FolderSettingsSerializer)
+@Singleton
+@Security
+internal fun ecuritySettingsDataStore(dataStoreMaker: DataStoreMaker) =
+    dataStoreMaker.createDataStore(SecuritySettingsSerializer)
 
-    @Singleton
-    @Security
-    internal fun ecuritySettingsDataStore(dataStoreMaker: DataStoreMaker) =
-        dataStoreMaker.createDataStore(SecuritySettingsSerializer)
+@Singleton
+@Settings
+internal fun SettingsDataStore(dataStoreMaker: DataStoreMaker) =
+    dataStoreMaker.createDataStore(SettingsSerializer)
 
-    @Singleton
-    @Settings
-    internal fun SettingsDataStore(dataStoreMaker: DataStoreMaker) =
-        dataStoreMaker.createDataStore(SettingsSerializer)
+@Singleton
+@ViewerOperation
+internal fun viewerOperationSettingsDataStore(dataStoreMaker: DataStoreMaker) =
+    dataStoreMaker.createDataStore(ViewerOperationSettingsSerializer)
 
-    @Singleton
-    @ViewerOperation
-    internal fun viewerOperationSettingsDataStore(dataStoreMaker: DataStoreMaker) =
-        dataStoreMaker.createDataStore(ViewerOperationSettingsSerializer)
-
-    @Singleton
-    @Viewer
-    internal fun viewerSettingsDataStore(dataStoreMaker: DataStoreMaker) =
-        dataStoreMaker.createDataStore(ViewerSettingsSerializer)
+@Singleton
+@Viewer
+internal fun viewerSettingsDataStore(dataStoreMaker: DataStoreMaker) =
+    dataStoreMaker.createDataStore(ViewerSettingsSerializer)

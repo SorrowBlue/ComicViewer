@@ -35,6 +35,7 @@ kotlin {
                 implementation(projects.feature.favorite.add)
                 implementation(projects.feature.favorite.create)
                 implementation(projects.feature.search)
+                implementation(projects.feature.tutorial)
 
                 implementation(compose.material3)
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha01")
@@ -66,7 +67,6 @@ kotlin {
                 implementation(projects.feature.authentication)
                 implementation(projects.feature.settings)
                 implementation(projects.feature.settings.security)
-                implementation(projects.feature.tutorial)
                 implementation(projects.feature.library)
                 implementation(compose.preview)
                 implementation(libs.androidx.activity)

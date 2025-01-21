@@ -95,11 +95,11 @@ internal fun DependenciesContainerBuilder<*>.MainDependencies(
 //        }
 //    )
 
-    SettingsGraphDependencies(
-        onStartTutorialClick = {
-            destinationsNavigator.navigate(TutorialNavGraph)
-        }
-    )
+//    SettingsGraphDependencies(
+//        onStartTutorialClick = {
+//            destinationsNavigator.navigate(TutorialNavGraph)
+//        }
+//    )
 
     TutorialGraphDependencies(destinationsNavigator::navigateUp)
 

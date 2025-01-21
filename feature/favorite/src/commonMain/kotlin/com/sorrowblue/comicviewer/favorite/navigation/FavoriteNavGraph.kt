@@ -33,7 +33,7 @@ internal annotation class FavoriteNavigation {
 }
 
 interface FavoriteNavGraphNavigator {
-    fun onBookClick(file: Book, favoriteId: FavoriteId = FavoriteId())
+    fun onBookClick(book: Book, favoriteId: FavoriteId = FavoriteId())
     fun onNewFavoriteClick()
     fun onSettingsClick()
     fun onFavoriteClick(bookshelfId: BookshelfId, path: String)

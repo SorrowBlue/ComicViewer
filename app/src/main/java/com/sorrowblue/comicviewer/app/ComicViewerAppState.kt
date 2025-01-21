@@ -97,7 +97,6 @@ internal fun rememberComicViewerAppState(
     lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     navController: NavHostController = rememberNavController(),
     mainViewModel: MainViewModel = viewModel(LocalContext.current as ComponentActivity),
-    navTabHandler: NavTabHandler = viewModel(LocalContext.current as ComponentActivity),
     viewModel: ComicViewerAppViewModel = koinViewModel(),
 ): ComicViewerAppState = rememberSaveableScreenState {
     ComicViewerAppStateImpl(
@@ -106,7 +105,6 @@ internal fun rememberComicViewerAppState(
         navController = navController,
         scope = scope,
         mainViewModel = mainViewModel,
-        navTabHandler = navTabHandler,
         getNavigationHistoryUseCase = viewModel.getNavigationHistoryUseCase,
         manageDisplaySettingsUseCase = viewModel.manageDisplaySettingsUseCase,
         getInstalledModulesUseCase = viewModel.getInstalledModulesUseCase,
@@ -136,7 +134,6 @@ private class ComicViewerAppStateImpl(
     override val navController: NavHostController,
     private val scope: CoroutineScope,
     private val mainViewModel: MainViewModel,
-    private val navTabHandler: NavTabHandler,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     private val getInstalledModulesUseCase: GetInstalledModulesUseCase,
@@ -183,7 +180,6 @@ private class ComicViewerAppStateImpl(
     override fun onTabSelect(tab: MainScreenTab) {
         val navGraph = tab.navGraph
         if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.route == navGraph.route } == true) {
-            navTabHandler.click.tryEmit(Unit)
         } else if (navGraph is Direction) {
             events.tryEmit(
                 ComicViewerAppEvent.Navigate2(

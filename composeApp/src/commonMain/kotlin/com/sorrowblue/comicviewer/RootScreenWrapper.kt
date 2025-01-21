@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreen
 import logcat.logcat
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -37,16 +38,7 @@ internal fun RootScreenWrapper(
         }
     }
     if (state.tutorialRequired) {
-//        TutorialScreen(navigator = state::onTutorialComplete)
-        Column(
-            Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Button(onClick = { state.onTutorialComplete() }) {
-                Text("onTutorialComplete")
-            }
-        }
+        TutorialScreen(navigator = state::onTutorialComplete)
         SideEffect {
             viewModel.shouldKeepSplash.value = false
         }
