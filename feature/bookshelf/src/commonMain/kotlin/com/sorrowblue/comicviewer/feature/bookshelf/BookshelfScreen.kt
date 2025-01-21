@@ -27,9 +27,11 @@ import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
 import com.sorrowblue.comicviewer.framework.annotation.Destination
 import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
+import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
 data object Bookshelf
@@ -68,7 +70,7 @@ internal fun BookshelfScreen(
         )
     }
 
-//    TODO NavTabHandler(onClick = state::onNavClick)
+    NavTabHandler(onClick = state::onNavClick)
 }
 
 @Composable

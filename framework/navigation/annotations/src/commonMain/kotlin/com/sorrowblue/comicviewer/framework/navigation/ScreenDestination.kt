@@ -79,7 +79,7 @@ fun NavGraphNavHost(
         startDestination = navGraph.startDestination,
         modifier = modifier,
         contentAlignment = contentAlignment,
-        route = Root::class
+        route = navGraph.route
     ) {
         navGraph.nestedNavGraphs.forEach {
             navGraphNavigation(it, isCompact)

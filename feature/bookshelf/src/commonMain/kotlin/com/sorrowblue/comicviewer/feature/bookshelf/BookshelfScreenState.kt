@@ -15,6 +15,7 @@ import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import logcat.logcat
 import org.koin.compose.viewmodel.koinViewModel
 
 internal interface BookshelfScreenState {
@@ -68,6 +69,7 @@ private class BookshelfScreenStateImpl(
     }
 
     override fun onNavClick() {
+        logcat { "onNavClick" }
         if (lazyGridState.canScrollBackward) {
             scope.launch {
                 lazyGridState.scrollToItem(0)
