@@ -39,6 +39,7 @@ kotlin {
                 implementation(projects.feature.tutorial)
                 implementation(projects.feature.folder)
                 implementation(projects.feature.settings)
+                implementation(projects.feature.library)
 
                 implementation(compose.material3)
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha02")
@@ -67,8 +68,6 @@ kotlin {
                 implementation(projects.framework.designsystem)
                 implementation(projects.data.di)
                 implementation(projects.domain.usecase)
-                implementation(projects.feature.settings.security)
-                implementation(projects.feature.library)
                 implementation(compose.preview)
                 implementation(libs.androidx.activity)
                 implementation(libs.androidx.biometric)
