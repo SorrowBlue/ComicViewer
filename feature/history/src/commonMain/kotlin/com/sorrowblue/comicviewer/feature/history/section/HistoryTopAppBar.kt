@@ -6,12 +6,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import com.sorrowblue.comicviewer.feature.history.R
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalTopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
+import comicviewer.feature.history.generated.resources.Res
+import comicviewer.feature.history.generated.resources.history_title
+import org.jetbrains.compose.resources.stringResource
 
 internal sealed interface HistoryTopAppBarAction {
     data object Back : HistoryTopAppBarAction
@@ -26,7 +27,7 @@ internal fun HistoryTopAppBar(
     scrollableState: ScrollableState,
 ) {
     CanonicalTopAppBar(
-        title = { Text(stringResource(R.string.history_title)) },
+        title = { Text(stringResource(Res.string.history_title)) },
         navigationIcon = { BackIconButton(onClick = { onAction(HistoryTopAppBarAction.Back) }) },
         actions = {
             IconButton(onClick = { onAction(HistoryTopAppBarAction.DeleteAll) }) {

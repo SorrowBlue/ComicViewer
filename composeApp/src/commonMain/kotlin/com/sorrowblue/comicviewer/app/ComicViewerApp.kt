@@ -1,15 +1,18 @@
 package com.sorrowblue.comicviewer.app
 
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavController
+import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffold
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraphImpl
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavigator
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
+import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraphNavigator
@@ -25,7 +28,12 @@ import org.koin.dsl.module
 
 @Composable
 internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppState()) {
-    logcat("ComicViewerApp") { "LocalViewModelStoreOwner: ${LocalViewModelStoreOwner.current}" }
+    val info = currentWindowAdaptiveInfo()
+    LaunchedEffect(info) {
+        logcat { "minWidthDp=${info.windowSizeClass.minWidthDp}, minHeightDp=${info.windowSizeClass.minHeightDp}" }
+        logcat { "containsWidthDp MEDIUM=${info.windowSizeClass.containsWidthDp(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)}" }
+        logcat { "containsWidthDp EXPANDED=${info.windowSizeClass.containsWidthDp(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)}" }
+    }
     ComicViewerScaffold(
         uiState = state.uiState,
         onTabSelect = { tab -> state.onTabSelect(tab) },
@@ -47,7 +55,8 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
                         FavoriteNavGraphNavigator::class,
                         SearchNavGraphNavigator::class,
                         FavoriteAddScreenNavigator::class,
-                        TutorialNavGraphNavigator::class
+                        TutorialNavGraphNavigator::class,
+                        HistoryNavGraphNavigator::class,
                     )
                     single<NavController>(qualifier<AppNavController>()) { state.navController }
                 }

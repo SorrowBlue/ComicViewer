@@ -7,7 +7,7 @@ import androidx.window.core.layout.WindowSizeClass
 @Composable
 fun isCompactWindowClass(): Boolean {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    return windowSizeClass.containsWindowSizeDp(
+    return !windowSizeClass.containsWindowSizeDp(
         WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
         WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND
     )

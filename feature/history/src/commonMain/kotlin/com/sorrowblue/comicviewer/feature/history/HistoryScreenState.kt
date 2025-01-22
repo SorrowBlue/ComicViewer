@@ -6,23 +6,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
-import com.ramcosta.composedestinations.result.NavResult
-import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.file.ClearAllHistoryUseCase
-import com.sorrowblue.comicviewer.feature.history.destinations.ClearAllHistoryDialogDestination
+import com.sorrowblue.comicviewer.feature.history.section.HistoryContentsAction
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
+import com.sorrowblue.comicviewer.framework.navigation.NavResult
+import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.ScreenStateEvent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface HistoryScreenEvent {
@@ -37,59 +36,60 @@ internal sealed interface HistoryScreenEvent {
 }
 
 internal interface HistoryScreenState :
-    SaveableScreenState,
-    ScreenStateEvent<HistoryScreenEvent> {
+    SaveableScreenState {
     val pagingDataFlow: Flow<PagingData<Book>>
+    val events: EventFlow<HistoryScreenEvent>
     val navigator: ThreePaneScaffoldNavigator<File.Key>
     fun onHistoryTopAppBarAction(action: HistoryTopAppBarAction)
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onHistoryContentsAction(action: HistoryContentsAction)
+    fun onNavResult(result: NavResult<Boolean>)
 }
 
 @Composable
 internal fun rememberHistoryScreenState(
-    clearAllResult: ResultRecipient<ClearAllHistoryDialogDestination, Boolean>,
     navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: HistoryViewModel = koinViewModel(),
+    clearAllHistoryUseCase: ClearAllHistoryUseCase = koinInject(),
 ): HistoryScreenState {
-    val state = rememberSaveableScreenState {
+    return rememberSaveableScreenState {
         HistoryScreenStateImpl(
             pagingDataFlow = viewModel.pagingDataFlow,
             savedStateHandle = it,
             navigator = navigator,
             scope = scope,
-            clearAllHistoryUseCase = viewModel.clearAllHistoryUseCase
+            clearAllHistoryUseCase = clearAllHistoryUseCase
         )
     }
-    clearAllResult.onNavResult {
-        when (it) {
-            NavResult.Canceled -> Unit
-            is NavResult.Value -> {
-                if (it.value) {
-                    state.clearAll()
-                }
-            }
-        }
-    }
-    return state
 }
 
 private class HistoryScreenStateImpl(
-    override val pagingDataFlow: Flow<PagingData<Book>>,
     override val savedStateHandle: SavedStateHandle,
+    private val scope: CoroutineScope,
+    override val pagingDataFlow: Flow<PagingData<Book>>,
     override val navigator: ThreePaneScaffoldNavigator<File.Key>,
-    override val scope: CoroutineScope,
     private val clearAllHistoryUseCase: ClearAllHistoryUseCase,
 ) : HistoryScreenState {
 
-    override val event = MutableSharedFlow<HistoryScreenEvent>()
+    override val events = EventFlow<HistoryScreenEvent>()
 
     override fun onHistoryTopAppBarAction(action: HistoryTopAppBarAction) {
         when (action) {
-            HistoryTopAppBarAction.Back -> sendEvent(HistoryScreenEvent.Back)
-            HistoryTopAppBarAction.Settings -> sendEvent(HistoryScreenEvent.Settings)
-            HistoryTopAppBarAction.DeleteAll -> sendEvent(HistoryScreenEvent.DeleteAll)
+            HistoryTopAppBarAction.Back -> events.tryEmit(HistoryScreenEvent.Back)
+            HistoryTopAppBarAction.Settings -> events.tryEmit(HistoryScreenEvent.Settings)
+            HistoryTopAppBarAction.DeleteAll -> events.tryEmit(HistoryScreenEvent.DeleteAll)
+        }
+    }
+
+    override fun onNavResult(result: NavResult<Boolean>) {
+        when (result) {
+            NavResult.Canceled -> Unit
+            is NavResult.Value -> {
+                if (result.value) {
+                    clearAll()
+                }
+            }
         }
     }
 
@@ -97,16 +97,20 @@ private class HistoryScreenStateImpl(
         when (action) {
             FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
             is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
-                sendEvent(HistoryScreenEvent.Favorite(it.bookshelfId, it.path))
+                events.tryEmit(HistoryScreenEvent.Favorite(it.bookshelfId, it.path))
             }
 
-            is FileInfoSheetNavigator.OpenFolder -> sendEvent(HistoryScreenEvent.OpenFolder(action.file))
+            is FileInfoSheetNavigator.OpenFolder -> events.tryEmit(
+                HistoryScreenEvent.OpenFolder(
+                    action.file
+                )
+            )
         }
     }
 
     override fun onHistoryContentsAction(action: HistoryContentsAction) {
         when (action) {
-            is HistoryContentsAction.Book -> sendEvent(HistoryScreenEvent.Book(action.book))
+            is HistoryContentsAction.Book -> events.tryEmit(HistoryScreenEvent.Book(action.book))
             is HistoryContentsAction.FileInfo -> navigateToFileInfo(action.file)
         }
     }

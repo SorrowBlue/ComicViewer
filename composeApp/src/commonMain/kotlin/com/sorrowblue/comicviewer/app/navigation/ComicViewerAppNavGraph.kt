@@ -6,6 +6,7 @@ import com.sorrowblue.comicviewer.feature.book.Book
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAdd
 import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreate
+import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraph
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraph
@@ -26,6 +27,7 @@ internal data object ComicViewerAppNavGraph {
     @NestedNavGraph<SearchNavGraph>
     @NestedNavGraph<TutorialNavGraph>
     @NestedNavGraph<SettingsNavGraph>
+    @NestedNavGraph<HistoryNavGraph>
     @DestinationInGraph<Authentication>
     @DestinationInGraph<Book>
     @DestinationInGraph<FavoriteAdd>

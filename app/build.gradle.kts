@@ -54,13 +54,7 @@ android {
         }
     }
 
-    dynamicFeatures += setOf(
-        projects.data.reader.document.path,
-        projects.feature.library.box.path,
-        projects.feature.library.dropbox.path,
-        projects.feature.library.googledrive.path,
-        projects.feature.library.onedrive.path,
-    )
+    dynamicFeatures += setOf(projects.data.reader.document.path)
 
     buildFeatures.buildConfig = true
 
@@ -89,7 +83,6 @@ dependencies {
     implementation(projects.feature.settings)
     implementation(projects.feature.settings.security)
     implementation(projects.feature.tutorial)
-    implementation(projects.feature.library)
 
     implementation(libs.androidx.activity)
     implementation(libs.androidx.biometric)

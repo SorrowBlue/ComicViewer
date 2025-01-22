@@ -1,8 +1,5 @@
 package com.sorrowblue.comicviewer.feature.history
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.TopAppBarDefaults
@@ -12,27 +9,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.parameters.CodeGenVisibility
-import com.ramcosta.composedestinations.result.ResultRecipient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.feature.history.destinations.ClearAllHistoryDialogDestination
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryGraph
+import com.sorrowblue.comicviewer.feature.history.section.FavoriteContents
+import com.sorrowblue.comicviewer.feature.history.section.HistoryContentsAction
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
-import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.LaunchedEventEffect
+import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
+import kotlinx.serialization.Serializable
 
 interface HistoryScreenNavigator {
     fun navigateUp()
@@ -43,22 +35,15 @@ interface HistoryScreenNavigator {
     fun onClearAllClick()
 }
 
-@Destination<HistoryGraph>(start = true, visibility = CodeGenVisibility.INTERNAL)
+@Serializable
+data object History
+
+@Destination<History>
 @Composable
 internal fun HistoryScreen(
     navigator: HistoryScreenNavigator,
-    clearAllResult: ResultRecipient<ClearAllHistoryDialogDestination, Boolean>,
-) {
-    HistoryScreen(
-        navigator = navigator,
-        state = rememberHistoryScreenState(clearAllResult = clearAllResult),
-    )
-}
-
-@Composable
-private fun HistoryScreen(
-    navigator: HistoryScreenNavigator,
-    state: HistoryScreenState,
+    clearAllResult: NavResultReceiver<ClearAllHistory, Boolean>,
+    state: HistoryScreenState = rememberHistoryScreenState(),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     val lazyGridState = rememberLazyGridState()
@@ -71,13 +56,13 @@ private fun HistoryScreen(
         lazyGridState = lazyGridState,
     )
 
+    clearAllResult.onNavResult { state.onNavResult(it) }
+
     val currentNavigator by rememberUpdatedState(navigator)
-    LaunchedEventEffect(state.event) {
+    EventEffect(state.events) {
         when (it) {
-            is HistoryScreenEvent.Favorite -> currentNavigator.onFavoriteClick(
-                it.bookshelfId,
-                it.path
-            )
+            is HistoryScreenEvent.Favorite ->
+                currentNavigator.onFavoriteClick(it.bookshelfId, it.path)
 
             is HistoryScreenEvent.Book -> currentNavigator.navigateToBook(it.book)
             is HistoryScreenEvent.OpenFolder -> currentNavigator.navigateToFolder(it.file)
@@ -89,7 +74,7 @@ private fun HistoryScreen(
 }
 
 @Composable
-private fun HistoryScreen(
+internal fun HistoryScreen(
     lazyPagingItems: LazyPagingItems<Book>,
     navigator: ThreePaneScaffoldNavigator<File.Key>,
     onHistoryTopAppBarAction: (HistoryTopAppBarAction) -> Unit,
@@ -122,42 +107,5 @@ private fun HistoryScreen(
             onAction = onHistoryContentsAction,
             contentPadding = contentPadding
         )
-    }
-}
-
-internal sealed interface HistoryContentsAction {
-
-    data class Book(val book: com.sorrowblue.comicviewer.domain.model.file.Book) :
-        HistoryContentsAction
-
-    data class FileInfo(val file: File) :
-        HistoryContentsAction
-}
-
-@Composable
-private fun FavoriteContents(
-    lazyPagingItems: LazyPagingItems<Book>,
-    lazyGridState: LazyGridState,
-    onAction: (HistoryContentsAction) -> Unit,
-    contentPadding: PaddingValues = PaddingValues(),
-) {
-    if (lazyPagingItems.isEmptyData) {
-        EmptyContent(
-            imageVector = ComicIcons.UndrawResumeFolder,
-            text = stringResource(id = R.string.history_label_no_history),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-        )
-    } else {
-//        FileLazyVerticalGrid(
-//            uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
-//            state = lazyGridState,
-//            lazyPagingItems = lazyPagingItems,
-//            onItemClick = { onAction(HistoryContentsAction.Book(it)) },
-//            onItemInfoClick = { onAction(HistoryContentsAction.FileInfo(it)) },
-//            contentPadding = contentPadding,
-//            modifier = Modifier.fillMaxSize()
-//        )
     }
 }

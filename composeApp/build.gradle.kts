@@ -39,7 +39,7 @@ kotlin {
                 implementation(projects.feature.tutorial)
                 implementation(projects.feature.folder)
                 implementation(projects.feature.settings)
-                implementation(projects.feature.library)
+                implementation(projects.feature.history)
 
                 implementation(compose.material3)
                 implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha02")
@@ -142,6 +142,10 @@ android {
 
     packaging {
         resources.excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
+    }
+
+    lint {
+        abortOnError = true
     }
 }
 

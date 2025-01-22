@@ -102,11 +102,11 @@ fun DestinationResolver(
                 }
             val genFunctionName = routeType.toClassName().simpleName + "Destination"
             val clazz = TypeSpec.classBuilder(genFunctionName)
-                .addSuperinterface(ScreenDestination.parameterizedBy(routeType.toTypeName()))
+                .addSuperinterface(ScreenDestination)
                 .addProperty(
                     PropertySpec.builder(
                         "route",
-                        KClass::class.asTypeName().parameterizedBy(routeType.toTypeName()),
+                        KClass::class.asTypeName().parameterizedBy(STAR),
                         KModifier.OVERRIDE
                     )
                         .initializer("%L::class", routeType.declaration.qualifiedName!!.asString())
@@ -288,9 +288,7 @@ fun NavGraphResolver(
                     PropertySpec.builder(
                         "screenDestinations",
                         List::class.asClassName().parameterizedBy(
-                            ScreenDestination.parameterizedBy(
-                                STAR
-                            )
+                            ScreenDestination
                         ),
                         KModifier.OVERRIDE
                     ).addKdoc("Retrieved from [${(includeObject.parent as KSClassDeclaration).simpleName.asString()}.${includeObject.simpleName.asString()}]")

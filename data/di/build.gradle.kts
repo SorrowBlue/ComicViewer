@@ -40,10 +40,6 @@ kotlin {
                     projects.composeApp,
                     projects.data.di,
                     projects.data.reader.document,
-                    projects.feature.library.box,
-                    projects.feature.library.dropbox,
-                    projects.feature.library.googledrive,
-                    projects.feature.library.onedrive,
                 ).map { it.test() }
                 rootProject.subprojects {
                     if (!this.project.isModuleEmpty() && !skipModule.contains(this.project.parentName())) {

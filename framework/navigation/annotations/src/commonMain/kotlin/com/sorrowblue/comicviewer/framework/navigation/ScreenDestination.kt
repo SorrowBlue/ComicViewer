@@ -39,12 +39,12 @@ interface NavGraph {
     val route: KClass<*>
     val typeMap: Map<KType, NavType<*>>
 
-    val screenDestinations: List<ScreenDestination<*>>
+    val screenDestinations: List<ScreenDestination>
     val nestedNavGraphs: List<NavGraph>
 }
 
-interface ScreenDestination<T : Any> {
-    val route: KClass<T>
+interface ScreenDestination {
+    val route: KClass<*>
     val typeMap: Map<KType, NavType<*>>
     val style: DestinationStyle
     val navController: NavController
@@ -107,7 +107,7 @@ fun NavGraphBuilder.navGraphNavigation(
 }
 
 fun NavGraphBuilder.screenDestination(
-    screenDestination: ScreenDestination<*>,
+    screenDestination: ScreenDestination,
     isCompact: Boolean,
 ) {
     when (screenDestination.style) {
@@ -128,7 +128,7 @@ fun NavGraphBuilder.screenDestination(
 }
 
 @OptIn(KoinExperimentalAPI::class)
-private fun NavGraphBuilder.addComposable(screenDestination: ScreenDestination<*>) {
+private fun NavGraphBuilder.addComposable(screenDestination: ScreenDestination) {
     destination(
         ComposeNavigatorDestinationBuilder(
             provider[ComposeNavigator::class],
@@ -144,7 +144,7 @@ private fun NavGraphBuilder.addComposable(screenDestination: ScreenDestination<*
 }
 
 @OptIn(KoinExperimentalAPI::class)
-private fun NavGraphBuilder.addDialog(screenDestination: ScreenDestination<*>) {
+private fun NavGraphBuilder.addDialog(screenDestination: ScreenDestination) {
     destination(
         DialogNavigatorDestinationBuilder(
             navigator = provider[DialogNavigator::class],
