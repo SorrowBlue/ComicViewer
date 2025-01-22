@@ -1,10 +1,8 @@
 package com.sorrowblue.comicviewer.framework.notification
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.startup.Initializer
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
@@ -51,16 +49,4 @@ internal class NotificationInitializer : Initializer<Unit> {
         channel.importance
         return channel
     }
-}
-
-fun createNotification(
-    context: Context,
-    channelID: ChannelID,
-    smallIcon: Int,
-    builder: NotificationCompat.Builder.() -> Unit,
-): Notification {
-    return NotificationCompat.Builder(context, channelID.id)
-        .setSmallIcon(smallIcon)
-        .apply(builder)
-        .build()
 }
