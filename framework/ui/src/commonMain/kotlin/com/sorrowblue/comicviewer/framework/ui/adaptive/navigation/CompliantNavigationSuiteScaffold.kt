@@ -18,7 +18,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 
@@ -62,8 +62,7 @@ fun NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo2(
     if (windowPosture.isTabletop) {
         NavigationState.NavigationBar(defaultVisible)
     } else if (
-        windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED ||
-        windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.MEDIUM
+        windowSizeClass.containsWidthDp(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
     ) {
         NavigationState.NavigationRail(defaultVisible)
     } else {

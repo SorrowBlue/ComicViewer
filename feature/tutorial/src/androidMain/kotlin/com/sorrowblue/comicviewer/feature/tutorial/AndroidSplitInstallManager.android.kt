@@ -1,11 +1,13 @@
 package com.sorrowblue.comicviewer.feature.tutorial
 
+import android.content.Context
 import com.google.android.play.core.ktx.bytesDownloaded
 import com.google.android.play.core.ktx.errorCode
 import com.google.android.play.core.ktx.requestInstall
 import com.google.android.play.core.ktx.status
 import com.google.android.play.core.ktx.totalBytesToDownload
 import com.google.android.play.core.splitinstall.SplitInstallManager
+import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.google.android.play.core.splitinstall.SplitInstallSessionState
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
@@ -15,7 +17,8 @@ import org.koin.core.annotation.Factory
 
 @Factory
 internal actual class AndroidSplitInstallManager(
-    private val splitInstallManager: SplitInstallManager,
+    private val context: Context,
+    private val splitInstallManager: SplitInstallManager = SplitInstallManagerFactory.create(context),
 ) : SplitInstallManager by splitInstallManager {
 
     actual val installedModulesSet: Set<String>

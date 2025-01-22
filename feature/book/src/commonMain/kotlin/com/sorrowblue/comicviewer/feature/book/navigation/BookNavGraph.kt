@@ -7,8 +7,10 @@ import com.sorrowblue.comicviewer.feature.book.BookScreenNavigator
 import com.sorrowblue.comicviewer.feature.book.menu.BookMenu
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.comicviewer.framework.navigation.AppNavController
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Qualifier
 
 @NavGraph(startDestination = Book::class)
 @Serializable
@@ -19,7 +21,7 @@ data object BookNavGraph {
 }
 
 @Factory
-internal class BookNavGraphNavigator(val navController: NavController) : BookScreenNavigator {
+internal class BookNavGraphNavigator(@Qualifier(AppNavController::class) private val navController: NavController) : BookScreenNavigator {
     override fun navigateUp() {
         navController.navigateUp()
     }

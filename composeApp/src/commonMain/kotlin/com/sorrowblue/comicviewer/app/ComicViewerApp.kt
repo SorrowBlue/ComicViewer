@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.app
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.navigation.NavController
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffold
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraphImpl
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavigator
@@ -12,11 +13,13 @@ import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigato
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraphNavigator
+import com.sorrowblue.comicviewer.framework.navigation.AppNavController
 import com.sorrowblue.comicviewer.framework.navigation.NavGraphNavHost
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import logcat.logcat
 import org.koin.compose.module.rememberKoinModules
+import org.koin.core.qualifier.qualifier
 import org.koin.dsl.binds
 import org.koin.dsl.module
 
@@ -31,7 +34,6 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
             ComicViewerAppNavGraphImpl()
         }
         rememberKoinModules {
-            logcat("APPAPP") { "rememberKoinModules" }
             listOf(
                 module {
                     single {
@@ -47,6 +49,7 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
                         FavoriteAddScreenNavigator::class,
                         TutorialNavGraphNavigator::class
                     )
+                    single<NavController>(qualifier<AppNavController>()) { state.navController }
                 }
             )
         }

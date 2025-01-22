@@ -17,10 +17,10 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.get
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 import org.koin.compose.module.rememberKoinModules
 import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.annotation.Qualifier
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -59,24 +59,22 @@ fun navigationModule(navController: NavHostController): Module {
     return module { single<NavController> { navController } }
 }
 
-@Serializable
-data object Root
+@Qualifier
+annotation class AppNavController
 
 @Suppress("OPT_IN_USAGE")
 @Composable
 fun NavGraphNavHost(
     navGraph: NavGraph,
+    startDestination: KClass<*>? = null,
     navController: NavHostController,
-    isCompact: Boolean,
+    isCompact: Boolean = false,
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.TopStart,
 ) {
-    rememberKoinModules(unloadModules = true) {
-        listOf(navigationModule(navController))
-    }
     androidx.navigation.compose.NavHost(
         navController = navController,
-        startDestination = navGraph.startDestination,
+        startDestination = startDestination ?: navGraph.startDestination,
         modifier = modifier,
         contentAlignment = contentAlignment,
         route = navGraph.route

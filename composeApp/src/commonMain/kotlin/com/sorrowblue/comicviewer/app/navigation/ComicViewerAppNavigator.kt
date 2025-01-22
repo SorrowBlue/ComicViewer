@@ -12,6 +12,7 @@ import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreate
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.Search
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
+import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.book.Book as BookRoute
 
@@ -46,7 +47,7 @@ internal class ComicViewerAppNavigator(
     }
 
     override fun onSettingsClick() {
-        TODO("Not yet implemented")
+        navController.navigate(SettingsNavGraph)
     }
 
     override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) {

@@ -1,21 +1,40 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.feature)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(projects.framework.designsystem)
+                implementation(projects.framework.ui)
+                implementation(projects.domain.model)
+                implementation(projects.domain.usecase)
+                implementation(projects.feature.settings.common)
+                implementation(libs.kotlinx.datetime)
+            }
+        }
+        androidMain {
+            dependencies {
+                implementation(libs.androidx.browser)
+                implementation(libs.mikepenz.aboutlibrariesComposeM3)
+            }
+        }
+    }
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer.feature.settings.info"
     resourcePrefix("settings_info")
-
-    defaultConfig {
-        buildConfigField("long", "TIMESTAMP", "${System.currentTimeMillis()}L")
-    }
-
-    buildFeatures.buildConfig = true
 }
 
 dependencies {
-    implementation(projects.feature.settings.common)
-
-    implementation(libs.androidx.browser)
-    implementation(libs.mikepenz.aboutlibrariesComposeM3)
+    add("kspCommonMainMetadata", projects.framework.navigation.kspCompiler)
+    add("kspAndroid", projects.framework.navigation.kspCompiler)
+    add("kspIosX64", projects.framework.navigation.kspCompiler)
+    add("kspIosArm64", projects.framework.navigation.kspCompiler)
+    add("kspIosSimulatorArm64", projects.framework.navigation.kspCompiler)
+    add("kspDesktop", projects.framework.navigation.kspCompiler)
 }

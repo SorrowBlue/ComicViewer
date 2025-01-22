@@ -16,7 +16,9 @@ import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEdit
 import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEditScreenNavigator
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.comicviewer.framework.navigation.AppNavController
 import kotlinx.serialization.Serializable
+import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Single
 
 @NavGraph(startDestination = FavoriteList::class)
@@ -40,7 +42,7 @@ interface FavoriteNavGraphNavigator {
 
 @Single
 internal class FavoriteNavGraphNavigatorImpl(
-    override val navController: NavController,
+    @Qualifier(AppNavController::class) override val navController: NavController,
     val navigator: FavoriteNavGraphNavigator,
 ) : FavoriteListNavigator,
     FavoriteScreenNavigator,

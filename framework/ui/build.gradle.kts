@@ -12,11 +12,11 @@ kotlin {
                 api(projects.framework.navigation.annotations)
 
                 implementation(compose.material3)
-                implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha01")
-                implementation("org.jetbrains.compose.material3.adaptive:adaptive-layout:1.1.0-alpha01")
-                api("org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.1.0-alpha01")
+                implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha02")
+                implementation("org.jetbrains.compose.material3.adaptive:adaptive-layout:1.1.0-alpha02")
+                api("org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.1.0-alpha02")
                 implementation("org.jetbrains.compose.material3:material3-window-size-class:1.7.3")
-                implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha11")
+                implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha12")
                 implementation(compose.material3AdaptiveNavigationSuite)
 
                 implementation(compose.components.uiToolingPreview)

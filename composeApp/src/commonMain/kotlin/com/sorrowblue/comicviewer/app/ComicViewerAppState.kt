@@ -117,6 +117,9 @@ private class ComicViewerAppStateImpl(
                     hierarchy.any { it.hasRoute(tab.navGraph::class) }
                 }
                 if (currentTab == null) {
+//                    delay(500)
+                }
+                if (uiState.currentTab == null && currentTab != null) {
                     delay(250)
                 }
                 uiState = uiState.copy(currentTab = currentTab)

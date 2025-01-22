@@ -11,7 +11,9 @@ import com.sorrowblue.comicviewer.feature.readlater.ReadLaterFolderScreenNavigat
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreenNavigator
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.comicviewer.framework.navigation.AppNavController
 import kotlinx.serialization.Serializable
+import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Singleton
 
 
@@ -25,7 +27,7 @@ interface ReadLaterNavGraphNavigator {
 
 @Singleton
 internal class ReadLaterNavGraphNavigatorImpl(
-    override val navController: NavController,
+    @Qualifier(AppNavController::class) override val navController: NavController,
     private val navigator: ReadLaterNavGraphNavigator,
 ) : ReadLaterScreenNavigator, ReadLaterFolderScreenNavigator {
     override fun navigateUp() {

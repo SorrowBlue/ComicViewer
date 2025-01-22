@@ -20,8 +20,10 @@ import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionNavigator
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.comicviewer.framework.navigation.AppNavController
 import kotlinx.serialization.Serializable
 import logcat.logcat
+import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Single
 
 @Serializable
@@ -47,7 +49,7 @@ interface BookshelfNavGraphNavigator {
 @Single
 internal class BookshelfNavGraphNavigatorImpl(
     val navigator: BookshelfNavGraphNavigator,
-    override val navController: NavController,
+    @Qualifier(AppNavController::class) override val navController: NavController,
 ) : BookshelfScreenNavigator,
     BookshelfSelectionNavigator,
     BookshelfEditScreenNavigator,
