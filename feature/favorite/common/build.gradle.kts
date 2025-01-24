@@ -1,16 +1,11 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.feature)
 }
 
 kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.framework.designsystem)
-                implementation(projects.framework.ui)
-                implementation(projects.domain.model)
-                implementation(projects.domain.usecase)
                 api(libs.soil.form)
             }
         }

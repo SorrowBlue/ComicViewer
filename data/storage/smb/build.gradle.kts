@@ -4,14 +4,19 @@ plugins {
 }
 
 kotlin {
-    sourceSets.commonMain.dependencies {
-        implementation(projects.data.storage.client)
-    }
-
-    sourceSets.androidMain.dependencies {
-        implementation(libs.jcifs.ng)
-        implementation(libs.slf4j.android)
-        implementation(libs.androidx.documentfile)
+    sourceSets {
+        commonMain.dependencies {
+            implementation(projects.data.storage.client)
+            implementation(libs.kotlinx.coroutines.core)
+        }
+        androidMain.dependencies {
+            implementation(libs.jcifs.ng)
+            implementation(libs.slf4j.android)
+            implementation(libs.androidx.documentfile)
+        }
+        desktopMain.dependencies {
+            implementation(libs.jcifs.ng)
+        }
     }
 }
 

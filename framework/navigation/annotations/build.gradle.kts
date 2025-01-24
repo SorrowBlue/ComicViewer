@@ -19,7 +19,6 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.ui)
 
-                implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.core)
 
                 implementation(libs.koin.annotations)

@@ -6,6 +6,7 @@ plugins {
 kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.data.storage.client)
+        implementation(libs.kotlinx.coroutines.core)
     }
 
     sourceSets.androidMain.dependencies {

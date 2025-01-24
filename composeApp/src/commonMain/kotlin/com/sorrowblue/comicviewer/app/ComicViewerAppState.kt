@@ -4,12 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -29,9 +29,7 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsU
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
-import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -63,7 +61,27 @@ internal fun rememberComicViewerAppState(
     mainViewModel: MainViewModel = koinViewModel(),
     navController: NavHostController = rememberNavController(),
 ): ComicViewerAppState {
-    return rememberSaveableScreenState {
+    return rememberSaveable(
+        saver = Saver(
+            save = {
+                it.isNavigationRestored
+            },
+            restore = {
+
+                ComicViewerAppStateImpl(
+                    lifecycle = lifecycle,
+                    mainViewModel = mainViewModel,
+                    scope = scope,
+                    navTabHandler = navTabHandler,
+                    manageDisplaySettingsUseCase = manageDisplaySettingsUseCase,
+                    getNavigationHistoryUseCase = getNavigationHistoryUseCase,
+                    navController = navController,
+                ).apply {
+                    isNavigationRestored = it
+                }
+            }
+        )
+    ) {
         ComicViewerAppStateImpl(
             lifecycle = lifecycle,
             mainViewModel = mainViewModel,
@@ -71,13 +89,12 @@ internal fun rememberComicViewerAppState(
             navTabHandler = navTabHandler,
             manageDisplaySettingsUseCase = manageDisplaySettingsUseCase,
             getNavigationHistoryUseCase = getNavigationHistoryUseCase,
-            savedStateHandle = it,
             navController = navController,
         )
     }
 }
 
-internal interface ComicViewerAppState : SaveableScreenState {
+internal interface ComicViewerAppState {
 
     val navController: NavHostController
     val uiState: ComicViewerScaffoldUiState
@@ -95,7 +112,6 @@ private class ComicViewerAppStateImpl(
     private val navTabHandler: NavTabHandler,
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
-    override val savedStateHandle: SavedStateHandle,
     override val navController: NavHostController,
 ) :
     ComicViewerAppState {
@@ -105,7 +121,7 @@ private class ComicViewerAppStateImpl(
 
     override val events = EventFlow<ComicViewerAppEvent>()
 
-    private var isNavigationRestored by savedStateHandle.saveable { mutableStateOf(false) }
+    var isNavigationRestored by mutableStateOf(false)
 
     init {
         refreshAddOnList()

@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer
 
+import com.android.build.api.dsl.ApplicationDefaultConfig
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.LibraryDefaultConfig
 import org.gradle.api.Project
@@ -12,6 +13,11 @@ internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.conf
 
             if (this is LibraryDefaultConfig) {
                 consumerProguardFiles("consumer-rules.pro")
+            } else if (this is ApplicationDefaultConfig) {
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
             }
         }
 

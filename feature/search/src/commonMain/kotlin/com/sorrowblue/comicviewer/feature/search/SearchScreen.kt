@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
@@ -22,13 +21,13 @@ import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.annotation.Destination
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
+import com.sorrowblue.comicviewer.framework.ui.KSerializableSaver
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 interface SearchScreenNavigator {
     fun navigateUp()
@@ -87,23 +86,12 @@ internal fun SearchScreen(
     }
 }
 
+@Serializable
 internal data class SearchScreenUiState(
     val searchCondition: SearchCondition = SearchCondition(),
     val searchContentsUiState: SearchContentsUiState = SearchContentsUiState(),
 ) {
-    object Saver :
-        androidx.compose.runtime.saveable.Saver<SearchScreenUiState, String> {
-        override fun restore(value: String): SearchScreenUiState {
-            val searchCondition = Json.decodeFromString<SearchCondition>(value)
-            return SearchScreenUiState(
-                searchCondition = searchCondition,
-                searchContentsUiState = SearchContentsUiState(searchCondition.query)
-            )
-        }
-
-        override fun SaverScope.save(value: SearchScreenUiState) =
-            Json.encodeToString<SearchCondition>(value.searchCondition)
-    }
+    object Saver : KSerializableSaver<SearchScreenUiState>(serializer())
 }
 
 @Composable

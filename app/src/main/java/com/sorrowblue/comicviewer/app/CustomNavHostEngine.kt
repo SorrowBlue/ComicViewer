@@ -18,7 +18,6 @@ import com.ramcosta.composedestinations.spec.Direction
 import com.ramcosta.composedestinations.spec.NavGraphSpec
 import com.ramcosta.composedestinations.spec.NavHostEngine
 import com.ramcosta.composedestinations.spec.TypedDestinationSpec
-import com.sorrowblue.comicviewer.framework.ui.AnimatedOrDialog
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 
 /**
@@ -126,24 +125,6 @@ internal class CustomNavHostEngine(
         manualComposableCalls: ManualComposableCalls,
     ) = with(manualComposableCalls.manualAnimation(destination.route) ?: destination.style) {
         when (this) {
-            is AnimatedOrDialog -> {
-                if (isCompact) {
-                    addComposable(
-                        destination,
-                        navController,
-                        dependenciesContainerBuilder,
-                        manualComposableCalls
-                    )
-                } else {
-                    addDialog(
-                        destination,
-                        navController,
-                        dependenciesContainerBuilder,
-                        manualComposableCalls
-                    )
-                }
-            }
-
             else -> addComposable(
                 destination,
                 navController,

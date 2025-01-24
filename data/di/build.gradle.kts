@@ -7,14 +7,22 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.domain.service)
-                implementation(projects.data.coil)
-                implementation(projects.data.database)
-                implementation(projects.data.datastore)
-                implementation(projects.data.reader.zip)
-                implementation(projects.data.storage.client)
-                implementation(projects.data.storage.device)
-                implementation(projects.data.storage.smb)
+
+                val dh = this
+                val skipModule = listOf(
+                    projects.app,
+                    projects.catalog,
+                    projects.composeApp,
+                    projects.data.di,
+                    projects.data.reader.document,
+                    projects.framework.notification,
+                    projects.framework.navigation.kspCompiler,
+                ).map { it.test() }
+                rootProject.subprojects {
+                    if (!this.project.isModuleEmpty() && !skipModule.contains(this.project.parentName())) {
+                        dh.implementation(this.project)
+                    }
+                }
             }
         }
 
@@ -31,22 +39,11 @@ kotlin {
                 // :feature:library:googledrive
                 // Type com.google.common.util.concurrent.ListenableFuture is defined multiple times:
                 implementation(libs.google.guava)
-
-
-                val dh = this
-                val skipModule = listOf(
-                    projects.app,
-                    projects.catalog,
-                    projects.composeApp,
-                    projects.data.di,
-                    projects.data.reader.document,
-                ).map { it.test() }
-                rootProject.subprojects {
-                    if (!this.project.isModuleEmpty() && !skipModule.contains(this.project.parentName())) {
-                        dh.implementation(this.project)
-                    }
-                }
             }
+        }
+
+        desktopMain.dependencies {
+            implementation(projects.data.reader.document)
         }
     }
 }

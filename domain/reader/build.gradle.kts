@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.sorrowblue.comicviewer.data.reader"
+    namespace = "com.sorrowblue.comicviewer.domain.reader"
 }
 
 kotlin {

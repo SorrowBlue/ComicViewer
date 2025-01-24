@@ -6,6 +6,7 @@ import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
@@ -17,7 +18,7 @@ import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-internal interface SettingsScreenState : SaveableScreenState {
+internal interface SettingsScreenState {
     val navigator: ThreePaneScaffoldNavigator<Settings2>
     val navController: NavHostController
     fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit)
@@ -34,9 +35,8 @@ internal fun rememberSettingsScreenState(
     appLocaleSettingsLauncher: AppLocaleSettingsLauncher = rememberAppLocaleSettingsLauncher(),
     navController: NavHostController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope(),
-): SettingsScreenState = rememberSaveableScreenState {
+): SettingsScreenState = remember {
     SettingsScreenStateImpl(
-        savedStateHandle = it,
         navigator = navigator,
         navController = navController,
         appLocaleSettingsLauncher = appLocaleSettingsLauncher,
@@ -46,7 +46,6 @@ internal fun rememberSettingsScreenState(
 
 
 private class SettingsScreenStateImpl(
-    override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<Settings2>,
     override val navController: NavHostController,
     private val appLocaleSettingsLauncher: AppLocaleSettingsLauncher,

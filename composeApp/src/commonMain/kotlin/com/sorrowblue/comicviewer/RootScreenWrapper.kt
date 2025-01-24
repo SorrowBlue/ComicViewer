@@ -33,7 +33,6 @@ internal fun RootScreenWrapper(
     viewModel: MainViewModel = koinViewModel(),
     content: @Composable () -> Unit,
 ) {
-    logcat("RootScreenWrapper") { "LocalViewModelStoreOwner: ${LocalViewModelStoreOwner.current}" }
     val isInitialized by viewModel.isInitialized.collectAsState()
     val state = rememberRootScreenWrapperState()
 

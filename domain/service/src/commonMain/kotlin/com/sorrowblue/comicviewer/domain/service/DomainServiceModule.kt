@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.domain.service
 
-import di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO

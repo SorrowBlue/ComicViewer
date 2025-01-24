@@ -10,9 +10,6 @@ kotlin {
         api(projects.domain.reader)
         implementation(libs.kotlinx.coroutines.core)
     }
-
-    sourceSets.androidMain.dependencies {
-    }
 }
 
 android {

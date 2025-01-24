@@ -19,18 +19,12 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
 
             kotlin<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
-                    implementation(project.dependencies.platform(libs.koin.bom))
                     implementation(libs.koin.core)
-
-                    api(libs.koin.annotations)
+                    implementation(libs.koin.annotations)
                 }
 
                 sourceSets.commonMain.configure {
                     kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
-                }
-
-                sourceSets.androidMain.dependencies {
-                    implementation(libs.koin.android)
                 }
             }
 
@@ -47,13 +41,6 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
                 arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
                 arg("KOIN_CONFIG_CHECK", "false")
             }
-
-            // Trigger Common Metadata Generation from Native tasks
-//            project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-//                if (name != "kspCommonMainKotlinMetadata") {
-//                    dependsOn("kspCommonMainKotlinMetadata")
-//                }
-//            }
         }
     }
 }

@@ -1,24 +1,6 @@
 package com.sorrowblue.comicviewer.framework.ui
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.runtime.Immutable
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDestination.Companion.hierarchy
-import com.ramcosta.composedestinations.spec.DestinationSpec
-import com.ramcosta.composedestinations.spec.DestinationStyle
-import com.ramcosta.composedestinations.spec.RouteOrDirection
-import com.ramcosta.composedestinations.utils.destination
-import com.sorrowblue.comicviewer.framework.ui.animation.materialContainerTransformIn
-import com.sorrowblue.comicviewer.framework.ui.animation.materialContainerTransformOut
-import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
-import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
-import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisXIn
-import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisXOut
-import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisYIn
-import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisYOut
-
+/*
 @Immutable
 data class TransitionsConfigure(
     val enterRoute: RouteOrDirection,
@@ -140,3 +122,4 @@ abstract class DestinationTransitions : DestinationStyle.Animated() {
             } ?: ExitTransition.None
         }
 }
+*/

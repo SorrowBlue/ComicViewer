@@ -84,14 +84,11 @@ gradlePlugin {
         register(libs.plugins.comicviewer.dokka) {
             implementationClass = "DokkaConventionPlugin"
         }
-        register(libs.plugins.comicviewer.kotlinMultiplatform.base) {
-            implementationClass = "KotlinMultiplatformConventionPlugin"
-        }
         register(libs.plugins.comicviewer.kotlinMultiplatform.application) {
-            implementationClass = "KotlinMultiplatformAndroidApplicationConventionPlugin"
+            implementationClass = "KotlinMultiplatformApplicationConventionPlugin"
         }
         register(libs.plugins.comicviewer.kotlinMultiplatform.library) {
-            implementationClass = "KotlinMultiplatformAndroidLibraryConventionPlugin"
+            implementationClass = "KotlinMultiplatformLibraryConventionPlugin"
         }
         register(libs.plugins.comicviewer.kotlinMultiplatform.compose) {
             implementationClass = "KotlinMultiplatformComposeConventionPlugin"
@@ -101,6 +98,9 @@ gradlePlugin {
         }
         register(libs.plugins.comicviewer.kotlinMultiplatform.dynamicfeature) {
             implementationClass = "KotlinMultiplatformAndroidDynamicFeatureConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.kotlinMultiplatform.feature) {
+            implementationClass = "KotlinMultiplatformFeatureConventionPlugin"
         }
     }
 }

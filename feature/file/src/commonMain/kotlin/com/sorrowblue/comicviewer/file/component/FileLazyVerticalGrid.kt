@@ -25,7 +25,9 @@ import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumnType
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class FileLazyVerticalGridUiState(
     val fileListDisplay: FileListDisplay = FolderDisplaySettingsDefaults.fileListDisplay,
     val columnSize: GridColumnSize = FolderDisplaySettingsDefaults.gridColumnSize,

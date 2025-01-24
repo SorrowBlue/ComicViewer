@@ -5,7 +5,9 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.core.okio.OkioStorage
 import com.sorrowblue.comicviewer.data.datastore.serializer.OkioKSerializer
+import java.io.File
 import okio.FileSystem
+import okio.Path.Companion.toOkioPath
 import okio.Path.Companion.toPath
 import org.koin.core.annotation.Singleton
 
@@ -15,7 +17,7 @@ internal actual class DataStoreMaker {
         return DataStoreFactory.create(
             storage = OkioStorage(
                 fileSystem = FileSystem.SYSTEM,
-                producePath = { "datastore/${okioSerializer.fileName}".toPath() },
+                producePath = { File(System.getProperty("java.io.tmpdir"), "datastore/${okioSerializer.fileName}").toOkioPath() },
                 serializer = okioSerializer,
             ),
             corruptionHandler = ReplaceFileCorruptionHandler { okioSerializer.defaultValue },

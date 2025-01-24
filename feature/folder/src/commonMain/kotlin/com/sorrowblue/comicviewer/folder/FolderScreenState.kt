@@ -13,6 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
@@ -64,7 +66,7 @@ internal sealed interface FolderScreenEvent {
 }
 
 @Stable
-internal interface FolderScreenState : SaveableScreenState {
+internal interface FolderScreenState {
 
     val navigator: ThreePaneScaffoldNavigator<File.Key>
     val events: EventFlow<FolderScreenEvent>
@@ -94,10 +96,28 @@ internal fun rememberFolderScreenState(
 ): FolderScreenState {
     val lazyPagingItems =
         viewModel.pagingDataFlow(args.bookshelfId, args.path).collectAsLazyPagingItems()
-    return rememberSaveableScreenState {
+    return rememberSaveable(saver = Saver(
+        save = {
+            it.isRestored
+        },
+        restore = {
+            FolderScreenStateImpl(
+                lazyPagingItems = lazyPagingItems,
+                navigator = navigator,
+                lazyGridState = lazyGridState,
+                snackbarHostState = snackbarHostState,
+                pullRefreshState = pullRefreshState,
+                scope = scope,
+                args = args,
+                folderDisplaySettingsUseCase = viewModel.displaySettingsUseCase,
+                getFileUseCase = viewModel.getFileUseCase
+            ).apply {
+                isRestored = it
+            }
+        }
+    )) {
         FolderScreenStateImpl(
             lazyPagingItems = lazyPagingItems,
-            savedStateHandle = it,
             navigator = navigator,
             lazyGridState = lazyGridState,
             snackbarHostState = snackbarHostState,
@@ -110,10 +130,8 @@ internal fun rememberFolderScreenState(
     }
 }
 
-@OptIn(SavedStateHandleSaveableApi::class)
 private class FolderScreenStateImpl(
     override val lazyPagingItems: LazyPagingItems<File>,
-    override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<File.Key>,
     override val lazyGridState: LazyGridState,
     override val snackbarHostState: SnackbarHostState,
@@ -124,7 +142,7 @@ private class FolderScreenStateImpl(
     getFileUseCase: GetFileUseCase,
 ) : FolderScreenState {
 
-    private var isRestored by savedStateHandle.saveable { mutableStateOf(false) }
+    var isRestored by mutableStateOf(false)
 
     override val events = EventFlow<FolderScreenEvent>()
 

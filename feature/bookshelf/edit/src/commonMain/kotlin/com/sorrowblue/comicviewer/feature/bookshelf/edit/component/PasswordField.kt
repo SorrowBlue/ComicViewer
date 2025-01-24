@@ -73,10 +73,8 @@ internal fun FormScope<SmbEditScreenForm>.PasswordFieldView(
     }
 }
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 internal expect fun Modifier.semanticsPasswordForAndroid(): Modifier
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 internal expect fun Modifier.semanticsUsernameForAndroid(): Modifier
 
 @Composable

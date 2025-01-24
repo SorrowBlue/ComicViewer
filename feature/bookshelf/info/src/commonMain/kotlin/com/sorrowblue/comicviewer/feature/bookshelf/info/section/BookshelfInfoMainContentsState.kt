@@ -23,7 +23,6 @@ internal interface BookshelfInfoMainContentsState {
     fun onScanThumbnailClick()
 }
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 @Composable
 internal expect fun rememberBookshelfInfoMainContentsState(
     bookshelfFolder: BookshelfFolder,

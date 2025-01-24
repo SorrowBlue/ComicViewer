@@ -18,6 +18,7 @@ import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import comicviewer.feature.search.generated.resources.Res
 import comicviewer.feature.search.generated.resources.search_label_not_found
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
 internal sealed interface SearchContentsAction {
@@ -28,6 +29,7 @@ internal sealed interface SearchContentsAction {
         SearchContentsAction
 }
 
+@Serializable
 internal data class SearchContentsUiState(
     val query: String = "",
     val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),

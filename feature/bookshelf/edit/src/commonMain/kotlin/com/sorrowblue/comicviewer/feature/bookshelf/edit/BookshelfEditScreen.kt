@@ -85,7 +85,6 @@ internal fun BookshelfEditScreen(
     }
 }
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 internal expect class AndroidAutofillManager {
     fun commit()
 }

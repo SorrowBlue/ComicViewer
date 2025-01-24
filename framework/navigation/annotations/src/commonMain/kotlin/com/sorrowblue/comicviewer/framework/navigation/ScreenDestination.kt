@@ -22,6 +22,7 @@ import org.koin.compose.module.rememberKoinModules
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.annotation.Qualifier
 import org.koin.core.module.Module
+import org.koin.core.qualifier.qualifier
 import org.koin.dsl.module
 
 sealed interface DestinationStyle {
@@ -49,20 +50,15 @@ interface ScreenDestination {
     val style: DestinationStyle
     val navController: NavController
         @Composable
-        get() = koinInject()
+        get() = koinInject(qualifier<AppNavController>())
 
     @Composable
     fun NavBackStackEntry.Content()
 }
 
-fun navigationModule(navController: NavHostController): Module {
-    return module { single<NavController> { navController } }
-}
-
 @Qualifier
 annotation class AppNavController
 
-@Suppress("OPT_IN_USAGE")
 @Composable
 fun NavGraphNavHost(
     navGraph: NavGraph,

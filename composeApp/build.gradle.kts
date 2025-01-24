@@ -24,8 +24,10 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.framework.ui)
                 implementation(projects.framework.designsystem)
+                implementation(projects.framework.ui)
+                implementation(projects.framework.navigation.annotations)
+                implementation(projects.data.di)
                 implementation(projects.domain.usecase)
                 implementation(projects.feature.authentication)
                 implementation(projects.feature.bookshelf)
@@ -41,34 +43,14 @@ kotlin {
                 implementation(projects.feature.settings)
                 implementation(projects.feature.history)
 
-                implementation(compose.material3)
-                implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.1.0-alpha02")
-                implementation("org.jetbrains.compose.material3.adaptive:adaptive-layout:1.1.0-alpha02")
-                implementation("org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.1.0-alpha02")
-                implementation("org.jetbrains.compose.material3:material3-window-size-class:1.7.3")
-                implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha12")
                 implementation(compose.material3AdaptiveNavigationSuite)
-
-                implementation(libs.androidx.lifecycle.viewmodel)
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.materialIconsExtended)
-                implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
-                implementation(compose.ui)
-                implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
-                implementation(libs.androidx.paging.common)
             }
         }
 
         androidMain {
             dependencies {
-                implementation(projects.framework.ui)
                 implementation(projects.framework.notification)
-                implementation(projects.framework.designsystem)
-                implementation(projects.data.di)
-                implementation(projects.domain.usecase)
-                implementation(compose.preview)
+
                 implementation(libs.androidx.activity)
                 implementation(libs.androidx.biometric)
                 implementation(libs.androidx.browser)
@@ -86,6 +68,8 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation(projects.data.coil)
+                implementation(projects.data.reader.zip)
             }
         }
     }

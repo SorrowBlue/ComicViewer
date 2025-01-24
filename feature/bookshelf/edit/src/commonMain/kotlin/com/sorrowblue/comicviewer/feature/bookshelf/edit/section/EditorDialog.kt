@@ -2,9 +2,12 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit.section
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -65,8 +68,9 @@ internal fun EditorDialog(
                 if (scrollState.canScrollBackward) {
                     HorizontalDivider()
                 }
-                // TODO scrollbar
-                content(this)
+                Column(Modifier.verticalScroll(scrollState)) {
+                    content(this)
+                }
                 if (scrollState.canScrollForward) {
                     HorizontalDivider()
                 }

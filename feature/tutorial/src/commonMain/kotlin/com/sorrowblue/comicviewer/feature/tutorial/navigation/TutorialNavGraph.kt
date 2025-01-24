@@ -13,15 +13,15 @@ interface TutorialNavGraphNavigator {
 }
 
 @Factory
-internal class TutorilaNavGraphNavigatorImpl(
+internal class TutorialNavGraphNavigatorImpl(
     private val navigator: TutorialNavGraphNavigator,
 ) : TutorialScreenNavigator {
 
     override fun onCompleteTutorial() = navigator.onCompleteTutorial()
 }
 
-@NavGraph(startDestination = Tutorial::class)
 @Serializable
+@NavGraph(startDestination = Tutorial::class)
 data object TutorialNavGraph {
 
     @DestinationInGraph<Tutorial>

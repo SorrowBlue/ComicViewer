@@ -20,32 +20,22 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
             plugins {
                 id(libs.plugins.composeMultiplatform)
                 id(libs.plugins.kotlin.compose)
-                id(libs.plugins.kotlin.serialization)
-                id(libs.plugins.google.ksp)
             }
 
             kotlin<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
-                    implementation(compose.material3)
+//                    implementation(compose.material3)
                     implementation(compose.components.resources)
-                    implementation(compose.components.uiToolingPreview)
+//                    implementation(compose.components.uiToolingPreview)
+//
+//                    implementation(libs.coil3.compose)
+//                    implementation(libs.coil3.networkKtor)
+//                    implementation(libs.kotlinx.serialization.core)
 
-                    implementation(libs.coil3.compose)
-                    implementation(libs.coil3.networkKtor)
-                    implementation(libs.kotlinx.serialization.core)
-
-                    implementation(project.dependencies.platform(libs.koin.bom))
-                    implementation(libs.koin.annotations)
-                    implementation(libs.koin.compose)
-                    implementation(libs.koin.composeViewModel)
-                    implementation(libs.koin.composeViewModelNavigation)
-                }
-
-                sourceSets.androidMain.dependencies {
-                    // TODO Remove
-                    implementation(libs.compose.destinations.core)
-                    implementation(libs.kotlinx.serialization.json)
+//                    implementation(libs.koin.compose)
+//                    implementation(libs.koin.composeViewModel)
+//                    implementation(libs.koin.composeViewModelNavigation)
                 }
 
                 compilerOptions {
@@ -69,19 +59,6 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     "debugImplementation",
                     extensions.getByType<ComposePlugin.Dependencies>().uiTooling
                 )
-                add("kspAndroid", libs.compose.destinations.ksp)
-                add("kspCommonMainMetadata", libs.koin.kspCompiler)
-                add("kspAndroid", libs.koin.kspCompiler)
-                add("kspIosX64", libs.koin.kspCompiler)
-                add("kspIosArm64", libs.koin.kspCompiler)
-                add("kspIosSimulatorArm64", libs.koin.kspCompiler)
-                add("kspDesktop", libs.koin.kspCompiler)
-            }
-            // TODO Remove
-            ksp {
-                arg("compose-destinations.codeGenPackageName", "com.sorrowblue.${parentName()}")
-                arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
-                arg("KOIN_CONFIG_CHECK", "false")
             }
         }
     }

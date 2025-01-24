@@ -29,6 +29,7 @@ uiGraphicsAndroid = "1.7.6"
 runtimeAndroid = "1.7.6"
 
 [plugins]
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
 android-dynamicFeature = { id = "com.android.dynamic-feature", version.ref = "android-gradle" }
@@ -36,7 +37,6 @@ androidx-room = { id = "androidx.room", version.ref = "androidx-room" }
 androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
@@ -63,12 +63,12 @@ comicviewer-android-feature = { id = "comicviewer.android.feature" }
 comicviewer-android-featureDynamicFeature = { id = "comicviewer.android.feature-dynamic-feature" }
 comicviewer-dokka = { id = "comicviewer.android.dokka" }
 
-comicviewer-kotlinMultiplatform-base = { id = "comicviewer.kotlinMultiplatform.base" }
 comicviewer-kotlinMultiplatform-application = { id = "comicviewer.kotlinMultiplatform.application" }
 comicviewer-kotlinMultiplatform-library = { id = "comicviewer.kotlinMultiplatform.library" }
 comicviewer-kotlinMultiplatform-koin = { id = "comicviewer.kotlinMultiplatform.koin" }
 comicviewer-kotlinMultiplatform-dynamicfeature = { id = "comicviewer.kotlinMultiplatform.dynamicfeature" }
 comicviewer-kotlinMultiplatform-compose = { id = "comicviewer.kotlinMultiplatform.compose" }
+comicviewer-kotlinMultiplatform-feature = { id = "comicviewer.kotlinMultiplatform.feature" }
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
@@ -79,6 +79,10 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 kotlin-compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlinx-kover-gradlePlugin = { group = "org.jetbrains.kotlinx.kover", name = "org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kotlinx-kover" }
 compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version = "1.7.3" }
+compose-multiplatform-material3-adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive", version = "1.1.0-alpha02" }
+compose-multiplatform-material3-adaptiveLayout = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-layout", version = "1.1.0-alpha02" }
+compose-multiplatform-material3-adaptiveNavigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version = "1.1.0-alpha02" }
+compose-multiplatform-navigationCompose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version = "2.8.0-alpha12" }
 
 androidx-activity = { group = "androidx.activity", name = "activity", version = "1.9.3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
@@ -108,6 +112,8 @@ androidx-datastoreCoreOkio = { group = "androidx.datastore", name = "datastore-c
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version = "1.0.1" }
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version = "1.3.7" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version = "2.8.7" }
+androidx-lifecycle-viewmodelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version = "2.8.7" }
+androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version = "2.8.7" }
 androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "androidx-paging" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidx-paging" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
@@ -123,6 +129,7 @@ androidx-work-runtime = { group = "androidx.work", name = "work-runtime", versio
 
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.6.1" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
@@ -156,6 +163,7 @@ soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha0
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version = "0.6.0" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.16-0" }
 
+artifex-mupdf = { group = "com.artifex.mupdf", name = "mupdf", version = "1.25.2" }
 artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.2" }
 squareup-logcat = { group = "com.squareup.logcat", name = "logcat", version = "0.1" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.10.2" }
@@ -186,11 +194,11 @@ nlopez-compose-rules-detekt = { group = "io.nlopez.compose.rules", name = "detek
 arturbosch-detektFormatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
-koin-compose = { group = "io.insert-koin", name = "koin-compose" }
-koin-composeViewModel = { group = "io.insert-koin", name = "koin-compose-viewmodel" }
-koin-composeViewModelNavigation = { group = "io.insert-koin", name = "koin-compose-viewmodel-navigation" }
-koin-core = { group = "io.insert-koin", name = "koin-core" }
-koin-android = { group = "io.insert-koin", name = "koin-android" }
+koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin" }
+koin-composeViewModel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
+koin-composeViewModelNavigation = { group = "io.insert-koin", name = "koin-compose-viewmodel-navigation", version.ref = "koin" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-androidxStartup = { group = "io.insert-koin", name = "koin-androidx-startup", version.ref = "koin" }
 koin-androidxWorkmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin" }
 koin-androidxCompose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }

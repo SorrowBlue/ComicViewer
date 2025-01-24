@@ -15,13 +15,14 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(projects.app)
-                implementation(projects.data.storage.client)
-
                 implementation(libs.androidx.core.ktx)
                 implementation(libs.artifex.mupdf.fitz)
-
                 implementation(libs.google.autoServiceAnnotations)
             }
+        }
+        desktopMain.dependencies {
+            implementation(libs.kotlinx.coroutines.swing)
+            implementation("org.apache.pdfbox:pdfbox:3.0.4")
         }
     }
 }

@@ -26,6 +26,7 @@ import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toClassNameOrNull
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
+import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -330,7 +331,7 @@ fun NavGraphResolver(
                 .build()
             val rootPackage =
                 if (isRoot) root.declaration.packageName.asString() else route.declaration.packageName.asString()
-            FileSpec.builder(rootPackage, "$className.nav")
+            FileSpec.builder(rootPackage, "$className.desktop")
                 .indent("    ")
                 .addKotlinDefaultImports()
                 .addImport(ScreenDestination, "")
@@ -354,7 +355,7 @@ fun generateTypeMap(
     val packageName = routeType.packageName.asString()
     val types = routeType.primaryConstructor?.parameters?.mapNotNull {
         val ksType = it.type.resolve()
-        when (ksType.toTypeName()) {
+        when (ksType.makeNotNullable().toTypeName()) {
             Int::class.asTypeName() -> ksType to "NavType.IntType"
             IntArray::class.asTypeName() -> ksType to "NavType.IntArrayType"
             Long::class.asTypeName() -> ksType to "NavType.LongType"
@@ -397,7 +398,9 @@ fun generateTypeMap(
                     }>()"
                 } else {
                     logger.warn("$ksType is not support")
-                    null
+                    ksType to "NavType.kSerializableType<${
+                        it.type.resolve().toClassName().canonicalName
+                    }>()"
                 }
             }
         }

@@ -11,7 +11,7 @@ import com.artifex.mupdf.fitz.android.AndroidDrawDevice
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.DocumentFileReader
 import com.sorrowblue.comicviewer.domain.reader.FileReader
-import di.IoDispatcher
+import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
