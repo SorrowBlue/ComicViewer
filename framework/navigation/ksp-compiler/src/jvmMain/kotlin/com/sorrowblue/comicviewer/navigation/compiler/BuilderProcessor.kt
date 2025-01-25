@@ -12,6 +12,7 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.KSValueParameter
+import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -26,7 +27,6 @@ import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toClassNameOrNull
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
-import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -54,9 +54,8 @@ fun DestinationResolver(
     codeGenerator: CodeGenerator,
     logger: KSPLogger,
     resolver: Resolver,
-): MutableMap<ClassName, ClassName> {
+): Sequence<KSAnnotated> {
     val symbols = resolver.getSymbolsWithAnnotation(Destination)
-    val routeToGenerate = mutableMapOf<ClassName, ClassName>()
     symbols.forEach { symbol ->
         logger.warn("@Destination checking..")
         if (symbol is KSFunctionDeclaration) {
@@ -176,10 +175,9 @@ fun DestinationResolver(
                 .addType(clazz)
                 .build()
                 .writeTo(codeGenerator, Dependencies(true))
-            routeToGenerate[routeType.toClassName()] = ClassName(packageName, clazz.name!!)
         }
     }
-    return routeToGenerate
+    return symbols.filter { !it.validate() }
 }
 
 fun NavGraphResolver(
@@ -292,22 +290,23 @@ fun NavGraphResolver(
                             ScreenDestination
                         ),
                         KModifier.OVERRIDE
-                    ).addKdoc("Retrieved from [${(includeObject.parent as KSClassDeclaration).simpleName.asString()}.${includeObject.simpleName.asString()}]")
+                    )
+                        .addKdoc("Retrieved from [${(includeObject.parent as KSClassDeclaration).simpleName.asString()}.${includeObject.simpleName.asString()}]")
                         .apply {
-                        if (inGraphRoute.isEmpty()) {
-                            initializer("emptyList()")
-                        } else {
+                            if (inGraphRoute.isEmpty()) {
+                                initializer("emptyList()")
+                            } else {
 
-                            initializer(
-                                "listOf(%L)",
-                                inGraphRoute.joinToString(",") { route ->
-                                    val genFunctionName =
-                                        route.toClassName().simpleName + "Destination"
-                                    "${route.declaration.packageName.asString()}.$genFunctionName()"
-                                }
-                            )
-                        }
-                    }.build()
+                                initializer(
+                                    "listOf(%L)",
+                                    inGraphRoute.joinToString(",") { route ->
+                                        val genFunctionName =
+                                            route.toClassName().simpleName + "Destination"
+                                        "${route.declaration.packageName.asString()}.$genFunctionName()"
+                                    }
+                                )
+                            }
+                        }.build()
                 )
                 .addProperty(
                     PropertySpec.builder(
@@ -454,8 +453,8 @@ class BuilderProcessor(
     @OptIn(KspExperimental::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {
         logger.warn("Scan symbols ... ${resolver.getModuleName().asString()}")
-        DestinationResolver(codeGenerator, logger, resolver)
-        return NavGraphResolver(codeGenerator, logger, resolver).also {
+        val list = DestinationResolver(codeGenerator, logger, resolver).toList()
+        return list + NavGraphResolver(codeGenerator, logger, resolver).also {
             if (it.isNotEmpty()) {
                 logger.warn(
                     "skip class ${
