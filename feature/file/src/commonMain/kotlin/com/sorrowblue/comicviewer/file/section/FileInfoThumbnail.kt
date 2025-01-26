@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.file.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.file.component.FileThumbnailAsyncImage
 import com.sorrowblue.comicviewer.file.component.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
@@ -27,7 +29,10 @@ internal fun FileInfoThumbnail(
     val navigationState = LocalNavigationState.current
     Box(modifier = modifier) {
         if (lazyPagingItems != null) {
-            FileThumbnailsCarousel(lazyPagingItems = lazyPagingItems)
+            FileThumbnailsCarousel(
+                lazyPagingItems = lazyPagingItems,
+                contentPadding = PaddingValues(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
+            )
         } else {
             FileThumbnailAsyncImage(
                 fileThumbnail = FileThumbnail.from(file),

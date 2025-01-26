@@ -31,6 +31,8 @@ import soil.form.compose.FormScope
 import soil.form.compose.rememberFieldRuleControl
 import soil.form.rule.notNull
 
+expect fun localUriToDisplayPath(uri: Uri): String
+
 @Composable
 internal fun FolderSelectField(
     state: FolderSelectFieldState,
@@ -40,8 +42,7 @@ internal fun FolderSelectField(
     Controller(state.control) { field ->
         val focusManager = LocalFocusManager.current
         OutlinedTextField(
-            value = field.value?.getPathSegments()?.lastOrNull()?.split(":")?.lastOrNull()
-                .orEmpty(),
+            value = field.value?.let { localUriToDisplayPath(it) }.orEmpty(),
             onValueChange = {},
             modifier = modifier
                 .testTag("FolderSelect")

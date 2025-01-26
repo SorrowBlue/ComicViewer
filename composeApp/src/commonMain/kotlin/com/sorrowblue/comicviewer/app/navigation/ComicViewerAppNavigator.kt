@@ -5,6 +5,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraphNavigator
+import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAdd
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
@@ -16,11 +17,14 @@ import com.sorrowblue.comicviewer.feature.search.Search
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraphNavigator
+import org.koin.core.annotation.InjectedParam
+import org.koin.core.annotation.Singleton
 import com.sorrowblue.comicviewer.feature.book.Book as BookRoute
 
+@Singleton
 internal class ComicViewerAppNavigator(
+    @InjectedParam private val onRestoreComplete: () -> Unit,
     private val navController: NavController,
-    private val onRestoreComplete: () -> Unit,
 ) : BookshelfNavGraphNavigator,
     ReadLaterNavGraphNavigator,
     FavoriteNavGraphNavigator,
@@ -28,6 +32,7 @@ internal class ComicViewerAppNavigator(
     FavoriteAddScreenNavigator,
     TutorialNavGraphNavigator,
     HistoryNavGraphNavigator,
+    BookNavGraphNavigator,
     FavoriteCreateScreenNavigator {
 
     override fun navigateToCreateFavorite(bookshelfId: BookshelfId, path: String) {

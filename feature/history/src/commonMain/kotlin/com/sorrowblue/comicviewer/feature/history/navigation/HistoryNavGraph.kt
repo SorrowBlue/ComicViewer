@@ -12,9 +12,7 @@ import com.sorrowblue.comicviewer.feature.history.HistoryScreenNavigator
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
-import com.sorrowblue.comicviewer.framework.navigation.AppNavController
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Singleton
 
 @Serializable
@@ -36,7 +34,7 @@ interface HistoryNavGraphNavigator {
 
 @Singleton
 internal class HistoryNavGraphNavigatorImpl(
-    @Qualifier(AppNavController::class) override val navController: NavController,
+    override val navController: NavController,
     private val navigator: HistoryNavGraphNavigator,
 ) : HistoryScreenNavigator, FolderScreenNavigator {
 

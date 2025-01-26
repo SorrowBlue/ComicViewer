@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.framework.designsystem.icon
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.ArrowRight
 import androidx.compose.material.icons.automirrored.rounded.InsertDriveFile
 import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
@@ -99,6 +100,7 @@ object ComicIcons {
     val DisplaySettings = Icons.Rounded.DisplaySettings
     val InstallMobile = Icons.Rounded.InstallMobile
     val ArrowRight = Icons.AutoMirrored.Rounded.ArrowRight
+    val ArrowLeft = Icons.AutoMirrored.Rounded.ArrowLeft
     val Settings = Icons.Rounded.Settings
     val MoreVert = Icons.Rounded.MoreVert
     val ClearAll = Icons.Rounded.ClearAll

@@ -16,18 +16,14 @@ import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreateScreenNa
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
-import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraphNavigator
-import com.sorrowblue.comicviewer.framework.navigation.AppNavController
 import com.sorrowblue.comicviewer.framework.navigation.NavGraphNavHost
+import com.sorrowblue.comicviewer.framework.ui.animation.rememberSlideDistance
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
-import com.sorrowblue.comicviewer.framework.ui.navigation.GlobalNavigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
 import logcat.logcat
 import org.koin.compose.module.rememberKoinModules
 import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.core.annotation.Qualifier
-import org.koin.core.annotation.Singleton
-import org.koin.core.qualifier.qualifier
 import org.koin.dsl.binds
 import org.koin.dsl.module
 
@@ -40,6 +36,7 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
         logcat { "containsWidthDp MEDIUM=${info.windowSizeClass.containsWidthDp(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)}" }
         logcat { "containsWidthDp EXPANDED=${info.windowSizeClass.containsWidthDp(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)}" }
     }
+    DestinationTransitions.slideDistance = rememberSlideDistance()
     ComicViewerScaffold(
         uiState = state.uiState,
         onTabSelect = { tab -> state.onTabSelect(tab) },
@@ -65,7 +62,7 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
                         HistoryNavGraphNavigator::class,
                         FavoriteCreateScreenNavigator::class,
                     )
-                    single<NavController>(qualifier<AppNavController>()) { state.navController }
+                    single<NavController> { state.navController }
                 }
             )
         }
@@ -74,14 +71,5 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
             isCompact = isCompactWindowClass(),
             navController = state.navController
         )
-    }
-}
-
-@Singleton
-internal class GlobalNavigatorImpl(
-    @Qualifier(AppNavController::class) private val navController: NavController,
-) : GlobalNavigator {
-    override fun onSettingsClick() {
-        navController.navigate(SettingsNavGraph)
     }
 }

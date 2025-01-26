@@ -11,7 +11,6 @@ import androidx.navigation.NavController
 import com.sorrowblue.comicviewer.feature.book.section.PageFormat2
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.AppNavController
 import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.ExposedDropdownMenu
@@ -21,7 +20,6 @@ import comicviewer.feature.book.generated.resources.book_label_scale
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import org.koin.core.qualifier.qualifier
 
 @Serializable
 data object BookMenu
@@ -33,7 +31,7 @@ internal data class BookMenuScreenUiState(
 
 @Destination<BookMenu>(style = DestinationStyle.Dialog::class)
 @Composable
-internal fun BookMenuScreen(navController: NavController = koinInject(qualifier<AppNavController>())) {
+internal fun BookMenuScreen(navController: NavController = koinInject()) {
     BookMenuScreen(onDismissRequest = navController::navigateUp)
 }
 

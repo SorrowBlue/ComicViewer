@@ -9,9 +9,7 @@ import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
-import com.sorrowblue.comicviewer.framework.navigation.AppNavController
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Singleton
 
 @Serializable
@@ -24,9 +22,8 @@ data object SettingsNavGraph {
 }
 
 @Singleton
-internal class SettingsNavGraphNavigator(
-    @Qualifier(AppNavController::class) private val navController: NavController,
-) : SettingsScreenNavigator, AuthenticationScreenNavigator {
+internal class SettingsNavGraphNavigator(private val navController: NavController) :
+    SettingsScreenNavigator, AuthenticationScreenNavigator {
 
     override fun navigateUp() {
         navController.navigateUp()

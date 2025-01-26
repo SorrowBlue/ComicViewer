@@ -11,19 +11,24 @@ import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsScope
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCache
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsNavGraph
+import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNaGraphNavigator
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNavGraphImpl
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettings
+import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettings
 import com.sorrowblue.comicviewer.framework.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -39,12 +44,13 @@ import comicviewer.feature.settings.generated.resources.settings_label_security
 import comicviewer.feature.settings.generated.resources.settings_label_tutorial
 import comicviewer.feature.settings.generated.resources.settings_label_viewer
 import kotlin.reflect.KClass
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.koin.compose.module.rememberKoinModules
 import org.koin.compose.scope.KoinScope
-import org.koin.core.qualifier.named
 import org.koin.dsl.bind
+import org.koin.dsl.binds
 import org.koin.dsl.module
 
 internal interface SettingsScreenNavigator {
@@ -68,13 +74,25 @@ internal fun SettingsScreen(
         onBackClick = screenNavigator::navigateUp,
         onSettingsClick = { state.onSettingsClick(it, screenNavigator::onStartTutorialClick) },
     ) {
+        val scope = rememberCoroutineScope()
         rememberKoinModules {
-            listOf(module {
-                scope<SettingsScope> {
-                    scoped { state.navController } bind NavController::class
-                    scoped(named("ThreePaneScaffoldNavigator")) { state.navigator }
+            listOf(
+                module {
+                    scope<SettingsScope> {
+                        scoped { state.navController } bind NavController::class
+                        scoped {
+                            SettingsDetailNaGraphNavigator(
+                                navigateBack = { scope.launch { state.navigator.navigateBack() } },
+                                settingsScreenNavigator = get()
+                            )
+                        } binds arrayOf(
+                            SecuritySettingsScreenNavigator::class,
+                            SettingsDetailNavigator::class,
+                            SettingsExtraNavigator::class
+                        )
+                    }
                 }
-            })
+            )
         }
         val navGraph = remember { SettingsDetailNavGraphImpl() }
         KoinScope<SettingsScope>("ScopeId") {

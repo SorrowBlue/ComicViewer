@@ -8,6 +8,7 @@ import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
@@ -17,6 +18,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STAR
@@ -138,6 +140,12 @@ fun DestinationResolver(
                 )
                 .addFunction(
                     FunSpec.builder("Content")
+                        .addParameter(
+                            ParameterSpec(
+                                "navController",
+                                ClassName("androidx.navigation", "NavController")
+                            )
+                        )
                         .addModifiers(KModifier.OVERRIDE)
                         .addAnnotation(Composable)
                         .receiver(NavBackStackEntry)
@@ -180,6 +188,16 @@ fun DestinationResolver(
     return symbols.filter { !it.validate() }
 }
 
+val NavTransition = ClassName("com.sorrowblue.comicviewer.framework.navigation", "NavTransition")
+
+fun Sequence<KSAnnotation>.get(className: ClassName): KSAnnotation {
+    return first { it.annotationType.resolve().declaration.qualifiedName?.asString() == className.canonicalName }
+}
+
+fun KSAnnotation.getArgument(name: String): KSType {
+    return arguments.first { it.name?.asString() == name }.value as KSType
+}
+
 fun NavGraphResolver(
     codeGenerator: CodeGenerator,
     logger: KSPLogger,
@@ -191,28 +209,26 @@ fun NavGraphResolver(
     symbols.forEach { symbol ->
         logger.warn("  symbol is ${symbol}")
         if (symbol is KSClassDeclaration) {
-            val route: KSType
             val startDestination: KSType
+            val transition: KSType
             val root: KSType
             logger.warn("  isCompanionObject ${symbol.isCompanionObject}")
 
             // @NavGraph(startDestination=XXX::class)
-            route = symbol.asType(emptyList())
-            symbol.annotations.first { it.annotationType.resolve().declaration.qualifiedName?.asString() == NavGraphAnnotation.canonicalName }
-                .let {
-                    startDestination =
-                        it.arguments.first { it.name?.asString() == "startDestination" }.value as KSType
-                    logger.warn("${(it.arguments.first { it.name?.asString() == "root" }.value)}")
-                    root = it.arguments.first { it.name?.asString() == "root" }.value as KSType
-                }
-
+            val route = symbol.asType(emptyList())
+            val navGraph = symbol.annotations.get(NavGraphAnnotation)
+            startDestination = navGraph.getArgument("startDestination")
+            transition = navGraph.getArgument("transition")
+            root = navGraph.getArgument("root")
 
             // data class Route(val value: String)
             if (!route.isObjectClass) {
                 generateTypeMap(codeGenerator, logger, route.declaration as KSClassDeclaration)
             }
-            logger.warn("  route=$route")
-            logger.warn("  startDestination=$startDestination")
+            logger.info(
+                "@NavGraph(startDestination = ${startDestination.declaration.simpleName}::class, root = ${root.declaration.simpleName}::class, transition = ${transition.declaration.simpleName}::class)",
+                symbol
+            )
             val inGraphRoute = mutableListOf<KSType>()
             val nestedNavGraphRoute = mutableListOf<KSType>()
 
@@ -238,6 +254,10 @@ fun NavGraphResolver(
                 } else {
                     route.declaration.simpleName.asString() + "NavGraph"
                 }
+            val imports = mutableListOf<ClassName>()
+            imports.add(startDestination.toClassName())
+            imports.add(transition.toClassName())
+            imports.add(route.toClassName())
             val clazz = TypeSpec.classBuilder(className)
                 .apply {
                     if (isRoot) {
@@ -254,7 +274,18 @@ fun NavGraphResolver(
                         if (isRoot) {
                             addModifiers(KModifier.ACTUAL)
                         }
-                        initializer("%L::class", startDestination.toClassName().canonicalName)
+                        initializer("%L::class", startDestination.toClassName().simpleName)
+                    }.build()
+                )
+                .addProperty(
+                    PropertySpec.builder("transition", NavTransition, KModifier.OVERRIDE).apply {
+                        if (isRoot) {
+                            addModifiers(KModifier.ACTUAL)
+                        }
+                        initializer(
+                            "%L${if (transition.isObjectClass) "" else "()"}",
+                            transition.toClassName().simpleName
+                        )
                     }.build()
                 )
                 .addProperty(
@@ -263,10 +294,11 @@ fun NavGraphResolver(
                         KClass::class.asTypeName().parameterizedBy(STAR),
                         KModifier.OVERRIDE
                     ).apply {
+                        imports.add(route.toClassName())
                         if (isRoot) {
                             addModifiers(KModifier.ACTUAL)
                         }
-                        initializer("%L::class", route.toClassName().canonicalName)
+                        initializer("%L::class", route.toClassName().simpleName)
                     }.build()
                 )
                 .addProperty(
@@ -305,12 +337,18 @@ fun NavGraphResolver(
                         if (inGraphRoute.isEmpty()) {
                             initializer("emptyList()")
                         } else {
+                            inGraphRoute.forEach { route ->
+                                imports.add(
+                                    ClassName(
+                                        route.declaration.packageName.asString(),
+                                        route.toClassName().simpleName + "Destination"
+                                    )
+                                )
+                            }
                             initializer(
                                 "listOf(%L)",
                                 inGraphRoute.joinToString(",") { route ->
-                                    val genFunctionName =
-                                        route.toClassName().simpleName + "Destination"
-                                    "${route.declaration.packageName.asString()}.$genFunctionName()"
+                                    "${route.toClassName().simpleName + "Destination"}()"
                                 }
                             )
                         }
@@ -342,12 +380,15 @@ fun NavGraphResolver(
                 .build()
             val rootPackage =
                 if (isRoot) root.declaration.packageName.asString() else route.declaration.packageName.asString()
-            FileSpec.builder(rootPackage, "$className.desktop")
+            FileSpec.builder(rootPackage, "$className.nav")
                 .indent("    ")
                 .addKotlinDefaultImports()
+                .apply {
+                    imports.filterNot { packageName == it.packageName }.forEach {
+                        addImport(it, "")
+                    }
+                }
                 .addImport(ScreenDestination, "")
-                .addImport(KoinScope, "")
-                .addImport(route.toClassName(), "")
                 .addType(clazz)
                 .build()
                 .writeTo(codeGenerator, Dependencies(true))

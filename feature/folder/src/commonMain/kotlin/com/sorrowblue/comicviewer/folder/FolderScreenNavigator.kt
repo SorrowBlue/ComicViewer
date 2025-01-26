@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 /** フォルダ画面のナビゲータ */
 interface FolderScreenNavigator {
 
-    val navController: NavController get() = TODO("Not yet implemented")
+    val navController: NavController
 
     /** ナビゲートを行う */
     fun navigateUp()

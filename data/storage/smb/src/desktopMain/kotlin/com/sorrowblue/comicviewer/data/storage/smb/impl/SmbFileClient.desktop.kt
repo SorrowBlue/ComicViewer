@@ -186,11 +186,6 @@ internal actual class SmbFileClient(
     }
 
     private fun SmbFile.toFileModel(resolveImageFolder: Boolean = false): File {
-        logcat { """
-            url.path=${url.path}
-            Path(url.path)=${Path(url.path).normalize()}
-            Path(url.path).parent=${Path(url.path).parent}
-        """.trimIndent() }
         if (resolveImageFolder && isDirectory && runCatching {
                 listFiles(SmbFileFilter { it.isFile && it.name.extension in SUPPORTED_IMAGE }).isNotEmpty()
             }.getOrDefault(

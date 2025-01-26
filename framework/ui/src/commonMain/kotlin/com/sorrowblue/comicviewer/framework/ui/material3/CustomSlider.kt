@@ -86,7 +86,7 @@ fun CustomSlider(
     },
     steps: Int = 0,
 ) {
-    val thumbContent = remember { movableContentOf { thumb(value) } }
+    val thumbContent = remember(value) { movableContentOf { thumb(value) } }
     val itemCount = (valueRange.endInclusive - valueRange.start).roundToInt()
     Box(modifier = modifier) {
         Layout(
