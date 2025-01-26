@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="googledrive_action_login">Login</string>
-    <string name="googledrive_action_logout">Logout</string>
-    <string name="googledrive_msg_downloading_background">Downloading in the background</string>
-    <string name="googledrive_msg_one_file_downloaded">1 file downloaded.</string>
-</resources>

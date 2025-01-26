@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="box_action_login">Login</string>
-    <string name="box_action_logout">Logout</string>
-    <string name="box_msg_downloading_background">Downloading in the background</string>
-    <string name="box_msg_file_downloaded">1 file downloaded</string>
-</resources>

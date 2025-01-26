@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="dropbox_action_login">ログイン</string>
-    <string name="dropbox_action_logout">ログアウト</string>
-    <string name="dropbox_message_auth">認証されました</string>
-    <string name="dropbox_message_not_auth">認証されませんでした</string>
-</resources>

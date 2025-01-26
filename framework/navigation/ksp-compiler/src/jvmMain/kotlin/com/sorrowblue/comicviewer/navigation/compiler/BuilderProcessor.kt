@@ -226,7 +226,7 @@ fun NavGraphResolver(
                 generateTypeMap(codeGenerator, logger, route.declaration as KSClassDeclaration)
             }
             logger.info(
-                "@NavGraph(startDestination = ${startDestination.declaration.simpleName}::class, root = ${root.declaration.simpleName}::class, transition = ${transition.declaration.simpleName}::class)",
+                "@NavGraph(startDestination = ${startDestination.toClassName().simpleName}::class, root = ${root.toClassName().simpleName}::class, transition = ${transition.toClassName().simpleName}::class)",
                 symbol
             )
             val inGraphRoute = mutableListOf<KSType>()

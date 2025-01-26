@@ -66,6 +66,7 @@ internal fun RecentFavorite(
             text =
             pluralStringResource(
                 CommonRes.plurals.favorite_common_label_file_count,
+                favorite.count,
                 favorite.count
             ),
             style = ComicTheme.typography.labelSmall,

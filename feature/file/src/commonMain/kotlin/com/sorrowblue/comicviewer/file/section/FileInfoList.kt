@@ -62,6 +62,7 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
                     Text(
                         text = pluralStringResource(
                             Res.plurals.file_text_page_count,
+                            file.totalPageCount,
                             file.totalPageCount
                         )
                     )

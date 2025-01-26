@@ -7,13 +7,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
+import comicviewer.feature.authentication.generated.resources.Res
+import comicviewer.feature.authentication.generated.resources.authentication_title_fingerprint_auth
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.jetbrains.compose.resources.getString
 
 internal actual class BiometricManager(
     private val context: Context,
 ) {
-    actual suspend fun authenticate(): AuthenticationResult =
-        suspendCancellableCoroutine { continuation ->
+    actual suspend fun authenticate(): AuthenticationResult {
+        val title = getString(Res.string.authentication_title_fingerprint_auth)
+        return suspendCancellableCoroutine { continuation ->
             val biometricPrompt = BiometricPrompt(
                 context as FragmentActivity,
                 object : BiometricPrompt.AuthenticationCallback() {
@@ -35,11 +39,12 @@ internal actual class BiometricManager(
             )
             val promptInfo = BiometricPrompt.PromptInfo.Builder()
                 .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-                .setTitle(context.getString(R.string.authentication_title_fingerprint_auth))
+                .setTitle(title)
                 .setNegativeButtonText("Cancel TODO")
                 .build()
             biometricPrompt.authenticate(promptInfo)
         }
+    }
 }
 
 @Composable

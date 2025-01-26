@@ -118,6 +118,7 @@ private fun FavoriteListItem(
             Text(
                 text = pluralStringResource(
                     Res.plurals.favorite_common_label_file_count,
+                    favorite.count,
                     favorite.count
                 )
             )

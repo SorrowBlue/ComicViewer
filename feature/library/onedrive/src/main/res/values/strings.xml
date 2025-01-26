@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="onedrive_action_signin">Sign in</string>
-    <string name="onedrive_action_signout">Sign out</string>
-    <string name="onedrive_msg_downloading_background">Downloading in the background</string>
-    <string name="onedrive_msg_one_file_downloaded">1 file downloaded.</string>
-</resources>
