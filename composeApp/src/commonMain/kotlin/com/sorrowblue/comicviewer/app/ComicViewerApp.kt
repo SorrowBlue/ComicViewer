@@ -12,20 +12,26 @@ import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavigator
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
+import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreateScreenNavigator
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
+import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraph
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraphNavigator
 import com.sorrowblue.comicviewer.framework.navigation.AppNavController
 import com.sorrowblue.comicviewer.framework.navigation.NavGraphNavHost
-import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.navigation.GlobalNavigator
 import logcat.logcat
 import org.koin.compose.module.rememberKoinModules
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.annotation.Qualifier
+import org.koin.core.annotation.Singleton
 import org.koin.core.qualifier.qualifier
 import org.koin.dsl.binds
 import org.koin.dsl.module
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppState()) {
     val info = currentWindowAdaptiveInfo()
@@ -57,6 +63,7 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
                         FavoriteAddScreenNavigator::class,
                         TutorialNavGraphNavigator::class,
                         HistoryNavGraphNavigator::class,
+                        FavoriteCreateScreenNavigator::class,
                     )
                     single<NavController>(qualifier<AppNavController>()) { state.navController }
                 }
@@ -68,11 +75,13 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
             navController = state.navController
         )
     }
-    EventEffect(state.events) {
-        when (it) {
-            is ComicViewerAppEvent.Navigate -> {
-                state.navController.navigate(it.route, it.navOptions)
-            }
-        }
+}
+
+@Singleton
+internal class GlobalNavigatorImpl(
+    @Qualifier(AppNavController::class) private val navController: NavController,
+) : GlobalNavigator {
+    override fun onSettingsClick() {
+        navController.navigate(SettingsNavGraph)
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.sorrowblue.comicviewer.app.ComicViewerApp
+import com.sorrowblue.comicviewer.app.RootScreenWrapper
 import com.sorrowblue.comicviewer.data.coil.CoilInitializer
 import com.sorrowblue.comicviewer.data.di.DiModule
 import com.sorrowblue.comicviewer.data.reader.zip.impl.SevenZipInitializer

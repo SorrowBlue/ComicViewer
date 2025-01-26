@@ -221,16 +221,15 @@ fun NavGraphResolver(
             // companion object
             val includeObject = symbol.declarations.filterIsInstance<KSClassDeclaration>()
                 .first { it.classKind == ClassKind.OBJECT }
-            includeObject.annotations
-                .forEach {
-                    logger.warn("  companion object annotation=${it.shortName.asString()}")
-                    val resolved = it.annotationType.resolve()
-                    if (resolved.declaration.qualifiedName?.asString() == DestinationInGraph.canonicalName) {
-                        inGraphRoute.add(resolved.arguments.first().type!!.resolve())
-                    } else if (resolved.declaration.qualifiedName?.asString() == NestedNavGraph.canonicalName) {
-                        nestedNavGraphRoute.add(resolved.arguments.first().type!!.resolve())
-                    }
+            includeObject.annotations.forEach {
+                logger.warn("  companion object annotation=${it.shortName.asString()}")
+                val resolved = it.annotationType.resolve()
+                if (resolved.declaration.qualifiedName?.asString() == DestinationInGraph.canonicalName) {
+                    inGraphRoute.add(resolved.arguments.first().type!!.resolve())
+                } else if (resolved.declaration.qualifiedName?.asString() == NestedNavGraph.canonicalName) {
+                    nestedNavGraphRoute.add(resolved.arguments.first().type!!.resolve())
                 }
+            }
 
             val isRoot = root.toClassName() != ClassName("java.lang", "Void")
             val className =
@@ -251,18 +250,24 @@ fun NavGraphResolver(
                         "startDestination",
                         KClass::class.asTypeName().parameterizedBy(STAR),
                         KModifier.OVERRIDE
-                    )
-                        .initializer("%L::class", startDestination.toClassName().canonicalName)
-                        .build()
+                    ).apply {
+                        if (isRoot) {
+                            addModifiers(KModifier.ACTUAL)
+                        }
+                        initializer("%L::class", startDestination.toClassName().canonicalName)
+                    }.build()
                 )
                 .addProperty(
                     PropertySpec.builder(
                         "route",
                         KClass::class.asTypeName().parameterizedBy(STAR),
                         KModifier.OVERRIDE
-                    )
-                        .initializer("%L::class", route.toClassName().canonicalName)
-                        .build()
+                    ).apply {
+                        if (isRoot) {
+                            addModifiers(KModifier.ACTUAL)
+                        }
+                        initializer("%L::class", route.toClassName().canonicalName)
+                    }.build()
                 )
                 .addProperty(
                     PropertySpec.builder(
@@ -273,6 +278,9 @@ fun NavGraphResolver(
                         ),
                         KModifier.OVERRIDE
                     ).apply {
+                        if (isRoot) {
+                            addModifiers(KModifier.ACTUAL)
+                        }
                         if (route.isObjectClass) {
                             initializer("emptyMap()")
                         } else {
@@ -290,23 +298,24 @@ fun NavGraphResolver(
                             ScreenDestination
                         ),
                         KModifier.OVERRIDE
-                    )
-                        .addKdoc("Retrieved from [${(includeObject.parent as KSClassDeclaration).simpleName.asString()}.${includeObject.simpleName.asString()}]")
-                        .apply {
-                            if (inGraphRoute.isEmpty()) {
-                                initializer("emptyList()")
-                            } else {
-
-                                initializer(
-                                    "listOf(%L)",
-                                    inGraphRoute.joinToString(",") { route ->
-                                        val genFunctionName =
-                                            route.toClassName().simpleName + "Destination"
-                                        "${route.declaration.packageName.asString()}.$genFunctionName()"
-                                    }
-                                )
-                            }
-                        }.build()
+                    ).apply {
+                        if (isRoot) {
+                            addModifiers(KModifier.ACTUAL)
+                        }
+                        if (inGraphRoute.isEmpty()) {
+                            initializer("emptyList()")
+                        } else {
+                            initializer(
+                                "listOf(%L)",
+                                inGraphRoute.joinToString(",") { route ->
+                                    val genFunctionName =
+                                        route.toClassName().simpleName + "Destination"
+                                    "${route.declaration.packageName.asString()}.$genFunctionName()"
+                                }
+                            )
+                        }
+                        addKdoc("Retrieved from [${(includeObject.parent as KSClassDeclaration).simpleName.asString()}.${includeObject.simpleName.asString()}]")
+                    }.build()
                 )
                 .addProperty(
                     PropertySpec.builder(
@@ -314,6 +323,9 @@ fun NavGraphResolver(
                         List::class.asClassName().parameterizedBy(NavGraph),
                         KModifier.OVERRIDE
                     ).apply {
+                        if (isRoot) {
+                            addModifiers(KModifier.ACTUAL)
+                        }
                         if (nestedNavGraphRoute.isEmpty()) {
                             initializer("emptyList()")
                         } else {
@@ -454,7 +466,7 @@ class BuilderProcessor(
     override fun process(resolver: Resolver): List<KSAnnotated> {
         logger.warn("Scan symbols ... ${resolver.getModuleName().asString()}")
         val list = DestinationResolver(codeGenerator, logger, resolver).toList()
-        return list + NavGraphResolver(codeGenerator, logger, resolver).also {
+        return NavGraphResolver(codeGenerator, logger, resolver).also {
             if (it.isNotEmpty()) {
                 logger.warn(
                     "skip class ${

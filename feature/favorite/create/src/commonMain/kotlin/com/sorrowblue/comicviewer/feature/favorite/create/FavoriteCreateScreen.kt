@@ -12,7 +12,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameField
 import com.sorrowblue.comicviewer.framework.annotation.Destination
@@ -37,21 +36,25 @@ internal data class FavoriteCreateScreenUiState(
 @Serializable
 data class FavoriteCreate(val bookshelfId: BookshelfId = BookshelfId(), val path: String = "")
 
+interface FavoriteCreateScreenNavigator {
+    fun navigateUp()
+}
+
 @Destination<FavoriteCreate>(style = DestinationStyle.Dialog::class)
 @Composable
 internal fun FavoriteCreateScreen(
     route: FavoriteCreate,
-    navController: NavController,
+    navigator: FavoriteCreateScreenNavigator,
     state: FavoriteCreateScreenState = rememberFavoriteCreateScreenState(route),
 ) {
     FavoriteCreateScreen(
         uiState = state.uiState,
-        onDismissRequest = navController::navigateUp,
+        onDismissRequest = navigator::navigateUp,
         onSubmit = state::onSubmit
     )
     EventEffect(state.events) {
         when (it) {
-            FavoriteCreateScreenEvent.Success -> navController.navigateUp()
+            FavoriteCreateScreenEvent.Success -> navigator.navigateUp()
         }
     }
 }
@@ -62,11 +65,7 @@ internal fun FavoriteCreateScreen(
     onDismissRequest: () -> Unit,
     onSubmit: (String) -> Unit,
 ) {
-    Form(
-        onSubmit = { onSubmit(it) },
-        initialValue = "",
-        policy = FormPolicy.Default
-    ) {
+    Form(onSubmit = { onSubmit(it) }, initialValue = "", policy = FormPolicy.Default) {
         AlertDialog(
             title = { Text(text = stringResource(Res.string.favorite_create_title_new_favorite)) },
             text = {

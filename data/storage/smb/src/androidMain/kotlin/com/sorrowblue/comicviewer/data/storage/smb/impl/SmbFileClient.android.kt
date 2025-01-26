@@ -326,36 +326,8 @@ internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) :
         }
         return file.filePointer
     }
-    override fun get(position: Long): Int {
-        return file.skipBytes(position.toInt())
-    }
-
-    override fun get(position: Long, bytes: ByteArray?, off: Int, len: Int): Int {
-        file.skipBytes(position.toInt())
-        return file.read(bytes!!, off, len)
-    }
-
-    override fun length(): Long {
-        return file.length()
-    }
     override fun position(): Long {
         return file.filePointer
-    }
-
-    override fun read(): Int {
-        return file.read()
-    }
-
-    override fun read(b: ByteArray, offset: Int, length: Int): Int {
-        return file.read(b, offset, length)
-    }
-
-    override fun isClosed(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun isEOF(): Boolean {
-        TODO("Not yet implemented")
     }
 
     override fun read(buf: ByteArray): Int {

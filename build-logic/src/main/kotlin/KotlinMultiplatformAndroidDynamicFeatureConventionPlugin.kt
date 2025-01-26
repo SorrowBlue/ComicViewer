@@ -1,5 +1,4 @@
 import com.android.build.api.dsl.DynamicFeatureExtension
-import com.sorrowblue.comicviewer.android
 import com.sorrowblue.comicviewer.configureAndroid
 import com.sorrowblue.comicviewer.configureKotlin
 import com.sorrowblue.comicviewer.configureKotlinMultiplatform
@@ -18,26 +17,15 @@ class KotlinMultiplatformAndroidDynamicFeatureConventionPlugin : Plugin<Project>
             plugins {
                 id(libs.plugins.kotlinMultiplatform)
                 id(libs.plugins.android.dynamicFeature)
-                id(libs.plugins.comicviewer.android.lint)
-                id(libs.plugins.comicviewer.detekt)
-                id(libs.plugins.comicviewer.dokka)
             }
 
             configureKotlin<KotlinMultiplatformExtension>()
             configureKotlinMultiplatform()
             configureAndroid<DynamicFeatureExtension>()
 
-            android<DynamicFeatureExtension> {
-                defaultConfig {
-                    proguardFile("consumer-rules.pro")
-                }
-            }
-
             kotlin<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
-                    if (project.name != "common" || project.parent?.name != "framework") {
-                        implementation(project(":framework:common"))
-                    }
+                    implementation(project(":framework:common"))
                 }
             }
         }

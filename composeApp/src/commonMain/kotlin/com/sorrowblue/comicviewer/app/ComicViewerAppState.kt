@@ -14,11 +14,9 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.sorrowblue.comicviewer.MainViewModel
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffoldUiState
 import com.sorrowblue.comicviewer.app.component.MainScreenTab
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraph
@@ -28,7 +26,6 @@ import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
-import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -42,14 +39,6 @@ import logcat.LogPriority
 import logcat.logcat
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-
-internal sealed interface ComicViewerAppEvent {
-
-    data class Navigate(
-        val route: Any,
-        val navOptions: NavOptions? = null,
-    ) : ComicViewerAppEvent
-}
 
 @Composable
 internal fun rememberComicViewerAppState(
@@ -98,11 +87,8 @@ internal interface ComicViewerAppState {
 
     val navController: NavHostController
     val uiState: ComicViewerScaffoldUiState
-    val events: EventFlow<ComicViewerAppEvent>
-
     fun onTabSelect(tab: MainScreenTab)
     fun onNavigationHistoryRestore()
-    fun refreshAddOnList()
 }
 
 private class ComicViewerAppStateImpl(
@@ -119,12 +105,9 @@ private class ComicViewerAppStateImpl(
     override var uiState: ComicViewerScaffoldUiState by mutableStateOf(ComicViewerScaffoldUiState())
         private set
 
-    override val events = EventFlow<ComicViewerAppEvent>()
-
     var isNavigationRestored by mutableStateOf(false)
 
     init {
-        refreshAddOnList()
         navController.currentBackStackEntryFlow
             .filter { it.destination is ComposeNavigator.Destination }
             .onEach { backStackEntry ->
@@ -132,10 +115,8 @@ private class ComicViewerAppStateImpl(
                 val currentTab = MainScreenTab.entries.find { tab ->
                     hierarchy.any { it.hasRoute(tab.navGraph::class) }
                 }
-                if (currentTab == null) {
-//                    delay(500)
-                }
                 if (uiState.currentTab == null && currentTab != null) {
+                    // 画面が更新されてからNavigationを表示します。
                     delay(250)
                 }
                 uiState = uiState.copy(currentTab = currentTab)
@@ -167,17 +148,15 @@ private class ComicViewerAppStateImpl(
         if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.hasRoute(navGraph::class) } == true) {
             navTabHandler.click.tryEmit(Unit)
         } else {
-            events.tryEmit(
-                ComicViewerAppEvent.Navigate(
-                    navGraph,
-                    navOptions {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
+            navController.navigate(
+                navGraph,
+                navOptions {
+                    popUpTo(navController.graph.findStartDestination().route!!) {
+                        saveState = true
                     }
-                )
+                    launchSingleTop = true
+                    restoreState = true
+                }
             )
         }
     }
@@ -185,69 +164,58 @@ private class ComicViewerAppStateImpl(
     private fun restoreNavigation(): Job {
         return scope.launch {
             val history = getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
-            events.tryEmit(
-                ComicViewerAppEvent.Navigate(
-                    BookshelfNavGraph,
-                    navOptions {
-                        popUpTo(ComicViewerAppNavGraph) {
-                            inclusive = true
-                        }
+            navController.navigate(
+                BookshelfNavGraph,
+                navOptions {
+                    popUpTo(ComicViewerAppNavGraph) {
+                        inclusive = true
                     }
-                )
+                }
             )
             if (history?.folderList.isNullOrEmpty()) {
                 completeRestoreHistory()
             } else {
-                val (folderList, book) = history!!.value
+                val (folderList, book) = history.value
                 val bookshelfId = folderList.first().bookshelfId
                 if (folderList.size == 1) {
-                    events.tryEmit(
-                        ComicViewerAppEvent.Navigate(
-                            BookshelfFolder(
-                                bookshelfId = bookshelfId,
-                                path = folderList.first().path,
-                                restorePath = book.path
-                            )
+                    navController.navigate(
+                        BookshelfFolder(
+                            bookshelfId = bookshelfId,
+                            path = folderList.first().path,
+                            restorePath = book.path
                         )
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                 } else {
-                    events.tryEmit(
-                        ComicViewerAppEvent.Navigate(
-                            BookshelfFolder(
-                                bookshelfId = bookshelfId,
-                                path = folderList.first().path,
-                                restorePath = null
-                            )
+                    navController.navigate(
+                        BookshelfFolder(
+                            bookshelfId = bookshelfId,
+                            path = folderList.first().path,
+                            restorePath = null
                         )
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                     folderList.drop(1).dropLast(1).forEach { folder ->
-                        events.tryEmit(
-                            ComicViewerAppEvent.Navigate(
-                                BookshelfFolder(
-                                    bookshelfId = bookshelfId,
-                                    path = folder.path,
-                                    restorePath = null
-                                )
+                        navController.navigate(
+                            BookshelfFolder(
+                                bookshelfId = bookshelfId,
+                                path = folder.path,
+                                restorePath = null
                             )
                         )
                         logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                             "-> folder(${folder.path})"
                         }
                     }
-
-                    events.tryEmit(
-                        ComicViewerAppEvent.Navigate(
-                            BookshelfFolder(
-                                bookshelfId = bookshelfId,
-                                path = folderList.last().path,
-                                restorePath = book.path
-                            )
+                    navController.navigate(
+                        BookshelfFolder(
+                            bookshelfId = bookshelfId,
+                            path = folderList.last().path,
+                            restorePath = book.path
                         )
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -269,8 +237,6 @@ private class ComicViewerAppStateImpl(
         isNavigationRestored = true
     }
 
-    override fun refreshAddOnList() {
-    }
 
     /**
      * Cancel job

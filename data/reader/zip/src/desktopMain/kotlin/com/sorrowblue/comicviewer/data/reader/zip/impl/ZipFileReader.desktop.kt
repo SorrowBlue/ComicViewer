@@ -15,7 +15,6 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import logcat.logcat
-import net.sf.sevenzipjbinding.IInStream
 import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import okio.Sink
@@ -31,12 +30,6 @@ class SevenZipInitializer {
         SevenZip.initSevenZipFromPlatformJAR()
         logcat(LogPriority.INFO) { "Initialized SevenZip. ${SevenZip.getSevenZipJBindingVersion()}." }
     }
-}
-
-internal class IInStreamImpl(private val seekableInputStream: SeekableInputStream) : IInStream {
-    override fun read(data: ByteArray) = seekableInputStream.read(data)
-    override fun seek(offset: Long, seekOrigin: Int) = seekableInputStream.seek(offset, seekOrigin)
-    override fun close() = seekableInputStream.close()
 }
 
 @ZipFileReader

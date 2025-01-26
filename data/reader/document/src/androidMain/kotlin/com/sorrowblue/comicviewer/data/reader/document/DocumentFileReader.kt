@@ -28,8 +28,8 @@ private val COMPRESS_FORMAT = Bitmap.CompressFormat.WEBP_LOSSY
 
 @Suppress("unused")
 @Keep
-@Factory
 @DocumentFileReader
+@Factory
 internal actual class DocumentFileReader(
     @InjectedParam mimeType: String,
     @InjectedParam private val seekableInputStream: SeekableInputStream,

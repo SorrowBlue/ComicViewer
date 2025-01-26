@@ -10,7 +10,6 @@ kotlin {
 
                 val dh = this
                 val skipModule = listOf(
-                    projects.app,
                     projects.catalog,
                     projects.composeApp,
                     projects.data.di,

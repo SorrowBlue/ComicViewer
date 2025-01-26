@@ -1,4 +1,5 @@
 import com.sorrowblue.comicviewer.ComicBuildType
+import kotlin.plus
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -121,6 +122,8 @@ android {
     }
 
     // TODO(dynamicFeatures)
+
+    dynamicFeatures += setOf(projects.data.reader.document.path)
 
     buildFeatures.buildConfig = true
 

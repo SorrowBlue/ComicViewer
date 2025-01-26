@@ -23,7 +23,6 @@ plugins {
 }
 
 dependencies {
-    dokka(projects.app)
     dokka(projects.catalog)
     dokka(projects.data.coil)
     dokka(projects.data.database)

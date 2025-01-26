@@ -15,8 +15,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import com.sorrowblue.comicviewer.MainViewModel
-import com.sorrowblue.comicviewer.RootScreenWrapper
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import org.koin.androidx.compose.KoinAndroidContext
 

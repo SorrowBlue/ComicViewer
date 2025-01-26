@@ -29,6 +29,7 @@ internal class ExtensionInitializer : Initializer<Unit>, KoinComponent {
                 DynamicFeatureModuleProvider::class.java.classLoader
             )
             loadKoinModules(serviceLoader.iterator().next().module())
+            logcat(LogPriority.INFO) { "loadKoinModules DynamicFeatureModuleProvider" }
             SupportExtension.Archive.entries + SupportExtension.Document.entries
         } else {
             SupportExtension.Archive.entries

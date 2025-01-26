@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraphNa
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAdd
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
 import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreate
+import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreateScreenNavigator
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.Search
@@ -26,7 +27,8 @@ internal class ComicViewerAppNavigator(
     SearchNavGraphNavigator,
     FavoriteAddScreenNavigator,
     TutorialNavGraphNavigator,
-    HistoryNavGraphNavigator {
+    HistoryNavGraphNavigator,
+    FavoriteCreateScreenNavigator {
 
     override fun navigateToCreateFavorite(bookshelfId: BookshelfId, path: String) {
         navController.navigate(FavoriteCreate(bookshelfId, path))

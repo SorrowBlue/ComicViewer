@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.settings.navigation
 
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
+import androidx.navigation.NavType
 import com.sorrowblue.comicviewer.feature.settings.Settings2
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
@@ -19,6 +20,9 @@ import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettings
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
 import com.sorrowblue.comicviewer.framework.annotation.NestedNavGraph
+import com.sorrowblue.comicviewer.framework.navigation.ScreenDestination
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Module
@@ -27,8 +31,13 @@ import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
-internal expect class SettingsDetailNavGraphImpl() :
-    com.sorrowblue.comicviewer.framework.navigation.NavGraph
+internal expect class SettingsDetailNavGraphImpl() : com.sorrowblue.comicviewer.framework.navigation.NavGraph {
+    override val startDestination: KClass<*>
+    override val route: KClass<*>
+    override val typeMap: Map<KType, NavType<*>>
+    override val screenDestinations: List<ScreenDestination>
+    override val nestedNavGraphs: List<com.sorrowblue.comicviewer.framework.navigation.NavGraph>
+}
 
 @Serializable
 @NavGraph(

@@ -11,52 +11,10 @@ import okio.Sink
 import okio.buffer
 import org.apache.pdfbox.Loader
 import org.apache.pdfbox.cos.COSDocument
-import org.apache.pdfbox.io.RandomAccessRead
-import org.apache.pdfbox.io.RandomAccessReadView
 import org.apache.pdfbox.rendering.PDFRenderer
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Qualifier
-
-internal class RandomAccessReadImpl(
-    private val seekableInputStream: SeekableInputStream,
-) : RandomAccessRead {
-    override fun close() {
-        seekableInputStream.close()
-    }
-
-    override fun read(): Int {
-        return seekableInputStream.read()
-    }
-
-    override fun read(b: ByteArray, offset: Int, length: Int): Int {
-        return seekableInputStream.read(b, offset, length)
-    }
-
-    override fun getPosition(): Long {
-        return seekableInputStream.position()
-    }
-
-    override fun seek(position: Long) {
-        seekableInputStream.seek(position, 0)
-    }
-
-    override fun length(): Long {
-        return seekableInputStream.length()
-    }
-
-    override fun isClosed(): Boolean {
-        return false
-    }
-
-    override fun isEOF(): Boolean {
-        return false
-    }
-
-    override fun createView(startPosition: Long, streamLength: Long): RandomAccessReadView {
-        return RandomAccessReadView(this, startPosition, streamLength)
-    }
-}
 
 @DocumentFileReader
 @Factory

@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.app.navigation
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraph
 import com.sorrowblue.comicviewer.feature.authentication.Authentication
 import com.sorrowblue.comicviewer.feature.book.Book
+import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAdd
 import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreate
@@ -20,7 +21,6 @@ import kotlinx.serialization.Serializable
 @NavGraph(startDestination = BookshelfNavGraph::class, root = ComicViewerAppNavGraphImpl::class)
 @Serializable
 internal data object ComicViewerAppNavGraph {
-
     @NestedNavGraph<BookshelfNavGraph>
     @NestedNavGraph<ReadLaterNavGraph>
     @NestedNavGraph<FavoriteNavGraph>
@@ -28,8 +28,8 @@ internal data object ComicViewerAppNavGraph {
     @NestedNavGraph<TutorialNavGraph>
     @NestedNavGraph<SettingsNavGraph>
     @NestedNavGraph<HistoryNavGraph>
+    @NestedNavGraph<BookNavGraph>
     @DestinationInGraph<Authentication>
-    @DestinationInGraph<Book>
     @DestinationInGraph<FavoriteAdd>
     @DestinationInGraph<FavoriteCreate>
     @DestinationInGraph<SortTypeSelect>

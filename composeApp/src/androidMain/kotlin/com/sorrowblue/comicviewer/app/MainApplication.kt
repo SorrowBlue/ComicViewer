@@ -3,6 +3,8 @@ package com.sorrowblue.comicviewer.app
 import com.google.android.play.core.splitcompat.SplitCompatApplication
 import com.sorrowblue.comicviewer.data.di.DiModule
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsModule
+import logcat.LogPriority
+import logcat.logcat
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.koin.workManagerFactory
@@ -23,5 +25,11 @@ internal class MainApplication : SplitCompatApplication(), KoinStartup, KoinComp
         modules(SettingsModule().module)
         defaultModule()
         workManagerFactory()
+        logcat(LogPriority.INFO) { "onKoinStartup" }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        logcat(LogPriority.INFO) { "onCreate" }
     }
 }
