@@ -12,7 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.mapSaver
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationColumnContents
@@ -22,8 +22,15 @@ import com.sorrowblue.comicviewer.framework.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.core.isLandscape
+import comicviewer.feature.authentication.generated.resources.Res
+import comicviewer.feature.authentication.generated.resources.authentication_error_incorrect_pin
+import comicviewer.feature.authentication.generated.resources.authentication_error_pin_4_more
+import comicviewer.feature.authentication.generated.resources.authentication_error_pin_not_match
 import kotlinx.serialization.Serializable
+import logcat.logcat
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 interface AuthenticationScreenNavigator {
     fun navigateUp()
@@ -31,14 +38,17 @@ interface AuthenticationScreenNavigator {
 }
 
 @Serializable
-data class Authentication(val mode: Mode)
+data class Authentication(val screenType: ScreenType)
 
 @Destination<Authentication>
 @Composable
-fun AuthenticationScreen(route: Authentication, navigator: AuthenticationScreenNavigator) {
+fun AuthenticationScreen(
+    route: Authentication,
+    navigator: AuthenticationScreenNavigator,
+) {
     AuthenticationScreen(
         navigator = navigator,
-        state = rememberAuthenticationScreenState(args = route),
+        state = rememberAuthenticationScreenState(route = route),
     )
 }
 
@@ -66,122 +76,88 @@ private fun AuthenticationScreen(
     }
 }
 
+@Serializable
 internal sealed interface AuthenticationScreenUiState {
     val pin: String
-    val error: StringResource?
+    val error: ErrorType?
     val loading: Boolean
 
     fun copyPin(pin: String): AuthenticationScreenUiState
 
-    companion object {
-        fun stateSaver() = mapSaver(
-            save = {
-                mapOf(
-                    "class" to it::class.simpleName,
-                    "pin" to it.pin,
-                    "error" to it.error,
-                    "loading" to it.loading
-                )
-            },
-            restore = {
-                val pin = it["pin"] as String
-                val error = it["error"] as StringResource
-                val loading = it["loading"] as Boolean
-                when (it.get("class")) {
-                    Register.Input::class.simpleName -> {
-                        Register.Input(pin, error, loading)
-                    }
-
-                    Register.Confirm::class.simpleName -> {
-                        Register.Confirm(pin, error, loading)
-                    }
-
-                    Authentication::class.simpleName -> {
-                        Authentication(pin, error, loading)
-                    }
-
-                    Change.ConfirmOld::class.simpleName -> {
-                        Change.ConfirmOld(pin, error, loading)
-                    }
-
-                    Change.Input::class.simpleName -> {
-                        Change.Input(pin, error, loading)
-                    }
-
-                    Change.Confirm::class.simpleName -> {
-                        Change.Confirm(pin, error, loading)
-                    }
-
-                    Erase::class.simpleName -> {
-                        Erase(pin, error, loading)
-                    }
-
-                    else -> null
-                }
-            }
-        )
-    }
-
+    @Serializable
     sealed interface Register : AuthenticationScreenUiState {
+        @Serializable
         data class Input(
             override val pin: String,
-            override val error: StringResource? = null,
+            override val error: ErrorType? = null,
             override val loading: Boolean = false,
         ) : Register {
             override fun copyPin(pin: String) = copy(pin = pin)
         }
 
+        @Serializable
         data class Confirm(
             override val pin: String,
-            override val error: StringResource? = null,
+            override val error: ErrorType? = null,
             override val loading: Boolean = false,
         ) : Register {
             override fun copyPin(pin: String) = copy(pin = pin)
         }
     }
 
+    @Serializable
     data class Authentication(
         override val pin: String,
-        override val error: StringResource? = null,
+        override val error: ErrorType? = null,
         override val loading: Boolean = false,
     ) : AuthenticationScreenUiState {
         override fun copyPin(pin: String) = copy(pin = pin)
     }
 
+    @Serializable
     sealed interface Change : AuthenticationScreenUiState {
+        @Serializable
         data class ConfirmOld(
             override val pin: String,
-            override val error: StringResource? = null,
+            override val error: ErrorType? = null,
             override val loading: Boolean = false,
         ) : Change {
             override fun copyPin(pin: String) = copy(pin = pin)
         }
 
+        @Serializable
         data class Input(
             override val pin: String,
-            override val error: StringResource? = null,
+            override val error: ErrorType? = null,
             override val loading: Boolean = false,
         ) : Change {
             override fun copyPin(pin: String) = copy(pin = pin)
         }
 
+        @Serializable
         data class Confirm(
             override val pin: String,
-            override val error: StringResource? = null,
+            override val error: ErrorType? = null,
             override val loading: Boolean = false,
         ) : Change {
             override fun copyPin(pin: String) = copy(pin = pin)
         }
     }
 
+    @Serializable
     data class Erase(
         override val pin: String,
-        override val error: StringResource? = null,
+        override val error: ErrorType? = null,
         override val loading: Boolean = false,
-    ) :
-        AuthenticationScreenUiState {
+    ) : AuthenticationScreenUiState {
         override fun copyPin(pin: String) = copy(pin = pin)
     }
+}
+
+internal enum class ErrorType(val resource: StringResource) {
+    IncorrectPin(Res.string.authentication_error_incorrect_pin),
+    Pin4More(Res.string.authentication_error_pin_4_more),
+    PinNotMatch(Res.string.authentication_error_pin_not_match)
 }
 
 @Composable
@@ -191,8 +167,10 @@ internal fun AuthenticationScreen(
     onContentsAction: (AuthenticationContentsAction) -> Unit,
 ) {
     val isCompactWindowClass = isCompactWindowClass()
-    val isCompactLandscape by remember(isCompactWindowClass) {
-        mutableStateOf(isCompactWindowClass)
+    val isLandscape = isLandscape()
+    val isCompactLandscape by remember(isCompactWindowClass, isLandscape) {
+        logcat("AuthenticationScreen") { "isCompactWindowClass=$isCompactWindowClass, isLandscape=$isLandscape" }
+        mutableStateOf(isCompactWindowClass && isLandscape)
     }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },

@@ -5,6 +5,7 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import com.sorrowblue.comicviewer.framework.annotation.Destination
 import comicviewer.feature.settings.security.generated.resources.Res
 import comicviewer.feature.settings.security.generated.resources.settings_security_label_to_settings
 import comicviewer.feature.settings.security.generated.resources.settings_security_text_dialog_desc

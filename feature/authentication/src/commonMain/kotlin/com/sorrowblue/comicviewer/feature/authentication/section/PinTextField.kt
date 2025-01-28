@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.authentication.section
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,17 +12,27 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,10 +48,26 @@ internal fun PinTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        val pinCount by remember(pin) { mutableIntStateOf(pin.length) }
+    Box(
+        modifier = modifier
+            .onPreviewKeyEvent {
+                if (it.type == KeyEventType.KeyUp && it.key == Key.Enter) {
+                    onNextClick()
+                    false
+                } else if (it.type == KeyEventType.KeyDown && it.key == Key.Enter) {
+                    true
+                } else {
+                    false
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        val pinCount by remember(pin) { mutableIntStateOf(pin.count()) }
         val focusRequester = remember { FocusRequester() }
         val scrollState = rememberLazyListState()
+        var hasFocus by remember { mutableStateOf(false) }
+        val colors = OutlinedTextFieldDefaults.colors()
+        val borderColor by animateColorAsState(if (hasFocus) colors.focusedIndicatorColor else colors.unfocusedIndicatorColor)
         TextField(
             value = pin,
             onValueChange = onPinChange,
@@ -48,10 +75,12 @@ internal fun PinTextField(
                 keyboardType = KeyboardType.NumberPassword,
                 imeAction = ImeAction.Next
             ),
+            colors = TextFieldDefaults.colors(),
             keyboardActions = KeyboardActions(onNext = { onNextClick() }),
             modifier = Modifier
                 .size(1.dp)
                 .alpha(0f)
+                .onFocusChanged { hasFocus = it.hasFocus }
                 .focusRequester(focusRequester)
         )
         val keyboardController = LocalSoftwareKeyboardController.current
@@ -61,11 +90,9 @@ internal fun PinTextField(
                 .border(
                     width = 2.dp,
                     color = if (enabled) {
-                        ComicTheme.colorScheme.onSurfaceVariant
+                        borderColor
                     } else {
-                        ComicTheme.colorScheme.onSurface.copy(
-                            alpha = 0.38f
-                        )
+                        colors.disabledIndicatorColor
                     },
                     shape = ComicTheme.shapes.small
                 )

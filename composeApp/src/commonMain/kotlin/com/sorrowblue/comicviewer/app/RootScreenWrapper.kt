@@ -19,7 +19,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import com.sorrowblue.comicviewer.feature.authentication.Authentication
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreen
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNavigator
-import com.sorrowblue.comicviewer.feature.authentication.Mode
+import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreen
 import logcat.logcat
 import org.koin.compose.viewmodel.koinViewModel
@@ -58,7 +58,7 @@ internal fun RootScreenWrapper(
                     exit = slideOutVertically { it }
                 ) {
                     AuthenticationScreen(
-                        route = Authentication(Mode.Authentication),
+                        route = Authentication(ScreenType.Authenticate),
                         navigator = remember {
                             object : AuthenticationScreenNavigator {
                                 override fun navigateUp() = finishApp()

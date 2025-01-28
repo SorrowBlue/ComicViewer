@@ -18,7 +18,6 @@ internal actual fun PinDrawable(
     animate: Boolean,
     enabled: Boolean,
 ) {
-    // Androidぷらっｔ
     Image(
         imageVector = vectorResource(Res.drawable.authentication_avd_favorite_circle),
         contentDescription = null,

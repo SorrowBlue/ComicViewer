@@ -25,17 +25,8 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
             kotlin<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
-//                    implementation(compose.material3)
                     implementation(compose.components.resources)
-//                    implementation(compose.components.uiToolingPreview)
-//
-//                    implementation(libs.coil3.compose)
-//                    implementation(libs.coil3.networkKtor)
-//                    implementation(libs.kotlinx.serialization.core)
-
-//                    implementation(libs.koin.compose)
-//                    implementation(libs.koin.composeViewModel)
-//                    implementation(libs.koin.composeViewModelNavigation)
+                    implementation(compose.components.uiToolingPreview)
                 }
 
                 compilerOptions {

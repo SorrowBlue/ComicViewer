@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.feature.authentication
 
-enum class Mode {
+enum class ScreenType {
     Register,
     Change,
     Erase,
-    Authentication,
+    Authenticate
 }

@@ -3,7 +3,9 @@ package com.sorrowblue.comicviewer.feature.settings.security
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import kotlinx.coroutines.CoroutineScope
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 internal interface SecuritySettingsScreenState {
@@ -20,6 +22,6 @@ internal interface SecuritySettingsScreenState {
 @Composable
 internal expect fun rememberSecuritySettingsScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: SecuritySettingsViewModel = koinViewModel(),
+    manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase = koinInject(),
 ): SecuritySettingsScreenState
 

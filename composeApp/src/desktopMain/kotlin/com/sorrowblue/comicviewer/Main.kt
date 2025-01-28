@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.data.di.DiModule
 import com.sorrowblue.comicviewer.data.reader.zip.impl.SevenZipInitializer
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsModule
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import java.awt.Dimension
 import logcat.LogcatLogger
 import logcat.PrintLogger
 import org.koin.compose.KoinApplication
@@ -26,6 +27,7 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "ComicViewer",
     ) {
+        window.minimumSize = Dimension(400, 600)
         KoinApplication(application = {
             LogcatLogger.install(PrintLogger)
             modules(DiModule().module)

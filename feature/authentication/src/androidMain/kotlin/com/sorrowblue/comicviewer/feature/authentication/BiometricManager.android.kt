@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import comicviewer.feature.authentication.generated.resources.Res
 import comicviewer.feature.authentication.generated.resources.authentication_title_fingerprint_auth
 import kotlinx.coroutines.suspendCancellableCoroutine
+import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
 internal actual class BiometricManager(
@@ -23,15 +24,17 @@ internal actual class BiometricManager(
                 object : BiometricPrompt.AuthenticationCallback() {
                     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                         super.onAuthenticationSucceeded(result)
+                        logcat { "onAuthenticationSucceeded result=$result" }
                         continuation.resume(AuthenticationResult.Success) { cause, _, _ -> }
                     }
 
                     override fun onAuthenticationFailed() {
                         super.onAuthenticationFailed()
-                        continuation.resume(AuthenticationResult.Failed) { cause, _, _ -> }
+                        logcat { "onAuthenticationFailed" }
                     }
 
                     override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        logcat { "onAuthenticationError errorCode=$errorCode errString=$errString" }
                         super.onAuthenticationError(errorCode, errString)
                         continuation.resume(AuthenticationResult.Error(errString.toString())) { cause, _, _ -> }
                     }

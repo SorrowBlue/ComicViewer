@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.feature.settings.navigation
 import androidx.navigation.NavController
 import com.sorrowblue.comicviewer.feature.authentication.Authentication
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNavigator
-import com.sorrowblue.comicviewer.feature.authentication.Mode
+import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.feature.settings.Settings
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
@@ -39,13 +39,13 @@ internal class SettingsNavGraphNavigator(private val navController: NavControlle
 
     override fun navigateToChangeAuth(enabled: Boolean) {
         if (enabled) {
-            navController.navigate(Authentication(Mode.Register))
+            navController.navigate(Authentication(ScreenType.Register))
         } else {
-            navController.navigate(Authentication(Mode.Erase))
+            navController.navigate(Authentication(ScreenType.Erase))
         }
     }
 
     override fun onPasswordChange() {
-        navController.navigate(Authentication(Mode.Change))
+        navController.navigate(Authentication(ScreenType.Change))
     }
 }

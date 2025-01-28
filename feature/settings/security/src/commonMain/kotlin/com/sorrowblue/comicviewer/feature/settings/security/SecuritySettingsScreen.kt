@@ -68,6 +68,7 @@ private fun SecuritySettingsScreen(
 
 internal data class SecuritySettingsScreenUiState(
     val isAuthEnabled: Boolean = false,
+    val isBiometricCanBeUsed: Boolean = false,
     val isBiometricEnabled: Boolean = false,
     val isBackgroundLockEnabled: Boolean = false,
     val isBiometricsDialogShow: Boolean = false,
@@ -97,13 +98,15 @@ private fun SecuritySettingsScreen(
             onClick = onPasswordChangeClick,
             enabled = uiState.isAuthEnabled
         )
-        SwitchSetting(
-            title = Res.string.settings_security_title_use_biometric_auth,
-            checked = uiState.isBiometricEnabled,
-            onCheckedChange = onChangeBiometricEnable,
-            summary = Res.string.settings_security_summary_use_biometric_auth,
-            enabled = uiState.isAuthEnabled,
-        )
+        if (uiState.isBiometricCanBeUsed) {
+            SwitchSetting(
+                title = Res.string.settings_security_title_use_biometric_auth,
+                checked = uiState.isBiometricEnabled,
+                onCheckedChange = onChangeBiometricEnable,
+                summary = Res.string.settings_security_summary_use_biometric_auth,
+                enabled = uiState.isAuthEnabled,
+            )
+        }
         SwitchSetting(
             title = Res.string.settings_security_label_background_lock,
             checked = uiState.isBackgroundLockEnabled,

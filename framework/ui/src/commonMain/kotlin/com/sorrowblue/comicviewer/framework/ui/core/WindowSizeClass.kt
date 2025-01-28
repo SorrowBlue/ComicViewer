@@ -12,3 +12,9 @@ fun isCompactWindowClass(): Boolean {
         WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND
     )
 }
+
+@Composable
+fun isLandscape(): Boolean {
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    return windowSizeClass.minWidthDp > windowSizeClass.minHeightDp
+}

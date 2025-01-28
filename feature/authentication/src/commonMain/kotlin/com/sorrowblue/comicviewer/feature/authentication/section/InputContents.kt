@@ -46,7 +46,7 @@ internal fun InputContents(
                     is AuthenticationScreenUiState.Erase -> Res.string.authentication_text_enter_pin
                 }
             ),
-            style = MaterialTheme.typography.titleSmall
+            style = MaterialTheme.typography.titleMedium
         )
 
         val enabled by remember(uiState) { derivedStateOf { !uiState.loading } }
@@ -66,7 +66,7 @@ internal fun InputContents(
         AnimatedVisibility(visible = uiState.error != null) {
             if (uiState.error != null) {
                 Text(
-                    text = stringResource(uiState.error!!),
+                    text = stringResource(uiState.error!!.resource),
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = ComicTheme.dimension.padding)
