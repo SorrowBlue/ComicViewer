@@ -3,8 +3,8 @@ versionCode = "15"
 targetSdk = "35"
 java = "21"
 
-kotlin = "2.1.0"
-google-ksp = "2.1.0-1.0.29"
+kotlin = "2.1.10"
+google-ksp = "2.1.10-1.0.29"
 kotlinx-coroutines = "1.10.1"
 kotlinx-serialization = "1.8.0"
 kotlinx-kover = "0.9.1"
@@ -19,8 +19,7 @@ coil-kt = "3.0.4"
 detekt = "1.23.7"
 mikepenz-aboutlibraries = "11.5.0"
 koin = "4.1.0-Beta5"
-koin-annotations = "2.0.0-Beta3"
-compose-destinations = "2.1.0-beta15"
+koin-annotations = "2.0.0-RC1"
 
 dokka = "2.0.0"
 airbnb-android-showkase = "1.0.3"
@@ -163,8 +162,7 @@ soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha0
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version = "0.6.0" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.16-0" }
 
-artifex-mupdf = { group = "com.artifex.mupdf", name = "mupdf", version = "1.25.2" }
-artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.2" }
+artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.4" }
 squareup-logcat = { group = "com.squareup.logcat", name = "logcat", version = "0.1" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.10.2" }
 
@@ -205,9 +203,6 @@ koin-androidxCompose = { group = "io.insert-koin", name = "koin-androidx-compose
 
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
 koin-kspCompiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }
-
-compose-destinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "compose-destinations" }
-compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "compose-destinations" }
 
 airbnb-android-showkase = { group = "com.airbnb.android", name = "showkase", version.ref = "airbnb-android-showkase" }
 airbnb-android-showkase-annotation = { group = "com.airbnb.android", name = "showkase-annotation", version.ref = "airbnb-android-showkase" }

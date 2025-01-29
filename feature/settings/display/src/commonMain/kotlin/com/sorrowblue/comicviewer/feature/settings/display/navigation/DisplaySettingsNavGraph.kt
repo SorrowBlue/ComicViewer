@@ -25,7 +25,7 @@ data object DisplaySettingsNavGraph {
 
 @Module
 class DisplaySettingsModule {
-    @Scope(SettingsScope::class)
+    @Scope(name = SettingsScope)
     @Scoped
     internal fun displaySettingsNavGraphNavigator(
         navController: NavController,

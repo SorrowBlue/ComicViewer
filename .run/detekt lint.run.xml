@@ -15,7 +15,6 @@
           <option value="detektAndroidRelease" />
           <option value="detektDesktopMain" />
           <option value="detektMetadataCommonMain" />
-          <option value="app:lintRelease" />
         </list>
       </option>
       <option name="vmOptions" />

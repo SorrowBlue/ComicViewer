@@ -17,6 +17,7 @@ class KotlinMultiplatformAndroidDynamicFeatureConventionPlugin : Plugin<Project>
             plugins {
                 id(libs.plugins.kotlinMultiplatform)
                 id(libs.plugins.android.dynamicFeature)
+                id(libs.plugins.detekt)
             }
 
             configureKotlin<KotlinMultiplatformExtension>()

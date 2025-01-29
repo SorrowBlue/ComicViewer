@@ -6,24 +6,49 @@ import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNav
 import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.feature.settings.Settings
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraph
+import com.sorrowblue.comicviewer.feature.tutorial.Tutorial
+import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenNavigator
 import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
 import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
+import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
 @Serializable
-@NavGraph(startDestination = Settings::class)
+@NavGraph(startDestination = Settings::class, transition = SettingsNavGraphTransition::class)
 data object SettingsNavGraph {
 
-    @DestinationInGraph<Settings>
     @DestinationInGraph<Authentication>
+    @DestinationInGraph<Settings>
+    @DestinationInGraph<Tutorial>
     object Include
 }
 
-@Singleton
-internal class SettingsNavGraphNavigator(private val navController: NavController) :
-    SettingsScreenNavigator, AuthenticationScreenNavigator {
+object SettingsNavGraphTransition : DestinationTransitions() {
+    override val transitions: List<TransitionsConfigure> = listOf(
+        TransitionsConfigure(
+            SettingsNavGraph::class,
+            null,
+            TransitionsConfigure.Type.ContainerTransform
+        ),
+        TransitionsConfigure(
+            Settings::class,
+            Authentication::class,
+            TransitionsConfigure.Type.SharedAxisY
+        ),
+        TransitionsConfigure(
+            Settings::class,
+            Tutorial::class,
+            TransitionsConfigure.Type.SharedAxisY
+        )
+    )
+}
+
+@Factory
+internal class SettingsNavGraphNavigator(
+    private val navController: NavController,
+) : SettingsScreenNavigator, TutorialScreenNavigator, AuthenticationScreenNavigator {
 
     override fun navigateUp() {
         navController.navigateUp()
@@ -34,7 +59,7 @@ internal class SettingsNavGraphNavigator(private val navController: NavControlle
     }
 
     override fun onStartTutorialClick() {
-        navController.navigate(TutorialNavGraph)
+        navController.navigate(Tutorial)
     }
 
     override fun navigateToChangeAuth(enabled: Boolean) {
@@ -47,5 +72,9 @@ internal class SettingsNavGraphNavigator(private val navController: NavControlle
 
     override fun onPasswordChange() {
         navController.navigate(Authentication(ScreenType.Change))
+    }
+
+    override fun onCompleteTutorial() {
+        navController.popBackStack()
     }
 }

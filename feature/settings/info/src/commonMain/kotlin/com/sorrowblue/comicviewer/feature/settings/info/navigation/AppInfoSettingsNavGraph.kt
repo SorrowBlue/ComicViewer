@@ -25,7 +25,7 @@ data object AppInfoSettingsNavGraph {
 
 @Module
 class AppInfoSettingsModule {
-    @Scope(SettingsScope::class)
+    @Scope(name = SettingsScope)
     @Scoped
     internal fun appInfoSettingsScreenNavigator(
         navController: NavController,

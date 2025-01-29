@@ -17,6 +17,7 @@ class KotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
             plugins {
                 id(libs.plugins.kotlinMultiplatform)
                 id(libs.plugins.android.library)
+                id(libs.plugins.detekt)
             }
 
             configureKotlin<KotlinMultiplatformExtension>()

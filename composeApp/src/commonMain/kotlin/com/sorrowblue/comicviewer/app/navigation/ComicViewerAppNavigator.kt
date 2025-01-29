@@ -16,7 +16,6 @@ import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.feature.search.Search
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraph
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraphNavigator
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Singleton
 import com.sorrowblue.comicviewer.feature.book.Book as BookRoute
@@ -30,7 +29,6 @@ internal class ComicViewerAppNavigator(
     FavoriteNavGraphNavigator,
     SearchNavGraphNavigator,
     FavoriteAddScreenNavigator,
-    TutorialNavGraphNavigator,
     HistoryNavGraphNavigator,
     BookNavGraphNavigator,
     FavoriteCreateScreenNavigator {
@@ -69,9 +67,5 @@ internal class ComicViewerAppNavigator(
 
     override fun onSearchClick(bookshelfId: BookshelfId, path: String) {
         navController.navigate(Search(bookshelfId, path))
-    }
-
-    override fun onCompleteTutorial() {
-        navController.navigateUp()
     }
 }

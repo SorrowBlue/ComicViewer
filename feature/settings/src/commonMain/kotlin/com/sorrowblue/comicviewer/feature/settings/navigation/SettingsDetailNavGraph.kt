@@ -54,7 +54,7 @@ internal data object SettingsDetailNavGraph {
 @Module(includes = [DisplaySettingsModule::class, FolderSettingsModule::class, AppInfoSettingsModule::class])
 class SettingsModule
 
-internal class SettingsDetailNaGraphNavigator(
+internal class SettingsDetailNavGraphNavigator(
     private val navigateBack: () -> Unit,
     private val settingsScreenNavigator: SettingsScreenNavigator,
 ) : SecuritySettingsScreenNavigator, SettingsDetailNavigator, SettingsExtraNavigator {

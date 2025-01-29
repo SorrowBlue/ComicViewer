@@ -24,8 +24,8 @@ import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySet
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCache
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsNavGraph
-import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNaGraphNavigator
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNavGraphImpl
+import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettings
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
@@ -49,6 +49,8 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.koin.compose.module.rememberKoinModules
 import org.koin.compose.scope.KoinScope
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.binds
 import org.koin.dsl.module
@@ -63,6 +65,7 @@ internal interface SettingsScreenNavigator {
 @Serializable
 data object Settings
 
+@OptIn(KoinExperimentalAPI::class)
 @Destination<Settings>
 @Composable
 internal fun SettingsScreen(
@@ -78,24 +81,20 @@ internal fun SettingsScreen(
         rememberKoinModules {
             listOf(
                 module {
-                    scope<SettingsScope> {
+                    scope(named(SettingsScope)) {
+                        scoped { { scope.launch { state.navigator.navigateBack() } } }
                         scoped { state.navController } bind NavController::class
-                        scoped {
-                            SettingsDetailNaGraphNavigator(
-                                navigateBack = { scope.launch { state.navigator.navigateBack() } },
-                                settingsScreenNavigator = get()
-                            )
-                        } binds arrayOf(
+                        scoped { SettingsDetailNavGraphNavigator(get(), get()) } binds arrayOf(
                             SecuritySettingsScreenNavigator::class,
                             SettingsDetailNavigator::class,
-                            SettingsExtraNavigator::class
+                            SettingsExtraNavigator::class,
                         )
                     }
                 }
             )
         }
         val navGraph = remember { SettingsDetailNavGraphImpl() }
-        KoinScope<SettingsScope>("ScopeId") {
+        KoinScope("ScopeId", named(SettingsScope)) {
             NavGraphNavHost(
                 navController = state.navController,
                 navGraph = navGraph,
@@ -106,7 +105,6 @@ internal fun SettingsScreen(
     }
 }
 
-// Instance creation error : could not create instance for '[Singleton: 'com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavGraphNavigator',binds:com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenNavigator]': org.koin.core.error.NoDefinitionFoundException: No definition found for type 'com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator' and qualifier 'ThreePaneScaffoldNavigator'. Check your Modules configuration and add missing type and/or qualifier!
 @Composable
 private fun SettingsScreen(
     navigator: ThreePaneScaffoldNavigator<Settings2>,
@@ -114,9 +112,8 @@ private fun SettingsScreen(
     onSettingsClick: (Settings2) -> Unit,
     content: @Composable () -> Unit,
 ) {
-    @Suppress("UNCHECKED_CAST")
     NavigableListDetailPaneScaffold(
-        navigator = navigator as ThreePaneScaffoldNavigator<Any>,
+        navigator = navigator,
         detailPane = {
             val modifier = if (navigator.scaffoldDirective.maxHorizontalPartitions == 1) {
                 Modifier

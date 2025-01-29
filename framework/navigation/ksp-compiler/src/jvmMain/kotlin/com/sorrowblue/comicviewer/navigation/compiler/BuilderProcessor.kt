@@ -60,6 +60,7 @@ fun DestinationResolver(
     val symbols = resolver.getSymbolsWithAnnotation(Destination)
     symbols.forEach { symbol ->
         logger.warn("@Destination checking..")
+        logger.warn("@Destination checking..")
         if (symbol is KSFunctionDeclaration) {
             val functionName = symbol.simpleName.asString()
             logger.warn("  functionName=$functionName")

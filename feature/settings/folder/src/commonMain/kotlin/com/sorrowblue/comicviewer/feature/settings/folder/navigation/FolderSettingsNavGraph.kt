@@ -34,7 +34,7 @@ data object FolderSettingsNavGraph {
 
 @Module
 class FolderSettingsModule {
-    @Scope(SettingsScope::class)
+    @Scope(name = SettingsScope)
     @Scoped(binds = [FolderSettingsScreenNavigator::class])
     internal fun displaySettingsNavGraphNavigator(
         navController: NavController,

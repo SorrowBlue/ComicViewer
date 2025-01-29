@@ -1,4 +1,3 @@
-import com.sorrowblue.comicviewer.detektPlugins
 import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
@@ -19,10 +18,10 @@ internal class DetektConventionPlugin : Plugin<Project> {
             plugins {
                 id(libs.plugins.detekt)
             }
-
+            val detektPlugins2 = configurations.getByName("detektPlugins")
             dependencies {
-                detektPlugins(libs.nlopez.compose.rules.detekt)
-                detektPlugins(libs.arturbosch.detektFormatting)
+                detektPlugins2(libs.nlopez.compose.rules.detekt)
+                detektPlugins2(libs.arturbosch.detektFormatting)
             }
 
             configure<DetektExtension> {

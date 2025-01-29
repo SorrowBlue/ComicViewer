@@ -1,3 +1,3 @@
 package com.sorrowblue.comicviewer.feature.settings.common
 
-class SettingsScope
+const val SettingsScope = "SettingsScope"

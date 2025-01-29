@@ -16,7 +16,6 @@ import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreateScreenNa
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavGraphNavigator
 import com.sorrowblue.comicviewer.framework.navigation.NavGraphNavHost
 import com.sorrowblue.comicviewer.framework.ui.animation.rememberSlideDistance
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
@@ -58,7 +57,6 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
                         FavoriteNavGraphNavigator::class,
                         SearchNavGraphNavigator::class,
                         FavoriteAddScreenNavigator::class,
-                        TutorialNavGraphNavigator::class,
                         HistoryNavGraphNavigator::class,
                         FavoriteCreateScreenNavigator::class,
                     )
