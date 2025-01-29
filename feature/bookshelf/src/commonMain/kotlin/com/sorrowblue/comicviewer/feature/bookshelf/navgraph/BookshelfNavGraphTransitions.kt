@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure
 
-object BookshelfNavGraphTransitions : DestinationTransitions() {
+internal object BookshelfNavGraphTransitions : DestinationTransitions() {
     override val transitions: List<TransitionsConfigure> = listOf(
         TransitionsConfigure(
             Bookshelf::class,

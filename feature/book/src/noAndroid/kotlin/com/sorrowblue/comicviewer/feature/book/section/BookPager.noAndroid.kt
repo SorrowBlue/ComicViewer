@@ -21,8 +21,8 @@ internal actual fun Bitmap.asImageBitmap(): ImageBitmap {
     return asComposeImageBitmap()
 }
 
-internal actual val Bitmap.width: Int
+internal actual val Bitmap.width2: Int
     get() = width
 
-internal actual val Bitmap.height: Int
+internal actual val Bitmap.height2: Int
     get() = height

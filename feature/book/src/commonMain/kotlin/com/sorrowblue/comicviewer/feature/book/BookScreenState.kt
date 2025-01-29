@@ -23,8 +23,8 @@ import com.sorrowblue.comicviewer.feature.book.section.NextPage
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-import com.sorrowblue.comicviewer.feature.book.section.height
-import com.sorrowblue.comicviewer.feature.book.section.width
+import com.sorrowblue.comicviewer.feature.book.section.height2
+import com.sorrowblue.comicviewer.feature.book.section.width2
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
@@ -222,7 +222,7 @@ private class BookScreenStateImpl(
     private fun onSplitPageLoad(split: BookPage.Split.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(split)
         if (0 < index) {
-            if (bitmap.width < bitmap.height) {
+            if (bitmap.width2 < bitmap.height2) {
                 currentList[index] = BookPage.Split.Single(split.index)
             } else {
                 currentList[index] = BookPage.Split.Right(split.index)
@@ -233,7 +233,7 @@ private class BookScreenStateImpl(
 
     private fun onSpreadPageLoad(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(spread)
-        if (bitmap.width < bitmap.height) {
+        if (bitmap.width2 < bitmap.height2) {
             currentList[index] = BookPage.Spread.Single(spread.index)
         } else {
             // 横
