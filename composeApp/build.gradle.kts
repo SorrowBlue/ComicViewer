@@ -27,7 +27,7 @@ kotlin {
             dependencies {
                 implementation(projects.framework.designsystem)
                 implementation(projects.framework.ui)
-                implementation(projects.framework.navigation.annotations)
+                implementation("com.sorrowblue:annotations:1.0")
                 implementation(projects.data.di)
                 implementation(projects.domain.usecase)
                 implementation(projects.feature.authentication)

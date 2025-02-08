@@ -70,7 +70,8 @@ class AndroidLogcatLogger(minPriority: LogPriority = LogPriority.DEBUG) : Logcat
             application: Application,
             minPriority: LogPriority = LogPriority.DEBUG,
         ) {
-            if (!LogcatLogger.isInstalled && application.isDebuggableApp) {
+//            if (!LogcatLogger.isInstalled && application.isDebuggableApp) {
+            if (!LogcatLogger.isInstalled) {
                 LogcatLogger.install(AndroidLogcatLogger(minPriority))
             }
         }

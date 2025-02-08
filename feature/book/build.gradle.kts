@@ -9,4 +9,5 @@ android {
 
 dependencies {
     implementation(libs.androidx.ui.android)
+    implementation(libs.androidx.foundation.android)
 }

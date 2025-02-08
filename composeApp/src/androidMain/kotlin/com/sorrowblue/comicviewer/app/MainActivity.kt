@@ -17,6 +17,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import org.koin.androidx.compose.KoinAndroidContext
+import org.koin.compose.KoinMultiplatformApplication
+import org.koin.dsl.KoinConfiguration
 
 /**
  * Main activity
@@ -37,7 +39,6 @@ internal class MainActivity : AppCompatActivity() {
 
         @OptIn(ExperimentalComposeUiApi::class)
         ComposeUiFlags.isSemanticAutofillEnabled = true
-
         setContent {
             ComicTheme {
                 KoinAndroidContext {

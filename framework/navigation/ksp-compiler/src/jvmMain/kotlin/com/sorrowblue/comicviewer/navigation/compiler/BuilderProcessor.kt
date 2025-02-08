@@ -59,6 +59,7 @@ fun DestinationResolver(
 ): Sequence<KSAnnotated> {
     val symbols = resolver.getSymbolsWithAnnotation(Destination)
     symbols.forEach { symbol ->
+
         logger.warn("@Destination checking..")
         logger.warn("@Destination checking..")
         if (symbol is KSFunctionDeclaration) {

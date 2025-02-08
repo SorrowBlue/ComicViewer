@@ -12,6 +12,7 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.ComposeNavigatorDestinationBuilder
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.DialogNavigatorDestinationBuilder
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.get
 import kotlin.reflect.KClass

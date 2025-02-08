@@ -1,15 +1,13 @@
 package com.sorrowblue.comicviewer.app
 
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
-import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffold
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraphImpl
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavigator
 import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraphNavigator
+import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
 import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreateScreenNavigator
@@ -20,7 +18,6 @@ import com.sorrowblue.comicviewer.framework.navigation.NavGraphNavHost
 import com.sorrowblue.comicviewer.framework.ui.animation.rememberSlideDistance
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
-import logcat.logcat
 import org.koin.compose.module.rememberKoinModules
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.dsl.binds
@@ -29,12 +26,6 @@ import org.koin.dsl.module
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppState()) {
-    val info = currentWindowAdaptiveInfo()
-    LaunchedEffect(info) {
-        logcat { "minWidthDp=${info.windowSizeClass.minWidthDp}, minHeightDp=${info.windowSizeClass.minHeightDp}" }
-        logcat { "containsWidthDp MEDIUM=${info.windowSizeClass.containsWidthDp(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)}" }
-        logcat { "containsWidthDp EXPANDED=${info.windowSizeClass.containsWidthDp(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)}" }
-    }
     DestinationTransitions.slideDistance = rememberSlideDistance()
     ComicViewerScaffold(
         uiState = state.uiState,
@@ -53,6 +44,7 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
                         )
                     } binds arrayOf(
                         BookshelfNavGraphNavigator::class,
+                        BookNavGraphNavigator::class,
                         ReadLaterNavGraphNavigator::class,
                         FavoriteNavGraphNavigator::class,
                         SearchNavGraphNavigator::class,

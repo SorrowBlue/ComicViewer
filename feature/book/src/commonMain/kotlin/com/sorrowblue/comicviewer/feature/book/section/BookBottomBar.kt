@@ -9,11 +9,13 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import comicviewer.feature.book.generated.resources.Res
@@ -54,21 +56,19 @@ internal fun BookBottomBar(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Sliderはページの範囲だけ
-        Slider(
-            modifier = Modifier.rotate(180f),
-            value = remember(currentPage, pageRange) {
-                currentPage.coerceIn(
-                    pageRange.start.toInt(),
-                    pageRange.endInclusive.toInt()
-                ).toFloat()
-            },
-            onValueChange = {
-                logcat { "onValueChange=$it" }
-                onPageChange(it.toInt())
-            },
-            valueRange = pageRange,
-            steps = max((pageRange.endInclusive.toInt() / 2) - 2, 0)
-        )
+        CompositionLocalProvider(
+            LocalLayoutDirection.provides(LayoutDirection.Rtl)
+        ) {
+            Slider(
+                value = remember(currentPage, pageRange) {
+                    currentPage.coerceIn(pageRange.start.toInt(), pageRange.endInclusive.toInt())
+                        .toFloat()
+                },
+                onValueChange = { onPageChange(it.toInt()) },
+                valueRange = pageRange,
+                steps = max((pageRange.endInclusive.toInt() / 2) - 2, 0)
+            )
+        }
         Text(
             text = when {
                 currentPage < 1 -> stringResource(Res.string.book_label_prev_book)

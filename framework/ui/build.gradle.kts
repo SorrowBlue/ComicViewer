@@ -9,7 +9,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.framework.designsystem)
-                implementation(projects.framework.navigation.annotations)
+                implementation("com.sorrowblue:annotations:1.0")
                 implementation(projects.domain.model)
                 api(compose.material3)
                 api(libs.compose.multiplatform.material3.adaptiveLayout)
@@ -31,6 +31,7 @@ kotlin {
         androidMain {
             dependencies {
                 api(libs.androidx.compose.ui.toolingPreview)
+                implementation(libs.androidx.activity)
                 implementation(libs.drick.compose.edgeToEdgePreview)
             }
         }

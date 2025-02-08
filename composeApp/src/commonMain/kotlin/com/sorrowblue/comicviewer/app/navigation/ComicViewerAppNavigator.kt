@@ -16,13 +16,10 @@ import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.feature.search.Search
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraph
-import org.koin.core.annotation.InjectedParam
-import org.koin.core.annotation.Singleton
 import com.sorrowblue.comicviewer.feature.book.Book as BookRoute
 
-@Singleton
 internal class ComicViewerAppNavigator(
-    @InjectedParam private val onRestoreComplete: () -> Unit,
+    private val onRestoreComplete: () -> Unit,
     private val navController: NavController,
 ) : BookshelfNavGraphNavigator,
     ReadLaterNavGraphNavigator,

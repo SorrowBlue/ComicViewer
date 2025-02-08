@@ -1,16 +1,27 @@
 package com.sorrowblue.comicviewer.framework.ui.adaptive.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.DrawerDefaults
+import androidx.compose.material3.NavigationBarDefaults
+import androidx.compose.material3.NavigationRailDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuite
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteColors
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
@@ -18,6 +29,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
@@ -82,9 +95,9 @@ fun CompliantNavigationSuiteScaffold(
     content: @Composable () -> Unit,
 ) {
     val navigationSuiteColors = NavigationSuiteDefaults.colors()
-    NavigationSuiteScaffold(
+    NavigationSuiteScaffold2(
         navigationSuiteItems = navigationSuiteItems,
-        layoutType = navigationState.suiteType,
+        navigationState = navigationState,
         navigationSuiteColors = navigationSuiteColors,
         containerColor = ComicTheme.colorScheme.surface,
         contentColor = ComicTheme.colorScheme.onSurface,
@@ -117,4 +130,60 @@ fun CompliantNavigationSuiteScaffold(
             }
         }
     )
+}
+@Composable
+fun NavigationSuiteScaffold2(
+    navigationSuiteItems: NavigationSuiteScope.() -> Unit,
+    modifier: Modifier = Modifier,
+    navigationState: NavigationState,
+    navigationSuiteColors: NavigationSuiteColors = NavigationSuiteDefaults.colors(),
+    containerColor: Color = NavigationSuiteScaffoldDefaults.containerColor,
+    contentColor: Color = NavigationSuiteScaffoldDefaults.contentColor,
+    content: @Composable () -> Unit = {},
+) {
+    Surface(modifier = modifier, color = containerColor, contentColor = contentColor) {
+        NavigationSuiteScaffoldLayout(
+            navigationSuite = {
+                NavigationSuite(
+                    layoutType = navigationState.suiteType,
+                    colors = navigationSuiteColors,
+                    content = navigationSuiteItems,
+                    modifier = Modifier.windowInsetsPadding(
+                        if (navigationState.visible) {
+                            when (navigationState) {
+                                is NavigationState.NavigationBar ->
+                                    WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
+
+                                is NavigationState.NavigationRail ->
+                                    WindowInsets.safeDrawing.only(WindowInsetsSides.Start).add(
+                                        WindowInsets(top = 16.dp)
+                                    )
+                            }
+                        } else {
+                            WindowInsets(0)
+                        }
+                    )
+
+                )
+            },
+            layoutType = navigationState.suiteType,
+            content = {
+                Box(
+                    Modifier.consumeWindowInsets(
+                        when (navigationState.suiteType) {
+                            NavigationSuiteType.NavigationBar ->
+                                WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
+                            NavigationSuiteType.NavigationRail ->
+                                WindowInsets.safeDrawing.only(WindowInsetsSides.Start)
+                            NavigationSuiteType.NavigationDrawer ->
+                                WindowInsets.safeDrawing.only(WindowInsetsSides.Start)
+                            else -> WindowInsets(0)
+                        }
+                    )
+                ) {
+                    content()
+                }
+            }
+        )
+    }
 }

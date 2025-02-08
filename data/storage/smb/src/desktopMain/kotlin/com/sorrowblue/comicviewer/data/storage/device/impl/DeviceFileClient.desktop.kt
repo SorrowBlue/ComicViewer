@@ -55,9 +55,7 @@ internal actual class DeviceFileClient(
 
     override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         logcat { "current(path=$path, resolveImageFolder=$resolveImageFolder)" }
-        return path.toPath().toNioPath().toFileModel().also {
-            logcat { "$it" }
-        }
+        return path.toPath().toNioPath().toFileModel(resolveImageFolder)
     }
 
     override suspend fun bufferedSource(file: File): BufferedSource {

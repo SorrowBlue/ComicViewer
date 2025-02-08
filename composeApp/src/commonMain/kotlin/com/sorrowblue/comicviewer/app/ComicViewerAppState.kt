@@ -4,8 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -27,6 +25,8 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsU
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
+import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
+import com.sorrowblue.comicviewer.framework.ui.sharedKoinViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -44,32 +44,15 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun rememberComicViewerAppState(
     lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     scope: CoroutineScope = rememberCoroutineScope(),
-    navTabHandler: NavTabHandler = koinInject(),
+    navTabHandler: NavTabHandler = sharedKoinViewModel(),
     manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase = koinInject(),
     getNavigationHistoryUseCase: GetNavigationHistoryUseCase = koinInject(),
     mainViewModel: MainViewModel = koinViewModel(),
     navController: NavHostController = rememberNavController(),
 ): ComicViewerAppState {
-    return rememberSaveable(
-        saver = Saver(
-            save = {
-                it.isNavigationRestored
-            },
-            restore = {
-
-                ComicViewerAppStateImpl(
-                    lifecycle = lifecycle,
-                    mainViewModel = mainViewModel,
-                    scope = scope,
-                    navTabHandler = navTabHandler,
-                    manageDisplaySettingsUseCase = manageDisplaySettingsUseCase,
-                    getNavigationHistoryUseCase = getNavigationHistoryUseCase,
-                    navController = navController,
-                ).apply {
-                    isNavigationRestored = it
-                }
-            }
-        )
+    return rememberListSaveable(
+        save = { listOf(it.isNavigationRestored) },
+        restore = { isNavigationRestored = it[0] as Boolean }
     ) {
         ComicViewerAppStateImpl(
             lifecycle = lifecycle,
@@ -117,7 +100,7 @@ private class ComicViewerAppStateImpl(
                 }
                 if (uiState.currentTab == null && currentTab != null) {
                     // 画面が更新されてからNavigationを表示します。
-                    delay(250)
+//                    delay(250)
                 }
                 uiState = uiState.copy(currentTab = currentTab)
                 logcat {

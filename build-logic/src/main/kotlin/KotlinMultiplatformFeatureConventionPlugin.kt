@@ -22,7 +22,7 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                 sourceSets.commonMain.dependencies {
                     implementation(project(":framework:designsystem"))
                     implementation(project(":framework:ui"))
-                    implementation(project(":framework:navigation:annotations"))
+                    implementation("com.sorrowblue:annotations:1.0")
                     implementation(project(":domain:usecase"))
                 }
             }

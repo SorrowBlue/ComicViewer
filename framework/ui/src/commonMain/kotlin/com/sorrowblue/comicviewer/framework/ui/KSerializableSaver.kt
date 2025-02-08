@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.framework.ui
 
 import androidx.compose.runtime.saveable.SaverScope
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.okio.decodeFromBufferedSource
@@ -8,6 +9,7 @@ import kotlinx.serialization.json.okio.encodeToBufferedSink
 import okio.Buffer
 import okio.BufferedSource
 
+@OptIn(ExperimentalSerializationApi::class)
 abstract class KSerializableSaver<T>(private val serializer: KSerializer<T>) :
     androidx.compose.runtime.saveable.Saver<T, ByteArray> {
     override fun restore(value: ByteArray): T {

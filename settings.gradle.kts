@@ -32,6 +32,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        mavenLocal()
         maven {
             url = uri("https://maven.ghostscript.com/")
             content {
