@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.domain.reader
 
-import okio.Sink
+import kotlinx.io.Sink
 
 interface FileReader : AutoCloseable {
 

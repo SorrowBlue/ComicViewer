@@ -23,12 +23,11 @@ import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.io.Buffer
+import kotlinx.io.Source
 import logcat.asLog
 import logcat.logcat
-import okio.Buffer
-import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
-import okio.use
 import org.koin.core.annotation.Singleton
 
 private var fileReader: FileReader? = null
@@ -48,7 +47,7 @@ internal class BookPageFetcher(
         return BookPageMetaData(data.pageIndex, data.book.name, data.book.size)
     }
 
-    override fun BufferedSource.readMetadata() = BookPageMetaData.from<BookPageMetaData>(this)
+    override fun Source.readMetadata() = BookPageMetaData.from<BookPageMetaData>(this)
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val remoteDataSource = bookshelfLocalDataSource.flow(data.book.bookshelfId).first()

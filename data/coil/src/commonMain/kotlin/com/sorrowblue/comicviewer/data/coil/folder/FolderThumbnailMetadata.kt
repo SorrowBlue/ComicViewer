@@ -1,11 +1,11 @@
 package com.sorrowblue.comicviewer.data.coil.folder
 
 import com.sorrowblue.comicviewer.data.coil.CoilMetaData
+import kotlinx.io.Sink
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import okio.BufferedSink
 
 @Serializable
 internal data class FolderThumbnailMetadata(
@@ -16,7 +16,7 @@ internal data class FolderThumbnailMetadata(
 ) : CoilMetaData {
 
     @OptIn(ExperimentalSerializationApi::class)
-    override fun writeTo(sink: BufferedSink) {
+    override fun writeTo(sink: Sink) {
         sink.write(ProtoBuf.encodeToByteArray(this))
     }
 

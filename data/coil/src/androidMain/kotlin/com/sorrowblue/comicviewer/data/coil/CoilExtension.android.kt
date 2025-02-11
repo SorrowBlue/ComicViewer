@@ -3,17 +3,14 @@ package com.sorrowblue.comicviewer.data.coil
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
-import okio.Buffer
-import okio.BufferedSink
+import io.ktor.utils.io.streams.inputStream
+import kotlinx.io.Sink
+import kotlinx.io.Source
+import kotlinx.io.asOutputStream
 
-actual suspend fun resizeImage(
-    buffer: Buffer,
-    sink: BufferedSink,
-    imageFormat: ImageFormat,
-    quality: Int,
-) {
-    BitmapFactory.decodeStream(buffer.inputStream()).let { bitmap ->
-        bitmap.compress(imageFormat.toCompressFormat(), quality, sink.outputStream())
+actual suspend fun resizeImage(source: Source, sink: Sink, imageFormat: ImageFormat, quality: Int) {
+    BitmapFactory.decodeStream(source.inputStream()).let { bitmap ->
+        bitmap.compress(imageFormat.toCompressFormat(), quality, sink.asOutputStream())
         bitmap.recycle()
     }
 }

@@ -17,9 +17,9 @@ import com.sorrowblue.comicviewer.data.coil.thumbnailDiskCache
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import kotlinx.io.Source
 import logcat.LogPriority
 import logcat.logcat
-import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
 import org.koin.core.annotation.Singleton
 
@@ -41,7 +41,7 @@ internal class FavoriteThumbnailFetcher(
         return FavoriteThumbnailMetadata(data.id.value, thumbnails?.first)
     }
 
-    override fun BufferedSource.readMetadata() =
+    override fun Source.readMetadata() =
         FavoriteThumbnailMetadata.from<FavoriteThumbnailMetadata>(this)
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {

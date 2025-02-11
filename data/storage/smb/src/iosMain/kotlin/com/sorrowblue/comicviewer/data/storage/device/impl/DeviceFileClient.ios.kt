@@ -16,10 +16,8 @@ import dev.zwander.kotlin.file.FileUtils
 import dev.zwander.kotlin.file.IPlatformFile
 import dev.zwander.kotlin.file.okio.toOkioSource
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.io.buffered
 import logcat.logcat
 import okio.BufferedSource
-import okio.Path.Companion.toPath
 import okio.buffer
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam

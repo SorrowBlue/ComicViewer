@@ -21,10 +21,9 @@ import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import kotlinx.coroutines.flow.first
-import okio.Buffer
-import okio.BufferedSource
+import kotlinx.io.Buffer
+import kotlinx.io.Source
 import okio.ByteString.Companion.encodeUtf8
-import okio.use
 import org.koin.core.annotation.Singleton
 
 internal class BookThumbnailFetcher(
@@ -43,7 +42,7 @@ internal class BookThumbnailFetcher(
 
     override suspend fun metadata() = BookThumbnailMetadata(data)
 
-    override fun BufferedSource.readMetadata() =
+    override fun Source.readMetadata() =
         BookThumbnailMetadata.from<BookThumbnailMetadata>(this)
 
     override suspend fun fetch(): FetchResult? {

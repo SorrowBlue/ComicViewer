@@ -2,15 +2,13 @@ package com.sorrowblue.comicviewer.framework.navigation
 
 import androidx.core.bundle.Bundle
 import androidx.navigation.NavType
+import kotlinx.io.Buffer
+import kotlinx.io.readByteArray
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.okio.decodeFromBufferedSource
-import kotlinx.serialization.json.okio.encodeToBufferedSink
 import kotlinx.serialization.serializer
-import okio.Buffer
-import okio.use
 
 inline fun <reified D : @Serializable Any> NavType.Companion.kSerializableType(isNullableAllowed: Boolean = false): KSerializableType<D> {
     return KSerializableType(Json.serializersModule.serializer<D>(), isNullableAllowed)
@@ -26,13 +24,14 @@ class KSerializableType<D : @Serializable Any?>(
     override fun get(bundle: Bundle, key: String): D? {
         return bundle.getByteArray(key)?.let { bytes ->
             Buffer().use {
-                Json.decodeFromBufferedSource(serializer, it.write(bytes))
+                it.write(bytes)
+                Json.decodeFromBuffer(serializer, it)
             }
         }
     }
 
     override fun put(bundle: Bundle, key: String, value: D) {
-        Buffer().also { Json.encodeToBufferedSink(serializer, value, it) }.use {
+        Buffer().also { Json.encodeToBuffer(serializer, value, it) }.use {
             bundle.putByteArray(key, it.readByteArray())
         }
     }

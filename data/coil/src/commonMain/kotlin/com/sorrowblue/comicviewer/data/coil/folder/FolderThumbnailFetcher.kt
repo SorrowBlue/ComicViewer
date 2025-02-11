@@ -19,9 +19,9 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOr
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import kotlinx.coroutines.flow.first
+import kotlinx.io.Source
 import logcat.LogPriority
 import logcat.logcat
-import okio.BufferedSource
 import okio.ByteString.Companion.encodeUtf8
 import org.koin.core.annotation.Singleton
 
@@ -50,7 +50,7 @@ internal class FolderThumbnailFetcher(
         )
     }
 
-    override fun BufferedSource.readMetadata() =
+    override fun Source.readMetadata() =
         FolderThumbnailMetadata.from<FolderThumbnailMetadata>(this)
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {

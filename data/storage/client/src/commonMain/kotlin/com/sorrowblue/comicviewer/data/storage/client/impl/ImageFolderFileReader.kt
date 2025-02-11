@@ -6,10 +6,15 @@ import com.sorrowblue.comicviewer.domain.model.SortUtil
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.reader.FileReader
+import com.sorrowblue.comicviewer.domain.reader.asKotlinxIoRawSink
+import com.sorrowblue.comicviewer.domain.reader.asKotlinxIoRawSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import okio.Sink
-import okio.buffer
+import kotlinx.io.Buffer
+import kotlinx.io.InternalIoApi
+import kotlinx.io.RawSource
+import kotlinx.io.Sink
+import kotlinx.io.buffered
 import okio.use
 
 internal class ImageFolderFileReader(
@@ -29,11 +34,12 @@ internal class ImageFolderFileReader(
         }
     }
 
+    @OptIn(InternalIoApi::class)
     override suspend fun copyTo(pageIndex: Int, sink: Sink) {
         return withContext(dispatcher) {
-            sink.buffer().use { sink ->
+            sink.buffer.use { sink ->
                 fileClient.bufferedSource(list()[pageIndex]).use { source ->
-                    sink.writeAll(source)
+                    sink.transferFrom(source.buffer.asKotlinxIoRawSource())
                 }
             }
         }

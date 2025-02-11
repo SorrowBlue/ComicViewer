@@ -25,6 +25,9 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    compilerOptions {
+        freeCompilerArgs.add("-opt-in=kotlinx.serialization.json.internal.JsonFriendModuleApi")
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -34,9 +37,8 @@ kotlin {
                 implementation(libs.koin.core)
 
                 implementation(libs.koin.annotations)
-
-                implementation(libs.squareup.okio)
-                implementation(libs.kotlinx.serialization.jsonOkio)
+                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
+                implementation(libs.kotlinx.serialization.json)
                 api("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha12")
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.core)

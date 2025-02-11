@@ -8,9 +8,12 @@ import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import coil3.size.pxOrElse
-import okio.BufferedSink
-import okio.BufferedSource
-import okio.Sink
+import com.sorrowblue.comicviewer.domain.reader.asKotlinxIoRawSink
+import com.sorrowblue.comicviewer.domain.reader.asOkioSource
+import kotlinx.io.InternalIoApi
+import kotlinx.io.Sink
+import kotlinx.io.Source
+import kotlinx.io.buffered
 import okio.buffer
 
 /**
@@ -41,7 +44,7 @@ internal abstract class FileFetcher<T : CoilMetaData>(
      *
      * @return メタデータ
      */
-    abstract fun BufferedSource.readMetadata(): T?
+    abstract fun Source.readMetadata(): T?
 
     /**
      * Inner fetch
@@ -84,7 +87,7 @@ internal abstract class FileFetcher<T : CoilMetaData>(
     protected suspend fun writeToDiskCache(
         snapshot: DiskCache.Snapshot?,
         metaData: CoilMetaData,
-        sink: suspend (BufferedSink) -> Unit,
+        sink: suspend (Sink) -> Unit,
     ): DiskCache.Snapshot? {
         // この応答をキャッシュすることが許可されていない場合は、ショートします。
         if (!isCacheable) {
@@ -106,10 +109,10 @@ internal abstract class FileFetcher<T : CoilMetaData>(
         // メタデータと画像データを更新します。
         return kotlin.runCatching {
             fileSystem.write(editor.metadata) {
-                metaData.writeTo(this)
+                metaData.writeTo(asKotlinxIoRawSink().buffered())
             }
             fileSystem.write(editor.data) {
-                sink(this)
+                sink(asKotlinxIoRawSink().buffered())
             }
             editor.commitAndOpenSnapshot()
         }.onFailure {
@@ -122,8 +125,9 @@ internal abstract class FileFetcher<T : CoilMetaData>(
     protected fun DiskCache.Snapshot.toImageSource() =
         ImageSource(data, fileSystem, diskCacheKey, this)
 
+    @OptIn(InternalIoApi::class)
     protected fun Sink.toImageSource() =
-        ImageSource(source = buffer().buffer, fileSystem = options.fileSystem)
+        ImageSource(source = buffer.asOkioSource().buffer(), fileSystem = options.fileSystem)
 
     private val fileSystem get() = diskCache!!.fileSystem
 

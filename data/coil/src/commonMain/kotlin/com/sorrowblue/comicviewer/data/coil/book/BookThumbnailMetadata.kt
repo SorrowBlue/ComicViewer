@@ -2,11 +2,11 @@ package com.sorrowblue.comicviewer.data.coil.book
 
 import com.sorrowblue.comicviewer.data.coil.CoilMetaData
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
+import kotlinx.io.Sink
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import okio.BufferedSink
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
@@ -24,7 +24,7 @@ internal data class BookThumbnailMetadata(
         book.size
     )
 
-    override fun writeTo(sink: BufferedSink) {
+    override fun writeTo(sink: Sink) {
         sink.write(ProtoBuf.encodeToByteArray(this))
     }
 
