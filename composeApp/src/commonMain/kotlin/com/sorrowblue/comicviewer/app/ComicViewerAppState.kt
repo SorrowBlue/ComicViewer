@@ -82,8 +82,7 @@ private class ComicViewerAppStateImpl(
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     override val navController: NavHostController,
-) :
-    ComicViewerAppState {
+) : ComicViewerAppState {
 
     override var uiState: ComicViewerScaffoldUiState by mutableStateOf(ComicViewerScaffoldUiState())
         private set
@@ -91,6 +90,7 @@ private class ComicViewerAppStateImpl(
     var isNavigationRestored by mutableStateOf(false)
 
     init {
+        logcat { "init" }
         navController.currentBackStackEntryFlow
             .filter { it.destination is ComposeNavigator.Destination }
             .onEach { backStackEntry ->

@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.navigation.compiler
 
 import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.isDefault
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
@@ -66,7 +67,7 @@ fun DestinationResolver(
             val functionName = symbol.simpleName.asString()
             logger.warn("  functionName=$functionName")
             val routeType: KSType
-            val styleType: KSType
+            val styleType: KSType?
             symbol.annotations.filter { it.annotationType.resolve().declaration.qualifiedName?.asString() == Destination }
                 .first().let {
                     it.annotationType.resolve().arguments.first().type?.resolve()!!.let {
@@ -97,7 +98,7 @@ fun DestinationResolver(
                         routeType
                     }
                     it.arguments.first { it.name?.asString() == "style" }.let {
-                        styleType = it.value as KSType
+                        styleType = it.value as? KSType
                     }
                 }
             val argumentsNoDefault =
@@ -118,7 +119,7 @@ fun DestinationResolver(
                 )
                 .addProperty(
                     PropertySpec.builder("style", DestinationStyle, KModifier.OVERRIDE)
-                        .initializer("%L", styleType.toClassName().canonicalName)
+                        .initializer("%L", (styleType?.toClassName() ?: ClassName("com.sorrowblue.comicviewer.framework.navigation", "DestinationStyle.Composable")).canonicalName)
                         .build()
                 )
                 .addProperty(
@@ -196,8 +197,8 @@ fun Sequence<KSAnnotation>.get(className: ClassName): KSAnnotation {
     return first { it.annotationType.resolve().declaration.qualifiedName?.asString() == className.canonicalName }
 }
 
-fun KSAnnotation.getArgument(name: String): KSType {
-    return arguments.first { it.name?.asString() == name }.value as KSType
+fun KSAnnotation.getArgument(name: String): KSType? {
+    return arguments.first { it.name?.asString() == name }.value as? KSType
 }
 
 fun NavGraphResolver(
@@ -212,14 +213,14 @@ fun NavGraphResolver(
         logger.warn("  symbol is ${symbol}")
         if (symbol is KSClassDeclaration) {
             val startDestination: KSType
-            val transition: KSType
-            val root: KSType
+            val transition: KSType?
+            val root: KSType?
             logger.warn("  isCompanionObject ${symbol.isCompanionObject}")
 
             // @NavGraph(startDestination=XXX::class)
             val route = symbol.asType(emptyList())
             val navGraph = symbol.annotations.get(NavGraphAnnotation)
-            startDestination = navGraph.getArgument("startDestination")
+            startDestination = navGraph.getArgument("startDestination")!!
             transition = navGraph.getArgument("transition")
             root = navGraph.getArgument("root")
 
@@ -228,7 +229,7 @@ fun NavGraphResolver(
                 generateTypeMap(codeGenerator, logger, route.declaration as KSClassDeclaration)
             }
             logger.info(
-                "@NavGraph(startDestination = ${startDestination.toClassName().simpleName}::class, root = ${root.toClassName().simpleName}::class, transition = ${transition.toClassName().simpleName}::class)",
+                "@NavGraph(startDestination = ${startDestination.toClassName().simpleName}::class, root = ${root?.toClassName()?.simpleName}::class, transition = ${transition?.toClassName()?.simpleName}::class)",
                 symbol
             )
             val inGraphRoute = mutableListOf<KSType>()
@@ -249,16 +250,16 @@ fun NavGraphResolver(
                 }
             }
 
-            val isRoot = root.toClassName() != ClassName("java.lang", "Void")
+            val isRoot = root != null && root.toClassName() != ClassName("java.lang", "Void")
             val className =
                 if (isRoot) {
-                    root.declaration.simpleName.asString()
+                    root!!.declaration.simpleName.asString()
                 } else {
                     route.declaration.simpleName.asString() + "NavGraph"
                 }
             val imports = mutableListOf<ClassName>()
             imports.add(startDestination.toClassName())
-            imports.add(transition.toClassName())
+            imports.add(transition?.toClassName() ?: NavTransition)
             imports.add(route.toClassName())
             val clazz = TypeSpec.classBuilder(className)
                 .apply {
@@ -285,8 +286,8 @@ fun NavGraphResolver(
                             addModifiers(KModifier.ACTUAL)
                         }
                         initializer(
-                            "%L${if (transition.isObjectClass) "" else "()"}",
-                            transition.toClassName().simpleName
+                            "%L${if (transition?.isObjectClass == false) "()" else ""}",
+                            transition?.toClassName()?.simpleName ?: NavTransition.nestedClass("Default").canonicalName
                         )
                     }.build()
                 )
@@ -381,7 +382,7 @@ fun NavGraphResolver(
                 )
                 .build()
             val rootPackage =
-                if (isRoot) root.declaration.packageName.asString() else route.declaration.packageName.asString()
+                if (isRoot) root!!.declaration.packageName.asString() else route.declaration.packageName.asString()
             FileSpec.builder(rootPackage, "$className.nav")
                 .indent("    ")
                 .addKotlinDefaultImports()

@@ -34,7 +34,7 @@ import org.koin.ksp.generated.defineAndroidSplitInstallManager
 import org.koin.ksp.generated.module
 
 @OptIn(InternalComposeApi::class)
-fun main() = application {
+fun ma2in() = application {
     val trayState = rememberTrayState()
     val notification = rememberNotification("Notification", "Message from MyApp!")
     Tray(

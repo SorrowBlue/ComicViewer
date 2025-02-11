@@ -25,12 +25,14 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_not
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
+@Serializable
 enum class NotificationRequestResult {
     Ok,
     Cancel,
     NotAllowed,
 }
 
+@Serializable
 enum class ScanType {
     File,
     Thumbnail,
