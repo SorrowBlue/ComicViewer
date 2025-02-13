@@ -104,7 +104,7 @@ private class BookshelfEditScreenStateImpl(
                             uiState = InternalStorageEditScreenUiState(
                                 form = InternalStorageEditScreenForm(
                                     displayName = bookshelf.displayName,
-                                    path = UriUtils.parse(it.folder.path)
+                                    path = it.folder.path
                                 ),
                                 editMode = editMode
                             )

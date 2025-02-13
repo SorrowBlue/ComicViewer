@@ -1,0 +1,8 @@
+package = sevenzip
+
+# No string conversion for specific functions
+noStringConversion = freeMemoryNative
+
+# staticLibraries = libnative.a
+staticLibraries = libnativeApp.a
+libraryPaths = src/nativeMain/cpp/build/lib

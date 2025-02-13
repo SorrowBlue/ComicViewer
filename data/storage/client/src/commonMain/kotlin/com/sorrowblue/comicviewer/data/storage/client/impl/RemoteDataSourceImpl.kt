@@ -23,6 +23,8 @@ import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
 import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import logcat.asLog
+import logcat.logcat
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Qualifier
@@ -144,6 +146,7 @@ internal class RemoteDataSourceImpl(
                     is BookFolder -> ImageFolderFileReader(dispatcher, fileClient, book)
                 }
             }.getOrElse {
+                logcat { it.asLog() }
                 throw when (it) {
                     is FileClientException -> when (it) {
                         is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()

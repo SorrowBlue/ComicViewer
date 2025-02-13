@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import java.util.Locale
 
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual object SortUtil {
 
     private val collator: Collator

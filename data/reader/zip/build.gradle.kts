@@ -4,9 +4,25 @@ plugins {
 }
 
 kotlin {
+    listOf(
+        iosSimulatorArm64(),
+        iosArm64(),
+        iosX64()
+    ).forEach {
+//        it.compilations["main"].cinterops {
+//            create("sevenzip") {
+//                header(file("src/nativeInterop/cpp/jbinding-cpp/JavaToCPP/JavaToCPPSevenZip.cpp"))
+//                defFile("src/nativeInterop/cinterop/sevenzip.def")
+//                packageName("sevenzip")
+//                 Options to be passed to compiler by cinterop tool.
+//                compilerOpts("-I/Users/sorrowblue/Downloads/lzma2409/C")
+//            }
+//        }
+    }
     sourceSets.commonMain.dependencies {
         implementation(projects.data.storage.client)
         implementation(libs.kotlinx.coroutines.core)
+        implementation(libs.kotlinx.io)
     }
 
     sourceSets.androidMain.dependencies {

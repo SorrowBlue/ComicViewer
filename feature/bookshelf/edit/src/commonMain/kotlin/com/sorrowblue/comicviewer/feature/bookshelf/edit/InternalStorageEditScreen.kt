@@ -36,7 +36,7 @@ internal data class InternalStorageEditScreenUiState(
 
 internal data class InternalStorageEditScreenForm(
     override val displayName: String = "",
-    val path: Uri? = null,
+    val path: String? = null,
 ) : BookshelfEditForm {
 
     override fun <T : BookshelfEditForm> update(displayName: String): T {

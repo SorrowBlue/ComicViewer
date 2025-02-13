@@ -22,6 +22,7 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_err
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_select_folder
 import io.github.vinceglb.filekit.compose.PickerResultLauncher
 import io.github.vinceglb.filekit.compose.rememberDirectoryPickerLauncher
+import io.github.vinceglb.filekit.core.PlatformDirectory
 import logcat.logcat
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -32,6 +33,7 @@ import soil.form.compose.rememberFieldRuleControl
 import soil.form.rule.notNull
 
 expect fun localUriToDisplayPath(uri: Uri): String
+expect fun PlatformDirectory.displayPath(): String
 
 @Composable
 internal fun FolderSelectField(
@@ -42,7 +44,7 @@ internal fun FolderSelectField(
     Controller(state.control) { field ->
         val focusManager = LocalFocusManager.current
         OutlinedTextField(
-            value = field.value?.let { localUriToDisplayPath(it) }.orEmpty(),
+            value = field.value?.let { localUriToDisplayPath(UriUtils.parse(it)) }.orEmpty(),
             onValueChange = {},
             modifier = modifier
                 .testTag("FolderSelect")
@@ -77,19 +79,22 @@ internal fun FolderSelectField(
 }
 
 internal interface FolderSelectFieldState {
-    val control: FieldControl<Uri?>
+    val control: FieldControl<String?>
     val pickerResultLauncher: PickerResultLauncher
 }
 
 @Composable
 internal fun FormScope<InternalStorageEditScreenForm>.rememberFolderSelectFieldState(
     onOpenDocumentTreeCancel: () -> Unit,
-    control: FieldControl<Uri?> = rememberFolderSelectFieldControl(),
+    control: FieldControl<String?> = rememberFolderSelectFieldControl(),
     takePersistableUriPermission: TakePersistableUriPermission = koinInject(),
     pickerResultLauncher: PickerResultLauncher = rememberDirectoryPickerLauncher { uri ->
         logcat { "PickerResultLauncher onResult uri=$uri" }
-        uri?.path?.let(UriUtils::parse)?.let {
-            takePersistableUriPermission(it)
+        uri?.displayPath()
+        uri?.path
+//            ?.let(UriUtils::parse)
+            ?.let {
+            takePersistableUriPermission(UriUtils.parse(it))
             control.setValue(it)
         } ?: run {
             onOpenDocumentTreeCancel()
@@ -102,12 +107,12 @@ internal fun FormScope<InternalStorageEditScreenForm>.rememberFolderSelectFieldS
 }
 
 private class FolderSelectFieldStateImpl(
-    override val control: FieldControl<Uri?>,
+    override val control: FieldControl<String?>,
     override val pickerResultLauncher: PickerResultLauncher,
 ) : FolderSelectFieldState
 
 @Composable
-private fun FormScope<InternalStorageEditScreenForm>.rememberFolderSelectFieldControl(): FieldControl<Uri?> {
+private fun FormScope<InternalStorageEditScreenForm>.rememberFolderSelectFieldControl(): FieldControl<String?> {
     val message = stringResource(Res.string.bookshelf_edit_error_select_folder)
     return rememberFieldRuleControl(
         name = stringResource(Res.string.bookshelf_edit_label_select_folder),
