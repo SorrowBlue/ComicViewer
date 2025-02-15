@@ -1,23 +1,22 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
     alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
 }
 
 kotlin {
+    val xcFramework = XCFramework("zipReader")
     listOf(
-        iosSimulatorArm64(),
+        iosX64(),
         iosArm64(),
-        iosX64()
+        iosSimulatorArm64()
     ).forEach {
-//        it.compilations["main"].cinterops {
-//            create("sevenzip") {
-//                header(file("src/nativeInterop/cpp/jbinding-cpp/JavaToCPP/JavaToCPPSevenZip.cpp"))
-//                defFile("src/nativeInterop/cinterop/sevenzip.def")
-//                packageName("sevenzip")
-//                 Options to be passed to compiler by cinterop tool.
-//                compilerOpts("-I/Users/sorrowblue/Downloads/lzma2409/C")
-//            }
-//        }
+        it.binaries.framework {
+            baseName = "zipReader"
+            binaryOption("bundleId", "com.sorrowblue.comicviewer.data.reader.zip.zipReader")
+            xcFramework.add(this)
+        }
     }
     sourceSets.commonMain.dependencies {
         implementation(projects.data.storage.client)
@@ -31,8 +30,8 @@ kotlin {
     }
 
     sourceSets.desktopMain.dependencies {
-        implementation("net.sf.sevenzipjbinding:sevenzipjbinding:16.02-2.01")
-        implementation("net.sf.sevenzipjbinding:sevenzipjbinding-all-platforms:16.02-2.01")
+        implementation(libs.sevenzipjbinding)
+        implementation(libs.sevenzipjbinding.allPlatforms)
     }
 }
 
