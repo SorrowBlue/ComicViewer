@@ -1,21 +1,18 @@
 package com.sorrowblue.comicviewer.data.coil.book
 
-import com.sorrowblue.comicviewer.data.coil.CoilMetaData
+import com.sorrowblue.comicviewer.data.coil.CoilMetadata
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import kotlinx.io.Sink
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToByteArray
-import kotlinx.serialization.protobuf.ProtoBuf
+import kotlinx.serialization.json.Json
+import okio.BufferedSink
 
-@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 internal data class BookThumbnailMetadata(
     val path: String,
     val bookshelfId: Int,
     val lastModifier: Long,
     val size: Long,
-) : CoilMetaData {
+) : CoilMetadata {
 
     constructor(book: BookThumbnail) : this(
         book.path,
@@ -24,9 +21,7 @@ internal data class BookThumbnailMetadata(
         book.size
     )
 
-    override fun writeTo(sink: Sink) {
-        sink.write(ProtoBuf.encodeToByteArray(this))
+    override fun writeTo(bufferedSink: BufferedSink) {
+        bufferedSink.writeUtf8(Json.encodeToString(this))
     }
-
-    companion object : CoilMetaData.CompanionObject
 }

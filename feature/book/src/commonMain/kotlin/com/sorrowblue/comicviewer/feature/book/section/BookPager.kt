@@ -34,7 +34,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.toBitmap
-import com.sorrowblue.comicviewer.domain.model.BookPageRequest
+import com.sorrowblue.comicviewer.domain.model.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -78,7 +78,7 @@ private fun DefaultBookPage(
     val request by remember(bookPage.index) {
         mutableStateOf(
             ImageRequest.Builder(context)
-                .data(BookPageRequest(book to bookPage.index))
+                .data(BookPageImage(book to bookPage.index))
                 // TODO .transformations(WhiteTrimTransformation)
                 .build()
         )
@@ -147,7 +147,7 @@ private fun SplitBookPage(
     modifier: Modifier = Modifier,
 ) {
     AsyncImage(
-        model = BookPageRequest(book to bookPage.index),
+        model = BookPageImage(book to bookPage.index),
         contentDescription = null,
         transform = when (bookPage) {
             is BookPage.Split.Unrated -> SpreadSplitTransformation.unrated {
@@ -182,7 +182,7 @@ private fun SpreadBookPage(
                 .then(modifier)
         ) {
             AsyncImage(
-                model = BookPageRequest(book to bookPage.nextIndex),
+                model = BookPageImage(book to bookPage.nextIndex),
                 contentDescription = null,
                 contentScale = pageScale.contentScale,
                 error = rememberVectorPainter(ComicIcons.BrokenImage),
@@ -192,7 +192,7 @@ private fun SpreadBookPage(
                     .weight(1f),
             )
             AsyncImage(
-                model = BookPageRequest(book to bookPage.index),
+                model = BookPageImage(book to bookPage.index),
                 contentDescription = null,
                 contentScale = pageScale.contentScale,
                 error = rememberVectorPainter(ComicIcons.BrokenImage),
@@ -204,7 +204,7 @@ private fun SpreadBookPage(
         }
     } else {
         AsyncImage(
-            model = BookPageRequest(book to bookPage.index),
+            model = BookPageImage(book to bookPage.index),
             contentDescription = null,
             contentScale = pageScale.contentScale,
             transform = when (bookPage) {

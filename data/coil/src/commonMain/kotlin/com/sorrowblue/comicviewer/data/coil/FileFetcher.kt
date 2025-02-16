@@ -8,12 +8,9 @@ import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import coil3.size.pxOrElse
-import com.sorrowblue.comicviewer.domain.reader.asKotlinxIoRawSink
-import com.sorrowblue.comicviewer.domain.reader.asOkioSource
-import kotlinx.io.InternalIoApi
-import kotlinx.io.Sink
-import kotlinx.io.Source
-import kotlinx.io.buffered
+import okio.BufferedSink
+import okio.BufferedSource
+import okio.Sink
 import okio.buffer
 
 /**
@@ -24,9 +21,9 @@ import okio.buffer
  * @constructor
  * @property options
  */
-internal abstract class FileFetcher<T : CoilMetaData>(
+internal abstract class FileFetcher<T : CoilMetadata>(
     val options: Options,
-    diskCacheLazy: Lazy<DiskCache?>,
+    private val diskCacheLazy: Lazy<DiskCache>,
 ) : Fetcher {
 
     /** Disk cache key */
@@ -44,7 +41,7 @@ internal abstract class FileFetcher<T : CoilMetaData>(
      *
      * @return メタデータ
      */
-    abstract fun Source.readMetadata(): T?
+    abstract fun BufferedSource.readMetadata(): T?
 
     /**
      * Inner fetch
@@ -55,85 +52,89 @@ internal abstract class FileFetcher<T : CoilMetaData>(
     abstract suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult?
 
     override suspend fun fetch(): FetchResult? {
-        return readFromDiskCache()?.use { snapshot ->
-            // 高速パス: ネットワーク要求を実行せずに、ディスク キャッシュからイメージをフェッチする。
-            // キャッシュされた画像は手動で追加された可能性が高いため、常にメタデータが空の状態で返されます。
-            if (fileSystem.metadata(snapshot.metadata).size == 0L) {
-                return SourceFetchResult(
-                    source = snapshot.toImageSource(),
-                    mimeType = null,
-                    dataSource = DataSource.DISK
-                )
+        val snapshot = readFromDiskCache()
+        try {
+            if (snapshot != null) {
+                // Always return files with empty metadata as it's likely they've been written
+                // to the disk cache manually.
+                if (fileSystem.metadata(snapshot.metadata).size == 0L) {
+                    return SourceFetchResult(
+                        source = snapshot.toImageSource(),
+                        mimeType = null,
+                        dataSource = DataSource.DISK
+                    )
+                }
+
+                // Return the image from the disk cache if the cache strategy agrees.
+                if (snapshot.readMetadata() == metadata()) {
+                    return SourceFetchResult(
+                        source = snapshot.toImageSource(),
+                        mimeType = null,
+                        dataSource = DataSource.DISK
+                    )
+                }
             }
-            // 候補が適格である場合、キャッシュから候補を返します。
-            if (snapshot.readMetadata() == metadata()) {
-                return SourceFetchResult(
-                    source = snapshot.toImageSource(),
-                    mimeType = null,
-                    dataSource = DataSource.DISK
-                )
-            }
-            diskCache?.remove(diskCacheKey)
-            innerFetch(snapshot)
-        } ?: run {
-            innerFetch(null)
+
+            // Slow path: fetch the image from the network.
+            return innerFetch(snapshot)
+        } catch (e: Exception) {
+            snapshot?.closeQuietly()
+            throw e
         }
     }
 
-    protected val diskCache by diskCacheLazy
     protected val requestWidth = options.size.width.pxOrElse { 300 }.toFloat()
     protected val requestHeight = options.size.height.pxOrElse { 300 }.toFloat()
 
     protected suspend fun writeToDiskCache(
         snapshot: DiskCache.Snapshot?,
-        metaData: CoilMetaData,
-        sink: suspend (Sink) -> Unit,
+        metaData: T,
+        writeTo: suspend (BufferedSink) -> Unit,
     ): DiskCache.Snapshot? {
-        // この応答をキャッシュすることが許可されていない場合は、ショートします。
-        if (!isCacheable) {
+        // Short circuit if we're not allowed to cache this response.
+        if (!options.diskCachePolicy.writeEnabled) {
             snapshot?.closeQuietly()
             return null
         }
 
-        // 新しいエディターを開きます。
+        // Open a new editor. Return null if we're unable to write to this entry.
         val editor = if (snapshot != null) {
             snapshot.closeAndOpenEditor()
         } else {
-            diskCache?.openEditor(diskCacheKey)
-        }
+            diskCacheLazy.value.openEditor(diskCacheKey)
+        } ?: return null
 
-        // このエントリに書き込めない場合は `null` を返します。
-        if (editor == null) return null
-
-        // 応答をディスク キャッシュに書き込みます。
-        // メタデータと画像データを更新します。
-        return kotlin.runCatching {
+        // Write the network request metadata and the network response body to disk.
+        try {
             fileSystem.write(editor.metadata) {
-                metaData.writeTo(asKotlinxIoRawSink().buffered())
+                metaData.writeTo(this)
             }
             fileSystem.write(editor.data) {
-                sink(asKotlinxIoRawSink().buffered())
+                writeTo(this)
             }
-            editor.commitAndOpenSnapshot()
-        }.onFailure {
+            return editor.commitAndOpenSnapshot()
+        } catch (e: Exception) {
             editor.abortQuietly()
-        }.getOrThrow()
+            throw e
+        }
     }
 
-    private val isCacheable get() = options.diskCachePolicy.writeEnabled
-
     protected fun DiskCache.Snapshot.toImageSource() =
-        ImageSource(data, fileSystem, diskCacheKey, this)
+        ImageSource(
+            file = data,
+            fileSystem = fileSystem,
+            diskCacheKey = diskCacheKey,
+            closeable = this
+        )
 
-    @OptIn(InternalIoApi::class)
     protected fun Sink.toImageSource() =
-        ImageSource(source = buffer.asOkioSource().buffer(), fileSystem = options.fileSystem)
+        ImageSource(source = buffer().buffer, fileSystem = options.fileSystem)
 
-    private val fileSystem get() = diskCache!!.fileSystem
+    private val fileSystem get() = diskCacheLazy.value.fileSystem
 
     private fun readFromDiskCache(): DiskCache.Snapshot? {
         return if (options.diskCachePolicy.readEnabled) {
-            diskCache?.openSnapshot(diskCacheKey)
+            diskCacheLazy.value.openSnapshot(diskCacheKey)
         } else {
             null
         }

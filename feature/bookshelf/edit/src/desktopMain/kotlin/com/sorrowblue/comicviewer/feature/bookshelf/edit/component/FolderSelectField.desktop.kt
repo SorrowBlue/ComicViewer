@@ -1,7 +1,10 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
-import androidx.core.uri.Uri
+import io.github.vinceglb.filekit.core.PlatformDirectory
 
-actual fun localUriToDisplayPath(uri: Uri): String {
-    return uri.toString()
+actual fun localUriToDisplayPath(path: String): String {
+    return path
 }
+
+actual val PlatformDirectory.pathString: String
+    get() = file.absolutePath

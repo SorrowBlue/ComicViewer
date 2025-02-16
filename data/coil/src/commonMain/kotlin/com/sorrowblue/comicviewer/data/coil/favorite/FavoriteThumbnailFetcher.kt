@@ -9,31 +9,29 @@ import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CacheKeySnapshot
 import com.sorrowblue.comicviewer.data.coil.CoilDiskCache
+import com.sorrowblue.comicviewer.data.coil.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
-import com.sorrowblue.comicviewer.data.coil.from
 import com.sorrowblue.comicviewer.data.coil.thumbnailDiskCache
 import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
 import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
-import kotlinx.io.Source
 import logcat.LogPriority
 import logcat.logcat
-import okio.ByteString.Companion.encodeUtf8
+import okio.BufferedSource
 import org.koin.core.annotation.Singleton
 
 internal class FavoriteThumbnailFetcher(
     options: Options,
-    diskCache: Lazy<DiskCache?>,
-    private val coilDiskCacheLazy: Lazy<CoilDiskCache?>,
+    diskCache: Lazy<DiskCache>,
+    private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
     private val data: Favorite,
     private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
     private val fileModelLocalDataSource: FileLocalDataSource,
 ) : FileFetcher<FavoriteThumbnailMetadata>(options, diskCache) {
 
-    override val diskCacheKey
-        get() = options.diskCacheKey ?: "favorite:${data.id.value}".encodeUtf8().sha256().hex()
+    override val diskCacheKey get() = options.diskCacheKey ?: "favorite:${data.id.value}"
 
     override suspend fun metadata(): FavoriteThumbnailMetadata {
         val thumbnails = getThumbnailCache()
@@ -41,8 +39,7 @@ internal class FavoriteThumbnailFetcher(
         return FavoriteThumbnailMetadata(data.id.value, thumbnails?.first)
     }
 
-    override fun Source.readMetadata() =
-        FavoriteThumbnailMetadata.from<FavoriteThumbnailMetadata>(this)
+    override fun BufferedSource.readMetadata() = CoilMetadata.from<FavoriteThumbnailMetadata>(this)
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val thumbnailCache = getThumbnailCache()
@@ -65,7 +62,7 @@ internal class FavoriteThumbnailFetcher(
             return null
         }
         return cacheKeyList.firstNotNullOfOrNull { (bookshelfId, cacheKey) ->
-            coilDiskCacheLazy.value?.thumbnailDiskCache(bookshelfId)?.openSnapshot(cacheKey)?.let {
+            coilDiskCacheLazy.value.thumbnailDiskCache(bookshelfId).openSnapshot(cacheKey)?.let {
                 cacheKey to it
             } ?: run {
                 fileModelLocalDataSource.removeCacheKey(cacheKey)
@@ -79,7 +76,7 @@ internal class FavoriteThumbnailFetcher(
 @com.sorrowblue.comicviewer.data.coil.FavoriteFetcher
 internal class FavoriteThumbnailFetcherFactory(
     private val diskCache: Lazy<DiskCache>,
-    private val coilDiskCacheLazy: Lazy<CoilDiskCache?>,
+    private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
     private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
     private val fileModelLocalDataSource: FileLocalDataSource,
 ) : Fetcher.Factory<Favorite> {

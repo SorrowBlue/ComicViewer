@@ -1,5 +1,4 @@
 import com.sorrowblue.comicviewer.ComicBuildType
-import kotlin.plus
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -69,8 +68,6 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation(projects.data.coil)
-                implementation(projects.data.reader.zip)
             }
         }
     }
@@ -148,12 +145,12 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.sorrowblue.comicviewer.MainKt"
-
+        mainClass = "com.sorrowblue.comicviewer.app.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.sorrowblue.comicviewer"
+            packageName = "com.sorrowblue.comicviewer.app"
             packageVersion = versionNameGit
         }
+        jvmArgs("-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
     }
 }

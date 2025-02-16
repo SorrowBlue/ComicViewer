@@ -18,12 +18,8 @@ internal actual class DataStoreMaker(private val context: Context) {
         return DataStoreFactory.create(
             storage = OkioStorage(
                 fileSystem = FileSystem.SYSTEM,
-                producePath = {
-                    context.applicationContext.dataStoreFile(
-                        okioSerializer.fileName
-                    ).absolutePath.toPath()
-                },
-                serializer = okioSerializer,
+                producePath = { context.applicationContext.dataStoreFile(okioSerializer.fileName).absolutePath.toPath() },
+                serializer = okioSerializer
             ),
             corruptionHandler = ReplaceFileCorruptionHandler { okioSerializer.defaultValue },
         )

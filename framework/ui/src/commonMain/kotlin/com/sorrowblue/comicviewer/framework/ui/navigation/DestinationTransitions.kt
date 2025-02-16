@@ -49,12 +49,10 @@ abstract class DestinationTransitions : NavTransition() {
     override fun AnimatedContentTransitionScope<NavBackStackEntry>.enterTransition(): EnterTransition {
         val initRoute = initialState.destination
         val targetRoute = targetState.destination
-        logcat { "enterTransition $initRoute -> $targetRoute" }
         val transition = transitions.firstOrNull { conf ->
             (conf.exitRoute == null && targetRoute.hierarchy.any { it.hasRoute2(conf.enterRoute) })
                 || (initRoute.hasRoute2(conf.enterRoute) && targetRoute.hasRoute2(conf.exitRoute))
         }
-        logcat { "transition=$transition" }
         return transition?.let {
             when (transition.type) {
                 TransitionsConfigure.Type.SharedAxisX ->

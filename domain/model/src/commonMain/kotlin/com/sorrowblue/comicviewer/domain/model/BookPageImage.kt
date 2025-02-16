@@ -4,7 +4,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import kotlin.jvm.JvmInline
 
 @JvmInline
-value class BookPageRequest(val value: Pair<Book, Int>) {
+value class BookPageImage(val value: Pair<Book, Int>) {
     val book get() = value.first
     val pageIndex get() = value.second
 }

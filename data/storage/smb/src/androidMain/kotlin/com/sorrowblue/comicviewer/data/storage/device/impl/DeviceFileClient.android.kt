@@ -16,8 +16,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import okio.BufferedSource
-import okio.buffer
+import okio.Source
 import okio.source
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
@@ -31,11 +30,11 @@ internal actual class DeviceFileClient(
 
     private val contentResolver = context.contentResolver
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    override suspend fun source(file: File): Source {
         return kotlin.runCatching {
             ParcelFileDescriptor.AutoCloseInputStream(
                 contentResolver.openFileDescriptor(file.uri, "r")
-            ).source().buffer()
+            ).source()
         }.getOrElse {
             it.printStackTrace()
             when (it) {
@@ -46,8 +45,8 @@ internal actual class DeviceFileClient(
         }
     }
 
-    override suspend fun getAttribute(path: String): FileAttribute? {
-        return null
+    override suspend fun attribute(path: String): FileAttribute {
+        return FileAttribute()
     }
 
     override suspend fun connect(path: String) {

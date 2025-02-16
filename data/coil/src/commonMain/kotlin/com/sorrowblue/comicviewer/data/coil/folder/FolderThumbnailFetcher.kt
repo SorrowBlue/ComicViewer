@@ -9,33 +9,31 @@ import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CacheKeySnapshot
 import com.sorrowblue.comicviewer.data.coil.CoilDiskCache
+import com.sorrowblue.comicviewer.data.coil.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
-import com.sorrowblue.comicviewer.data.coil.from
 import com.sorrowblue.comicviewer.data.coil.thumbnailDiskCache
 import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import kotlinx.coroutines.flow.first
-import kotlinx.io.Source
 import logcat.LogPriority
 import logcat.logcat
-import okio.ByteString.Companion.encodeUtf8
+import okio.BufferedSource
 import org.koin.core.annotation.Singleton
 
 internal class FolderThumbnailFetcher(
     options: Options,
-    diskCache: Lazy<DiskCache?>,
+    private val diskCache: Lazy<DiskCache>,
     private val data: FolderThumbnail,
     private val fileLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : FileFetcher<FolderThumbnailMetadata>(options, diskCache) {
 
     override val diskCacheKey
-        get() = options.diskCacheKey
-            ?: "folder:${data.bookshelfId.value}:${data.path}".encodeUtf8().sha256().hex()
+        get() = options.diskCacheKey ?: "folder:${data.bookshelfId.value}:${data.path}"
 
     override suspend fun metadata(): FolderThumbnailMetadata {
         val folderThumbnailOrder =
@@ -50,8 +48,7 @@ internal class FolderThumbnailFetcher(
         )
     }
 
-    override fun Source.readMetadata() =
-        FolderThumbnailMetadata.from<FolderThumbnailMetadata>(this)
+    override fun BufferedSource.readMetadata() = CoilMetadata.from<FolderThumbnailMetadata>(this)
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val folderThumbnailOrder =
@@ -80,7 +77,7 @@ internal class FolderThumbnailFetcher(
             return null
         }
         return thumbnailCache.firstNotNullOfOrNull { cacheKey ->
-            diskCache?.openSnapshot(cacheKey)?.let {
+            diskCache.value.openSnapshot(cacheKey)?.let {
                 cacheKey to it
             } ?: run {
                 fileLocalDataSource.removeCacheKey(cacheKey)

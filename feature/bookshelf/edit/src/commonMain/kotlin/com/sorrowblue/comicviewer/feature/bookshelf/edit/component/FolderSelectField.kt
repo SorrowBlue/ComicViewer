@@ -13,8 +13,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.core.uri.Uri
-import androidx.core.uri.UriUtils
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.InternalStorageEditScreenForm
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
@@ -32,8 +30,8 @@ import soil.form.compose.FormScope
 import soil.form.compose.rememberFieldRuleControl
 import soil.form.rule.notNull
 
-expect fun localUriToDisplayPath(uri: Uri): String
-expect fun PlatformDirectory.displayPath(): String
+expect fun localUriToDisplayPath(path: String): String
+expect val PlatformDirectory.pathString: String
 
 @Composable
 internal fun FolderSelectField(
@@ -44,7 +42,7 @@ internal fun FolderSelectField(
     Controller(state.control) { field ->
         val focusManager = LocalFocusManager.current
         OutlinedTextField(
-            value = field.value?.let { localUriToDisplayPath(UriUtils.parse(it)) }.orEmpty(),
+            value = field.value?.let { localUriToDisplayPath(it) }.orEmpty(),
             onValueChange = {},
             modifier = modifier
                 .testTag("FolderSelect")
@@ -88,14 +86,11 @@ internal fun FormScope<InternalStorageEditScreenForm>.rememberFolderSelectFieldS
     onOpenDocumentTreeCancel: () -> Unit,
     control: FieldControl<String?> = rememberFolderSelectFieldControl(),
     takePersistableUriPermission: TakePersistableUriPermission = koinInject(),
-    pickerResultLauncher: PickerResultLauncher = rememberDirectoryPickerLauncher { uri ->
-        logcat { "PickerResultLauncher onResult uri=$uri" }
-        uri?.displayPath()
-        uri?.path
-//            ?.let(UriUtils::parse)
-            ?.let {
-            takePersistableUriPermission(UriUtils.parse(it))
-            control.setValue(it)
+    pickerResultLauncher: PickerResultLauncher = rememberDirectoryPickerLauncher { platformDirectory ->
+        logcat { "PickerResultLauncher onResult uri=$platformDirectory, pathString=${platformDirectory?.pathString}" }
+        platformDirectory?.let {
+            takePersistableUriPermission(it)
+            control.setValue(it.pathString)
         } ?: run {
             onOpenDocumentTreeCancel()
         }
@@ -125,5 +120,5 @@ private fun FormScope<InternalStorageEditScreenForm>.rememberFolderSelectFieldCo
 
 internal expect class TakePersistableUriPermission {
 
-    operator fun invoke(uri: Uri)
+    operator fun invoke(platformDirectory: PlatformDirectory)
 }

@@ -5,14 +5,18 @@ import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReader
 import com.sorrowblue.comicviewer.domain.reader.FileReader
 import com.sorrowblue.comicviewer.domain.service.IoDispatcher
+import com.sorrowblue.comicviewer.framework.common.Initializer
+import com.sorrowblue.comicviewer.framework.common.starup.LogcatInitializer
 import java.text.Collator
 import java.text.RuleBasedCollator
 import java.util.Locale
+import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.io.InternalIoApi
 import logcat.LogPriority
 import logcat.logcat
 import net.sf.sevenzipjbinding.SevenZip
@@ -24,14 +28,19 @@ import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Qualifier
 
 @Factory
-class SevenZipInitializer {
+internal class SevenZipInitializer : Initializer<Unit> {
 
-    fun create() {
+    override fun create() {
         SevenZip.initSevenZipFromPlatformJAR()
         logcat(LogPriority.INFO) { "Initialized SevenZip. ${SevenZip.getSevenZipJBindingVersion()}." }
     }
+
+    override fun dependencies(): List<KClass<out Initializer<*>>?> {
+        return listOf(LogcatInitializer::class)
+    }
 }
 
+@OptIn(InternalIoApi::class)
 @ZipFileReader
 @Factory
 internal actual class ZipFileReader(
@@ -61,9 +70,9 @@ internal actual class ZipFileReader(
 
     override suspend fun copyTo(pageIndex: Int, sink: Sink) {
         mutex.withLock {
-            sink.buffer().use { buffer ->
+            sink.buffer().also { bufferedSink ->
                 entries[pageIndex].extractSlow2 {
-                    buffer.write(it)
+                    bufferedSink.write(it)
                     it.size
                 }
             }

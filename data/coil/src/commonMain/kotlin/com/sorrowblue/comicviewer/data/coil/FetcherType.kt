@@ -6,7 +6,7 @@ import org.koin.core.annotation.Named
 annotation class BookThumbnailFetcher
 
 @Named
-annotation class BookPageFetcher
+annotation class BookPageImageFetcher
 
 @Named
 annotation class FolderThumbnailFetcher

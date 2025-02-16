@@ -10,18 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentWithReceiverOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.Modifier
-import androidx.core.uri.Uri
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DisplayNameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.EditScreen
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.EditorDialog
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.KSerializableSaver
 import com.sorrowblue.comicviewer.framework.ui.NotificationManager
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_msg_cancelled_folder_selection
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import soil.form.FormPolicy
@@ -34,10 +36,13 @@ internal data class InternalStorageEditScreenUiState(
     override val editMode: BookshelfEditMode,
 ) : BookshelfEditScreenUiState
 
+@Serializable
 internal data class InternalStorageEditScreenForm(
     override val displayName: String = "",
     val path: String? = null,
 ) : BookshelfEditForm {
+
+    object Saver : KSerializableSaver<InternalStorageEditScreenForm>(serializer())
 
     override fun <T : BookshelfEditForm> update(displayName: String): T {
         @Suppress("UNCHECKED_CAST")
@@ -59,6 +64,7 @@ internal fun InternalStorageEditDialogScreen(
         key = "InternalStorageEditDialogScreen",
         onSubmit = onSubmit,
         initialValue = uiState.form,
+        saver = InternalStorageEditScreenForm.Saver as Saver<InternalStorageEditScreenForm, Any>,
         policy = FormPolicy.Default
     ) {
         Controller(rememberSubmissionRuleAutoControl()) { submission ->

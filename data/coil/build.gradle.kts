@@ -11,7 +11,7 @@ kotlin {
         implementation(projects.domain.reader)
         implementation(libs.coil3)
         implementation(libs.kotlinx.io)
-        implementation(libs.kotlinx.serialization.protobuf)
+        implementation(libs.kotlinx.serialization.json)
     }
 
     sourceSets.androidMain.dependencies {

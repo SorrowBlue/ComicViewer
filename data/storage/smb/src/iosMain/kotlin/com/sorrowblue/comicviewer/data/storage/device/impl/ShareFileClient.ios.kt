@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.data.storage.client.qualifier.ShareFileClient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import okio.BufferedSource
+import okio.Source
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
@@ -27,7 +27,7 @@ internal actual class ShareFileClient(
         TODO("Not yet implemented")
     }
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    override suspend fun source(file: File): Source {
         TODO("Not yet implemented")
     }
 
@@ -39,7 +39,7 @@ internal actual class ShareFileClient(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAttribute(path: String): FileAttribute? {
+    override suspend fun attribute(path: String): FileAttribute {
         TODO("Not yet implemented")
     }
 }

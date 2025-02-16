@@ -36,8 +36,7 @@ import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
-import okio.BufferedSource
-import okio.buffer
+import okio.Source
 import okio.source
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
@@ -51,9 +50,9 @@ internal actual class SmbFileClient(
     @InjectedParam override val bookshelf: SmbServer,
 ) : FileClient<SmbServer> {
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    override suspend fun source(file: File): Source {
         return runCommand {
-            smbFile(file.path).openInputStream().source().buffer()
+            smbFile(file.path).openInputStream().source()
         }
     }
 
@@ -111,7 +110,7 @@ internal actual class SmbFileClient(
         }
     }
 
-    override suspend fun getAttribute(path: String): FileAttribute? {
+    override suspend fun attribute(path: String): FileAttribute {
         return runCommand {
             smbFile(path).run {
                 FileAttribute(
@@ -207,7 +206,8 @@ internal actual class SmbFileClient(
                 path = url.path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(url.path).parent?.toString().orEmpty().replace("\\", "/").removeSuffix("/") + "/",
+                parent = Path(url.path).parent?.toString().orEmpty().replace("\\", "/")
+                    .removeSuffix("/") + "/",
                 size = 0,
                 lastModifier = lastModified,
                 isHidden = isHidden,
@@ -217,7 +217,8 @@ internal actual class SmbFileClient(
                 path = url.path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(url.path).parent?.toString().orEmpty().replace("\\", "/").removeSuffix("/") + "/",
+                parent = Path(url.path).parent?.toString().orEmpty().replace("\\", "/")
+                    .removeSuffix("/") + "/",
                 size = length(),
                 lastModifier = lastModified,
                 isHidden = isHidden,

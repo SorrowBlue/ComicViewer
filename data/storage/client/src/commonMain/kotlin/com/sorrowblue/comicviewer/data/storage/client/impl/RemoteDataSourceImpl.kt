@@ -168,7 +168,7 @@ internal class RemoteDataSourceImpl(
     override suspend fun getAttribute(path: String): FileAttribute? {
         return kotlin.runCatching {
             withContext(dispatcher) {
-                fileClient.getAttribute(path = path)
+                fileClient.attribute(path = path)
             }
         }.getOrElse {
             throw when (it) {

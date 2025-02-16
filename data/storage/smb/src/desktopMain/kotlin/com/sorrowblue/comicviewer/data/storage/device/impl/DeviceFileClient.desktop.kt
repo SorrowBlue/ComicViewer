@@ -22,10 +22,9 @@ import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 import logcat.logcat
-import okio.BufferedSource
+import okio.FileSystem
 import okio.Path.Companion.toPath
-import okio.buffer
-import okio.source
+import okio.Source
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
@@ -35,6 +34,7 @@ internal actual class DeviceFileClient(
     @InjectedParam override val bookshelf: InternalStorage,
 ) : FileClient<InternalStorage> {
     override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
+        logcat { "listFiles(file.path=${file.path}, resolveImageFolder=$resolveImageFolder)" }
         return kotlin.runCatching {
             Files.list(file.path.toPath().toNioPath()).map { it.toFileModel(resolveImageFolder) }
                 .toList()
@@ -58,8 +58,8 @@ internal actual class DeviceFileClient(
         return path.toPath().toNioPath().toFileModel(resolveImageFolder)
     }
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
-        return file.path.toPath().toNioPath().source().buffer()
+    override suspend fun source(file: File): Source {
+        return FileSystem.SYSTEM.source(file.path.toPath())
     }
 
     override suspend fun seekableInputStream(file: File): SeekableInputStream {
@@ -84,12 +84,12 @@ internal actual class DeviceFileClient(
         }
     }
 
-    override suspend fun getAttribute(path: String): FileAttribute? {
+    override suspend fun attribute(path: String): FileAttribute {
         TODO("Not yet implemented")
     }
 
     private fun Path.toFileModel(resolveImageFolder: Boolean = false): File {
-        return if (resolveImageFolder && Files.list(this)
+        return if (resolveImageFolder && isDirectory() && Files.list(this)
                 .anyMatch { it.name.extension in SUPPORTED_IMAGE }
         ) {
             BookFolder(
@@ -126,7 +126,8 @@ internal actual class DeviceFileClient(
 }
 
 class LocalFileSeekableInputStream(path: Path) : SeekableInputStream {
-    val file = RandomAccessFile(path.toFile(), "r")
+    private val file = RandomAccessFile(path.toFile(), "r")
+
     override fun read(buf: ByteArray): Int {
         return file.read(buf)
     }

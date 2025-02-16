@@ -1,22 +1,17 @@
 package com.sorrowblue.comicviewer.data.coil.favorite
 
-import com.sorrowblue.comicviewer.data.coil.CoilMetaData
-import kotlinx.io.Sink
-import kotlinx.serialization.ExperimentalSerializationApi
+import com.sorrowblue.comicviewer.data.coil.CoilMetadata
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToByteArray
-import kotlinx.serialization.protobuf.ProtoBuf
+import kotlinx.serialization.json.Json
+import okio.BufferedSink
 
 @Serializable
 internal data class FavoriteThumbnailMetadata(
     val favoriteModelId: Int,
     val thumbnails: String?,
-) : CoilMetaData {
+) : CoilMetadata {
 
-    @OptIn(ExperimentalSerializationApi::class)
-    override fun writeTo(sink: Sink) {
-        sink.write(ProtoBuf.encodeToByteArray(this))
+    override fun writeTo(bufferedSink: BufferedSink) {
+        bufferedSink.writeUtf8(Json.encodeToString(this))
     }
-
-    companion object : CoilMetaData.CompanionObject
 }
