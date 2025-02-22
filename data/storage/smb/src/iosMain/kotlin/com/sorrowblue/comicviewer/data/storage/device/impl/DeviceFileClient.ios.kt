@@ -104,15 +104,6 @@ internal actual class DeviceFileClient(
         }
         val parent = absoluteString?.removeSuffix(lastPath).orEmpty()
         val file = FileUtils.fromString(input = path, hasDirectoryPath) ?: throw FileClientException.InvalidPath()
-        logcat { """
-            toFileModel
-              |path=${path}
-              |parent=${parent}
-              |name=${name}
-              |size=${size}
-              |lastModifiedAtMillis=${lastModifiedAtMillis}
-              |hasDirectoryPath=${hasDirectoryPath}
-        """.trimIndent() }
         return if (resolveImageFolder && !file.list { dir, name ->
             name.extension in SUPPORTED_IMAGE }.isNullOrEmpty()
         ) {

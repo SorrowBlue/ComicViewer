@@ -64,9 +64,8 @@ internal actual class ZipFileReader(
     }
 
     override suspend fun copyTo(pageIndex: Int, sink: Sink) {
-        paths[pageIndex]
         zipFileSystem.source(paths[pageIndex]).buffer().use { source ->
-            sink.transferFrom(source.asKotlinxIoRawSource())
+            source.readAll(sink)
         }
     }
 
