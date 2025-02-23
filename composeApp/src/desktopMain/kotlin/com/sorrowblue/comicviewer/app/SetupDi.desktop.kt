@@ -7,7 +7,7 @@ import logcat.PrintLogger
 import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.module
 import org.koin.ksp.generated.defaultModule
-import org.koin.ksp.generated.defineAndroidSplitInstallManager
+import org.koin.ksp.generated.defineComSorrowblueComicviewerFeatureTutorialAndroidSplitInstallManager
 import org.koin.ksp.generated.module
 
 internal actual fun setupDi() = KoinConfiguration {
@@ -16,6 +16,6 @@ internal actual fun setupDi() = KoinConfiguration {
     modules(SettingsModule().module)
     defaultModule()
     module {
-        defineAndroidSplitInstallManager()
+        defineComSorrowblueComicviewerFeatureTutorialAndroidSplitInstallManager()
     }
 }

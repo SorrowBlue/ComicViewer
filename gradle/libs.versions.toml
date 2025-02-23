@@ -11,21 +11,19 @@ kotlinx-kover = "0.9.1"
 
 androidx-credentials = "1.3.0"
 androidx-datastore = "1.1.2"
-androidx-paging = "3.3.5"
-androidx-room = "2.7.0-alpha13"
+androidx-paging = "3.3.6"
+androidx-room = "2.7.0-beta01"
 compose-multiplatform = "1.8.0-alpha03"
-android-gradle = "8.8.0"
+android-gradle = "8.8.1"
 coil-kt = "3.1.0"
-detekt = "1.23.7"
-mikepenz-aboutlibraries = "11.5.0"
+detekt = "1.23.8"
+mikepenz-aboutlibraries = "11.6.3"
 koin = "4.1.0-Beta5"
-koin-annotations = "2.0.0-RC1"
+koin-annotations = "2.0.0-RC5"
 
 dokka = "2.0.0"
 airbnb-android-showkase = "1.0.3"
 uiAndroid = "1.7.8"
-uiGraphicsAndroid = "1.7.6"
-runtimeAndroid = "1.7.6"
 foundationAndroid = "1.7.8"
 
 [plugins]
@@ -46,7 +44,7 @@ google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "mikepenz-aboutlibraries" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-modulegraph = { id = "dev.iurysouza.modulegraph", version = "0.10.1" }
+modulegraph = { id = "dev.iurysouza.modulegraph", version = "0.11.0" }
 semver = { id = "com.xenoterracide.gradle.semver", version = "0.11.5" }
 versions = "com.github.ben-manes.versions:0.52.0"
 
@@ -116,7 +114,7 @@ androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "life
 androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "androidx-paging" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidx-paging" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
-androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version = "2.5.0-alpha13" }
+androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version = "2.5.0-beta01" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidx-room" }
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
@@ -167,7 +165,7 @@ artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.
 squareup-logcat = { group = "com.squareup.logcat", name = "logcat", version = "0.1" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.10.2" }
 
-ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version = "3.0.3" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version = "3.1.0" }
 
 box-java-sdk = { group = "com.box", name = "box-java-sdk", version = "4.13.1" }
 
