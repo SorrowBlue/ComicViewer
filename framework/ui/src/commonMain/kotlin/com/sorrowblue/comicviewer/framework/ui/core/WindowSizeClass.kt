@@ -2,19 +2,20 @@ package com.sorrowblue.comicviewer.framework.ui.core
 
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 
 @Composable
 fun isCompactWindowClass(): Boolean {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    return !windowSizeClass.containsWindowSizeDp(
-        WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
-        WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND
-    )
+    return windowSizeClass.windowHeightSizeClass != WindowHeightSizeClass.COMPACT ||
+        windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.Companion.COMPACT
 }
 
 @Composable
 fun isLandscape(): Boolean {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    return windowSizeClass.minWidthDp > windowSizeClass.minHeightDp
+    return false
+    // TODO()
 }

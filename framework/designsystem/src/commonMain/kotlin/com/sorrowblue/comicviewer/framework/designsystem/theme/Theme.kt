@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowSizeClass
 
 @Composable
@@ -23,9 +24,9 @@ fun ComicTheme(
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val dimension by remember(windowSizeClass) {
         mutableStateOf(
-            if (windowSizeClass.containsHeightDp(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)) {
+            if (windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.EXPANDED) {
                 expandedDimension
-            } else if (windowSizeClass.containsHeightDp(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)) {
+            } else if (windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.MEDIUM) {
                 mediumDimension
             } else {
                 compactDimension

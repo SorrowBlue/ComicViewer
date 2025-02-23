@@ -17,6 +17,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 
 @Composable
 internal fun <T> rememberFixListDetailPaneScaffoldNavigator(
@@ -38,7 +39,7 @@ internal fun calculateLowerInfoPaneScaffoldDirective(
     val maxHorizontalPartitions: Int
     val horizontalPartitionSpacerSize: Dp
     when {
-        windowAdaptiveInfo.windowSizeClass.containsWidthDp(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> {
+        windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT -> {
             maxHorizontalPartitions = 2
             horizontalPartitionSpacerSize = 0.dp
         }

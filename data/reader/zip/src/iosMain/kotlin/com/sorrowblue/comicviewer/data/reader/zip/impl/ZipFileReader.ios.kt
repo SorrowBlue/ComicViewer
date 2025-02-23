@@ -3,43 +3,17 @@ package com.sorrowblue.comicviewer.data.reader.zip.impl
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReader
 import com.sorrowblue.comicviewer.domain.reader.FileReader
-import com.sorrowblue.comicviewer.domain.reader.asKotlinxIoRawSource
-import kotlinx.cinterop.BetaInteropApi
-import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.allocArrayOf
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.usePinned
-import kotlinx.io.Sink
+import logcat.asLog
+import logcat.logcat
 import okio.FileSystem
 import okio.Path.Companion.toPath
+import okio.Sink
 import okio.buffer
 import okio.openZip
 import okio.use
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
-import platform.Foundation.NSData
-import platform.Foundation.create
-import platform.posix.memcpy
-
-interface ZipReader2 {
-
-    fun read(url: String): ByteArray
-}
-
-@OptIn(ExperimentalForeignApi::class)
-fun NSData.toByteArray(): ByteArray {
-    return ByteArray(length.toInt()).apply {
-        usePinned {
-            memcpy(it.addressOf(0), bytes, length)
-        }
-    }
-}
-
-@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
-fun ByteArray.toNSData(): NSData = memScoped {
-    NSData.create(bytes = allocArrayOf(this@toNSData), length = this@toNSData.size.toULong())
-}
+import platform.Foundation.NSURL
 
 @ZipFileReader
 @Factory
@@ -47,12 +21,26 @@ internal actual class ZipFileReader(
     @InjectedParam actual val seekableInputStream: SeekableInputStream,
 ) : FileReader {
 
-    val zipFileSystem = FileSystem.SYSTEM.openZip(seekableInputStream.path.toPath())
+    val zipFileSystem = FileSystem.SYSTEM.openZip(NSURL.URLWithString(URLString = seekableInputStream.path)!!.path!!.toPath())
     val fileSystem = FileSystem.SYSTEM
 
     val paths = zipFileSystem.listRecursively("/".toPath())
         .filter { zipFileSystem.metadata(it).isRegularFile }
         .toList()
+
+    init {
+        kotlin.runCatching {
+            FileSystem.SYSTEM.openZip(NSURL.URLWithString(URLString = seekableInputStream.path)!!.path!!.toPath())
+        }.onFailure {
+            logcat { "path=${it.asLog()}" }
+        }.onSuccess {
+            logcat { "path=${it}" }
+        }
+    }
+
+    init {
+        logcat { "ZipFileReader init $zipFileSystem, path=$paths" }
+    }
 
     override fun close() {
         zipFileSystem.close()

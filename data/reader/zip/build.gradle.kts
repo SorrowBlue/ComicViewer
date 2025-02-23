@@ -6,18 +6,6 @@ plugins {
 }
 
 kotlin {
-    val xcFramework = XCFramework("zipReader")
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "zipReader"
-            binaryOption("bundleId", "com.sorrowblue.comicviewer.data.reader.zip.zipReader")
-            xcFramework.add(this)
-        }
-    }
     sourceSets.commonMain.dependencies {
         implementation(projects.data.storage.client)
         implementation(libs.kotlinx.coroutines.core)

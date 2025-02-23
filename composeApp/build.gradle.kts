@@ -1,5 +1,6 @@
 import com.sorrowblue.comicviewer.ComicBuildType
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.application)
@@ -10,6 +11,7 @@ plugins {
 }
 
 kotlin {
+    val xcFramework = XCFramework()
     listOf(
         iosX64(),
         iosArm64(),
@@ -19,6 +21,7 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
             binaryOption("bundleId", "com.sorrowblue.comicviewer.app")
+            xcFramework.add(this)
         }
     }
 
