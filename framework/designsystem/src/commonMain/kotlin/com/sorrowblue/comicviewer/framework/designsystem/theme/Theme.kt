@@ -11,12 +11,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.window.core.layout.WindowHeightSizeClass
-import androidx.window.core.layout.WindowSizeClass
 
 @Composable
 fun ComicTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
@@ -24,12 +22,10 @@ fun ComicTheme(
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val dimension by remember(windowSizeClass) {
         mutableStateOf(
-            if (windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.EXPANDED) {
-                expandedDimension
-            } else if (windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.MEDIUM) {
-                mediumDimension
-            } else {
-                compactDimension
+            when (windowSizeClass.windowHeightSizeClass) {
+                WindowHeightSizeClass.EXPANDED -> expandedDimension
+                WindowHeightSizeClass.MEDIUM -> mediumDimension
+                else -> compactDimension
             }
         )
     }
@@ -44,6 +40,5 @@ fun ComicTheme(
 
 @Composable
 internal expect fun colorScheme(darkTheme: Boolean, dynamicColor: Boolean): ColorScheme
-
 
 internal val AppTypography = Typography()

@@ -46,7 +46,7 @@ internal fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Bool
 }
 
 private fun Lint.configure(project: Project) {
-    val isCI = System.getenv("CI").toBoolean() == true
+    val isCI = System.getenv("CI").toBoolean()
     checkAllWarnings = true
     checkDependencies = true
     disable += listOf("InvalidPackage", "NewerVersionAvailable", "GradleDependency")

@@ -11,11 +11,10 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
-    id("com.android.settings") version "8.8.0"
+    id("com.android.settings") version "8.8.1"
 }
 
 android {
-    buildToolsVersion = "35.0.0"
     compileSdk = 35
     minSdk = 30
 }
@@ -86,12 +85,6 @@ include(":feature:favorite:edit")
 include(":feature:file")
 include(":feature:folder")
 include(":feature:history")
-//include(":feature:library")
-//include(":feature:library:common")
-//include(":feature:library:box")
-//include(":feature:library:dropbox")
-//include(":feature:library:googledrive")
-//include(":feature:library:onedrive")
 include(":feature:readlater")
 include(":feature:search")
 include(":feature:settings")
