@@ -9,7 +9,6 @@ kotlin {
             dependencies {
                 implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
-                implementation(compose.components.uiToolingPreview)
                 implementation(libs.compose.multiplatform.material3.adaptive)
             }
         }
@@ -17,9 +16,6 @@ kotlin {
         androidMain {
             dependencies {
                 api(project.dependencies.platform(libs.androidx.compose.bom))
-                implementation(libs.androidx.appcompat)
-                implementation(libs.androidx.compose.material3.adaptive.layout)
-
             }
         }
     }
