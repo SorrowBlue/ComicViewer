@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -19,7 +20,6 @@ import com.sorrowblue.comicviewer.feature.search.section.SearchContentsAction
 import com.sorrowblue.comicviewer.feature.search.section.SearchContentsUiState
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.framework.annotation.Destination
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.KSerializableSaver
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
@@ -28,6 +28,7 @@ import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 interface SearchScreenNavigator {
     fun navigateUp()
@@ -43,8 +44,9 @@ data class Search(val bookshelfId: BookshelfId, val path: String)
 @Destination<Search>
 @Composable
 internal fun SearchScreen(
-    navigator: SearchScreenNavigator,
-    state: SearchScreenState = rememberSearchScreenState(),
+    route: Search,
+    navigator: SearchScreenNavigator = koinInject(),
+    state: SearchScreenState = rememberSearchScreenState(route),
 ) {
     val lazyPagingItems = state.lazyPagingItems.collectAsLazyPagingItems()
     SearchScreen(

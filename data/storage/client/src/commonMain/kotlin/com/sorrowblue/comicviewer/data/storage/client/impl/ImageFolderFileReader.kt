@@ -8,8 +8,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.reader.FileReader
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import okio.Sink
-import okio.buffer
+import okio.BufferedSink
 import okio.use
 
 internal class ImageFolderFileReader(
@@ -29,10 +28,10 @@ internal class ImageFolderFileReader(
         }
     }
 
-    override suspend fun copyTo(pageIndex: Int, sink: Sink) {
+    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         withContext(dispatcher) {
-            fileClient.source(list()[pageIndex]).use { source ->
-                source.buffer().readAll(sink)
+            fileClient.bufferedSource(list()[pageIndex]).use {
+                it.readAll(bufferedSink)
             }
         }
     }

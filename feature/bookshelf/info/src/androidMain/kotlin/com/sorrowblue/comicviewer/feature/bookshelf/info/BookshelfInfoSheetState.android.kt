@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
-import com.sorrowblue.comicviewer.framework.navigation.NavResult
+import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_undo

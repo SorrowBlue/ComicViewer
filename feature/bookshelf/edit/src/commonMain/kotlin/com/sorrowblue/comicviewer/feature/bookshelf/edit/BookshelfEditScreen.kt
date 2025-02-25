@@ -3,12 +3,13 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.comicviewer.framework.ui.BackHandler
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 @Serializable
 data class BookshelfEdit(val editMode: BookshelfEditMode)
@@ -31,8 +32,8 @@ sealed interface BookshelfEditScreenUiState {
 @Composable
 internal fun BookshelfEditScreen(
     route: BookshelfEdit,
-    navigator: BookshelfEditScreenNavigator,
-    androidAutofillManager: AndroidAutofillManager,
+    navigator: BookshelfEditScreenNavigator = koinInject(),
+    androidAutofillManager: AndroidAutofillManager = koinInject(),
     state: BookshelfEditScreenState = rememberBookshelfEditScreenState(route.editMode),
     isCompact: Boolean = isCompactWindowClass(),
 ) {

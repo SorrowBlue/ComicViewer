@@ -5,9 +5,9 @@ import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReader
 import com.sorrowblue.comicviewer.domain.reader.FileReader
 import logcat.asLog
 import logcat.logcat
+import okio.BufferedSink
 import okio.FileSystem
 import okio.Path.Companion.toPath
-import okio.Sink
 import okio.buffer
 import okio.openZip
 import okio.use
@@ -51,9 +51,9 @@ internal actual class ZipFileReader(
         return paths.size
     }
 
-    override suspend fun copyTo(pageIndex: Int, sink: Sink) {
+    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         zipFileSystem.source(paths[pageIndex]).buffer().use { source ->
-            source.readAll(sink)
+            source.readAll(bufferedSink)
         }
     }
 

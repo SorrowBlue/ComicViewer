@@ -13,11 +13,11 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlinx.io.files.SystemTemporaryDirectory
+import logcat.LogPriority
+import logcat.logcat
 import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
-import okio.FileSystem
-import okio.buffer
+import okio.BufferedSink
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Qualifier
@@ -50,16 +50,15 @@ internal actual class ZipFileReader(
 
     override suspend fun fileName(pageIndex: Int): String = entries[pageIndex].path.orEmpty()
 
-    override suspend fun copyTo(pageIndex: Int, sink: okio.Sink) {
+    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         mutex.withLock {
-            sink.buffer().also { bufferedSink ->
-                entries[pageIndex].extractSlow2 {
-                    bufferedSink.write(it)
-                    it.size
-                }
+            logcat(LogPriority.DEBUG) { "copyTo(pageIndex: $pageIndex) path = ${entries[pageIndex].path}" }
+            entries[pageIndex].extractSlow2 {
+                logcat(LogPriority.DEBUG) { "  extractSlow2 ${entries[pageIndex].path}" }
+                bufferedSink.write(it)
+                it.size
             }
         }
-        FileSystem.SYSTEM_TEMPORARY_DIRECTORY
     }
 
     override suspend fun pageCount(): Int {

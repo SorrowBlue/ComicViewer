@@ -127,8 +127,8 @@ internal abstract class FileFetcher<T : CoilMetadata>(
             closeable = this
         )
 
-    protected fun Sink.toImageSource() =
-        ImageSource(source = buffer().buffer, fileSystem = options.fileSystem)
+    protected fun BufferedSink.toImageSource() =
+        ImageSource(source = buffer, fileSystem = options.fileSystem)
 
     private val fileSystem get() = diskCacheLazy.value.fileSystem
 

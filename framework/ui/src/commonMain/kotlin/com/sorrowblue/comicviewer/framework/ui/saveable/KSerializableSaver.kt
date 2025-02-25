@@ -13,9 +13,10 @@ import okio.use
 
 @OptIn(ExperimentalSerializationApi::class)
 inline fun <reified T : Any> T.encodeToByteArray(): ByteArray {
-    return Buffer().also {
+    return Buffer().use {
         Json.encodeToBufferedSink<T>(this, it)
-    }.use { it.readByteArray() }
+        it.readByteArray()
+    }
 }
 
 

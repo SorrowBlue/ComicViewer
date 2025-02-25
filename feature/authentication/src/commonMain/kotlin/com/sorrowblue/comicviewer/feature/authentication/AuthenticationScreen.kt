@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationColumnContents
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationContentsAction
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationRowContents
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
@@ -29,6 +29,7 @@ import comicviewer.feature.authentication.generated.resources.authentication_err
 import kotlinx.serialization.Serializable
 import logcat.logcat
 import org.jetbrains.compose.resources.StringResource
+import org.koin.compose.koinInject
 
 interface AuthenticationScreenNavigator {
     fun navigateUp()
@@ -42,7 +43,7 @@ data class Authentication(val screenType: ScreenType)
 @Composable
 fun AuthenticationScreen(
     route: Authentication,
-    navigator: AuthenticationScreenNavigator,
+    navigator: AuthenticationScreenNavigator = koinInject(),
 ) {
     AuthenticationScreen(
         navigator = navigator,

@@ -17,11 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
-import com.sorrowblue.comicviewer.framework.navigation.NavResultSender
+import com.sorrowblue.cmpdestinations.DestinationStyle
+import com.sorrowblue.cmpdestinations.result.NavResultSender
 import comicviewer.feature.folder.generated.resources.Res
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_asc
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_desc

@@ -12,7 +12,7 @@ actual suspend fun resizeImage(
     imageFormat: ImageFormat,
     quality: Int,
 ) {
-    BitmapFactory.decodeStream(source.inputStream()).let { bitmap ->
+    BitmapFactory.decodeStream(source.inputStream())?.let { bitmap ->
         bitmap.compress(imageFormat.toCompressFormat(), quality, sink.outputStream())
         bitmap.recycle()
     }

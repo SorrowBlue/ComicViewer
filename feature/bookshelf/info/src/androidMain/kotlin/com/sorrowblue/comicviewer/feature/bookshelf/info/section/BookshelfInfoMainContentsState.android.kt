@@ -27,7 +27,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.Notificati
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.RegenerateThumbnailsWorker
 import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.ScanFileWorker
-import com.sorrowblue.comicviewer.framework.navigation.NavResult
+import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

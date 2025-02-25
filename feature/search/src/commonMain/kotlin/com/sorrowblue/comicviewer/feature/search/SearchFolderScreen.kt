@@ -7,9 +7,10 @@ import com.sorrowblue.comicviewer.folder.Folder
 import com.sorrowblue.comicviewer.folder.FolderScreen
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 import com.sorrowblue.comicviewer.folder.SortTypeSelect
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 @Serializable
 data class SearchFolder(
@@ -24,7 +25,7 @@ internal interface SearchFolderScreenNavigator : FolderScreenNavigator
 @Composable
 internal fun SearchFolderScreen(
     route: SearchFolder,
-    navigator: SearchFolderScreenNavigator,
+    navigator: SearchFolderScreenNavigator = koinInject(),
     sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
 ) {
     FolderScreen(

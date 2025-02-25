@@ -22,15 +22,16 @@ import com.sorrowblue.comicviewer.feature.favorite.add.component.FavoriteAddButt
 import com.sorrowblue.comicviewer.feature.favorite.add.component.FavoriteAddTopAppBar
 import com.sorrowblue.comicviewer.feature.favorite.add.section.RecentFavoriteSheet
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteListItem
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
+import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.itemKey
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 @Serializable
 data class FavoriteAdd(val bookshelfId: BookshelfId, val path: String)
@@ -44,7 +45,7 @@ interface FavoriteAddScreenNavigator {
 @Composable
 internal fun FavoriteAddDialogScreen(
     route: FavoriteAdd,
-    navigator: FavoriteAddScreenNavigator,
+    navigator: FavoriteAddScreenNavigator = koinInject(),
     state: FavoriteAddScreenState = rememberFavoriteAddScreenState(route),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()

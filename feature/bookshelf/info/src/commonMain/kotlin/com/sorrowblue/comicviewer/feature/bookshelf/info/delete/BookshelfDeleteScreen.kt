@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
-import com.sorrowblue.comicviewer.framework.navigation.NavResultSender
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.DestinationStyle
+import com.sorrowblue.cmpdestinations.result.NavResultSender
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_btn_cancel

@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_language_label_all_languages
 import comicviewer.feature.settings.generated.resources.settings_language_label_japanese
@@ -18,13 +18,14 @@ import comicviewer.feature.settings.generated.resources.settings_language_title
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Serializable
 data object InAppLanguagePicker
 
 @Destination<InAppLanguagePicker>
 @Composable
-internal fun InAppLanguagePickerScreen(navigator: SettingsDetailNavigator) {
+internal fun InAppLanguagePickerScreen(navigator: SettingsDetailNavigator = koinInject()) {
     InAppLanguagePickerScreen(onBackClick = navigator::navigateBack)
 }
 

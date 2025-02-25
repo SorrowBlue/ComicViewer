@@ -3,12 +3,12 @@ package com.sorrowblue.comicviewer.feature.settings.navigation
 import com.sorrowblue.comicviewer.feature.authentication.Authentication
 import com.sorrowblue.comicviewer.feature.settings.Settings
 import com.sorrowblue.comicviewer.feature.tutorial.Tutorial
-import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
-import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
+import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import kotlinx.serialization.Serializable
 
 @Serializable
-@NavGraph(startDestination = Settings::class, transition = SettingsNavGraphTransitions::class)
+@NavGraph(startDestination = Settings::class, transitions = SettingsNavGraphTransitions::class)
 data object SettingsNavGraph {
 
     @DestinationInGraph<Authentication>

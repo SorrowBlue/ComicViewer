@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 internal sealed interface FavoriteEditScreenStateEvent {
     data object EditComplete : FavoriteEditScreenStateEvent
@@ -40,7 +41,7 @@ internal interface FavoriteEditScreenState : SaveableScreenState {
 internal fun rememberFavoriteEditScreenState(
     route: FavoriteEdit,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FavoriteEditViewModel = koinViewModel(),
+    viewModel: FavoriteEditViewModel = koinViewModel { parametersOf(route) },
 ): FavoriteEditScreenState = rememberSaveableScreenState {
     FavoriteEditScreenStateImpl(
         savedStateHandle = it,

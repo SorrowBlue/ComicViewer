@@ -20,7 +20,9 @@ import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuSta
 import comicviewer.feature.favorite.generated.resources.Res
 import comicviewer.feature.favorite.generated.resources.favorite_action_delete
 import comicviewer.feature.favorite.generated.resources.favorite_title_edit
+import comicviewer.feature.folder.generated.resources.folder_action_settings
 import org.jetbrains.compose.resources.stringResource
+import comicviewer.feature.folder.generated.resources.Res as FolderRes
 
 internal data class FavoriteAppBarUiState(
     val title: String = "",
@@ -67,7 +69,7 @@ internal fun FavoriteTopAppBar(
                     onClick = { onAction(FavoriteTopAppBarAction.Delete) }
                 )
                 OverflowMenuItem(
-                    text = "stringResource(com.sorrowblue.comicviewer.feature.folder.R.string.folder_action_settings)",
+                    text = stringResource(FolderRes.string.folder_action_settings),
                     icon = ComicIcons.Settings,
                     onClick = { onAction(FavoriteTopAppBarAction.Settings) }
                 )

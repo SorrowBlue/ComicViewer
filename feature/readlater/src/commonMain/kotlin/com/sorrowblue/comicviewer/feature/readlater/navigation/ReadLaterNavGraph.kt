@@ -2,11 +2,11 @@ package com.sorrowblue.comicviewer.feature.readlater.navigation
 
 import com.sorrowblue.comicviewer.feature.readlater.ReadLater
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterFolder
-import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
-import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
+import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import kotlinx.serialization.Serializable
 
-@NavGraph(startDestination = ReadLater::class, transition = ReadLaterNavGraphTransitions::class)
+@NavGraph(startDestination = ReadLater::class, transitions = ReadLaterNavGraphTransitions::class)
 @Serializable
 data object ReadLaterNavGraph {
 

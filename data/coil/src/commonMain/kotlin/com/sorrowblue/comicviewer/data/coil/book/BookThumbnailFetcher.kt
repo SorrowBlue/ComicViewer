@@ -91,13 +91,14 @@ internal class BookThumbnailFetcher(
                 )
             } ?: run {
                 // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
-                val buffer = Buffer()
-                fileReader.copyTo(0, buffer)
-                SourceFetchResult(
-                    source = buffer.toImageSource(),
-                    mimeType = null,
-                    dataSource = DataSource.NETWORK
-                )
+                Buffer().let {
+                    fileReader.copyTo(0, it)
+                    SourceFetchResult(
+                        source = it.toImageSource(),
+                        mimeType = null,
+                        dataSource = DataSource.NETWORK
+                    )
+                }
             }
         } ?: throw CoilRuntimeException("FileReaderが取得できない")
     }

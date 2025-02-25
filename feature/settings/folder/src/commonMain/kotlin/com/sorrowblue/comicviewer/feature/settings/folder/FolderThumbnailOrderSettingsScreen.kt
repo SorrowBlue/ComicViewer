@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
-import com.sorrowblue.comicviewer.framework.navigation.NavResultSender
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.DestinationStyle
+import com.sorrowblue.cmpdestinations.result.NavResultSender
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import comicviewer.feature.settings.folder.generated.resources.Res
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_folderthumbnail_label_last_read

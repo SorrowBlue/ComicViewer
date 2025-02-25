@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.reader.document
 
 import com.sorrowblue.comicviewer.domain.reader.FileReader
-import okio.Sink
+import okio.BufferedSink
 
 internal actual class DocumentFileReader : FileReader {
     override fun close() {
@@ -12,7 +12,7 @@ internal actual class DocumentFileReader : FileReader {
         TODO("Not yet implemented")
     }
 
-    override suspend fun copyTo(pageIndex: Int, sink: Sink) {
+    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         TODO("Not yet implemented")
     }
 

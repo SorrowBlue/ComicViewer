@@ -22,9 +22,10 @@ import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 import logcat.logcat
+import okio.BufferedSource
 import okio.FileSystem
 import okio.Path.Companion.toPath
-import okio.Source
+import okio.buffer
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
@@ -58,8 +59,8 @@ internal actual class DeviceFileClient(
         return path.toPath().toNioPath().toFileModel(resolveImageFolder)
     }
 
-    override suspend fun source(file: File): Source {
-        return FileSystem.SYSTEM.source(file.path.toPath())
+    override suspend fun bufferedSource(file: File): BufferedSource {
+        return FileSystem.SYSTEM.source(file.path.toPath()).buffer()
     }
 
     override suspend fun seekableInputStream(file: File): SeekableInputStream {

@@ -21,8 +21,7 @@ import logcat.LogPriority
 import logcat.logcat
 import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
-import okio.Sink
-import okio.buffer
+import okio.BufferedSink
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Qualifier
@@ -68,13 +67,11 @@ internal actual class ZipFileReader(
 
     override suspend fun fileName(pageIndex: Int): String = entries[pageIndex].path.orEmpty()
 
-    override suspend fun copyTo(pageIndex: Int, sink: Sink) {
+    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         mutex.withLock {
-            sink.buffer().also { bufferedSink ->
-                entries[pageIndex].extractSlow2 {
-                    bufferedSink.write(it)
-                    it.size
-                }
+            entries[pageIndex].extractSlow2 {
+                bufferedSink.write(it)
+                it.size
             }
         }
     }

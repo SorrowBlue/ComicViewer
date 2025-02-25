@@ -36,7 +36,8 @@ import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
-import okio.Source
+import okio.BufferedSource
+import okio.buffer
 import okio.source
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
@@ -50,9 +51,9 @@ internal actual class SmbFileClient(
     @InjectedParam override val bookshelf: SmbServer,
 ) : FileClient<SmbServer> {
 
-    override suspend fun source(file: File): Source {
+    override suspend fun bufferedSource(file: File): BufferedSource {
         return runCommand {
-            smbFile(file.path).openInputStream().source()
+            smbFile(file.path).openInputStream().source().buffer()
         }
     }
 

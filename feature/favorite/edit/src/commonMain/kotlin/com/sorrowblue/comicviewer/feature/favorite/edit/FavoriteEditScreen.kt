@@ -30,7 +30,7 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameField
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -46,6 +46,7 @@ import comicviewer.feature.favorite.edit.generated.resources.favorite_edit_text_
 import comicviewer.feature.favorite.edit.generated.resources.favorite_edit_title
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import soil.form.FormPolicy
 import soil.form.compose.Controller
 import soil.form.compose.Form
@@ -63,7 +64,7 @@ data class FavoriteEdit(val favoriteId: FavoriteId)
 @Composable
 internal fun FavoriteEditScreen(
     route: FavoriteEdit,
-    navigator: FavoriteEditScreenNavigator,
+    navigator: FavoriteEditScreenNavigator = koinInject(),
     state: FavoriteEditScreenState = rememberFavoriteEditScreenState(route = route),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()

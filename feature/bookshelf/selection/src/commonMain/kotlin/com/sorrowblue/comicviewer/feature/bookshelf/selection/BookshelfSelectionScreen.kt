@@ -16,15 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.section.BookshelfSourceList
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
+import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import comicviewer.feature.bookshelf.selection.generated.resources.Res
 import comicviewer.feature.bookshelf.selection.generated.resources.bookshelf_selection_title
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Serializable
 data object BookshelfSelection
@@ -41,7 +42,7 @@ internal data class BookshelfSelectionScreenUiState(
 @Destination<BookshelfSelection>(style = DestinationStyle.Auto::class)
 @Composable
 internal fun BookshelfSelectionScreen(
-    navigator: BookshelfSelectionNavigator,
+    navigator: BookshelfSelectionNavigator = koinInject(),
     state: BookshelfSelectionScreenState = rememberBookshelfSelectionScreenState(),
 ) {
     val uiState = state.uiState

@@ -10,11 +10,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
-import com.sorrowblue.comicviewer.framework.navigation.NavResultSender
+import com.sorrowblue.cmpdestinations.DestinationStyle
+import com.sorrowblue.cmpdestinations.result.NavResultSender
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_btn_cancel
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_btn_not_allowed
@@ -44,11 +44,11 @@ data class NotificationRequest(val scanType: ScanType)
 @Destination<NotificationRequest>(style = DestinationStyle.Dialog::class)
 @Composable
 internal fun NotificationRequestScreen(
-    type: ScanType,
+    route: NotificationRequest,
     resultNavigator: NavResultSender<NotificationRequestResult>,
 ) {
     NotificationRequestScreen(
-        type = type,
+        type = route.scanType,
         onDismissRequest = { resultNavigator.navigateBack(result = NotificationRequestResult.Cancel) },
         onConfirmClick = { resultNavigator.navigateBack(result = NotificationRequestResult.Ok) },
         onNotAllowedClick = { resultNavigator.navigateBack(result = NotificationRequestResult.NotAllowed) },

@@ -16,7 +16,7 @@ import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListAppBar
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListContents
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListContentsAction
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
@@ -25,6 +25,7 @@ import comicviewer.feature.favorite.generated.resources.Res
 import comicviewer.feature.favorite.generated.resources.favorite_btn_create
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 interface FavoriteListNavigator {
     fun onSettingsClick()
@@ -39,7 +40,7 @@ data object FavoriteList
 @Destination<FavoriteList>
 @Composable
 internal fun FavoriteListScreen(
-    navigator: FavoriteListNavigator,
+    navigator: FavoriteListNavigator = koinInject(),
     state: FavoriteListScreenState = rememberFavoriteListScreenState(),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()

@@ -17,9 +17,10 @@ import dev.zwander.kotlin.file.FileUtils
 import dev.zwander.kotlin.file.okio.toOkioSource
 import kotlinx.cinterop.ExperimentalForeignApi
 import logcat.logcat
+import okio.BufferedSource
 import okio.FileSystem
 import okio.Path.Companion.toPath
-import okio.Source
+import okio.buffer
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 import platform.Foundation.NSDirectoryEnumerationSkipsSubdirectoryDescendants
@@ -56,9 +57,9 @@ internal actual class DeviceFileClient(
         return url.toFileModel(resolveImageFolder)
     }
 
-    override suspend fun source(file: File): Source {
+    override suspend fun bufferedSource(file: File): BufferedSource {
         val file = FileUtils.fromString(input = file.path, !NSURL(fileURLWithPath = file.path).fileURL) ?: throw FileClientException.InvalidPath()
-        return file.openInputStream()!!.toOkioSource()
+        return file.openInputStream()!!.toOkioSource().buffer()
     }
 
     override suspend fun seekableInputStream(file: File): SeekableInputStream {

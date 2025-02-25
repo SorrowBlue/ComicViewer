@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 internal sealed interface FavoriteScreenEvent {
     data class Favorite(val bookshelfId: BookshelfId, val path: String) : FavoriteScreenEvent
@@ -71,7 +72,7 @@ internal fun rememberFavoriteScreenState(
     navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FavoriteViewModel = koinViewModel(),
+    viewModel: FavoriteViewModel = koinViewModel { parametersOf(route) },
 ): FavoriteScreenState = rememberSaveableScreenState {
     FavoriteScreenStateImpl(
         savedStateHandle = it,

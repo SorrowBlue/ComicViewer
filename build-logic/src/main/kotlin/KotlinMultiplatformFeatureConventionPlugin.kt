@@ -22,19 +22,18 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                 sourceSets.commonMain.dependencies {
                     implementation(project(":framework:designsystem"))
                     implementation(project(":framework:ui"))
-                    implementation("com.sorrowblue:annotations:1.0")
                     implementation(project(":domain:usecase"))
+                    implementation(libs.cmpdestinations)
                 }
             }
             configure<LibraryExtension> {
             }
             dependencies {
-                add("kspCommonMainMetadata", project(":framework:navigation:ksp-compiler"))
-                add("kspAndroid", project(":framework:navigation:ksp-compiler"))
-                add("kspIosX64", project(":framework:navigation:ksp-compiler"))
-                add("kspIosArm64", project(":framework:navigation:ksp-compiler"))
-                add("kspIosSimulatorArm64", project(":framework:navigation:ksp-compiler"))
-                add("kspDesktop", project(":framework:navigation:ksp-compiler"))
+                add("kspAndroid", libs.cmpdestinations.ksp)
+                add("kspIosX64", libs.cmpdestinations.ksp)
+                add("kspIosArm64", libs.cmpdestinations.ksp)
+                add("kspIosSimulatorArm64", libs.cmpdestinations.ksp)
+                add("kspDesktop", libs.cmpdestinations.ksp)
             }
         }
     }

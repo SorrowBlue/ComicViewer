@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import javax.imageio.ImageIO
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import okio.buffer
+import okio.BufferedSink
 import org.apache.pdfbox.Loader
 import org.apache.pdfbox.rendering.PDFRenderer
 import org.koin.core.annotation.Factory
@@ -37,11 +37,11 @@ internal actual class DocumentFileReader(
     }
 
 
-    override suspend fun copyTo(pageIndex: Int, sink: okio.Sink) {
+    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         val renderer = PDFRenderer(document)
         val image = renderer.renderImageWithDPI(pageIndex, 300f)
         withContext(dispatcher) {
-            ImageIO.write(image, "png", sink.buffer().outputStream())
+            ImageIO.write(image, "png", bufferedSink.outputStream())
         }
     }
 

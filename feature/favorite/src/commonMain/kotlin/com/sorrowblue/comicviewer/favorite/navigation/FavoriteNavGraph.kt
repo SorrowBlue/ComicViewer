@@ -4,11 +4,11 @@ import com.sorrowblue.comicviewer.favorite.Favorite
 import com.sorrowblue.comicviewer.favorite.FavoriteFolder
 import com.sorrowblue.comicviewer.favorite.list.FavoriteList
 import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEdit
-import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
-import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
+import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import kotlinx.serialization.Serializable
 
-@NavGraph(startDestination = FavoriteList::class, transition = FavoriteNavGraphTransitions::class)
+@NavGraph(startDestination = FavoriteList::class, transitions = FavoriteNavGraphTransitions::class)
 @Serializable
 data object FavoriteNavGraph {
 

@@ -6,8 +6,8 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsScope
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettings
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.display.section.DisplaySettingsDarkMode
-import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
-import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
+import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import kotlinx.serialization.Serializable
 import logcat.logcat
 import org.koin.core.annotation.Module

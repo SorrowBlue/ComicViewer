@@ -50,6 +50,10 @@ internal class BookPageImageFetcher(
 
     override fun BufferedSource.readMetadata() = CoilMetadata.from<BookPageImageMetadata>(this)
 
+    override suspend fun fetch(): FetchResult? {
+        return innerFetch(null)
+    }
+
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val dataSource = bookshelfLocalDataSource.flow(data.book.bookshelfId).first()
             ?.let(remoteDataSourceFactory::create)
@@ -82,13 +86,14 @@ internal class BookPageImageFetcher(
                 )
             } ?: run {
                 // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
-                val buffer = Buffer()
-                fileReader.copyTo(data.pageIndex, buffer)
-                SourceFetchResult(
-                    source = buffer.toImageSource(),
-                    mimeType = null,
-                    dataSource = DataSource.NETWORK
-                )
+                Buffer().let {
+                    fileReader.copyTo(data.pageIndex, it)
+                    SourceFetchResult(
+                        source = it.toImageSource(),
+                        mimeType = null,
+                        dataSource = DataSource.NETWORK
+                    )
+                }
             }
         } catch (e: Exception) {
             logcat { e.asLog() }

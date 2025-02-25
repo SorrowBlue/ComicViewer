@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 internal sealed interface SearchScreenEvent {
     data object Back : SearchScreenEvent
@@ -57,8 +58,9 @@ internal interface SearchScreenState : SaveableScreenState {
 
 @Composable
 internal fun rememberSearchScreenState(
+    route: Search,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: SearchViewModel = koinViewModel(),
+    viewModel: SearchViewModel = koinViewModel { parametersOf(route) },
     lazyGridState: LazyGridState = rememberLazyGridState(),
     navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
 ): SearchScreenState = rememberSaveableScreenState {

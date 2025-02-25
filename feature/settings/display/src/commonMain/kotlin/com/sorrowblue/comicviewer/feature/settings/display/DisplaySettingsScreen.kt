@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.settings.display.generated.resources.Res
 import comicviewer.feature.settings.display.generated.resources.settings_display_desc_show_last_folder
@@ -19,6 +19,7 @@ import comicviewer.feature.settings.display.generated.resources.settings_display
 import comicviewer.feature.settings.display.generated.resources.settings_display_title
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 internal interface DisplaySettingsScreenNavigator : SettingsDetailNavigator {
     fun navigateToDarkMode()
@@ -30,7 +31,7 @@ data object DisplaySettings
 @Destination<DisplaySettings>
 @Composable
 internal fun DisplaySettingsScreen(
-    navigator: DisplaySettingsScreenNavigator,
+    navigator: DisplaySettingsScreenNavigator = koinInject(),
     state: DisplaySettingsScreenState = rememberDisplaySettingsScreenState(),
 ) {
     DisplaySettingsScreen(

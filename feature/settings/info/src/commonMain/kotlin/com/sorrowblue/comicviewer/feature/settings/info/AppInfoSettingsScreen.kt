@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.settings.info.generated.resources.Res
 import comicviewer.feature.settings.info.generated.resources.settings_info_label_build
@@ -16,6 +16,7 @@ import comicviewer.feature.settings.info.generated.resources.settings_info_rate_
 import comicviewer.feature.settings.info.generated.resources.settings_info_title
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 internal interface AppInfoSettingsScreenNavigator : SettingsDetailNavigator {
 
@@ -27,7 +28,7 @@ data object AppInfoSettings
 
 @Destination<AppInfoSettings>
 @Composable
-internal fun AppInfoSettingsScreen(navigator: AppInfoSettingsScreenNavigator) {
+internal fun AppInfoSettingsScreen(navigator: AppInfoSettingsScreenNavigator = koinInject()) {
     AppInfoSettingsScreen(
         onBackClick = navigator::navigateBack,
         onLicenceClick = navigator::navigateToLicense

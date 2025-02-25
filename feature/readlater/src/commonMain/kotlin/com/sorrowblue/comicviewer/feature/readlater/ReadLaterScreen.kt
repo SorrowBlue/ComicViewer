@@ -20,7 +20,7 @@ import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
@@ -33,6 +33,7 @@ import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_label_nothing_to_read_later
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 interface ReadLaterScreenNavigator {
     fun onSettingsClick()
@@ -47,7 +48,7 @@ data object ReadLater
 @Destination<ReadLater>
 @Composable
 internal fun ReadLaterScreen(
-    navigator: ReadLaterScreenNavigator,
+    navigator: ReadLaterScreenNavigator = koinInject(),
     state: ReadLaterScreenState = rememberReadLaterScreenState(),
 ) {
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()

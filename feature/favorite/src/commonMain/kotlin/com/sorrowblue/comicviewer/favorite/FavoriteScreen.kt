@@ -25,7 +25,7 @@ import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
@@ -38,6 +38,7 @@ import comicviewer.feature.favorite.generated.resources.Res
 import comicviewer.feature.favorite.generated.resources.favorite_label_no_favorites
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 interface FavoriteScreenNavigator {
     fun navigateUp()
@@ -55,7 +56,7 @@ data class Favorite(val favoriteId: FavoriteId)
 @Composable
 internal fun FavoriteScreen(
     route: Favorite,
-    navigator: FavoriteScreenNavigator,
+    navigator: FavoriteScreenNavigator = koinInject(),
     state: FavoriteScreenState = rememberFavoriteScreenState(route = route),
 ) {
     val uiState = state.uiState

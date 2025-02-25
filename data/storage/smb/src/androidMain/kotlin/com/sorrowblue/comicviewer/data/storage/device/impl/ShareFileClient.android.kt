@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import okio.Source
+import okio.BufferedSource
 import okio.buffer
 import okio.source
 import org.koin.core.annotation.Factory
@@ -27,7 +27,7 @@ internal actual class ShareFileClient(
 
     private val contentResolver = context.contentResolver
 
-    override suspend fun source(file: File): Source {
+    override suspend fun bufferedSource(file: File): BufferedSource {
         return kotlin.runCatching {
             ParcelFileDescriptor.AutoCloseInputStream(
                 contentResolver.openFileDescriptor(file.uri, "r")

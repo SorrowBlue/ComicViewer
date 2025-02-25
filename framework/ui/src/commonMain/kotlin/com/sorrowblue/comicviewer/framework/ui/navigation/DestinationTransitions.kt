@@ -8,7 +8,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.sorrowblue.comicviewer.framework.navigation.NavTransition
+import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.comicviewer.framework.ui.animation.materialContainerTransformIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialContainerTransformOut
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
@@ -18,7 +18,6 @@ import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisXOut
 import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisYIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisYOut
 import kotlin.reflect.KClass
-import logcat.logcat
 
 data class TransitionsConfigure(
     val enterRoute: KClass<*>,
@@ -34,7 +33,7 @@ data class TransitionsConfigure(
     }
 }
 
-abstract class DestinationTransitions : NavTransition() {
+abstract class DestinationTransitions : NavTransitions() {
 
     companion object {
         var slideDistance = -1

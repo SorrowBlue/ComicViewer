@@ -1,6 +1,11 @@
 package com.sorrowblue.comicviewer.feature.settings.navigation
 
 import androidx.navigation.NavType
+import com.sorrowblue.cmpdestinations.ScreenDestination
+import com.sorrowblue.cmpdestinations.animation.NavTransitions
+import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
+import com.sorrowblue.cmpdestinations.annotation.NavGraph
+import com.sorrowblue.cmpdestinations.annotation.NestedNavGraph
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
@@ -14,11 +19,6 @@ import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettin
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettings
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettings
-import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
-import com.sorrowblue.comicviewer.framework.annotation.NavGraph
-import com.sorrowblue.comicviewer.framework.annotation.NestedNavGraph
-import com.sorrowblue.comicviewer.framework.navigation.NavTransition
-import com.sorrowblue.comicviewer.framework.navigation.ScreenDestination
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlinx.serialization.Serializable
@@ -26,13 +26,13 @@ import org.koin.core.annotation.Module
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
 internal expect class SettingsDetailNavGraphImpl() :
-    com.sorrowblue.comicviewer.framework.navigation.NavGraph {
+    com.sorrowblue.cmpdestinations.NavGraph {
     override val startDestination: KClass<*>
     override val route: KClass<*>
     override val typeMap: Map<KType, NavType<*>>
     override val screenDestinations: List<ScreenDestination>
-    override val nestedNavGraphs: List<com.sorrowblue.comicviewer.framework.navigation.NavGraph>
-    override val transition: NavTransition
+    override val nestedNavGraphs: List<com.sorrowblue.cmpdestinations.NavGraph>
+    override val transitions: NavTransitions
 }
 
 @Serializable

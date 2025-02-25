@@ -55,8 +55,6 @@ include(":composeApp")
 
 include(":framework:common")
 include(":framework:notification")
-include(":framework:navigation:annotations")
-include(":framework:navigation:ksp-compiler")
 include(":framework:designsystem")
 include(":framework:ui")
 

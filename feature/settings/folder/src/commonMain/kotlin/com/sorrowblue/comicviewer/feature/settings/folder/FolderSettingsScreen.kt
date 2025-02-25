@@ -14,8 +14,8 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigato
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import comicviewer.feature.settings.folder.generated.resources.Res
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_desc_image_folder
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_file_sort
@@ -37,6 +37,7 @@ import comicviewer.feature.settings.folder.generated.resources.settings_folder_l
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_title
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 internal data class FolderSettingsScreenUiState(
     val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.isDisplayHiddenFile,
@@ -73,7 +74,7 @@ internal fun FolderSettingsScreen(
     imageScaleResultRecipient: NavResultReceiver<ImageScaleSettings, ImageScale>,
     imageFilterQualityRecipient: NavResultReceiver<ImageFilterQualitySettings, ImageFilterQuality>,
     folderThumbnailOrderRecipient: NavResultReceiver<FolderThumbnailOrderSettings, FolderThumbnailOrder>,
-    navigator: FolderSettingsScreenNavigator,
+    navigator: FolderSettingsScreenNavigator = koinInject(),
 ) {
     FolderSettingsScreen(
         onBackClick = navigator::navigateBack,

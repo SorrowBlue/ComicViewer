@@ -8,9 +8,10 @@ import com.sorrowblue.comicviewer.folder.Folder
 import com.sorrowblue.comicviewer.folder.FolderScreen
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 import com.sorrowblue.comicviewer.folder.SortTypeSelect
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 @Serializable
 internal data class HistoryFolder(
@@ -23,7 +24,7 @@ internal data class HistoryFolder(
 @Composable
 internal fun HistoryFolderScreen(
     route: HistoryFolder,
-    navigator: FolderScreenNavigator,
+    navigator: FolderScreenNavigator = koinInject(),
     sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
 ) {
     FolderScreen(

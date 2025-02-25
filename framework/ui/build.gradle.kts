@@ -9,8 +9,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.framework.designsystem)
-                implementation("com.sorrowblue:annotations:1.0")
                 implementation(projects.domain.model)
+                implementation(libs.cmpdestinations)
                 api(compose.material3)
                 api(libs.compose.multiplatform.material3.adaptiveLayout)
                 api(libs.compose.multiplatform.material3.adaptiveNavigation)

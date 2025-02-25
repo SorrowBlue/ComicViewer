@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.favorite.common.component.FavoriteNameField
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
+import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import comicviewer.feature.favorite.create.generated.resources.Res
 import comicviewer.feature.favorite.create.generated.resources.cancel
@@ -24,6 +24,7 @@ import comicviewer.feature.favorite.create.generated.resources.favorite_create_l
 import comicviewer.feature.favorite.create.generated.resources.favorite_create_title_new_favorite
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import soil.form.FormPolicy
 import soil.form.compose.Controller
 import soil.form.compose.Form
@@ -44,7 +45,7 @@ interface FavoriteCreateScreenNavigator {
 @Composable
 internal fun FavoriteCreateScreen(
     route: FavoriteCreate,
-    navigator: FavoriteCreateScreenNavigator,
+    navigator: FavoriteCreateScreenNavigator = koinInject(),
     state: FavoriteCreateScreenState = rememberFavoriteCreateScreenState(route),
 ) {
     FavoriteCreateScreen(

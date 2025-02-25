@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import okio.Source
+import okio.BufferedSource
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
@@ -27,7 +27,7 @@ internal actual class SmbFileClient(
         TODO("Not yet implemented")
     }
 
-    override suspend fun source(file: File): Source {
+    override suspend fun bufferedSource(file: File): BufferedSource {
         TODO("Not yet implemented")
     }
 

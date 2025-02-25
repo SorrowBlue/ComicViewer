@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import comicviewer.feature.settings.security.generated.resources.Res
 import comicviewer.feature.settings.security.generated.resources.settings_security_label_background_lock
 import comicviewer.feature.settings.security.generated.resources.settings_security_summary_password_lock
@@ -19,6 +19,7 @@ import comicviewer.feature.settings.security.generated.resources.settings_securi
 import comicviewer.feature.settings.security.generated.resources.settings_security_title_use_biometric_auth
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 interface SecuritySettingsScreenNavigator : SettingsDetailNavigator {
     fun navigateToChangeAuth(enabled: Boolean)
@@ -30,7 +31,7 @@ data object SecuritySettings
 
 @Destination<SecuritySettings>
 @Composable
-internal fun SecuritySettingsScreen(navigator: SecuritySettingsScreenNavigator) {
+internal fun SecuritySettingsScreen(navigator: SecuritySettingsScreenNavigator = koinInject()) {
     SecuritySettingsScreen(
         onBackClick = navigator::navigateBack,
         onChangeAuthEnable = navigator::navigateToChangeAuth,

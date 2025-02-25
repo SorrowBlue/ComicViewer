@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreateScreenNa
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
-import com.sorrowblue.comicviewer.framework.navigation.NavGraphNavHost
+import com.sorrowblue.cmpdestinations.NavGraphNavHost
 import com.sorrowblue.comicviewer.framework.ui.animation.rememberSlideDistance
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions

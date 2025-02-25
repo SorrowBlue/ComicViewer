@@ -20,9 +20,7 @@ kotlin {
                     projects.domain,
                     projects.feature,
                     projects.framework,
-                    projects.framework.navigation,
                     projects.framework.notification,
-                    projects.framework.navigation.kspCompiler,
                 ).map(DelegatingProjectDependency::getPath)
                 rootProject.subprojects {
                     if (!skipModule.contains(project.path)) {

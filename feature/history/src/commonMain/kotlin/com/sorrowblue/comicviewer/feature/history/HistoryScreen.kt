@@ -18,13 +18,14 @@ import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 interface HistoryScreenNavigator {
     fun navigateUp()
@@ -41,7 +42,7 @@ data object History
 @Destination<History>
 @Composable
 internal fun HistoryScreen(
-    navigator: HistoryScreenNavigator,
+    navigator: HistoryScreenNavigator = koinInject(),
     clearAllResult: NavResultReceiver<ClearAllHistory, Boolean>,
     state: HistoryScreenState = rememberHistoryScreenState(),
 ) {

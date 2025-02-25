@@ -24,13 +24,14 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequest
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequestResult
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 @Serializable
 data object Bookshelf
@@ -44,9 +45,9 @@ interface BookshelfScreenNavigator : BookshelfInfoSheetNavigator {
 @Destination<Bookshelf>()
 @Composable
 internal fun BookshelfScreen(
-    navigator: BookshelfScreenNavigator,
     deleteNavResultReceiver: NavResultReceiver<BookshelfDelete, Boolean>,
     notificationNavResultReceiver: NavResultReceiver<NotificationRequest, NotificationRequestResult>,
+    navigator: BookshelfScreenNavigator = koinInject(),
     state: BookshelfScreenState = rememberBookshelfScreenState(),
 ) {
     BookshelfScreen(

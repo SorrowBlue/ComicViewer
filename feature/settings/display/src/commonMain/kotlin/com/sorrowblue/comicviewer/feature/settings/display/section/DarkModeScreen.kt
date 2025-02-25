@@ -22,8 +22,8 @@ import androidx.navigation.NavController
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.settings.display.label
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.comicviewer.framework.ui.layout.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import comicviewer.feature.settings.display.generated.resources.Res
@@ -84,7 +84,7 @@ data object DisplaySettingsDarkMode
 
 @Destination<DisplaySettingsDarkMode>(style = DestinationStyle.Dialog::class)
 @Composable
-internal fun DarkModeScreen(navController: NavController) {
+internal fun DarkModeScreen(navController: NavController = koinInject()) {
     val state: AppearanceDialogState = rememberAppearanceDialogState()
     DarkModeScreen(
         onDismissRequest = { navController.popBackStack() },

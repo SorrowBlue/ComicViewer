@@ -17,9 +17,10 @@ import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.WelcomeSheet
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.ui.BackHandler
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 @Serializable
 data object Tutorial
@@ -36,7 +37,7 @@ fun TutorialScreen(navigator: TutorialScreenNavigator) {
 @Destination<Tutorial>
 @Composable
 internal fun TutorialScreen(
-    navigator: TutorialScreenNavigator,
+    navigator: TutorialScreenNavigator = koinInject(),
     state: TutorialScreenState = rememberTutorialScreenState(),
 ) {
     val uiState = state.uiState

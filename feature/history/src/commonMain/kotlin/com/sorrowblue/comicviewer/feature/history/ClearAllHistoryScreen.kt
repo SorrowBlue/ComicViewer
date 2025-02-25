@@ -4,9 +4,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.DestinationStyle
-import com.sorrowblue.comicviewer.framework.navigation.NavResultSender
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.DestinationStyle
+import com.sorrowblue.cmpdestinations.result.NavResultSender
 import comicviewer.feature.history.generated.resources.Res
 import comicviewer.feature.history.generated.resources.history_btn_clear_all
 import comicviewer.feature.history.generated.resources.history_text_clear_all

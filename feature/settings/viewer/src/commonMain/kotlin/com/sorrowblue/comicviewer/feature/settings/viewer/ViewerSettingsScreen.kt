@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigato
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import comicviewer.feature.settings.viewer.generated.resources.Res
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_binding_direction_each
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_cache_images
@@ -25,13 +25,14 @@ import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_t
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_show_status_bar
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Serializable
 data object ViewerSettings
 
 @Destination<ViewerSettings>
 @Composable
-internal fun ViewerSettingsScreen(navigator: SettingsDetailNavigator) {
+internal fun ViewerSettingsScreen(navigator: SettingsDetailNavigator = koinInject()) {
     ViewerSettingsScreen(onBackClick = navigator::navigateBack)
 }
 

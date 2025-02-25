@@ -6,8 +6,8 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsScope
 import com.sorrowblue.comicviewer.feature.settings.info.AppInfoSettings
 import com.sorrowblue.comicviewer.feature.settings.info.AppInfoSettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.info.license.License
-import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
-import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
+import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Scope

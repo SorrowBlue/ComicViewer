@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 internal sealed interface FavoriteAddScreenStateEvent {
     class AddClick(val bookshelfId: BookshelfId, val path: String) : FavoriteAddScreenStateEvent
@@ -34,7 +35,7 @@ internal interface FavoriteAddScreenState {
 internal fun rememberFavoriteAddScreenState(
     route: FavoriteAdd,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FavoriteAddViewModel = koinViewModel(),
+    viewModel: FavoriteAddViewModel = koinViewModel { parametersOf(route) },
 ): FavoriteAddScreenState = remember {
     FavoriteAddScreenStateImpl(
         route = route,

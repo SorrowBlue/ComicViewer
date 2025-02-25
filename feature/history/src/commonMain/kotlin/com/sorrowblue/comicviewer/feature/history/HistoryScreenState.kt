@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.ClearAllHistoryUseCase
 import com.sorrowblue.comicviewer.feature.history.section.HistoryContentsAction
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.framework.navigation.NavResult
+import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator

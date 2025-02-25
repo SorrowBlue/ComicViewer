@@ -18,7 +18,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import okio.buffer
+import okio.BufferedSink
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Qualifier
@@ -67,9 +67,9 @@ internal actual class DocumentFileReader(
         return 0
     }
 
-    override suspend fun copyTo(pageIndex: Int, sink: okio.Sink) {
+    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         mutex.withLock {
-            sink.buffer().outputStream().also {
+            bufferedSink.outputStream().also {
                 AndroidDrawDevice.drawPageFitWidth(document.loadPage(pageIndex), width)
                     .compress(COMPRESS_FORMAT, 75, it)
             }

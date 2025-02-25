@@ -36,11 +36,12 @@ import com.sorrowblue.comicviewer.feature.book.section.BookSheet
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 
 internal sealed interface BookScreenUiState {
@@ -74,7 +75,7 @@ data class Book(
 
 @Destination<Book>
 @Composable
-internal fun BookScreen(route: Book, navigator: BookScreenNavigator) {
+internal fun BookScreen(route: Book, navigator: BookScreenNavigator = koinInject()) {
     BookScreen(
         route = route,
         onBackClick = navigator::navigateUp,

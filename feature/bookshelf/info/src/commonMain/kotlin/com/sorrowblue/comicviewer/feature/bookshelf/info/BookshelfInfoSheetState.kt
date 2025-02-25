@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.feature.bookshelf.info
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.framework.navigation.NavResult
+import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
 import kotlinx.coroutines.CoroutineScope

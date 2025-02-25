@@ -11,8 +11,8 @@ import com.sorrowblue.comicviewer.feature.settings.folder.FolderThumbnailOrderSe
 import com.sorrowblue.comicviewer.feature.settings.folder.ImageFilterQualitySettings
 import com.sorrowblue.comicviewer.feature.settings.folder.ImageScaleSettings
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeSettings
-import com.sorrowblue.comicviewer.framework.annotation.DestinationInGraph
-import com.sorrowblue.comicviewer.framework.annotation.NavGraph
+import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
+import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Scope

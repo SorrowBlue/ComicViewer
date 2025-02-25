@@ -7,9 +7,10 @@ import com.sorrowblue.comicviewer.folder.Folder
 import com.sorrowblue.comicviewer.folder.FolderScreen
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
 import com.sorrowblue.comicviewer.folder.SortTypeSelect
-import com.sorrowblue.comicviewer.framework.annotation.Destination
-import com.sorrowblue.comicviewer.framework.navigation.NavResultReceiver
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 @Serializable
 data class BookshelfFolder(
@@ -24,8 +25,8 @@ internal interface BookshelfFolderScreenNavigator : FolderScreenNavigator
 @Composable
 internal fun BookshelfFolderScreen(
     route: BookshelfFolder,
-    navigator: BookshelfFolderScreenNavigator,
     sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
+    navigator: BookshelfFolderScreenNavigator = koinInject(),
 ) {
     FolderScreen(
         route = route,

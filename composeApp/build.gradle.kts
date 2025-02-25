@@ -30,7 +30,6 @@ kotlin {
             dependencies {
                 implementation(projects.framework.designsystem)
                 implementation(projects.framework.ui)
-                implementation("com.sorrowblue:annotations:1.0")
                 implementation(projects.data.di)
                 implementation(projects.domain.usecase)
                 implementation(projects.feature.authentication)
@@ -48,6 +47,7 @@ kotlin {
                 implementation(projects.feature.history)
 
                 implementation(compose.material3AdaptiveNavigationSuite)
+                implementation(libs.cmpdestinations)
             }
         }
 
@@ -139,12 +139,11 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
-    add("kspCommonMainMetadata", projects.framework.navigation.kspCompiler)
-    add("kspAndroid", projects.framework.navigation.kspCompiler)
-    add("kspIosX64", projects.framework.navigation.kspCompiler)
-    add("kspIosArm64", projects.framework.navigation.kspCompiler)
-    add("kspIosSimulatorArm64", projects.framework.navigation.kspCompiler)
-    add("kspDesktop", projects.framework.navigation.kspCompiler)
+    add("kspAndroid", libs.cmpdestinations.ksp)
+    add("kspIosX64", libs.cmpdestinations.ksp)
+    add("kspIosArm64", libs.cmpdestinations.ksp)
+    add("kspIosSimulatorArm64", libs.cmpdestinations.ksp)
+    add("kspDesktop", libs.cmpdestinations.ksp)
 }
 
 compose.desktop {

@@ -30,9 +30,9 @@ import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettings
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettings
-import com.sorrowblue.comicviewer.framework.annotation.Destination
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.navigation.NavGraphNavHost
+import com.sorrowblue.cmpdestinations.NavGraphNavHost
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigableListDetailPaneScaffold
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_label_app
@@ -47,6 +47,7 @@ import kotlin.reflect.KClass
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
+import org.koin.compose.koinInject
 import org.koin.compose.module.rememberKoinModules
 import org.koin.compose.scope.KoinScope
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -69,7 +70,7 @@ data object Settings
 @Destination<Settings>
 @Composable
 internal fun SettingsScreen(
-    screenNavigator: SettingsScreenNavigator,
+    screenNavigator: SettingsScreenNavigator = koinInject(),
     state: SettingsScreenState = rememberSettingsScreenState(),
 ) {
     SettingsScreen(
