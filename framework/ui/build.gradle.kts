@@ -10,28 +10,30 @@ kotlin {
             dependencies {
                 implementation(projects.framework.designsystem)
                 implementation(projects.domain.model)
-                implementation(libs.cmpdestinations)
-                api(compose.material3)
-                api(libs.compose.multiplatform.material3.adaptiveLayout)
-                api(libs.compose.multiplatform.material3.adaptiveNavigation)
-                api(libs.compose.multiplatform.navigationCompose)
+
+                // Material3
+                implementation(compose.material3)
                 implementation(compose.material3AdaptiveNavigationSuite)
-                implementation(compose.components.resources)
-                api(libs.koin.compose)
-                api(libs.koin.composeViewModel)
-                api(libs.kotlinx.serialization.core)
-                api(libs.coil3.compose)
-                implementation(libs.kotlinx.serialization.jsonOkio)
-                implementation(libs.squareup.okio)
-                api(libs.androidx.paging.common)
-                implementation(libs.androidx.lifecycle.viewmodel)
+                implementation(libs.compose.multiplatform.material3.adaptiveLayout)
+                implementation(libs.compose.multiplatform.material3.adaptiveNavigation)
+                // Navigation + Serialization
+                implementation(libs.cmpdestinations)
+                implementation(libs.compose.multiplatform.navigationCompose)
+                implementation(libs.kotlinx.serialization.cbor)
+                // Image
+                implementation(libs.coil3.compose)
+                // Paging
+                implementation(libs.androidx.paging.common)
+                // Di
+                implementation(libs.koin.composeViewModel)
+
+//                implementation(libs.androidx.lifecycle.viewmodel)
             }
         }
 
         androidMain {
             dependencies {
-                api(libs.androidx.compose.ui.toolingPreview)
-                implementation(libs.androidx.activity)
+                implementation(libs.androidx.activity.compose)
                 implementation(libs.drick.compose.edgeToEdgePreview)
             }
         }

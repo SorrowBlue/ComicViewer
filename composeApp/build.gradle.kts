@@ -1,6 +1,5 @@
 import com.sorrowblue.comicviewer.ComicBuildType
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.application)
@@ -8,10 +7,10 @@ plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.aboutlibraries)
+    alias(libs.plugins.gitVersioning)
 }
 
 kotlin {
-    val xcFramework = XCFramework()
     listOf(
         iosX64(),
         iosArm64(),
@@ -21,7 +20,6 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
             binaryOption("bundleId", "com.sorrowblue.comicviewer.app")
-            xcFramework.add(this)
         }
     }
 
@@ -46,8 +44,16 @@ kotlin {
                 implementation(projects.feature.settings)
                 implementation(projects.feature.history)
 
+                // Material3
+                implementation(compose.material3)
                 implementation(compose.material3AdaptiveNavigationSuite)
+                implementation(libs.compose.multiplatform.material3.adaptive)
+                // Navigation
                 implementation(libs.cmpdestinations)
+                implementation(libs.compose.multiplatform.navigationCompose)
+                implementation(libs.kotlinx.serialization.core)
+                // Di
+                implementation(libs.koin.composeViewModel)
             }
         }
 
@@ -55,17 +61,11 @@ kotlin {
             dependencies {
                 implementation(projects.framework.notification)
 
-                implementation(libs.androidx.activity)
-                implementation(libs.androidx.biometric)
-                implementation(libs.androidx.browser)
                 implementation(libs.androidx.core.splashscreen)
-                implementation(libs.google.android.play.review.ktx)
-                implementation(libs.google.android.play.feature.delivery.ktx)
-                implementation(libs.androidx.appcompat)
                 implementation(libs.koin.androidxCompose)
                 implementation(libs.koin.androidxStartup)
                 implementation(libs.koin.androidxWorkmanager)
-                implementation(libs.google.android.billingclient.billingKtx)
+                implementation(libs.google.android.play.feature.delivery.ktx)
             }
         }
 
@@ -76,7 +76,29 @@ kotlin {
         }
     }
 }
-val versionNameGit = "1.0.0"
+
+dependencies {
+    add("kspAndroid", libs.cmpdestinations.ksp)
+    add("kspIosX64", libs.cmpdestinations.ksp)
+    add("kspIosArm64", libs.cmpdestinations.ksp)
+    add("kspIosSimulatorArm64", libs.cmpdestinations.ksp)
+    add("kspDesktop", libs.cmpdestinations.ksp)
+}
+
+version = "0.0.0-SNAPSHOT"
+gitVersioning.apply {
+    refs {
+        tag("(?<version>.*)") {
+            version = "\${describe.tag.version}"
+        }
+        branch("develop/.+") {
+            version = "\${describe}-SNAPSHOT"
+        }
+    }
+    rev {
+        version = "\${commit}"
+    }
+}
 
 android {
     namespace = "com.sorrowblue.comicviewer.app"
@@ -84,8 +106,7 @@ android {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = libs.versions.versionCode.get().toInt()
-        versionName = versionNameGit
-        logger.lifecycle("versionName=$versionName")
+        versionName = version.toString()
     }
     androidResources {
         generateLocaleConfig = true
@@ -122,8 +143,6 @@ android {
         }
     }
 
-    // TODO(dynamicFeatures)
-
     dynamicFeatures += setOf(projects.data.reader.document.path)
 
     buildFeatures.buildConfig = true
@@ -137,22 +156,13 @@ android {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
-    add("kspAndroid", libs.cmpdestinations.ksp)
-    add("kspIosX64", libs.cmpdestinations.ksp)
-    add("kspIosArm64", libs.cmpdestinations.ksp)
-    add("kspIosSimulatorArm64", libs.cmpdestinations.ksp)
-    add("kspDesktop", libs.cmpdestinations.ksp)
-}
-
 compose.desktop {
     application {
         mainClass = "com.sorrowblue.comicviewer.app.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.sorrowblue.comicviewer.app"
-            packageVersion = versionNameGit
+            packageVersion = "1.0.0"
         }
         jvmArgs("-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
     }

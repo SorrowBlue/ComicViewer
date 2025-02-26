@@ -27,6 +27,10 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     implementation(compose.components.uiToolingPreview)
                 }
 
+                sourceSets.androidMain.dependencies {
+                    implementation(libs.androidx.compose.ui.toolingPreview)
+                }
+
                 compilerOptions {
                     freeCompilerArgs.addAll(
                         "-opt-in=androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi",
@@ -44,10 +48,8 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                add(
-                    "debugImplementation",
-                    extensions.getByType<ComposePlugin.Dependencies>().uiTooling
-                )
+                val compose = extensions.getByType<ComposePlugin.Dependencies>()
+                add("debugImplementation", compose.uiTooling)
             }
         }
     }

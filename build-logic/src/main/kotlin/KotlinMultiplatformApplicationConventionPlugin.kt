@@ -20,7 +20,8 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
             plugins {
                 id(libs.plugins.kotlinMultiplatform)
                 id(libs.plugins.android.application)
-                id(libs.plugins.detekt)
+                id(libs.plugins.comicviewer.android.lint)
+                id(libs.plugins.comicviewer.detekt)
             }
 
             configureKotlin<KotlinMultiplatformExtension>()

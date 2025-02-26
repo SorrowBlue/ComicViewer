@@ -1,11 +1,14 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
+import kotlinx.serialization.Serializable
+
 internal sealed interface BookshelfEditForm {
     fun <T : BookshelfEditForm> update(displayName: String): T
 
     val displayName: String
 }
 
+@Serializable
 internal data class SmbEditScreenForm(
     override val displayName: String = "",
     val host: String = "",

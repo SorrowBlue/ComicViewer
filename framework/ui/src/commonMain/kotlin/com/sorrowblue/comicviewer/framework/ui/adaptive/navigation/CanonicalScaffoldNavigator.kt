@@ -19,13 +19,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.util.fastMap
+import com.sorrowblue.comicviewer.framework.ui.kSerializableByteArraySaver
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 @Composable
 inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldNavigator(
@@ -35,7 +34,7 @@ inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldNavigator(
     isDestinationHistoryAware: Boolean = true,
     initialDestinationHistory: List<ThreePaneScaffoldDestinationItem<T>> = DefaultSupportingPaneHistory,
 ): ThreePaneScaffoldNavigator<T> = rememberCanonicalScaffoldNavigator(
-    serializableSaver<T>(),
+    kSerializableByteArraySaver<T>(),
     scaffoldDirective,
     adaptStrategies,
     isDestinationHistoryAware,
@@ -49,21 +48,21 @@ inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldNavigator(
 @PublishedApi
 @Composable
 internal fun <T> rememberCanonicalScaffoldNavigator(
-    serializableSaver: SerializableSaver<T>,
+    kSerializableSaver: Saver<T, ByteArray>,
     scaffoldDirective: PaneScaffoldDirective,
     adaptStrategies: ThreePaneScaffoldAdaptStrategies,
     isDestinationHistoryAware: Boolean,
     initialDestinationHistory: List<ThreePaneScaffoldDestinationItem<T>>,
 ): ThreePaneScaffoldNavigator<T> =
     rememberSaveable(
-        saver = DefaultRememberCanonicalScaffoldNavigator.saver(
-            serializableSaver,
+        saver = DefaultCanonicalScaffoldNavigator.Saver(
+            kSerializableSaver,
             scaffoldDirective,
             adaptStrategies,
             isDestinationHistoryAware
         )
     ) {
-        DefaultRememberCanonicalScaffoldNavigator(
+        DefaultCanonicalScaffoldNavigator(
             initialDestinationHistory = initialDestinationHistory,
             initialScaffoldDirective = scaffoldDirective,
             initialAdaptStrategies = adaptStrategies,
@@ -76,17 +75,16 @@ internal fun <T> rememberCanonicalScaffoldNavigator(
     }
 
 /**
- * @see
- *    androidx.compose.material3.adaptive.navigation.DefaultThreePaneScaffoldNavigator
+ * @see [androidx.compose.material3.adaptive.navigation.DefaultThreePaneScaffoldNavigator]
  */
-private class DefaultRememberCanonicalScaffoldNavigator<T>(
+private class DefaultCanonicalScaffoldNavigator<T>(
     initialDestinationHistory: List<ThreePaneScaffoldDestinationItem<T>>,
     initialScaffoldDirective: PaneScaffoldDirective,
     initialAdaptStrategies: ThreePaneScaffoldAdaptStrategies,
     initialIsDestinationHistoryAware: Boolean,
 ) : ThreePaneScaffoldNavigator<T> {
 
-    private val destinationHistory =
+    val destinationHistory =
         mutableStateListOf<ThreePaneScaffoldDestinationItem<T>>().apply {
             addAll(initialDestinationHistory)
         }
@@ -144,7 +142,7 @@ private class DefaultRememberCanonicalScaffoldNavigator<T>(
             animateStateToCurrentScaffoldValue()
         } else {
             val previousScaffoldValue = peekPreviousScaffoldValue(backNavigationBehavior)
-            scaffoldState.seekTo(fraction, previousScaffoldValue)
+            scaffoldState.seekTo(fraction, previousScaffoldValue, isPredictiveBackInProgress = true)
         }
     }
 
@@ -214,68 +212,44 @@ private class DefaultRememberCanonicalScaffoldNavigator<T>(
         }
 
     companion object {
+
         /** To keep destination history saved */
-        fun <T> saver(
-            serializableSaver: SerializableSaver<T>,
+        fun <T> Saver(
+            byteArraySaver: Saver<T, ByteArray>,
             initialScaffoldDirective: PaneScaffoldDirective,
             initialAdaptStrategies: ThreePaneScaffoldAdaptStrategies,
             initialDestinationHistoryAware: Boolean,
-        ): Saver<DefaultRememberCanonicalScaffoldNavigator<T>, *> {
-            val destinationItemSaver = destinationItemSaver(serializableSaver)
-            return listSaver(
-                save = {
-                    it.destinationHistory.fastMap { destination ->
-                        with(destinationItemSaver) { save(destination) }
-                    }
-                },
-                restore = {
-                    DefaultRememberCanonicalScaffoldNavigator(
-                        initialDestinationHistory =
-                        it.fastMap { savedDestination ->
-                            destinationItemSaver.restore(savedDestination!!)!!
-                        },
-                        initialScaffoldDirective = initialScaffoldDirective,
-                        initialAdaptStrategies = initialAdaptStrategies,
-                        initialIsDestinationHistoryAware = initialDestinationHistoryAware
+        ) = listSaver<DefaultCanonicalScaffoldNavigator<T>, List<Any?>>(
+            save = {
+                it.destinationHistory.fastMap { destination ->
+                    listOf(
+                        destination.pane,
+                        destination.contentKey?.let { contentKey ->
+                            with(byteArraySaver) { save(contentKey) }
+                        }
                     )
                 }
-            )
-        }
+            },
+            restore = {
+                DefaultCanonicalScaffoldNavigator(
+                    initialDestinationHistory = it.fastMap { savedDestination ->
+                        ThreePaneScaffoldDestinationItem(
+                            savedDestination[0] as ThreePaneScaffoldRole,
+                            (savedDestination[1] as? ByteArray)?.let(byteArraySaver::restore)
+                        )
+                    },
+                    initialScaffoldDirective = initialScaffoldDirective,
+                    initialAdaptStrategies = initialAdaptStrategies,
+                    initialIsDestinationHistoryAware = initialDestinationHistoryAware
+                )
+            }
+        )
     }
 }
 
-/** @see androidx.compose.material3.adaptive.navigation.destinationItemSaver */
-private fun <T> destinationItemSaver(
-    serializableSaver: SerializableSaver<T>,
-): Saver<ThreePaneScaffoldDestinationItem<T>, Any> =
-    listSaver(
-        save = {
-            listOf(it.pane, it.contentKey?.let { with(serializableSaver) { save(it) } })
-        },
-        restore = {
-            ThreePaneScaffoldDestinationItem(
-                pane = it[0] as ThreePaneScaffoldRole,
-                contentKey = (it[1] as? String)?.let(serializableSaver::restore)
-            )
-        }
-    )
-
 /**
- * @see
- *    androidx.compose.material3.adaptive.navigation.DefaultSupportingPaneHistory
+ * @see [androidx.compose.material3.adaptive.navigation.DefaultSupportingPaneHistory]
  */
 @PublishedApi
 internal val DefaultSupportingPaneHistory: List<ThreePaneScaffoldDestinationItem<Nothing>> =
     listOf(ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main))
-
-private typealias SerializableSaver<Original> = Saver<Original, Any>
-
-inline fun <reified Original : @Serializable Any> serializableSaver() =
-    object : Saver<Original, Any> {
-
-        override fun restore(value: Any) =
-            kotlin.runCatching { Json.decodeFromString<Original>(value as String) }.getOrNull()
-
-        override fun SaverScope.save(value: Original) =
-            kotlin.runCatching { Json.Default.encodeToString(value) }.getOrNull()
-    }

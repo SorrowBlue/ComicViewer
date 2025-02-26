@@ -22,10 +22,6 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
                     implementation(libs.koin.core)
                     implementation(libs.koin.annotations)
                 }
-
-                sourceSets.commonMain.configure {
-                    kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
-                }
             }
 
             dependencies {

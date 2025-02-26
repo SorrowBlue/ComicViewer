@@ -7,19 +7,14 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.DrawerDefaults
-import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuite
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteColors
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
@@ -31,7 +26,6 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
@@ -132,6 +126,7 @@ fun CompliantNavigationSuiteScaffold(
         }
     )
 }
+
 @Composable
 fun NavigationSuiteScaffold2(
     navigationSuiteItems: NavigationSuiteScope.() -> Unit,
@@ -174,10 +169,13 @@ fun NavigationSuiteScaffold2(
                         when (navigationState.suiteType) {
                             NavigationSuiteType.NavigationBar ->
                                 WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
+
                             NavigationSuiteType.NavigationRail ->
                                 WindowInsets.safeDrawing.only(WindowInsetsSides.Start)
+
                             NavigationSuiteType.NavigationDrawer ->
                                 WindowInsets.safeDrawing.only(WindowInsetsSides.Start)
+
                             else -> WindowInsets(0)
                         }
                     )

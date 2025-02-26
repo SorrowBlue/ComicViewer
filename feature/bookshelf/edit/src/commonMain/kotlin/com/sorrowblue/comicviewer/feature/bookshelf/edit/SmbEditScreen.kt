@@ -30,7 +30,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.EditScreen
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.EditorDialog
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.serializableSaver
+import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import soil.form.FormPolicy
 import soil.form.compose.Controller
 import soil.form.compose.Form
@@ -53,7 +53,7 @@ internal fun SmbEditScreen(
     Form(
         onSubmit = onSubmit,
         initialValue = uiState.form,
-        saver = serializableSaver(),
+        saver = kSerializableSaver<SmbEditScreenForm>(),
         policy = FormPolicy.Default
     ) {
         Controller(rememberSubmissionRuleAutoControl()) { submission ->
