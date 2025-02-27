@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
@@ -20,7 +21,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.Notificati
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.file.component.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
@@ -47,8 +47,8 @@ internal fun BookshelfInfoMainContents(
     showNotificationPermissionRationale: (ScanType) -> Unit,
     snackbarHostState: SnackbarHostState,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier,
     notificationNavResultReceiver: NavResultReceiver<NotificationRequest, NotificationRequestResult>,
+    modifier: Modifier = Modifier,
     state: BookshelfInfoMainContentsState = rememberBookshelfInfoMainContentsState(
         bookshelfFolder = bookshelfFolder,
         snackbarHostState = snackbarHostState

@@ -100,7 +100,6 @@ internal class BookPageImageFetcher(
             throw e
         }
     }
-
 }
 
 @Singleton

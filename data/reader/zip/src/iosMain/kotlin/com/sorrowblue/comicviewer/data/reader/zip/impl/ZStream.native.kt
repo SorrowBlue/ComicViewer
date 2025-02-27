@@ -243,7 +243,7 @@ class NativeZStream : ZStream {
         try {
             inflateEnd()
             deflateEnd()
-        } catch (_ : Throwable) {}
+        } catch (_: Throwable) {}
         nativeHeap.free(zRef)
     }
 }

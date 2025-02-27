@@ -56,11 +56,14 @@ internal fun rememberComicViewerAppState(
     ) {
         ComicViewerAppStateImpl(
             lifecycle = lifecycle,
-            mainViewModel = mainViewModel,
             scope = scope,
             navTabHandler = navTabHandler,
             manageDisplaySettingsUseCase = manageDisplaySettingsUseCase,
             getNavigationHistoryUseCase = getNavigationHistoryUseCase,
+            completeInit = {
+                mainViewModel.shouldKeepSplash.value = false
+                mainViewModel.isInitialized.value = true
+            },
             navController = navController,
         )
     }
@@ -76,11 +79,11 @@ internal interface ComicViewerAppState {
 
 private class ComicViewerAppStateImpl(
     lifecycle: Lifecycle,
-    private val mainViewModel: MainViewModel,
     private val scope: CoroutineScope,
     private val navTabHandler: NavTabHandler,
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
+    private val completeInit: () -> Unit,
     override val navController: NavHostController,
 ) : ComicViewerAppState {
 
@@ -100,7 +103,7 @@ private class ComicViewerAppStateImpl(
                 }
                 if (uiState.currentTab == null && currentTab != null) {
                     // 画面が更新されてからNavigationを表示します。
-//                    delay(250)
+                    // TODO delay(250)
                 }
                 uiState = uiState.copy(currentTab = currentTab)
                 logcat {
@@ -215,11 +218,9 @@ private class ComicViewerAppStateImpl(
     }
 
     private fun completeRestoreHistory() {
-        mainViewModel.shouldKeepSplash.value = false
-        mainViewModel.isInitialized.value = true
+        completeInit()
         isNavigationRestored = true
     }
-
 
     /**
      * Cancel job

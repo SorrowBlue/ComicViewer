@@ -14,10 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationColumnContents
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationContentsAction
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationRowContents
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
@@ -156,7 +156,7 @@ internal sealed interface AuthenticationScreenUiState {
 internal enum class ErrorType(val resource: StringResource) {
     IncorrectPin(Res.string.authentication_error_incorrect_pin),
     Pin4More(Res.string.authentication_error_pin_4_more),
-    PinNotMatch(Res.string.authentication_error_pin_not_match)
+    PinNotMatch(Res.string.authentication_error_pin_not_match),
 }
 
 @Composable

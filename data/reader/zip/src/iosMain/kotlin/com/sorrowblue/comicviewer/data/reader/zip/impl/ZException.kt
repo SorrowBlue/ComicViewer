@@ -11,5 +11,5 @@ package com.uselessmnemonic.pak
  */
 class ZException(
     val error: ZError,
-    message: String
+    message: String,
 ) : Exception(message)

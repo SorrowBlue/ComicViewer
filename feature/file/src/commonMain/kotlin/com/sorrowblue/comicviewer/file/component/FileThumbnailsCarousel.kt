@@ -66,7 +66,6 @@ fun FileThumbnailsCarousel(
                 preferredItemWidth = ItemWidth,
                 itemSpacing = ItemSpacing,
                 contentPadding = contentPadding,
-                modifier = modifier
             ) { index ->
                 lazyPagingItems[index]?.let {
                     FileThumbnailAsyncImage(

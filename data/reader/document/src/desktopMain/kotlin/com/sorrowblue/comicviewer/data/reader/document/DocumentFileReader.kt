@@ -17,7 +17,7 @@ import org.koin.core.annotation.Qualifier
 @DocumentFileReader
 @Factory
 internal actual class DocumentFileReader(
-    @InjectedParam mimeType: String,
+    @Suppress("UNUSED_PARAMETER") @InjectedParam mimeType: String,
     @InjectedParam private val seekableInputStream: SeekableInputStream,
     @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
@@ -36,7 +36,6 @@ internal actual class DocumentFileReader(
         return 0
     }
 
-
     override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         val renderer = PDFRenderer(document)
         val image = renderer.renderImageWithDPI(pageIndex, 300f)
@@ -46,5 +45,6 @@ internal actual class DocumentFileReader(
     }
 
     override fun close() {
+        // TODO()
     }
 }

@@ -2,6 +2,8 @@ package com.sorrowblue.comicviewer.feature.settings.folder
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
@@ -14,8 +16,6 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigato
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import comicviewer.feature.settings.folder.generated.resources.Res
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_desc_image_folder
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_file_sort

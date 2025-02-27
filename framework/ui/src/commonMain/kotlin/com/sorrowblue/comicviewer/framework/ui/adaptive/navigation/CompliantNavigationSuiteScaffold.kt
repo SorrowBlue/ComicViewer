@@ -130,8 +130,8 @@ fun CompliantNavigationSuiteScaffold(
 @Composable
 fun NavigationSuiteScaffold2(
     navigationSuiteItems: NavigationSuiteScope.() -> Unit,
-    modifier: Modifier = Modifier,
     navigationState: NavigationState,
+    modifier: Modifier = Modifier,
     navigationSuiteColors: NavigationSuiteColors = NavigationSuiteDefaults.colors(),
     containerColor: Color = NavigationSuiteScaffoldDefaults.containerColor,
     contentColor: Color = NavigationSuiteScaffoldDefaults.contentColor,

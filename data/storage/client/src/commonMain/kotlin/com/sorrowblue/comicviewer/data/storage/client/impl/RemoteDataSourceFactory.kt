@@ -7,7 +7,7 @@ import kotlinx.coroutines.IO
 import org.koin.core.annotation.Singleton
 
 @Singleton(binds = [RemoteDataSource.Factory::class])
-internal class RemoteDataSourceFactory() : RemoteDataSource.Factory {
+internal class RemoteDataSourceFactory : RemoteDataSource.Factory {
     override fun create(bookshelf: Bookshelf): RemoteDataSource {
         return RemoteDataSourceImpl(bookshelf, Dispatchers.IO)
     }

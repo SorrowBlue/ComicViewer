@@ -5,7 +5,9 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.usecase.GetInstalledModulesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import org.koin.core.annotation.Singleton
 
+@Singleton
 internal class GetInstalledModulesInteractor : GetInstalledModulesUseCase() {
 
     override fun run(request: EmptyRequest): Flow<Resource<Set<String>, Unit>> {

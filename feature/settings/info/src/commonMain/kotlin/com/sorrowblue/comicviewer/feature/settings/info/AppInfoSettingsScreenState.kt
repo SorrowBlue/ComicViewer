@@ -31,8 +31,8 @@ private class AppInfoSettingsScreenStateImpl(
 
     override var uiState: SettingsAppInfoScreenUiState by mutableStateOf(
         SettingsAppInfoScreenUiState(
-            versionName = "BuildConfig.VERSION_NAME",// TODO
-            buildAt = Instant.fromEpochMilliseconds(0L)// TODO BuildConfig.TIMESTAMP
+            versionName = "BuildConfig.VERSION_NAME", // TODO
+            buildAt = Instant.fromEpochMilliseconds(0L) // TODO BuildConfig.TIMESTAMP
                 .toLocalDateTime(TimeZone.currentSystemDefault())
                 .format(
                     LocalDateTime.Format {

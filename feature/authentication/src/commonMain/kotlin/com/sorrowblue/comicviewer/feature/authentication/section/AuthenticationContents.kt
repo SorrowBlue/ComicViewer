@@ -33,9 +33,7 @@ internal fun AuthenticationRowContents(
     onAction: (AuthenticationContentsAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         IconButton(onClick = { onAction(AuthenticationContentsAction.BackClick) }) {
             if (uiState is AuthenticationScreenUiState.Authentication) {
                 Icon(imageVector = ComicIcons.Close, contentDescription = null)
@@ -43,9 +41,7 @@ internal fun AuthenticationRowContents(
                 Icon(imageVector = ComicIcons.ArrowBack, contentDescription = null)
             }
         }
-        Row(
-            modifier = modifier
-        ) {
+        Row {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,

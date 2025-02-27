@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.util.Log
 import kotlin.math.min
+import logcat.AndroidLogcatLogger.Companion.installOnDebuggableApp
 
 private const val MAX_LOG_LENGTH = 4000
 
@@ -70,8 +71,7 @@ class AndroidLogcatLogger(minPriority: LogPriority = LogPriority.DEBUG) : Logcat
             application: Application,
             minPriority: LogPriority = LogPriority.DEBUG,
         ) {
-//            if (!LogcatLogger.isInstalled && application.isDebuggableApp) {
-            if (!LogcatLogger.isInstalled) {
+            if (!LogcatLogger.isInstalled && application.isDebuggableApp) {
                 LogcatLogger.install(AndroidLogcatLogger(minPriority))
             }
         }

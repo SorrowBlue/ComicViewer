@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
-
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
     alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
@@ -9,7 +7,6 @@ kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.data.storage.client)
         implementation(libs.kotlinx.coroutines.core)
-        implementation(libs.kotlinx.io)
     }
 
     sourceSets.androidMain.dependencies {

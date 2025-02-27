@@ -106,7 +106,8 @@ internal actual class DeviceFileClient(
         val parent = absoluteString?.removeSuffix(lastPath).orEmpty()
         val file = FileUtils.fromString(input = path, hasDirectoryPath) ?: throw FileClientException.InvalidPath()
         return if (resolveImageFolder && !file.list { dir, name ->
-            name.extension in SUPPORTED_IMAGE }.isNullOrEmpty()
+                name.extension in SUPPORTED_IMAGE
+            }.isNullOrEmpty()
         ) {
             BookFolder(
                 path = path,
@@ -141,9 +142,7 @@ internal actual class DeviceFileClient(
     }
 }
 
-
 class LocalFileSeekableInputStream(override val path: String) : SeekableInputStream {
     override fun close() {
-
     }
 }

@@ -3,31 +3,17 @@ package com.sorrowblue.comicviewer.feature.book
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.gestures.PressGestureScope
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.PointerInputScope
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import coil3.Bitmap
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.feature.book.section.BookAppBar
@@ -36,10 +22,6 @@ import com.sorrowblue.comicviewer.feature.book.section.BookSheet
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-import com.sorrowblue.cmpdestinations.annotation.Destination
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
@@ -174,76 +156,5 @@ internal fun BookScreen(
             onNextBookClick = onNextBookClick,
             onPageLoad = onPageLoad
         )
-        val scope = rememberCoroutineScope()
-        Row(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-//                    .pointerInput(Unit) {
-//                        detectTapGestures {
-//                            onContainerClick()
-//                        }
-//                    }
-//                    .combinedClickable(
-//                        interactionSource = remember { MutableInteractionSource() },
-//                        indication = null,
-//                        onClick = onContainerClick
-//                    )
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-//                    .pointerInput(Unit) {
-//                        detectTapGestures {
-//                            scope.launch {
-//                                pagerState.scrollToPage(pagerState.currentPage + 1)
-//                            }
-//                        }
-//                    }
-//                    .combinedClickable(
-//                        interactionSource = remember { MutableInteractionSource() },
-//                        indication = null
-//                    ) {
-//                        scope.launch {
-//                            pagerState.scrollToPage(pagerState.currentPage + 1)
-//                        }
-//                    }
-            )
-        }
-    }
-}
-
-suspend fun PointerInputScope.detectTapGestures2(
-    onDoubleTap: ((Offset) -> Unit)? = null,
-    onLongPress: ((Offset) -> Unit)? = null,
-    onPress: suspend PressGestureScope.(Offset) -> Unit = { },
-    onTap: ((Offset) -> Unit)? = null,
-) = coroutineScope {
-    // special signal to indicate to the sending side that it shouldn't intercept and consume
-    // cancel/up events as we're only require down events
-    awaitEachGesture {
-        awaitFirstDown()
-//        val down = awaitFirstDown()
-//        down.consume()
-        // In some cases, coroutine cancellation of the reset job might still be processing when we
-        // are already processing an up or cancel pointer event. We need to wait for the reset job
-        // to cancel and complete so it can clean up properly (e.g. unlock the underlying mutex)
-//        val upOrCancel: PointerInputChange?
-//        val cancelOrReleaseJob: Job?
-
-        // wait for first tap up or long press
-//        upOrCancel = waitForUpOrCancellation()
-
-//        if (upOrCancel != null) {
-            // tap was successful.
-//            onTap?.invoke(upOrCancel.position) // no need to check for double-tap.
-//        }
     }
 }

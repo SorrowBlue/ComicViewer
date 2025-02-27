@@ -6,7 +6,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
 
 internal interface SecuritySettingsScreenState {
     fun onChangeBackgroundLockEnabled(value: Boolean)
@@ -24,4 +23,3 @@ internal expect fun rememberSecuritySettingsScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase = koinInject(),
 ): SecuritySettingsScreenState
-

@@ -13,7 +13,6 @@ inline fun <reified T : Any> T.encodeToByteArray(): ByteArray {
     return Cbor.encodeToByteArray<T>(this)
 }
 
-
 @OptIn(ExperimentalSerializationApi::class)
 inline fun <reified T : Any> ByteArray.decodeTo(): T {
     return Cbor.decodeFromByteArray<T>(this)

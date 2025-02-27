@@ -66,7 +66,7 @@ data class DonationScreenUiState(
     val items: List<InAppItem> = emptyList(),
 )
 
-//@Destination<SettingsDetailGraph>(visibility = CodeGenVisibility.INTERNAL)
+// @Destination<SettingsDetailGraph>(visibility = CodeGenVisibility.INTERNAL)
 @Composable
 internal fun DonationScreen(navigator: SettingsDetailNavigator) {
     DonationScreen(onBackClick = navigator::navigateBack)

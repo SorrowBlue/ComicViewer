@@ -2,8 +2,6 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit.section
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.size

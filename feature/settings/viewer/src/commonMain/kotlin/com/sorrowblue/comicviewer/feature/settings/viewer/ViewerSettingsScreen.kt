@@ -2,13 +2,13 @@ package com.sorrowblue.comicviewer.feature.settings.viewer
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import comicviewer.feature.settings.viewer.generated.resources.Res
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_binding_direction_each
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_cache_images

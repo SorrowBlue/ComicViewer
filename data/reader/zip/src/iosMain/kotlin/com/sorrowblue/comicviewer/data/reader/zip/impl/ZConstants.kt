@@ -62,7 +62,7 @@ enum class ZFlush(val value: Int) {
      * Available only for decompressors. Trees behaves similarly to [Block], but causes `inflate` to return just after
      * the compression header of each block.
      */
-    Trees(6)
+    Trees(6),
 }
 
 /**
@@ -92,7 +92,7 @@ enum class ZResult(val value: Int) {
     /**
      * Indicates that a decompressor needs the predefined dictionary chosen by the compressor.
      */
-    NeedsDictionary(2)
+    NeedsDictionary(2),
 }
 
 /**
@@ -128,10 +128,11 @@ enum class ZError(val value: Int) {
      * Indicates a version mismatch between what the target header and loaded symbols indicate for the specific instance
      * of zlib loaded by the library.
      */
-    VersionError(-6);
+    VersionError(-6),
+    ;
 
     internal fun thrown(msg: String? = null): Nothing {
-        throw ZException(this,  msg ?: "The operation failed with $this ($value)")
+        throw ZException(this, msg ?: "The operation failed with $this ($value)")
     }
 }
 
@@ -151,7 +152,7 @@ enum class ZCompressionLevel(val value: Int) {
     Compression6(6),
     Compression7(7),
     Compression8(8),
-    BestCompression(9)
+    BestCompression(9),
 }
 
 /**
@@ -185,5 +186,5 @@ enum class ZCompressionStrategy(val value: Int) {
      * Uses the default string matching, but prevents the use of dynamic Huffman codes, allowing for a simpler decoder
      * for special applications.
      */
-    Fixed(4)
+    Fixed(4),
 }

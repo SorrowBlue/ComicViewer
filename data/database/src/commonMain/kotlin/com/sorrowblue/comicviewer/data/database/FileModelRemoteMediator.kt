@@ -10,11 +10,11 @@ import com.sorrowblue.comicviewer.domain.model.SortUtil
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
-import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -66,7 +66,9 @@ internal class FileModelRemoteMediator(
         kotlin.runCatching {
             withContext(dispatcher) {
                 val settings = folderSettings.first()
-                val supportExtensions = (settings.supportExtension + listOf(SupportExtension.Document.PDF)).map(SupportExtension::extension)
+                val supportExtensions = (settings.supportExtension + listOf(SupportExtension.Document.PDF)).map(
+                    SupportExtension::extension
+                )
                 val files = SortUtil.sortedIndex(
                     remoteDataSource.listFiles(file, settings.resolveImageFolder) {
                         SortUtil.filter(it, supportExtensions)

@@ -41,12 +41,12 @@ internal fun folderSettingsDataStore(dataStoreMaker: DataStoreMaker) =
 
 @Singleton
 @Security
-internal fun ecuritySettingsDataStore(dataStoreMaker: DataStoreMaker) =
+internal fun securitySettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(SecuritySettingsSerializer)
 
 @Singleton
 @Settings
-internal fun SettingsDataStore(dataStoreMaker: DataStoreMaker) =
+internal fun settingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(SettingsSerializer)
 
 @Singleton

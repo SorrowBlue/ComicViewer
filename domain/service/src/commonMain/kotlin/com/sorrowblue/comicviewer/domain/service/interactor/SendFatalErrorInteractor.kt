@@ -8,7 +8,7 @@ import logcat.logcat
 import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class SendFatalErrorInteractor() : SendFatalErrorUseCase() {
+internal class SendFatalErrorInteractor : SendFatalErrorUseCase() {
 
     override suspend fun run(request: Request): Resource<Unit, Unit> {
         logcat(LogPriority.ERROR, "SendFatalErrorUseCase") { request.throwable.asLog() }

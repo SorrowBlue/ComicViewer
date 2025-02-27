@@ -1,9 +1,7 @@
 package com.sorrowblue.comicviewer.feature.settings.info.license
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.content.MediaType.Companion.HtmlText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -27,9 +25,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -52,8 +52,12 @@ import com.mikepenz.aboutlibraries.ui.compose.m3.util.htmlReadyLicenseContent
 import com.mikepenz.aboutlibraries.util.withContext
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import logcat.LogPriority
+import logcat.asLog
+import logcat.logcat
 
 @Composable
 internal actual fun LibrariesContainer(modifier: Modifier) {
@@ -63,9 +67,6 @@ internal actual fun LibrariesContainer(modifier: Modifier) {
 @Composable
 private fun LibrariesContainer2(
     modifier: Modifier = Modifier,
-    librariesBlock: (Context) -> Libs = { context ->
-        Libs.Builder().withContext(context).build()
-    },
     lazyListState: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     showAuthor: Boolean = true,
@@ -76,17 +77,19 @@ private fun LibrariesContainer2(
     itemContentPadding: PaddingValues = LibraryDefaults.ContentPadding,
     itemSpacing: Dp = 0.dp,
     header: (LazyListScope.() -> Unit)? = null,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
     onLibraryClick: ((Library) -> Unit)? = null,
 ) {
     val context = LocalContext.current
-
-    val libraries = produceState<Libs?>(null) {
-        value = withContext(Dispatchers.IO) {
-            librariesBlock(context)
+    var libraries by remember { mutableStateOf<Libs?>(null) }
+    LaunchedEffect(Unit) {
+        withContext(dispatcher) {
+            libraries = Libs.Builder().withContext(context).build()
         }
     }
+
     LibrariesContainer(
-        libraries.value,
+        libraries,
         modifier,
         lazyListState,
         contentPadding,
@@ -155,7 +158,10 @@ private fun LibrariesContainer(
                     try {
                         uriHandler.openUri(it)
                     } catch (t: Throwable) {
-                        println("Failed to open url: ${it}")
+                        logcat(
+                            tag = "LibrariesContainer",
+                            priority = LogPriority.ERROR
+                        ) { "Failed to open url: $it ${t.asLog()}" }
                     }
                 }
             }
@@ -174,13 +180,12 @@ private fun LibrariesContainer(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun LicenseDialog(
     library: Library,
+    onDismiss: () -> Unit,
     colors: LibraryColors = LibraryDefaults.libraryColors(),
     confirmText: String = "OK",
-    onDismiss: () -> Unit,
     body: @Composable (Library) -> Unit,
 ) {
     val scrollState = rememberScrollState()
@@ -265,7 +270,10 @@ private fun Libraries(
                     try {
                         uriHandler.openUri(it)
                     } catch (t: Throwable) {
-                        println("Failed to open url: ${it}")
+                        logcat(
+                            tag = "Libraries",
+                            priority = LogPriority.ERROR
+                        ) { "Failed to open url: $it ${t.asLog()}" }
                     }
                 }
             }

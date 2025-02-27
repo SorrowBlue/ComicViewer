@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.app
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
+import com.sorrowblue.cmpdestinations.NavGraphNavHost
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffold
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraphImpl
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavigator
@@ -14,7 +15,6 @@ import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreateScreenNa
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
-import com.sorrowblue.cmpdestinations.NavGraphNavHost
 import com.sorrowblue.comicviewer.framework.ui.animation.rememberSlideDistance
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions

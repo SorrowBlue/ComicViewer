@@ -35,13 +35,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
-import org.koin.compose.koinInject
 import comicviewer.framework.ui.generated.resources.Res as UiRes
 
 @Composable
 internal actual fun rememberSecuritySettingsScreenState(
     scope: CoroutineScope,
-    manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase
+    manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
 ): SecuritySettingsScreenState {
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -55,7 +54,7 @@ internal actual fun rememberSecuritySettingsScreenState(
     }
     state.resultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
-        onResult = state::activityResult
+        onResult = { state.activityResult() }
     )
     return state
 }
@@ -71,7 +70,6 @@ private class SecuritySettingsScreenStateImpl(
 
     lateinit var resultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
 
-
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())
 
     init {
@@ -82,10 +80,14 @@ private class SecuritySettingsScreenStateImpl(
                 isBiometricEnabled = it.useBiometrics
             )
         }.launchIn(scope)
-        val state = BiometricManager.from(context).canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK)
-        val isEnabled = state == BiometricManager.BIOMETRIC_SUCCESS // OK
-                || state ==BiometricManager.BIOMETRIC_STATUS_UNKNOWN // 判断不可
-            || state == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED // 未登録
+        val state = BiometricManager.from(
+            context
+        ).canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK
+        )
+        val isEnabled = state == BiometricManager.BIOMETRIC_SUCCESS || // OK
+            state == BiometricManager.BIOMETRIC_STATUS_UNKNOWN || // 判断不可
+            state == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED // 未登録
         uiState = uiState.copy(isBiometricCanBeUsed = isEnabled)
     }
 
@@ -100,7 +102,7 @@ private class SecuritySettingsScreenStateImpl(
         resultLauncher.launch(enrollIntent)
     }
 
-    fun activityResult(activityResult: ActivityResult) {
+    fun activityResult() {
         when (biometricManager.canAuthenticateWeak()) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
                 startBiometric()
@@ -166,7 +168,6 @@ private class SecuritySettingsScreenStateImpl(
     }
 
     override fun onChangeBackgroundLockEnabled(value: Boolean) {
-
         scope.launch {
             manageSecuritySettingsUseCase.edit {
                 it.copy(lockOnBackground = true)
@@ -225,7 +226,9 @@ private class SecuritySettingsScreenStateImpl(
                             }
                         }
                         scope.launch {
-                            snackbarHostState.showSnackbar(getString(Res.string.settings_security_msg_disabled_bio_auth))
+                            snackbarHostState.showSnackbar(
+                                getString(Res.string.settings_security_msg_disabled_bio_auth)
+                            )
                         }
                     }
                 }

@@ -208,6 +208,5 @@ private class AuthenticationScreenStateImpl(
                 }
             }
         }
-
     }
 }

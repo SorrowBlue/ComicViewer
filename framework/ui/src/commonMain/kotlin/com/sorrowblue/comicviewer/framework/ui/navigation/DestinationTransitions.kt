@@ -49,8 +49,8 @@ abstract class DestinationTransitions : NavTransitions() {
         val initRoute = initialState.destination
         val targetRoute = targetState.destination
         val transition = transitions.firstOrNull { conf ->
-            (conf.exitRoute == null && targetRoute.hierarchy.any { it.hasRoute2(conf.enterRoute) })
-                || (initRoute.hasRoute2(conf.enterRoute) && targetRoute.hasRoute2(conf.exitRoute))
+            (conf.exitRoute == null && targetRoute.hierarchy.any { it.hasRoute2(conf.enterRoute) }) ||
+                (initRoute.hasRoute2(conf.enterRoute) && targetRoute.hasRoute2(conf.exitRoute))
         }
         return transition?.let {
             when (transition.type) {

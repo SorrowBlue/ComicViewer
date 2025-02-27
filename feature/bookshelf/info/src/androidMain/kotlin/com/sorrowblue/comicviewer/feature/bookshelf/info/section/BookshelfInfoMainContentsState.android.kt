@@ -18,21 +18,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.paging.PagingData
+import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.feature.bookshelf.info.IntentLauncher
 import com.sorrowblue.comicviewer.feature.bookshelf.info.NotificationPermissionRequest
-import com.sorrowblue.comicviewer.feature.bookshelf.info.R
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequestResult
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.RegenerateThumbnailsWorker
 import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.ScanFileWorker
-import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import comicviewer.feature.bookshelf.info.generated.resources.Res
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_notification_settings
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_file
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_file_no_notification
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails_no_notification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import logcat.logcat
+import org.jetbrains.compose.resources.getString
 
 @Composable
 internal actual fun rememberBookshelfInfoMainContentsState(
@@ -158,22 +164,22 @@ private class BookshelfInfoMainContentsStateImpl(
         scope.launch {
             if (checkNotificationPermission()) {
                 snackbarHostState.showSnackbar(
-                    context.getString(
+                    getString(
                         when (currentScanType) {
-                            ScanType.File -> R.string.bookshelf_info_label_scanning_file
-                            ScanType.Thumbnail -> R.string.bookshelf_info_label_scanning_thumbnails
+                            ScanType.File -> Res.string.bookshelf_info_label_scanning_file
+                            ScanType.Thumbnail -> Res.string.bookshelf_info_label_scanning_thumbnails
                         }
                     )
                 )
             } else {
                 val result = snackbarHostState.showSnackbar(
-                    message = context.getString(
+                    message = getString(
                         when (currentScanType) {
-                            ScanType.File -> R.string.bookshelf_info_label_scanning_file_no_notification
-                            ScanType.Thumbnail -> R.string.bookshelf_info_label_scanning_thumbnails_no_notification
+                            ScanType.File -> Res.string.bookshelf_info_label_scanning_file_no_notification
+                            ScanType.Thumbnail -> Res.string.bookshelf_info_label_scanning_thumbnails_no_notification
                         }
                     ),
-                    actionLabel = context.getString(R.string.bookshelf_info_label_notification_settings),
+                    actionLabel = getString(Res.string.bookshelf_info_label_notification_settings),
                     duration = SnackbarDuration.Long
                 )
                 when (result) {

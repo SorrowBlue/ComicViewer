@@ -26,10 +26,14 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCa
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.R
+import comicviewer.feature.bookshelf.info.generated.resources.Res
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_title_scan
 import kotlin.random.Random
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import logcat.asLog
 import logcat.logcat
+import org.jetbrains.compose.resources.getString
 import org.koin.android.annotation.KoinWorker
 
 @KoinWorker
@@ -113,11 +117,7 @@ internal class RegenerateThumbnailsWorker(
             .createCancelPendingIntent(id)
         val notification =
             NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id).apply {
-                setContentTitle(
-                    applicationContext.getString(
-                        com.sorrowblue.comicviewer.feature.bookshelf.info.R.string.bookshelf_info_title_scan
-                    )
-                )
+                setContentTitle(runBlocking { getString(Res.string.bookshelf_info_title_scan) })
                 setSubText(bookshelfName)
                 setContentText("$progress/$max")
                 setProgress(max.toInt(), progress.toInt(), init)

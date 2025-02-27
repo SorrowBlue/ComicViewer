@@ -54,14 +54,18 @@ private class SecuritySettingsScreenStateImpl(
     }
 
     override fun onChangeBiometricEnabled(value: Boolean) {
+        // TODO()
     }
 
     override fun onResume() {
+        // TODO()
     }
 
     override fun onBiometricsDialogClick() {
+        // TODO()
     }
 
     override fun onBiometricsDialogDismissRequest() {
+        // TODO()
     }
 }

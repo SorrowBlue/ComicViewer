@@ -7,5 +7,5 @@ enum class ScreenType {
     Register,
     Change,
     Erase,
-    Authenticate
+    Authenticate,
 }

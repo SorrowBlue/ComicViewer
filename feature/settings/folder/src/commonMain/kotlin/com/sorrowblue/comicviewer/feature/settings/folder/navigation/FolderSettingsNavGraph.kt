@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.feature.settings.folder.navigation
 
 import androidx.navigation.NavController
+import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
+import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
@@ -11,8 +13,6 @@ import com.sorrowblue.comicviewer.feature.settings.folder.FolderThumbnailOrderSe
 import com.sorrowblue.comicviewer.feature.settings.folder.ImageFilterQualitySettings
 import com.sorrowblue.comicviewer.feature.settings.folder.ImageScaleSettings
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeSettings
-import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
-import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Scope

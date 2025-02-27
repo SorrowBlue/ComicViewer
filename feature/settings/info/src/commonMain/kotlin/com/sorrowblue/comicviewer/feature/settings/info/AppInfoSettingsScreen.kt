@@ -2,10 +2,10 @@ package com.sorrowblue.comicviewer.feature.settings.info
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.settings.info.generated.resources.Res
 import comicviewer.feature.settings.info.generated.resources.settings_info_label_build

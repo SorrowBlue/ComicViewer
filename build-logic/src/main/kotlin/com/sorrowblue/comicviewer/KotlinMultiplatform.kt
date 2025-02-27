@@ -1,10 +1,14 @@
 package com.sorrowblue.comicviewer
 
+import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.NamedDomainObjectProvider
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.getValue
-import org.gradle.kotlin.dsl.getting
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinSourceSetConvention
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 /**
  * Configure base Kotlin multiplatform options
@@ -43,7 +47,7 @@ internal fun Project.configureKotlinMultiplatform() {
             dependsOn(noAndroid)
         }
 
-        val desktopMain by sourceSets.getting {
+        sourceSets.desktopMain {
             dependsOn(noAndroid)
         }
 
@@ -52,3 +56,6 @@ internal fun Project.configureKotlinMultiplatform() {
         }
     }
 }
+
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
+val NamedDomainObjectContainer<KotlinSourceSet>.desktopMain: NamedDomainObjectProvider<KotlinSourceSet> by KotlinSourceSetConvention

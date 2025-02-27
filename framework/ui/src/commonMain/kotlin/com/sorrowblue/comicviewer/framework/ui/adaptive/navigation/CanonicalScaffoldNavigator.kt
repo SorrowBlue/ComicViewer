@@ -55,7 +55,7 @@ internal fun <T> rememberCanonicalScaffoldNavigator(
     initialDestinationHistory: List<ThreePaneScaffoldDestinationItem<T>>,
 ): ThreePaneScaffoldNavigator<T> =
     rememberSaveable(
-        saver = DefaultCanonicalScaffoldNavigator.Saver(
+        saver = DefaultCanonicalScaffoldNavigator.saver(
             kSerializableSaver,
             scaffoldDirective,
             adaptStrategies,
@@ -214,7 +214,7 @@ private class DefaultCanonicalScaffoldNavigator<T>(
     companion object {
 
         /** To keep destination history saved */
-        fun <T> Saver(
+        fun <T> saver(
             byteArraySaver: Saver<T, ByteArray>,
             initialScaffoldDirective: PaneScaffoldDirective,
             initialAdaptStrategies: ThreePaneScaffoldAdaptStrategies,

@@ -5,13 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import kotlinx.coroutines.CoroutineScope
-import org.koin.compose.koinInject
 
 @Composable
 internal actual fun rememberSecuritySettingsScreenState(
     scope: CoroutineScope,
     manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
-    ): SecuritySettingsScreenState {
+): SecuritySettingsScreenState {
     return remember { SecuritySettingsScreenStateImpl() }
 }
 

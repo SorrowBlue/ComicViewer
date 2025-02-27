@@ -16,7 +16,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlinx.io.InternalIoApi
 import logcat.LogPriority
 import logcat.logcat
 import net.sf.sevenzipjbinding.SevenZip
@@ -39,7 +38,6 @@ internal class SevenZipInitializer : Initializer<Unit> {
     }
 }
 
-@OptIn(InternalIoApi::class)
 @ZipFileReader
 @Factory
 internal actual class ZipFileReader(

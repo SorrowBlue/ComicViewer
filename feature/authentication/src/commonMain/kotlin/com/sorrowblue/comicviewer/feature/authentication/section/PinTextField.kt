@@ -67,7 +67,9 @@ internal fun PinTextField(
         val scrollState = rememberLazyListState()
         var hasFocus by remember { mutableStateOf(false) }
         val colors = OutlinedTextFieldDefaults.colors()
-        val borderColor by animateColorAsState(if (hasFocus) colors.focusedIndicatorColor else colors.unfocusedIndicatorColor)
+        val borderColor by animateColorAsState(
+            if (hasFocus) colors.focusedIndicatorColor else colors.unfocusedIndicatorColor
+        )
         TextField(
             value = pin,
             onValueChange = onPinChange,

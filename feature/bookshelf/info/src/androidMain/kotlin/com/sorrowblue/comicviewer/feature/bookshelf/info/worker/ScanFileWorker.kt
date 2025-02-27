@@ -24,12 +24,15 @@ import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
-import com.sorrowblue.comicviewer.feature.bookshelf.info.R
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
+import comicviewer.feature.bookshelf.info.generated.resources.Res
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_title_scan
 import kotlin.random.Random
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import logcat.asLog
 import logcat.logcat
+import org.jetbrains.compose.resources.getString
 import org.koin.android.annotation.KoinWorker
 import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 
@@ -119,7 +122,7 @@ internal class ScanFileWorker(
             .createCancelPendingIntent(id)
         val notification =
             NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id).apply {
-                setContentTitle(applicationContext.getString(R.string.bookshelf_info_title_scan))
+                setContentTitle(runBlocking { getString(Res.string.bookshelf_info_title_scan) })
                 setSubText(bookshelfName)
                 setContentText(path)
                 setSmallIcon(NotificationR.drawable.ic_sync_book_24dp)

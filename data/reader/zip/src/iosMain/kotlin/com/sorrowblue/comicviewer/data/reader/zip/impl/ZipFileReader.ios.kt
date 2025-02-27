@@ -21,7 +21,9 @@ internal actual class ZipFileReader(
     @InjectedParam actual val seekableInputStream: SeekableInputStream,
 ) : FileReader {
 
-    val zipFileSystem = FileSystem.SYSTEM.openZip(NSURL.URLWithString(URLString = seekableInputStream.path)!!.path!!.toPath())
+    val zipFileSystem = FileSystem.SYSTEM.openZip(
+        NSURL.URLWithString(URLString = seekableInputStream.path)!!.path!!.toPath()
+    )
     val fileSystem = FileSystem.SYSTEM
 
     val paths = zipFileSystem.listRecursively("/".toPath())
@@ -34,7 +36,7 @@ internal actual class ZipFileReader(
         }.onFailure {
             logcat { "path=${it.asLog()}" }
         }.onSuccess {
-            logcat { "path=${it}" }
+            logcat { "path=$it" }
         }
     }
 

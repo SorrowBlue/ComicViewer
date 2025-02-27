@@ -2,12 +2,12 @@ package com.sorrowblue.comicviewer.feature.settings.display
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.settings.display.generated.resources.Res
 import comicviewer.feature.settings.display.generated.resources.settings_display_desc_show_last_folder

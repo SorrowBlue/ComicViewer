@@ -1,10 +1,10 @@
 package com.sorrowblue.comicviewer.feature.settings.navigation
 
+import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
+import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.authentication.Authentication
 import com.sorrowblue.comicviewer.feature.settings.Settings
 import com.sorrowblue.comicviewer.feature.tutorial.Tutorial
-import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
-import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import kotlinx.serialization.Serializable
 
 @Serializable

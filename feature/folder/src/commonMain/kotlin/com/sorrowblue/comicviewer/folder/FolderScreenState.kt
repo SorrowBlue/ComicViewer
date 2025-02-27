@@ -16,10 +16,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.LoadState
+import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -32,15 +30,12 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
-import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
-import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -96,26 +91,28 @@ internal fun rememberFolderScreenState(
 ): FolderScreenState {
     val lazyPagingItems =
         viewModel.pagingDataFlow(args.bookshelfId, args.path).collectAsLazyPagingItems()
-    return rememberSaveable(saver = Saver(
-        save = {
-            it.isRestored
-        },
-        restore = {
-            FolderScreenStateImpl(
-                lazyPagingItems = lazyPagingItems,
-                navigator = navigator,
-                lazyGridState = lazyGridState,
-                snackbarHostState = snackbarHostState,
-                pullRefreshState = pullRefreshState,
-                scope = scope,
-                args = args,
-                folderDisplaySettingsUseCase = viewModel.displaySettingsUseCase,
-                getFileUseCase = viewModel.getFileUseCase
-            ).apply {
-                isRestored = it
+    return rememberSaveable(
+        saver = Saver(
+            save = {
+                it.isRestored
+            },
+            restore = {
+                FolderScreenStateImpl(
+                    lazyPagingItems = lazyPagingItems,
+                    navigator = navigator,
+                    lazyGridState = lazyGridState,
+                    snackbarHostState = snackbarHostState,
+                    pullRefreshState = pullRefreshState,
+                    scope = scope,
+                    args = args,
+                    folderDisplaySettingsUseCase = viewModel.displaySettingsUseCase,
+                    getFileUseCase = viewModel.getFileUseCase
+                ).apply {
+                    isRestored = it
+                }
             }
-        }
-    )) {
+        )
+    ) {
         FolderScreenStateImpl(
             lazyPagingItems = lazyPagingItems,
             navigator = navigator,

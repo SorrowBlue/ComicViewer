@@ -11,7 +11,6 @@ kotlin {
         commonMain {
             dependencies {
                 api(libs.squareup.okio)
-                api(libs.kotlinx.io)
             }
         }
     }

@@ -78,6 +78,7 @@ kotlin {
 }
 
 dependencies {
+    add("kspCommonMainMetadata", libs.cmpdestinations.ksp)
     add("kspAndroid", libs.cmpdestinations.ksp)
     add("kspIosX64", libs.cmpdestinations.ksp)
     add("kspIosArm64", libs.cmpdestinations.ksp)
@@ -113,30 +114,28 @@ android {
     }
 
     buildTypes {
-        // TODO(Remove suffix .kmp)
-        val suffix = ".kmp"
         release {
-            applicationIdSuffix = ComicBuildType.RELEASE.applicationIdSuffix + suffix
+            applicationIdSuffix = ComicBuildType.RELEASE.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.RELEASE.isMinifyEnabled
             isShrinkResources = ComicBuildType.RELEASE.isShrinkResources
             signingConfig = signingConfigs.findByName(name)
         }
         getByName(ComicBuildType.PRERELEASE.display) {
             initWith(getByName(ComicBuildType.RELEASE.display))
-            applicationIdSuffix = ComicBuildType.PRERELEASE.applicationIdSuffix + suffix
+            applicationIdSuffix = ComicBuildType.PRERELEASE.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.PRERELEASE.isMinifyEnabled
             isShrinkResources = ComicBuildType.PRERELEASE.isShrinkResources
             signingConfig = signingConfigs.findByName(name)
         }
         getByName(ComicBuildType.INTERNAL.display) {
             initWith(getByName(ComicBuildType.RELEASE.display))
-            applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix + suffix
+            applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.INTERNAL.isMinifyEnabled
             isShrinkResources = ComicBuildType.INTERNAL.isShrinkResources
             signingConfig = signingConfigs.findByName(name)
         }
         debug {
-            applicationIdSuffix = ComicBuildType.DEBUG.applicationIdSuffix + suffix
+            applicationIdSuffix = ComicBuildType.DEBUG.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.DEBUG.isMinifyEnabled
             isShrinkResources = ComicBuildType.DEBUG.isShrinkResources
             signingConfig = signingConfigs.findByName(name)

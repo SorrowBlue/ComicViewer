@@ -10,7 +10,6 @@ import coil3.request.Options
 import coil3.size.pxOrElse
 import okio.BufferedSink
 import okio.BufferedSource
-import okio.Sink
 import okio.buffer
 
 /**

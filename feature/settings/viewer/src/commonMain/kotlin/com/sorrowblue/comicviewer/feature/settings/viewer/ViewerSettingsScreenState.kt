@@ -81,12 +81,15 @@ private class ViewerSettingsScreenStateImpl(
     }
 
     override fun onCutWhitespaceChange(value: Boolean) {
+        // TODO()
     }
 
     override fun onCacheImageChange(value: Boolean) {
+        // TODO()
     }
 
     override fun onDisplayFirstPageChange(value: Boolean) {
+        // TODO()
     }
 
     override fun onImageQualityChange(value: Float) {

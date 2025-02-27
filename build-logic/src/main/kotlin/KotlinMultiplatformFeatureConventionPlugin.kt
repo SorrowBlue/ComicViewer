@@ -43,6 +43,7 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                 }
             }
             dependencies {
+                add("kspCommonMainMetadata", libs.cmpdestinations.ksp)
                 add("kspAndroid", libs.cmpdestinations.ksp)
                 add("kspIosX64", libs.cmpdestinations.ksp)
                 add("kspIosArm64", libs.cmpdestinations.ksp)

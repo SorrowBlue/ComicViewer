@@ -1,13 +1,13 @@
 package com.sorrowblue.comicviewer.feature.settings.info.navigation
 
 import androidx.navigation.NavController
+import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
+import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsScope
 import com.sorrowblue.comicviewer.feature.settings.info.AppInfoSettings
 import com.sorrowblue.comicviewer.feature.settings.info.AppInfoSettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.info.license.License
-import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
-import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Scope

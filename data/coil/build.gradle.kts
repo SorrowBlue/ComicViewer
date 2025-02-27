@@ -10,7 +10,6 @@ kotlin {
         implementation(projects.domain.service)
         implementation(projects.domain.reader)
         implementation(libs.coil3)
-        implementation(libs.kotlinx.io)
         implementation(libs.kotlinx.serialization.json)
     }
 

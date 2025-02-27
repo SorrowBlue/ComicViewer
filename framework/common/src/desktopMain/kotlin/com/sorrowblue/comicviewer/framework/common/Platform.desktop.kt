@@ -22,7 +22,7 @@ fun getAppSpecificConfigDirectory(configDirName: String): Path {
         }
 
         else -> {
-            Path(System.getProperty("user.home"),".comicviewerforlinux", configDirName)
+            Path(System.getProperty("user.home"), ".comicviewerforlinux", configDirName)
         }
     }
 
