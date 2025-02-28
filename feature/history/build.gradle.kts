@@ -17,7 +17,3 @@ android {
     namespace = "com.sorrowblue.comicviewer.feature.history"
     resourcePrefix("history")
 }
-
-dependencies {
-    implementation(libs.androidx.ui.android)
-}

@@ -7,8 +7,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.soil.form)
-                implementation("io.github.vinceglb:filekit-compose:0.8.8")
-                implementation("net.thauvin.erik.urlencoder:urlencoder-lib:1.6.0")
+                implementation(libs.filekit.compose)
             }
         }
     }

@@ -17,7 +17,3 @@ android {
     namespace = "com.sorrowblue.comicviewer.feature.search"
     resourcePrefix("search")
 }
-
-dependencies {
-    implementation(libs.androidx.ui.android)
-}

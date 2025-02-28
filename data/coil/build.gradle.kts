@@ -17,7 +17,6 @@ kotlin {
         implementation(libs.androidx.startup.runtime)
         implementation(libs.androidx.exifinterface)
         implementation(libs.coil3.networkKtor)
-        implementation(libs.ktor.client.okhttp)
         implementation(libs.jcifs.ng)
         implementation(libs.koin.androidxStartup)
     }

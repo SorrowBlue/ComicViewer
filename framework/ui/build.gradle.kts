@@ -26,8 +26,6 @@ kotlin {
                 implementation(libs.androidx.paging.common)
                 // Di
                 implementation(libs.koin.composeViewModel)
-
-//                implementation(libs.androidx.lifecycle.viewmodel)
             }
         }
 

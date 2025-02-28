@@ -22,7 +22,7 @@ kotlin {
         }
         desktopMain.dependencies {
             implementation(libs.kotlinx.coroutines.swing)
-            implementation("org.apache.pdfbox:pdfbox:3.0.4")
+            implementation(libs.pdfbox)
         }
     }
 }

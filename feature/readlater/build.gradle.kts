@@ -17,7 +17,3 @@ android {
     namespace = "com.sorrowblue.comicviewer.feature.readlater"
     resourcePrefix("readlater")
 }
-
-dependencies {
-    implementation(libs.androidx.ui.android)
-}
