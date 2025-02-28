@@ -2,6 +2,7 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
@@ -11,7 +12,7 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
-    id("com.android.settings") version "8.8.1"
+    id("com.android.settings") version "8.8.2"
 }
 
 android {
@@ -36,13 +37,6 @@ dependencyResolutionManagement {
             url = uri("https://maven.ghostscript.com/")
             content {
                 includeModule("com.artifex.mupdf", "fitz")
-            }
-        }
-        maven {
-            url =
-                uri("https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1")
-            content {
-                includeGroupByRegex("com\\.microsoft.*")
             }
         }
     }
@@ -95,5 +89,3 @@ include(":feature:settings:info")
 include(":feature:settings:security")
 include(":feature:settings:viewer")
 include(":feature:tutorial")
-
-includeBuild("build-logic")
