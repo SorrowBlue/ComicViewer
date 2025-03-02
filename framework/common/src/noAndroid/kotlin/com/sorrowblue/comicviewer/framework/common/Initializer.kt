@@ -22,9 +22,11 @@ interface Initializer<T> {
                     }
                 }
                 if (size == initializing.size) {
-                    throw RuntimeException("!!!Circular Dependencies!!!")
+                    throw StartupException("!!!Circular Dependencies!!!")
                 }
             }
         }
     }
 }
+
+internal class StartupException(message: String?) : RuntimeException(message)

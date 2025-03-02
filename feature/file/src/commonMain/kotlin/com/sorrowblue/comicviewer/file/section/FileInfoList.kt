@@ -6,10 +6,11 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -19,6 +20,7 @@ import comicviewer.feature.file.generated.resources.file_label_modified_date
 import comicviewer.feature.file.generated.resources.file_text_page_count
 import kotlin.math.pow
 import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -27,17 +29,22 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
+expect fun String.createClipEntry(): ClipEntry
+
 @Composable
 internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         val transparentColor = ListItemDefaults.colors(containerColor = Color.Transparent)
-        val clipboardManager = LocalClipboardManager.current
+        val clipboardManager = LocalClipboard.current
+        val scope = rememberCoroutineScope()
         ListItem(
             overlineContent = { Text(text = "パス") },
             headlineContent = { Text(text = file.path) },
             colors = transparentColor,
             modifier = Modifier.combinedClickable(onLongClick = {
-                clipboardManager.setText(AnnotatedString(file.path))
+                scope.launch {
+                    clipboardManager.setClipEntry(file.path.createClipEntry())
+                }
             }, onClick = {})
         )
         ListItem(

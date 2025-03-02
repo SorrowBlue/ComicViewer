@@ -64,7 +64,7 @@ internal fun InternalStorageEditDialogScreen(
         key = "InternalStorageEditDialogScreen",
         onSubmit = onSubmit,
         initialValue = uiState.form,
-        saver = InternalStorageEditScreenForm.Saver as Saver<InternalStorageEditScreenForm, Any>,
+        saver = InternalStorageEditScreenForm.Saver,
         policy = FormPolicy.Default
     ) {
         Controller(rememberSubmissionRuleAutoControl()) { submission ->

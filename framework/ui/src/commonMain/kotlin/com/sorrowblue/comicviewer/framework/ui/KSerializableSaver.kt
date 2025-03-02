@@ -10,9 +10,9 @@ import kotlinx.serialization.encodeToByteArray
 
 @OptIn(ExperimentalSerializationApi::class)
 abstract class KSerializableSaver<T : Any?>(private val serializer: KSerializer<T>) :
-    Saver<T, ByteArray> {
-    override fun restore(value: ByteArray): T {
-        return Cbor.decodeFromByteArray(serializer, value)
+    Saver<T, Any> {
+    override fun restore(value: Any): T {
+        return Cbor.decodeFromByteArray(serializer, value as ByteArray)
     }
 
     override fun SaverScope.save(value: T): ByteArray {

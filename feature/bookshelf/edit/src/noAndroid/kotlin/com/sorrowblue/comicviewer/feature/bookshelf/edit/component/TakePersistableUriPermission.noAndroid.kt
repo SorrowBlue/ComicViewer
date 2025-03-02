@@ -6,5 +6,6 @@ import org.koin.core.annotation.Singleton
 @Singleton
 internal actual class TakePersistableUriPermission {
     actual operator fun invoke(platformDirectory: PlatformDirectory) {
+        // TODO
     }
 }
