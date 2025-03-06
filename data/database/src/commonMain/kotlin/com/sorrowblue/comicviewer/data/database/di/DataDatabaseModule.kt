@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.data.database.di
 
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.sorrowblue.comicviewer.data.database.ComicViewerDatabase
 import com.sorrowblue.comicviewer.data.database.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +26,6 @@ internal fun provideReadLaterFileDao(database: ComicViewerDatabase) =
 internal fun getRoomDatabase(helper: DatabaseHelper): ComicViewerDatabase {
     return helper.getDatabaseBuilder()
         .fallbackToDestructiveMigrationOnDowngrade(true)
-        .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 }

@@ -49,6 +49,7 @@ include(":composeApp")
 include(":framework:common")
 include(":framework:notification")
 include(":framework:designsystem")
+include(":framework:test")
 include(":framework:ui")
 
 include(":domain:model")

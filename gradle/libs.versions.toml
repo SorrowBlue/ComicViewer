@@ -73,6 +73,8 @@ compose-multiplatform-material3-adaptiveNavigation = { group = "org.jetbrains.co
 compose-multiplatform-navigationCompose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version = "2.8.0-alpha13" }
 compose-multiplatform-coreUri = { group = "org.jetbrains.androidx.core", name = "core-uri", version = "1.1.0-alpha03" }
 
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.10.1" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.2.0-alpha05" }
@@ -154,6 +156,7 @@ arturbosch-detektFormatting = { group = "io.gitlab.arturbosch.detekt", name = "d
 
 koin-composeViewModel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
 koin-androidxStartup = { group = "io.insert-koin", name = "koin-androidx-startup", version.ref = "koin" }
 koin-androidxWorkmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin" }
 koin-androidxCompose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }

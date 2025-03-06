@@ -48,10 +48,6 @@ kotlin {
                 implementation(compose.material3)
                 implementation(compose.material3AdaptiveNavigationSuite)
                 implementation(libs.compose.multiplatform.material3.adaptive)
-                // Navigation
-                implementation(libs.cmpdestinations)
-                implementation(libs.compose.multiplatform.navigationCompose)
-                implementation(libs.kotlinx.serialization.core)
                 // Di
                 implementation(libs.koin.composeViewModel)
             }
@@ -75,15 +71,6 @@ kotlin {
             }
         }
     }
-}
-
-dependencies {
-    add("kspCommonMainMetadata", libs.cmpdestinations.ksp)
-    add("kspAndroid", libs.cmpdestinations.ksp)
-    add("kspIosX64", libs.cmpdestinations.ksp)
-    add("kspIosArm64", libs.cmpdestinations.ksp)
-    add("kspIosSimulatorArm64", libs.cmpdestinations.ksp)
-    add("kspDesktop", libs.cmpdestinations.ksp)
 }
 
 version = "0.0.0-SNAPSHOT"

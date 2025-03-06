@@ -17,7 +17,9 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
         with(target) {
             plugins {
                 id(libs.plugins.composeMultiplatform)
+                id(libs.plugins.google.ksp)
                 id(libs.plugins.kotlin.compose)
+                id(libs.plugins.kotlin.serialization)
             }
 
             kotlin<KotlinMultiplatformExtension> {
@@ -25,6 +27,11 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
                     implementation(compose.components.resources)
                     implementation(compose.components.uiToolingPreview)
+
+                    // Navigation
+                    implementation(libs.cmpdestinations)
+                    implementation(libs.compose.multiplatform.navigationCompose)
+                    implementation(libs.kotlinx.serialization.core)
                 }
 
                 sourceSets.androidMain.dependencies {
@@ -50,6 +57,18 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
             dependencies {
                 val compose = extensions.getByType<ComposePlugin.Dependencies>()
                 add("debugImplementation", compose.uiTooling)
+
+                add("kspCommonMainMetadata", libs.cmpdestinations.ksp)
+                add("kspAndroid", libs.cmpdestinations.ksp)
+                add("kspAndroidTest", libs.cmpdestinations.ksp)
+                add("kspIosX64", libs.cmpdestinations.ksp)
+                add("kspIosX64Test", libs.cmpdestinations.ksp)
+                add("kspIosArm64", libs.cmpdestinations.ksp)
+                add("kspIosArm64Test", libs.cmpdestinations.ksp)
+                add("kspIosSimulatorArm64", libs.cmpdestinations.ksp)
+                add("kspIosSimulatorArm64Test", libs.cmpdestinations.ksp)
+                add("kspDesktop", libs.cmpdestinations.ksp)
+                add("kspDesktopTest", libs.cmpdestinations.ksp)
             }
         }
     }

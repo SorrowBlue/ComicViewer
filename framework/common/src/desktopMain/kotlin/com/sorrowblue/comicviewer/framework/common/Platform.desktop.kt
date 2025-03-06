@@ -9,7 +9,6 @@ actual val isTouchable = false
 
 fun getAppSpecificConfigDirectory(configDirName: String): Path {
     val os = System.getProperty("os.name").lowercase()
-
     val configPath = when {
         os.contains("win") -> {
             val appData =
@@ -18,7 +17,13 @@ fun getAppSpecificConfigDirectory(configDirName: String): Path {
         }
 
         os.contains("mac") -> {
-            Path(System.getProperty("user.home"), "Library", "Application Support", "ComicViewerForMac", configDirName)
+            Path(
+                System.getProperty("user.home"),
+                "Library",
+                "Caches",
+                "com.sorrowblue.comicviewer",
+                configDirName
+            )
         }
 
         else -> {

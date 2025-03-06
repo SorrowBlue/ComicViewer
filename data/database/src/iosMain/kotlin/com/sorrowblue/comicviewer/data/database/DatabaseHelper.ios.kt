@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.data.database
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.cinterop.ExperimentalForeignApi
 import org.koin.core.annotation.Singleton
 import platform.Foundation.NSDocumentDirectory
@@ -14,7 +15,7 @@ internal actual class DatabaseHelper {
         val dbFilePath = documentDirectory() + "/$DATABASE_NAME"
         return Room.databaseBuilder<ComicViewerDatabase>(
             name = dbFilePath,
-        )
+        ).setDriver(BundledSQLiteDriver())
     }
 
     private fun documentDirectory(): String {

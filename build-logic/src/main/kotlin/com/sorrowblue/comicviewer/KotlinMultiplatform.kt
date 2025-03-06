@@ -51,6 +51,18 @@ internal fun Project.configureKotlinMultiplatform() {
             dependsOn(noAndroid)
         }
 
+        val noAndroidTest by sourceSets.creating {
+            dependsOn(sourceSets.commonTest.get())
+        }
+
+        sourceSets.iosTest {
+            dependsOn(noAndroidTest)
+        }
+
+        sourceSets.desktopTest {
+            dependsOn(noAndroidTest)
+        }
+
         compilerOptions {
             freeCompilerArgs.add("-Xexpect-actual-classes")
         }
@@ -59,3 +71,6 @@ internal fun Project.configureKotlinMultiplatform() {
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
 val NamedDomainObjectContainer<KotlinSourceSet>.desktopMain: NamedDomainObjectProvider<KotlinSourceSet> by KotlinSourceSetConvention
+
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
+val NamedDomainObjectContainer<KotlinSourceSet>.desktopTest: NamedDomainObjectProvider<KotlinSourceSet> by KotlinSourceSetConvention

@@ -1,4 +1,5 @@
 import dev.iurysouza.modulegraph.Orientation
+import io.gitlab.arturbosch.detekt.Detekt
 import java.util.Locale
 
 plugins {
@@ -111,4 +112,8 @@ moduleGraphConfig {
 
 tasks.updateDaemonJvm {
     jvmVersion = JavaLanguageVersion.of(libs.versions.java.get())
+}
+
+tasks.register("detektAll") {
+    dependsOn(tasks.withType<Detekt>())
 }
