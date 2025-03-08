@@ -15,6 +15,7 @@ kotlin {
                 implementation(projects.feature.authentication)
                 implementation(projects.feature.tutorial)
                 implementation(compose.material3AdaptiveNavigationSuite)
+                implementation(libs.compose.multiplatform.coreUri)
             }
         }
         androidMain {

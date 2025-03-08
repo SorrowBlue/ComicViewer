@@ -60,7 +60,7 @@ kotlin {
         }
 
         desktopMain.dependencies {
-            implementation("com.microsoft:credential-secure-storage:1.0.0")
+            implementation(libs.credential.secure.storage)
         }
 
         androidUnitTest.dependencies {

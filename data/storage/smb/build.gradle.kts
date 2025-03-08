@@ -20,6 +20,10 @@ kotlin {
         desktopMain.dependencies {
             implementation(libs.jcifs.ng)
         }
+        iosMain.dependencies {
+            implementation("dev.zwander:kmpfile-filekit:0.7.0")
+            implementation("dev.zwander:kmpfile-okio:0.7.0")
+        }
     }
 }
 

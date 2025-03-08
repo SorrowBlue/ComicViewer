@@ -1,4 +1,5 @@
 [versions]
+credentialSecureStorage = "1.0.0"
 versionCode = "15"
 targetSdk = "35"
 java = "21"
@@ -60,6 +61,7 @@ comicviewer-kotlinMultiplatform-feature = { id = "comicviewer.kotlinMultiplatfor
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
+credential-secure-storage = { module = "com.microsoft:credential-secure-storage", version.ref = "credentialSecureStorage" }
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 google-ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
@@ -77,7 +79,7 @@ kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.re
 
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.10.1" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
-androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.2.0-alpha05" }
+androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.4.0-alpha02" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.8.0" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.15.0" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.1" }
@@ -166,8 +168,8 @@ koin-kspCompiler = { group = "io.insert-koin", name = "koin-ksp-compiler", versi
 
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
-cmpdestinations = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-core", version = "0.1.0" }
-cmpdestinations-ksp = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-ksp", version = "0.1.0" }
+cmpdestinations = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-core", version = "0.1.1" }
+cmpdestinations-ksp = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-ksp", version = "0.1.1" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx", "androidx-room-paging"]
