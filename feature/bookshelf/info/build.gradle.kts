@@ -7,6 +7,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.file)
+                implementation(libs.compose.multiplatform.coreUri)
             }
         }
         androidMain {
