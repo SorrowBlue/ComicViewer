@@ -4,7 +4,7 @@ targetSdk = "35"
 java = "21"
 
 kotlin = "2.1.10"
-google-ksp = "2.1.10-1.0.30"
+google-ksp = "2.1.10-1.0.31"
 kotlinx-coroutines = "1.10.1"
 kotlinx-serialization = "1.8.0"
 kotlinx-kover = "0.9.1"
@@ -12,8 +12,8 @@ kotlinx-kover = "0.9.1"
 androidx-datastore = "1.1.3"
 androidx-paging = "3.3.6"
 androidx-room = "2.7.0-rc01"
-compose-multiplatform = "1.8.0-alpha03"
-android-gradle = "8.8.2"
+compose-multiplatform = "1.8.0-alpha04"
+android-gradle = "8.9.0"
 coil-kt = "3.1.0"
 detekt = "1.23.8"
 mikepenz-aboutlibraries = "11.6.3"
@@ -67,10 +67,10 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 kotlin-compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlinx-kover-gradlePlugin = { group = "org.jetbrains.kotlinx.kover", name = "org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kotlinx-kover" }
 compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version = "1.7.3" }
-compose-multiplatform-material3-adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive", version = "1.1.0-alpha03" }
-compose-multiplatform-material3-adaptiveLayout = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-layout", version = "1.1.0-alpha03" }
-compose-multiplatform-material3-adaptiveNavigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version = "1.1.0-alpha03" }
-compose-multiplatform-navigationCompose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version = "2.8.0-alpha13" }
+compose-multiplatform-material3-adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive", version = "1.1.0-alpha04" }
+compose-multiplatform-material3-adaptiveLayout = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-layout", version = "1.1.0-alpha04" }
+compose-multiplatform-material3-adaptiveNavigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version = "1.1.0-alpha04" }
+compose-multiplatform-navigationCompose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version = "2.9.0-alpha14" }
 compose-multiplatform-coreUri = { group = "org.jetbrains.androidx.core", name = "core-uri", version = "1.1.0-alpha03" }
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
@@ -134,7 +134,7 @@ sevenzipjbinding = { group = "net.sf.sevenzipjbinding", name = "sevenzipjbinding
 sevenzipjbinding-allPlatforms = { group = "net.sf.sevenzipjbinding", name = "sevenzipjbinding-all-platforms", version = "16.02-2.01" }
 soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha09" }
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version = "0.6.0" }
-slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.16-0" }
+slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.17-0" }
 
 artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.4" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.10.2" }
@@ -166,8 +166,8 @@ koin-kspCompiler = { group = "io.insert-koin", name = "koin-ksp-compiler", versi
 
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
-cmpdestinations = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations", version = "0.1" }
-cmpdestinations-ksp = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-ksp", version = "0.1" }
+cmpdestinations = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-core", version = "0.1.0" }
+cmpdestinations-ksp = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-ksp", version = "0.1.0" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx", "androidx-room-paging"]

@@ -12,7 +12,7 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
-    id("com.android.settings") version "8.8.2"
+    id("com.android.settings") version "8.9.0"
 }
 
 android {
