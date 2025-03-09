@@ -9,8 +9,6 @@ import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettings
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.display.section.DisplaySettingsDarkMode
 import kotlinx.serialization.Serializable
-import logcat.logcat
-import org.koin.core.annotation.Module
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
@@ -23,25 +21,12 @@ data object DisplaySettingsNavGraph {
     object Include
 }
 
-@Module
-class DisplaySettingsModule {
-    @Scope(name = SettingsScope)
-    @Scoped
-    internal fun displaySettingsNavGraphNavigator(
-        navController: NavController,
-        settingsDetailNavigator: SettingsDetailNavigator,
-    ): DisplaySettingsScreenNavigator =
-        DisplaySettingsNavGraphNavigator(navController, settingsDetailNavigator)
-}
-
+@Scope(name = SettingsScope)
+@Scoped
 internal class DisplaySettingsNavGraphNavigator(
     private val navController: NavController,
     private val settingsDetailNavigator: SettingsDetailNavigator,
 ) : DisplaySettingsScreenNavigator {
-
-    init {
-        logcat { "navController=$navController" }
-    }
 
     override fun navigateBack() {
         settingsDetailNavigator.navigateBack()

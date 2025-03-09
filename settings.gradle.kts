@@ -64,6 +64,8 @@ include(":data:reader:zip")
 include(":data:reader:document")
 include(":data:storage:client")
 include(":data:storage:smb")
+include(":data:storage:")
+include(":data:storage:device")
 include(":data:di")
 
 include(":feature:authentication")

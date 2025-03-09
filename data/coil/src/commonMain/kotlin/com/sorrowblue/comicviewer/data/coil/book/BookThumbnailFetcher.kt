@@ -43,7 +43,6 @@ internal class BookThumbnailFetcher(
     override fun BufferedSource.readMetadata() = CoilMetadata.from<BookThumbnailMetadata>(this)
 
     override suspend fun fetch(): FetchResult? {
-        return innerFetch(null)
         // ページ数が不明な場合はキャッシュから取得する処理をスキップします。
         return if (data.totalPageCount <= 0) {
             innerFetch(null)

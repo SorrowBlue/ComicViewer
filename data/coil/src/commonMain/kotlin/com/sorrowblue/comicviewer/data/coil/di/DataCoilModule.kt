@@ -5,6 +5,6 @@ import com.sorrowblue.comicviewer.data.coil.CoilDiskCache
 import org.koin.core.annotation.Singleton
 
 @Singleton
-fun provideImageCacheDiskCacheDiskCache(coilDiskCache: CoilDiskCache): DiskCache {
+internal fun provideImageCacheDiskCacheDiskCache(coilDiskCache: CoilDiskCache): DiskCache {
     return DiskCache.Builder().directory(coilDiskCache.resolve("image_cache")).build()
 }

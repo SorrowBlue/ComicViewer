@@ -14,7 +14,6 @@ import com.sorrowblue.comicviewer.feature.settings.folder.ImageFilterQualitySett
 import com.sorrowblue.comicviewer.feature.settings.folder.ImageScaleSettings
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeSettings
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Module
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 import com.sorrowblue.comicviewer.feature.settings.folder.ImageFormatSettings as ImageFormatRoute
@@ -32,17 +31,8 @@ data object FolderSettingsNavGraph {
     object Include
 }
 
-@Module
-class FolderSettingsModule {
-    @Scope(name = SettingsScope)
-    @Scoped(binds = [FolderSettingsScreenNavigator::class])
-    internal fun displaySettingsNavGraphNavigator(
-        navController: NavController,
-        settingsDetailNavigator: SettingsDetailNavigator,
-    ): FolderSettingsScreenNavigator =
-        FolderSettingsNavGraphNavigator(navController, settingsDetailNavigator)
-}
-
+@Scope(name = SettingsScope)
+@Scoped(binds = [FolderSettingsScreenNavigator::class])
 internal class FolderSettingsNavGraphNavigator(
     private val navController: NavController,
     private val navigator: SettingsDetailNavigator,

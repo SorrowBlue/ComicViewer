@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.feature.history.ClearAllHistory
 import com.sorrowblue.comicviewer.feature.history.HistoryFolder
 import com.sorrowblue.comicviewer.feature.history.HistoryScreenNavigator
 import com.sorrowblue.comicviewer.folder.FolderScreenNavigator
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
 interface HistoryNavGraphNavigator {
     fun onBookClick(book: Book)
@@ -18,7 +18,7 @@ interface HistoryNavGraphNavigator {
     fun onSearchClick(bookshelfId: BookshelfId, path: String)
 }
 
-@Singleton
+@Factory
 internal class HistoryNavGraphNavigatorImpl(
     override val navController: NavController,
     private val navigator: HistoryNavGraphNavigator,

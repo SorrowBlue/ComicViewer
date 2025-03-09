@@ -9,10 +9,8 @@ import com.sorrowblue.comicviewer.feature.settings.info.AppInfoSettings
 import com.sorrowblue.comicviewer.feature.settings.info.AppInfoSettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.info.license.License
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Module
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
-import org.koin.core.annotation.Singleton
 
 @Serializable
 @NavGraph(startDestination = AppInfoSettings::class)
@@ -23,18 +21,8 @@ data object AppInfoSettingsNavGraph {
     object Include
 }
 
-@Module
-class AppInfoSettingsModule {
-    @Scope(name = SettingsScope)
-    @Scoped
-    internal fun appInfoSettingsScreenNavigator(
-        navController: NavController,
-        settingsDetailNavigator: SettingsDetailNavigator,
-    ): AppInfoSettingsScreenNavigator =
-        AppInfoSettingsNavGraphNavigator(navController, settingsDetailNavigator)
-}
-
-@Singleton
+@Scope(name = SettingsScope)
+@Scoped
 internal class AppInfoSettingsNavGraphNavigator(
     private val navController: NavController,
     private val navigator: SettingsDetailNavigator,

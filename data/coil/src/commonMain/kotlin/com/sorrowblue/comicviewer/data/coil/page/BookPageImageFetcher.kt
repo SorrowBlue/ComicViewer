@@ -50,10 +50,6 @@ internal class BookPageImageFetcher(
 
     override fun BufferedSource.readMetadata() = CoilMetadata.from<BookPageImageMetadata>(this)
 
-    override suspend fun fetch(): FetchResult? {
-        return innerFetch(null)
-    }
-
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val dataSource = bookshelfLocalDataSource.flow(data.book.bookshelfId).first()
             ?.let(remoteDataSourceFactory::create)

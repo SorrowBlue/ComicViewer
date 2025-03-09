@@ -7,14 +7,11 @@ import logcat.logcat
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.dsl.KoinConfiguration
-import org.koin.ksp.generated.defaultModule
 import org.koin.ksp.generated.module
 
 internal actual fun setupDi() = KoinConfiguration {
     logcat(LogPriority.INFO) { "onKoinStartup" }
     androidLogger()
-    modules(DiModule().module)
-    modules(SettingsModule().module)
-    defaultModule()
+    modules(DiModule().module, SettingsModule().module, AppModule().module)
     workManagerFactory()
 }

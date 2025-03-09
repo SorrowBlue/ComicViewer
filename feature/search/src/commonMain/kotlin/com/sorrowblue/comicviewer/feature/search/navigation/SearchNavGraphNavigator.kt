@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.feature.search.Search
 import com.sorrowblue.comicviewer.feature.search.SearchFolder
 import com.sorrowblue.comicviewer.feature.search.SearchFolderScreenNavigator
 import com.sorrowblue.comicviewer.feature.search.SearchScreenNavigator
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
 interface SearchNavGraphNavigator {
     fun onBookClick(book: Book)
@@ -17,7 +17,7 @@ interface SearchNavGraphNavigator {
     fun onSettingsClick()
 }
 
-@Singleton
+@Factory
 internal class SearchNavGraphNavigatorImpl(
     override val navController: NavController,
     private val navigator: SearchNavGraphNavigator,

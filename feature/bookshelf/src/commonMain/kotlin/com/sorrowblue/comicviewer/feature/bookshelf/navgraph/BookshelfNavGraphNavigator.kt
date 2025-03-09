@@ -18,6 +18,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.Notificati
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionNavigator
+import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Single
 
 interface BookshelfNavGraphNavigator {
@@ -28,7 +29,7 @@ interface BookshelfNavGraphNavigator {
     fun onSearchClick(bookshelfId: BookshelfId, path: String)
 }
 
-@Single
+@Factory
 internal class BookshelfNavGraphNavigatorImpl(
     val navigator: BookshelfNavGraphNavigator,
     override val navController: NavController,

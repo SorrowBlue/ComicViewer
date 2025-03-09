@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.favorite.FavoriteScreenNavigator
 import com.sorrowblue.comicviewer.favorite.list.FavoriteListNavigator
 import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEdit
 import com.sorrowblue.comicviewer.feature.favorite.edit.FavoriteEditScreenNavigator
-import org.koin.core.annotation.Single
+import org.koin.core.annotation.Factory
 
 interface FavoriteNavGraphNavigator {
     fun onBookClick(book: Book, favoriteId: FavoriteId = FavoriteId())
@@ -23,7 +23,7 @@ interface FavoriteNavGraphNavigator {
     fun onSearchClick(bookshelfId: BookshelfId, path: String)
 }
 
-@Single
+@Factory
 internal class FavoriteNavGraphNavigatorImpl(
     override val navController: NavController,
     val navigator: FavoriteNavGraphNavigator,

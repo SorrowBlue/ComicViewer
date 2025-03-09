@@ -11,6 +11,3 @@ actual class CoilDiskCache(val context: Context) {
         return context.cacheDir.resolve(folder).apply { mkdirs() }.toOkioPath()
     }
 }
-//
-// @Singleton
-// fun providePlatformContext(context: Context): PlatformContext = context

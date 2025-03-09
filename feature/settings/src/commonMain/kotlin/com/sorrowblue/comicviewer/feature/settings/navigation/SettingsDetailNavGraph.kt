@@ -9,12 +9,12 @@ import com.sorrowblue.cmpdestinations.annotation.NestedNavGraph
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
-import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsModule
+import com.sorrowblue.comicviewer.feature.settings.display.di.DisplaySettingsModule
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavGraph
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsModule
+import com.sorrowblue.comicviewer.feature.settings.folder.di.FolderSettingsModule
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCache
-import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsModule
+import com.sorrowblue.comicviewer.feature.settings.info.di.AppInfoSettingsModule
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettings
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
