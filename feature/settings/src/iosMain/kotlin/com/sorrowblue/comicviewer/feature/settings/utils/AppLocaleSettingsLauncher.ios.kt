@@ -16,7 +16,7 @@ internal actual fun rememberAppLocaleSettingsLauncher(): AppLocaleSettingsLaunch
 internal actual class AppLocaleSettingsLauncher {
 
     actual fun launch(fallback: () -> Unit) {
-        val result = UIApplication.sharedApplication().openURL(NSURL(UIApplicationOpenSettingsURLString))
+        val result = UIApplication.sharedApplication().openURL(NSURL(string = UIApplicationOpenSettingsURLString))
         if (!result) {
             fallback()
         }

@@ -2,8 +2,9 @@ package com.sorrowblue.comicviewer.feature.tutorial
 
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheetUiState
 import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Singleton
 
-@Factory
+@Singleton
 internal actual class AndroidSplitInstallManager {
     actual val installedModulesSet: Set<String> = setOf(DocumentModule)
 

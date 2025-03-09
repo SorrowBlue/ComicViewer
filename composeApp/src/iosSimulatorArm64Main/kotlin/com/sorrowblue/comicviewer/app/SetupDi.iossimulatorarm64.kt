@@ -14,6 +14,6 @@ internal actual fun setupDi() = KoinConfiguration {
     modules(SettingsModule().module)
     defaultModule()
     module {
-        defineAndroidSplitInstallManager()
+        defineComSorrowblueComicviewerFeatureTutorialAndroidSplitInstallManager()
     }
 }
