@@ -28,6 +28,8 @@ dependencies {
     compileOnly(libs.detekt.gradlePlugin)
     compileOnly(libs.dokka.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.licensee.gradlePlugin)
+    compileOnly(libs.aboutlibraries.gradlePlugin)
     compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
     detektPlugins(libs.nlopez.compose.rules.detekt)
     detektPlugins(libs.arturbosch.detektFormatting)

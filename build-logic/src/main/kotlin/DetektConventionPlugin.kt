@@ -42,7 +42,7 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 }
                 finalizedBy(reportMerge)
                 exclude {
-                    it.file.path.contains("generated")
+                    it.file.path.run { contains("generated") || contains("buildkonfig") }
                 }
             }
             reportMerge.configureEach {

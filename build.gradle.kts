@@ -5,6 +5,7 @@ import java.util.Locale
 plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
+    alias(libs.plugins.gitVersioning)
     alias(libs.plugins.dokka)
     alias(libs.plugins.modulegraph)
     alias(libs.plugins.kotlinx.kover)
@@ -19,6 +20,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.aboutlibraries) apply false
+    alias(libs.plugins.licensee) apply false
     alias(libs.plugins.composeMultiplatform) apply false
 }
 
@@ -108,6 +110,21 @@ moduleGraphConfig {
 //    focusedModulesRegex.set(".*(domain).*")
 //    this.rootModulesRegex.set(".*(data).*")
 //    setStyleByModuleType.set(true)
+}
+
+version = "0.0.0-SNAPSHOT"
+gitVersioning.apply {
+    refs {
+        tag("(?<version>.*)") {
+            version = "\${describe.tag.version}"
+        }
+        branch("develop/.+") {
+            version = "\${describe.tag.version}-\${describe.distance}-\${commit.short}-SNAPSHOT"
+        }
+    }
+    rev {
+        version = "\${commit}"
+    }
 }
 
 tasks.updateDaemonJvm {

@@ -6,8 +6,6 @@ plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
     alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.aboutlibraries)
-    alias(libs.plugins.gitVersioning)
 }
 
 kotlin {
@@ -42,6 +40,7 @@ kotlin {
                 implementation(projects.feature.tutorial)
                 implementation(projects.feature.folder)
                 implementation(projects.feature.settings)
+                implementation(projects.feature.settings.info)
                 implementation(projects.feature.history)
 
                 // Material3
@@ -50,6 +49,8 @@ kotlin {
                 implementation(libs.compose.multiplatform.material3.adaptive)
                 // Di
                 implementation(libs.koin.composeViewModel)
+
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 
@@ -70,21 +71,6 @@ kotlin {
                 implementation(compose.desktop.currentOs)
             }
         }
-    }
-}
-
-version = "0.0.0-SNAPSHOT"
-gitVersioning.apply {
-    refs {
-        tag("(?<version>.*)") {
-            version = "\${describe.tag.version}"
-        }
-        branch("develop/.+") {
-            version = "\${describe}-SNAPSHOT"
-        }
-    }
-    rev {
-        version = "\${commit}"
     }
 }
 

@@ -19,7 +19,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelectionNavigator
 import org.koin.core.annotation.Factory
-import org.koin.core.annotation.Single
 
 interface BookshelfNavGraphNavigator {
     fun onBookClick(book: Book)

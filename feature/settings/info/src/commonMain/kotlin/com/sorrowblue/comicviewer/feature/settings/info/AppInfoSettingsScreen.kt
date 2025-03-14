@@ -18,13 +18,12 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-internal interface AppInfoSettingsScreenNavigator : SettingsDetailNavigator {
-
-    fun navigateToLicense()
-}
-
 @Serializable
 data object AppInfoSettings
+
+internal interface AppInfoSettingsScreenNavigator : SettingsDetailNavigator {
+    fun navigateToLicense()
+}
 
 @Destination<AppInfoSettings>
 @Composable

@@ -13,7 +13,10 @@ import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
 @Serializable
-@NavGraph(startDestination = AppInfoSettings::class)
+@NavGraph(
+    startDestination = AppInfoSettings::class,
+    transitions = AppInfoSettingsGraphTransitions::class
+)
 data object AppInfoSettingsNavGraph {
 
     @DestinationInGraph<AppInfoSettings>
@@ -21,7 +24,7 @@ data object AppInfoSettingsNavGraph {
     object Include
 }
 
-@Scope(name = SettingsScope)
+@Scope(SettingsScope::class)
 @Scoped
 internal class AppInfoSettingsNavGraphNavigator(
     private val navController: NavController,

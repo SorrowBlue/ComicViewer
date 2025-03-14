@@ -13,12 +13,12 @@ kotlin {
             implementation(libs.compose.multiplatform.coreUri)
         }
         androidMain.dependencies {
-            implementation(libs.jcifs.ng)
+            implementation(libs.jcifs)
             implementation(libs.slf4j.android)
             implementation(libs.androidx.documentfile)
         }
         desktopMain.dependencies {
-            implementation(libs.jcifs.ng)
+            implementation(libs.jcifs)
         }
         iosMain.dependencies {
             implementation("dev.zwander:kmpfile-filekit:0.7.0")

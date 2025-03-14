@@ -8,10 +8,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
+import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
+import om.sorrowblue.comicviewer.feature.settings.BuildKonfig
 
 internal interface AppInfoSettingsScreenState {
     fun launchReview()
@@ -31,12 +35,14 @@ private class AppInfoSettingsScreenStateImpl(
 
     override var uiState: SettingsAppInfoScreenUiState by mutableStateOf(
         SettingsAppInfoScreenUiState(
-            versionName = "BuildConfig.VERSION_NAME", // TODO
-            buildAt = Instant.fromEpochMilliseconds(0L) // TODO BuildConfig.TIMESTAMP
+            versionName = BuildKonfig.VERSION_NAME,
+            buildAt = Instant.fromEpochMilliseconds(BuildKonfig.TIMESTAMP)
                 .toLocalDateTime(TimeZone.currentSystemDefault())
                 .format(
                     LocalDateTime.Format {
-                        // TODO
+                        date(LocalDate.Formats.ISO)
+                        char(' ')
+                        time(LocalTime.Formats.ISO)
                     }
                 )
         )

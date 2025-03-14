@@ -1,20 +1,16 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="detekt lint" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="exportLibraryDefinitions ios" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
-      <option name="scriptParameters" value="" />
+      <option name="scriptParameters" value="-P&quot;aboutLibraries.exportPath=src/iosMain/composeResources/files/&quot; -P&quot;aboutLibraries.exportVariant=metadataIosMain&quot;" />
       <option name="taskDescriptions">
         <list />
       </option>
       <option name="taskNames">
         <list>
-          <option value=":build-logic:detektMain" />
-          <option value="detektAndroidRelease" />
-          <option value="detektDesktopMain" />
-          <option value="detektMetadataCommonMain" />
-          <option value="composeApp:lintRelease" />
+          <option value="exportLibraryDefinitions" />
         </list>
       </option>
       <option name="vmOptions" />

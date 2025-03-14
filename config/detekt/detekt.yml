@@ -65,6 +65,7 @@ Compose:
   CompositionLocalAllowlist:
     active: true
     allowedCompositionLocals:
+      - 'LocalScrollbarStyle'
       - 'LocalDimension'
       - 'LocalContainerColor'
       - 'LocalNavigationState'

@@ -1,14 +1,18 @@
 package com.sorrowblue.comicviewer.feature.settings.navigation
 
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import com.sorrowblue.cmpdestinations.ScreenDestination
 import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.cmpdestinations.annotation.NestedNavGraph
+import com.sorrowblue.comicviewer.feature.settings.Settings2
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsScope
 import com.sorrowblue.comicviewer.feature.settings.display.di.DisplaySettingsModule
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.folder.di.FolderSettingsModule
@@ -21,8 +25,13 @@ import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScre
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettings
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
 internal expect class SettingsDetailNavGraphImpl() :
@@ -52,10 +61,15 @@ internal data object SettingsDetailNavGraph {
 }
 
 @Module(includes = [DisplaySettingsModule::class, FolderSettingsModule::class, AppInfoSettingsModule::class])
+@ComponentScan
 class SettingsModule
 
+@Scope(SettingsScope::class)
+@Scoped(binds = [SecuritySettingsScreenNavigator::class, SettingsDetailNavigator::class, SettingsExtraNavigator::class])
 internal class SettingsDetailNavGraphNavigator(
-    private val navigateBack: () -> Unit,
+    private val scope: CoroutineScope,
+    private val navController: NavController,
+    private val navigator: ThreePaneScaffoldNavigator<Settings2>,
     private val settingsScreenNavigator: SettingsScreenNavigator,
 ) : SecuritySettingsScreenNavigator, SettingsDetailNavigator, SettingsExtraNavigator {
 
@@ -68,10 +82,12 @@ internal class SettingsDetailNavGraphNavigator(
     }
 
     override fun navigateBack() {
-        navigateBack.invoke()
+        scope.launch {
+            navigator.navigateBack()
+        }
     }
 
     override fun navigateUp() {
-        settingsScreenNavigator.navigateUp()
+        navController.navigateUp()
     }
 }

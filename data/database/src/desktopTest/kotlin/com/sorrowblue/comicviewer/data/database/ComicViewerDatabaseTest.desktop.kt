@@ -16,9 +16,11 @@ internal actual inline fun <reified T : RoomDatabase> createDatabase(): T {
 
 internal actual fun setupComicViewerDatabaseTest() {
     startKoin {
-        modules(module {
-            single<DesktopContext> { TestDesktopContext() }
-        })
+        modules(
+            module {
+                single<DesktopContext> { TestDesktopContext() }
+            }
+        )
     }
 }
 

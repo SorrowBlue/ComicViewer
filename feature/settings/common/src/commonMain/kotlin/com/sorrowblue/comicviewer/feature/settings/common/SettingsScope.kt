@@ -1,3 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.common
 
-const val SettingsScope = "SettingsScope"
+import org.koin.core.annotation.Scope
+
+@Scope
+class SettingsScope

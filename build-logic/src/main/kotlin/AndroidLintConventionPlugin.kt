@@ -49,7 +49,7 @@ private fun Lint.configure(project: Project) {
     val isCI = System.getenv("CI").toBoolean()
     checkAllWarnings = true
     checkDependencies = true
-    disable += listOf("InvalidPackage", "NewerVersionAvailable", "GradleDependency")
+    disable += listOf("InvalidPackage", "NewerVersionAvailable", "GradleDependency", "AppLinksAutoVerify")
     baseline = project.file("lint-baseline.xml")
     htmlReport = !isCI
     htmlOutput =

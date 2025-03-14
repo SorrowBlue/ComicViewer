@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
 }
 
 android {

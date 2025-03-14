@@ -15,9 +15,8 @@ kotlin {
 
     sourceSets.androidMain.dependencies {
         implementation(libs.androidx.startup.runtime)
-        implementation(libs.androidx.exifinterface)
+//        implementation(libs.androidx.exifinterface)
         implementation(libs.coil3.networkKtor)
-        implementation(libs.jcifs.ng)
         implementation(libs.koin.androidxStartup)
     }
 }

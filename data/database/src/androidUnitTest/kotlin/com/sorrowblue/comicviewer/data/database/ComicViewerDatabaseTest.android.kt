@@ -11,7 +11,9 @@ internal actual inline fun <reified T : RoomDatabase> createDatabase(): T {
 }
 
 internal actual fun setupComicViewerDatabaseTest() {
+    // Do nothing
 }
 
 internal actual fun releaseComicViewerDatabaseTest() {
+    // Do nothing
 }

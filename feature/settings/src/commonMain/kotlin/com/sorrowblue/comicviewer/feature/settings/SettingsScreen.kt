@@ -19,18 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sorrowblue.cmpdestinations.NavGraphNavHost
 import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsScope
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCache
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNavGraphImpl
-import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettings
-import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettings
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigableListDetailPaneScaffold
@@ -44,16 +40,13 @@ import comicviewer.feature.settings.generated.resources.settings_label_security
 import comicviewer.feature.settings.generated.resources.settings_label_tutorial
 import comicviewer.feature.settings.generated.resources.settings_label_viewer
 import kotlin.reflect.KClass
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.koin.compose.koinInject
 import org.koin.compose.module.rememberKoinModules
 import org.koin.compose.scope.KoinScope
 import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.core.qualifier.named
-import org.koin.dsl.bind
-import org.koin.dsl.binds
 import org.koin.dsl.module
 
 internal interface SettingsScreenNavigator {
@@ -65,6 +58,18 @@ internal interface SettingsScreenNavigator {
 
 @Serializable
 data object Settings
+
+fun nestedSettingsModule(
+    navController: NavController,
+    scaffoldNavigator: ThreePaneScaffoldNavigator<*>,
+    coroutineScope: CoroutineScope,
+) = module {
+    scope<SettingsScope> {
+        scoped { coroutineScope }
+        scoped { scaffoldNavigator }
+        scoped { navController }
+    }
+}
 
 @OptIn(KoinExperimentalAPI::class)
 @Destination<Settings>
@@ -78,24 +83,18 @@ internal fun SettingsScreen(
         onBackClick = screenNavigator::navigateUp,
         onSettingsClick = { state.onSettingsClick(it, screenNavigator::onStartTutorialClick) },
     ) {
-        val scope = rememberCoroutineScope()
+        val coroutineScope = rememberCoroutineScope()
         rememberKoinModules {
             listOf(
-                module {
-                    scope(named(SettingsScope)) {
-                        scoped { { scope.launch { state.navigator.navigateBack() } } }
-                        scoped { state.navController } bind NavController::class
-                        scoped { SettingsDetailNavGraphNavigator(get(), get()) } binds arrayOf(
-                            SecuritySettingsScreenNavigator::class,
-                            SettingsDetailNavigator::class,
-                            SettingsExtraNavigator::class,
-                        )
-                    }
-                }
+                nestedSettingsModule(
+                    navController = state.navController,
+                    scaffoldNavigator = state.navigator,
+                    coroutineScope = coroutineScope
+                )
             )
         }
         val navGraph = remember { SettingsDetailNavGraphImpl() }
-        KoinScope("ScopeId", named(SettingsScope)) {
+        KoinScope<SettingsScope>(SettingsScope::class.simpleName.orEmpty()) {
             NavGraphNavHost(
                 navController = state.navController,
                 navGraph = navGraph,

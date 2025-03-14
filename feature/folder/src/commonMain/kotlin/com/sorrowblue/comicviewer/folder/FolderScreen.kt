@@ -1,8 +1,11 @@
 package com.sorrowblue.comicviewer.folder
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -24,8 +27,10 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -44,11 +49,14 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
+import com.sorrowblue.comicviewer.framework.ui.scrollbar.VerticalScrollbar
+import com.sorrowblue.comicviewer.framework.ui.scrollbar.rememberScrollbarAdapter
+import com.sorrowblue.comicviewer.framework.ui.scrollbar.scrollbarStyle
 import comicviewer.feature.folder.generated.resources.Res
 import comicviewer.feature.folder.generated.resources.folder_text_nothing_in_folder
 import org.jetbrains.compose.resources.stringResource
@@ -205,18 +213,7 @@ private fun FolderContents(
                 text = stringResource(Res.string.folder_text_nothing_in_folder, title)
             )
         } else {
-            ScrollbarBox(
-                state = lazyGridState,
-                itemsAvailable = lazyPagingItems.itemCount,
-                scrollbarWindowInsets = contentPadding
-                    .asWindowInsets()
-                    .only(WindowInsetsSides.Top)
-                    .union(
-                        WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Vertical + WindowInsetsSides.End
-                        )
-                    ),
-            ) {
+            Box {
                 FileLazyVerticalGrid(
                     modifier = Modifier
                         .fillMaxSize(),
@@ -228,7 +225,24 @@ private fun FolderContents(
                     state = lazyGridState,
                     emphasisPath = emphasisPath
                 )
+                VerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                        .fillMaxHeight()
+                        .padding(
+                            contentPadding
+                                .asWindowInsets()
+                                .only(WindowInsetsSides.Top)
+                                .union(
+                                    WindowInsets.safeDrawing.only(
+                                        WindowInsetsSides.Vertical + WindowInsetsSides.End
+                                    )
+                                ).asPaddingValues().plus(PaddingValues(end = 4.dp))
+                        ),
+                    style = scrollbarStyle(),
+                    adapter = rememberScrollbarAdapter(lazyGridState)
+                )
             }
+//            }
         }
     }
 }

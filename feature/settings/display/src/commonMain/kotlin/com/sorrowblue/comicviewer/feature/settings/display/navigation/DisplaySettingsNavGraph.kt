@@ -21,7 +21,7 @@ data object DisplaySettingsNavGraph {
     object Include
 }
 
-@Scope(name = SettingsScope)
+@Scope(SettingsScope::class)
 @Scoped
 internal class DisplaySettingsNavGraphNavigator(
     private val navController: NavController,

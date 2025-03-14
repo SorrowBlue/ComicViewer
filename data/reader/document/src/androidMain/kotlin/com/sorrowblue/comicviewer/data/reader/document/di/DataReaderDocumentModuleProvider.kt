@@ -13,7 +13,6 @@ internal class DataReaderDocumentModuleProvider : DynamicFeatureModuleProvider {
     }
 }
 
-
 @org.koin.core.annotation.Module
 @ComponentScan("com.sorrowblue.comicviewer.data.reader.document")
 class DataReaderDocument

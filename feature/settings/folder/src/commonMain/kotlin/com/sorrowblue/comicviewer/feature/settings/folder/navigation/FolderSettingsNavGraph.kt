@@ -31,7 +31,7 @@ data object FolderSettingsNavGraph {
     object Include
 }
 
-@Scope(name = SettingsScope)
+@Scope(SettingsScope::class)
 @Scoped(binds = [FolderSettingsScreenNavigator::class])
 internal class FolderSettingsNavGraphNavigator(
     private val navController: NavController,
