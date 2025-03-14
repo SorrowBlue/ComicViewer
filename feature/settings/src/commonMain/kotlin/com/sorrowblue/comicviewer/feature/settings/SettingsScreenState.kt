@@ -18,6 +18,7 @@ internal interface SettingsScreenState {
     val navigator: ThreePaneScaffoldNavigator<Settings2>
     val navController: NavHostController
     fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit)
+    fun onSettingsLongClick(settings2: Settings2, onStartTutorialClick: () -> Unit)
     fun onDetailBackClick()
 }
 
@@ -49,19 +50,21 @@ private class SettingsScreenStateImpl(
 
     override fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit) {
         when (settings2) {
-            Settings2.LANGUAGE -> {
-                appLocaleSettingsLauncher.launch {
-                    onSettingsClick2(settings2)
-                }
-            }
-
-            Settings2.TUTORIAL -> {
-                onStartTutorialClick()
-            }
-
-            else -> {
+            Settings2.LANGUAGE -> appLocaleSettingsLauncher.launch {
                 onSettingsClick2(settings2)
             }
+
+
+            Settings2.TUTORIAL -> onStartTutorialClick()
+
+            else -> onSettingsClick2(settings2)
+        }
+    }
+
+    override fun onSettingsLongClick(settings2: Settings2, onStartTutorialClick: () -> Unit) {
+        when (settings2) {
+            Settings2.LANGUAGE -> onSettingsClick2(settings2)
+            else -> Unit
         }
     }
 

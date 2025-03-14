@@ -39,6 +39,13 @@ dependencyResolutionManagement {
                 includeModule("com.artifex.mupdf", "fitz")
             }
         }
+        maven {
+            name = "gitlab-maven"
+            url = uri("https://gitlab.com/api/v4/projects/59936705/packages/maven")
+            content {
+                includeModule("com.github.shayartzi.sevenzipjbinding", "sevenzipjbinding-all-platforms")
+            }
+        }
     }
 }
 

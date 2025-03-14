@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.section
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -38,6 +38,7 @@ internal fun SettingsListPane(
     navigator: ThreePaneScaffoldNavigator<Settings2>,
     onBackClick: () -> Unit,
     onSettingsClick: (Settings2) -> Unit,
+    onSettingsLongClick: (Settings2) -> Unit,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
@@ -46,6 +47,7 @@ internal fun SettingsListPane(
         CompactListPane(
             settingsList = settingsList,
             onSettingsClick = onSettingsClick,
+            onSettingsLongClick = onSettingsLongClick,
             onBackClick = onBackClick,
             modifier = modifier,
             lazyListState = lazyListState
@@ -56,6 +58,7 @@ internal fun SettingsListPane(
             currentSettings = navigator.currentDestination?.contentKey
                 ?: Settings2.DISPLAY,
             onSettingsClick = onSettingsClick,
+            onSettingsLongClick = onSettingsLongClick,
             onBackClick = onBackClick,
             modifier = modifier,
             lazyListState = lazyListState
@@ -67,6 +70,7 @@ internal fun SettingsListPane(
 private fun CompactListPane(
     settingsList: List<Settings2>,
     onSettingsClick: (Settings2) -> Unit,
+    onSettingsLongClick: (Settings2) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
@@ -100,7 +104,10 @@ private fun CompactListPane(
                             contentDescription = null
                         )
                     },
-                    modifier = Modifier.clickable { onSettingsClick(settings) }
+                    modifier = Modifier.combinedClickable(
+                        onClick = { onSettingsClick(settings) },
+                        onLongClick = { onSettingsLongClick(settings) }
+                    )
                 )
             }
         }
@@ -112,6 +119,7 @@ private fun ListPane(
     settingsList: List<Settings2>,
     currentSettings: Settings2?,
     onSettingsClick: (Settings2) -> Unit,
+    onSettingsLongClick: (Settings2) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
@@ -140,9 +148,14 @@ private fun ListPane(
                 NavigationDrawerItem(
                     label = { Text(text = stringResource(settings2.title)) },
                     icon = { Icon(imageVector = settings2.icon, contentDescription = null) },
-                    onClick = { onSettingsClick(settings2) },
+                    onClick = { },
                     selected = currentSettings == settings2,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .combinedClickable(
+                            onClick = { onSettingsClick(settings2) },
+                            onLongClick = { onSettingsLongClick(settings2) }
+                        )
+                        .padding(horizontal = 16.dp)
                 )
             }
         }

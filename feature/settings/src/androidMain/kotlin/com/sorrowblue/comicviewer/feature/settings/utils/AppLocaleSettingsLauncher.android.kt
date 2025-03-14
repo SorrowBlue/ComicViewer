@@ -7,6 +7,7 @@ import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.uri.Uri
+import androidx.core.net.toUri
 
 @Composable
 internal actual fun rememberAppLocaleSettingsLauncher(): AppLocaleSettingsLauncher {
@@ -21,7 +22,7 @@ internal actual class AppLocaleSettingsLauncher(private val context: Context) {
                 context.startActivity(
                     Intent(
                         Settings.ACTION_APP_LOCALE_SETTINGS,
-                        Uri.parse("package:${context.applicationInfo.packageName}")
+                        "package:${context.applicationInfo.packageName}".toUri()
                     )
                 )
             }.onFailure {

@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.window.core.layout.WindowHeightSizeClass
+import com.sorrowblue.comicviewer.framework.designsystem.locale.ProvideLocalAppLocaleIso
 
 @Composable
 fun ComicTheme(
@@ -29,7 +30,7 @@ fun ComicTheme(
             }
         )
     }
-    CompositionLocalProvider(LocalDimension provides dimension) {
+    CompositionLocalProvider(LocalDimension provides dimension, ProvideLocalAppLocaleIso) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = AppTypography,

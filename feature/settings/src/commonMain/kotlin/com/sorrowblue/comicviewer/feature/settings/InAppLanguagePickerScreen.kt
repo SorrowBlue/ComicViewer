@@ -9,6 +9,8 @@ import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
+import com.sorrowblue.comicviewer.framework.designsystem.locale.LocalAppLocaleIso
+import com.sorrowblue.comicviewer.framework.designsystem.locale.updateAppLocaleIso
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_language_label_all_languages
 import comicviewer.feature.settings.generated.resources.settings_language_label_japanese
@@ -53,22 +55,29 @@ private fun InAppLanguagePickerScreen(onBackClick: () -> Unit) {
         }
 
         SettingsCategory(title = Res.string.settings_language_label_all_languages) {
-            languages.forEach {
-                if (current == it.tag) {
-                    CheckedSetting(
-                        title = stringResource(it.label),
-                        onClick = {
-                        }
-                    )
-                } else {
-                    Setting(
-                        title = stringResource(it.label),
-                        onClick = {
-                            localeManager.setLocale(it.tag)
-                        }
-                    )
-                }
+            LocalAppLocaleIso.locales.forEach {
+                CheckedSetting(
+                    title = it,
+                    onClick = {
+                    }
+                )
             }
+//            languages.forEach {
+//                if (current == it.tag) {
+//                    CheckedSetting(
+//                        title = stringResource(it.label),
+//                        onClick = {
+//                        }
+//                    )
+//                } else {
+//                    Setting(
+//                        title = stringResource(it.label),
+//                        onClick = {
+//                            updateAppLocaleIso(it.tag)
+//                        }
+//                    )
+//                }
+//            }
         }
     }
 }

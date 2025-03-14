@@ -15,8 +15,14 @@ kotlin {
 
         androidMain {
             dependencies {
+                implementation(libs.androidx.appcompat)
                 api(project.dependencies.platform(libs.androidx.compose.bom))
             }
+        }
+
+        noAndroid.dependencies {
+            implementation(projects.domain.usecase)
+            implementation(libs.koin.composeViewModel)
         }
     }
 }

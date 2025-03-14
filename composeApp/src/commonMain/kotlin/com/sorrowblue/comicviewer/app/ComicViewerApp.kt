@@ -34,7 +34,7 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
         val navGraph = remember {
             ComicViewerAppNavGraphImpl()
         }
-        rememberKoinModules {
+        rememberKoinModules(unloadModules = true) {
             listOf(
                 module {
                     single {

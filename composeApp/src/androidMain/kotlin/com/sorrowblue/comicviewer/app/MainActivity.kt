@@ -16,6 +16,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import logcat.logcat
 import org.koin.androidx.compose.KoinAndroidContext
 
 /**
@@ -26,6 +27,7 @@ internal class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        logcat { "onCreate" }
         installSplashScreen().apply {
             enableEdgeToEdge(
                 navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)

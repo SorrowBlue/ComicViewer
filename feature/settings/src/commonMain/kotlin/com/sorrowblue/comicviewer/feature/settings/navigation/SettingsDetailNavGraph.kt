@@ -8,6 +8,7 @@ import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.cmpdestinations.annotation.NestedNavGraph
+import com.sorrowblue.comicviewer.feature.settings.InAppLanguagePicker
 import com.sorrowblue.comicviewer.feature.settings.Settings2
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
@@ -57,11 +58,12 @@ internal data object SettingsDetailNavGraph {
     @DestinationInGraph<ImageCache>
     @DestinationInGraph<SecuritySettings>
     @DestinationInGraph<ViewerSettings>
+    @DestinationInGraph<InAppLanguagePicker>
     object Include
 }
 
 @Module(includes = [DisplaySettingsModule::class, FolderSettingsModule::class, AppInfoSettingsModule::class])
-@ComponentScan
+@ComponentScan("com.sorrowblue.comicviewer.feature.settings")
 class SettingsModule
 
 @Scope(SettingsScope::class)

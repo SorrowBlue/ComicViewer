@@ -30,7 +30,8 @@ internal const val DATABASE_NAME = "comic_viewer_database"
         AutoMigration(3, 4),
         AutoMigration(4, 5),
         AutoMigration(5, 6),
-    ]
+    ],
+    exportSchema = true
 )
 @ConstructedBy(ComicViewerDatabaseConstructor::class)
 @TypeConverters(PasswordConverters::class)

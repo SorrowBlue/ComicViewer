@@ -82,6 +82,7 @@ internal fun SettingsScreen(
         navigator = state.navigator,
         onBackClick = screenNavigator::navigateUp,
         onSettingsClick = { state.onSettingsClick(it, screenNavigator::onStartTutorialClick) },
+        onSettingsLongClick = { state.onSettingsLongClick(it, screenNavigator::onStartTutorialClick) },
     ) {
         val coroutineScope = rememberCoroutineScope()
         rememberKoinModules {
@@ -110,6 +111,7 @@ private fun SettingsScreen(
     navigator: ThreePaneScaffoldNavigator<Settings2>,
     onBackClick: () -> Unit,
     onSettingsClick: (Settings2) -> Unit,
+    onSettingsLongClick: (Settings2) -> Unit,
     content: @Composable () -> Unit,
 ) {
     NavigableListDetailPaneScaffold(
@@ -132,6 +134,7 @@ private fun SettingsScreen(
                     navigator = navigator,
                     onBackClick = onBackClick,
                     onSettingsClick = onSettingsClick,
+                    onSettingsLongClick = onSettingsLongClick
                 )
             }
         },

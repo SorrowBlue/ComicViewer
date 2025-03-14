@@ -2,43 +2,70 @@ package com.sorrowblue.comicviewer.feature.settings.security
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @Composable
 internal actual fun rememberSecuritySettingsScreenState(
     scope: CoroutineScope,
     manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
 ): SecuritySettingsScreenState {
-    return remember { SecuritySettingsScreenStateImpl() }
+    val snackbarHostState = remember { SnackbarHostState() }
+    return remember {
+        SecuritySettingsScreenStateImpl(
+            scope = scope,
+            manageSecuritySettingsUseCase = manageSecuritySettingsUseCase,
+            snackbarHostState = snackbarHostState
+        )
+    }
 }
 
-private class SecuritySettingsScreenStateImpl : SecuritySettingsScreenState {
+private class SecuritySettingsScreenStateImpl(
+    private val scope: CoroutineScope,
+    override val snackbarHostState: SnackbarHostState,
+    private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
+) : SecuritySettingsScreenState {
+    override var uiState by mutableStateOf(SecuritySettingsScreenUiState())
+
+    init {
+        uiState = uiState.copy(isBiometricCanBeUsed = false)
+        manageSecuritySettingsUseCase.settings.onEach {
+            uiState = uiState.copy(
+                isAuthEnabled = it.password != null,
+                isBackgroundLockEnabled = it.lockOnBackground,
+                isBiometricEnabled = it.useBiometrics
+            )
+        }.launchIn(scope)
+    }
 
     override fun onChangeBackgroundLockEnabled(value: Boolean) {
-        TODO("Not yet implemented")
+        scope.launch {
+            manageSecuritySettingsUseCase.edit {
+                it.copy(lockOnBackground = value)
+            }
+        }
     }
 
     override fun onChangeBiometricEnabled(value: Boolean) {
-        TODO("Not yet implemented")
+        // TODO()
     }
 
     override fun onResume() {
-        TODO("Not yet implemented")
+        // TODO()
     }
 
     override fun onBiometricsDialogClick() {
-        TODO("Not yet implemented")
+        // TODO()
     }
 
     override fun onBiometricsDialogDismissRequest() {
-        TODO("Not yet implemented")
+        // TODO()
     }
-
-    override val snackbarHostState: SnackbarHostState
-        get() = TODO("Not yet implemented")
-    override var uiState: SecuritySettingsScreenUiState
-        get() = TODO("Not yet implemented")
-        set(value) {}
 }
