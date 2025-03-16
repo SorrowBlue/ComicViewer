@@ -8,6 +8,6 @@ package logcat
 object PrintLogger : LogcatLogger {
 
     override fun log(priority: LogPriority, tag: String, message: String) {
-        println("$tag $message")
+        println("$tag: $message")
     }
 }

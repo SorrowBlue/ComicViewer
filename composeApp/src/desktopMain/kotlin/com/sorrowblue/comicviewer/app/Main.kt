@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.window.Tray
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -17,7 +18,7 @@ fun main() = application {
     val notification = rememberNotification("Notification", "Message from MyApp!")
     Tray(
         state = trayState,
-        icon = androidx.compose.ui.graphics.vector.rememberVectorPainter(ComicIcons.Launcher),
+        icon = rememberVectorPainter(ComicIcons.Launcher),
         onAction = {
             trayState.sendNotification(notification)
         },
@@ -28,6 +29,7 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "ComicViewer",
+        icon = rememberVectorPainter(ComicIcons.Launcher),
     ) {
         trayState.sendNotification(notification)
         window.minimumSize = Dimension(400, 600)

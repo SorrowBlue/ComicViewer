@@ -5,10 +5,16 @@ import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.notExists
 import org.koin.core.annotation.Singleton
+import org.koin.mp.KoinPlatform
 
 interface DesktopContext {
     val filesDir: Path
     val cacheDir: Path
+
+    companion object {
+
+        val INSTANCE get(): DesktopContext = KoinPlatform.getKoin().get()
+    }
 }
 
 @Singleton
