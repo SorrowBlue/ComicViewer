@@ -2,11 +2,15 @@ plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.framework.notification"
+kotlin {
+    sourceSets {
+        androidMain.dependencies {
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.startup.runtime)
+        }
+    }
 }
 
-dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.startup.runtime)
+android {
+    namespace = "com.sorrowblue.comicviewer.framework.notification"
 }

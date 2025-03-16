@@ -72,6 +72,7 @@ Compose:
       - 'LocalCanonicalScaffoldBound'
       - 'LocalDestinationScope'
       - 'LocalCoroutineScope'
+      - 'LocalAppLocaleIsoInternal'
     # You can optionally define a list of CompositionLocals that are allowed here
     # allowedCompositionLocals: LocalSomething,LocalSomethingElse
   ContentEmitterReturningValues:

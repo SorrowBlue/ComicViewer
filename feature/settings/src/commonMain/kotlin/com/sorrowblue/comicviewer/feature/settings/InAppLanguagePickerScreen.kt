@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.feature.settings
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.CheckedSetting
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
@@ -10,15 +9,12 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.locale.LocalAppLocaleIso
-import com.sorrowblue.comicviewer.framework.designsystem.locale.updateAppLocaleIso
+import com.sorrowblue.comicviewer.framework.designsystem.locale.displayLanguageName
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_language_label_all_languages
-import comicviewer.feature.settings.generated.resources.settings_language_label_japanese
 import comicviewer.feature.settings.generated.resources.settings_language_label_system_default
-import comicviewer.feature.settings.generated.resources.settings_language_label_us
 import comicviewer.feature.settings.generated.resources.settings_language_title
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -33,16 +29,13 @@ internal fun InAppLanguagePickerScreen(navigator: SettingsDetailNavigator = koin
 
 @Composable
 private fun InAppLanguagePickerScreen(onBackClick: () -> Unit) {
-    val languages = remember { Language.entries }
-    val localeManager = remember { LocaleManager() }
+    val locales = LocalAppLocaleIso.locales
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_language_title)) },
         onBackClick = onBackClick,
     ) {
-        val current = remember {
-            localeManager.currentLocale()
-        }
-        if (current.isEmpty()) {
+        val currentLocale = LocalAppLocaleIso.current
+        if (currentLocale == null) {
             CheckedSetting(
                 title = stringResource(Res.string.settings_language_label_system_default),
                 onClick = {}
@@ -50,39 +43,24 @@ private fun InAppLanguagePickerScreen(onBackClick: () -> Unit) {
         } else {
             Setting(
                 title = stringResource(Res.string.settings_language_label_system_default),
-                onClick = { localeManager.setSystemDefault() }
+                onClick = { LocalAppLocaleIso.set(null) }
             )
         }
 
         SettingsCategory(title = Res.string.settings_language_label_all_languages) {
-            LocalAppLocaleIso.locales.forEach {
-                CheckedSetting(
-                    title = it,
-                    onClick = {
-                    }
-                )
+            locales.forEach { locale ->
+                if (currentLocale?.toLanguageTag() == locale.toLanguageTag()) {
+                    CheckedSetting(
+                        title = locale.displayLanguageName,
+                        onClick = {}
+                    )
+                } else {
+                    Setting(
+                        title = locale.displayLanguageName,
+                        onClick = { LocalAppLocaleIso.set(locale) }
+                    )
+                }
             }
-//            languages.forEach {
-//                if (current == it.tag) {
-//                    CheckedSetting(
-//                        title = stringResource(it.label),
-//                        onClick = {
-//                        }
-//                    )
-//                } else {
-//                    Setting(
-//                        title = stringResource(it.label),
-//                        onClick = {
-//                            updateAppLocaleIso(it.tag)
-//                        }
-//                    )
-//                }
-//            }
         }
     }
-}
-
-private enum class Language(val label: StringResource, val tag: String) {
-    JAPANESE(Res.string.settings_language_label_japanese, "ja"),
-    ENGLISH_US(Res.string.settings_language_label_us, "us"),
 }

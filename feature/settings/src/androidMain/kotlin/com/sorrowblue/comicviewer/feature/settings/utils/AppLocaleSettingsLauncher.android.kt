@@ -6,7 +6,6 @@ import android.os.Build
 import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.uri.Uri
 import androidx.core.net.toUri
 
 @Composable

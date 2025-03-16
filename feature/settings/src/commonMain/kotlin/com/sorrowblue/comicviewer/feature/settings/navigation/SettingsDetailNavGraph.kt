@@ -9,7 +9,7 @@ import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.cmpdestinations.annotation.NestedNavGraph
 import com.sorrowblue.comicviewer.feature.settings.InAppLanguagePicker
-import com.sorrowblue.comicviewer.feature.settings.Settings2
+import com.sorrowblue.comicviewer.feature.settings.SettingsItem
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
@@ -71,7 +71,7 @@ class SettingsModule
 internal class SettingsDetailNavGraphNavigator(
     private val scope: CoroutineScope,
     private val navController: NavController,
-    private val navigator: ThreePaneScaffoldNavigator<Settings2>,
+    private val navigator: ThreePaneScaffoldNavigator<SettingsItem>,
     private val settingsScreenNavigator: SettingsScreenNavigator,
 ) : SecuritySettingsScreenNavigator, SettingsDetailNavigator, SettingsExtraNavigator {
 

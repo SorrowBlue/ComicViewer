@@ -108,10 +108,10 @@ internal fun SettingsScreen(
 
 @Composable
 private fun SettingsScreen(
-    navigator: ThreePaneScaffoldNavigator<Settings2>,
+    navigator: ThreePaneScaffoldNavigator<SettingsItem>,
     onBackClick: () -> Unit,
-    onSettingsClick: (Settings2) -> Unit,
-    onSettingsLongClick: (Settings2) -> Unit,
+    onSettingsClick: (SettingsItem) -> Unit,
+    onSettingsLongClick: (SettingsItem) -> Unit,
     content: @Composable () -> Unit,
 ) {
     NavigableListDetailPaneScaffold(
@@ -141,7 +141,7 @@ private fun SettingsScreen(
     )
 }
 
-enum class Settings2(
+enum class SettingsItem(
     val title: StringResource,
     val icon: ImageVector,
     val route: KClass<*>? = null,
@@ -157,7 +157,6 @@ enum class Settings2(
     APP(Res.string.settings_label_app, ComicIcons.Info, AppInfoSettingsNavGraph::class),
     TUTORIAL(Res.string.settings_label_tutorial, ComicIcons.Start),
 
-    //    Donation(R.string.settings_label_donation, ComicIcons.Money, DonationScreenDestination),
     Thumbnail(Res.string.settings_label_image_cache, ComicIcons.Storage, ImageCache::class),
     LANGUAGE(Res.string.settings_label_language, ComicIcons.Language, InAppLanguagePicker::class),
 }

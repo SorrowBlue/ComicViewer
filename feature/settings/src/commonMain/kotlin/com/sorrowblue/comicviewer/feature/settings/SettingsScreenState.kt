@@ -15,10 +15,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 internal interface SettingsScreenState {
-    val navigator: ThreePaneScaffoldNavigator<Settings2>
+    val navigator: ThreePaneScaffoldNavigator<SettingsItem>
     val navController: NavHostController
-    fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit)
-    fun onSettingsLongClick(settings2: Settings2, onStartTutorialClick: () -> Unit)
+    fun onSettingsClick(item: SettingsItem, onStartTutorialClick: () -> Unit)
+    fun onSettingsLongClick(item: SettingsItem, onStartTutorialClick: () -> Unit)
     fun onDetailBackClick()
 }
 
@@ -26,7 +26,7 @@ internal interface SettingsScreenState {
 internal fun rememberSettingsScreenState(
     scaffoldDirective: PaneScaffoldDirective =
         calculateLowerInfoPaneScaffoldDirective(currentWindowAdaptiveInfo()),
-    navigator: ThreePaneScaffoldNavigator<Settings2> = rememberFixListDetailPaneScaffoldNavigator(
+    navigator: ThreePaneScaffoldNavigator<SettingsItem> = rememberFixListDetailPaneScaffoldNavigator(
         scaffoldDirective = scaffoldDirective,
     ),
     appLocaleSettingsLauncher: AppLocaleSettingsLauncher = rememberAppLocaleSettingsLauncher(),
@@ -42,35 +42,34 @@ internal fun rememberSettingsScreenState(
 }
 
 private class SettingsScreenStateImpl(
-    override val navigator: ThreePaneScaffoldNavigator<Settings2>,
+    override val navigator: ThreePaneScaffoldNavigator<SettingsItem>,
     override val navController: NavHostController,
     private val appLocaleSettingsLauncher: AppLocaleSettingsLauncher,
     private val scope: CoroutineScope,
 ) : SettingsScreenState {
 
-    override fun onSettingsClick(settings2: Settings2, onStartTutorialClick: () -> Unit) {
-        when (settings2) {
-            Settings2.LANGUAGE -> appLocaleSettingsLauncher.launch {
-                onSettingsClick2(settings2)
+    override fun onSettingsClick(item: SettingsItem, onStartTutorialClick: () -> Unit) {
+        when (item) {
+            SettingsItem.LANGUAGE -> appLocaleSettingsLauncher.launch {
+                onSettingsClick2(item)
             }
 
+            SettingsItem.TUTORIAL -> onStartTutorialClick()
 
-            Settings2.TUTORIAL -> onStartTutorialClick()
-
-            else -> onSettingsClick2(settings2)
+            else -> onSettingsClick2(item)
         }
     }
 
-    override fun onSettingsLongClick(settings2: Settings2, onStartTutorialClick: () -> Unit) {
-        when (settings2) {
-            Settings2.LANGUAGE -> onSettingsClick2(settings2)
+    override fun onSettingsLongClick(item: SettingsItem, onStartTutorialClick: () -> Unit) {
+        when (item) {
+            SettingsItem.LANGUAGE -> onSettingsClick2(item)
             else -> Unit
         }
     }
 
-    private fun onSettingsClick2(settings2: Settings2) {
+    private fun onSettingsClick2(item: SettingsItem) {
         scope.launch {
-            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, settings2)
+            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, item)
         }
     }
 

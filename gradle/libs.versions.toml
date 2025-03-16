@@ -4,8 +4,8 @@ versionCode = "15"
 targetSdk = "35"
 java = "21"
 
-kotlin = "2.1.20-RC2"
-google-ksp = "2.1.20-RC2-1.0.31"
+kotlin = "2.1.20-RC3"
+google-ksp = "2.1.20-RC3-1.0.31"
 kotlinx-coroutines = "1.10.1"
 kotlinx-serialization = "1.8.0"
 kotlinx-kover = "0.9.1"
@@ -143,7 +143,7 @@ soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha0
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version = "0.6.0" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.17-0" }
 
-artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.4" }
+artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.5" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.10.2" }
 
 # Test libraries
