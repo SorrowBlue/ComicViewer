@@ -4,4 +4,5 @@
     <string name="app_label_favorite">お気に入り</string>
     <string name="app_label_read_later">あとで読む</string>
     <string name="app_label_history">履歴</string>
+    <string name="app_label_exit">終了</string>
 </resources>

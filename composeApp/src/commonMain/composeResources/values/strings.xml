@@ -4,4 +4,5 @@
     <string name="app_label_favorite">Favorite</string>
     <string name="app_label_read_later">Read Later</string>
     <string name="app_label_history">History</string>
+    <string name="app_label_exit">Exit</string>
 </resources>

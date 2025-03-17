@@ -74,6 +74,21 @@ kotlin {
     }
 }
 
+compose.resources {
+    customDirectory(
+        sourceSetName = "androidMain",
+        directoryProvider = layout.buildDirectory.dir("generated/aboutLibrariesExt/androidMain/composeResources")
+    )
+    customDirectory(
+        sourceSetName = "desktopMain",
+        directoryProvider = layout.buildDirectory.dir("generated/aboutLibrariesExt/desktopMain/composeResources")
+    )
+    customDirectory(
+        sourceSetName = "iosMain",
+        directoryProvider = layout.buildDirectory.dir("generated/aboutLibrariesExt/iosMain/composeResources")
+    )
+}
+
 android {
     namespace = "com.sorrowblue.comicviewer.app"
     defaultConfig {
