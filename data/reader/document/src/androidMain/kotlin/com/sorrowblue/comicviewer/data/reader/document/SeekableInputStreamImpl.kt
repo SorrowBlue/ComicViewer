@@ -1,9 +1,7 @@
 package com.sorrowblue.comicviewer.data.reader.document
 
-import androidx.annotation.Keep
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 
-@Keep
 internal class SeekableInputStreamImpl(private val seekableInputStream: SeekableInputStream) :
     com.artifex.mupdf.fitz.SeekableInputStream {
 

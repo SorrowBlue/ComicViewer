@@ -15,9 +15,8 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(projects.composeApp)
-                implementation(libs.androidx.core.ktx)
+                implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.artifex.mupdf.fitz)
-                implementation(libs.google.autoServiceAnnotations)
             }
         }
         desktopMain.dependencies {

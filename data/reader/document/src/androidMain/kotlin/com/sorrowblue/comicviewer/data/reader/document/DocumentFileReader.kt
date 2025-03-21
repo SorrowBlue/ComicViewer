@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.annotation.Keep
-import androidx.core.content.ContextCompat
 import com.artifex.mupdf.fitz.Document
 import com.artifex.mupdf.fitz.android.AndroidDrawDevice
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
@@ -26,7 +24,6 @@ import org.koin.core.annotation.Qualifier
 private val COMPRESS_FORMAT = Bitmap.CompressFormat.WEBP_LOSSY
 
 @Suppress("unused")
-@Keep
 @DocumentFileReader
 @Factory
 internal actual class DocumentFileReader(
@@ -37,7 +34,7 @@ internal actual class DocumentFileReader(
 ) : FileReader {
 
     private val width by lazy {
-        val windowManager = ContextCompat.getSystemService(context, WindowManager::class.java)!!
+        val windowManager = context.getSystemService(WindowManager::class.java)!!
         val windowMetrics = windowManager.currentWindowMetrics
         windowManager.currentWindowMetrics.windowInsets.getInsetsIgnoringVisibility(
             WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout()

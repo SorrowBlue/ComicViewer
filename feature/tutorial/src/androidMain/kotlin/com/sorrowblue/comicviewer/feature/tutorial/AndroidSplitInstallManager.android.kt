@@ -13,6 +13,7 @@ import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListene
 import com.google.android.play.core.splitinstall.model.SplitInstallErrorCode
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheetUiState
+import logcat.logcat
 import org.koin.core.annotation.Factory
 
 @Factory
@@ -28,7 +29,8 @@ internal actual class AndroidSplitInstallManager(
 
     private val stateUpdatedListener = SplitInstallStateUpdatedListener {
         if (installedModulesSet.contains(DocumentModule)) {
-            when (it.status) {
+            logcat("AndroidSplitInstallManager") { "SplitInstallStateUpdatedListener status=${it.status}" }
+            val uiState = when (it.status) {
                 SplitInstallSessionStatus.CANCELED -> DocumentSheetUiState.CANCELED
                 SplitInstallSessionStatus.CANCELING -> DocumentSheetUiState.CANCELING
                 SplitInstallSessionStatus.DOWNLOADED -> DocumentSheetUiState.DOWNLOADED
@@ -44,6 +46,7 @@ internal actual class AndroidSplitInstallManager(
                 SplitInstallSessionStatus.UNKNOWN -> DocumentSheetUiState.NONE
                 else -> DocumentSheetUiState.NONE
             }
+            listener?.invoke(uiState)
         }
     }
 

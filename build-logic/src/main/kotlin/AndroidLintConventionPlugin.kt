@@ -15,17 +15,17 @@ internal class AndroidLintConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             when {
-                pluginManager.hasPlugin(libs.plugins.android.application) ->
+                pluginManager.hasPlugin(libs.plugins.androidApplication) ->
                     configure<ApplicationExtension> {
                         lint { configure(target) }
                     }
 
-                pluginManager.hasPlugin(libs.plugins.android.library) ->
+                pluginManager.hasPlugin(libs.plugins.androidLibrary) ->
                     configure<LibraryExtension> {
                         lint { configure(target) }
                     }
 
-                pluginManager.hasPlugin(libs.plugins.android.dynamicFeature) ->
+                pluginManager.hasPlugin(libs.plugins.androidDynamicFeature) ->
                     configure<DynamicFeatureExtension> {
                         lint { configure(target) }
                     }

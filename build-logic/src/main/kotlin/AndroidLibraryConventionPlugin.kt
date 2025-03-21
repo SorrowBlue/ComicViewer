@@ -18,7 +18,7 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             plugins {
-                id(libs.plugins.android.library)
+                id(libs.plugins.androidLibrary)
                 id(libs.plugins.kotlin.android)
                 id(libs.plugins.comicviewer.android.lint)
                 id(libs.plugins.comicviewer.detekt)

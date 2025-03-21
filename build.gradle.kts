@@ -9,9 +9,9 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.modulegraph)
     alias(libs.plugins.kotlinx.kover)
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.android.dynamicFeature) apply false
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.androidDynamicFeature) apply false
     alias(libs.plugins.androidx.room) apply false
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false

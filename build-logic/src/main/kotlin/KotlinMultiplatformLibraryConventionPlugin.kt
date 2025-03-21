@@ -18,7 +18,7 @@ class KotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
         with(target) {
             plugins {
                 id(libs.plugins.kotlinMultiplatform)
-                id(libs.plugins.android.library)
+                id(libs.plugins.androidLibrary)
                 id(libs.plugins.comicviewer.android.lint)
                 id(libs.plugins.comicviewer.detekt)
                 id(libs.plugins.licensee)

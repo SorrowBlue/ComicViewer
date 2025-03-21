@@ -35,6 +35,7 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
 import comicviewer.feature.settings.info.generated.resources.Res
@@ -79,7 +80,8 @@ internal fun LicenseScreen(
         val lazyListState = rememberLazyListState()
         ScrollbarBox(
             state = lazyListState,
-            padding = contentPadding.only(PaddingValuesSides.Vertical + PaddingValuesSides.End),
+            padding = contentPadding.only(PaddingValuesSides.Vertical + PaddingValuesSides.End)
+                .plus(PaddingValues(end = 8.dp)),
         ) {
             LibrariesContainerFixed(
                 libraries = libs,

@@ -57,6 +57,5 @@ internal fun Project.configureLicensee() {
 internal fun Project.configureAboutLibraries() {
     configure<AboutLibrariesExtension> {
         registerAndroidTasks = false
-        configPath = "config"
     }
 }
