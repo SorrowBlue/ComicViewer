@@ -11,9 +11,6 @@
             <meta-data
                 android:name="com.sorrowblue.comicviewer.data.datastore.startup.DarkModeInitializer"
                 android:value="androidx.startup" />
-            <meta-data
-                android:name="com.sorrowblue.comicviewer.data.datastore.startup.ExtensionInitializer"
-                android:value="androidx.startup" />
         </provider>
     </application>
 </manifest>

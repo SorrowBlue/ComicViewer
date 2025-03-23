@@ -7,10 +7,8 @@ import coil3.fetch.FetchResult
 import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
-import coil3.size.pxOrElse
 import okio.BufferedSink
 import okio.BufferedSource
-import okio.buffer
 
 /**
  * File fetcher
@@ -81,9 +79,6 @@ internal abstract class FileFetcher<T : CoilMetadata>(
             throw e
         }
     }
-
-    protected val requestWidth = options.size.width.pxOrElse { 300 }.toFloat()
-    protected val requestHeight = options.size.height.pxOrElse { 300 }.toFloat()
 
     protected suspend fun writeToDiskCache(
         snapshot: DiskCache.Snapshot?,

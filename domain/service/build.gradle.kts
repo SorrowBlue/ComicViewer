@@ -13,15 +13,10 @@ kotlin {
             dependencies {
                 api(projects.domain.model)
                 implementation(projects.domain.usecase)
-                implementation(projects.domain.reader)
+
+                api(libs.squareup.okio)
                 implementation(libs.androidx.paging.common)
                 implementation(libs.kotlinx.datetime)
-            }
-        }
-
-        androidMain {
-            dependencies {
-                implementation(libs.google.android.play.feature.delivery.ktx)
             }
         }
     }

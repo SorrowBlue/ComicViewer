@@ -37,7 +37,6 @@ kotlin {
         freeCompilerArgs.add("-opt-in=androidx.paging.ExperimentalPagingApi")
     }
 
-
     sourceSets {
         commonMain {
             dependencies {

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.datastore.di
+package com.sorrowblue.comicviewer.data.storage.client
 
 import org.koin.core.module.Module
 

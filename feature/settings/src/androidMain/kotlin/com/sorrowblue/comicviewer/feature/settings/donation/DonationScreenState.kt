@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.settings.donation
 
-import android.app.Activity
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -10,12 +9,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import com.android.billingclient.api.Purchase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import logcat.logcat
 
 interface DonationScreenState {
     val snackbarHostState: SnackbarHostState
@@ -46,6 +42,7 @@ private class DonationScreenStateImpl(
 
     override var uiState by mutableStateOf(DonationScreenUiState())
         private set
+/*
 
     var billingClient = BillingClientWrapper(context)
 
@@ -111,12 +108,15 @@ private class DonationScreenStateImpl(
             }
         }
     }
+*/
 
     override fun onItemClick(item: InAppItem) {
+/*
         scope.launch {
             billingClient.queryProductDetail(item.product.productId)?.let {
                 billingClient.launchBillingFlow(context as Activity, it)
             }
         }
+*/
     }
 }

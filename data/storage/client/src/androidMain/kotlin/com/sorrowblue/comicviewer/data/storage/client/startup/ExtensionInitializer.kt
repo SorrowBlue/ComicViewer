@@ -1,9 +1,9 @@
-package com.sorrowblue.comicviewer.data.datastore.startup
+package com.sorrowblue.comicviewer.data.storage.client.startup
 
 import android.content.Context
 import androidx.startup.Initializer
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
-import com.sorrowblue.comicviewer.data.datastore.di.DynamicFeatureModuleProvider
+import com.sorrowblue.comicviewer.data.storage.client.DynamicFeatureModuleProvider
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer

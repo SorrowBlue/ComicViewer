@@ -62,7 +62,6 @@ include(":framework:ui")
 include(":domain:model")
 include(":domain:service")
 include(":domain:usecase")
-include(":domain:reader")
 
 include(":data:coil")
 include(":data:database")

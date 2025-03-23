@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.reader.document
 
-import com.sorrowblue.comicviewer.domain.reader.FileReader
+import com.sorrowblue.comicviewer.domain.service.FileReader
 import okio.BufferedSink
 
 internal actual class DocumentFileReader : FileReader {

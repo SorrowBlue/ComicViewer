@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.domain.reader
+package com.sorrowblue.comicviewer.domain.service
 
 import okio.BufferedSink
 

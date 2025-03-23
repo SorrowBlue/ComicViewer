@@ -1,4 +1,5 @@
-import dev.iurysouza.modulegraph.Orientation
+import dev.iurysouza.modulegraph.ModuleType.Custom
+import dev.iurysouza.modulegraph.Theme
 import io.gitlab.arturbosch.detekt.Detekt
 import java.util.Locale
 
@@ -34,7 +35,6 @@ dependencies {
     dokka(projects.data.storage.client)
     dokka(projects.data.storage.smb)
     dokka(projects.domain.model)
-    dokka(projects.domain.reader)
     dokka(projects.domain.service)
     dokka(projects.domain.usecase)
     dokka(projects.feature.authentication)
@@ -95,21 +95,30 @@ afterEvaluate {
     }
 }
 moduleGraphConfig {
-    graph("${rootDir}/README2.md", "## Domain") {
-        focusedModulesRegex = ".*(domain).*"
-        rootModulesRegex = ".*(domain).*"
-        excludedModulesRegex = ".*(feature).*"
-    }
     graph("${rootDir}/README2.md", "## Data") {
-        focusedModulesRegex = ".*(data).*"
-        rootModulesRegex = ".*(data).*"
-        orientation = Orientation.RIGHT_TO_LEFT
-        excludedModulesRegex = ".*(feature|di|model|app|framework).*"
-        excludedConfigurationsRegex = "api"
+        rootModulesRegex = "^:data(?!:di\$).+"
+        nestingEnabled = true
+        setStyleByModuleType = true
+        strictMode = true
+        excludedModulesRegex = ".*(framework|feature|aggregate|composeApp|di).*"
+        theme = Theme.BASE(moduleTypes = listOf(
+            Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
+            Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
+            Custom(id = "comicviewer.kotlinMultiplatform.library", color = "#00C853"),
+        ))
     }
-//    focusedModulesRegex.set(".*(domain).*")
-//    this.rootModulesRegex.set(".*(data).*")
-//    setStyleByModuleType.set(true)
+    graph("${rootDir}/README2.md", "## Feature") {
+        rootModulesRegex = "^(:composeApp).*"
+        nestingEnabled = true
+        setStyleByModuleType = true
+        excludedModulesRegex =
+            ".*(framework|aggregate|di|data|domain|folder|settings:|file).*"
+        theme = Theme.BASE(moduleTypes = listOf(
+            Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
+            Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
+            Custom(id = "comicviewer.kotlinMultiplatform.library", color = "#00C853"),
+        ))
+    }
 }
 
 version = "0.0.0-SNAPSHOT"

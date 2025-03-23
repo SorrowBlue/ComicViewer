@@ -5,7 +5,7 @@ import android.icu.text.RuleBasedCollator
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReader
-import com.sorrowblue.comicviewer.domain.reader.FileReader
+import com.sorrowblue.comicviewer.domain.service.FileReader
 import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import java.util.Locale
 import kotlinx.coroutines.CoroutineDispatcher

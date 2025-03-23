@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.reader.document.di
 
-import com.sorrowblue.comicviewer.data.datastore.di.DynamicFeatureModuleProvider
+import com.sorrowblue.comicviewer.data.storage.client.DynamicFeatureModuleProvider
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.module.Module
 import org.koin.ksp.generated.module

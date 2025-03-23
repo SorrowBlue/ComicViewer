@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.data.reader.document
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.DocumentFileReader
-import com.sorrowblue.comicviewer.domain.reader.FileReader
+import com.sorrowblue.comicviewer.domain.service.FileReader
 import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import javax.imageio.ImageIO
 import kotlinx.coroutines.CoroutineDispatcher

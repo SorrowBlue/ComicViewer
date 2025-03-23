@@ -21,7 +21,6 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.androidx.appcompat)
-                implementation(libs.google.android.billingclient.billingKtx)
             }
         }
     }

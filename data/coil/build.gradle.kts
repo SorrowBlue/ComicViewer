@@ -8,7 +8,6 @@ plugins {
 kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.domain.service)
-        implementation(projects.domain.reader)
         implementation(libs.coil3)
         implementation(libs.kotlinx.serialization.json)
     }
