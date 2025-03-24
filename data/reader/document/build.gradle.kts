@@ -8,7 +8,6 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.data.storage.client)
-                implementation(projects.data.datastore)
             }
         }
 
@@ -20,7 +19,7 @@ kotlin {
             }
         }
         desktopMain.dependencies {
-            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.pdfbox)
         }
     }

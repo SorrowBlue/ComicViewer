@@ -35,12 +35,6 @@ kotlin {
                 implementation(libs.drick.compose.edgeToEdgePreview)
             }
         }
-
-        desktopMain {
-            dependencies {
-                implementation(libs.kotlinx.coroutines.swing)
-            }
-        }
     }
 }
 

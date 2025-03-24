@@ -22,54 +22,50 @@ kotlin {
     }
 
     sourceSets {
-        commonMain {
-            dependencies {
-                implementation(projects.framework.designsystem)
-                implementation(projects.framework.ui)
-                implementation(projects.data.di)
-                implementation(projects.domain.usecase)
-                implementation(projects.feature.authentication)
-                implementation(projects.feature.bookshelf)
-                implementation(projects.feature.bookshelf.info)
-                implementation(projects.feature.book)
-                implementation(projects.feature.readlater)
-                implementation(projects.feature.favorite)
-                implementation(projects.feature.favorite.add)
-                implementation(projects.feature.favorite.create)
-                implementation(projects.feature.search)
-                implementation(projects.feature.tutorial)
-                implementation(projects.feature.folder)
-                implementation(projects.feature.settings)
-                implementation(projects.feature.settings.info)
-                implementation(projects.feature.history)
+        commonMain.dependencies {
+            implementation(projects.framework.designsystem)
+            implementation(projects.framework.ui)
+            implementation(projects.data.di)
+            implementation(projects.domain.usecase)
+            implementation(projects.feature.authentication)
+            implementation(projects.feature.bookshelf)
+            implementation(projects.feature.bookshelf.info)
+            implementation(projects.feature.book)
+            implementation(projects.feature.readlater)
+            implementation(projects.feature.favorite)
+            implementation(projects.feature.favorite.add)
+            implementation(projects.feature.favorite.create)
+            implementation(projects.feature.search)
+            implementation(projects.feature.tutorial)
+            implementation(projects.feature.folder)
+            implementation(projects.feature.settings)
+            implementation(projects.feature.settings.info)
+            implementation(projects.feature.history)
 
-                // Material3
-                implementation(compose.material3)
-                implementation(compose.material3AdaptiveNavigationSuite)
-                implementation(libs.compose.multiplatform.material3.adaptive)
-                // Di
-                implementation(libs.koin.composeViewModel)
+            // Material3
+            implementation(compose.material3)
+            implementation(compose.material3AdaptiveNavigationSuite)
+            implementation(libs.compose.multiplatform.material3.adaptive)
+            // Di
+            implementation(libs.koin.composeViewModel)
 
-                implementation(libs.kotlinx.serialization.json)
-            }
+            implementation(libs.kotlinx.serialization.json)
         }
 
-        androidMain {
-            dependencies {
-                implementation(projects.framework.notification)
+        androidMain.dependencies {
+            implementation(projects.framework.notification)
 
-                implementation(libs.androidx.core.splashscreen)
-                implementation(libs.koin.androidxCompose)
-                implementation(libs.koin.androidxStartup)
-                implementation(libs.koin.androidxWorkmanager)
-                implementation(libs.google.android.play.feature.delivery.ktx)
-            }
+            implementation(libs.androidx.core.splashscreen)
+            implementation(libs.koin.androidxCompose)
+            implementation(libs.koin.androidxStartup)
+            implementation(libs.koin.androidxWorkmanager)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.google.android.play.feature.delivery.ktx)
         }
 
-        val desktopMain by getting {
-            dependencies {
-                implementation(compose.desktop.currentOs)
-            }
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }
