@@ -6,4 +6,6 @@
     <string name="favorite_title_edit">編集</string>
     <string name="favorite_title_list">お気に入り</string>
     <string name="favorite_btn_create">作成</string>
+    <string name="favorite_list_label_btn_edit">編集</string>
+    <string name="favorite_list_label_btn_delete">削除</string>
 </resources>

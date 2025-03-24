@@ -38,8 +38,9 @@ internal class BillingClientWrapper(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : PurchasesUpdatedListener {
 
-    */
-/** 再試行可能なレスポンスコード *//*
+ */
+/** 再試行可能なレスポンスコード */
+/*
 
     private val retryableResponseCodes = setOf(
         BillingClient.BillingResponseCode.ERROR,
@@ -47,8 +48,9 @@ internal class BillingClientWrapper(
         BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
     )
 
-    */
-/** 再試行できないレスポンスコード *//*
+ */
+/** 再試行できないレスポンスコード */
+/*
 
     private val notRetryableResponseCodes = setOf(
         BillingClient.BillingResponseCode.BILLING_UNAVAILABLE,
@@ -69,8 +71,9 @@ internal class BillingClientWrapper(
         )
         .build()
 
-    */
-/** Google Playへの接続を確立します。 *//*
+ */
+/** Google Playへの接続を確立します。 */
+/*
 
     fun startBillingConnection(onConnected: () -> Unit) {
         billingClient.startConnection(object : BillingClientStateListener {
@@ -92,8 +95,9 @@ internal class BillingClientWrapper(
         })
     }
 
-    */
-/** 請求接続の再試行ロジック。これは単純な最大再試行パターンです *//*
+ */
+/** 請求接続の再試行ロジック。これは単純な最大再試行パターンです */
+/*
 
     fun retryBillingServiceConnection() {
         val maxTries = 3

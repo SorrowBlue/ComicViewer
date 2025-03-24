@@ -172,7 +172,9 @@ fun ListFileCard(
                 } else {
                     Box(
                         modifier = Modifier
-                            .size(64.dp),
+                            .size(64.dp)
+                            .clip(CardDefaults.shape)
+                            .background(ComicTheme.colorScheme.surfaceContainer),
                         contentAlignment = Alignment.Center,
                     ) {
                         if (file is Book) {
@@ -188,8 +190,20 @@ fun ListFileCard(
             },
             supportingContent = {
                 if (file is Book && 0 < file.lastPageRead) {
+                    val color = ProgressIndicatorDefaults.linearColor
                     LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth(),
                         progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+                        strokeCap = StrokeCap.Butt,
+                        gapSize = 0.dp,
+                        drawStopIndicator = {
+                            drawStopIndicator(
+                                drawScope = this,
+                                stopSize = 0.dp,
+                                color = color,
+                                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
+                            )
+                        }
                     )
                 }
             },

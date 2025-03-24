@@ -19,6 +19,7 @@ import com.sorrowblue.comicviewer.favorite.section.FavoriteListContents
 import com.sorrowblue.comicviewer.favorite.section.FavoriteListContentsAction
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
+import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import comicviewer.feature.favorite.generated.resources.Res
@@ -59,7 +60,7 @@ internal fun FavoriteListScreen(
             }
         }
     )
-    // TODO NavTabHandler(onClick = state::onNavClick)
+    NavTabHandler(onClick = state::onNavClick)
 }
 
 @Composable

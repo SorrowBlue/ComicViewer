@@ -134,6 +134,10 @@ android {
         resources.excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
     }
 
+    this.sourceSets {
+        this.getByName("main").res.srcDirs("src/commonMain/composeResources")
+    }
+
     lint {
         abortOnError = true
     }

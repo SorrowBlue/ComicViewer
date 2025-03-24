@@ -6,4 +6,6 @@
     <string name="favorite_title_edit">Edit</string>
     <string name="favorite_title_list">Favorite</string>
     <string name="favorite_btn_create">Create</string>
+    <string name="favorite_list_label_btn_edit">Edit</string>
+    <string name="favorite_list_label_btn_delete">Delete</string>
 </resources>

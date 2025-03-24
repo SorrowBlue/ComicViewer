@@ -34,6 +34,8 @@ fun fakeBookFile(bookshelfId: Int = 0, name: String = nextLoremIpsum()) =
         (size * 2).also { size = it },
         100,
         false,
+        totalPageCount = 100,
+        lastPageRead = 50
     )
 
 fun fakeFolder(bookshelfId: BookshelfId = BookshelfId()) =

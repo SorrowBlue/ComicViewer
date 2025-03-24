@@ -31,6 +31,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResum
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
@@ -87,7 +88,7 @@ internal fun FavoriteScreen(
         }
     }
 
-    // TODO NavTabHandler(onClick = state::onNavClick)
+    NavTabHandler(onClick = state::onNavClick)
 }
 
 internal data class FavoriteScreenUiState(

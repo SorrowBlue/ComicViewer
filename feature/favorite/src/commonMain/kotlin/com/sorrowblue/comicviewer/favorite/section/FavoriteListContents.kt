@@ -32,6 +32,8 @@ import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.itemKey
 import comicviewer.feature.favorite.generated.resources.Res
+import comicviewer.feature.favorite.generated.resources.favorite_list_label_btn_delete
+import comicviewer.feature.favorite.generated.resources.favorite_list_label_btn_edit
 import comicviewer.feature.favorite.generated.resources.favorite_list_label_no_favorites
 import org.jetbrains.compose.resources.stringResource
 
@@ -81,14 +83,14 @@ internal fun FavoriteListContents(
                                 onDismissRequest = { expanded = false }
                             ) {
                                 DropdownMenuItem(
-                                    text = { Text("Edit") },
+                                    text = { Text(stringResource(Res.string.favorite_list_label_btn_edit)) },
                                     onClick = {
                                         expanded = false
                                         onAction(FavoriteListContentsAction.EditClick(it.id))
                                     }
                                 )
                                 DropdownMenuItem(
-                                    text = { Text("Delete") },
+                                    text = { Text(stringResource(Res.string.favorite_list_label_btn_delete)) },
                                     onClick = {
                                         expanded = false
                                         onAction(FavoriteListContentsAction.DeleteClick(it.id))
