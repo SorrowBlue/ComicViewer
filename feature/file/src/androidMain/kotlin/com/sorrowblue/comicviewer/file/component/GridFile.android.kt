@@ -8,10 +8,10 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySett
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 
-@Preview(widthDp = 120, apiLevel = 34)
-@Preview(widthDp = 160, apiLevel = 34)
-@Preview(widthDp = 180, apiLevel = 34)
-@Preview(widthDp = 200, apiLevel = 34)
+@Preview(widthDp = 120)
+@Preview(widthDp = 160)
+@Preview(widthDp = 180)
+@Preview(widthDp = 200)
 @Composable
 internal fun PreviewFileGrid() {
     PreviewTheme {

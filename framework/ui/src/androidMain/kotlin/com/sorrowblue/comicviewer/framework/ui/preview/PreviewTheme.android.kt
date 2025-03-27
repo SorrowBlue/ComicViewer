@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.PreviewImage
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun PreviewTheme(content: @Composable () -> Unit) {
+actual fun PreviewTheme(content: @Composable () -> Unit) {
     ComicTheme {
         val context = LocalContext.current
         val previewHandler = AsyncImagePreviewHandler { PreviewImage(context) }

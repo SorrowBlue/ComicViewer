@@ -35,7 +35,6 @@ internal class MainActivity : AppCompatActivity() {
             super.onCreate(savedInstanceState)
             setOnExitAnimationListener(SplashScreenViewProvider::startShrinkingAnimation)
             setKeepOnScreenCondition(viewModel.shouldKeepSplash::value)
-            com.sorrowblue.comicviewer.framework.ui.R.string.app_label_history
         }
 
         @OptIn(ExperimentalComposeUiApi::class)

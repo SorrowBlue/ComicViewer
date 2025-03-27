@@ -1,11 +1,8 @@
 package com.sorrowblue.comicviewer.file.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
@@ -14,6 +11,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.ProgressIndicatorDefaults.drawStopIndicator
@@ -39,45 +37,42 @@ import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_desc_open_file_info
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * ファイル情報をリストアイテムで表示する
- *
- * @param file ファイル
- * @param onClick クリック時の処理
- * @param onLongClick ロングクリック時の処理
- * @param showThumbnail サムネイル表示するか
- * @param fontSize
- * @param contentScale
- * @param filterQuality
- * @param modifier Modifier
- */
 @Composable
 fun ListFile(
     file: File,
-    onClick: () -> Unit,
     onLongClick: () -> Unit,
     showThumbnail: Boolean,
     fontSize: Int,
     contentScale: ContentScale,
     filterQuality: FilterQuality,
     modifier: Modifier = Modifier,
+    colors: ListItemColors = ListItemDefaults.colors(),
 ) {
     ListItem(
         leadingContent = {
             if (showThumbnail) {
-                FileThumbnailAsyncImage(
-                    fileThumbnail = FileThumbnail.from(file),
-                    contentScale = contentScale,
-                    filterQuality = filterQuality,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CardDefaults.shape)
-                        .background(ComicTheme.colorScheme.imageBackground(ListItemDefaults.containerColor))
-                )
+                Box {
+                    FileThumbnailAsyncImage(
+                        fileThumbnail = FileThumbnail.from(file),
+                        contentScale = contentScale,
+                        filterQuality = filterQuality,
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CardDefaults.shape)
+                            .background(ComicTheme.colorScheme.imageBackground(ListItemDefaults.containerColor))
+                    )
+                    if (file is Folder) {
+                        Icon(
+                            imageVector = ComicIcons.Folder,
+                            contentDescription = null,
+                            modifier = Modifier.align(Alignment.BottomEnd)
+                        )
+                    }
+                }
             } else {
                 Box(
                     modifier = Modifier
-                        .size(64.dp)
+                        .size(80.dp)
                         .clip(CardDefaults.shape)
                         .background(ComicTheme.colorScheme.surfaceContainer),
                     contentAlignment = Alignment.Center
@@ -91,13 +86,7 @@ fun ListFile(
             }
         },
         headlineContent = {
-            Row {
-                if (file is Folder) {
-                    Icon(imageVector = ComicIcons.Folder, contentDescription = null)
-                    Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
-                }
-                Text(text = file.name, fontSize = fontSize.sp)
-            }
+            Text(text = file.name, fontSize = fontSize.sp)
         },
         supportingContent = {
             Column {
@@ -128,7 +117,8 @@ fun ListFile(
                 )
             }
         },
-        modifier = modifier.clickable(onClick = onClick)
+        colors = colors,
+        modifier = modifier
     )
 }
 
@@ -155,66 +145,14 @@ fun ListFileCard(
     filterQuality: FilterQuality,
     modifier: Modifier = Modifier,
 ) {
-    val colors = CardDefaults.cardColors()
-    Card(onClick = onClick, colors = colors, modifier = modifier) {
-        ListItem(
-            leadingContent = {
-                if (showThumbnail) {
-                    FileThumbnailAsyncImage(
-                        fileThumbnail = FileThumbnail.from(file),
-                        contentScale = contentScale,
-                        filterQuality = filterQuality,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CardDefaults.shape)
-                            .background(ComicTheme.colorScheme.imageBackground(colors.containerColor))
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CardDefaults.shape)
-                            .background(ComicTheme.colorScheme.surfaceContainer),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        if (file is Book) {
-                            Icon(imageVector = ComicIcons.Book, contentDescription = null)
-                        } else {
-                            Icon(imageVector = ComicIcons.Folder, contentDescription = null)
-                        }
-                    }
-                }
-            },
-            headlineContent = {
-                Text(file.name, fontSize = fontSize.sp)
-            },
-            supportingContent = {
-                if (file is Book && 0 < file.lastPageRead) {
-                    val color = ProgressIndicatorDefaults.linearColor
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth(),
-                        progress = { file.lastPageRead.toFloat() / file.totalPageCount },
-                        strokeCap = StrokeCap.Butt,
-                        gapSize = 0.dp,
-                        drawStopIndicator = {
-                            drawStopIndicator(
-                                drawScope = this,
-                                stopSize = 0.dp,
-                                color = color,
-                                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
-                            )
-                        }
-                    )
-                }
-            },
-            trailingContent = {
-                IconButton(onClick = onLongClick) {
-                    Icon(
-                        imageVector = ComicIcons.MoreVert,
-                        contentDescription = stringResource(Res.string.file_desc_open_file_info)
-                    )
-                }
-            },
+    Card(onClick = onClick, colors = CardDefaults.cardColors(), modifier = modifier) {
+        ListFile(
+            file = file,
+            onLongClick = onLongClick,
+            showThumbnail = showThumbnail,
+            fontSize = fontSize,
+            contentScale = contentScale,
+            filterQuality = filterQuality,
             colors = ListItemDefaults.colors(containerColor = Color.Transparent)
         )
     }

@@ -95,29 +95,33 @@ afterEvaluate {
     }
 }
 moduleGraphConfig {
-    graph("${rootDir}/README2.md", "## Data") {
+    readmePath.set(layout.projectDirectory.file("README2.md").asFile.path)
+    rootModulesRegex.set("^(:composeApp).*")
+    nestingEnabled.set(true)
+    setStyleByModuleType.set(true)
+    excludedModulesRegex.set(".*(framework|aggregate|di|data|domain|folder|settings:|file).*")
+    theme.set(
+        Theme.BASE(
+            moduleTypes = listOf(
+                Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
+                Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
+                Custom(id = "comicviewer.kotlinMultiplatform.library", color = "#00C853"),
+            )
+        )
+    )
+    graph(layout.projectDirectory.file("README2.md").asFile.path, "## Data") {
         rootModulesRegex = "^:data(?!:di\$).+"
         nestingEnabled = true
         setStyleByModuleType = true
         strictMode = true
         excludedModulesRegex = ".*(framework|feature|aggregate|composeApp|di).*"
-        theme = Theme.BASE(moduleTypes = listOf(
-            Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
-            Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
-            Custom(id = "comicviewer.kotlinMultiplatform.library", color = "#00C853"),
-        ))
-    }
-    graph("${rootDir}/README2.md", "## Feature") {
-        rootModulesRegex = "^(:composeApp).*"
-        nestingEnabled = true
-        setStyleByModuleType = true
-        excludedModulesRegex =
-            ".*(framework|aggregate|di|data|domain|folder|settings:|file).*"
-        theme = Theme.BASE(moduleTypes = listOf(
-            Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
-            Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
-            Custom(id = "comicviewer.kotlinMultiplatform.library", color = "#00C853"),
-        ))
+        theme = Theme.BASE(
+            moduleTypes = listOf(
+                Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
+                Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
+                Custom(id = "comicviewer.kotlinMultiplatform.library", color = "#00C853"),
+            )
+        )
     }
 }
 

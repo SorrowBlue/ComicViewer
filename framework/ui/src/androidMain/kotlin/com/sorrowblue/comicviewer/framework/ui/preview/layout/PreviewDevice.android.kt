@@ -10,8 +10,8 @@ import de.drick.compose.edgetoedgepreviewlib.InsetMode
 import de.drick.compose.edgetoedgepreviewlib.InsetsConfig
 
 @Composable
-fun PreviewDevice(
-    config: PreviewConfig = PreviewConfig(),
+actual fun PreviewDevice(
+    config: PreviewConfig,
     content: @Composable () -> Unit,
 ) {
     PreviewTheme {

@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.file.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -81,7 +82,6 @@ fun <T : File> FileLazyVerticalGrid(
             LazyPagingColumnType.List -> {
                 ListFile(
                     file = item,
-                    onClick = { onItemClick(item) },
                     onLongClick = { onItemInfoClick(item) },
                     showThumbnail = uiState.showThumbnails,
                     fontSize = uiState.fontSize,
@@ -91,7 +91,7 @@ fun <T : File> FileLazyVerticalGrid(
                         Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
                     } else {
                         Modifier
-                    }.animateItem()
+                    }.animateItem().clickable { onItemClick(item) }
                 )
             }
 

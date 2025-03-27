@@ -11,28 +11,24 @@ import androidx.compose.ui.tooling.preview.Preview
     name = "1 Phone - Portrait",
     group = "Phone",
     device = "spec:parent=pixel_9",
-    showBackground = true,
-    apiLevel = 34
+    showBackground = true
 )
 @Preview(
     name = "2 Phone - Landscape",
     group = "Phone",
     device = "spec:parent=pixel_9,orientation=landscape",
-    showBackground = true,
-    apiLevel = 34
+    showBackground = true
 )
 @Preview(
     name = "3 Tablet - Landscape",
     group = "Tablet",
     device = "id:pixel_tablet",
-    showBackground = true,
-    apiLevel = 34
+    showBackground = true
 )
 @Preview(
     name = "3 Tablet - Portrait",
     group = "Tablet",
     device = "spec:parent=pixel_tablet,orientation=portrait",
-    showBackground = true,
-    apiLevel = 34
+    showBackground = true
 )
 annotation class PreviewMultiScreen
