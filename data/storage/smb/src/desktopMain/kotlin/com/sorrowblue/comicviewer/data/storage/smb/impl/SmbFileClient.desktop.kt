@@ -48,16 +48,16 @@ private val mutex = Mutex()
 @Factory
 @SmbFileClient
 internal actual class SmbFileClient(
-    @InjectedParam override val bookshelf: SmbServer,
+    @InjectedParam actual override val bookshelf: SmbServer,
 ) : FileClient<SmbServer> {
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    actual override suspend fun bufferedSource(file: File): BufferedSource {
         return runCommand {
             smbFile(file.path).openInputStream().source().buffer()
         }
     }
 
-    override suspend fun connect(path: String) {
+    actual override suspend fun connect(path: String) {
         kotlin.runCatching {
             smbFile(path).use {
                 it.connect()
@@ -99,19 +99,19 @@ internal actual class SmbFileClient(
         }
     }
 
-    override suspend fun exists(path: String): Boolean {
+    actual override suspend fun exists(path: String): Boolean {
         return runCommand {
             smbFile(path).exists()
         }
     }
 
-    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         return runCommand {
             smbFile(path).toFileModel(resolveImageFolder)
         }
     }
 
-    override suspend fun attribute(path: String): FileAttribute {
+    actual override suspend fun attribute(path: String): FileAttribute {
         return runCommand {
             smbFile(path).run {
                 FileAttribute(
@@ -134,7 +134,7 @@ internal actual class SmbFileClient(
         return attributes and attribute == attribute
     }
 
-    override suspend fun listFiles(
+    actual override suspend fun listFiles(
         file: File,
         resolveImageFolder: Boolean,
     ): List<File> {
@@ -144,7 +144,7 @@ internal actual class SmbFileClient(
         }
     }
 
-    override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return runCommand {
             SmbSeekableInputStream(smbFile(file.path), false)
         }

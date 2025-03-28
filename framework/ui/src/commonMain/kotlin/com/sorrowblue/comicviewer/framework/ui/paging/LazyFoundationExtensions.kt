@@ -9,14 +9,12 @@ import kotlin.jvm.JvmSuppressWildcards
  * Returns a factory of stable and unique keys representing the item.
  *
  * Keys are generated with the key lambda that is passed in. If null is passed in, keys will
- * default to a placeholder key. If [PagingConfig.enablePlaceholders] is true,
+ * default to a placeholder key. If [androidx.paging.PagingConfig.enablePlaceholders] is true,
  * LazyPagingItems may return null items. Null items will also automatically default to
  * a placeholder key.
  *
  * This factory can be applied to Lazy foundations such as [LazyGridScope.items] or Pagers.
  * Examples:
- * @sample androidx.paging.compose.samples.PagingWithHorizontalPager
- * @sample androidx.paging.compose.samples.PagingWithLazyGrid
  *
  * @param [key] a factory of stable and unique keys representing the item. Using the same key
  * for multiple items in the list is not allowed. Type of the key should be saveable

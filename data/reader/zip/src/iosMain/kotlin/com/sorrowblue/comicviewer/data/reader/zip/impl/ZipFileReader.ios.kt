@@ -44,26 +44,26 @@ internal actual class ZipFileReader(
         logcat { "ZipFileReader init $zipFileSystem, path=$paths" }
     }
 
-    override fun close() {
+    actual override fun close() {
         zipFileSystem.close()
         fileSystem.close()
     }
 
-    override suspend fun pageCount(): Int {
+    actual override suspend fun pageCount(): Int {
         return paths.size
     }
 
-    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
+    actual override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         zipFileSystem.source(paths[pageIndex]).buffer().use { source ->
             source.readAll(bufferedSink)
         }
     }
 
-    override suspend fun fileSize(pageIndex: Int): Long {
+    actual override suspend fun fileSize(pageIndex: Int): Long {
         return 0
     }
 
-    override suspend fun fileName(pageIndex: Int): String {
+    actual override suspend fun fileName(pageIndex: Int): String {
         return paths[pageIndex].name
     }
 }

@@ -21,6 +21,7 @@ class KotlinMultiplatformAndroidDynamicFeatureConventionPlugin : Plugin<Project>
                 id(libs.plugins.androidDynamicFeature)
                 id(libs.plugins.comicviewer.android.lint)
                 id(libs.plugins.comicviewer.detekt)
+                id(libs.plugins.comicviewer.dokka)
                 id(libs.plugins.licensee)
                 id(libs.plugins.aboutlibraries)
             }

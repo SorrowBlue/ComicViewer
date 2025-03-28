@@ -24,19 +24,19 @@ internal actual class DocumentFileReader(
 
     private val document = Loader.loadPDF(RandomAccessReadImpl(seekableInputStream))
 
-    override suspend fun pageCount(): Int {
+    actual override suspend fun pageCount(): Int {
         return document.numberOfPages
     }
 
-    override suspend fun fileName(pageIndex: Int): String {
+    actual override suspend fun fileName(pageIndex: Int): String {
         return ""
     }
 
-    override suspend fun fileSize(pageIndex: Int): Long {
+    actual override suspend fun fileSize(pageIndex: Int): Long {
         return 0
     }
 
-    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
+    actual override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         val renderer = PDFRenderer(document)
         val image = renderer.renderImageWithDPI(pageIndex, 300f)
         withContext(dispatcher) {
@@ -44,7 +44,7 @@ internal actual class DocumentFileReader(
         }
     }
 
-    override fun close() {
+    actual override fun close() {
         // TODO()
     }
 }

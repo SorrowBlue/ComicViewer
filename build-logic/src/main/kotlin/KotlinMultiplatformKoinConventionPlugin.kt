@@ -25,7 +25,6 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                add("kspCommonMainMetadata", libs.koin.kspCompiler)
                 add("kspAndroid", libs.koin.kspCompiler)
                 add("kspAndroidTest", libs.koin.kspCompiler)
                 add("kspIosX64", libs.koin.kspCompiler)

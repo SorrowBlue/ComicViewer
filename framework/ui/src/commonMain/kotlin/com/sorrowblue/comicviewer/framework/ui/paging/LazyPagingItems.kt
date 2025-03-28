@@ -34,8 +34,6 @@ internal expect val mainDispatcher: CoroutineContext
  * Previewing [LazyPagingItems] is supported on a list of mock data. See sample for how to preview
  * mock data.
  *
- * @sample androidx.paging.compose.samples.PagingPreview
- *
  * @param T the type of value used by [PagingData].
  */
 class LazyPagingItems<T : Any> internal constructor(
@@ -109,12 +107,12 @@ class LazyPagingItems<T : Any> internal constructor(
      * Retry any failed load requests that would result in a [LoadState.Error] update to this
      * [LazyPagingItems].
      *
-     * Unlike [refresh], this does not invalidate [PagingSource], it only retries failed loads
+     * Unlike [refresh], this does not invalidate [androidx.paging.PagingSource], it only retries failed loads
      * within the same generation of [PagingData].
      *
      * [LoadState.Error] can be generated from two types of load requests:
-     *  * [PagingSource.load] returning [PagingSource.LoadResult.Error]
-     *  * [RemoteMediator.load] returning [RemoteMediator.MediatorResult.Error]
+     *  * [androidx.paging.PagingSource.load] returning [androidx.paging.PagingSource.LoadResult.Error]
+     *  * [androidx.paging.RemoteMediator.load] returning [androidx.paging.RemoteMediator.MediatorResult.Error]
      */
     fun retry() {
         pagingDataPresenter.retry()
@@ -123,16 +121,16 @@ class LazyPagingItems<T : Any> internal constructor(
     /**
      * Refresh the data presented by this [LazyPagingItems].
      *
-     * [refresh] triggers the creation of a new [PagingData] with a new instance of [PagingSource]
-     * to represent an updated snapshot of the backing dataset. If a [RemoteMediator] is set,
-     * calling [refresh] will also trigger a call to [RemoteMediator.load] with [LoadType] [REFRESH]
-     * to allow [RemoteMediator] to check for updates to the dataset backing [PagingSource].
+     * [refresh] triggers the creation of a new [PagingData] with a new instance of [androidx.paging.PagingSource]
+     * to represent an updated snapshot of the backing dataset. If a [androidx.paging.RemoteMediator] is set,
+     * calling [refresh] will also trigger a call to [androidx.paging.RemoteMediator.load] with [androidx.paging.LoadType] [androidx.paging.LoadType.REFRESH]
+     * to allow [androidx.paging.RemoteMediator] to check for updates to the dataset backing [androidx.paging.PagingSource].
      *
      * Note: This API is intended for UI-driven refresh signals, such as swipe-to-refresh.
      * Invalidation due repository-layer signals, such as DB-updates, should instead use
-     * [PagingSource.invalidate].
+     * [androidx.paging.PagingSource.invalidate].
      *
-     * @see PagingSource.invalidate
+     * @see androidx.paging.PagingSource.invalidate
      */
     fun refresh() {
         pagingDataPresenter.refresh()
@@ -176,8 +174,6 @@ private val InitialLoadStates = LoadStates(
  * Collects values from this [Flow] of [PagingData] and represents them inside a [LazyPagingItems]
  * instance. The [LazyPagingItems] instance can be used for lazy foundations such as
  * [LazyListScope.items] in order to display the data obtained from a [Flow] of [PagingData].
- *
- * @sample androidx.paging.compose.samples.PagingBackendSample
  *
  * @param context the [CoroutineContext] to perform the collection of [PagingData]
  * and [CombinedLoadStates].

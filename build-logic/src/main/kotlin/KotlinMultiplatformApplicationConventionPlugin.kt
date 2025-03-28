@@ -24,6 +24,7 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
                 id(libs.plugins.androidApplication)
                 id(libs.plugins.comicviewer.android.lint)
                 id(libs.plugins.comicviewer.detekt)
+                id(libs.plugins.comicviewer.dokka)
                 id(libs.plugins.licensee)
                 id(libs.plugins.aboutlibraries)
             }

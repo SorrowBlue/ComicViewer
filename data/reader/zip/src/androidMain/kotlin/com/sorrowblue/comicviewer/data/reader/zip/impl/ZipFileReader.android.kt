@@ -46,11 +46,11 @@ internal actual class ZipFileReader(
 
     private val mutex = Mutex()
 
-    override suspend fun fileSize(pageIndex: Int): Long = entries[pageIndex].size ?: 0
+    actual override suspend fun fileSize(pageIndex: Int): Long = entries[pageIndex].size ?: 0
 
-    override suspend fun fileName(pageIndex: Int): String = entries[pageIndex].path.orEmpty()
+    actual override suspend fun fileName(pageIndex: Int): String = entries[pageIndex].path.orEmpty()
 
-    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
+    actual override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         mutex.withLock {
             logcat(LogPriority.DEBUG) { "copyTo(pageIndex: $pageIndex) path = ${entries[pageIndex].path}" }
             entries[pageIndex].extractSlow2 {
@@ -61,11 +61,11 @@ internal actual class ZipFileReader(
         }
     }
 
-    override suspend fun pageCount(): Int {
+    actual override suspend fun pageCount(): Int {
         return entries.size
     }
 
-    override fun close() {
+    actual override fun close() {
         runBlocking {
             withContext(dispatcher) {
                 seekableInputStream.close()

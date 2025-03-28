@@ -52,19 +52,19 @@ internal actual class DocumentFileReader(
 
     private val mutex = Mutex()
 
-    override suspend fun pageCount(): Int {
+    actual override suspend fun pageCount(): Int {
         return withContext(dispatcher) { document.countPages() }
     }
 
-    override suspend fun fileName(pageIndex: Int): String {
+    actual override suspend fun fileName(pageIndex: Int): String {
         return ""
     }
 
-    override suspend fun fileSize(pageIndex: Int): Long {
+    actual override suspend fun fileSize(pageIndex: Int): Long {
         return 0
     }
 
-    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
+    actual override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         mutex.withLock {
             bufferedSink.outputStream().also {
                 AndroidDrawDevice.drawPageFitWidth(document.loadPage(pageIndex), width)
@@ -73,7 +73,7 @@ internal actual class DocumentFileReader(
         }
     }
 
-    override fun close() {
+    actual override fun close() {
         runBlocking {
             withContext(dispatcher) {
                 seekableInputStream.close()

@@ -58,7 +58,6 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                 val compose = extensions.getByType<ComposePlugin.Dependencies>()
                 add("debugImplementation", compose.uiTooling)
 
-                add("kspCommonMainMetadata", libs.cmpdestinations.ksp)
                 add("kspAndroid", libs.cmpdestinations.ksp)
                 add("kspAndroidTest", libs.cmpdestinations.ksp)
                 add("kspIosX64", libs.cmpdestinations.ksp)

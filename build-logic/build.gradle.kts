@@ -53,9 +53,6 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
 
 gradlePlugin {
     plugins {
-        register(libs.plugins.comicviewer.android.library) {
-            implementationClass = "AndroidLibraryConventionPlugin"
-        }
         register(libs.plugins.comicviewer.android.lint) {
             implementationClass = "AndroidLintConventionPlugin"
         }

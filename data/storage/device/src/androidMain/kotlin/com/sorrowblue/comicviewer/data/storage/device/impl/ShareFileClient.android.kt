@@ -21,13 +21,13 @@ import org.koin.core.annotation.InjectedParam
 @Factory
 @ShareFileClient
 internal actual class ShareFileClient(
-    @InjectedParam override val bookshelf: ShareContents,
+    @InjectedParam actual override val bookshelf: ShareContents,
     private val context: Context,
 ) : FileClient<ShareContents> {
 
     private val contentResolver = context.contentResolver
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    actual override suspend fun bufferedSource(file: File): BufferedSource {
         return kotlin.runCatching {
             ParcelFileDescriptor.AutoCloseInputStream(
                 contentResolver.openFileDescriptor(file.uri, "r")
@@ -42,11 +42,11 @@ internal actual class ShareFileClient(
         }
     }
 
-    override suspend fun attribute(path: String): FileAttribute {
+    actual override suspend fun attribute(path: String): FileAttribute {
         return FileAttribute()
     }
 
-    override suspend fun connect(path: String) {
+    actual override suspend fun connect(path: String) {
         kotlin.runCatching {
             documentFile(path).exists()
         }.fold({
@@ -63,7 +63,7 @@ internal actual class ShareFileClient(
         }
     }
 
-    override suspend fun exists(path: String): Boolean {
+    actual override suspend fun exists(path: String): Boolean {
         return kotlin.runCatching {
             documentFile(path).exists()
         }.getOrElse {
@@ -76,7 +76,7 @@ internal actual class ShareFileClient(
         }
     }
 
-    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         return kotlin.runCatching {
             documentFile(path).toFileModel()
         }.getOrElse {
@@ -89,7 +89,7 @@ internal actual class ShareFileClient(
         }
     }
 
-    override suspend fun listFiles(
+    actual override suspend fun listFiles(
         file: File,
         resolveImageFolder: Boolean,
     ): List<File> {
@@ -105,7 +105,7 @@ internal actual class ShareFileClient(
         }
     }
 
-    override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return kotlin.runCatching {
             DeviceSeekableInputStream(context, file.uri)
         }.getOrElse {

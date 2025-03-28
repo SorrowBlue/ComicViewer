@@ -48,16 +48,16 @@ private val mutex = Mutex()
 @Factory
 @SmbFileClient
 internal actual class SmbFileClient(
-    @InjectedParam override val bookshelf: SmbServer,
+    @InjectedParam actual override val bookshelf: SmbServer,
 ) : FileClient<SmbServer> {
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    actual override suspend fun bufferedSource(file: File): BufferedSource {
         return runCommand {
             smbFile(file.path).openInputStream().source().buffer()
         }
     }
 
-    override suspend fun connect(path: String) {
+    actual override suspend fun connect(path: String) {
         kotlin.runCatching {
             smbFile(path).use {
                 it.connect()
@@ -99,19 +99,19 @@ internal actual class SmbFileClient(
         }
     }
 
-    override suspend fun exists(path: String): Boolean {
+    actual override suspend fun exists(path: String): Boolean {
         return runCommand {
             smbFile(path).exists()
         }
     }
 
-    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         return runCommand {
             smbFile(path).toFileModel(resolveImageFolder)
         }
     }
 
-    override suspend fun attribute(path: String): FileAttribute {
+    actual override suspend fun attribute(path: String): FileAttribute {
         return runCommand {
             smbFile(path).run {
                 FileAttribute(
@@ -134,7 +134,7 @@ internal actual class SmbFileClient(
         return attributes and attribute == attribute
     }
 
-    override suspend fun listFiles(
+    actual override suspend fun listFiles(
         file: File,
         resolveImageFolder: Boolean,
     ): List<File> {
@@ -144,7 +144,7 @@ internal actual class SmbFileClient(
         }
     }
 
-    override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return runCommand {
             SmbSeekableInputStream(smbFile(file.path), false)
         }
@@ -302,40 +302,5 @@ internal actual class SmbFileClient(
                 NtlmPasswordAuthenticator(auth.domain, auth.username, auth.password)
             )
         }
-    }
-}
-
-internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) :
-    SeekableInputStream {
-
-    private val file = kotlin.runCatching {
-        if (write) {
-            smbFile.openRandomAccess("rw", SmbConstants.DEFAULT_SHARING)
-        } else {
-            smbFile.openRandomAccess("r", SmbConstants.DEFAULT_SHARING)
-        }
-    }.onFailure {
-        it.printStackTrace()
-    }.getOrThrow()
-
-    override fun seek(offset: Long, whence: Int): Long {
-        when (whence) {
-            SeekableInputStream.SEEK_SET -> file.seek(offset)
-            SeekableInputStream.SEEK_CUR -> file.seek(file.filePointer + offset)
-            SeekableInputStream.SEEK_END -> file.seek(file.length() + offset)
-        }
-        return file.filePointer
-    }
-
-    override fun position(): Long {
-        return file.filePointer
-    }
-
-    override fun read(buf: ByteArray): Int {
-        return file.read(buf)
-    }
-
-    override fun close() {
-        file.close()
     }
 }

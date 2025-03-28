@@ -32,9 +32,9 @@ import org.koin.core.annotation.InjectedParam
 @Factory
 @DeviceFileClient
 internal actual class DeviceFileClient(
-    @InjectedParam override val bookshelf: InternalStorage,
+    @InjectedParam actual override val bookshelf: InternalStorage,
 ) : FileClient<InternalStorage> {
-    override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
+    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
         logcat { "listFiles(file.path=${file.path}, resolveImageFolder=$resolveImageFolder)" }
         return kotlin.runCatching {
             Files.list(file.path.toPath().toNioPath()).map { it.toFileModel(resolveImageFolder) }
@@ -49,25 +49,25 @@ internal actual class DeviceFileClient(
         }
     }
 
-    override suspend fun exists(path: String): Boolean {
+    actual override suspend fun exists(path: String): Boolean {
         logcat { "exists(path=$path)" }
         return path.toPath().toNioPath().exists()
     }
 
-    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         logcat { "current(path=$path, resolveImageFolder=$resolveImageFolder)" }
         return path.toPath().toNioPath().toFileModel(resolveImageFolder)
     }
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    actual override suspend fun bufferedSource(file: File): BufferedSource {
         return FileSystem.SYSTEM.source(file.path.toPath()).buffer()
     }
 
-    override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return LocalFileSeekableInputStream(file.path.toPath().toNioPath())
     }
 
-    override suspend fun connect(path: String) {
+    actual override suspend fun connect(path: String) {
         logcat { "connect(path=$path)" }
         kotlin.runCatching {
             path.toPath().toNioPath().exists()
@@ -85,7 +85,7 @@ internal actual class DeviceFileClient(
         }
     }
 
-    override suspend fun attribute(path: String): FileAttribute {
+    actual override suspend fun attribute(path: String): FileAttribute {
         TODO("Not yet implemented")
     }
 

@@ -13,33 +13,33 @@ import org.koin.core.annotation.InjectedParam
 @Factory
 @SmbFileClient
 internal actual class SmbFileClient(
-    @InjectedParam override val bookshelf: SmbServer,
+    @InjectedParam actual override val bookshelf: SmbServer,
 ) : FileClient<SmbServer> {
-    override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
+    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun exists(path: String): Boolean {
+    actual override suspend fun exists(path: String): Boolean {
         TODO("Not yet implemented")
     }
 
-    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         TODO("Not yet implemented")
     }
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    actual override suspend fun bufferedSource(file: File): BufferedSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
         TODO("Not yet implemented")
     }
 
-    override suspend fun connect(path: String) {
+    actual override suspend fun connect(path: String) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun attribute(path: String): FileAttribute {
+    actual override suspend fun attribute(path: String): FileAttribute {
         TODO("Not yet implemented")
     }
 }

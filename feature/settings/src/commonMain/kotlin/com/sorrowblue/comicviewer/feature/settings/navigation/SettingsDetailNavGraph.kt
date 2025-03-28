@@ -34,7 +34,7 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@Suppress("KotlinNoActualForExpect")
 internal expect class SettingsDetailNavGraphImpl() :
     com.sorrowblue.cmpdestinations.NavGraph {
     override val startDestination: KClass<*>
