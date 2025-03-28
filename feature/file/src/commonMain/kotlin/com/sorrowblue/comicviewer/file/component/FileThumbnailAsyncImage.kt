@@ -30,6 +30,8 @@ fun FileThumbnailAsyncImage(
     },
     loading: @Composable (SubcomposeAsyncImageScope.(State.Loading) -> Unit)? =
         if (LocalInspectionMode.current) null else FileThumbnailAsyncImageDefault.loading,
+    onError: ((State.Error) -> Unit)? = null,
+    onSuccess: ((State.Success) -> Unit)? = null,
     filterQuality: FilterQuality = FilterQuality.None,
     alignment: Alignment = Alignment.Center,
     contentScale: ContentScale = ContentScale.Fit,
@@ -42,7 +44,9 @@ fun FileThumbnailAsyncImage(
         alignment = alignment,
         error = error,
         loading = loading,
-        modifier = modifier
+        modifier = modifier,
+        onError = onError,
+        onSuccess = onSuccess
     )
 }
 

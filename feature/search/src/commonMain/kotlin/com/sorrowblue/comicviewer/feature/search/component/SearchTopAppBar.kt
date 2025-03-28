@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -119,6 +120,15 @@ internal fun SearchTopAppBar(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent
                 ),
+                trailingIcon = if (searchCondition.query.isEmpty()) {
+                    null
+                } else {
+                    {
+                        IconButton(onClick = { onAction(SearchTopAppBarAction.QueryChange("")) }) {
+                            Icon(ComicIcons.Close, null)
+                        }
+                    }
+                },
                 keyboardActions = KeyboardActions(onSearch = { skc?.hide() }),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 modifier = Modifier.fillMaxWidth()
@@ -157,7 +167,7 @@ internal fun SearchTopAppBar(
                     onChangeSelect = { onAction(SearchTopAppBarAction.SortTypeClick(it)) },
                     menus = remember { SortType.entries }
                 ) {
-                    // Text(stringResource(it.displayText))
+                    Text(text = stringResource(it.displayText))
                 }
                 FilterChip(
                     selected = searchCondition.showHidden,
