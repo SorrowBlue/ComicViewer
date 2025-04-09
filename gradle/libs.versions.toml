@@ -78,7 +78,7 @@ androidx-browser = { group = "androidx.browser", name = "browser", version = "1.
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.15.0" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.1" }
 
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom-alpha", version = "2024.12.01" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom-alpha", version = "2025.04.00" }
 androidx-compose-animation-graphics = { group = "androidx.compose.animation", name = "animation-graphics" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
