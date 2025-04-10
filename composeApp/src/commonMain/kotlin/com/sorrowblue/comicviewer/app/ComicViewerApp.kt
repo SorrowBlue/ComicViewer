@@ -7,11 +7,9 @@ import com.sorrowblue.cmpdestinations.NavGraphNavHost
 import com.sorrowblue.comicviewer.app.component.ComicViewerScaffold
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraphImpl
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavigator
-import com.sorrowblue.comicviewer.favorite.navigation.FavoriteNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraphNavigator
-import com.sorrowblue.comicviewer.feature.favorite.add.FavoriteAddScreenNavigator
-import com.sorrowblue.comicviewer.feature.favorite.create.FavoriteCreateScreenNavigator
+import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
@@ -46,11 +44,9 @@ internal fun ComicViewerApp(state: ComicViewerAppState = rememberComicViewerAppS
                         BookshelfNavGraphNavigator::class,
                         BookNavGraphNavigator::class,
                         ReadLaterNavGraphNavigator::class,
-                        FavoriteNavGraphNavigator::class,
+                        CollectionNavGraphNavigator::class,
                         SearchNavGraphNavigator::class,
-                        FavoriteAddScreenNavigator::class,
                         HistoryNavGraphNavigator::class,
-                        FavoriteCreateScreenNavigator::class,
                     )
                     single<NavController> { state.navController }
                 }

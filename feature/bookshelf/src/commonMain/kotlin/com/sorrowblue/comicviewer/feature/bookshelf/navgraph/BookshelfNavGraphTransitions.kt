@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.feature.bookshelf.navgraph
 
 import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEdit
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure
@@ -26,12 +26,12 @@ internal object BookshelfNavGraphTransitions : DestinationTransitions() {
         ),
         TransitionsConfigure(
             Bookshelf::class,
-            BookshelfEdit::class,
+            BookshelfEditNavGraph::class,
             TransitionsConfigure.Type.SharedAxisY
         ),
         TransitionsConfigure(
             BookshelfSelection::class,
-            BookshelfEdit::class,
+            BookshelfEditNavGraph::class,
             TransitionsConfigure.Type.SharedAxisX
         ),
         TransitionsConfigure(

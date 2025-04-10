@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.search.navigation
 
 import androidx.navigation.NavController
+import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -13,8 +14,9 @@ import org.koin.core.annotation.Factory
 
 interface SearchNavGraphNavigator {
     fun onBookClick(book: Book)
-    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onCollectionAddClick(bookshelfId: BookshelfId, path: String)
     fun onSettingsClick()
+    fun onSmartCollectionClick(bookshelfId: BookshelfId, searchCondition: SearchCondition)
 }
 
 @Factory
@@ -33,8 +35,8 @@ internal class SearchNavGraphNavigatorImpl(
         }
     }
 
-    override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) {
-        navigator.onFavoriteClick(bookshelfId, path)
+    override fun onCollectionAddClick(bookshelfId: BookshelfId, path: String) {
+        navigator.onCollectionAddClick(bookshelfId, path)
     }
 
     override fun onOpenFolderClick(bookshelfId: BookshelfId, parent: String) {
@@ -47,5 +49,12 @@ internal class SearchNavGraphNavigatorImpl(
 
     override fun onSettingsClick() {
         navigator.onSettingsClick()
+    }
+
+    override fun onSmartCollectionClick(
+        bookshelfId: BookshelfId,
+        searchCondition: SearchCondition,
+    ) {
+        navigator.onSmartCollectionClick(bookshelfId, searchCondition)
     }
 }

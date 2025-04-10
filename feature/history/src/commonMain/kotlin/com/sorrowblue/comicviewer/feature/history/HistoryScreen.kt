@@ -31,7 +31,7 @@ interface HistoryScreenNavigator {
     fun navigateUp()
     fun onSettingsClick()
     fun navigateToBook(book: Book)
-    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onCollectionAddClick(bookshelfId: BookshelfId, path: String)
     fun navigateToFolder(file: File)
     fun onClearAllClick()
 }
@@ -62,8 +62,8 @@ internal fun HistoryScreen(
     val currentNavigator by rememberUpdatedState(navigator)
     EventEffect(state.events) {
         when (it) {
-            is HistoryScreenEvent.Favorite ->
-                currentNavigator.onFavoriteClick(it.bookshelfId, it.path)
+            is HistoryScreenEvent.Collection ->
+                currentNavigator.onCollectionAddClick(it.bookshelfId, it.path)
 
             is HistoryScreenEvent.Book -> currentNavigator.navigateToBook(it.book)
             is HistoryScreenEvent.OpenFolder -> currentNavigator.navigateToFolder(it.file)

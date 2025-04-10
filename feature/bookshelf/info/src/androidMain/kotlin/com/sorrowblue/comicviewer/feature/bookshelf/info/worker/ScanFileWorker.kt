@@ -113,7 +113,7 @@ internal class ScanFileWorker(
         })
     }
 
-    private fun createForegroundInfo(
+    private suspend fun createForegroundInfo(
         bookshelfName: String,
         path: String,
         init: Boolean = false,
@@ -122,7 +122,7 @@ internal class ScanFileWorker(
             .createCancelPendingIntent(id)
         val notification =
             NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id).apply {
-                setContentTitle(runBlocking { getString(Res.string.bookshelf_info_title_scan) })
+                setContentTitle(getString(Res.string.bookshelf_info_title_scan))
                 setSubText(bookshelfName)
                 setContentText(path)
                 setSmallIcon(NotificationR.drawable.ic_sync_book_24dp)

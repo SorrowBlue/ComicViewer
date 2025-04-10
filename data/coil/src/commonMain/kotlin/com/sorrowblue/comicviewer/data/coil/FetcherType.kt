@@ -12,4 +12,4 @@ annotation class BookPageImageFetcher
 annotation class FolderThumbnailFetcher
 
 @Named
-annotation class FavoriteFetcher
+annotation class CollectionFetcher

@@ -23,6 +23,9 @@ internal actual val AutoMigration_4_5_Impl: Migration =
 internal actual val AutoMigration_5_6_Impl: Migration =
     ComicViewerTestDatabase_AutoMigration_5_6_Impl()
 
+internal actual val AutoMigration_6_7_Impl: Migration =
+    ComicViewerTestDatabase_AutoMigration_6_7_Impl()
+
 internal actual fun getMigrationTestHelper(): MigrationTestHelper {
     val dbPath = KoinPlatform.getKoin().get<DesktopContext>().filesDir.resolve("database")
     return MigrationTestHelper(

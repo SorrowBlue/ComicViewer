@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collection_editor_title_smart_create">Adding Smart collection</string>
+    <string name="collection_editor_title_smart_edit">Edit Smart collection</string>
+    <string name="collection_editor_title_basic_create">Create Collection</string>
+    <string name="collection_editor_title_basic_edit">Eit Collection</string>
+
+    <string name="collection_editor_label_create">Create</string>
+    <string name="collection_editor_label_cancel">Cancel</string>
+
+    <string name="collection_editor_label_bookshelf">Bookshelf</string>
+    <string name="collection_editor_label_all_bookshelf">All bookshelf</string>
+
+    <string name="collection_editor_label_range">Scope</string>
+    <string name="collection_editor_label_range_bookshelf">whole bookshelf</string>
+    <string name="collection_editor_label_range_in_folder">in folder</string>
+    <string name="collection_editor_label_range_sub_folder">sub folder</string>
+
+    <string name="collection_editor_label_period">Period</string>
+    <string name="collection_editor_label_period_none">none</string>
+    <string name="collection_editor_label_period_hour24">24hours</string>
+    <string name="collection_editor_label_period_week1">one week</string>
+    <string name="collection_editor_label_period_month1">one month</string>
+
+    <string name="collection_editor_label_sort">Sort order</string>
+    <string name="collection_editor_label_sort_name_asc">File name (ascending)</string>
+    <string name="collection_editor_label_sort_name_desc">File name (descending)</string>
+    <string name="collection_editor_label_sort_date_asc">Timestamp (ascending)</string>
+    <string name="collection_editor_label_sort_date_desc">Timestamp (descending)</string>
+    <string name="collection_editor_label_sort_size_asc">File size (ascending)</string>
+    <string name="collection_editor_label_sort_size_desc">File size (descending)</string>
+
+    <string name="collection_editor_label_show_hidden_files">Show hidden files</string>
+    <string name="collection_editor_label_no_books">There are no books in collection</string>
+    <string name="collection_editor_msg_success_create">“%1$s” collection has been created</string>
+    <string name="collection_editor_msg_success_create_add">Added book to collection</string>
+</resources>

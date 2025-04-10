@@ -121,6 +121,22 @@ fun animateMainContentPaddingValues(
     )
 }
 
+@Composable
+fun animatePaddingValues(
+    value: PaddingValues,
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
+    animationSpec: AnimationSpec<PaddingValues> = paddingValuesDefaultSpring,
+    finishedListener: ((PaddingValues) -> Unit)? = null,
+): State<PaddingValues> {
+    return animateValueAsState(
+        targetValue = value,
+        typeConverter = paddingValuesToVector(layoutDirection),
+        animationSpec = animationSpec,
+        label = "PaddingValuesAnimation",
+        finishedListener = finishedListener
+    )
+}
+
 private fun paddingValuesToVector(layoutDirection: LayoutDirection): TwoWayConverter<PaddingValues, AnimationVector4D> =
     TwoWayConverter(
         convertToVector = {

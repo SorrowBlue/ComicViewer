@@ -8,6 +8,7 @@ kotlin {
             dependencies {
                 implementation(projects.feature.file)
                 implementation(projects.feature.folder)
+                implementation(libs.soil.form)
             }
         }
     }

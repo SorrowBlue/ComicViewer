@@ -13,7 +13,7 @@ import org.koin.core.annotation.Factory
 
 interface HistoryNavGraphNavigator {
     fun onBookClick(book: Book)
-    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onCollectionAddClick(bookshelfId: BookshelfId, path: String)
     fun onSettingsClick()
     fun onSearchClick(bookshelfId: BookshelfId, path: String)
 }
@@ -34,8 +34,8 @@ internal class HistoryNavGraphNavigatorImpl(
         navController.navigate(ClearAllHistory)
     }
 
-    override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) =
-        navigator.onFavoriteClick(bookshelfId, path)
+    override fun onCollectionAddClick(bookshelfId: BookshelfId, path: String) =
+        navigator.onCollectionAddClick(bookshelfId, path)
 
     override fun onSearchClick(bookshelfId: BookshelfId, path: String) =
         navigator.onSearchClick(bookshelfId, path)

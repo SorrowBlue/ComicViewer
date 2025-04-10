@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import com.sorrowblue.comicviewer.framework.common.Initializer
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import org.koin.compose.KoinContext
 import org.koin.compose.KoinMultiplatformApplication
 import org.koin.compose.currentKoinScope
 import org.koin.core.qualifier.Qualifier
@@ -13,16 +12,15 @@ import org.koin.core.scope.Scope
 
 @Composable
 fun Application(finishApp: () -> Unit) {
+    @Suppress("OPT_IN_USAGE")
     KoinMultiplatformApplication(config = setupDi()) {
         val initializing = koinInjectAll<Initializer<*>>()
         LaunchedEffect(Unit) {
             Initializer.initialize(initializing)
         }
         ComicTheme {
-            KoinContext {
-                RootScreenWrapper(finishApp = finishApp) {
-                    ComicViewerApp()
-                }
+            RootScreenWrapper(finishApp = finishApp) {
+                ComicViewerApp()
             }
         }
     }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
 import org.koin.androix.startup.KoinInitializer
+import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -29,5 +30,6 @@ internal class DarkModeInitializer : Initializer<Unit>, KoinComponent {
         logcat(LogPriority.INFO) { "Initialized nightMode. $darkMode." }
     }
 
+    @OptIn(KoinExperimentalAPI::class)
     override fun dependencies() = listOf(LogcatInitializer::class.java, KoinInitializer::class.java)
 }

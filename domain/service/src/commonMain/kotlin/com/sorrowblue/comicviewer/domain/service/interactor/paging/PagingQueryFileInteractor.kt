@@ -19,7 +19,7 @@ internal class PagingQueryFileInteractor(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun run(request: Request): Flow<PagingData<File>> {
         return bookshelfLocalDataSource.flow(request.bookshelfId).flatMapLatest {
-            fileLocalDataSource.pagingSource(
+            fileLocalDataSource.pagingDataFlow(
                 request.pagingConfig,
                 request.bookshelfId,
                 request.searchCondition

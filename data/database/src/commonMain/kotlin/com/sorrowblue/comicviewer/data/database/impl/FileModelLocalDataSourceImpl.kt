@@ -52,9 +52,9 @@ internal class FileModelLocalDataSourceImpl(
         return dao.count(bookshelfId.value).first()
     }
 
-    override fun pagingSource(
+    override fun pagingDataFlow(
         pagingConfig: PagingConfig,
-        bookshelfId: BookshelfId,
+        bookshelfId: BookshelfId?,
         searchCondition: () -> SearchCondition,
     ): Flow<PagingData<File>> = Pager(pagingConfig) {
         dao.pagingSourceFileSearch(bookshelfId, searchCondition())
@@ -136,7 +136,7 @@ internal class FileModelLocalDataSourceImpl(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun pagingSource(
+    override fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,
         file: File,

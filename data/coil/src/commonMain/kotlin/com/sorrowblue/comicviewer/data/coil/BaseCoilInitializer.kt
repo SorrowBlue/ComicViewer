@@ -8,11 +8,11 @@ import coil3.request.crossfade
 import coil3.size.Precision
 import coil3.util.DebugLogger
 import com.sorrowblue.comicviewer.data.coil.book.BookThumbnailKeyer
-import com.sorrowblue.comicviewer.data.coil.favorite.FavoriteKeyer
+import com.sorrowblue.comicviewer.data.coil.collection.CollectionKeyer
 import com.sorrowblue.comicviewer.data.coil.folder.FolderThumbnailKeyer
 import com.sorrowblue.comicviewer.data.coil.page.BookPageImageKeyer
 import com.sorrowblue.comicviewer.domain.model.BookPageImage
-import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
+import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import logcat.LogPriority
@@ -33,7 +33,7 @@ internal abstract class BaseCoilInitializer : KoinComponent, SingletonImageLoade
     private val bookPageImageFetcher: Fetcher.Factory<BookPageImage> by inject(named<BookPageImageFetcher>())
 
     @Suppress("UndeclaredKoinUsage")
-    private val favoriteThumbnailFetcher: Fetcher.Factory<Favorite> by inject(named<FavoriteFetcher>())
+    private val collectionThumbnailFetcher: Fetcher.Factory<Collection> by inject(named<CollectionFetcher>())
 
     fun initialize() {
         SingletonImageLoader.setSafe(this)
@@ -43,14 +43,17 @@ internal abstract class BaseCoilInitializer : KoinComponent, SingletonImageLoade
     override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader(context).newBuilder()
             .components {
-                add(bookThumbnailFetcher)
-                add(folderThumbnailFetcher)
-                add(bookPageImageFetcher)
-                add(favoriteThumbnailFetcher)
                 add(BookThumbnailKeyer)
-                add(FavoriteKeyer)
+                add(bookThumbnailFetcher)
+
                 add(FolderThumbnailKeyer)
+                add(folderThumbnailFetcher)
+
                 add(BookPageImageKeyer)
+                add(bookPageImageFetcher)
+
+                add(CollectionKeyer)
+                add(collectionThumbnailFetcher)
             }
             .crossfade(true)
             .precision(Precision.INEXACT)

@@ -25,7 +25,7 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface HistoryScreenEvent {
-    data class Favorite(val bookshelfId: BookshelfId, val path: String) : HistoryScreenEvent
+    data class Collection(val bookshelfId: BookshelfId, val path: String) : HistoryScreenEvent
     data class OpenFolder(val file: File) : HistoryScreenEvent
     data class Book(val book: com.sorrowblue.comicviewer.domain.model.file.Book) :
         HistoryScreenEvent
@@ -96,8 +96,8 @@ private class HistoryScreenStateImpl(
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
             FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
-            is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
-                events.tryEmit(HistoryScreenEvent.Favorite(it.bookshelfId, it.path))
+            is FileInfoSheetNavigator.Collection -> navigator.currentDestination?.contentKey?.let {
+                events.tryEmit(HistoryScreenEvent.Collection(it.bookshelfId, it.path))
             }
 
             is FileInfoSheetNavigator.OpenFolder -> events.tryEmit(

@@ -37,9 +37,11 @@ import org.koin.core.parameter.parametersOf
 internal sealed interface SearchScreenEvent {
     data object Back : SearchScreenEvent
     data object Settings : SearchScreenEvent
-    data class Favorite(val bookshelfId: BookshelfId, val path: String) : SearchScreenEvent
+    data class Collection(val bookshelfId: BookshelfId, val path: String) : SearchScreenEvent
     data class OpenFolder(val bookshelfId: BookshelfId, val parent: String) : SearchScreenEvent
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) : SearchScreenEvent
+    data class SmartCollection(val bookshelfId: BookshelfId, val searchCondition: SearchCondition) :
+        SearchScreenEvent
 }
 
 @Stable
@@ -69,6 +71,7 @@ internal fun rememberSearchScreenState(
         savedStateHandle = it,
         navigator = navigator,
         scope = scope,
+        route = route,
         lazyGridState = lazyGridState,
         viewModel = viewModel
     )
@@ -80,6 +83,7 @@ private class SearchScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
     override val navigator: ThreePaneScaffoldNavigator<File.Key>,
     override val lazyGridState: LazyGridState,
+    private val route: Search,
     private val scope: CoroutineScope,
     private val viewModel: SearchViewModel,
 ) : SearchScreenState {
@@ -150,6 +154,12 @@ private class SearchScreenStateImpl(
                 uiState = copySearchCondition { it.copy(showHidden = action.value) }
 
             SearchTopAppBarAction.Settings -> events.tryEmit(SearchScreenEvent.Settings)
+            SearchTopAppBarAction.SmartCollection -> events.tryEmit(
+                SearchScreenEvent.SmartCollection(
+                    bookshelfId = route.bookshelfId,
+                    searchCondition = uiState.searchCondition
+                )
+            )
         }
         update()
     }
@@ -166,8 +176,8 @@ private class SearchScreenStateImpl(
                 navigator.navigateBack()
             }
 
-            is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
-                events.tryEmit(SearchScreenEvent.Favorite(it.bookshelfId, it.path))
+            is FileInfoSheetNavigator.Collection -> navigator.currentDestination?.contentKey?.let {
+                events.tryEmit(SearchScreenEvent.Collection(it.bookshelfId, it.path))
             }
 
             is FileInfoSheetNavigator.OpenFolder ->

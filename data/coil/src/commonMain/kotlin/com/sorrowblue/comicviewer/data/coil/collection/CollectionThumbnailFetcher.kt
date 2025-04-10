@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.coil.favorite
+package com.sorrowblue.comicviewer.data.coil.collection
 
 import coil3.ImageLoader
 import coil3.decode.DataSource
@@ -11,40 +11,42 @@ import com.sorrowblue.comicviewer.data.coil.CacheKeySnapshot
 import com.sorrowblue.comicviewer.data.coil.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
+import com.sorrowblue.comicviewer.data.coil.CollectionFetcher
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.thumbnailDiskCache
-import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
-import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
+import com.sorrowblue.comicviewer.domain.model.collection.Collection
+import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import logcat.LogPriority
 import logcat.logcat
 import okio.BufferedSource
 import org.koin.core.annotation.Singleton
 
-internal class FavoriteThumbnailFetcher(
+internal class CollectionThumbnailFetcher(
     options: Options,
     diskCache: Lazy<DiskCache>,
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
-    private val data: Favorite,
-    private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
-    private val fileModelLocalDataSource: FileLocalDataSource,
-) : FileFetcher<FavoriteThumbnailMetadata>(options, diskCache) {
+    private val data: Collection,
+    private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
+    private val fileLocalDataSource: FileLocalDataSource,
+) : FileFetcher<CollectionThumbnailMetadata>(options, diskCache) {
 
-    override val diskCacheKey get() = options.diskCacheKey ?: "favorite:${data.id.value}"
+    override val diskCacheKey get() = options.diskCacheKey ?: "collection:${data.id.value}"
 
-    override suspend fun metadata(): FavoriteThumbnailMetadata {
+    override suspend fun metadata(): CollectionThumbnailMetadata {
         val thumbnails = getThumbnailCache()
         thumbnails?.second?.closeQuietly()
-        return FavoriteThumbnailMetadata(data.id.value, thumbnails?.first)
+        return CollectionThumbnailMetadata(data.id, thumbnails?.first)
     }
 
-    override fun BufferedSource.readMetadata() = CoilMetadata.from<FavoriteThumbnailMetadata>(this)
+    override fun BufferedSource.readMetadata() =
+        CoilMetadata.from<CollectionThumbnailMetadata>(this)
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val thumbnailCache = getThumbnailCache()
         if (thumbnailCache == null) {
-            throw CoilRuntimeException("No thumbnails were generated for this favorite file.")
+            throw CoilRuntimeException("No thumbnails were generated for this collection file.")
         } else {
             // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
             return SourceFetchResult(
@@ -56,7 +58,7 @@ internal class FavoriteThumbnailFetcher(
     }
 
     private suspend fun getThumbnailCache(): CacheKeySnapshot? {
-        val cacheKeyList = favoriteFileLocalDataSource.getCacheKeyList(data.id, 10)
+        val cacheKeyList = collectionFileLocalDataSource.getCacheKeyList(data.id, 4)
         if (cacheKeyList.isEmpty()) {
             logcat(LogPriority.INFO) { "Not found thumbnail cache.$data" }
             return null
@@ -65,7 +67,7 @@ internal class FavoriteThumbnailFetcher(
             coilDiskCacheLazy.value.thumbnailDiskCache(bookshelfId).openSnapshot(cacheKey)?.let {
                 cacheKey to it
             } ?: run {
-                fileModelLocalDataSource.removeCacheKey(cacheKey)
+                fileLocalDataSource.removeCacheKey(cacheKey)
                 null
             }
         } ?: getThumbnailCache()
@@ -73,21 +75,21 @@ internal class FavoriteThumbnailFetcher(
 }
 
 @Singleton
-@com.sorrowblue.comicviewer.data.coil.FavoriteFetcher
-internal class FavoriteThumbnailFetcherFactory(
+@CollectionFetcher
+internal class CollectionThumbnailFetcherFactory(
     private val diskCache: Lazy<DiskCache>,
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
-    private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
+    private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
     private val fileModelLocalDataSource: FileLocalDataSource,
-) : Fetcher.Factory<Favorite> {
+) : Fetcher.Factory<Collection> {
 
-    override fun create(data: Favorite, options: Options, imageLoader: ImageLoader) =
-        FavoriteThumbnailFetcher(
-            options,
-            diskCache,
-            coilDiskCacheLazy,
-            data,
-            favoriteFileLocalDataSource,
-            fileModelLocalDataSource
+    override fun create(data: Collection, options: Options, imageLoader: ImageLoader) =
+        CollectionThumbnailFetcher(
+            options = options,
+            diskCache = diskCache,
+            coilDiskCacheLazy = coilDiskCacheLazy,
+            data = data,
+            collectionFileLocalDataSource = collectionFileLocalDataSource,
+            fileLocalDataSource = fileModelLocalDataSource
         )
 }

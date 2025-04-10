@@ -27,7 +27,7 @@ internal class PagingFileInteractor(
                 val file = fileLocalDataSource.findBy(request.bookshelfId, request.path)
                 if (file is IFolder) {
                     Resource.Success(
-                        fileLocalDataSource.pagingSource(
+                        fileLocalDataSource.pagingDataFlow(
                             request.pagingConfig,
                             bookshelf,
                             file

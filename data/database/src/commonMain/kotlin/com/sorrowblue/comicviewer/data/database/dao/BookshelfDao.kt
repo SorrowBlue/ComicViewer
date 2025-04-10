@@ -36,6 +36,6 @@ internal interface BookshelfDao {
     @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND file_type != 'FOLDER'")
     fun pagingSourceFileOnBookshelf(bookshelfId: Int): PagingSource<Int, FileEntity>
 
-    @Query("SELECT * FROM bookshelf")
+    @Query("SELECT * FROM bookshelf ORDER BY ID")
     fun allBookshelf(): Flow<List<BookshelfEntity>>
 }

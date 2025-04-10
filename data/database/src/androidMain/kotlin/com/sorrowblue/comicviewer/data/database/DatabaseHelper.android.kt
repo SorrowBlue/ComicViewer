@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.data.database
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.driver.AndroidSQLiteDriver
 import org.koin.core.annotation.Singleton
 
 @Singleton
@@ -16,6 +15,8 @@ internal actual class DatabaseHelper(
         return Room.databaseBuilder<ComicViewerDatabase>(
             context = appContext,
             name = dbFile.absolutePath
-        ).setDriver(AndroidSQLiteDriver())
+        )
+//            .createFromAsset("database/comic_viewer_database")
+//            .setDriver(AndroidSQLiteDriver())
     }
 }

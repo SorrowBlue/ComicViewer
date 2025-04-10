@@ -25,6 +25,7 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsU
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
+import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
 import com.sorrowblue.comicviewer.framework.ui.sharedKoinViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +40,7 @@ import logcat.LogPriority
 import logcat.logcat
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.component.KoinComponent
 
 @Composable
 internal fun rememberComicViewerAppState(
@@ -85,7 +87,7 @@ private class ComicViewerAppStateImpl(
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     private val completeInit: () -> Unit,
     override val navController: NavHostController,
-) : ComicViewerAppState {
+) : ComicViewerAppState, KoinComponent {
 
     override var uiState: ComicViewerScaffoldUiState by mutableStateOf(ComicViewerScaffoldUiState())
         private set
@@ -93,17 +95,21 @@ private class ComicViewerAppStateImpl(
     var isNavigationRestored by mutableStateOf(false)
 
     init {
+        val tabDisplayRoutes = getKoin().getAll<TabDisplayRoute>().flatMap(TabDisplayRoute::routes)
         logcat { "init" }
         navController.currentBackStackEntryFlow
             .filter { it.destination is ComposeNavigator.Destination }
             .onEach { backStackEntry ->
                 val hierarchy = backStackEntry.destination.hierarchy
                 val currentTab = MainScreenTab.entries.find { tab ->
-                    hierarchy.any { it.hasRoute(tab.navGraph::class) }
+                    hierarchy.any { destination ->
+                        tabDisplayRoutes.any { destination.hasRoute(it) }
+                            && destination.parent?.hasRoute(tab.navGraph::class) == true
+                    }
                 }
                 if (uiState.currentTab == null && currentTab != null) {
                     // 画面が更新されてからNavigationを表示します。
-                    // TODO delay(250)
+                    delay(250)
                 }
                 uiState = uiState.copy(currentTab = currentTab)
                 logcat {

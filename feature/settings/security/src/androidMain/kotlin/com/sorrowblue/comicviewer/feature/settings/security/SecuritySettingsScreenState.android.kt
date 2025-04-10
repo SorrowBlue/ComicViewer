@@ -103,7 +103,7 @@ private class SecuritySettingsScreenStateImpl(
     }
 
     fun activityResult() {
-        when (biometricManager.canAuthenticateWeak()) {
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
                 startBiometric()
             }
@@ -177,7 +177,7 @@ private class SecuritySettingsScreenStateImpl(
 
     override fun onChangeBiometricEnabled(value: Boolean) {
         if (value) {
-            when (biometricManager.canAuthenticateWeak()) {
+            when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
                 BiometricManager.BIOMETRIC_SUCCESS, BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
                     // 生体認証が有効なため、認証する
                     startBiometric()
@@ -248,7 +248,7 @@ private class SecuritySettingsScreenStateImpl(
     override fun onResume() {
         scope.launch {
             if (manageSecuritySettingsUseCase.settings.first().useBiometrics) {
-                when (biometricManager.canAuthenticateWeak()) {
+                when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
                     BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED,
                     BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
                     BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,

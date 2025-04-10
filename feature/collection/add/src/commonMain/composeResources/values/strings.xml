@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collection_add_title">Add to Collection</string>
+    <string name="collection_add_label_add">Add</string>
+    <string name="collection_add_label_recent">Recent</string>
+
+
+    <plurals name="collection_add_label_file_count">
+        <item quantity="one">%1$d file</item>
+        <item quantity="other">%1$d files</item>
+    </plurals>
+</resources>

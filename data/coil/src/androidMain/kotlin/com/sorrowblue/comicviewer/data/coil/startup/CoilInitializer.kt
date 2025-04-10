@@ -20,6 +20,7 @@ internal class CoilInitializer : BaseCoilInitializer(), Initializer<Unit> {
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> {
+        @Suppress("OPT_IN_USAGE")
         return listOf(LogcatInitializer::class.java, KoinInitializer::class.java)
     }
 }

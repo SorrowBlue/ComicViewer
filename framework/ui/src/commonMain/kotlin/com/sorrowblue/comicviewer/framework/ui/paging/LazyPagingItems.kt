@@ -52,7 +52,7 @@ class LazyPagingItems<T : Any> internal constructor(
     private val pagingDataPresenter = object : PagingDataPresenter<T>(
         mainContext = mainDispatcher,
         cachedPagingData =
-            if (flow is SharedFlow<PagingData<T>>) flow.replayCache.firstOrNull() else null
+        if (flow is SharedFlow<PagingData<T>>) flow.replayCache.firstOrNull() else null
     ) {
         override suspend fun presentPagingDataEvent(
             event: PagingDataEvent<T>,

@@ -7,18 +7,21 @@ import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
+import com.sorrowblue.comicviewer.data.database.dao.CollectionDao
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteDao
 import com.sorrowblue.comicviewer.data.database.dao.FavoriteFileDao
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.dao.ReadLaterFileDao
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
+import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionEntity
+import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteEntity
 import com.sorrowblue.comicviewer.data.database.entity.favorite.FavoriteFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEntity
 
 @Database(
-    entities = [BookshelfEntity::class, FileEntity::class, FavoriteEntity::class, FavoriteFileEntity::class, ReadLaterFileEntity::class],
+    entities = [BookshelfEntity::class, FileEntity::class, FavoriteEntity::class, FavoriteFileEntity::class, ReadLaterFileEntity::class, CollectionEntity::class, CollectionFileEntity::class],
     version = DATABASE_VERSION,
     autoMigrations = [
         AutoMigration(1, 2),
@@ -26,6 +29,7 @@ import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEn
         AutoMigration(3, 4),
         AutoMigration(4, 5),
         AutoMigration(5, 6),
+        AutoMigration(6, 7),
     ]
 )
 @ConstructedBy(ComicViewerTestDatabaseConstructor::class)
@@ -37,6 +41,8 @@ internal abstract class ComicViewerTestDatabase : RoomDatabase() {
     abstract fun fileDao(): FileDao
 
     abstract fun favoriteDao(): FavoriteDao
+
+    abstract fun collectionDao(): CollectionDao
 
     abstract fun favoriteFileDao(): FavoriteFileDao
 

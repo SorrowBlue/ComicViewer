@@ -33,9 +33,10 @@ import org.koin.compose.koinInject
 interface SearchScreenNavigator {
     fun navigateUp()
     fun onFileClick(file: File)
-    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onCollectionAddClick(bookshelfId: BookshelfId, path: String)
     fun onOpenFolderClick(bookshelfId: BookshelfId, parent: String)
     fun onSettingsClick()
+    fun onSmartCollectionClick(bookshelfId: BookshelfId, searchCondition: SearchCondition)
 }
 
 @Serializable
@@ -62,8 +63,8 @@ internal fun SearchScreen(
     val currentNavigator by rememberUpdatedState(navigator)
     EventEffect(state.events) {
         when (it) {
-            is SearchScreenEvent.Favorite ->
-                currentNavigator.onFavoriteClick(it.bookshelfId, it.path)
+            is SearchScreenEvent.Collection ->
+                currentNavigator.onCollectionAddClick(it.bookshelfId, it.path)
 
             is SearchScreenEvent.OpenFolder ->
                 currentNavigator.onOpenFolderClick(it.bookshelfId, it.parent)
@@ -71,6 +72,10 @@ internal fun SearchScreen(
             SearchScreenEvent.Back -> currentNavigator.navigateUp()
             is SearchScreenEvent.File -> currentNavigator.onFileClick(it.file)
             SearchScreenEvent.Settings -> currentNavigator.onSettingsClick()
+            is SearchScreenEvent.SmartCollection -> currentNavigator.onSmartCollectionClick(
+                it.bookshelfId,
+                it.searchCondition
+            )
         }
     }
 

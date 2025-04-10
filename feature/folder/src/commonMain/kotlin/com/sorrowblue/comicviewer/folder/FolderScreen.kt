@@ -105,10 +105,8 @@ fun FolderScreen(
     EventEffect(state.events) {
         when (it) {
             FolderScreenEvent.Back -> currentNavigator.navigateUp()
-            is FolderScreenEvent.Favorite -> currentNavigator.onFavoriteClick(
-                it.bookshelfId,
-                it.path
-            )
+            is FolderScreenEvent.Collection ->
+                currentNavigator.onCollectionAddClick(it.bookshelfId, it.path)
 
             is FolderScreenEvent.File -> currentNavigator.onFileClick(it.file)
             FolderScreenEvent.Restore -> currentNavigator.onRestoreComplete()

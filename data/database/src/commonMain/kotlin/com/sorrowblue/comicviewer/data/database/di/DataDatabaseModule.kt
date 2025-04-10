@@ -16,6 +16,12 @@ internal fun provideFileDao(database: ComicViewerDatabase) = database.fileDao()
 internal fun provideFavoriteDao(database: ComicViewerDatabase) = database.favoriteDao()
 
 @Singleton
+internal fun provideCollectionDao(database: ComicViewerDatabase) = database.collectionDao()
+
+@Singleton
+internal fun provideCollectionFileDao(database: ComicViewerDatabase) = database.collectionFileDao()
+
+@Singleton
 internal fun provideFavoriteFileDao(database: ComicViewerDatabase) = database.favoriteFileDao()
 
 @Singleton

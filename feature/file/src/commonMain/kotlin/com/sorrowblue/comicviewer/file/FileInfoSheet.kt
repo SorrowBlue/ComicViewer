@@ -58,7 +58,7 @@ data class FileInfoUiState(
 internal sealed interface FileInfoSheetAction {
     data object Close : FileInfoSheetAction
     data object ReadLater : FileInfoSheetAction
-    data object Favorite : FileInfoSheetAction
+    data object Collection : FileInfoSheetAction
     data object OpenFolder : FileInfoSheetAction
 }
 
@@ -123,7 +123,7 @@ fun FileInfoSheet(
     EventEffect(state.events) {
         when (it) {
             FileInfoSheetStateEvent.Close -> onAction(FileInfoSheetNavigator.Back)
-            is FileInfoSheetStateEvent.Favorite -> onAction(FileInfoSheetNavigator.Favorite(it.file))
+            is FileInfoSheetStateEvent.Collection -> onAction(FileInfoSheetNavigator.Collection(it.file))
             is FileInfoSheetStateEvent.OpenFolder -> onAction(FileInfoSheetNavigator.OpenFolder(it.file))
         }
     }

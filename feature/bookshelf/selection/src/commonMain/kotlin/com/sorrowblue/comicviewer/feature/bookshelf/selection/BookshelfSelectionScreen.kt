@@ -14,6 +14,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.navigation.NavController
 import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
@@ -31,7 +32,6 @@ import org.koin.compose.koinInject
 data object BookshelfSelection
 
 interface BookshelfSelectionNavigator {
-    fun navigateUp()
     fun onSourceClick(bookshelfType: BookshelfType)
 }
 
@@ -43,19 +43,20 @@ internal data class BookshelfSelectionScreenUiState(
 @Composable
 internal fun BookshelfSelectionScreen(
     navigator: BookshelfSelectionNavigator = koinInject(),
+    navController: NavController = koinInject(),
     state: BookshelfSelectionScreenState = rememberBookshelfSelectionScreenState(),
 ) {
     val uiState = state.uiState
     if (isCompactWindowClass()) {
         BookshelfSelectionScreen(
             uiState = uiState,
-            onBackClick = navigator::navigateUp,
+            onBackClick = navController::navigateUp,
             onSourceClick = navigator::onSourceClick,
         )
     } else {
         BookshelfSelectionDialog(
             uiState = uiState,
-            onDismissRequest = navigator::navigateUp,
+            onDismissRequest = navController::navigateUp,
             onSourceClick = navigator::onSourceClick
         )
     }

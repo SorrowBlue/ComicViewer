@@ -47,7 +47,7 @@ import logcat.logcat
 import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface FolderScreenEvent {
-    data class Favorite(val bookshelfId: BookshelfId, val path: String) : FolderScreenEvent
+    data class Collection(val bookshelfId: BookshelfId, val path: String) : FolderScreenEvent
 
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) : FolderScreenEvent
 
@@ -182,8 +182,8 @@ private class FolderScreenStateImpl(
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
             FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
-            is FileInfoSheetNavigator.Favorite -> navigator.currentDestination!!.contentKey!!.let {
-                events.tryEmit(FolderScreenEvent.Favorite(it.bookshelfId, it.path))
+            is FileInfoSheetNavigator.Collection -> navigator.currentDestination!!.contentKey!!.let {
+                events.tryEmit(FolderScreenEvent.Collection(it.bookshelfId, it.path))
             }
 
             is FileInfoSheetNavigator.OpenFolder -> Unit

@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 
 @Serializable
-data class BookshelfEdit(val editMode: BookshelfEditMode)
+internal data class BookshelfEdit(val editMode: BookshelfEditMode)
 
 interface BookshelfEditScreenNavigator {
     fun onBack(editMode: BookshelfEditMode)

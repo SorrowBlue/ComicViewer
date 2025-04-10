@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
@@ -69,7 +70,6 @@ private class BookshelfEditScreenStateImpl(
     override var uiState: BookshelfEditScreenUiState by mutableStateOf(
         BookshelfEditScreenUiState.Loading(editMode)
     )
-        private set
 
     override val events: EventFlow<BookshelfEditScreenEvent> = EventFlow()
 
@@ -149,19 +149,26 @@ private class BookshelfEditScreenStateImpl(
     override suspend fun onSubmit(form: BookshelfEditForm) {
         logcat { "onSubmit(form: $form)" }
         delay(300)
-        val (bookshelf, path) = when (form) {
-            is InternalStorageEditScreenForm ->
-                when (editMode) {
-                    is BookshelfEditMode.Edit -> InternalStorage(
+        val bookshelf: Bookshelf
+        val path: String
+        when (form) {
+            is InternalStorageEditScreenForm -> when (editMode) {
+                is BookshelfEditMode.Edit -> {
+                    bookshelf = InternalStorage(
                         editMode.bookshelfId,
                         form.displayName
-                    ) to form.path!!.toString()
-
-                    is BookshelfEditMode.Register -> InternalStorage(form.displayName) to form.path!!.toString()
+                    )
+                    path = form.path!!.toString()
                 }
 
+                is BookshelfEditMode.Register -> {
+                    bookshelf = InternalStorage(form.displayName)
+                    path = form.path!!.toString()
+                }
+            }
+
             is SmbEditScreenForm -> {
-                val path = "/${form.path}/".replace("(/+)".toRegex(), "/")
+                val paths = "/${form.path}/".replace("(/+)".toRegex(), "/")
                 val auth = when (form.auth) {
                     SmbEditScreenForm.Auth.Guest -> SmbServer.Auth.Guest
                     SmbEditScreenForm.Auth.UserPass -> SmbServer.Auth.UsernamePassword(
@@ -171,20 +178,26 @@ private class BookshelfEditScreenStateImpl(
                     )
                 }
                 when (editMode) {
-                    is BookshelfEditMode.Edit -> SmbServer(
-                        editMode.bookshelfId,
-                        displayName = form.displayName,
-                        host = form.host,
-                        port = form.port,
-                        auth = auth,
-                    ) to path
+                    is BookshelfEditMode.Edit -> {
+                        bookshelf = SmbServer(
+                            editMode.bookshelfId,
+                            displayName = form.displayName,
+                            host = form.host,
+                            port = form.port,
+                            auth = auth,
+                        )
+                        path = paths
+                    }
 
-                    is BookshelfEditMode.Register -> SmbServer(
-                        displayName = form.displayName,
-                        host = form.host,
-                        port = form.port,
-                        auth = auth,
-                    ) to path
+                    is BookshelfEditMode.Register -> {
+                        bookshelf = SmbServer(
+                            displayName = form.displayName,
+                            host = form.host,
+                            port = form.port,
+                            auth = auth,
+                        )
+                        path = paths
+                    }
                 }
             }
         }

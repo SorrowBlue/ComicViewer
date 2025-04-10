@@ -7,7 +7,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFavorite
 
-@Preview(showBackground = true, apiLevel = 34)
+@Preview(showBackground = true)
 @Composable
 private fun RecentFavoritePreview(@PreviewParameter(BooleanProvider::class) exist: Boolean) {
     PreviewTheme {

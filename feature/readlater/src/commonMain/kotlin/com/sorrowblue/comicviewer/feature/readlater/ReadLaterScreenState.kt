@@ -22,7 +22,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface ReadLaterScreenEvent {
 
-    data class Favorite(val bookshelfId: BookshelfId, val path: String) : ReadLaterScreenEvent
+    data class Collection(val bookshelfId: BookshelfId, val path: String) : ReadLaterScreenEvent
 
     data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
         ReadLaterScreenEvent
@@ -87,8 +87,8 @@ private class ReadLaterScreenStateImpl(
                 navigator.navigateBack()
             }
 
-            is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
-                events.tryEmit(ReadLaterScreenEvent.Favorite(it.bookshelfId, it.path))
+            is FileInfoSheetNavigator.Collection -> navigator.currentDestination?.contentKey?.let {
+                events.tryEmit(ReadLaterScreenEvent.Collection(it.bookshelfId, it.path))
             }
 
             is FileInfoSheetNavigator.OpenFolder -> {

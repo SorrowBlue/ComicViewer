@@ -201,7 +201,7 @@ private class FavoriteScreenStateImpl(
                 navigator.navigateBack()
             }
 
-            is FileInfoSheetNavigator.Favorite -> navigator.currentDestination?.contentKey?.let {
+            is FileInfoSheetNavigator.Collection -> navigator.currentDestination?.contentKey?.let {
                 events.tryEmit(FavoriteScreenEvent.Favorite(it.bookshelfId, it.path))
             }
 

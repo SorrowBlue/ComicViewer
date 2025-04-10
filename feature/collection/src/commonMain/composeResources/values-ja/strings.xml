@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collection_title">コレクション</string>
+    <string name="collection_label_no_collection">コレクションはありません</string>
+    <string name="collection_label_create">作成</string>
+    <string name="collection_label_edit">編集</string>
+    <string name="collection_label_delete">削除</string>
+</resources>

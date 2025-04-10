@@ -37,7 +37,7 @@ interface FolderScreenNavigator {
      * @param bookshelfId 本棚ID
      * @param path お気に入りにするパス
      */
-    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onCollectionAddClick(bookshelfId: BookshelfId, path: String)
 
     fun onSortClick(sortType: SortType) {
         navController.navigate(SortTypeSelect(sortType))

@@ -10,9 +10,9 @@ import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolderScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenNavigator
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEdit
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequest
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
@@ -23,7 +23,7 @@ import org.koin.core.annotation.Factory
 interface BookshelfNavGraphNavigator {
     fun onBookClick(book: Book)
     fun onSettingsClick()
-    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onCollectionAddClick(bookshelfId: BookshelfId, path: String)
     fun onRestoreComplete()
     fun onSearchClick(bookshelfId: BookshelfId, path: String)
 }
@@ -49,8 +49,8 @@ internal class BookshelfNavGraphNavigatorImpl(
         }
     }
 
-    override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) {
-        navigator.onFavoriteClick(bookshelfId, path)
+    override fun onCollectionAddClick(bookshelfId: BookshelfId, path: String) {
+        navigator.onCollectionAddClick(bookshelfId, path)
     }
 
     override fun onRestoreComplete() {
@@ -70,7 +70,7 @@ internal class BookshelfNavGraphNavigatorImpl(
     }
 
     override fun onEditClick(id: BookshelfId) {
-        navController.navigate(BookshelfEdit(BookshelfEditMode.Edit(id)))
+        navController.navigate(BookshelfEditNavGraph(BookshelfEditMode.Edit(id)))
     }
 
     override fun onRemoveClick(bookshelfId: BookshelfId) {
@@ -86,7 +86,7 @@ internal class BookshelfNavGraphNavigatorImpl(
     }
 
     override fun onSourceClick(bookshelfType: BookshelfType) {
-        navController.navigate(BookshelfEdit(BookshelfEditMode.Register(bookshelfType))) {
+        navController.navigate(BookshelfEditNavGraph(BookshelfEditMode.Register(bookshelfType))) {
             popUpTo(route = Bookshelf)
         }
     }

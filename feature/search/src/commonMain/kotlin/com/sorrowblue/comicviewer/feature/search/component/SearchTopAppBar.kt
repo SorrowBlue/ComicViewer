@@ -62,6 +62,9 @@ internal sealed interface SearchTopAppBarAction {
     /** 設定 */
     data object Settings : SearchTopAppBarAction
 
+    /** スマートコレクション */
+    data object SmartCollection : SearchTopAppBarAction
+
     /**
      * 検索クエリ
      *
@@ -138,6 +141,9 @@ internal fun SearchTopAppBar(
             BackIconButton(onClick = { onAction(SearchTopAppBarAction.BackClick) })
         },
         actions = {
+            IconButton(onClick = { onAction(SearchTopAppBarAction.SmartCollection) }) {
+                Icon(ComicIcons.CollectionsBookmark, null)
+            }
             SettingsIconButton(onClick = { onAction(SearchTopAppBarAction.Settings) })
         },
         bottomComponent = {
@@ -186,20 +192,20 @@ internal fun SearchTopAppBar(
     )
 }
 
-private val SearchCondition.Period.displayText
+internal val SearchCondition.Period.displayText
     get() = when (this) {
         SearchCondition.Period.None -> Res.string.search_label_none
         SearchCondition.Period.Hour24 -> Res.string.search_label_hour24
         SearchCondition.Period.Week1 -> Res.string.search_label_week1
         SearchCondition.Period.Month1 -> Res.string.search_label_month1
     }
-private val SearchCondition.Range.displayText
+internal val SearchCondition.Range.displayText
     get() = when (this) {
         SearchCondition.Range.Bookshelf -> Res.string.search_label_bookshelf
         is SearchCondition.Range.InFolder -> Res.string.search_label_in_folder
         is SearchCondition.Range.SubFolder -> Res.string.search_label_sub_folder
     }
-private val SortType.displayText
+internal val SortType.displayText
     get() = when (this) {
         is SortType.Date -> if (isAsc) FolderRes.string.folder_sorttype_label_date_asc else FolderRes.string.folder_sorttype_label_date_desc
         is SortType.Name -> if (isAsc) FolderRes.string.folder_sorttype_label_name_asc else FolderRes.string.folder_sorttype_label_name_desc

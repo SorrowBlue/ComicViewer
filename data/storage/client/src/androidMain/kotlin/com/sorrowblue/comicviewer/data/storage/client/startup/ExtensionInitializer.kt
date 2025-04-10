@@ -12,6 +12,7 @@ import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
 import org.koin.androix.startup.KoinInitializer
+import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.loadKoinModules
@@ -42,5 +43,6 @@ internal class ExtensionInitializer : Initializer<Unit>, KoinComponent {
         logcat(LogPriority.INFO) { "Initialized supportExtension. $extensions" }
     }
 
+    @OptIn(KoinExperimentalAPI::class)
     override fun dependencies() = listOf(LogcatInitializer::class.java, KoinInitializer::class.java)
 }

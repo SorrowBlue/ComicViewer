@@ -20,6 +20,7 @@ import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.ClearAll
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.CollectionsBookmark
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DisplaySettings
@@ -111,4 +112,5 @@ object ComicIcons {
     val InsertDriveFile = Icons.AutoMirrored.Rounded.InsertDriveFile
     val Storage = Icons.Rounded.Storage
     val Notifications = Icons.Rounded.Notifications
+    val CollectionsBookmark = Icons.Rounded.CollectionsBookmark
 }

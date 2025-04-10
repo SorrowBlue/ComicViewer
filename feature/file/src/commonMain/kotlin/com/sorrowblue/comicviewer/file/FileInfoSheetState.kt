@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 sealed interface FileInfoSheetStateEvent {
-    data class Favorite(val file: File) : FileInfoSheetStateEvent
+    data class Collection(val file: File) : FileInfoSheetStateEvent
     data class OpenFolder(val file: File) : FileInfoSheetStateEvent
     data object Close : FileInfoSheetStateEvent
 }
@@ -121,7 +121,7 @@ private class FileInfoSheetStateImpl(
     override fun onAction(action: FileInfoSheetAction) {
         when (action) {
             FileInfoSheetAction.Close -> events.tryEmit(FileInfoSheetStateEvent.Close)
-            FileInfoSheetAction.Favorite -> events.tryEmit(FileInfoSheetStateEvent.Favorite(file))
+            FileInfoSheetAction.Collection -> events.tryEmit(FileInfoSheetStateEvent.Collection(file))
             FileInfoSheetAction.OpenFolder -> events.tryEmit(FileInfoSheetStateEvent.OpenFolder(file))
             FileInfoSheetAction.ReadLater -> updateReadLater()
         }

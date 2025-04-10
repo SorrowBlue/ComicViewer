@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import coil3.Bitmap
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.feature.book.section.BookAppBar
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
@@ -53,6 +54,7 @@ data class Book(
     val path: String,
     val name: String,
     val favoriteId: FavoriteId = FavoriteId(),
+    val collectionId: CollectionId = CollectionId(),
 )
 
 @Destination<Book>

@@ -40,7 +40,7 @@ internal class FavoriteFileLocalDataSourceImpl(
         limit: Int,
     ): List<Pair<BookshelfId, String>> {
         return favoriteFileDao.findCacheKey(favoriteModelId.value, limit)
-            .map { it.bookshelfId to it.cacheKey }
+            .map { BookshelfId(it.bookshelfId) to it.cacheKey }
     }
 
     override suspend fun add(favoriteFileModel: FavoriteFile) {

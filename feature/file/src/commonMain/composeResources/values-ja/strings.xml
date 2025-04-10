@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="file_info_label_add_favourites">お気に入り</string>
+    <string name="file_info_label_add_collection">コレクション</string>
     <string name="file_info_label_add_read_later">後で読む</string>
     <string name="file_info_label_open_folder">フォルダを開く</string>
     <string name="file_label_modified_date">変更日時</string>

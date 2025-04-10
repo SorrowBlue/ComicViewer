@@ -26,6 +26,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveB
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
@@ -38,7 +39,7 @@ import org.koin.compose.koinInject
 interface ReadLaterScreenNavigator {
     fun onSettingsClick()
     fun onFileClick(file: File)
-    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onCollectionAddClick(bookshelfId: BookshelfId, path: String)
     fun onOpenFolderClick(file: File)
 }
 
@@ -64,15 +65,15 @@ internal fun ReadLaterScreen(
     val currentNavigator by rememberUpdatedState(navigator)
     EventEffect(state.events) {
         when (it) {
-            is ReadLaterScreenEvent.Favorite ->
-                currentNavigator.onFavoriteClick(it.bookshelfId, it.path)
+            is ReadLaterScreenEvent.Collection ->
+                currentNavigator.onCollectionAddClick(it.bookshelfId, it.path)
 
             is ReadLaterScreenEvent.File -> currentNavigator.onFileClick(it.file)
             is ReadLaterScreenEvent.OpenFolder -> currentNavigator.onOpenFolderClick(it.file)
             ReadLaterScreenEvent.Settings -> currentNavigator.onSettingsClick()
         }
     }
-//    TODO NavTabHandler(onClick = state::onNavClick)
+    NavTabHandler(onClick = state::onNavClick)
 }
 
 @Composable

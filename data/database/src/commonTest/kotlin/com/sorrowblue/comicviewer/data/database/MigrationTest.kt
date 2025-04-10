@@ -13,11 +13,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
+import logcat.LogcatLogger
+import logcat.PrintLogger
 
 internal expect val AutoMigration_2_3_Impl: Migration
 internal expect val AutoMigration_3_4_Impl: Migration
 internal expect val AutoMigration_4_5_Impl: Migration
 internal expect val AutoMigration_5_6_Impl: Migration
+internal expect val AutoMigration_6_7_Impl: Migration
 
 internal expect fun getMigrationTestHelper(): MigrationTestHelper
 
@@ -27,6 +30,9 @@ internal class MigrationTest {
     @BeforeTest
     fun setup() {
         setupComicViewerDatabaseTest()
+        if (!LogcatLogger.isInstalled) {
+            LogcatLogger.install(PrintLogger)
+        }
     }
 
     @AfterTest
@@ -82,7 +88,6 @@ internal class MigrationTest {
         }
     }
 
-
     @Test
     fun testMigration_5_6() = runTest {
         migration(
@@ -99,22 +104,41 @@ internal class MigrationTest {
         }
     }
 
+    @Test
+    fun testMigration_6_7() = runTest {
+        migration(
+            version = 6,
+            migration = AutoMigration_6_7_Impl,
+            afterInsertSQL = """
+                INSERT INTO
+                  collection (name, type)
+                  VALUES ('test_collection_name', 'Comic')
+            """.trimIndent(),
+            prepareSQL = "SELECT name FROM collection"
+        ) {
+            assertEquals(it.getText(0), "test_collection_name")
+        }
+    }
+
     private fun migration(
         version: Int,
         migration: Migration,
-        insertSQL: String,
+        insertSQL: String? = null,
+        afterInsertSQL: String? = null,
         prepareSQL: String,
         assert: (SQLiteStatement) -> Unit,
     ) {
         val migrationTestHelper = getMigrationTestHelper()
-        migrationTestHelper.createDatabase(version).use {
-            it.execSQL(insertSQL)
+        migrationTestHelper.createDatabase(version).use { connection ->
+            insertSQL?.let(connection::execSQL)
         }
-        migrationTestHelper.runMigrationsAndValidate(version + 1, listOf(migration)).use {
-            it.prepare(prepareSQL).use { stmt ->
-                assertTrue(stmt.step())
-                assert(stmt)
+        migrationTestHelper.runMigrationsAndValidate(version + 1, listOf(migration))
+            .use { connection ->
+                afterInsertSQL?.let(connection::execSQL)
+                connection.prepare(prepareSQL).use { stmt ->
+                    assertTrue(stmt.step())
+                    assert(stmt)
+                }
             }
-        }
     }
 }

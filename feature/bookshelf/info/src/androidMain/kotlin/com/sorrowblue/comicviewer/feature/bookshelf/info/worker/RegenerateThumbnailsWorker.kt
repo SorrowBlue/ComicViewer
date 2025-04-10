@@ -107,7 +107,7 @@ internal class RegenerateThumbnailsWorker(
         })
     }
 
-    private fun createForegroundInfo(
+    private suspend fun createForegroundInfo(
         bookshelfName: String,
         progress: Long,
         max: Long,
@@ -117,7 +117,7 @@ internal class RegenerateThumbnailsWorker(
             .createCancelPendingIntent(id)
         val notification =
             NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id).apply {
-                setContentTitle(runBlocking { getString(Res.string.bookshelf_info_title_scan) })
+                setContentTitle(getString(Res.string.bookshelf_info_title_scan))
                 setSubText(bookshelfName)
                 setContentText("$progress/$max")
                 setProgress(max.toInt(), progress.toInt(), init)

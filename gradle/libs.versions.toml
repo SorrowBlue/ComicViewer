@@ -5,23 +5,23 @@ targetSdk = "35"
 java = "21"
 
 kotlin = "2.1.20"
-google-ksp = "2.1.20-1.0.32"
-kotlinx-coroutines = "1.10.1"
-kotlinx-serialization = "1.8.0"
+google-ksp = "2.1.20-2.0.0"
+kotlinx-coroutines = "1.10.2"
+kotlinx-serialization = "1.8.1"
 kotlinx-kover = "0.9.1"
 
 androidx-datastore = "1.1.4"
 androidx-paging = "3.3.6"
 androidx-room = "2.7.0-rc03"
-multiplatform-compose = "1.8.0-beta01"
-multiplatform-navigationCompose = "2.9.0-alpha15"
-multiplatform-compose-material3Adaptive = "1.1.0-beta01"
+multiplatform-compose = "1.8.0-beta02"
+multiplatform-navigationCompose = "2.9.0-alpha16"
+multiplatform-compose-material3Adaptive = "1.1.0-beta02"
 android-gradle = "8.9.1"
 coil-kt = "3.1.0"
 detekt = "1.23.8"
 licensee = "1.13.0"
-aboutlibraries = "12.0.0-a04"
-koin = "4.1.0-Beta5"
+aboutlibraries = "12.0.0-b02"
+koin = "4.1.0-Beta7"
 koin-annotations = "2.0.0"
 
 dokka = "2.0.0"
@@ -148,7 +148,7 @@ soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha0
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version = "0.6.0" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.17-0" }
 
-artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.5" }
+artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.6" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.10.2" }
 
 # Test libraries
@@ -178,8 +178,8 @@ koin-kspCompiler = { group = "io.insert-koin", name = "koin-ksp-compiler", versi
 
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
-cmpdestinations = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-core", version = "0.1.2" }
-cmpdestinations-ksp = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-ksp", version = "0.1.2" }
+cmpdestinations = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-core", version = "0.1.3" }
+cmpdestinations-ksp = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-ksp", version = "0.1.3" }
 
 [bundles]
 androidx-room = ["androidx-room-runtime", "androidx-room-ktx", "androidx-room-paging"]

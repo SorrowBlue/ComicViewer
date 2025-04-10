@@ -14,7 +14,7 @@ interface ReadLaterNavGraphNavigator {
     fun onSearchClick(bookshelfId: BookshelfId, path: String)
     fun onSettingsClick()
     fun onBookClick(book: Book)
-    fun onFavoriteClick(bookshelfId: BookshelfId, path: String)
+    fun onCollectionAddClick(bookshelfId: BookshelfId, path: String)
 }
 
 @Factory
@@ -41,8 +41,8 @@ internal class ReadLaterNavGraphNavigatorImpl(
         }
     }
 
-    override fun onFavoriteClick(bookshelfId: BookshelfId, path: String) {
-        navigator.onFavoriteClick(bookshelfId, path)
+    override fun onCollectionAddClick(bookshelfId: BookshelfId, path: String) {
+        navigator.onCollectionAddClick(bookshelfId, path)
     }
 
     override fun onOpenFolderClick(file: File) {

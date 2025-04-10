@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.file.component.ReadlaterButton
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import comicviewer.feature.file.generated.resources.Res
-import comicviewer.feature.file.generated.resources.file_info_label_add_favourites
+import comicviewer.feature.file.generated.resources.file_info_label_add_collection
 import comicviewer.feature.file.generated.resources.file_info_label_open_folder
 import org.jetbrains.compose.resources.stringResource
 
@@ -33,7 +33,7 @@ internal fun SheetActionButtons(
             onClick = { onAction(FileInfoSheetAction.ReadLater) }
         )
         OutlinedButton(
-            onClick = { onAction(FileInfoSheetAction.Favorite) },
+            onClick = { onAction(FileInfoSheetAction.Collection) },
             contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
             modifier = Modifier
                 .fillMaxWidth()
@@ -41,7 +41,7 @@ internal fun SheetActionButtons(
         ) {
             Icon(imageVector = ComicIcons.Favorite, contentDescription = null)
             Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-            Text(text = stringResource(Res.string.file_info_label_add_favourites))
+            Text(text = stringResource(Res.string.file_info_label_add_collection))
         }
         if (uiState.isOpenFolderEnabled) {
             OutlinedButton(

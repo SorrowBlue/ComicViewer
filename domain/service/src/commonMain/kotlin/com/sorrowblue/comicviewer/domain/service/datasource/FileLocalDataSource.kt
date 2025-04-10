@@ -21,9 +21,9 @@ sealed interface LocalDataSourceQueryError : Resource.IError {
 
 interface FileLocalDataSource {
 
-    fun pagingSource(
+    fun pagingDataFlow(
         pagingConfig: PagingConfig,
-        bookshelfId: BookshelfId,
+        bookshelfId: BookshelfId?,
         searchCondition: () -> SearchCondition,
     ): Flow<PagingData<File>>
 
@@ -89,7 +89,7 @@ interface FileLocalDataSource {
      */
     suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean
 
-    fun pagingSource(
+    fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,
         file: File,
