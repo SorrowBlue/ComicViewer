@@ -29,5 +29,4 @@ data object BookshelfNavGraph {
 internal class BookshelfNavGraphTabDisplayRoute : TabDisplayRoute {
     override val routes: List<KClass<*>> =
         listOf(Bookshelf::class, BookshelfFolder::class, BookshelfDelete::class)
-
 }

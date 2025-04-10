@@ -30,7 +30,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Serializable
-data class BasicCollectionAdd(
+internal data class BasicCollectionAdd(
     val bookshelfId: BookshelfId,
     val path: String,
 )
@@ -45,13 +45,11 @@ internal fun BasicCollectionAddScreen(
     route: BasicCollectionAdd,
     navController: NavController = koinInject(),
     navigator: BasicCollectionAddNavigator = koinInject(),
+    state: BasicCollectionAddScreenState = rememberBasicCollectionAddScreenState(route),
 ) {
-    val state = rememberBasicCollectionAddScreenState(route)
-    val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
-    val recentFavorites = state.recentFavoritesFlow.collectAsLazyPagingItems()
     BasicCollectionAddScreen(
-        lazyPagingItems = lazyPagingItems,
-        recentFavorites = recentFavorites,
+        lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
+        recentFavorites = state.recentFavoritesFlow.collectAsLazyPagingItems(),
         onDismissRequest = navController::popBackStack,
         onClick = state::onCollectionClick,
         onCollectionCreateClick = {

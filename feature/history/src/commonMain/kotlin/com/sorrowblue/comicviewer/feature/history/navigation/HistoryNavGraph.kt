@@ -24,5 +24,4 @@ data object HistoryNavGraph {
 internal class HistoryNavGraphTabDisplayRoute : TabDisplayRoute {
     override val routes: List<KClass<*>> =
         listOf(History::class, HistoryFolder::class, ClearAllHistory::class)
-
 }

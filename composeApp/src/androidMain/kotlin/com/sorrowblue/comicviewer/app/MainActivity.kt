@@ -17,11 +17,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import logcat.logcat
-import org.koin.androidx.compose.KoinAndroidContext
 
-/**
- * Main activity
- */
+/** Main activity */
 internal class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
@@ -41,19 +38,15 @@ internal class MainActivity : AppCompatActivity() {
         ComposeUiFlags.isSemanticAutofillEnabled = true
         setContent {
             ComicTheme {
-                KoinAndroidContext {
-                    RootScreenWrapper(finishApp = ::finish) {
-                        ComicViewerApp()
-                    }
+                RootScreenWrapper(finishApp = ::finish) {
+                    ComicViewerApp()
                 }
             }
         }
     }
 }
 
-/**
- * Start shrinking animation
- */
+/** Start shrinking animation */
 private fun SplashScreenViewProvider.startShrinkingAnimation() {
     kotlin.runCatching {
         ObjectAnimator.ofFloat(view, View.SCALE_X, 1f, 0f).apply {

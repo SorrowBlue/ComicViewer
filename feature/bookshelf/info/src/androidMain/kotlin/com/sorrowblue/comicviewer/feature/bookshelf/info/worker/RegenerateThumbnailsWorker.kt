@@ -30,7 +30,6 @@ import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_title_scan
 import kotlin.random.Random
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import logcat.asLog
 import logcat.logcat
 import org.jetbrains.compose.resources.getString

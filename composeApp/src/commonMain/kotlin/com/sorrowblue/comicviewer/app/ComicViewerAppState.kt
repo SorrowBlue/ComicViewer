@@ -103,8 +103,8 @@ private class ComicViewerAppStateImpl(
                 val hierarchy = backStackEntry.destination.hierarchy
                 val currentTab = MainScreenTab.entries.find { tab ->
                     hierarchy.any { destination ->
-                        tabDisplayRoutes.any { destination.hasRoute(it) }
-                            && destination.parent?.hasRoute(tab.navGraph::class) == true
+                        tabDisplayRoutes.any { destination.hasRoute(it) } &&
+                            destination.parent?.hasRoute(tab.navGraph::class) == true
                     }
                 }
                 if (uiState.currentTab == null && currentTab != null) {

@@ -22,5 +22,4 @@ data object ReadLaterNavGraph {
 internal class ReadLaterNavGraphTabDisplayRoute : TabDisplayRoute {
     override val routes: List<KClass<*>> =
         listOf(ReadLater::class, ReadLaterFolder::class)
-
 }
