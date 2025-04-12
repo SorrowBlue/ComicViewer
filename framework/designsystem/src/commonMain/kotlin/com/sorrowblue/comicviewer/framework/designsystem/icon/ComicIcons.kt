@@ -7,6 +7,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowRight
 import androidx.compose.material.icons.automirrored.rounded.InsertDriveFile
 import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
 import androidx.compose.material.icons.automirrored.rounded.Logout
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.automirrored.rounded.ViewList
 import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.AccountCircle
@@ -71,6 +72,7 @@ object ComicIcons {
     val ErrorOutline = Icons.Rounded.ErrorOutline
     val RestartAlt = Icons.Rounded.RestartAlt
     val SortByAlpha = Icons.Rounded.SortByAlpha
+    val Sort = Icons.AutoMirrored.Rounded.Sort
     val Search = Icons.Rounded.Search
     val Delete = Icons.Rounded.Delete
     val ViewList = Icons.AutoMirrored.Rounded.ViewList

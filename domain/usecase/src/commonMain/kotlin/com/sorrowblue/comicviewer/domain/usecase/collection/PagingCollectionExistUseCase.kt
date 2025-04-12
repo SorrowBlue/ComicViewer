@@ -4,6 +4,7 @@ import androidx.paging.PagingConfig
 import com.sorrowblue.comicviewer.domain.BaseRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionType
 import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
 
 abstract class PagingCollectionExistUseCase :
@@ -13,6 +14,6 @@ abstract class PagingCollectionExistUseCase :
         val pagingConfig: PagingConfig,
         val bookshelfId: BookshelfId,
         val path: String,
-        val isRecent: Boolean,
+        val collectionType: CollectionType,
     ) : BaseRequest
 }

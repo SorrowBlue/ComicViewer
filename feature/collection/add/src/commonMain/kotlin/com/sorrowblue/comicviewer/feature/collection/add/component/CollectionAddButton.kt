@@ -17,7 +17,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun CollectionAddButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Button(onClick = onClick, modifier = modifier) {
+    Button(
+        onClick = onClick,
+        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+        modifier = modifier
+    ) {
         Icon(imageVector = ComicIcons.Add, contentDescription = null)
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
         Text(text = stringResource(Res.string.collection_add_label_add))

@@ -142,6 +142,36 @@ internal interface CollectionDao {
 
     @Query(
         """
+            SELECT
+              *,
+              (SELECT COUNT(*) FROM collection_file WHERE id = collection_id) as count,
+              EXISTS(
+                SELECT file_path
+                FROM collection_file
+                WHERE id = collection_id AND bookshelf_id = :bookshelfId AND file_path = :path
+              ) exist
+            FROM collection WHERE type = 'Basic' ORDER BY created_at DESC
+        """
+    )
+    fun pagingSourceBasic(bookshelfId: BookshelfId, path: String): PagingSource<Int, CollectionEntityCountExist>
+
+    @Query(
+        """
+            SELECT
+              *,
+              (SELECT COUNT(*) FROM collection_file WHERE id = collection_id) as count,
+              EXISTS(
+                SELECT file_path
+                FROM collection_file
+                WHERE id = collection_id AND bookshelf_id = :bookshelfId AND file_path = :path
+              ) exist
+            FROM collection WHERE type = 'Basic' ORDER BY updated_at DESC
+        """
+    )
+    fun pagingSourceBasicRecent(bookshelfId: BookshelfId, path: String): PagingSource<Int, CollectionEntityCountExist>
+
+    @Query(
+        """
             INSERT INTO collection
               (name, type, bookshelf_id, `query`, `range`, range_parent, period, sort_type, sort_type_asc, show_hidden)
             VALUES

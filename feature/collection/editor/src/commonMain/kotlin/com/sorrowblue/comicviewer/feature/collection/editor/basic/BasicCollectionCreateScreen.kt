@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.collection.editor.basic
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -78,9 +77,7 @@ private fun FavoriteCreateScreen(
         AlertDialog(
             title = { Text(text = stringResource(Res.string.collection_editor_title_basic_create)) },
             text = {
-                Column {
-                    CollectionNameField(control = rememberCollectionNameControl())
-                }
+                CollectionNameField(control = rememberCollectionNameControl())
             },
             onDismissRequest = onCancel,
             confirmButton = {

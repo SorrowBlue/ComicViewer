@@ -4,6 +4,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionCriteria
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import kotlinx.coroutines.flow.Flow
 
@@ -15,7 +16,7 @@ interface CollectionLocalDataSource {
         pagingConfig: PagingConfig,
         bookshelfId: BookshelfId,
         path: String,
-        isRecent: Boolean,
+        collectionCriteria: () -> CollectionCriteria,
     ): Flow<PagingData<Pair<Collection, Boolean>>>
 
     fun flow(id: CollectionId): Flow<Collection?>

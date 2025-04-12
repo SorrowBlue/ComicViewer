@@ -18,6 +18,9 @@ annotation class Folder
 annotation class Security
 
 @Qualifier
+annotation class Collection
+
+@Qualifier
 annotation class Settings
 
 @Qualifier

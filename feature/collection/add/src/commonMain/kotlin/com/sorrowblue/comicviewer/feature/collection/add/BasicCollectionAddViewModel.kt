@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionType
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionExistUseCase
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam
@@ -15,10 +16,11 @@ internal class BasicCollectionAddViewModel(
 ) : ViewModel() {
 
     val pagingDataFlow = pagingCollectionExistUseCase(
-        PagingCollectionExistUseCase.Request(PagingConfig(20), route.bookshelfId, route.path, false)
-    ).cachedIn(viewModelScope)
-
-    val recentPagingDataFlow = pagingCollectionExistUseCase(
-        PagingCollectionExistUseCase.Request(PagingConfig(20), route.bookshelfId, route.path, true)
+        PagingCollectionExistUseCase.Request(
+            pagingConfig = PagingConfig(20),
+            bookshelfId = route.bookshelfId,
+            path = route.path,
+            collectionType = CollectionType.Basic,
+        )
     ).cachedIn(viewModelScope)
 }

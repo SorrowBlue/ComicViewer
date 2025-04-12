@@ -141,17 +141,15 @@ fun rememberLazyPagingColumnType(
         mutableStateOf(
             when (fileListDisplay) {
                 FileListDisplay.List -> if (scaffoldDirective.maxHorizontalPartitions == 1) LazyPagingColumnType.List else LazyPagingColumnType.ListMedium
-                FileListDisplay.Grid -> when {
-                    windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED -> when (gridColumnSize) {
+                FileListDisplay.Grid -> when (windowSizeClass.windowWidthSizeClass) {
+                    WindowWidthSizeClass.EXPANDED -> when (gridColumnSize) {
                         GridColumnSize.Medium -> 160
                         GridColumnSize.Large -> 200
                     }
-
-                    windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.MEDIUM -> when (gridColumnSize) {
+                    WindowWidthSizeClass.MEDIUM -> when (gridColumnSize) {
                         GridColumnSize.Medium -> 160
                         GridColumnSize.Large -> 200
                     }
-
                     else -> when (gridColumnSize) {
                         GridColumnSize.Medium -> 120
                         GridColumnSize.Large -> 180

@@ -12,7 +12,9 @@ import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionEnti
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionEntityCountExist
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionCriteria
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionType
 import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -38,19 +40,25 @@ internal class CollectionLocalDataSourceImpl(
         pagingConfig: PagingConfig,
         bookshelfId: BookshelfId,
         path: String,
-        isRecent: Boolean,
+        collectionCriteria: () -> CollectionCriteria,
     ): Flow<PagingData<Pair<Collection, Boolean>>> {
         return Pager(pagingConfig) {
-            if (isRecent) {
-                dao.pagingSource(
-                    bookshelfId,
-                    path
-                )
-            } else {
-                dao.pagingSourceRecent(
-                    bookshelfId,
-                    path
-                )
+            val criteria = collectionCriteria()
+            when (criteria.type) {
+                CollectionType.Smart -> TODO()
+                CollectionType.Basic ->
+                    if (criteria.recent) {
+                        dao.pagingSourceBasicRecent(bookshelfId, path)
+                    } else {
+                        dao.pagingSourceBasic(bookshelfId, path)
+                    }
+
+                CollectionType.All ->
+                    if (criteria.recent) {
+                        dao.pagingSourceRecent(bookshelfId, path)
+                    } else {
+                        dao.pagingSource(bookshelfId, path)
+                    }
             }
         }.flow.map { it.map(CollectionEntityCountExist::toModel) }
     }

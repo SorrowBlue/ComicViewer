@@ -3,7 +3,8 @@
     <string name="collection_add_title">コレクションに追加</string>
     <string name="collection_add_label_add">作成</string>
     <string name="collection_add_label_recent">最近の</string>
-
+    <string name="collection_add_label_sort">並び替え</string>
+    <string name="collection_add_label_created">作成日</string>
 
     <plurals name="collection_add_label_file_count">
         <item quantity="one">%1$d ファイル</item>

@@ -38,7 +38,7 @@ fun <T : Menu3> ExposedDropdownMenu(
     ) {
         OutlinedTextField(
             modifier = Modifier
-                .menuAnchor(MenuAnchorType.PrimaryEditable, true)
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             readOnly = true,

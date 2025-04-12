@@ -48,8 +48,8 @@ private class SmartCollectionEditScreenImpl(
     route: SmartCollectionEdit,
     scope: CoroutineScope,
     flowBookshelfListUseCase: FlowBookshelfListUseCase,
+    flowCollectionUseCase: FlowCollectionUseCase,
     private val updateCollectionUseCase: UpdateCollectionUseCase,
-    private val flowCollectionUseCase: FlowCollectionUseCase,
 ) : SmartCollectionEditorScreenState {
 
     override var uiState by mutableStateOf(SmartCollectionEditorScreenUiState())

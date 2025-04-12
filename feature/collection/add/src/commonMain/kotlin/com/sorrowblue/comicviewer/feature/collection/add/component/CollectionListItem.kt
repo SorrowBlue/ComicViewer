@@ -1,22 +1,33 @@
 package com.sorrowblue.comicviewer.feature.collection.add.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil3.compose.SubcomposeAsyncImage
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
+import com.sorrowblue.comicviewer.framework.ui.AsyncImage3
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
 import comicviewer.feature.collection.add.generated.resources.Res
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_file_count
 import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick: () -> Unit) {
@@ -38,15 +49,10 @@ internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick:
             )
         },
         leadingContent = {
-            SubcomposeAsyncImage(
+            AsyncImage3(
                 model = collection,
                 contentDescription = null,
-                loading = {
-                    CircularProgressIndicator(
-                        strokeWidth = 2.dp,
-                        modifier = Modifier.wrapContentSize()
-                    )
-                },
+                contentScale = ContentScale.Crop,
                 error = {
                     Icon(
                         imageVector = ComicIcons.BrokenImage,
@@ -55,6 +61,8 @@ internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick:
                     )
                 },
                 modifier = Modifier.size(56.dp)
+                    .clip(CardDefaults.shape)
+                    .background(ComicTheme.colorScheme.imageBackground(ListItemDefaults.containerColor))
             )
         },
         trailingContent = {
@@ -64,4 +72,24 @@ internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick:
         },
         modifier = Modifier.clickable(onClick = onClick)
     )
+}
+
+@Preview
+@Composable
+private fun CollectionListItemPreview() {
+    PreviewTheme {
+        Column {
+            CollectionListItem(
+                collection = fakeBasicCollection(),
+                exist = true,
+                onClick = {}
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            CollectionListItem(
+                collection = fakeBasicCollection(),
+                exist = false,
+                onClick = {}
+            )
+        }
+    }
 }

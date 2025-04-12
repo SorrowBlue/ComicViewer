@@ -26,7 +26,7 @@ private fun FileInfoSheetPreview(
             initialDestinationHistory = listOf(
                 ThreePaneScaffoldDestinationItem(
                     SupportingPaneScaffoldRole.Extra,
-                    uiState
+                    ""
                 )
             )
         ),
@@ -34,7 +34,7 @@ private fun FileInfoSheetPreview(
             val screenState = rememberScrollState()
             val lazyPagingItems = PagingData.flowData(10) { BookThumbnail.from(fakeBookFile(it)) }
             FileInfoSheet(
-                uiState = contentKey,
+                uiState = uiState,
                 onAction = {},
                 scrollState = screenState,
                 lazyPagingItems = lazyPagingItems.collectAsLazyPagingItems()

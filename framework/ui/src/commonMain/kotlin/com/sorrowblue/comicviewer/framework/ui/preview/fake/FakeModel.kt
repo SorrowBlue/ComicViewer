@@ -28,10 +28,10 @@ fun fakeSmbServer(bookshelfId: Int = 0, name: String = nextLoremIpsum()) =
 fun fakeBookFile(bookshelfId: Int = 0, name: String = nextLoremIpsum()) =
     BookFile(
         BookshelfId(bookshelfId),
-        name,
+        "$name.zip",
         "parent",
         "path$bookshelfId",
-        (size * 2).also { size = it },
+        10240000,
         100,
         false,
         totalPageCount = 100,
@@ -57,5 +57,3 @@ fun fakeFavorite(favoriteId: Int = 0, exist: Boolean = Random(1).nextBoolean()) 
         exist,
         Random(1).nextLong()
     )
-
-private var size = 100L

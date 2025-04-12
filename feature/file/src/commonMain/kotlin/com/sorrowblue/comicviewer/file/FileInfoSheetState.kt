@@ -130,7 +130,7 @@ private class FileInfoSheetStateImpl(
     fun updateReadLater() {
         uiState = uiState.copy(readLaterUiState = uiState.readLaterUiState.copy(loading = true))
         scope.launch {
-            delay(250)
+            delay(1250)
             if (uiState.readLaterUiState.checked) {
                 deleteReadLaterUseCase(DeleteReadLaterUseCase.Request(file.bookshelfId, file.path))
             } else {

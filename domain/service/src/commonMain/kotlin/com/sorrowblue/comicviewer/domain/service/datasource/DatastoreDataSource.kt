@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.domain.service.datasource
 
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
+import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
@@ -39,4 +40,9 @@ interface DatastoreDataSource {
 
     val securitySettings: Flow<SecuritySettings>
     suspend fun updateSecuritySettings(transform: suspend (SecuritySettings) -> SecuritySettings): SecuritySettings
+
+    val collectionSettings: Flow<CollectionSettings>
+    suspend fun updateCollectionSettings(
+        transform: suspend (CollectionSettings) -> CollectionSettings,
+    ): CollectionSettings
 }

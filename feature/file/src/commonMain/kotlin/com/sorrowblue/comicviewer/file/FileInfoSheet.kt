@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -36,6 +35,7 @@ import com.sorrowblue.comicviewer.file.component.FileAttributeChips
 import com.sorrowblue.comicviewer.file.section.FileInfoList
 import com.sorrowblue.comicviewer.file.section.FileInfoThumbnail
 import com.sorrowblue.comicviewer.file.section.SheetActionButtons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
@@ -43,8 +43,7 @@ import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import org.koin.android.annotation.KoinViewModel
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 
 data class ReadLaterUiState(val checked: Boolean = false, val loading: Boolean = false)
 
@@ -66,18 +65,13 @@ interface FileKeyState {
     val file: File?
 }
 
-@KoinViewModel
-internal class FileKeyViewModel(
-    val getFileUseCase: GetFileUseCase,
-) : ViewModel()
-
 @Composable
 internal fun rememberFileKeyState(
     fileKey: File.Key,
     scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: FileKeyViewModel = koinViewModel(),
+    getFileUseCase: GetFileUseCase = koinInject(),
 ): FileKeyState {
-    return remember(fileKey) { FileKeyStateImpl(fileKey, scope, viewModel.getFileUseCase) }
+    return remember(fileKey) { FileKeyStateImpl(fileKey, scope, getFileUseCase) }
 }
 
 private class FileKeyStateImpl(
@@ -166,14 +160,18 @@ internal fun FileInfoSheet(
                             layoutDirection = LocalLayoutDirection.current,
                             horizontal = contentPadding
                         )
+                        .padding(top = ComicTheme.dimension.padding * 2)
                         .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
                 )
                 FileInfoList(
                     file = file,
-                    modifier = Modifier.padding(
-                        layoutDirection = LocalLayoutDirection.current,
-                        horizontal = contentPadding
-                    )
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            layoutDirection = LocalLayoutDirection.current,
+                            horizontal = contentPadding
+                        )
+                        .padding(top = ComicTheme.dimension.padding * 2)
                         .padding(horizontal = 8.dp),
                 )
                 uiState.attribute?.let {

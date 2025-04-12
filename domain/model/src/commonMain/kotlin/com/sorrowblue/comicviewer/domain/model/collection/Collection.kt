@@ -14,6 +14,17 @@ sealed interface Collection {
     val updatedAt: LocalDateTime
 }
 
+data class CollectionCriteria(
+    val type: CollectionType = CollectionType.All,
+    val recent: Boolean = false,
+)
+
+enum class CollectionType {
+    Smart,
+    Basic,
+    All,
+}
+
 @Serializable
 @JvmInline
 value class CollectionId @ExperimentalIdValue constructor(val value: Int) {

@@ -16,9 +16,8 @@ internal class FlowBookshelfListInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : FlowBookshelfListUseCase() {
     override fun run(request: EmptyRequest): Flow<Resource<List<Bookshelf>, Error>> {
-        // Resource<Flow<List<Bookshelf>>, Resource.SystemError>
-        return bookshelfLocalDataSource.allBookshelf().fold({
-            it.map {
+        return bookshelfLocalDataSource.allBookshelf().fold({ flow ->
+            flow.map {
                 Resource.Success(it)
             }
         }, {

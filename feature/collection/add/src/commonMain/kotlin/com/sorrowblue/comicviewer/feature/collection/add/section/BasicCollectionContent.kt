@@ -13,7 +13,6 @@ import com.sorrowblue.comicviewer.framework.ui.paging.itemKey
 
 @Composable
 internal fun BasicCollectionContent(
-    recentLazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>,
     lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>,
     onClick: (Collection, Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -25,15 +24,6 @@ internal fun BasicCollectionContent(
         contentPadding = contentPadding,
         modifier = modifier
     ) {
-        item("recentFavorites") {
-            if (recentLazyPagingItems.itemCount > 0) {
-                RecentCollectionSheet(
-                    lazyPagingItems = recentLazyPagingItems,
-                    onClick = onClick,
-                    modifier = Modifier.animateItem()
-                )
-            }
-        }
         items(
             count = lazyPagingItems.itemCount,
             key = lazyPagingItems.itemKey { it.first.id.value }

@@ -22,9 +22,12 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
+import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -111,6 +114,8 @@ val Long.asDateTime: String
         .toLocalDateTime(TimeZone.currentSystemDefault())
         .format(
             LocalDateTime.Format {
-                // TODO
+                date(LocalDate.Formats.ISO)
+                char(' ')
+                time(LocalTime.Formats.ISO)
             }
         )

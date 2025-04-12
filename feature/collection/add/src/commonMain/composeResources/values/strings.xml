@@ -3,7 +3,8 @@
     <string name="collection_add_title">Add to Collection</string>
     <string name="collection_add_label_add">Add</string>
     <string name="collection_add_label_recent">Recent</string>
-
+    <string name="collection_add_label_sort">Sort</string>
+    <string name="collection_add_label_created">Created</string>
 
     <plurals name="collection_add_label_file_count">
         <item quantity="one">%1$d file</item>

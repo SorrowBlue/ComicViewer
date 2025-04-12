@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.data.datastore.impl
 
 import androidx.datastore.core.DataStore
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Book
+import com.sorrowblue.comicviewer.data.datastore.qualifier.Collection
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Display
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Folder
 import com.sorrowblue.comicviewer.data.datastore.qualifier.FolderDisplay
@@ -9,6 +10,7 @@ import com.sorrowblue.comicviewer.data.datastore.qualifier.Security
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Viewer
 import com.sorrowblue.comicviewer.data.datastore.qualifier.ViewerOperation
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
+import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
@@ -31,6 +33,7 @@ internal class DatastoreDataSourceImpl(
     @Qualifier(FolderDisplay::class) private val folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings>,
     @Qualifier(Folder::class) private val folderSettingsDataStore: DataStore<FolderSettings>,
     @Qualifier(ViewerOperation::class) private val viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings>,
+    @Qualifier(Collection::class) private val collectionSettingsDataStore: DataStore<CollectionSettings>,
     @Qualifier(Security::class) private val securitySettingsDataStore: DataStore<SecuritySettings>,
 ) : DatastoreDataSource {
 
@@ -69,4 +72,8 @@ internal class DatastoreDataSourceImpl(
     override val securitySettings: Flow<SecuritySettings> = securitySettingsDataStore.data
     override suspend fun updateSecuritySettings(transform: suspend (SecuritySettings) -> SecuritySettings) =
         securitySettingsDataStore.updateData(transform)
+
+    override val collectionSettings: Flow<CollectionSettings> = collectionSettingsDataStore.data
+    override suspend fun updateCollectionSettings(transform: suspend (CollectionSettings) -> CollectionSettings) =
+        collectionSettingsDataStore.updateData(transform)
 }

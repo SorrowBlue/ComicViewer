@@ -67,10 +67,10 @@ private class RootScreenWrapperStateImpl(
         manageSecuritySettingsUseCase.settings.mapLatest { !it.password.isNullOrEmpty() }
             .distinctUntilChanged()
             .onEach {
-                if (it) {
-                    authStatus = AuthStatus.AuthRequired(authed = authStatus !is AuthStatus.Unknown)
+                authStatus = if (it) {
+                    AuthStatus.AuthRequired(authed = authStatus !is AuthStatus.Unknown)
                 } else {
-                    authStatus = AuthStatus.NoAuthRequired
+                    AuthStatus.NoAuthRequired
                 }
             }.launchIn(scope)
     }
