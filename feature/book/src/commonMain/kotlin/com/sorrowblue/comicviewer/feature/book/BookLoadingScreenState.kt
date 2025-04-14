@@ -45,9 +45,9 @@ private class BookLoadingScreenStateImpl(
             uiState = when (it) {
                 is Resource.Success ->
                     BookScreenUiState.Loaded(
-                        it.data,
-                        route.favoriteId,
-                        BookSheetUiState(it.data)
+                        book = it.data,
+                        collectionId = route.collectionId,
+                        bookSheetUiState = BookSheetUiState(it.data)
                     )
 
                 is Resource.Error -> when (it.error) {

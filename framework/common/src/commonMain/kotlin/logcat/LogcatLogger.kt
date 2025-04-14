@@ -1,9 +1,9 @@
 package logcat
 
-import kotlinx.atomicfu.atomic
-import kotlinx.atomicfu.locks.SynchronizedObject
-import kotlinx.atomicfu.locks.synchronized
-import kotlinx.atomicfu.update
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import logcat.LogcatLogger.Companion.install
+import logcat.LogcatLogger.Companion.uninstall
 
 interface LogcatLogger {
 
@@ -20,19 +20,20 @@ interface LogcatLogger {
         message: String,
     )
 
-    companion object : SynchronizedObject() {
+    @OptIn(ExperimentalAtomicApi::class)
+    companion object {
 
-        private val aLogger = atomic<LogcatLogger>(NoLog)
+        private val aLogger = AtomicReference<LogcatLogger>(NoLog)
 
         @PublishedApi
         internal var logger: LogcatLogger
-            get() = aLogger.value
-            private set(value) = aLogger.update { value }
+            get() = aLogger.load()
+            private set(value) = aLogger.store(value)
 
-        private val aInstalledThrowable = atomic<Throwable?>(null)
+        private val aInstalledThrowable = AtomicReference<Throwable?>(null)
         private var installedThrowable: Throwable?
-            get() = aInstalledThrowable.value
-            set(value) = aInstalledThrowable.update { value }
+            get() = aInstalledThrowable.load()
+            set(value) = aInstalledThrowable.store(value)
 
         val isInstalled: Boolean
             get() = installedThrowable != null
@@ -45,26 +46,22 @@ interface LogcatLogger {
          * error to the newly provided logger.
          */
         fun install(logger: LogcatLogger) {
-            synchronized(this) {
-                if (isInstalled) {
-                    logger.log(
-                        LogPriority.ERROR,
-                        "LogcatLogger",
-                        "Installing $logger even though a logger was previously installed here: " +
-                            installedThrowable!!.asLog()
-                    )
-                }
-                installedThrowable = RuntimeException("Previous logger installed here")
-                Companion.logger = logger
+            if (isInstalled) {
+                logger.log(
+                    LogPriority.ERROR,
+                    "LogcatLogger",
+                    "Installing $logger even though a logger was previously installed here: " +
+                        installedThrowable!!.asLog()
+                )
             }
+            installedThrowable = RuntimeException("Previous logger installed here")
+            Companion.logger = logger
         }
 
         /** Replaces the current logger (if any) with a no-op logger. */
         fun uninstall() {
-            synchronized(this) {
-                installedThrowable = null
-                logger = NoLog
-            }
+            installedThrowable = null
+            logger = NoLog
         }
     }
 

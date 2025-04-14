@@ -11,8 +11,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import coil3.Bitmap
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
@@ -97,16 +97,16 @@ private class BookScreenStateImpl(
 
     private suspend fun GetNextBookUseCase.execute(isNext: Boolean): NextPage {
         val nextBookList = mutableListOf<NextBook>()
-        if (uiState.favoriteId != FavoriteId()) {
+        if (uiState.collectionId != CollectionId()) {
             invoke(
                 GetNextBookUseCase.Request(
                     uiState.book.bookshelfId,
                     uiState.book.path,
-                    GetNextBookUseCase.Location.Favorite(uiState.favoriteId),
+                    GetNextBookUseCase.Location.Collection(uiState.collectionId),
                     isNext
                 )
             ).first().dataOrNull()?.let {
-                nextBookList.add(NextBook.Favorite(it))
+                nextBookList.add(NextBook.Collection(it))
             }
         }
         invoke(

@@ -15,7 +15,7 @@ sealed interface NextBook {
     val book: Book
 
     data class Folder(override val book: Book) : NextBook
-    data class Favorite(override val book: Book) : NextBook
+    data class Collection(override val book: Book) : NextBook
 }
 
 sealed interface UnratedPage

@@ -6,19 +6,19 @@ import androidx.sqlite.driver.AndroidSQLiteDriver
 import androidx.test.platform.app.InstrumentationRegistry
 
 internal actual val AutoMigration_2_3_Impl: Migration =
-    ComicViewerTestDatabase_AutoMigration_2_3_Impl()
+    ComicViewerDatabase_AutoMigration_2_3_Impl()
 
 internal actual val AutoMigration_3_4_Impl: Migration =
-    ComicViewerTestDatabase_AutoMigration_3_4_Impl()
+    ComicViewerDatabase_AutoMigration_3_4_Impl()
 
 internal actual val AutoMigration_4_5_Impl: Migration =
-    ComicViewerTestDatabase_AutoMigration_4_5_Impl()
+    ComicViewerDatabase_AutoMigration_4_5_Impl()
 
 internal actual val AutoMigration_5_6_Impl: Migration =
-    ComicViewerTestDatabase_AutoMigration_5_6_Impl()
+    ComicViewerDatabase_AutoMigration_5_6_Impl()
 
 internal actual val AutoMigration_6_7_Impl: Migration =
-    ComicViewerTestDatabase_AutoMigration_6_7_Impl()
+    ComicViewerDatabase_AutoMigration_6_7_Impl()
 
 internal actual fun getMigrationTestHelper(): MigrationTestHelper {
     val instrumentation = InstrumentationRegistry.getInstrumentation()
@@ -26,6 +26,6 @@ internal actual fun getMigrationTestHelper(): MigrationTestHelper {
         instrumentation = InstrumentationRegistry.getInstrumentation(),
         file = instrumentation.context.filesDir.resolve(TEST_DB_NAME),
         driver = AndroidSQLiteDriver(),
-        databaseClass = ComicViewerTestDatabase::class,
+        databaseClass = ComicViewerDatabase::class,
     )
 }

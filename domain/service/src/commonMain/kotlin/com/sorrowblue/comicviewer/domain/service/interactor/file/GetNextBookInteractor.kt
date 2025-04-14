@@ -2,12 +2,12 @@ package com.sorrowblue.comicviewer.domain.service.interactor.file
 
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteFile
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.FavoriteFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
@@ -22,16 +22,16 @@ import org.koin.core.annotation.Singleton
 internal class GetNextBookInteractor(
     private val datastoreDataSource: DatastoreDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
-    private val favoriteFileLocalDataSource: FavoriteFileLocalDataSource,
+    private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
 ) : GetNextBookUseCase() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun run(request: Request): Flow<Resource<Book, GetLibraryInfoError>> {
         return datastoreDataSource.folderDisplaySettings.flatMapLatest { settings ->
             when (val location = request.location) {
-                is Location.Favorite -> favorite(
+                is Location.Collection -> collection(
                     request.isNext,
-                    location.favoriteId,
+                    location.collectionId,
                     request.bookshelfId,
                     request.path,
                     settings.sortType
@@ -72,22 +72,22 @@ internal class GetNextBookInteractor(
         })
     }
 
-    private fun favorite(
+    private fun collection(
         isNext: Boolean,
-        favoriteId: FavoriteId,
+        collectionId: CollectionId,
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
     ): Flow<Resource<Book, GetLibraryInfoError>> {
         return runCatching {
             if (isNext) {
-                favoriteFileLocalDataSource.flowNextFavoriteFile(
-                    FavoriteFile(favoriteId, bookshelfId, path),
+                collectionFileLocalDataSource.flowNextCollectionFile(
+                    CollectionFile(collectionId, bookshelfId, path),
                     sortType
                 )
             } else {
-                favoriteFileLocalDataSource.flowPrevFavoriteFile(
-                    FavoriteFile(favoriteId, bookshelfId, path),
+                collectionFileLocalDataSource.flowPrevCollectionFile(
+                    CollectionFile(collectionId, bookshelfId, path),
                     sortType
                 )
             }

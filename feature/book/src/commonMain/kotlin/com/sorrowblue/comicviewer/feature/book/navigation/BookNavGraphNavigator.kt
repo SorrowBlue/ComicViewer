@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.feature.book.navigation
 
 import androidx.navigation.NavController
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.feature.book.Book
 import com.sorrowblue.comicviewer.feature.book.BookScreenNavigator
 import com.sorrowblue.comicviewer.feature.book.menu.BookMenu
@@ -26,9 +26,16 @@ internal class BookNavGraphNavigatorImpl(
 
     override fun onNextBookClick(
         book: com.sorrowblue.comicviewer.domain.model.file.Book,
-        favoriteId: FavoriteId,
+        collectionId: CollectionId,
     ) {
-        navController.navigate(Book(book.bookshelfId, book.path, book.name, favoriteId)) {
+        navController.navigate(
+            Book(
+                bookshelfId = book.bookshelfId,
+                path = book.path,
+                name = book.name,
+                collectionId = collectionId
+            )
+        ) {
             popUpTo<Book> {
                 inclusive = true
             }

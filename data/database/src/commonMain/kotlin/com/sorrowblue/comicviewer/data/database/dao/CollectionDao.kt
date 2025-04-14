@@ -262,7 +262,7 @@ internal interface CollectionDao {
                   WHERE
                     bookshelf_id = collection.bookshelf_id
                     AND CASE
-                      WHEN collection.show_hidden = false THEN (hidden = false AND name NOT LIKE '.%')
+                      WHEN collection.show_hidden = 0 THEN (hidden = 0 AND file.name NOT LIKE '.%')
                       ELSE "" = ""
                     END
                     AND CASE

@@ -80,7 +80,7 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
     ) {
         Text(
             text = when (nextBook) {
-                is NextBook.Favorite -> stringResource(Res.string.book_text_favorite_book)
+                is NextBook.Collection -> stringResource(Res.string.book_text_favorite_book)
                 is NextBook.Folder -> stringResource(Res.string.book_text_folder_book)
             },
             style = ComicTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),

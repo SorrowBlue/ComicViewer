@@ -16,7 +16,6 @@ import coil3.Bitmap
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.feature.book.section.BookAppBar
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
 import com.sorrowblue.comicviewer.feature.book.section.BookSheet
@@ -35,7 +34,7 @@ internal sealed interface BookScreenUiState {
 
     data class Loaded(
         val book: BookFile,
-        val favoriteId: FavoriteId,
+        val collectionId: CollectionId,
         val bookSheetUiState: BookSheetUiState,
         val isVisibleTooltip: Boolean = true,
     ) : BookScreenUiState
@@ -44,7 +43,7 @@ internal sealed interface BookScreenUiState {
 interface BookScreenNavigator {
     fun navigateUp()
     fun onSettingsClick()
-    fun onNextBookClick(book: BookFile, favoriteId: FavoriteId)
+    fun onNextBookClick(book: BookFile, collectionId: CollectionId)
     fun onContainerLongClick()
 }
 
@@ -53,7 +52,6 @@ data class Book(
     val bookshelfId: BookshelfId,
     val path: String,
     val name: String,
-    val favoriteId: FavoriteId = FavoriteId(),
     val collectionId: CollectionId = CollectionId(),
 )
 
@@ -74,7 +72,7 @@ private fun BookScreen(
     route: Book,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onNextBookClick: (BookFile, FavoriteId) -> Unit,
+    onNextBookClick: (BookFile, CollectionId) -> Unit,
     onContainerLongClick: () -> Unit,
     loadingState: BookLoadingScreenState = rememberBookLoadingScreenState(route = route),
 ) {
@@ -92,7 +90,7 @@ private fun BookScreen(
                 pagerState = state.pagerState,
                 currentList = state.currentList,
                 onBackClick = onBackClick,
-                onNextBookClick = { onNextBookClick(it, route.favoriteId) },
+                onNextBookClick = { onNextBookClick(it, route.collectionId) },
                 onContainerClick = state::toggleTooltip,
                 onContainerLongClick = onContainerLongClick,
                 onPageChange = state::onPageChange,

@@ -16,7 +16,5 @@ internal actual class DatabaseHelper(
             context = appContext,
             name = dbFile.absolutePath
         )
-//            .createFromAsset("database/comic_viewer_database")
-//            .setDriver(AndroidSQLiteDriver())
     }
 }
