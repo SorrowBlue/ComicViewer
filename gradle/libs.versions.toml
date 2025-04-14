@@ -122,10 +122,10 @@ google-android-play-feature-delivery-ktx = { group = "com.google.android.play", 
 google-android-play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version = "2.0.2" }
 google-android-billingclient-billingKtx = { group = "com.android.billingclient", name = "billing-ktx", version = "7.1.1" }
 google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.11.0" }
-google-guava = { group = "com.google.guava", name = "guava", version = "33.4.0-jre" }
+google-guava = { group = "com.google.guava", name = "guava", version = "33.4.8-jre" }
 google-android-gms-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version = "21.3.0" }
-google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version = "2.7.1" }
-google-api-services-drive = { group = "com.google.apis", name = "google-api-services-drive", version = "v3-rev20241206-2.0.0" }
+google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version = "2.7.2" }
+google-api-services-drive = { group = "com.google.apis", name = "google-api-services-drive", version = "v3-rev20250220-2.0.0" }
 google-api-services-people = { group = "com.google.apis", name = "google-api-services-people", version = "v1-rev20240313-2.0.0" }
 google-autoServiceAnnotations = { group = "com.google.auto.service", name = "auto-service-annotations", version = "1.1.1" }
 autoservice-ksp = { group = "dev.zacsweers.autoservice", name = "auto-service-ksp", version = "1.2.0" }
