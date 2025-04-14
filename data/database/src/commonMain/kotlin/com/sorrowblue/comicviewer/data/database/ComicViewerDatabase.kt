@@ -85,7 +85,7 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
                         FROM
                           favorite
                         ;
-            """.trimIndent()
+                """.trimIndent()
             )
             connection.execSQL(
                 """
@@ -98,7 +98,7 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
                         FROM
                           favorite_file
                         ;
-            """.trimIndent()
+                """.trimIndent()
             )
         }
     }
