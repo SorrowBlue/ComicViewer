@@ -31,4 +31,3 @@ internal actual fun getMigrationTestHelper(): MigrationTestHelper {
         databaseClass = ComicViewerDatabase::class
     )
 }
-
