@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.modulegraph)
     alias(libs.plugins.kotlinx.kover)
+    alias(libs.plugins.versionCatalogLinter)
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.androidDynamicFeature) apply false

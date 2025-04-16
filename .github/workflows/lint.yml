@@ -3,7 +3,7 @@ on:
   workflow_call:
 
 jobs:
-  lint:
+  lintDebug:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -11,7 +11,55 @@ jobs:
       - uses: ./.github/actions/setup-java-gradle
 
       - name: 🚨Run lint
-        run: ./gradlew lintRelease
+        run: ./gradlew composeApp:lintDebug
+
+      - uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: build/reports/lint/lint-result.sarif
+          category: lint
+
+  lintPrerelease:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-java-gradle
+
+      - name: 🚨Run lint
+        run: ./gradlew composeApp:lintPrerelease
+
+      - uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: build/reports/lint/lint-result.sarif
+          category: lint
+
+  lintInternal:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-java-gradle
+
+      - name: 🚨Run lint
+        run: ./gradlew composeApp:lintInternal
+
+      - uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: build/reports/lint/lint-result.sarif
+          category: lint
+
+  lintRelease:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-java-gradle
+
+      - name: 🚨Run lint
+        run: ./gradlew composeApp:lintRelease
 
       - uses: github/codeql-action/upload-sarif@v3
         if: ${{ !cancelled() }}
