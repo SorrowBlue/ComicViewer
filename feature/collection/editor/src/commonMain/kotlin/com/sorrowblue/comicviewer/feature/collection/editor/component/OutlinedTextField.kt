@@ -28,16 +28,16 @@ internal fun OutlinedTextField(
             isError = field.hasError,
             singleLine = true,
             supportingText =
-                if (field.hasError) {
-                    {
-                        Text(
-                            text = field.errors.first(),
-                            color = ComicTheme.colorScheme.error
-                        )
-                    }
-                } else {
-                    null
-                },
+            if (field.hasError) {
+                {
+                    Text(
+                        text = field.errors.first(),
+                        color = ComicTheme.colorScheme.error
+                    )
+                }
+            } else {
+                null
+            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next

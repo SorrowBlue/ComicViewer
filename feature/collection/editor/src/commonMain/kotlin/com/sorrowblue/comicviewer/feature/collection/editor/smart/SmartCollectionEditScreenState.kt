@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
-import logcat.logcat
 import org.jetbrains.compose.resources.getString
 import org.koin.compose.koinInject
 

@@ -24,9 +24,9 @@ import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.Sort
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.collection.editor.generated.resources.Res
+import comicviewer.feature.collection.editor.generated.resources.collection_editor_error_must_not_be_blank
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_collection_name
-import comicviewer.feature.collection.editor.generated.resources.collection_editor_error_must_not_be_blank
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_search_keyword
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource

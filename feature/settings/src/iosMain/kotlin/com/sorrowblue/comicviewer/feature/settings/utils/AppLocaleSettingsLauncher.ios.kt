@@ -18,7 +18,7 @@ internal actual class AppLocaleSettingsLauncher {
     actual fun launch(fallback: () -> Unit) {
         val url = NSURL.URLWithString(UIApplicationOpenSettingsURLString)
         if (url != null && UIApplication.sharedApplication.canOpenURL(url)) {
-            UIApplication.sharedApplication.openURL(url, emptyMap<Any?,Any>()) {}
+            UIApplication.sharedApplication.openURL(url, emptyMap<Any?, Any>()) {}
         } else {
             fallback()
         }
