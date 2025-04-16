@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.configureAboutLibraries
 import com.sorrowblue.comicviewer.configureAndroid
 import com.sorrowblue.comicviewer.configureKotlin
 import com.sorrowblue.comicviewer.configureKotlinMultiplatform
-import com.sorrowblue.comicviewer.configureLicensee
 import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.kotlin
 import com.sorrowblue.comicviewer.libs
@@ -25,7 +24,7 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
                 id(libs.plugins.comicviewer.android.lint)
                 id(libs.plugins.comicviewer.detekt)
                 id(libs.plugins.comicviewer.dokka)
-                id(libs.plugins.licensee)
+//                id(libs.plugins.licensee)
                 id(libs.plugins.aboutlibraries)
             }
 
@@ -79,7 +78,7 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
                 }
             }
 
-            configureLicensee()
+//            configureLicensee()
             configureAboutLibraries()
         }
     }

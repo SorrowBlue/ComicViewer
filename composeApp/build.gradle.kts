@@ -1,4 +1,7 @@
+import com.android.build.api.variant.VariantOutput
 import com.sorrowblue.comicviewer.ComicBuildType
+import java.io.ByteArrayOutputStream
+import kotlin.jvm.java
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -89,9 +92,9 @@ android {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = libs.versions.versionCode.get().toInt()
-        versionName = version.toString()
     }
     androidResources {
+        @Suppress("UnstableApiUsage")
         generateLocaleConfig = true
     }
 
@@ -150,5 +153,66 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
         jvmArgs("-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
+    }
+}
+// Provider を取得
+val gitTagProvider: Provider<String> = providers.of(GitTagValueSource::class) {}
+
+// --- AGP Variant API を使用 ---
+androidComponents {
+    // onVariants は設定フェーズで実行されるが、中の処理は遅延される
+    onVariants(selector().all()) { variant -> // release ビルドのみ対象
+        // すべてのバリアントを対象にする場合は selector().all()
+
+        // Variant の Output (通常は1つ) にアクセス
+        variant.outputs.forEach { output: VariantOutput -> // 型を明示的に指定
+
+            // versionName にGitタグを設定
+            // orElse でタグが見つからない場合のフォールバックを設定
+            // map でタグ名を加工 (例: 'v' を削除)
+            val vn = gitTagProvider.orElse("0.0.0").get()
+            logger.lifecycle("${variant.name} versionName=$vn")
+            output.versionName.set(vn)
+        }
+
+    }
+}
+
+// パラメータは不要だが、インターフェースとして定義が必要
+interface GitTagParameters : ValueSourceParameters
+
+// Gitコマンドを実行して最新タグを取得するValueSource
+abstract class GitTagValueSource @Inject constructor(
+    private val execOperations: ExecOperations
+) : ValueSource<String, GitTagParameters> {
+
+    override fun obtain(): String {
+        return try {
+            // 標準出力をキャプチャするためのByteArrayOutputStream
+            val stdout = ByteArrayOutputStream()
+            // git describe コマンドを実行
+            val result = execOperations.exec {
+                // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
+                commandLine("git", "describe", "--tags", "--abbrev=1")
+                standardOutput = stdout
+                // エラーが発生してもGradleビルドを止めないようにし、戻り値で判断
+                isIgnoreExitValue = true
+                // エラー出力は捨てる (必要ならキャプチャも可能)
+                errorOutput = ByteArrayOutputStream()
+            }
+
+            if (result.exitValue == 0) {
+                // 成功したら標準出力をトリムして返す
+                stdout.toString().trim()
+            } else {
+                // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
+                println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
+                "UNKNOWN" // または適切なデフォルト値
+            }
+        } catch (e: Exception) {
+            // その他の予期せぬエラー
+            println("Warning: Failed to execute git command: ${e.message}")
+            "UNKNOWN" // または適切なデフォルト値
+        }
     }
 }

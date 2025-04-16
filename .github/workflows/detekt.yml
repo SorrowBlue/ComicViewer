@@ -1,0 +1,24 @@
+name: Detekt
+on:
+  workflow_call:
+
+jobs:
+  detekt:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-java-gradle
+
+      - name: 🔍️Run detekt
+        run: ./gradlew detektAll
+
+      - uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: build/reports/detekt/merge.sarif
+          category: detekt
+
+      - name: Run check VersionCatalog
+        if: ${{ always() }}
+        run: ./gradlew checkVersionCatalog

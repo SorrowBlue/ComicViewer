@@ -6,7 +6,6 @@ import java.util.Locale
 plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
-    alias(libs.plugins.gitVersioning)
     alias(libs.plugins.dokka)
     alias(libs.plugins.modulegraph)
     alias(libs.plugins.kotlinx.kover)
@@ -20,7 +19,6 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.kotlin.serialization) apply false
-    alias(libs.plugins.licensee) apply false
     alias(libs.plugins.composeMultiplatform) apply false
     alias(libs.plugins.aboutlibraries) apply false
 }
@@ -120,25 +118,6 @@ moduleGraphConfig {
     }
 }
 
-version = "0.0.0-SNAPSHOT"
-gitVersioning.apply {
-    refs {
-        tag("(?<version>.*)") {
-            version = "\${describe.tag.version}"
-        }
-        branch("develop/.+") {
-            version = "\${describe.tag.version}-\${describe.distance}-\${commit.short}-SNAPSHOT"
-        }
-    }
-    rev {
-        version = "\${commit}"
-    }
-}
-
 tasks.updateDaemonJvm {
-    jvmVersion = JavaLanguageVersion.of(libs.versions.java.get())
-}
-
-tasks.register("detektAll") {
-    dependsOn(tasks.withType<Detekt>())
+    languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
 }

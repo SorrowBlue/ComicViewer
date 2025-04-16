@@ -13,7 +13,7 @@ import soil.form.compose.FieldControl
 import soil.form.compose.onFocusChanged
 
 @Composable
-internal fun CollectionNameField(
+internal fun OutlinedTextField(
     control: FieldControl<String>,
     modifier: Modifier = Modifier,
 ) {
@@ -21,19 +21,23 @@ internal fun CollectionNameField(
         OutlinedTextField(
             value = field.value,
             onValueChange = field.onChange,
+            label = { Text(field.name) },
             placeholder = { Text(field.name) },
             modifier = modifier.onFocusChanged(field),
             enabled = field.isEnabled,
             isError = field.hasError,
             singleLine = true,
-            supportingText = {
+            supportingText =
                 if (field.hasError) {
-                    Text(
-                        text = field.errors.first(),
-                        color = ComicTheme.colorScheme.error
-                    )
-                }
-            },
+                    {
+                        Text(
+                            text = field.errors.first(),
+                            color = ComicTheme.colorScheme.error
+                        )
+                    }
+                } else {
+                    null
+                },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next

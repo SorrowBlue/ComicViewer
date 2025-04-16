@@ -3,7 +3,9 @@ package com.sorrowblue.comicviewer.feature.collection.editor.smart.section
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -12,7 +14,7 @@ import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.feature.collection.editor.component.CollectionNameField
+import com.sorrowblue.comicviewer.feature.collection.editor.component.OutlinedTextField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.BookshelfField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.PeriodField
@@ -23,8 +25,12 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel
+import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_collection_name
+import comicviewer.feature.collection.editor.generated.resources.collection_editor_error_must_not_be_blank
+import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_search_keyword
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import soil.form.FormPolicy
 import soil.form.compose.FieldControl
 import soil.form.compose.Form
@@ -55,35 +61,39 @@ internal fun SmartCollectionEditorForm(
         onSubmit = onSubmit,
         saver = kSerializableSaver<SmartCollectionEditorFormData>(),
         initialValue = formData,
+        key = formData,
         policy = FormPolicy.Minimal,
         modifier = modifier
     ) {
         Column {
-            CollectionNameField(control = rememberCollectionNameControl())
-
-            Spacer(Modifier.size(ComicTheme.dimension.padding))
-
-            CollectionNameField(control = rememberQueryControl())
-
-            Spacer(Modifier.size(ComicTheme.dimension.padding))
-
-            BookshelfField(bookshelfList)
+            OutlinedTextField(
+                control = rememberCollectionNameControl(),
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(Modifier.size(ComicTheme.dimension.minPadding))
 
-            RangeField()
+            OutlinedTextField(control = rememberQueryControl(), modifier = Modifier.fillMaxWidth())
 
             Spacer(Modifier.size(ComicTheme.dimension.minPadding))
 
-            PeriodField()
+            BookshelfField(bookshelfList = bookshelfList, modifier = Modifier.fillMaxWidth())
 
             Spacer(Modifier.size(ComicTheme.dimension.minPadding))
 
-            SortTypeField()
+            RangeField(modifier = Modifier.fillMaxWidth())
 
             Spacer(Modifier.size(ComicTheme.dimension.minPadding))
 
-            ShowHiddenFilesField()
+            PeriodField(modifier = Modifier.fillMaxWidth())
+
+            Spacer(Modifier.size(ComicTheme.dimension.minPadding))
+
+            SortTypeField(modifier = Modifier.fillMaxWidth())
+
+            Spacer(Modifier.size(ComicTheme.dimension.minPadding))
+
+            ShowHiddenFilesField(modifier = Modifier.fillMaxWidth())
 
             Spacer(Modifier.size(ComicTheme.dimension.padding))
 
@@ -101,22 +111,39 @@ internal fun SmartCollectionEditorForm(
 
 @Composable
 private fun FormScope<SmartCollectionEditorFormData>.rememberCollectionNameControl(): FieldControl<String> {
+    val errorMessage = stringResource(Res.string.collection_editor_error_must_not_be_blank)
     return rememberFieldRuleControl(
-        name = "Collection name",
+        name = stringResource(Res.string.collection_editor_label_collection_name),
         select = { this.name },
         update = { copy(name = it) },
     ) {
-        notBlank { "must not be blank" }
+        notBlank { errorMessage }
     }
 }
 
 @Composable
 private fun FormScope<SmartCollectionEditorFormData>.rememberQueryControl(): FieldControl<String> {
+    val errorMessage = stringResource(Res.string.collection_editor_error_must_not_be_blank)
     return rememberFieldRuleControl(
-        name = "query",
+        name = stringResource(Res.string.collection_editor_label_search_keyword),
         select = { this.searchCondition.query },
         update = { copy(searchCondition = searchCondition.copy(query = it)) },
     ) {
-        notBlank { "must not be blank" }
+        notBlank { errorMessage }
+    }
+}
+
+@Preview
+@Composable
+private fun SmartCollectionEditorFormPreview() {
+    ComicTheme {
+        Scaffold {
+            SmartCollectionEditorForm(
+                formData = SmartCollectionEditorFormData(),
+                bookshelfList = emptyList(),
+                onCancel = {},
+                onSubmit = {}
+            )
+        }
     }
 }

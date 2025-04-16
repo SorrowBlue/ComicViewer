@@ -22,7 +22,7 @@ import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.section.BasicCollectionContent
-import com.sorrowblue.comicviewer.feature.collection.editor.component.CollectionNameField
+import com.sorrowblue.comicviewer.feature.collection.editor.component.OutlinedTextField
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
@@ -110,7 +110,7 @@ private fun BasicCollectionEditScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { contentPadding ->
             Column(modifier = Modifier.padding(top = contentPadding.calculateTopPadding())) {
-                CollectionNameField(
+                OutlinedTextField(
                     control = rememberCollectionNameControl(),
                     modifier = Modifier
                         .fillMaxWidth()

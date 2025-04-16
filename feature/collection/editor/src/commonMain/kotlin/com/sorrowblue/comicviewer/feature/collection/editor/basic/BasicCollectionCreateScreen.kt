@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.feature.collection.editor.component.CollectionNameField
+import com.sorrowblue.comicviewer.feature.collection.editor.component.OutlinedTextField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.CollectionEditorFormData
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
@@ -77,7 +77,7 @@ private fun FavoriteCreateScreen(
         AlertDialog(
             title = { Text(text = stringResource(Res.string.collection_editor_title_basic_create)) },
             text = {
-                CollectionNameField(control = rememberCollectionNameControl())
+                OutlinedTextField(control = rememberCollectionNameControl())
             },
             onDismissRequest = onCancel,
             confirmButton = {

@@ -1,7 +1,7 @@
 [versions]
 credentialSecureStorage = "1.0.3"
 versionCode = "15"
-targetSdk = "35"
+targetSdk = "36"
 java = "21"
 
 kotlin = "2.1.20"
@@ -51,7 +51,6 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 modulegraph = { id = "dev.iurysouza.modulegraph", version = "0.12.0" }
 versions = { id = "com.github.ben-manes.versions", version = "0.52.0" }
-gitVersioning = { id = "me.qoomon.git-versioning", version = "6.4.4" }
 
 comicviewer-android-library = { id = "comicviewer.android.library" }
 comicviewer-android-lint = { id = "comicviewer.android.lint" }

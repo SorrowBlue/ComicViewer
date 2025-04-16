@@ -49,6 +49,7 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 input.from(tasks.withType<Detekt>().map(Detekt::sarifReportFile))
             }
             tasks.register("detektAll") {
+                group = "verification"
                 dependsOn(tasks.withType<Detekt>())
             }
         }
