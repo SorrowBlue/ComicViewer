@@ -26,7 +26,7 @@ internal class DokkaConventionPlugin : Plugin<Project> {
                 }
                 dokkaGeneratorIsolation.set(
                     ProcessIsolation {
-                        maxHeapSize.set("4g")
+                        maxHeapSize.set("6g")
                     }
                 )
             }

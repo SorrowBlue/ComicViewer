@@ -1,17 +1,23 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.library)
-    alias(libs.plugins.comicviewer.android.hilt)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer.domain.service"
 }
 
-dependencies {
-    api(projects.domain.model)
-    implementation(projects.domain.usecase)
-    implementation(projects.domain.reader)
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                api(projects.domain.model)
+                implementation(projects.domain.usecase)
 
-    implementation(libs.androidx.paging.common)
-    implementation(libs.google.android.play.feature.delivery.ktx)
+                api(libs.squareup.okio)
+                implementation(libs.androidx.paging.common)
+                implementation(libs.kotlinx.datetime)
+            }
+        }
+    }
 }

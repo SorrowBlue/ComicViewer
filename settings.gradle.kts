@@ -2,6 +2,7 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
@@ -11,11 +12,10 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
-    id("com.android.settings") version "8.8.0"
+    id("com.android.settings") version "8.9.1"
 }
 
 android {
-    buildToolsVersion = "35.0.0"
     compileSdk = 35
     minSdk = 30
 }
@@ -32,6 +32,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        mavenLocal()
         maven {
             url = uri("https://maven.ghostscript.com/")
             content {
@@ -39,10 +40,10 @@ dependencyResolutionManagement {
             }
         }
         maven {
-            url =
-                uri("https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1")
+            name = "gitlab-maven"
+            url = uri("https://gitlab.com/api/v4/projects/59936705/packages/maven")
             content {
-                includeGroupByRegex("com\\.microsoft.*")
+                includeModule("com.github.shayartzi.sevenzipjbinding", "sevenzipjbinding-all-platforms")
             }
         }
     }
@@ -50,18 +51,17 @@ dependencyResolutionManagement {
 
 rootProject.name = "comicviewer"
 
-include(":app")
-include(":catalog")
+include(":composeApp")
 
 include(":framework:common")
 include(":framework:notification")
 include(":framework:designsystem")
+include(":framework:test")
 include(":framework:ui")
 
 include(":domain:model")
 include(":domain:service")
 include(":domain:usecase")
-include(":domain:reader")
 
 include(":data:coil")
 include(":data:database")
@@ -69,8 +69,9 @@ include(":data:datastore")
 include(":data:reader:zip")
 include(":data:reader:document")
 include(":data:storage:client")
-include(":data:storage:device")
 include(":data:storage:smb")
+include(":data:storage:")
+include(":data:storage:device")
 include(":data:di")
 
 include(":feature:authentication")
@@ -79,20 +80,12 @@ include(":feature:bookshelf")
 include(":feature:bookshelf:edit")
 include(":feature:bookshelf:info")
 include(":feature:bookshelf:selection")
-include(":feature:favorite")
-include(":feature:favorite:add")
-include(":feature:favorite:common")
-include(":feature:favorite:create")
-include(":feature:favorite:edit")
+include(":feature:collection")
+include(":feature:collection:add")
+include(":feature:collection:editor")
 include(":feature:file")
 include(":feature:folder")
 include(":feature:history")
-include(":feature:library")
-include(":feature:library:common")
-include(":feature:library:box")
-include(":feature:library:dropbox")
-include(":feature:library:googledrive")
-include(":feature:library:onedrive")
 include(":feature:readlater")
 include(":feature:search")
 include(":feature:settings")
@@ -103,5 +96,3 @@ include(":feature:settings:info")
 include(":feature:settings:security")
 include(":feature:settings:viewer")
 include(":feature:tutorial")
-
-includeBuild("build-logic")

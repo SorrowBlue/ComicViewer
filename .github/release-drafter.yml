@@ -1,58 +1,23 @@
+name-template: 'v$RESOLVED_VERSION 🌈'
+tag-template: 'v$RESOLVED_VERSION'
 
 categories:
   - title: '🚀 Features'
-    label: ':sparkles: enhancement'
+    label: ':sparkles: feature'
   - title: '🐛 Bug Fixes'
     label: ':bug: bug'
   - title: '♻️ Refactoring'
     label: ':recycle: refactor'
   - title: '🧰 Maintenance'
-    labels:
-      - ':truck: chore'
-      - 'github'
+    label: ':truck: chore'
   - title: '📝 Documentation'
-    label: ':memo:documentation'
+    label: ':memo: documentation'
   - title: '⛓️ Dependency update'
     label: ':dependabot: dependencies'
 
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
-
-template: |
-  ## Changes
-  $CHANGES
-
-autolabeler:
-  - label: ':bug: bug'
-    branch:
-      # fix/xxxxxxxxx
-      - '/^fix[/].+/'
-
-  - label: ':sparkles: enhancement'
-    branch:
-      # feature/xxxxxxxxx
-      - '/^feature[/].+/'
-
-  - label: ':truck: chore'
-    branch:
-      # chore/xxxxxxxxx
-      - '/^chore[/-].+/'
-
-  - label: ':recycle: refactor'
-    branch:
-      # refactor/xxxxxxxxxx
-      - '/^refactor[/-].+/'
-
-  - label: ':memo:documentation'
-    branch:
-      - '/^doc[/-].+/'
-    files:
-      - '*.md'
-
-  - label: github
-    files:
-      - '.github/**/*'
 
 version-resolver:
   major:
@@ -65,3 +30,38 @@ version-resolver:
     labels:
       - 'patch'
   default: patch
+
+template: |
+  ## Changes
+
+  $CHANGES
+
+autolabeler:
+  - label: ':sparkles: feature'
+    branch:
+      - '/^feature[/].+/'
+  - label: ':bug: bug'
+    branch:
+      - '/^fix[/].+/'
+  - label: ':truck: chore'
+    branch:
+      - '/^chore[/-].+/'
+  - label: ':recycle: refactor'
+    branch:
+      - '/^refactor[/-].+/'
+  - label: ':memo: documentation'
+    branch:
+      - '/^doc[/-].+/'
+    files:
+      - '*.md'
+  - label: ':dependabot: dependencies'
+    branch:
+      - '/dependencies[/-].+/'
+      - '/renovate[/-].+/'
+  - label: 'gradle'
+    files:
+      - 'gradle/**/*'
+      - '*gradle.kts'
+  - label: github
+    files:
+      - '.github/**/*'

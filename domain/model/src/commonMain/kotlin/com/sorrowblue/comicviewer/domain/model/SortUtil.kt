@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.domain.model
 
 import com.sorrowblue.comicviewer.domain.model.file.File
 
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 expect object SortUtil {
 
     val compareFile: Comparator<File>

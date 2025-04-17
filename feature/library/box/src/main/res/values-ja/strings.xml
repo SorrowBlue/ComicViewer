@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="box_action_login">ログイン</string>
-    <string name="box_action_logout">ログアウト</string>
-    <string name="box_msg_downloading_background">バックグラウンドでダウンロード中</string>
-    <string name="box_msg_file_downloaded">1つのファイルをダウンロードしました</string>
-</resources>

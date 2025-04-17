@@ -65,12 +65,16 @@ Compose:
   CompositionLocalAllowlist:
     active: true
     allowedCompositionLocals:
+      - 'LocalScrollbarStyle'
       - 'LocalDimension'
       - 'LocalContainerColor'
       - 'LocalNavigationState'
       - 'LocalCanonicalScaffoldBound'
       - 'LocalDestinationScope'
       - 'LocalCoroutineScope'
+      - 'LocalAppLocaleIso'
+      - 'LocalAppLocaleIsoInternal'
+      - 'LocalDefaultLanguage'
     # You can optionally define a list of CompositionLocals that are allowed here
     # allowedCompositionLocals: LocalSomething,LocalSomethingElse
   ContentEmitterReturningValues:

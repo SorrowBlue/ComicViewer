@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <plurals name="favorite_common_label_file_count">
-        <item quantity="other">%1$d ファイル</item>
-    </plurals>
-    <string name="favorite_common_message_error">名前を空にすることはできません。</string>
-    <string name="favorite_common_label_favorite_name">お気に入りの名前</string>
-</resources>

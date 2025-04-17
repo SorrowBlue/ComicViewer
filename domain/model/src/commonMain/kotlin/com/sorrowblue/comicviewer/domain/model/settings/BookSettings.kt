@@ -8,6 +8,7 @@ data class BookSettings(
     val pageScale: PageScale = PageScale.Fit,
 ) {
 
+    @Serializable
     enum class PageFormat {
         Default,
         Spread,
@@ -15,6 +16,7 @@ data class BookSettings(
         Auto,
     }
 
+    @Serializable
     enum class PageScale {
         Fit,
         FillWidth,

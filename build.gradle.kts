@@ -1,4 +1,6 @@
-import dev.iurysouza.modulegraph.Orientation
+import dev.iurysouza.modulegraph.ModuleType.Custom
+import dev.iurysouza.modulegraph.Theme
+import io.gitlab.arturbosch.detekt.Detekt
 import java.util.Locale
 
 plugins {
@@ -7,24 +9,22 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.modulegraph)
     alias(libs.plugins.kotlinx.kover)
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.android.dynamicFeature) apply false
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin) apply false
+    alias(libs.plugins.versionCatalogLinter)
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.androidDynamicFeature) apply false
     alias(libs.plugins.androidx.room) apply false
-    alias(libs.plugins.google.dagger.hilt) apply false
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.composeMultiplatform) apply false
     alias(libs.plugins.aboutlibraries) apply false
 }
 
 dependencies {
-    dokka(projects.app)
-    dokka(projects.catalog)
     dokka(projects.data.coil)
     dokka(projects.data.database)
     dokka(projects.data.datastore)
@@ -32,10 +32,8 @@ dependencies {
     dokka(projects.data.reader.document)
     dokka(projects.data.reader.zip)
     dokka(projects.data.storage.client)
-    dokka(projects.data.storage.device)
     dokka(projects.data.storage.smb)
     dokka(projects.domain.model)
-    dokka(projects.domain.reader)
     dokka(projects.domain.service)
     dokka(projects.domain.usecase)
     dokka(projects.feature.authentication)
@@ -44,20 +42,9 @@ dependencies {
     dokka(projects.feature.bookshelf.edit)
     dokka(projects.feature.bookshelf.info)
     dokka(projects.feature.bookshelf.selection)
-    dokka(projects.feature.favorite)
-    dokka(projects.feature.favorite.add)
-    dokka(projects.feature.favorite.common)
-    dokka(projects.feature.favorite.create)
-    dokka(projects.feature.favorite.edit)
     dokka(projects.feature.file)
     dokka(projects.feature.folder)
     dokka(projects.feature.history)
-    dokka(projects.feature.library)
-    dokka(projects.feature.library.box)
-    dokka(projects.feature.library.common)
-    dokka(projects.feature.library.dropbox)
-    dokka(projects.feature.library.googledrive)
-    dokka(projects.feature.library.onedrive)
     dokka(projects.feature.readlater)
     dokka(projects.feature.search)
     dokka(projects.feature.settings)
@@ -102,24 +89,36 @@ afterEvaluate {
     }
 }
 moduleGraphConfig {
-    graph("${rootDir}/README2.md", "## Domain") {
-        focusedModulesRegex = ".*(domain).*"
-        rootModulesRegex = ".*(domain).*"
-        excludedModulesRegex = ".*(feature).*"
+    readmePath.set(layout.projectDirectory.file("README2.md").asFile.path)
+    rootModulesRegex.set("^(:composeApp).*")
+    nestingEnabled.set(true)
+    setStyleByModuleType.set(true)
+    excludedModulesRegex.set(".*(framework|aggregate|di|data|domain|folder|settings:|file).*")
+    theme.set(
+        Theme.BASE(
+            moduleTypes = listOf(
+                Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
+                Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
+                Custom(id = "comicviewer.kotlinMultiplatform.library", color = "#00C853"),
+            )
+        )
+    )
+    graph(layout.projectDirectory.file("README2.md").asFile.path, "## Data") {
+        rootModulesRegex = "^:data(?!:di\$).+"
+        nestingEnabled = true
+        setStyleByModuleType = true
+        strictMode = true
+        excludedModulesRegex = ".*(framework|feature|aggregate|composeApp|di).*"
+        theme = Theme.BASE(
+            moduleTypes = listOf(
+                Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
+                Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
+                Custom(id = "comicviewer.kotlinMultiplatform.library", color = "#00C853"),
+            )
+        )
     }
-    graph("${rootDir}/README2.md", "## Data") {
-        focusedModulesRegex = ".*(data).*"
-        rootModulesRegex = ".*(data).*"
-        orientation = Orientation.RIGHT_TO_LEFT
-        excludedModulesRegex = ".*(feature|di|model|app|framework).*"
-        excludedConfigurationsRegex = "api"
-    }
-//    focusedModulesRegex.set(".*(domain).*")
-//    this.rootModulesRegex.set(".*(data).*")
-//    setStyleByModuleType.set(true)
 }
 
 tasks.updateDaemonJvm {
-    logger.lifecycle("${libs.versions.java.get()::class}")
-    jvmVersion = JavaLanguageVersion.of(libs.versions.java.get())
+    languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
 }

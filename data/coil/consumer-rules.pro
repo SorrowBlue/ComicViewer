@@ -1,0 +1,1 @@
+-keep @org.koin.core.annotation.Named public class *

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="favorite_add_title">お気に入りに追加</string>
-    <string name="favorite_add_btn_add">追加</string>
-    <string name="favorite_add_label_recent">最近</string>
-</resources>
