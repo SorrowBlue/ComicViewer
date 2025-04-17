@@ -16,13 +16,13 @@ actual object LocalAppLocaleIso {
 
     private val default = NSLocale.preferredLanguages.first() as String
 
-    private val LocalAppLocaleIso = staticCompositionLocalOf { default }
+    private val LocalDefaultLanguage = staticCompositionLocalOf { default }
 
     /**
      * 現在の[Locale]。nullの場合はシステムデフォルト。
      */
     actual val current: Locale?
-        @Composable get() = Locale(LocalAppLocaleIso.current)
+        @Composable get() = Locale(LocalDefaultLanguage.current)
 
     actual val locales: List<Locale>
         get() = NSLocale.preferredLanguages.filterIsInstance<String>().map(::Locale)
@@ -35,7 +35,7 @@ actual object LocalAppLocaleIso {
         } else {
             NSUserDefaults.standardUserDefaults.setObject(arrayListOf(new), LANG_KEY)
         }
-        return LocalAppLocaleIso.provides(new)
+        return LocalDefaultLanguage.provides(new)
     }
 
     /**
