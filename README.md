@@ -23,23 +23,25 @@ Use [detekt](https://github.com/detekt/detekt) as a static code analysis tool.
 title: Plugin configuration
 ---
 graph LR
-    application ---> detekt
-    application ---> dokka
-    feature-dynamicFeature ---> dynamic-feature
-    feature-dynamicFeature ---> compose
-    feature-dynamicFeature ---> koin
-    library ---> detekt
-    library ---> dokka
-    feature --> library
-    feature --> compose
-    feature ---> hilt
-    dynamic-feature --> detekt
-    dynamic-feature --> dokka
-    hilt
-    dokka
-    detekt
-    compose
-    koin
+    DetektConventionPlugin
+    DokkaConventionPlugin
+
+    KotlinMultiplatformApplicationConventionPlugin --> AndroidLintConventionPlugin
+    KotlinMultiplatformApplicationConventionPlugin --> DetektConventionPlugin
+
+    KotlinMultiplatformAndroidDynamicFeatureConventionPlugin --> AndroidLintConventionPlugin
+    KotlinMultiplatformAndroidDynamicFeatureConventionPlugin --> DetektConventionPlugin
+
+    KotlinMultiplatformLibraryConventionPlugin --> AndroidLintConventionPlugin
+    KotlinMultiplatformLibraryConventionPlugin --> DetektConventionPlugin
+
+    KotlinMultiplatformComposeConventionPlugin --> DetektConventionPlugin
+
+    KotlinMultiplatformKoinConventionPlugin
+
+    KotlinMultiplatformFeatureConventionPlugin --> KotlinMultiplatformLibraryConventionPlugin
+    KotlinMultiplatformFeatureConventionPlugin --> KotlinMultiplatformComposeConventionPlugin
+    KotlinMultiplatformFeatureConventionPlugin --> KotlinMultiplatformKoinConventionPlugin
 ```
 
 ## Module configuration

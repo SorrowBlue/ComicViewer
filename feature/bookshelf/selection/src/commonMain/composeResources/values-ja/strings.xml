@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bookshelf_selection_title">本棚の選択</string>
+    <string name="bookshelf_selection_label_smb_detail">WindowsやNASなどで共有されているフォルダを本棚として追加できます。</string>
+    <string name="bookshelf_selection_label_device_detail">この端末上のフォルダを本棚として追加します。</string>
+</resources>

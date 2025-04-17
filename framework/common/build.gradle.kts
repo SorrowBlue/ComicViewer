@@ -1,5 +1,6 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.kotlinMultiplatform)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
 }
 
 android {
@@ -8,13 +9,6 @@ android {
 
 kotlin {
     sourceSets {
-        commonMain {
-            dependencies {
-                api(projects.domain.model)
-
-                implementation(libs.androidx.paging.common)
-            }
-        }
         androidMain {
             dependencies {
                 implementation(libs.androidx.startup.runtime)

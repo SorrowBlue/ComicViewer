@@ -1,4 +1,3 @@
-import com.sorrowblue.comicviewer.detektPlugins
 import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
@@ -19,10 +18,10 @@ internal class DetektConventionPlugin : Plugin<Project> {
             plugins {
                 id(libs.plugins.detekt)
             }
-
+            val detektPlugins2 = configurations.getByName("detektPlugins")
             dependencies {
-                detektPlugins(libs.nlopez.compose.rules.detekt)
-                detektPlugins(libs.arturbosch.detektFormatting)
+                detektPlugins2(libs.nlopez.compose.rules.detekt)
+                detektPlugins2(libs.arturbosch.detektFormatting)
             }
 
             configure<DetektExtension> {
@@ -42,9 +41,16 @@ internal class DetektConventionPlugin : Plugin<Project> {
                     xml.required.set(false)
                 }
                 finalizedBy(reportMerge)
+                exclude {
+                    it.file.path.run { contains("generated") || contains("buildkonfig") }
+                }
             }
             reportMerge.configureEach {
                 input.from(tasks.withType<Detekt>().map(Detekt::sarifReportFile))
+            }
+            tasks.register("detektAll") {
+                group = "verification"
+                dependsOn(tasks.withType<Detekt>())
             }
         }
     }

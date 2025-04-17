@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name" translatable="false">ComicViewer</string>
-    <string name="ui_desc_close">Close</string>
-    <string name="ui_desc_open_settings">Open settings</string>
-    <string name="ui_desc_move_up">move up</string>
-</resources>

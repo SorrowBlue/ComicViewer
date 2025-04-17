@@ -27,6 +27,9 @@ dependencies {
     compileOnly(libs.google.ksp.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
     compileOnly(libs.dokka.gradlePlugin)
+    compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.licensee.gradlePlugin)
+    compileOnly(libs.aboutlibraries.gradlePlugin)
     compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
     detektPlugins(libs.nlopez.compose.rules.detekt)
     detektPlugins(libs.arturbosch.detektFormatting)
@@ -50,41 +53,32 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
 
 gradlePlugin {
     plugins {
-        register(libs.plugins.comicviewer.android.application) {
-            implementationClass = "AndroidApplicationConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.android.library) {
-            implementationClass = "AndroidLibraryConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.android.dynamicFeature) {
-            implementationClass = "AndroidDynamicFeatureConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.android.compose) {
-            implementationClass = "ComposeConventionPlugin"
-        }
         register(libs.plugins.comicviewer.android.lint) {
             implementationClass = "AndroidLintConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.android.kotlinMultiplatform) {
-            implementationClass = "AndroidKotlinMultiplatformConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.android.hilt) {
-            implementationClass = "DaggerHiltConventionPlugin"
         }
         register(libs.plugins.comicviewer.detekt) {
             implementationClass = "DetektConventionPlugin"
         }
-        register(libs.plugins.comicviewer.koin) {
-            implementationClass = "KoinConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.android.feature) {
-            implementationClass = "AndroidFeatureConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.android.featureDynamicFeature) {
-            implementationClass = "AndroidFeatureDynamicFeatureConventionPlugin"
-        }
         register(libs.plugins.comicviewer.dokka) {
             implementationClass = "DokkaConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.kotlinMultiplatform.application) {
+            implementationClass = "KotlinMultiplatformApplicationConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.kotlinMultiplatform.library) {
+            implementationClass = "KotlinMultiplatformLibraryConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.kotlinMultiplatform.compose) {
+            implementationClass = "KotlinMultiplatformComposeConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.kotlinMultiplatform.koin) {
+            implementationClass = "KotlinMultiplatformKoinConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.kotlinMultiplatform.dynamicfeature) {
+            implementationClass = "KotlinMultiplatformAndroidDynamicFeatureConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.kotlinMultiplatform.feature) {
+            implementationClass = "KotlinMultiplatformFeatureConventionPlugin"
         }
     }
 }

@@ -1,0 +1,12 @@
+{
+  "uniqueId": "com.artifex.mupdf:fitz",
+  "funding": [],
+  "developers": [],
+  "artifactVersion": "1.25.6",
+  "description": "",
+  "name": "fitz",
+  "website": "http://www.mupdf.com",
+  "licenses": [
+    "81b43f5cd798b4dc6882f2e05417355f"
+  ]
+}

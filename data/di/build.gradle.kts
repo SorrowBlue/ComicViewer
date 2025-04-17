@@ -1,29 +1,41 @@
+import org.gradle.api.internal.catalog.DelegatingProjectDependency
+
 plugins {
-    alias(libs.plugins.comicviewer.android.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                val dependencyHandler = this
+                val skipModule = listOf(
+                    projects.composeApp,
+                    projects.data,
+                    projects.data.di,
+                    projects.data.reader,
+                    projects.data.reader.document,
+                    projects.data.storage,
+                    projects.domain,
+                    projects.feature,
+                    projects.framework,
+                    projects.framework.notification,
+                ).map(DelegatingProjectDependency::getPath)
+                rootProject.subprojects {
+                    if (!skipModule.contains(project.path)) {
+                        dependencyHandler.implementation(project)
+                    }
+                }
+            }
+        }
+
+        desktopMain.dependencies {
+            implementation(projects.data.reader.document)
+        }
+    }
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer.data.di"
-}
-
-dependencies {
-    implementation(projects.data.coil)
-    implementation(projects.data.database)
-    implementation(projects.data.datastore)
-    implementation(projects.data.reader.zip)
-    implementation(projects.data.storage.device)
-    implementation(projects.data.storage.smb)
-
-    // :feature:library:box :feature:library:onedrive
-    implementation(libs.squareup.okhttp3)
-    implementation(libs.bouncycastle.bcprovJdk18on)
-    // :feature:library:dropbox :feature:library:onedrive
-    implementation(libs.fasterxml.jackson.core)
-    // :feature:library:googledrive :feature:library:onedrive
-    implementation(libs.google.code.gson)
-    implementation(libs.androidx.credentials.playServicesAuth)
-
-    // :feature:library:googledrive
-    // Type com.google.common.util.concurrent.ListenableFuture is defined multiple times:
-    implementation(libs.google.guava)
 }

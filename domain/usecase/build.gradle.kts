@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.kotlinMultiplatform)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
 }
 
 android {
@@ -12,7 +12,7 @@ kotlin {
             dependencies {
                 api(projects.domain.model)
 
-                implementation(projects.framework.common)
+                implementation(libs.kotlinx.datetime)
                 implementation(libs.androidx.paging.common)
             }
         }

@@ -1,14 +1,23 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.feature)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.feature)
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(projects.feature.settings.common)
+            }
+        }
+        androidMain {
+            dependencies {
+                implementation(libs.androidx.appcompat)
+            }
+        }
+    }
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer.feature.settings.display"
     resourcePrefix("settings_display")
-}
-
-dependencies {
-    implementation(projects.feature.settings.common)
-
-    implementation(libs.androidx.appcompat)
 }

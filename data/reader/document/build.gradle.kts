@@ -1,6 +1,28 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.dynamicFeature)
-    alias(libs.plugins.google.ksp)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.dynamicfeature)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(projects.data.storage.client)
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation(projects.composeApp)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.artifex.mupdf.fitz)
+            }
+        }
+        desktopMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.pdfbox)
+        }
+    }
 }
 
 android {
@@ -13,12 +35,5 @@ android {
 }
 
 dependencies {
-    implementation(projects.app)
-    implementation(projects.data.storage.client)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.artifex.mupdf.fitz)
-
-    implementation(libs.google.autoServiceAnnotations)
-    ksp(libs.autoservice.ksp)
+    add("kspAndroid", libs.autoservice.ksp)
 }

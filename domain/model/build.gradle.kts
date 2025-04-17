@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.kotlinMultiplatform)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -11,7 +11,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(libs.kotlinx.datetime)
+                api(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.core)
             }
         }

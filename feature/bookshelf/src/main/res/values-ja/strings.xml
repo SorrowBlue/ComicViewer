@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="bookshelf_list_title">本棚</string>
-    <string name="bookshelf_list_message_no_bookshelves_added_yet">本棚はまだ追加されていません。</string>
-    <string name="bookshelf_desc_open_bookshelf_info">本棚情報を開く</string>
-    <string name="bookshelf_btn_add">新規</string>
-</resources>

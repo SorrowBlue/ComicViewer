@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="bookshelf_list_title">Bookshelf</string>
-    <string name="bookshelf_list_message_no_bookshelves_added_yet">No bookshelves added yet</string>
-
-    <string name="bookshelf_desc_open_bookshelf_info">Open bookshelf information</string>
-    <string name="bookshelf_btn_add">Add</string>
-</resources>

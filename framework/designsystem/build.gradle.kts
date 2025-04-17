@@ -1,20 +1,33 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.library)
-    alias(libs.plugins.comicviewer.android.compose)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(compose.material3)
+                implementation(compose.materialIconsExtended)
+                implementation(libs.compose.multiplatform.material3.adaptive)
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation(libs.androidx.appcompat)
+                implementation(libs.koin.core)
+                api(project.dependencies.platform(libs.androidx.compose.bom))
+            }
+        }
+
+        noAndroid.dependencies {
+            implementation(projects.domain.usecase)
+            implementation(libs.koin.composeViewModel)
+        }
+    }
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer.framework.designsystem"
-}
-
-dependencies {
-    api(platform(libs.androidx.compose.bom))
-    api(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material.iconsExtended)
-    implementation(libs.androidx.compose.material3.adaptive.layout)
-
-    implementation(libs.androidx.appcompat)
-
-    implementation(libs.androidx.compose.ui.toolingPreview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
 }

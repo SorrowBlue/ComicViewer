@@ -1,13 +1,8 @@
 plugins {
-    alias(libs.plugins.comicviewer.android.feature)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.feature)
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer.feature.book"
     resourcePrefix("book")
-}
-
-dependencies {
-    implementation(libs.androidx.compose.ui.toolingPreview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
 }

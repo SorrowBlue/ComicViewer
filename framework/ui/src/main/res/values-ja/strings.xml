@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="ui_desc_close">閉じる</string>
-    <string name="ui_desc_open_settings">設定を開く</string>
-    <string name="ui_desc_move_up">上に移動</string>
-</resources>
