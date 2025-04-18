@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionEditorForm
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionEditorFormData
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import kotlinx.serialization.Serializable
 
@@ -20,6 +21,7 @@ internal fun SmartCollectionEditorScreen(
     state: SmartCollectionEditorScreenState,
     title: @Composable () -> Unit,
     onCancel: () -> Unit,
+    onComplete: () -> Unit,
 ) {
     SmartCollectionEditorScreen(
         uiState = state.uiState,
@@ -27,6 +29,11 @@ internal fun SmartCollectionEditorScreen(
         onCancel = onCancel,
         onSubmit = state::onSubmit,
     )
+    EventEffect(state.event) {
+        when (it) {
+            SmartCollectionEditorScreenStateEvent.Complete -> onComplete()
+        }
+    }
 }
 
 @Composable

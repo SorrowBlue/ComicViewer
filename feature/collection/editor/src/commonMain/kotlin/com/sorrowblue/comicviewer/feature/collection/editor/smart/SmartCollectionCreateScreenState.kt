@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.CreateCollectionUseCase
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionEditorFormData
+import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterIsInstance
@@ -46,6 +47,7 @@ private class SmartCollectionCreateScreenStateImpl(
     private val createCollectionUseCase: CreateCollectionUseCase,
 ) : SmartCollectionEditorScreenState {
 
+    override val event = EventFlow<SmartCollectionEditorScreenStateEvent>()
     override var uiState by mutableStateOf(
         SmartCollectionEditorScreenUiState(
             formData = SmartCollectionEditorFormData(
@@ -73,5 +75,6 @@ private class SmartCollectionCreateScreenStateImpl(
                 )
             )
         ).first()
+        event.emit(SmartCollectionEditorScreenStateEvent.Complete)
     }
 }
