@@ -16,6 +16,7 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseC
 import com.sorrowblue.comicviewer.domain.usecase.collection.FlowCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.UpdateCollectionUseCase
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionEditorFormData
+import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_all_bookshelf
 import kotlinx.coroutines.CoroutineScope
@@ -52,6 +53,8 @@ private class SmartCollectionEditScreenImpl(
     private val updateCollectionUseCase: UpdateCollectionUseCase,
 ) : SmartCollectionEditorScreenState {
 
+    override val event = EventFlow<SmartCollectionEditorScreenStateEvent>()
+
     override var uiState by mutableStateOf(SmartCollectionEditorScreenUiState())
 
     init {
@@ -87,6 +90,7 @@ private class SmartCollectionEditScreenImpl(
                 )
             )
         ).collect()
+        event.emit(SmartCollectionEditorScreenStateEvent.Complete)
     }
 
     private suspend fun allBookshelf(): Bookshelf {

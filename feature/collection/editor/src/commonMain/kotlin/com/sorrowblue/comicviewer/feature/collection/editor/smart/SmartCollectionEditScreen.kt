@@ -25,5 +25,6 @@ internal fun SmartCollectionEditScreen(
         state = rememberSmartCollectionEditScreenState(route = route),
         title = { Text(text = stringResource(Res.string.collection_editor_title_smart_edit)) },
         onCancel = navController::popBackStack,
+        onComplete = navController::popBackStack,
     )
 }

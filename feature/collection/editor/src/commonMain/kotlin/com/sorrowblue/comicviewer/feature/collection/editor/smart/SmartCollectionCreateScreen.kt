@@ -29,5 +29,6 @@ internal fun SmartCollectionCreateScreen(
         state = rememberSmartCollectionCreateScreenState(route = route),
         title = { Text(text = stringResource(Res.string.collection_editor_title_smart_create)) },
         onCancel = navController::popBackStack,
+        onComplete = navController::popBackStack,
     )
 }
