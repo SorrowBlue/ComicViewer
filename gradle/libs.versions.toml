@@ -132,7 +132,7 @@ androidApplication = { id = "com.android.application", version.ref = "android-gr
 androidDynamicFeature = { id = "com.android.dynamic-feature", version.ref = "android-gradle" }
 androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
 androidx-room = { id = "androidx.room", version.ref = "androidx-room" }
-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.0" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
 comicviewer-android-library = { id = "comicviewer.android.library" }
 comicviewer-android-lint = { id = "comicviewer.android.lint" }
 comicviewer-detekt = { id = "comicviewer.android.detekt" }
