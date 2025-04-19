@@ -1,45 +1,45 @@
 name: Upload AAB to Internal App Sharing (Workload Identity)
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - main # またはリリース用のブランチなど
+      - main
 
-# これを追加: OIDCトークン発行権限
 permissions:
-  contents: read # コードのチェックアウトに必要
-  id-token: write # google-github-actions/auth に必要
+  contents: read
+  id-token: write
 
 jobs:
   build_and_upload:
     runs-on: ubuntu-latest
+    environment: android
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - uses: ./.github/actions/setup-java-gradle
-
-      - name: Build AAB
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Run bundleInternal
         run: ./gradlew bundleInternal
-
-      # --- ここから Workload Identity Federation による認証 ---
+        env:
+          ORG_GRADLE_PROJECT_androidSigningReleaseStoreFile: ${{ steps.android_keystore.outputs.filePath }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
       - name: Authenticate to Google Cloud
-        id: auth # このステップのID (後で参照するため)
-        uses: google-github-actions/auth@v2 # 最新版を確認
+        id: auth
+        uses: google-github-actions/auth@v2
         with:
-          # GCP設定の値を入力
-          workload_identity_provider: 'projects/303610403123/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
-          service_account: 'googleplayconsole@comicviewer.iam.gserviceaccount.com' # 例: play-uploader-sa@your-project-id.iam.gserviceaccount.com
+          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
 
-      # --- r0adkll/upload-google-play の呼び出し ---
       - name: Upload AAB to Internal App Sharing (Attempt)
         id: upload
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
-          # 他のパラメータは通常通り設定
           packageName: com.sorrowblue.comicviewer
           releaseFiles: composeApp/build/outputs/bundle/internal/composeApp-internal.aab
           track: internalsharing

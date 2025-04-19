@@ -1,35 +1,20 @@
-name: Detekt & Lint & Build
-
+name: Build
 on:
-  workflow_dispatch:
   workflow_call:
-  pull_request:
-    branches:
-      - 'main'
-  push:
-    branches:
-      - 'main'
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-permissions:
-  contents: read
-  pull-requests: write
-  # Required to upload SARIF files
-  security-events: write
+    secrets:
+      ANDROID_STORE_FILE_BASE64:
+        required: true
+      ANDROID_STORE_PASSWORD:
+        required: true
+      ANDROID_KEY_ALIAS:
+        required: true
+      ANDROID_KEY_PASSWORD:
+        required: true
 
 jobs:
 
-  detekt:
-    uses: ./.github/workflows/detekt.yml
-
-  lint:
-    uses: ./.github/workflows/lint.yml
-
   build-android:
     runs-on: ubuntu-latest
-    needs: [detekt, lint]
     environment: android
     steps:
       - uses: actions/checkout@v4
@@ -51,41 +36,37 @@ jobs:
         with:
           name: android
           path: composeApp/build/outputs/
-  build-windows:
-    runs-on: windows-latest
-    needs: [detekt, lint]
+
+  build-desktop:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-java-gradle
+      - name: Set artifact name
+        id: set_artifact_name
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            $ARTIFACT_NAME="desktop-${{ matrix.os }}".Replace("-latest", "")
+            [System.IO.File]::WriteAllText("$env:GITHUB_ENV", "artifact_name=$ARTIFACT_NAME`n")
+          else
+            ARTIFACT_NAME="desktop-${{ matrix.os }}"
+            ARTIFACT_NAME=${ARTIFACT_NAME/-latest/}
+            echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_ENV
+          fi
       - name: Run packageDistributionForCurrentOS
         run: ./gradlew packageDistributionForCurrentOS
       - uses: actions/upload-artifact@v4
         with:
-          name: windows
+          name: ${{ env.artifact_name }}
           path: composeApp/build/compose/binaries/main/
 
-  build-macos:
-    runs-on: macos-latest
-    needs: [detekt, lint]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-java-gradle
-      - name: Run packageDistributionForCurrentOS
-        run: ./gradlew packageDistributionForCurrentOS
-      - uses: actions/upload-artifact@v4
-        with:
-          name: macos
-          path: composeApp/build/compose/binaries/main/
-
-  build-linux:
+  build:
+    name: All Build Passed
     runs-on: ubuntu-latest
-    needs: [detekt, lint]
+    needs: [build-android, build-desktop]
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-java-gradle
-      - name: Run packageDistributionForCurrentOS
-        run: ./gradlew packageDistributionForCurrentOS
-      - uses: actions/upload-artifact@v4
-        with:
-          name: linux
-          path: composeApp/build/compose/binaries/main/
+      - name : Confirm All Build Jobs Succeeded
+        run: echo "✅ All build jobs (Android, Windows, macOS, Linux) completed successfully."
