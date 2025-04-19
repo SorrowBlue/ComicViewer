@@ -155,5 +155,5 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
 licensee = { id = "app.cash.licensee", version.ref = "licensee" }
 modulegraph = { id = "dev.iurysouza.modulegraph", version = "0.12.0" }
-versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version = "1.0.3" }
+versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version = "1.0.5" }
 versions = { id = "com.github.ben-manes.versions", version = "0.52.0" }
