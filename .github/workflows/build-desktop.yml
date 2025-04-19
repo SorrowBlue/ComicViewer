@@ -22,7 +22,6 @@ jobs:
             [System.IO.File]::WriteAllText("$env:GITHUB_ENV", "artifact_name=$ARTIFACT_NAME`n")
           else
             ARTIFACT_NAME="desktop-${{ matrix.os }}"
-            ARTIFACT_NAME=${ARTIFACT_NAME/-latest/}
             echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_ENV
           fi
       - name: Run packageDistributionForCurrentOS
