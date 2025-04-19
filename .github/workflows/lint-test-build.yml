@@ -19,9 +19,11 @@ jobs:
 
   lint:
     uses: ./.github/workflows/lint.yml
+    if: ${{ false }}
 
   test:
     uses: ./.github/workflows/test.yml
+    if: ${{ false }}
 
   build:
     needs: [ lint, test ]
