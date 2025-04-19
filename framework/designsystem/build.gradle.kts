@@ -17,7 +17,6 @@ kotlin {
             dependencies {
                 implementation(libs.androidx.appcompat)
                 implementation(libs.koin.core)
-                api(project.dependencies.platform(libs.androidx.compose.bom))
             }
         }
 
