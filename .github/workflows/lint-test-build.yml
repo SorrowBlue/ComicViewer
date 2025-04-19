@@ -26,7 +26,7 @@ jobs:
     if: ${{ false }}
 
   build:
-    needs: [ lint, test ]
+#    needs: [ lint, test ]
     uses: ./.github/workflows/build.yml
     with:
       environment: android
