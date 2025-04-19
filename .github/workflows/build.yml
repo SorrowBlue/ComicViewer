@@ -21,8 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-java-gradle
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
       - name: Decode android keystore file
         id: android_keystore
         uses: timheuer/base64-to-file@v1.2.4
@@ -36,36 +38,14 @@ jobs:
           ORG_GRADLE_PROJECT_androidSigningReleaseStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
           ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
           ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-      - uses: actions/upload-artifact@v4
+      - name: Upload AAB to Internal App Sharing
+        uses: actions/upload-artifact@v4
         with:
           name: android
           path: composeApp/build/outputs/
 
   build-desktop:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-java-gradle
-      - name: Set artifact name
-        id: set_artifact_name
-        run: |
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            $ARTIFACT_NAME="desktop-${{ matrix.os }}".Replace("-latest", "")
-            [System.IO.File]::WriteAllText("$env:GITHUB_ENV", "artifact_name=$ARTIFACT_NAME`n")
-          else
-            ARTIFACT_NAME="desktop-${{ matrix.os }}"
-            ARTIFACT_NAME=${ARTIFACT_NAME/-latest/}
-            echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_ENV
-          fi
-      - name: Run packageDistributionForCurrentOS
-        run: ./gradlew packageDistributionForCurrentOS
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.artifact_name }}
-          path: composeApp/build/compose/binaries/main/
+    uses: ./.github/workflows/build-desktop.yml
 
   build:
     name: All Build Passed

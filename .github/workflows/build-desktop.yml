@@ -1,0 +1,33 @@
+name: 'Build Desktop'
+on:
+  workflow_call:
+
+jobs:
+  build-desktop:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Set artifact name
+        id: set_artifact_name
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            $ARTIFACT_NAME="desktop-${{ matrix.os }}".Replace("-latest", "")
+            [System.IO.File]::WriteAllText("$env:GITHUB_ENV", "artifact_name=$ARTIFACT_NAME`n")
+          else
+            ARTIFACT_NAME="desktop-${{ matrix.os }}"
+            ARTIFACT_NAME=${ARTIFACT_NAME/-latest/}
+            echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_ENV
+          fi
+      - name: Run packageDistributionForCurrentOS
+        run: ./gradlew packageDistributionForCurrentOS
+      - name: Upload Desktop Binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.artifact_name }}
+          path: composeApp/build/compose/binaries/main/
