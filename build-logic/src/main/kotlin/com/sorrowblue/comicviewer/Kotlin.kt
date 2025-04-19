@@ -50,6 +50,14 @@ internal fun Project.configureLicensee() {
         allowUrl("https://opensource.org/license/mit")
         allowUrl("https://github.com/zacharee/KMPFile/blob/main/LICENSE")
 
+        allowDependency(
+            "com.github.shayartzi.sevenzipjbinding",
+            "sevenzipjbinding-all-platforms",
+            "16.02-2.01",
+        ) {
+            because("LGPL, but typo in license URL fixed in newer versions")
+        }
+
         unusedAction(UnusedAction.IGNORE)
     }
 }

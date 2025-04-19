@@ -6,6 +6,7 @@ import java.util.Locale
 plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
+    alias(libs.plugins.licensee) apply false
     alias(libs.plugins.dokka)
     alias(libs.plugins.modulegraph)
     alias(libs.plugins.kotlinx.kover)
