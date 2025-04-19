@@ -45,12 +45,29 @@ jobs:
           path: composeApp/build/outputs/
 
   build-desktop:
-    uses: ./.github/workflows/build-desktop.yml
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    environment: android
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Run packageDistributionForCurrentOS
+        run: ./gradlew packageDistributionForCurrentOS
+      - name: Upload Desktop Binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ runner.os }}
+          path: composeApp/build/compose/binaries/main/
 
   build:
     name: All Build Passed
     runs-on: ubuntu-latest
-    needs: [build-android, build-desktop]
+    environment: android
+    needs: [ build-android, build-desktop ]
     steps:
-      - name : Confirm All Build Jobs Succeeded
+      - name: Confirm All Build Jobs Succeeded
         run: echo "✅ All build jobs (Android, Windows, macOS, Linux) completed successfully."
