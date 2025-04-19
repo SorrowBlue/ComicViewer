@@ -1,6 +1,10 @@
 name: Build
 on:
   workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
     secrets:
       ANDROID_STORE_FILE_BASE64:
         required: true
@@ -15,7 +19,7 @@ jobs:
 
   build-android:
     runs-on: ubuntu-latest
-    environment: android
+    environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-java-gradle
