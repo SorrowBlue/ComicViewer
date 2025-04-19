@@ -23,6 +23,7 @@ class KotlinMultiplatformAndroidDynamicFeatureConventionPlugin : Plugin<Project>
                 id(libs.plugins.comicviewer.dokka)
 //                id(libs.plugins.licensee)
 //                id(libs.plugins.aboutlibraries)
+                id(libs.plugins.aboutlibraries)
             }
 
             configureKotlin<KotlinMultiplatformExtension>()
@@ -37,6 +38,7 @@ class KotlinMultiplatformAndroidDynamicFeatureConventionPlugin : Plugin<Project>
 
 //            configureLicensee()
 //            configureAboutLibraries()
+            configureAboutLibraries()
         }
     }
 }

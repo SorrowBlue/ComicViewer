@@ -13,7 +13,7 @@ kotlin {
             dependencies {
                 implementation(projects.feature.settings.common)
                 implementation(libs.kotlinx.datetime)
-                implementation(libs.aboutlibraries.composeM3) }
+                implementation(libs.aboutlibraries.compose) }
         }
         androidMain {
             dependencies {
