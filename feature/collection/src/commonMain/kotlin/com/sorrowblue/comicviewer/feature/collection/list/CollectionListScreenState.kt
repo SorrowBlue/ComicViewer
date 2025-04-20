@@ -8,11 +8,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
-import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.usecase.collection.DeleteCollectionUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -21,7 +19,6 @@ internal interface CollectionListScreenState {
     val pagingDataFlow: Flow<PagingData<Collection>>
     val lazyListState: LazyListState
     fun onNavClick()
-    fun delete(id: CollectionId)
 }
 
 @Composable
@@ -52,12 +49,6 @@ private class CollectionListScreenStateImpl(
             scope.launch {
                 lazyListState.scrollToItem(0)
             }
-        }
-    }
-
-    override fun delete(id: CollectionId) {
-        scope.launch {
-            deleteCollectionUseCase(DeleteCollectionUseCase.Request(id)).first()
         }
     }
 }

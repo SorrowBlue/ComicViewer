@@ -2,7 +2,12 @@
 <resources>
     <string name="collection_title">コレクション</string>
     <string name="collection_label_no_collection">コレクションはありません</string>
+    <string name="collection_label_no_contents">内容はありません</string>
     <string name="collection_label_create">作成</string>
     <string name="collection_label_edit">編集</string>
     <string name="collection_label_delete">削除</string>
+    <string name="collection_title_delete">コレクションの削除</string>
+    <string name="collection_label_delete_confirm">「%1$s」を削除してもよろしいですか？</string>
+    <string name="collection_label_collection">コレクション</string>
+    <string name="collection_label_smart_collection">スマートコレクション</string>
 </resources>

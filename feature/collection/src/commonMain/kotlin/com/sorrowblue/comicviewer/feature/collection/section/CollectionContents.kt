@@ -13,6 +13,9 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResum
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import comicviewer.feature.collection.generated.resources.Res
+import comicviewer.feature.collection.generated.resources.collection_label_no_contents
+import org.jetbrains.compose.resources.stringResource
 import com.sorrowblue.comicviewer.domain.model.file.File as FileModel
 
 internal sealed interface CollectionContentsAction {
@@ -33,7 +36,7 @@ internal fun CollectionContents(
     if (lazyPagingItems.isEmptyData) {
         EmptyContent(
             imageVector = ComicIcons.UndrawResumeFolder,
-            text = "No contents",
+            text = stringResource(Res.string.collection_label_no_contents),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)

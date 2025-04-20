@@ -16,7 +16,11 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalTopA
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.OverflowMenuItem
+import com.sorrowblue.comicviewer.framework.ui.material3.SettingsOverflowMenuItem
 import com.sorrowblue.comicviewer.framework.ui.material3.rememberOverflowMenuState
+import comicviewer.feature.collection.generated.resources.Res
+import comicviewer.feature.collection.generated.resources.collection_label_delete
+import org.jetbrains.compose.resources.stringResource
 
 internal data class CollectionAppBarUiState(
     val title: String = "",
@@ -58,15 +62,11 @@ internal fun CollectionAppBar(
                     onClick = { onAction(CollectionAppBarAction.GridSize) }
                 )
                 OverflowMenuItem(
-                    text = "Delete",
+                    text = stringResource(Res.string.collection_label_delete),
                     icon = ComicIcons.Delete,
                     onClick = { onAction(CollectionAppBarAction.Delete) }
                 )
-                OverflowMenuItem(
-                    text = "Settings",
-                    icon = ComicIcons.Settings,
-                    onClick = { onAction(CollectionAppBarAction.Settings) }
-                )
+                SettingsOverflowMenuItem(onClick = { onAction(CollectionAppBarAction.Settings) })
             }
         },
         scrollBehavior = scrollBehavior,

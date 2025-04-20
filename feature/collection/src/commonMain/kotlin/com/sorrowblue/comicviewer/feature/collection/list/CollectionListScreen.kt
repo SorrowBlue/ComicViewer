@@ -36,11 +36,12 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerCol
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import comicviewer.feature.collection.generated.resources.Res
+import comicviewer.feature.collection.generated.resources.collection_label_collection
 import comicviewer.feature.collection.generated.resources.collection_label_create
+import comicviewer.feature.collection.generated.resources.collection_label_smart_collection
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import com.sorrowblue.comicviewer.domain.model.collection.Collection as CollectionModel
 
 @Serializable
 internal data object CollectionList
@@ -50,6 +51,7 @@ internal interface CollectionListScreenNavigator {
     fun onCreateSmartCollectionClick()
     fun onCreateBasicCollectionClick()
     fun onCollectionEditClick(collection: Collection)
+    fun onCollectionDeleteClick(collection: Collection)
     fun navigateToCollection(id: CollectionId)
 }
 
@@ -66,7 +68,7 @@ internal fun CollectionListScreen(navigator: CollectionListScreenNavigator = koi
                     it.id
                 )
 
-                is CollectionListContentsAction.DeleteClick -> state.delete(it.id)
+                is CollectionListContentsAction.DeleteClick -> navigator.onCollectionDeleteClick(it.collection)
                 is CollectionListContentsAction.EditClick -> navigator.onCollectionEditClick(it.collection)
             }
         },
@@ -78,7 +80,7 @@ internal fun CollectionListScreen(navigator: CollectionListScreenNavigator = koi
 
 @Composable
 private fun CollectionListScreen(
-    lazyPagingItems: LazyPagingItems<CollectionModel>,
+    lazyPagingItems: LazyPagingItems<Collection>,
     lazyListState: LazyListState,
     onContentsAction: (CollectionListContentsAction) -> Unit,
     onSettingsClick: () -> Unit,
@@ -108,7 +110,7 @@ private fun CollectionListScreen(
                                 onCreateBasicCollectionClick()
                             },
                             text = {
-                                Text("コレクション")
+                                Text(stringResource(Res.string.collection_label_collection))
                             },
                             icon = {
                                 Icon(
@@ -124,7 +126,7 @@ private fun CollectionListScreen(
                                 onCreateSmartCollectionClick()
                             },
                             text = {
-                                Text("スマートコレクション")
+                                Text(stringResource(Res.string.collection_label_smart_collection))
                             },
                             icon = {
                                 Icon(
