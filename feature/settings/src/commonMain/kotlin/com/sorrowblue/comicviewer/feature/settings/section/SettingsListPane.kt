@@ -193,23 +193,22 @@ fun NavigationDrawerItem(
     interactionSource: MutableInteractionSource? = null,
 ) {
     Surface(
-        modifier =
-            modifier
-                .semantics { role = Role.Tab }
-                .heightIn(min = 56.0.dp)
-                .fillMaxWidth()
-                .clip(shape)
-                .selectable(
-                    selected = selected,
-                    interactionSource = interactionSource,
-                    indication = ripple(
-                        bounded = true,
-                        radius = Dp.Unspecified,
-                        color = Color.Unspecified
-                    ),
-                    onClick = { }
-                )
-                .combinedClickable(onClick = onClick, onLongClick = onLongClick),
+        modifier = modifier
+            .semantics { role = Role.Tab }
+            .heightIn(min = 56.0.dp)
+            .fillMaxWidth()
+            .clip(shape)
+            .selectable(
+                selected = selected,
+                interactionSource = interactionSource,
+                indication = ripple(
+                    bounded = true,
+                    radius = Dp.Unspecified,
+                    color = Color.Unspecified
+                ),
+                onClick = { }
+            )
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick),
         shape = shape,
         color = colors.containerColor(selected).value,
     ) {
