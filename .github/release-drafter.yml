@@ -65,3 +65,8 @@ autolabeler:
   - label: github
     files:
       - '.github/**/*'
+
+prerelease: true
+include-pre-releases: true
+
+prerelease-identifier: 'beta'
