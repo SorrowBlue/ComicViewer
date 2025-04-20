@@ -5,21 +5,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.feature.collection.component.CollectionActionsDropdown
 import com.sorrowblue.comicviewer.feature.collection.component.CollectionListCardItem
 import com.sorrowblue.comicviewer.feature.collection.component.CollectionListItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -32,15 +25,13 @@ import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.itemKey
 import comicviewer.feature.collection.generated.resources.Res
-import comicviewer.feature.collection.generated.resources.collection_label_delete
-import comicviewer.feature.collection.generated.resources.collection_label_edit
 import comicviewer.feature.collection.generated.resources.collection_label_no_collection
 import org.jetbrains.compose.resources.stringResource
 
 internal sealed interface CollectionListContentsAction {
     data class CollectionListClick(val id: CollectionId) : CollectionListContentsAction
     data class EditClick(val collection: Collection) : CollectionListContentsAction
-    data class DeleteClick(val id: CollectionId) : CollectionListContentsAction
+    data class DeleteClick(val collection: Collection) : CollectionListContentsAction
 }
 
 @Composable
@@ -74,29 +65,14 @@ internal fun CollectionListContents(
                 lazyPagingItems[index]?.let {
                     val content = remember {
                         movableContentOf {
-                            var expanded by remember { mutableStateOf(false) }
-                            IconButton(onClick = { expanded = !expanded }) {
-                                Icon(ComicIcons.MoreVert, null)
-                            }
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false }
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(Res.string.collection_label_edit)) },
-                                    onClick = {
-                                        expanded = false
-                                        onAction(CollectionListContentsAction.EditClick(it))
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(Res.string.collection_label_delete)) },
-                                    onClick = {
-                                        expanded = false
-                                        onAction(CollectionListContentsAction.DeleteClick(it.id))
-                                    }
-                                )
-                            }
+                            CollectionActionsDropdown(
+                                onEditClick = {
+                                    onAction(CollectionListContentsAction.EditClick(it))
+                                },
+                                onDeleteClick = {
+                                    onAction(CollectionListContentsAction.DeleteClick(it))
+                                }
+                            )
                         }
                     }
                     if (isCompact) {

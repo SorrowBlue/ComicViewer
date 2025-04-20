@@ -2,7 +2,12 @@
 <resources>
     <string name="collection_title">Collection</string>
     <string name="collection_label_no_collection">No collection</string>
+    <string name="collection_label_no_contents">No contents</string>
     <string name="collection_label_create">Create</string>
     <string name="collection_label_edit">Edit</string>
     <string name="collection_label_delete">Delete</string>
+    <string name="collection_title_delete">Delete Collection</string>
+    <string name="collection_label_delete_confirm">Are you sure you want to delete "%1$s"?</string>
+    <string name="collection_label_collection">Collection</string>
+    <string name="collection_label_smart_collection">Smart Collection</string>
 </resources>

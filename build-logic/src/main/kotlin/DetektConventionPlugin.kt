@@ -52,13 +52,8 @@ internal class DetektConventionPlugin : Plugin<Project> {
             tasks.register("detektAndroidAll") {
                 group = "verification"
                 dependsOn(
-                    tasks.withType<Detekt>().matching {
-                        it.name.contains("(?i)^(?!.*metadata).*android.*$".toRegex())
-                    }.also {
-                        it.filter { it.path.contains("composeApp") }.forEach {
-                            logger.lifecycle("detektAndroidAll task: ${it.path}")
-                        }
-                    })
+                    tasks.withType<Detekt>()
+                        .matching { it.name.contains("(?i)^(?!.*metadata).*android.*$".toRegex()) })
             }
             tasks.register("detektDesktopAll") {
                 group = "verification"

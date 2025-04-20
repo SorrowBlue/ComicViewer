@@ -15,6 +15,7 @@ import com.sorrowblue.comicviewer.feature.collection.CollectionFolderScreenNavig
 import com.sorrowblue.comicviewer.feature.collection.CollectionScreenNavigator
 import com.sorrowblue.comicviewer.feature.collection.add.BasicCollectionAddNavigator
 import com.sorrowblue.comicviewer.feature.collection.add.navigation.BasicCollectionAddNavGraph
+import com.sorrowblue.comicviewer.feature.collection.delete.DeleteCollection
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.navigateToBasicCollectionCreate
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.navigateToBasicCollectionEdit
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.navigateToSmartCollectionCreate
@@ -79,6 +80,10 @@ internal class CollectionListNavGraphNavigatorImpl(
             is SmartCollection ->
                 navController.navigateToSmartCollectionEdit(collection.id)
         }
+    }
+
+    override fun onCollectionDeleteClick(collection: CollectionModel) {
+        navController.navigate(DeleteCollection(collection.id, collection.name))
     }
 
     override fun onFileClick(file: File, collectionId: CollectionId) {
