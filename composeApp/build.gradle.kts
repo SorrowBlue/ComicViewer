@@ -104,6 +104,7 @@ android {
             isMinifyEnabled = ComicBuildType.RELEASE.isMinifyEnabled
             isShrinkResources = ComicBuildType.RELEASE.isShrinkResources
             signingConfig = signingConfigs.findByName(name)
+            ndk.debugSymbolLevel = "SYMBOL_TABLE"
         }
         getByName(ComicBuildType.PRERELEASE.display) {
             initWith(getByName(ComicBuildType.RELEASE.display))
