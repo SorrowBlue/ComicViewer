@@ -48,9 +48,35 @@ internal class DetektConventionPlugin : Plugin<Project> {
             reportMerge.configureEach {
                 input.from(tasks.withType<Detekt>().map(Detekt::sarifReportFile))
             }
-            tasks.register("detektAll") {
+
+            tasks.register("detektAndroidAll") {
                 group = "verification"
-                dependsOn(tasks.withType<Detekt>())
+                dependsOn(
+                    tasks.withType<Detekt>().matching {
+                        it.name.contains("(?i)^(?!.*metadata).*android.*$".toRegex())
+                    }.also {
+                        it.filter { it.path.contains("composeApp") }.forEach {
+                            logger.lifecycle("detektAndroidAll task: ${it.path}")
+                        }
+                    })
+            }
+            tasks.register("detektDesktopAll") {
+                group = "verification"
+                dependsOn(
+                    tasks.withType<Detekt>()
+                        .matching { it.name.contains("(?i)^(?!.*metadata).*desktop.*$".toRegex()) })
+            }
+            tasks.register("detektIosAll") {
+                group = "verification"
+                dependsOn(
+                    tasks.withType<Detekt>()
+                        .matching { it.name.contains("(?i)^(?!.*metadata).*ios.*$".toRegex()) })
+            }
+            tasks.register("detektMetadataAll") {
+                group = "verification"
+                dependsOn(
+                    tasks.withType<Detekt>()
+                        .matching { it.name.contains("(?i)^.*metadata.*$".toRegex()) })
             }
         }
     }

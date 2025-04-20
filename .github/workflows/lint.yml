@@ -6,13 +6,16 @@ jobs:
 
   detekt:
     runs-on: macos-latest
+    strategy:
+      matrix:
+        target: [ Android, Desktop, Ios, Metadata ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🔍️Run detekt
-        run: ./gradlew detektAll
+        run: ./gradlew detekt${{ matrix.target }}All
       - name: Upload Detekt SARIF
         uses: github/codeql-action/upload-sarif@v3
         if: ${{ !cancelled() }}
