@@ -36,8 +36,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerCol
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import comicviewer.feature.collection.generated.resources.Res
-import comicviewer.feature.collection.generated.resources.collection_label_create
 import comicviewer.feature.collection.generated.resources.collection_label_collection
+import comicviewer.feature.collection.generated.resources.collection_label_create
 import comicviewer.feature.collection.generated.resources.collection_label_smart_collection
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource

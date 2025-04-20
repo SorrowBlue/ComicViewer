@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.collection.component
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -21,30 +22,31 @@ internal fun CollectionActionsDropdown(
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    IconButton(onClick = { expanded = !expanded }) {
-        Icon(ComicIcons.MoreVert, null)
+    Box {
+        var expanded by rememberSaveable { mutableStateOf(false) }
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(ComicIcons.MoreVert, null)
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text(stringResource(Res.string.collection_label_edit)) },
+                leadingIcon = { Icon(ComicIcons.Edit, null) },
+                onClick = {
+                    expanded = false
+                    onEditClick()
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(stringResource(Res.string.collection_label_delete)) },
+                leadingIcon = { Icon(ComicIcons.Delete, null) },
+                onClick = {
+                    expanded = false
+                    onDeleteClick()
+                }
+            )
+        }
     }
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false }
-    ) {
-        DropdownMenuItem(
-            text = { Text(stringResource(Res.string.collection_label_edit)) },
-            leadingIcon = { Icon(ComicIcons.Edit, null) },
-            onClick = {
-                expanded = false
-                onEditClick()
-            }
-        )
-        DropdownMenuItem(
-            text = { Text(stringResource(Res.string.collection_label_delete)) },
-            leadingIcon = { Icon(ComicIcons.Delete, null) },
-            onClick = {
-                expanded = false
-                onDeleteClick()
-            }
-        )
-    }
-
 }

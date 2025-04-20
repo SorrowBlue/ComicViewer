@@ -5,8 +5,8 @@ import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.cmpdestinations.annotation.NestedNavGraph
 import com.sorrowblue.comicviewer.feature.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.CollectionFolder
-import com.sorrowblue.comicviewer.feature.collection.delete.DeleteCollection
 import com.sorrowblue.comicviewer.feature.collection.add.navigation.BasicCollectionAddNavGraph
+import com.sorrowblue.comicviewer.feature.collection.delete.DeleteCollection
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.CollectionEditorNavGraph
 import com.sorrowblue.comicviewer.feature.collection.list.CollectionList
 import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
