@@ -13,6 +13,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import comicviewer.framework.ui.generated.resources.Res
+import comicviewer.framework.ui.generated.resources.label_settings
+import org.jetbrains.compose.resources.stringResource
 
 interface OverflowMenuScope {
 
@@ -34,6 +37,19 @@ fun OverflowMenuScope.OverflowMenuItem(
             onClick()
         },
         modifier = modifier
+    )
+}
+
+@Composable
+fun OverflowMenuScope.SettingsOverflowMenuItem(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    state: OverflowMenuState = rememberOverflowMenuState(),
+) {
+    OverflowMenuItem(
+        text = stringResource(Res.string.label_settings),
+        icon = ComicIcons.Settings,
+        onClick = onClick
     )
 }
 
