@@ -1,5 +1,3 @@
-@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
-
 package com.sorrowblue.comicviewer.feature.settings.section
 
 import androidx.compose.foundation.combinedClickable
@@ -22,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalContentColor
@@ -35,8 +34,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.ripple
-import androidx.compose.material3.tokens.NavigationDrawerTokens
-import androidx.compose.material3.value
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -116,9 +113,7 @@ private fun CompactListPane(
         LazyColumn(
             state = lazyListState,
             contentPadding = contentPadding,
-            modifier = Modifier
-                .fillMaxSize()
-            // TODO .drawVerticalScrollbar(lazyListState)
+            modifier = Modifier.fillMaxSize()
         ) {
             items(settingsList) { settings ->
                 ListItem(
@@ -193,28 +188,28 @@ fun NavigationDrawerItem(
     modifier: Modifier = Modifier,
     icon: (@Composable () -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null,
-    shape: Shape = NavigationDrawerTokens.ActiveIndicatorShape.value,
+    shape: Shape = CircleShape,
     colors: NavigationDrawerItemColors = NavigationDrawerItemDefaults.colors(),
     interactionSource: MutableInteractionSource? = null,
 ) {
     Surface(
         modifier =
-        modifier
-            .semantics { role = Role.Tab }
-            .heightIn(min = NavigationDrawerTokens.ActiveIndicatorHeight)
-            .fillMaxWidth()
-            .clip(shape)
-            .selectable(
-                selected = selected,
-                interactionSource = interactionSource,
-                indication = ripple(
-                    bounded = true,
-                    radius = Dp.Unspecified,
-                    color = Color.Unspecified
-                ),
-                onClick = { }
-            )
-            .combinedClickable(onClick = onClick, onLongClick = onLongClick),
+            modifier
+                .semantics { role = Role.Tab }
+                .heightIn(min = 56.0.dp)
+                .fillMaxWidth()
+                .clip(shape)
+                .selectable(
+                    selected = selected,
+                    interactionSource = interactionSource,
+                    indication = ripple(
+                        bounded = true,
+                        radius = Dp.Unspecified,
+                        color = Color.Unspecified
+                    ),
+                    onClick = { }
+                )
+                .combinedClickable(onClick = onClick, onLongClick = onLongClick),
         shape = shape,
         color = colors.containerColor(selected).value,
     ) {

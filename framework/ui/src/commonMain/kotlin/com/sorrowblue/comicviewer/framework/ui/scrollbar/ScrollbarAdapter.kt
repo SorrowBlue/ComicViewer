@@ -1,5 +1,3 @@
-@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
-
 package com.sorrowblue.comicviewer.framework.ui.scrollbar
 
 import androidx.compose.animation.animateColorAsState
@@ -475,9 +473,9 @@ internal class LazyGridScrollbarAdapter(
         if (isVertical) y else x
     }
 
-    private fun lineOfIndex(index: Int) = index / scrollState.slotsPerLine
+    private fun lineOfIndex(index: Int) = index / scrollState.layoutInfo.maxSpan
 
-    private fun indexOfFirstInLine(line: Int) = line * scrollState.slotsPerLine
+    private fun indexOfFirstInLine(line: Int) = line * scrollState.layoutInfo.maxSpan
 
     override fun firstVisibleLine(): VisibleLine? {
         return scrollState.layoutInfo.visibleItemsInfo
