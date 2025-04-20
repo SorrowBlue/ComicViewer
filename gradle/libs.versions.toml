@@ -23,7 +23,7 @@ multiplatform-compose-material3Adaptive = "1.1.0-beta02"
 multiplatform-navigationCompose = "2.9.0-alpha16"
 targetSdk = "36"
 uiAndroid = "1.7.8"
-versionCode = "15"
+versionCode = "16"
 
 [libraries]
 aboutlibraries-compose = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "aboutlibraries" }
