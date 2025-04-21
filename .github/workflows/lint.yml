@@ -18,9 +18,15 @@ jobs:
         run: ./gradlew ${{ matrix.task }}
       - name: Upload Detekt SARIF
         uses: github/codeql-action/upload-sarif@v3
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.task != ':build-logic:detektAll' }}
         with:
           sarif_file: build/reports/detekt/merge.sarif
+          category: detekt
+      - name: Upload Detekt SARIF(build-logic)
+        uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() && matrix.task == ':build-logic:detektAll' }}
+        with:
+          sarif_file: build-logic/build/reports/detekt/merge.sarif
           category: detekt
 
   checkVersionCatalog:
