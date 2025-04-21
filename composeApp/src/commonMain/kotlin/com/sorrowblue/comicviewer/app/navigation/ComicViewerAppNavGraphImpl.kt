@@ -7,8 +7,8 @@ import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
-expect class ComicViewerAppNavGraphImpl() : NavGraph {
+@Suppress("KotlinNoActualForExpect")
+internal expect class ComicViewerAppNavGraphImpl() : NavGraph {
     override val startDestination: KClass<*>
     override val route: KClass<*>
     override val typeMap: Map<KType, NavType<*>>

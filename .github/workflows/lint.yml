@@ -8,19 +8,25 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        target: [ Android, Desktop, Ios, Metadata ]
+        task: [ detektAndroidAll, detektDesktopAll, detektIosAll, detektMetadataAll, ':build-logic:detektAll' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🔍️Run detekt
-        run: ./gradlew detekt${{ matrix.target }}All
+        run: ./gradlew ${{ matrix.task }}
       - name: Upload Detekt SARIF
         uses: github/codeql-action/upload-sarif@v3
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.task != ':build-logic:detektAll' }}
         with:
           sarif_file: build/reports/detekt/merge.sarif
+          category: detekt
+      - name: Upload Detekt SARIF(build-logic)
+        uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() && matrix.task == ':build-logic:detektAll' }}
+        with:
+          sarif_file: build-logic/build/reports/detekt/detekt.sarif
           category: detekt
 
   checkVersionCatalog:

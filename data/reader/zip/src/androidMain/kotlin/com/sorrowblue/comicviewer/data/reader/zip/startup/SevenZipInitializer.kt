@@ -7,7 +7,6 @@ import logcat.LogPriority
 import logcat.logcat
 import net.sf.sevenzipjbinding.SevenZip
 
-@Suppress("unused")
 internal class SevenZipInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {

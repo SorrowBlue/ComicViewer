@@ -20,8 +20,8 @@ import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationC
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationRowContents
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
+import com.sorrowblue.comicviewer.framework.ui.core.DetectOrientation
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
-import com.sorrowblue.comicviewer.framework.ui.core.isLandscape
 import comicviewer.feature.authentication.generated.resources.Res
 import comicviewer.feature.authentication.generated.resources.authentication_error_incorrect_pin
 import comicviewer.feature.authentication.generated.resources.authentication_error_pin_4_more
@@ -166,34 +166,35 @@ internal fun AuthenticationScreen(
     onContentsAction: (AuthenticationContentsAction) -> Unit,
 ) {
     val isCompactWindowClass = isCompactWindowClass()
-    val isLandscape = isLandscape()
-    val isCompactLandscape by remember(isCompactWindowClass, isLandscape) {
-        logcat("AuthenticationScreen") { "isCompactWindowClass=$isCompactWindowClass, isLandscape=$isLandscape" }
-        mutableStateOf(isCompactWindowClass && isLandscape)
-    }
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = ComicTheme.colorScheme.surfaceContainer,
-        contentWindowInsets = WindowInsets.safeDrawing
-    ) { contentPadding ->
-        if (isCompactLandscape) {
-            AuthenticationRowContents(
-                uiState = uiState,
-                onAction = onContentsAction,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
-                    .padding(ComicTheme.dimension.margin)
-            )
-        } else {
-            AuthenticationColumnContents(
-                uiState = uiState,
-                onAction = onContentsAction,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
-                    .padding(ComicTheme.dimension.margin)
-            )
+    DetectOrientation(Modifier.fillMaxSize()) { isLandscape ->
+        val isCompactLandscape by remember(isCompactWindowClass, isLandscape) {
+            logcat("AuthenticationScreen") { "isCompactWindowClass=$isCompactWindowClass, isLandscape=$isLandscape" }
+            mutableStateOf(isCompactWindowClass && isLandscape)
+        }
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            containerColor = ComicTheme.colorScheme.surfaceContainer,
+            contentWindowInsets = WindowInsets.safeDrawing
+        ) { contentPadding ->
+            if (isCompactLandscape) {
+                AuthenticationRowContents(
+                    uiState = uiState,
+                    onAction = onContentsAction,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                        .padding(ComicTheme.dimension.margin)
+                )
+            } else {
+                AuthenticationColumnContents(
+                    uiState = uiState,
+                    onAction = onContentsAction,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                        .padding(ComicTheme.dimension.margin)
+                )
+            }
         }
     }
 }

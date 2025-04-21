@@ -15,7 +15,6 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-@Suppress("unused")
 internal class DarkModeInitializer : Initializer<Unit>, KoinComponent {
 
     private val datastoreDataSource: DatastoreDataSource by inject()

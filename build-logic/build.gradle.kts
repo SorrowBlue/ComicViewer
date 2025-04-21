@@ -1,3 +1,6 @@
+import io.gitlab.arturbosch.detekt.Detekt
+import org.gradle.kotlin.dsl.withType
+
 plugins {
     `kotlin-dsl`
     alias(libs.plugins.detekt)
@@ -41,7 +44,7 @@ detekt {
     config.setFrom(layout.projectDirectory.file("../config/detekt/detekt.yml"))
 }
 
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+tasks.withType<Detekt>().configureEach {
     reports {
         html.required.set(false)
         md.required.set(false)
@@ -49,6 +52,11 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
         txt.required.set(false)
         xml.required.set(false)
     }
+}
+
+tasks.register("detektAll") {
+    group = "verification"
+    dependsOn(tasks.withType<Detekt>())
 }
 
 gradlePlugin {

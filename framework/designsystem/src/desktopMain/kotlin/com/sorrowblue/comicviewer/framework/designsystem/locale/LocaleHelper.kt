@@ -34,7 +34,7 @@ internal object LocaleHelper {
         }
     }
 
-    fun load(): java.util.Locale? {
+    fun load(): JavaLocale? {
         return kotlin.runCatching {
             file.inputStream().use {
                 Properties().apply {
