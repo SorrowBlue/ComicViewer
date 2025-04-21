@@ -8,7 +8,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        task: [ detektAndroidAll, detektDesktopAll, detektIosAll, detektMetadataAll, :build-logic:detektAll ]
+        task: [ detektAndroidAll, detektDesktopAll, detektIosAll, detektMetadataAll, ':build-logic:detektAll' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
