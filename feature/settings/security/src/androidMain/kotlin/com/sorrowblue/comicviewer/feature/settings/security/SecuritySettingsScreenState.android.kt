@@ -126,10 +126,6 @@ private class SecuritySettingsScreenStateImpl(
                     snackbarHostState.showSnackbar(getString(Res.string.settings_security_not_available_bio_auth))
                 }
             }
-
-            BiometricManager.BIOMETRIC_ERROR_NOT_ENABLED_FOR_APPS -> {
-                TODO()
-            }
         }
     }
 
