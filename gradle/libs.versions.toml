@@ -1,6 +1,6 @@
 [versions]
 aboutlibraries = "12.0.0"
-android-gradle = "8.9.1"
+android-gradle = "8.9.2"
 androidx-datastore = "1.1.4"
 androidx-paging = "3.3.6"
 androidx-room = "2.7.0"
