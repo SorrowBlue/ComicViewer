@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.security
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
@@ -120,6 +121,8 @@ private class SecuritySettingsScreenStateImpl(
             BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED,
             BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
             BiometricManager.BIOMETRIC_STATUS_UNKNOWN,
+            @SuppressLint("RestrictedApi")
+            BiometricManager.BIOMETRIC_ERROR_NOT_ENABLED_FOR_APPS,
             -> {
                 logcat { "生体認証 利用不可" }
                 scope.launch {
@@ -199,6 +202,8 @@ private class SecuritySettingsScreenStateImpl(
 
                 BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
                 BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
+                @SuppressLint("RestrictedApi")
+                BiometricManager.BIOMETRIC_ERROR_NOT_ENABLED_FOR_APPS,
                 -> {
                     // 生体認証が利用不可のため、エラーメッセージ表示
                     scope.launch {
@@ -254,6 +259,8 @@ private class SecuritySettingsScreenStateImpl(
                     BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
                     BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE,
                     BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED,
+                    @SuppressLint("RestrictedApi")
+                    BiometricManager.BIOMETRIC_ERROR_NOT_ENABLED_FOR_APPS,
                     ->
                         scope.launch {
                             manageSecuritySettingsUseCase.edit {
