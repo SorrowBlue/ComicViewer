@@ -52,25 +52,29 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 group = "verification"
                 dependsOn(
                     tasks.withType<Detekt>()
-                        .matching { it.name.contains("(?i)^(?!.*metadata).*android.*$".toRegex()) })
+                        .matching { detekt -> detekt.name.contains("(?i)^(?!.*metadata).*android.*$".toRegex()) }
+                )
             }
             tasks.register("detektDesktopAll") {
                 group = "verification"
                 dependsOn(
                     tasks.withType<Detekt>()
-                        .matching { it.name.contains("(?i)^(?!.*metadata).*desktop.*$".toRegex()) })
+                        .matching { detekt -> detekt.name.contains("(?i)^(?!.*metadata).*desktop.*$".toRegex()) }
+                )
             }
             tasks.register("detektIosAll") {
                 group = "verification"
                 dependsOn(
                     tasks.withType<Detekt>()
-                        .matching { it.name.contains("(?i)^(?!.*metadata).*ios.*$".toRegex()) })
+                        .matching { detekt -> detekt.name.contains("(?i)^(?!.*metadata).*ios.*$".toRegex()) }
+                )
             }
             tasks.register("detektMetadataAll") {
                 group = "verification"
                 dependsOn(
                     tasks.withType<Detekt>()
-                        .matching { it.name.contains("(?i)^.*metadata.*$".toRegex()) })
+                        .matching { detekt -> detekt.name.contains("(?i)^.*metadata.*$".toRegex()) }
+                )
             }
         }
     }
