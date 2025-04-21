@@ -7,7 +7,6 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.dokka.gradle.DokkaExtension
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 
-@Suppress("unused")
 internal class DokkaConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {

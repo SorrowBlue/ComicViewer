@@ -23,7 +23,6 @@ import org.koin.core.annotation.Qualifier
 
 private val COMPRESS_FORMAT = Bitmap.CompressFormat.WEBP_LOSSY
 
-@Suppress("unused")
 @DocumentFileReader
 @Factory
 internal actual class DocumentFileReader(

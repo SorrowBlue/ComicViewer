@@ -17,7 +17,7 @@ import org.koin.core.annotation.Qualifier
 @DocumentFileReader
 @Factory
 internal actual class DocumentFileReader(
-    @Suppress("UNUSED_PARAMETER") @InjectedParam mimeType: String,
+    @InjectedParam mimeType: String,
     @InjectedParam private val seekableInputStream: SeekableInputStream,
     @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : FileReader {

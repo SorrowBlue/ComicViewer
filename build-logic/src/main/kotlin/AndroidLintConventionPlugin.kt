@@ -10,7 +10,6 @@ import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.configure
 import org.gradle.plugin.use.PluginDependency
 
-@Suppress("unused")
 internal class AndroidLintConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {

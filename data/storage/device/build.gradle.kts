@@ -16,8 +16,8 @@ kotlin {
             implementation(libs.androidx.documentfile)
         }
         iosMain.dependencies {
-            implementation("dev.zwander:kmpfile-filekit:0.7.0")
-            implementation("dev.zwander:kmpfile-okio:0.7.0")
+            implementation(libs.kmpfile.filekit)
+            implementation(libs.kmpfile.okio)
         }
     }
 }

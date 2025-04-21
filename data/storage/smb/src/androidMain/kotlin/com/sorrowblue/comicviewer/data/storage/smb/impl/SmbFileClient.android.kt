@@ -27,7 +27,6 @@ import jcifs.smb.NtStatus
 import jcifs.smb.NtlmPasswordAuthenticator
 import jcifs.smb.SmbException
 import jcifs.smb.SmbFile
-import jcifs.smb.SmbFileFilter
 import jcifs.util.transport.ConnectionTimeoutException
 import jcifs.util.transport.TransportException
 import kotlin.io.path.Path
@@ -187,7 +186,7 @@ internal actual class SmbFileClient(
 
     private fun SmbFile.toFileModel(resolveImageFolder: Boolean = false): File {
         if (resolveImageFolder && isDirectory && runCatching {
-                listFiles(SmbFileFilter { it.isFile && it.name.extension in SUPPORTED_IMAGE }).isNotEmpty()
+                listFiles { it.isFile && it.name.extension in SUPPORTED_IMAGE }.isNotEmpty()
             }.getOrDefault(
                 false
             )

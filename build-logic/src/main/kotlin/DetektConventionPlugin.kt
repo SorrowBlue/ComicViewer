@@ -10,7 +10,6 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.withType
 
-@Suppress("unused")
 internal class DetektConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
