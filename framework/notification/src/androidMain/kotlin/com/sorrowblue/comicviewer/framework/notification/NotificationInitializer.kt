@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import logcat.LogPriority
 import logcat.logcat
 
-@Suppress("unused")
 internal class NotificationInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {

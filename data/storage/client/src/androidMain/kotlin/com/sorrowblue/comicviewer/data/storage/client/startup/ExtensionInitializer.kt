@@ -17,7 +17,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.loadKoinModules
 
-@Suppress("unused")
 internal class ExtensionInitializer : Initializer<Unit>, KoinComponent {
 
     private val datastoreDataSource: DatastoreDataSource by inject()

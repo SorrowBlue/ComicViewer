@@ -1,7 +1,6 @@
 import com.android.build.api.variant.VariantOutput
 import com.sorrowblue.comicviewer.ComicBuildType
 import java.io.ByteArrayOutputStream
-import kotlin.jvm.java
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -69,21 +68,6 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
         }
     }
-}
-
-compose.resources {
-    customDirectory(
-        sourceSetName = "androidMain",
-        directoryProvider = layout.buildDirectory.dir("generated/aboutLibrariesExt/androidMain/composeResources")
-    )
-    customDirectory(
-        sourceSetName = "desktopMain",
-        directoryProvider = layout.buildDirectory.dir("generated/aboutLibrariesExt/desktopMain/composeResources")
-    )
-    customDirectory(
-        sourceSetName = "iosMain",
-        directoryProvider = layout.buildDirectory.dir("generated/aboutLibrariesExt/iosMain/composeResources")
-    )
 }
 
 android {

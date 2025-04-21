@@ -22,7 +22,6 @@ internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.conf
             }
         }
 
-        @Suppress("UnstableApiUsage")
         testOptions {
             unitTests {
                 isIncludeAndroidResources = true
