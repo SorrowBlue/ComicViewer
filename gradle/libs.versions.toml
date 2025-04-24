@@ -8,7 +8,7 @@ coil-kt = "3.1.0"
 credentialSecureStorage = "1.0.3"
 detekt = "1.23.8"
 dokka = "2.0.0"
-foundationAndroid = "1.7.8"
+foundationAndroid = "1.8.0"
 google-ksp = "2.1.20-2.0.0"
 java = "21"
 kmpfile = "0.7.0"
@@ -23,7 +23,7 @@ multiplatform-compose = "1.8.0-beta02"
 multiplatform-compose-material3Adaptive = "1.1.0-beta02"
 multiplatform-navigationCompose = "2.9.0-alpha16"
 targetSdk = "36"
-uiAndroid = "1.7.8"
+uiAndroid = "1.8.0"
 versionCode = "16"
 
 [libraries]
@@ -34,8 +34,8 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.4.0-alpha03" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.8.0" }
-androidx-compose-animation-graphics = { group = "androidx.compose.animation", name = "animation-graphics", version = "1.8.0-rc03" }
-androidx-compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version = "1.8.0-rc03" }
+androidx-compose-animation-graphics = { group = "androidx.compose.animation", name = "animation-graphics", version = "1.8.0" }
+androidx-compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version = "1.8.0" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.16.0" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.1" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "androidx-datastore" }
