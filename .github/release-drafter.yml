@@ -2,18 +2,20 @@ name-template: 'v$RESOLVED_VERSION 🌈'
 tag-template: 'v$RESOLVED_VERSION'
 
 categories:
-  - title: '🚀 Features'
-    label: ':sparkles: feature'
+  - title: '✨ Features'
+    label: 'type: :sparkles:feature'
+  - title: '🚀 Enhancements'
+    label: 'type: :rocket:enhancement'
   - title: '🐛 Bug Fixes'
-    label: ':bug: bug'
+    label: 'type: :bug:bug'
   - title: '♻️ Refactoring'
-    label: ':recycle: refactor'
-  - title: '🧰 Maintenance'
-    label: ':truck: chore'
+    label: 'type: :recycle:refactor'
+  - title: '⚙️ Maintenance'
+    label: 'type: :gear:chore'
   - title: '📝 Documentation'
-    label: ':memo: documentation'
-  - title: '⛓️ Dependency update'
-    label: ':dependabot: dependencies'
+    label: 'type: :memo:documentation'
+  - title: '📦 Dependency update'
+    label: 'type: :dependabot:dependencies'
 
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 
@@ -37,36 +39,33 @@ template: |
   $CHANGES
 
 autolabeler:
-  - label: ':sparkles: feature'
+  - label: 'type: :sparkles:feature'
     branch:
       - '/^feature[/].+/'
-  - label: ':bug: bug'
+  - label: 'type: :rocket:enhancement'
     branch:
-      - '/^fix[/].+/'
-  - label: ':truck: chore'
-    branch:
-      - '/^chore[/-].+/'
-  - label: ':recycle: refactor'
+      - '/^enhancement[/].+/'
+  - label: 'type: :recycle:refactor'
     branch:
       - '/^refactor[/-].+/'
-  - label: ':memo: documentation'
+  - label: 'type: :bug:bug'
+    branch:
+      - '/^fix[/].+/'
+  - label: 'type: :memo:documentation'
     branch:
       - '/^doc[/-].+/'
     files:
       - '*.md'
-  - label: ':dependabot: dependencies'
+  - label: 'type: :dependabot:dependencies'
     branch:
       - '/dependencies[/-].+/'
       - '/renovate[/-].+/'
-  - label: 'gradle'
-    files:
-      - 'gradle/**/*'
-      - '*gradle.kts'
-  - label: github
-    files:
-      - '.github/**/*'
+  - label: 'type: :gear:chore'
+    branch:
+      - '/^chore[/-].+/'
 
 prerelease: true
+
 include-pre-releases: true
 
 prerelease-identifier: 'beta'

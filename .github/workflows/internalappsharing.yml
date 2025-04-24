@@ -5,7 +5,13 @@ on:
   push:
     branches:
       - main
-
+    paths-ignore:
+      - '.github/**'
+      - '.idea/**'
+      - '.run/**'
+      - 'config/**'
+      - 'docs/**'
+      - 'iosApp/**'
 permissions:
   contents: read
   id-token: write
