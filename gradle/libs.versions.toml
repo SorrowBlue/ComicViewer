@@ -57,7 +57,7 @@ androidx-test-ext-truth = { group = "androidx.test.ext", name = "truth", version
 androidx-test-rules = { group = "androidx.test", name = "rules", version = "1.6.1" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version = "1.6.2" }
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
-androidx-work-runtime = { group = "androidx.work", name = "work-runtime", version = "2.10.0" }
+androidx-work-runtime = { group = "androidx.work", name = "work-runtime", version = "2.10.1" }
 artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.6" }
 arturbosch-detektFormatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 autoservice-ksp = { group = "dev.zacsweers.autoservice", name = "auto-service-ksp", version = "1.2.0" }
