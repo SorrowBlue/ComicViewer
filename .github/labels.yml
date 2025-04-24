@@ -1,0 +1,38 @@
+- name: 'type: :sparkles:feature'
+  color: '0075ca'
+  description: '「新しい機能の提案や実装」[Proposals and implementation of new features]'
+  delete: false
+- name: 'type: :rocket:enhancement'
+  color: 'a2eeef'
+  aliases: [ 'improvement' ]
+  description: '「既存機能の改善」[Improvements to existing functions]'
+  delete: false
+- name: 'type: :recycle:refactor'
+  color: 'f9d0c4'
+  description: '「コードの内部的な改善（機能変更なし）」[Internal improvements to the code (no feature changes)]'
+  delete: false
+- name: 'type: :bug:bug'
+  color: 'd73a4a'
+  description: '「バグ、予期しない動作」[Bugs, unexpected behavior]'
+  delete: false
+- name: 'type: :memo:documentation'
+  color: '008672'
+  description: '「ドキュメントの作成、修正、追加」[Create, edit, add documents]'
+  delete: false
+- name: 'type: :dependabot:dependencies'
+  color: '0052CC'
+  description: '「依存関係更新」[Dependency Updates]'
+  delete: false
+- name: 'type: :gear:chore'
+  color: 'cfd3d7'
+  aliases: [ 'github', 'gradle' ]
+  description: '「ビルド、CI/CD、依存関係更新など」[Build, CI/CD, dependency updates, etc.]'
+  delete: false
+- name: 'status: :no_entry_sign:wontfix'
+  color: 'ffffff'
+  description: '「対応しないことが決定された」[It has been decided not to respond]'
+  delete: false
+- name: ':robot:renovate'
+  color: '308be3'
+  description: '「Renovateによって作成された」[Created by Renovate]'
+  delete: false
