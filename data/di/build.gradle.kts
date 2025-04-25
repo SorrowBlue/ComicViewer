@@ -9,7 +9,6 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                val dependencyHandler = this
                 val skipModule = listOf(
                     projects.composeApp,
                     projects.data,
@@ -24,14 +23,16 @@ kotlin {
                 ).map(DelegatingProjectDependency::getPath)
                 rootProject.subprojects {
                     if (!skipModule.contains(project.path)) {
-                        dependencyHandler.implementation(project)
+                        implementation(project)
                     }
                 }
             }
         }
 
-        desktopMain.dependencies {
-            implementation(projects.data.reader.document)
+        desktopMain {
+            dependencies {
+                implementation(projects.data.reader.document)
+            }
         }
     }
 }

@@ -16,4 +16,10 @@ kotlin {
 android {
     namespace = "com.sorrowblue.comicviewer.feature.bookshelf.edit"
     resourcePrefix("bookshelf_edit")
+
+    sourceSets {
+        debug {
+            manifest.srcFile("src/androidDebug/AndroidManifest.xml")
+        }
+    }
 }
