@@ -5,17 +5,21 @@ plugins {
 }
 
 kotlin {
-    sourceSets.commonMain.dependencies {
-        implementation(projects.domain.service)
-        implementation(libs.coil3)
-        implementation(libs.kotlinx.serialization.json)
-    }
-
-    sourceSets.androidMain.dependencies {
-        implementation(libs.androidx.startup.runtime)
-//        implementation(libs.androidx.exifinterface)
-        implementation(libs.coil3.networkKtor)
-        implementation(libs.koin.androidxStartup)
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(projects.domain.service)
+                implementation(libs.coil3)
+                implementation(libs.kotlinx.serialization.json)
+            }
+        }
+        androidMain {
+            dependencies {
+                implementation(libs.androidx.startup.runtime)
+                implementation(libs.coil3.networkKtor)
+                implementation(libs.koin.androidxStartup)
+            }
+        }
     }
 }
 

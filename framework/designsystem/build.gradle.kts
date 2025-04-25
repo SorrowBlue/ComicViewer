@@ -12,17 +12,17 @@ kotlin {
                 implementation(libs.compose.multiplatform.material3.adaptive)
             }
         }
-
         androidMain {
             dependencies {
                 implementation(libs.androidx.appcompat)
                 implementation(libs.koin.core)
             }
         }
-
-        noAndroid.dependencies {
-            implementation(projects.domain.usecase)
-            implementation(libs.koin.composeViewModel)
+        noAndroid {
+            dependencies {
+                implementation(projects.domain.usecase)
+                implementation(libs.koin.composeViewModel)
+            }
         }
     }
 }

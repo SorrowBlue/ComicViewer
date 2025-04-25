@@ -4,9 +4,11 @@ plugins {
 
 kotlin {
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.androidx.core.ktx)
-            implementation(libs.androidx.startup.runtime)
+        androidMain {
+            dependencies {
+                implementation(libs.androidx.core.ktx)
+                implementation(libs.androidx.startup.runtime)
+            }
         }
     }
 }
