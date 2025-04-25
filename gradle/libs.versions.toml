@@ -20,6 +20,7 @@ kotlinx-serialization = "1.8.1"
 licensee = "1.13.0"
 multiplatform-compose = "1.8.0-rc01"
 multiplatform-compose-material3Adaptive = "1.1.0-rc01"
+multiplatform-lifecycleCompose = "2.9.0-alpha07"
 multiplatform-navigationCompose = "2.9.0-alpha17"
 targetSdk = "36"
 versionCode = "16"
@@ -63,6 +64,7 @@ coil3-networkKtor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", v
 com-sorrowblue-sevenzipjbinding = { group = "com.sorrowblue.sevenzipjbinding", name = "7-Zip-JBinding-4Android", version = "16.02-2.4" }
 compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "multiplatform-compose" }
 compose-multiplatform-coreUri = { group = "org.jetbrains.androidx.core", name = "core-uri", version = "1.1.0-alpha03" }
+compose-multiplatform-lifecycleCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "multiplatform-lifecycleCompose" }
 compose-multiplatform-material3-adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive", version.ref = "multiplatform-compose-material3Adaptive" }
 compose-multiplatform-material3-adaptiveLayout = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-layout", version.ref = "multiplatform-compose-material3Adaptive" }
 compose-multiplatform-material3-adaptiveNavigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "multiplatform-compose-material3Adaptive" }
