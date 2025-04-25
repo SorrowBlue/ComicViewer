@@ -17,8 +17,6 @@ kotlin {
                 implementation(libs.compose.multiplatform.material3.adaptiveLayout)
                 implementation(libs.compose.multiplatform.material3.adaptiveNavigation)
                 // Navigation + Serialization
-                implementation(libs.cmpdestinations)
-                implementation(libs.compose.multiplatform.navigationCompose)
                 implementation(libs.kotlinx.serialization.cbor)
                 // Image
                 implementation(libs.coil3.compose)
