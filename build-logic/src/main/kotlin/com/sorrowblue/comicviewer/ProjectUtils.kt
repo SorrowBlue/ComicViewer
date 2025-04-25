@@ -16,8 +16,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 internal val Project.libs: LibrariesForLibs
     get() = the<LibrariesForLibs>()
 
-internal fun Project.parentName(): String = parent?.let { it.parentName() + ".$name" } ?: name
-
 internal fun Project.plugins(block: PluginManager.() -> Unit) = with(pluginManager, block)
 
 internal fun PluginManager.id(provider: Provider<PluginDependency>) = apply(provider.get().pluginId)
@@ -35,44 +33,4 @@ internal fun Project.composeCompiler(block: ComposeCompilerGradlePluginExtension
 
 internal fun DependencyHandlerScope.implementation(dependencyNotation: Any) {
     add("implementation", dependencyNotation)
-}
-
-internal fun DependencyHandlerScope.detektPlugins(dependencyNotation: Any) {
-    add("detektPlugins", dependencyNotation)
-}
-
-internal fun DependencyHandlerScope.testImplementation(dependencyNotation: Any) {
-    add("testImplementation", dependencyNotation)
-}
-
-internal fun DependencyHandlerScope.debugImplementation(dependencyNotation: Any) {
-    add("debugImplementation", dependencyNotation)
-}
-
-internal fun DependencyHandlerScope.testDebugImplementation(dependencyNotation: Any) {
-    add("testDebugImplementation", dependencyNotation)
-}
-
-internal fun DependencyHandlerScope.testPrereleaseImplementation(dependencyNotation: Any) {
-    add("testPrereleaseImplementation", dependencyNotation)
-}
-
-internal fun DependencyHandlerScope.testInternalImplementation(dependencyNotation: Any) {
-    add("testInternalImplementation", dependencyNotation)
-}
-
-internal fun DependencyHandlerScope.testReleaseImplementation(dependencyNotation: Any) {
-    add("testReleaseImplementation", dependencyNotation)
-}
-
-internal fun DependencyHandlerScope.androidTestImplementation(dependencyNotation: Any) {
-    add("androidTestImplementation", dependencyNotation)
-}
-
-internal fun DependencyHandlerScope.ksp(dependencyNotation: Any) {
-    add("ksp", dependencyNotation)
-}
-
-internal fun DependencyHandlerScope.kspDebug(dependencyNotation: Any) {
-    add("kspDebug", dependencyNotation)
 }

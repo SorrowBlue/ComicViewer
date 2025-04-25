@@ -83,22 +83,21 @@ android {
     }
 
     buildTypes {
-        release {
+        val release by getting {
             applicationIdSuffix = ComicBuildType.RELEASE.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.RELEASE.isMinifyEnabled
             isShrinkResources = ComicBuildType.RELEASE.isShrinkResources
             signingConfig = signingConfigs.findByName(name)
-            ndk.debugSymbolLevel = "SYMBOL_TABLE"
         }
-        getByName(ComicBuildType.PRERELEASE.display) {
-            initWith(getByName(ComicBuildType.RELEASE.display))
+        prerelease {
+            initWith(release)
             applicationIdSuffix = ComicBuildType.PRERELEASE.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.PRERELEASE.isMinifyEnabled
             isShrinkResources = ComicBuildType.PRERELEASE.isShrinkResources
             signingConfig = signingConfigs.findByName(name)
         }
-        getByName(ComicBuildType.INTERNAL.display) {
-            initWith(getByName(ComicBuildType.RELEASE.display))
+        internal {
+            initWith(release)
             applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix
             isMinifyEnabled = ComicBuildType.INTERNAL.isMinifyEnabled
             isShrinkResources = ComicBuildType.INTERNAL.isShrinkResources
@@ -120,8 +119,8 @@ android {
         resources.excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
     }
 
-    this.sourceSets {
-        this.getByName("main").res.srcDirs("src/commonMain/composeResources")
+    sourceSets {
+        getByName("main").res.srcDirs("src/commonMain/composeResources")
     }
 
     lint {
@@ -140,64 +139,15 @@ compose.desktop {
         jvmArgs("-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
     }
 }
-// Provider を取得
-val gitTagProvider: Provider<String> = providers.of(GitTagValueSource::class) {}
 
-// --- AGP Variant API を使用 ---
+val gitTagProvider = providers.of(GitTagValueSource::class) {}
+
 androidComponents {
-    // onVariants は設定フェーズで実行されるが、中の処理は遅延される
-    onVariants(selector().all()) { variant -> // release ビルドのみ対象
-        // すべてのバリアントを対象にする場合は selector().all()
-
-        // Variant の Output (通常は1つ) にアクセス
-        variant.outputs.forEach { output: VariantOutput -> // 型を明示的に指定
-
-            // versionName にGitタグを設定
-            // orElse でタグが見つからない場合のフォールバックを設定
-            // map でタグ名を加工 (例: 'v' を削除)
+    onVariants(selector().all()) { variant ->
+        variant.outputs.forEach { output: VariantOutput ->
             val vn = gitTagProvider.orElse("0.0.0").get()
-            logger.lifecycle("${variant.name} versionName=$vn")
             output.versionName.set(vn)
-        }
-
-    }
-}
-
-// パラメータは不要だが、インターフェースとして定義が必要
-interface GitTagParameters : ValueSourceParameters
-
-// Gitコマンドを実行して最新タグを取得するValueSource
-abstract class GitTagValueSource @Inject constructor(
-    private val execOperations: ExecOperations
-) : ValueSource<String, GitTagParameters> {
-
-    override fun obtain(): String {
-        return try {
-            // 標準出力をキャプチャするためのByteArrayOutputStream
-            val stdout = ByteArrayOutputStream()
-            // git describe コマンドを実行
-            val result = execOperations.exec {
-                // commandLine("git", "tag", "--sort=-creatordate") // もし作成日時順の最新タグが良い場合
-                commandLine("git", "describe", "--tags", "--abbrev=1")
-                standardOutput = stdout
-                // エラーが発生してもGradleビルドを止めないようにし、戻り値で判断
-                isIgnoreExitValue = true
-                // エラー出力は捨てる (必要ならキャプチャも可能)
-                errorOutput = ByteArrayOutputStream()
-            }
-
-            if (result.exitValue == 0) {
-                // 成功したら標準出力をトリムして返す
-                stdout.toString().trim()
-            } else {
-                // gitコマンド失敗時 (タグがない、gitリポジトリでない等)
-                println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
-                "UNKNOWN" // または適切なデフォルト値
-            }
-        } catch (e: Exception) {
-            // その他の予期せぬエラー
-            println("Warning: Failed to execute git command: ${e.message}")
-            "UNKNOWN" // または適切なデフォルト値
+            logger.lifecycle("${variant.name} versionName=$vn")
         }
     }
 }

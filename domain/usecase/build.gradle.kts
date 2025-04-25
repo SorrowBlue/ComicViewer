@@ -2,10 +2,6 @@ plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.domain.usecase"
-}
-
 kotlin {
     sourceSets {
         commonMain {
@@ -17,4 +13,8 @@ kotlin {
             }
         }
     }
+}
+
+android {
+    namespace = "com.sorrowblue.comicviewer.domain.usecase"
 }

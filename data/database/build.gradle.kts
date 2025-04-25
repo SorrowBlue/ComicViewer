@@ -1,5 +1,3 @@
-import com.sorrowblue.comicviewer.desktopMain
-
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
     alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
@@ -10,8 +8,9 @@ android {
     namespace = "com.sorrowblue.comicviewer.data.database"
 
     sourceSets {
-        val test by getting
-        test.assets.srcDir(file("$projectDir/schemas"))
+        getByName("test") {
+            assets.srcDir(file("$projectDir/schemas"))
+        }
     }
 
     @Suppress("UnstableApiUsage")
@@ -59,26 +58,32 @@ kotlin {
             }
         }
 
-        desktopMain.dependencies {
-            implementation(libs.credential.secure.storage)
+        desktopMain{
+            dependencies {
+                implementation(libs.credential.secure.storage)
+            }
         }
 
-        androidUnitTest.dependencies {
-            implementation(libs.androidx.test.core.ktx)
-            implementation(libs.androidx.test.runner)
-            implementation(libs.androidx.test.rules)
-            implementation(libs.androidx.test.ext.junitKtx)
-            implementation(libs.robolectric)
+        androidUnitTest{
+            dependencies {
+                implementation(libs.androidx.test.core.ktx)
+                implementation(libs.androidx.test.runner)
+                implementation(libs.androidx.test.rules)
+                implementation(libs.androidx.test.ext.junitKtx)
+                implementation(libs.robolectric)
+            }
         }
 
-        androidInstrumentedTest.dependencies {
-            implementation(libs.androidx.test.core.ktx)
-            implementation(libs.androidx.test.runner)
-            implementation(libs.androidx.test.rules)
-            implementation(libs.androidx.test.ext.junitKtx)
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.androidx.room.testing)
-            implementation(libs.androidx.sqlite.bundled)
+        androidInstrumentedTest{
+            dependencies {
+                implementation(libs.androidx.test.core.ktx)
+                implementation(libs.androidx.test.runner)
+                implementation(libs.androidx.test.rules)
+                implementation(libs.androidx.test.ext.junitKtx)
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.androidx.room.testing)
+                implementation(libs.androidx.sqlite.bundled)
+            }
         }
     }
 }

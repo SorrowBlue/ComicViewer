@@ -28,7 +28,6 @@ kotlin {
                 implementation(libs.koin.composeViewModel)
             }
         }
-
         androidMain {
             dependencies {
                 implementation(libs.androidx.activity.compose)
@@ -38,8 +37,10 @@ kotlin {
     }
 }
 
-compose.resources {
-    publicResClass = true
+compose {
+    resources {
+        publicResClass = true
+    }
 }
 
 android {

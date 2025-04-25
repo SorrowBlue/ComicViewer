@@ -10,7 +10,6 @@ kotlin {
                 implementation(projects.data.storage.client)
             }
         }
-
         androidMain {
             dependencies {
                 implementation(projects.composeApp)
@@ -18,9 +17,11 @@ kotlin {
                 implementation(libs.artifex.mupdf.fitz)
             }
         }
-        desktopMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.pdfbox)
+        desktopMain {
+            dependencies {
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.pdfbox)
+            }
         }
     }
 }
@@ -28,9 +29,7 @@ kotlin {
 android {
     namespace = "com.sorrowblue.comicviewer.data.reader.document"
     packaging {
-        jniLibs {
-            useLegacyPackaging = false
-        }
+        jniLibs.useLegacyPackaging = false
     }
 }
 

@@ -8,7 +8,6 @@ coil-kt = "3.1.0"
 credentialSecureStorage = "1.0.3"
 detekt = "1.23.8"
 dokka = "2.0.0"
-foundationAndroid = "1.8.0"
 google-ksp = "2.1.20-2.0.0"
 java = "21"
 kmpfile = "0.7.0"
@@ -23,7 +22,6 @@ multiplatform-compose = "1.8.0-rc01"
 multiplatform-compose-material3Adaptive = "1.1.0-rc01"
 multiplatform-navigationCompose = "2.9.0-alpha16"
 targetSdk = "36"
-uiAndroid = "1.8.0"
 versionCode = "16"
 
 [libraries]
@@ -41,11 +39,8 @@ androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscree
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "androidx-datastore" }
 androidx-datastoreCoreOkio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "androidx-datastore" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version = "1.0.1" }
-androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version = "1.4.1" }
-androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "androidx-paging" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidx-room" }
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "androidx-room" }
@@ -56,7 +51,6 @@ androidx-test-ext-junitKtx = { group = "androidx.test.ext", name = "junit-ktx", 
 androidx-test-ext-truth = { group = "androidx.test.ext", name = "truth", version = "1.6.0" }
 androidx-test-rules = { group = "androidx.test", name = "rules", version = "1.6.1" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version = "1.6.2" }
-androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime", version = "2.10.1" }
 artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.6" }
 arturbosch-detektFormatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
@@ -66,7 +60,6 @@ cmpdestinations-ksp = { group = "com.sorrowblue.cmpdestinations", name = "cmp-de
 coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil-kt" }
 coil3-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-kt" }
 coil3-networkKtor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil-kt" }
-coil3-test = { group = "io.coil-kt.coil3", name = "coil-test", version.ref = "coil-kt" }
 com-sorrowblue-sevenzipjbinding = { group = "com.sorrowblue.sevenzipjbinding", name = "7-Zip-JBinding-4Android", version = "16.02-2.4" }
 compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "multiplatform-compose" }
 compose-multiplatform-coreUri = { group = "org.jetbrains.androidx.core", name = "core-uri", version = "1.1.0-alpha03" }
@@ -79,9 +72,7 @@ detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gr
 dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version = "0.6.0" }
 filekit-compose = { group = "io.github.vinceglb", name = "filekit-compose", version = "0.8.8" }
-google-android-billingclient-billingKtx = { group = "com.android.billingclient", name = "billing-ktx", version = "7.1.1" }
 google-android-play-feature-delivery-ktx = { group = "com.google.android.play", name = "feature-delivery-ktx", version = "2.1.0" }
-google-autoServiceAnnotations = { group = "com.google.auto.service", name = "auto-service-annotations", version = "1.1.1" }
 google-ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
 jcifs = { group = "org.codelibs", name = "jcifs", version = "2.1.39" }
 kmpfile-filekit = { module = "dev.zwander:kmpfile-filekit", version.ref = "kmpfile" }
@@ -115,7 +106,6 @@ sevenzipjbinding = { group = "net.sf.sevenzipjbinding", name = "sevenzipjbinding
 sevenzipjbinding-allPlatforms = { group = "com.github.shayartzi.sevenzipjbinding", name = "sevenzipjbinding-all-platforms", version = "16.02-2.01" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.17-0" }
 soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha10" }
-squareup-leakcanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-android", version = "2.14" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.11.0" }
 
 [plugins]

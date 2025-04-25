@@ -3,10 +3,6 @@ plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.domain.service"
-}
-
 kotlin {
     sourceSets {
         commonMain {
@@ -20,4 +16,8 @@ kotlin {
             }
         }
     }
+}
+
+android {
+    namespace = "com.sorrowblue.comicviewer.domain.service"
 }
