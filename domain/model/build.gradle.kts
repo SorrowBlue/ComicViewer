@@ -3,10 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.domain.model"
-}
-
 kotlin {
     sourceSets {
         commonMain {
@@ -16,4 +12,8 @@ kotlin {
             }
         }
     }
+}
+
+android {
+    namespace = "com.sorrowblue.comicviewer.domain.model"
 }

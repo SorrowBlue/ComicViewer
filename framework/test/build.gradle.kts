@@ -4,8 +4,10 @@ plugins {
 
 kotlin {
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.androidx.test.ext.junitKtx)
+        androidMain{
+            dependencies {
+                implementation(libs.androidx.test.ext.junitKtx)
+            }
         }
     }
 }
