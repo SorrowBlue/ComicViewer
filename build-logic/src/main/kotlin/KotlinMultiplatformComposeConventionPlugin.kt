@@ -30,6 +30,7 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
 
                     // Navigation
                     implementation(libs.cmpdestinations)
+                    implementation(libs.compose.multiplatform.lifecycleCompose)
                     implementation(libs.compose.multiplatform.navigationCompose)
                     implementation(libs.kotlinx.serialization.core)
                 }
