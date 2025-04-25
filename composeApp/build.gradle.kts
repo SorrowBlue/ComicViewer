@@ -132,7 +132,7 @@ compose.desktop {
     application {
         mainClass = "com.sorrowblue.comicviewer.app.MainKt"
         nativeDistributions {
-            targetFormats(*TargetFormat.values())
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.sorrowblue.comicviewer.app"
             packageVersion = "1.0.0"
         }
