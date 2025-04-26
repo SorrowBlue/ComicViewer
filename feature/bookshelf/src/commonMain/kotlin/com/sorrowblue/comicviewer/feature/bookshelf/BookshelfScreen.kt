@@ -87,7 +87,7 @@ internal fun BookshelfScreen(
     extraPane: @Composable (BookshelfId) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val expanded by rememberLastScrolledForward(lazyGridState, 300)
+    val expanded by rememberLastScrolledForward(lazyGridState)
     CanonicalScaffold(
         navigator = navigator,
         topBar = {
@@ -114,7 +114,10 @@ internal fun BookshelfScreen(
 }
 
 @Composable
-private fun rememberLastScrolledForward(lazyGridState: LazyGridState, delay: Long): State<Boolean> {
+private fun rememberLastScrolledForward(
+    lazyGridState: LazyGridState,
+    delay: Long = 300,
+): State<Boolean> {
     val expanded = remember { mutableStateOf(true) }
     LaunchedEffect(lazyGridState.lastScrolledForward) {
         delay(delay)

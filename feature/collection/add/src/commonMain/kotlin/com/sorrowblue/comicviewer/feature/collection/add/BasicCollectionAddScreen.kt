@@ -27,7 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onLayoutRectChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -124,9 +124,9 @@ private fun BasicCollectionAddScreen(
                     },
                     onClick = onCollectionCreateClick,
                     modifier = Modifier
-                        .onGloballyPositioned {
+                        .onLayoutRectChanged {
                             with(density) {
-                                buttonHeight = it.size.height.toDp() + FabSpacing
+                                buttonHeight = it.height.toDp() + FabSpacing
                             }
                         }
                 )
