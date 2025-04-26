@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.cmpdestinations.annotation.Destination
@@ -33,16 +34,16 @@ sealed interface BookshelfEditScreenUiState {
 internal fun BookshelfEditScreen(
     route: BookshelfEdit,
     navigator: BookshelfEditScreenNavigator = koinInject(),
-    androidAutofillManager: AndroidAutofillManager = koinInject(),
     state: BookshelfEditScreenState = rememberBookshelfEditScreenState(route.editMode),
     isCompact: Boolean = isCompactWindowClass(),
 ) {
     BackHandler {
         navigator.onBack(state.uiState.editMode)
     }
+    val autofillManager = LocalAutofillManager.current
     DisposableEffect(Unit) {
         onDispose {
-            androidAutofillManager.commit()
+            autofillManager?.commit()
         }
     }
     when (val uiState = state.uiState) {
@@ -84,8 +85,4 @@ internal fun BookshelfEditScreen(
             keyboardController?.hide()
         }
     }
-}
-
-internal expect class AndroidAutofillManager {
-    fun commit()
 }

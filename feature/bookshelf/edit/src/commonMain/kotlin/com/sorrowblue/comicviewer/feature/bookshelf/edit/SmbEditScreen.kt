@@ -17,6 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentWithReceiverOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentDataType
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.semantics.contentDataType
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntSize
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenForm.Auth
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.AuthField
@@ -65,12 +70,14 @@ internal fun SmbEditScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
+                            .semantics { contentDataType = ContentDataType.None }
                     )
                     HostField(
                         enabled = !submission.isSubmitting,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
+                            .semantics { contentDataType = ContentDataType.None }
                     )
 
                     PortField(
@@ -78,6 +85,7 @@ internal fun SmbEditScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
+                            .semantics { contentDataType = ContentDataType.None }
                     )
 
                     PathField(
@@ -86,12 +94,14 @@ internal fun SmbEditScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
+                            .semantics { contentDataType = ContentDataType.None }
                     )
 
                     HorizontalDivider(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing * 2)
+                            .semantics { contentDataType = ContentDataType.None }
                     )
 
                     AuthField(
@@ -99,6 +109,7 @@ internal fun SmbEditScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
+                            .semantics { contentDataType = ContentDataType.None }
                     )
 
                     AnimatedVisibility(
@@ -112,6 +123,7 @@ internal fun SmbEditScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = dimension.targetSpacing)
+                                    .semantics { contentDataType = ContentDataType.None }
                             )
 
                             UsernameFieldView(
@@ -119,6 +131,7 @@ internal fun SmbEditScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = dimension.targetSpacing)
+                                    .semantics { contentType = ContentType.Username }
                             )
 
                             PasswordFieldView(
@@ -126,6 +139,7 @@ internal fun SmbEditScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = dimension.targetSpacing)
+                                    .semantics { contentType = ContentType.Password }
                             )
                         }
                     }
