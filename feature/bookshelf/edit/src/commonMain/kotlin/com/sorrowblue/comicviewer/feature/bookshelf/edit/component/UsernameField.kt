@@ -40,7 +40,6 @@ internal fun FormScope<SmbEditScreenForm>.UsernameFieldView(
             singleLine = true,
             modifier = modifier
                 .testTag("Username")
-                .semanticsUsernameForAndroid()
         )
     }
 }
