@@ -58,7 +58,7 @@ internal class BookPageImageFetcher(
             throw CoilRuntimeException("ファイルがない(${data.book.path})")
         }
         val fileReader = mutex.withLock {
-            if (fileReader != null && book?.bookshelfId == data.book.bookshelfId && book?.path == data.book.path) {
+            if (fileReader != null && book?.bookshelfId == data.book.bookshelfId && book?.path == data.book.path && book?.totalPageCount == data.book.totalPageCount && book?.lastModifier == data.book.lastModifier) {
                 logcat { "同じFileReaderを使う。 ${data.book.name}, ${data.pageIndex}" }
                 fileReader!!
             } else {
