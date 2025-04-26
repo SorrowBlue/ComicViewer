@@ -68,14 +68,9 @@ internal fun FormScope<SmbEditScreenForm>.PasswordFieldView(
             singleLine = true,
             modifier = modifier
                 .testTag("Password")
-                .semanticsPasswordForAndroid()
         )
     }
 }
-
-internal expect fun Modifier.semanticsPasswordForAndroid(): Modifier
-
-internal expect fun Modifier.semanticsUsernameForAndroid(): Modifier
 
 @Composable
 private fun FormScope<SmbEditScreenForm>.rememberPasswordFieldControl(): FieldControl<String> {
