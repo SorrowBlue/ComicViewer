@@ -24,7 +24,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onLayoutRectChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.animation.fabEnter
@@ -62,9 +62,9 @@ fun <T : Any> CanonicalScaffold(
                     Box(
                         modifier = Modifier
                             .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.End))
-                            .onGloballyPositioned {
+                            .onLayoutRectChanged {
                                 with(density) {
-                                    fabHeight = it.size.height.toDp() + FabSpacing
+                                    fabHeight = it.height.toDp() + FabSpacing
                                 }
                             }
                     ) {
@@ -141,9 +141,7 @@ fun <T : Any> CanonicalScaffold(
     }
 }
 
-/**
- * 境界が必要な場合はtrue
- */
+/** 境界が必要な場合はtrue */
 internal data class CanonicalScaffoldBound(
     val start: Boolean = false,
     val top: Boolean = false,
