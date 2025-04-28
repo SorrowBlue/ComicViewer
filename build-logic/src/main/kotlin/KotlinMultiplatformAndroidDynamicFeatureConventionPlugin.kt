@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.DynamicFeatureExtension
+import com.sorrowblue.comicviewer.configureAboutLibraries
 import com.sorrowblue.comicviewer.configureAndroid
 import com.sorrowblue.comicviewer.configureKotlin
 import com.sorrowblue.comicviewer.configureKotlinMultiplatform
@@ -22,19 +23,20 @@ class KotlinMultiplatformAndroidDynamicFeatureConventionPlugin : Plugin<Project>
                 id(libs.plugins.comicviewer.detekt)
                 id(libs.plugins.comicviewer.dokka)
                 id(libs.plugins.licensee)
+                id(libs.plugins.aboutlibraries)
             }
 
             configureKotlin<KotlinMultiplatformExtension>()
             configureKotlinMultiplatform()
             configureAndroid<DynamicFeatureExtension>()
+            configureLicensee()
+            configureAboutLibraries()
 
             kotlin<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
                     implementation(project(":framework:common"))
                 }
             }
-
-            configureLicensee()
         }
     }
 }

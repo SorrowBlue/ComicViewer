@@ -1,6 +1,5 @@
 import com.android.build.api.variant.VariantOutput
 import com.sorrowblue.comicviewer.ComicBuildType
-import java.io.ByteArrayOutputStream
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -124,6 +123,8 @@ android {
     }
 
     lint {
+        val androidLintCheckReleaseBuilds: Boolean? by project
+        checkReleaseBuilds = androidLintCheckReleaseBuilds ?: true
         abortOnError = true
     }
 }
