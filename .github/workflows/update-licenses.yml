@@ -3,9 +3,6 @@ on:
   push:
     branches:
       - main
-  # TODO Test trigger. Must be deleted before merging.
-  pull_request:
-    types: [ opened, reopened, synchronize ]
 permissions:
   contents: write
   pull-requests: write
