@@ -1,0 +1,37 @@
+name: Update Licenses
+on:
+  push:
+    branches:
+      - main
+  # TODO Test trigger. Must be deleted before merging.
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  update-licenses:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: 🤖 ExportLibraryDefinitions android
+        run: ./gradlew :data:reader:document:exportLibraryDefinitions -PaboutLibraries.exportPath=../../../composeApp/src/androidMain/composeResources/files -PaboutLibraries.exportVariant=androidRelease
+      - name: 🖥️ ExportLibraryDefinitions desktop
+        run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/desktopMain/composeResources/files -PaboutLibraries.exportVariant=desktop
+      - name: 🍎 ExportLibraryDefinitions ios
+        run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/iosMain/composeResources/files -PaboutLibraries.exportVariant=metadataIosMain
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: 'Update aboutlibraries.json'
+          body: 'This PR updates the aboutlibraries.json'
+          base: main
+          branch: chore/update-licenses
+          assignees: 'SorrowBlue'
+          reviewers: 'SorrowBlue,Copilot'
+          labels: ':robot:create-pull-request'
+          commit-message: 'Update aboutlibraries.json'

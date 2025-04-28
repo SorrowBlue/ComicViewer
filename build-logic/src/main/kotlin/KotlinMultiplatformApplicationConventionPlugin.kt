@@ -1,7 +1,7 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.mikepenz.aboutlibraries.plugin.AboutLibrariesExtension
 import com.sorrowblue.comicviewer.ComicBuildType
 import com.sorrowblue.comicviewer.android
+import com.sorrowblue.comicviewer.configureAboutLibraries
 import com.sorrowblue.comicviewer.configureAndroid
 import com.sorrowblue.comicviewer.configureKotlin
 import com.sorrowblue.comicviewer.configureKotlinMultiplatform
@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.provideDelegate
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
@@ -33,6 +32,8 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
             configureKotlin<KotlinMultiplatformExtension>()
             configureKotlinMultiplatform()
             configureAndroid<ApplicationExtension>()
+            configureLicensee()
+            configureAboutLibraries()
 
             kotlin<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
@@ -78,11 +79,6 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
                         logger.warn("androidSigningReleaseStoreFile not found")
                     }
                 }
-            }
-
-            configureLicensee()
-            configure<AboutLibrariesExtension> {
-                android.registerAndroidTasks.set(false)
             }
         }
     }
