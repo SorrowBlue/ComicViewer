@@ -36,3 +36,8 @@
   color: '308be3'
   description: '「Renovateによって作成された」[Created by Renovate]'
   delete: false
+
+- name: ':robot:create-pull-request'
+  color: 'B3BD18'
+  description: '「Create Pull Requestによって作成された」[Created by Create Pull Request]'
+  delete: false
