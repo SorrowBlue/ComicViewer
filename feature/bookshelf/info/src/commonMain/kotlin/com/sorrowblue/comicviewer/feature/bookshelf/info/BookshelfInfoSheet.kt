@@ -9,24 +9,36 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
+import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.paging.PagingData
 import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequest
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequestResult
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoMainContents
+import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoMainContentsUiState
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BottomActions
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.ErrorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.LoadingContents
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffold
+import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCanonicalScaffold
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_title
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 interface BookshelfInfoSheetNavigator {
     fun notificationRequest(type: ScanType)
@@ -105,7 +117,7 @@ internal sealed interface BookshelfInfoSheetAction {
 }
 
 @Composable
-internal fun BookshelfInfoSheet(
+private fun BookshelfInfoSheet(
     onAction: (BookshelfInfoSheetAction) -> Unit,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
@@ -124,4 +136,44 @@ internal fun BookshelfInfoSheet(
         content = content,
         modifier = modifier
     )
+}
+
+@Preview
+@Composable
+private fun BookshelfInfoSheetPreview() {
+    val navigator = rememberSupportingPaneScaffoldNavigator(
+        initialDestinationHistory = listOf(
+            ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, "")
+        )
+    )
+    val uiState =
+        BookshelfInfoSheetUiState.Loaded(BookshelfFolder(fakeSmbServer(), fakeFolder()))
+    PreviewCanonicalScaffold(
+        navigator = navigator,
+        extraPane = {
+            BookshelfInfoSheet(onAction = {}) { contentPadding ->
+                BookshelfInfoMainContents(
+                    uiState = BookshelfInfoMainContentsUiState(
+                        uiState.bookshelfFolder.bookshelf,
+                        uiState.bookshelfFolder.folder
+                    ),
+                    lazyPagingItems = PagingData.flowData(10) {
+                        BookThumbnail(
+                            BookshelfId(),
+                            "$it",
+                            0,
+                            0,
+                            0
+                        )
+                    }.collectAsLazyPagingItems(),
+                    onScanFileClick = {},
+                    onScanThumbnailClick = {},
+                    contentPadding = contentPadding,
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+            }
+        }
+    ) {
+    }
 }

@@ -3,16 +3,16 @@ package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
-@Deprecated("Use RegenerateThumbnailsUseCase2 instead")
-abstract class RegenerateThumbnailsUseCase :
-    UseCase<RegenerateThumbnailsUseCase.Request, Unit, RegenerateThumbnailsUseCase.Error>() {
+abstract class ScanBookshelfUseCase2 :
+    OneShotUseCase<ScanBookshelfUseCase2.Request, List<File>, ScanBookshelfUseCase2.Error>() {
 
     class Request(
         val bookshelfId: BookshelfId,
-        val process: suspend (Bookshelf, progress: Long, max: Long) -> Unit,
-    ) : UseCase.Request
+        val process: suspend (Bookshelf, File) -> Unit,
+    ) : OneShotUseCase.Request
 
     enum class Error : Resource.AppError {
         System,

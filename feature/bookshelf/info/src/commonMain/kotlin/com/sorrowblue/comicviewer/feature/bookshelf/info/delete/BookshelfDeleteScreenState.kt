@@ -35,14 +35,9 @@ internal fun rememberBookshelfDeleteScreenState(
     }
 }
 
-internal sealed interface BookshelfDeleteScreenEvent {
-    data object RemoveSuccess : BookshelfDeleteScreenEvent
-}
-
 internal interface BookshelfDeleteScreenState {
     val uiState: BookshelfDeleteScreenUiState
-    val events: EventFlow<BookshelfDeleteScreenEvent>
-    fun onConfirmClick()
+    fun onConfirmClick(done: () -> Unit)
 }
 
 private class BookshelfDeleteScreenStateImpl(
@@ -51,8 +46,6 @@ private class BookshelfDeleteScreenStateImpl(
     private val bookshelfId: BookshelfId,
     private val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
 ) : BookshelfDeleteScreenState {
-
-    override val events = EventFlow<BookshelfDeleteScreenEvent>()
 
     override var uiState by mutableStateOf(BookshelfDeleteScreenUiState())
         private set
@@ -64,7 +57,7 @@ private class BookshelfDeleteScreenStateImpl(
             }.launchIn(scope)
     }
 
-    override fun onConfirmClick() {
+    override fun onConfirmClick(done: () -> Unit) {
         uiState = uiState.copy(isProcessing = true)
         scope.launch {
             delay(300)
@@ -78,7 +71,7 @@ private class BookshelfDeleteScreenStateImpl(
                 }
 
                 is Resource.Success -> {
-                    events.tryEmit(BookshelfDeleteScreenEvent.RemoveSuccess)
+                    done()
                     uiState = uiState.copy(isProcessing = false)
                 }
             }

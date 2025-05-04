@@ -6,6 +6,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -14,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.paging.PagingData
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
@@ -29,20 +31,26 @@ import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.PreviewCompliantNavigation
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Serializable
-data object Bookshelf
+internal data object Bookshelf
 
-interface BookshelfScreenNavigator : BookshelfInfoSheetNavigator {
+internal interface BookshelfScreenNavigator : BookshelfInfoSheetNavigator {
     fun onSettingsClick()
     fun onFabClick()
     fun onBookshelfClick(bookshelfId: BookshelfId, path: String)
 }
 
-@Destination<Bookshelf>()
+@Destination<Bookshelf>
 @Composable
 internal fun BookshelfScreen(
     deleteNavResultReceiver: NavResultReceiver<BookshelfDelete, Boolean>,
@@ -124,4 +132,25 @@ private fun rememberLastScrolledForward(
         expanded.value = !lazyGridState.lastScrolledForward
     }
     return expanded
+}
+
+@Preview
+@Composable
+private fun PreviewBookshelfScreen() {
+    PreviewCompliantNavigation {
+        val lazyPagingItems =
+            PagingData.flowData { BookshelfFolder(fakeInternalStorage(it), fakeFolder()) }
+                .collectAsLazyPagingItems()
+        val lazyGridState = rememberLazyGridState()
+        BookshelfScreen(
+            navigator = rememberSupportingPaneScaffoldNavigator<BookshelfId>(),
+            lazyPagingItems = lazyPagingItems,
+            snackbarHostState = remember { SnackbarHostState() },
+            onFabClick = {},
+            onSettingsClick = {},
+            onBookshelfClick = { _, _ -> },
+            onBookshelfInfoClick = {},
+            lazyGridState = lazyGridState
+        ) { _ -> }
+    }
 }
