@@ -56,8 +56,8 @@ androidx-work-runtime = { group = "androidx.work", name = "work-runtime", versio
 artifex-mupdf-fitz = { group = "com.artifex.mupdf", name = "fitz", version = "1.25.6" }
 arturbosch-detektFormatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 autoservice-ksp = { group = "dev.zacsweers.autoservice", name = "auto-service-ksp", version = "1.2.0" }
-cmpdestinations = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-core", version = "0.1.3-SNAPSHOT" }
-cmpdestinations-ksp = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-ksp", version = "0.1.3-SNAPSHOT" }
+cmpdestinations = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-core", version = "0.1.4" }
+cmpdestinations-ksp = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-ksp", version = "0.1.4" }
 coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil-kt" }
 coil3-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-kt" }
 coil3-networkKtor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil-kt" }
