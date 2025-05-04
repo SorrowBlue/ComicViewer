@@ -22,9 +22,11 @@ fun Application(finishApp: () -> Unit) {
         val coroutineScope = rememberCoroutineScope()
         @Suppress("OPT_IN_USAGE")
         rememberKoinModules {
-            listOf(module {
-                single(TypeQualifier(AppCoroutineContext::class)) { coroutineScope }
-            })
+            listOf(
+                module {
+                    single(TypeQualifier(AppCoroutineContext::class)) { coroutineScope }
+                }
+            )
         }
         val initializing = koinInjectAll<Initializer<*>>()
         LaunchedEffect(Unit) {
