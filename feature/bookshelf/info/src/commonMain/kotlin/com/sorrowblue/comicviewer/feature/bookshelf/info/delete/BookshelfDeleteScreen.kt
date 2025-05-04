@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.cmpdestinations.result.NavResultSender
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_btn_cancel
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_btn_delete
@@ -27,7 +25,6 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_del
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_title
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 internal data class BookshelfDeleteScreenUiState(
     val title: String? = null,
