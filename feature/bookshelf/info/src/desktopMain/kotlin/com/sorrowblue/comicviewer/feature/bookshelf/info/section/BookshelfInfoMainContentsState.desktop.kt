@@ -114,7 +114,6 @@ private class BookshelfInfoMainContentsStateImpl(
         appCoroutineScope.launch {
             regenerateThumbnailsUseCase.invoke(
                 RegenerateThumbnailsUseCase2.Request(bookshelfId = uiState.bookshelf.id) { bookshelf, progress, max ->
-
                 }
             )
         }
