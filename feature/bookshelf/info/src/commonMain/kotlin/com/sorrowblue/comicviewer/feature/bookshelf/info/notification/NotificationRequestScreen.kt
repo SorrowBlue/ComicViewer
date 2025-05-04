@@ -15,6 +15,7 @@ import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.cmpdestinations.result.NavResultSender
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_btn_cancel
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_btn_not_allowed
@@ -24,6 +25,7 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_not
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Serializable
 enum class NotificationRequestResult {
@@ -57,7 +59,7 @@ internal fun NotificationRequestScreen(
 }
 
 @Composable
-internal fun NotificationRequestScreen(
+private fun NotificationRequestScreen(
     type: ScanType,
     onDismissRequest: () -> Unit,
     onConfirmClick: () -> Unit,
@@ -96,3 +98,18 @@ internal fun NotificationRequestScreen(
         }
     )
 }
+
+@Preview
+@Composable
+private fun NotificationRequestScreenPreview() {
+    PreviewTheme {
+        NotificationRequestScreen(
+            type = ScanType.File,
+            onDismissRequest = {},
+            onConfirmClick = {},
+            onNotAllowedClick = {},
+            onCancelClick = {}
+        )
+    }
+}
+

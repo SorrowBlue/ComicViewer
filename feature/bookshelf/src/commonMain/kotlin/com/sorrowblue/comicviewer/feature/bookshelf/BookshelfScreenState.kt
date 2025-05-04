@@ -15,7 +15,6 @@ import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import logcat.logcat
 import org.koin.compose.viewmodel.koinViewModel
 
 internal interface BookshelfScreenState {
@@ -23,7 +22,6 @@ internal interface BookshelfScreenState {
     val navigator: ThreePaneScaffoldNavigator<BookshelfId>
     val snackbarHostState: SnackbarHostState
     val lazyGridState: LazyGridState
-
     fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder)
     fun onNavClick()
     fun onSheetCloseClick()
@@ -33,6 +31,7 @@ internal interface BookshelfScreenState {
 internal fun rememberBookshelfScreenState(
     viewModel: BookshelfViewModel = koinViewModel(),
     navigator: ThreePaneScaffoldNavigator<BookshelfId> = rememberCanonicalScaffoldNavigator(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ): BookshelfScreenState {
@@ -41,7 +40,7 @@ internal fun rememberBookshelfScreenState(
         BookshelfScreenStateImpl(
             pagingItems = pagingItems,
             scope = scope,
-            snackbarHostState = SnackbarHostState(),
+            snackbarHostState = snackbarHostState,
             navigator = navigator,
             lazyGridState = lazyGridState,
         )
@@ -69,7 +68,6 @@ private class BookshelfScreenStateImpl(
     }
 
     override fun onNavClick() {
-        logcat { "onNavClick" }
         if (lazyGridState.canScrollBackward) {
             scope.launch {
                 lazyGridState.scrollToItem(0)

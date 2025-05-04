@@ -9,43 +9,39 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
-import kotlinx.coroutines.flow.Flow
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase2
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
-internal class ScanBookshelfInteractor(
+@Factory
+internal class ScanBookshelf2Interactor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val datastoreDataSource: DatastoreDataSource,
-) : ScanBookshelfUseCase() {
+) : ScanBookshelfUseCase2() {
 
-    override fun run(request: Request): Flow<Resource<List<File>, Error>> {
-        return flow {
-            val bookshelf = bookshelfLocalDataSource.flow(request.bookshelfId).first()
-            if (bookshelf != null) {
-                val rootFolder = fileLocalDataSource.root(request.bookshelfId)
-                if (rootFolder != null) {
-                    val supportExtension =
-                        datastoreDataSource.folderSettings.first().supportExtension.map { it.extension }
-                    val resolveImageFolder =
-                        datastoreDataSource.folderSettings.first().resolveImageFolder
-                    remoteDataSourceFactory.create(
-                        bookshelf
-                    ).nestedListFiles(
-                        bookshelf,
-                        rootFolder,
-                        request.process,
-                        resolveImageFolder,
-                        supportExtension
-                    )
-                }
+    override suspend fun run(request: Request): Resource<List<File>, Error> {
+        val bookshelf = bookshelfLocalDataSource.flow(request.bookshelfId).first()
+        if (bookshelf != null) {
+            val rootFolder = fileLocalDataSource.root(request.bookshelfId)
+            if (rootFolder != null) {
+                val supportExtension =
+                    datastoreDataSource.folderSettings.first().supportExtension.map { it.extension }
+                val resolveImageFolder =
+                    datastoreDataSource.folderSettings.first().resolveImageFolder
+                remoteDataSourceFactory.create(
+                    bookshelf
+                ).nestedListFiles(
+                    bookshelf,
+                    rootFolder,
+                    request.process,
+                    resolveImageFolder,
+                    supportExtension
+                )
             }
-            emit(Resource.Success(emptyList()))
         }
+        return Resource.Success(emptyList())
     }
 
     private suspend fun RemoteDataSource.nestedListFiles(
@@ -76,4 +72,3 @@ internal class ScanBookshelfInteractor(
             }
     }
 }
-
