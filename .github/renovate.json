@@ -101,6 +101,13 @@
       "matchPackageNames": [
         "io.coil-kt.coil3{/,}**"
       ]
+    },
+    {
+      "groupName": "com.sorrowblue.cmpdestinations",
+      "groupSlug": "com.sorrowblue.cmpdestinations",
+      "matchPackageNames": [
+        "com.sorrowblue.cmpdestinations{/,}**"
+      ]
     }
   ]
 }
