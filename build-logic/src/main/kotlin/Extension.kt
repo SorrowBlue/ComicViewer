@@ -1,8 +1,10 @@
 import com.android.build.api.dsl.AndroidSourceSet
 import com.android.build.api.dsl.ApplicationBuildType
+import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.NamedDomainObjectProvider
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinSourceSetConvention
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
@@ -23,3 +25,7 @@ val NamedDomainObjectContainer<KotlinSourceSet>.desktopMain: NamedDomainObjectPr
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
 val NamedDomainObjectContainer<KotlinSourceSet>.desktopTest: NamedDomainObjectProvider<KotlinSourceSet> by KotlinSourceSetConvention
+
+internal fun KotlinMultiplatformExtension.sourceSets(configure: Action<NamedDomainObjectContainer<KotlinSourceSet>>) {
+    extensions.configure("sourceSets", configure)
+}

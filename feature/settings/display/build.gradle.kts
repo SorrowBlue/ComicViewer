@@ -3,6 +3,10 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.settings.display"
+//        resourcePrefix("settings_display")
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -15,9 +19,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.settings.display"
-    resourcePrefix("settings_display")
 }

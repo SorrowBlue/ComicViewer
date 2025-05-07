@@ -3,6 +3,10 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.tutorial"
+//        resourcePrefix("tutorial")
+    }
     sourceSets {
         androidMain {
             dependencies {
@@ -10,9 +14,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.tutorial"
-    resourcePrefix("tutorial")
 }

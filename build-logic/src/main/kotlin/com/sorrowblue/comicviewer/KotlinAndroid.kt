@@ -7,7 +7,9 @@ import com.android.build.api.dsl.LibraryDefaultConfig
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
-internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.configureAndroid() =
+internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.configureAndroid(
+    crossinline action: T.() -> Unit = {},
+) =
     configure<T> {
         defaultConfig {
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -36,4 +38,6 @@ internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.conf
                 initWith(getByName(ComicBuildType.RELEASE.display))
             }
         }
+
+        action()
     }

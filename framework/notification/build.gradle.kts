@@ -3,6 +3,9 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.framework.notification"
+    }
     sourceSets {
         androidMain {
             dependencies {
@@ -11,8 +14,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.framework.notification"
 }

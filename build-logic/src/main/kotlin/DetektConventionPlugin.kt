@@ -17,10 +17,10 @@ internal class DetektConventionPlugin : Plugin<Project> {
             plugins {
                 id(libs.plugins.detekt)
             }
-            val detektPlugins2 = configurations.getByName("detektPlugins")
+            val detektPlugins = configurations.getByName("detektPlugins")
             dependencies {
-                detektPlugins2(libs.nlopez.compose.rules.detekt)
-                detektPlugins2(libs.arturbosch.detektFormatting)
+                detektPlugins(libs.nlopez.compose.rules.detekt)
+                detektPlugins(libs.arturbosch.detektFormatting)
             }
 
             configure<DetektExtension> {

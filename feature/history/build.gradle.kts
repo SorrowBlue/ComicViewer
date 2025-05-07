@@ -3,6 +3,10 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.history"
+//        resourcePrefix("history")
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -11,9 +15,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.history"
-    resourcePrefix("history")
 }

@@ -3,6 +3,11 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.readlater"
+//        resourcePrefix("readlater")
+    }
+
     sourceSets {
         commonMain {
             dependencies {
@@ -11,9 +16,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.readlater"
-    resourcePrefix("readlater")
 }

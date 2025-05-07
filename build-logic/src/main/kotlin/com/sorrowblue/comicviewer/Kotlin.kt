@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 /** Configure base Kotlin options */
-internal inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() =
+internal inline fun <reified T : KotlinBaseExtension> Project.configureKotlin(crossinline action: T.() -> Unit = {}) =
     configure<T> {
         jvmToolchain {
             vendor.set(JvmVendorSpec.ADOPTIUM)
@@ -22,4 +22,6 @@ internal inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() 
             is KotlinMultiplatformExtension -> compilerOptions
             else -> throw UnsupportedOperationException("Unsupported project extension $this ${T::class}")
         }.allWarningsAsErrors.set(warningsAsErrors.toBoolean())
+
+        action()
     }

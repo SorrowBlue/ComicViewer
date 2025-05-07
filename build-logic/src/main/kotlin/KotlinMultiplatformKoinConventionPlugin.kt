@@ -1,3 +1,4 @@
+import com.sorrowblue.comicviewer.hasPlugin
 import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.kotlin
 import com.sorrowblue.comicviewer.ksp
@@ -26,7 +27,12 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
 
             dependencies {
                 add("kspAndroid", libs.koin.kspCompiler)
-                add("kspAndroidTest", libs.koin.kspCompiler)
+                if (pluginManager.hasPlugin(libs.plugins.android.kotlin.multiplatform.library)) {
+                    add("kspAndroidHostTest", libs.koin.kspCompiler)
+                    add("kspAndroidDeviceTest", libs.koin.kspCompiler)
+                } else {
+                    add("kspAndroidTest", libs.koin.kspCompiler)
+                }
                 add("kspIosX64", libs.koin.kspCompiler)
                 add("kspIosX64Test", libs.koin.kspCompiler)
                 add("kspIosArm64", libs.koin.kspCompiler)

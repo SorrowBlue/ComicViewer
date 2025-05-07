@@ -3,6 +3,10 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.authentication"
+//        resourcePrefix("authentication")
+    }
     sourceSets {
         androidMain {
             dependencies {
@@ -11,9 +15,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.authentication"
-    resourcePrefix("authentication")
 }

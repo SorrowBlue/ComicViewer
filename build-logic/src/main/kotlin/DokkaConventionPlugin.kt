@@ -15,7 +15,7 @@ internal class DokkaConventionPlugin : Plugin<Project> {
                 id(libs.plugins.dokka)
             }
 
-            extensions.configure<DokkaExtension> {
+            configure<DokkaExtension> {
                 dokkaSourceSets.configureEach {
                     suppressedFiles.setFrom(layout.buildDirectory.dir("generated/ksp"))
                     documentedVisibilities(

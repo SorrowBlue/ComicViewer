@@ -1,4 +1,5 @@
 import com.sorrowblue.comicviewer.composeCompiler
+import com.sorrowblue.comicviewer.hasPlugin
 import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.kotlin
 import com.sorrowblue.comicviewer.libs
@@ -56,11 +57,16 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                val compose = extensions.getByType<ComposePlugin.Dependencies>()
-                add("debugImplementation", compose.uiTooling)
+//                val compose = extensions.getByType<ComposePlugin.Dependencies>()
+//                add("debugImplementation", compose.uiTooling)
 
                 add("kspAndroid", libs.cmpdestinations.ksp)
-                add("kspAndroidTest", libs.cmpdestinations.ksp)
+                if (pluginManager.hasPlugin(libs.plugins.android.kotlin.multiplatform.library)) {
+                    add("kspAndroidHostTest", libs.cmpdestinations.ksp)
+                    add("kspAndroidDeviceTest", libs.cmpdestinations.ksp)
+                } else {
+                    add("kspAndroidTest", libs.cmpdestinations.ksp)
+                }
                 add("kspIosX64", libs.cmpdestinations.ksp)
                 add("kspIosX64Test", libs.cmpdestinations.ksp)
                 add("kspIosArm64", libs.cmpdestinations.ksp)

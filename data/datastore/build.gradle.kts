@@ -3,11 +3,10 @@ plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.data.datastore"
-}
-
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.data.datastore"
+    }
     sourceSets {
         commonMain {
             dependencies {

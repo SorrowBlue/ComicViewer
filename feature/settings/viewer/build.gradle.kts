@@ -3,6 +3,9 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.settings.viewer"
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -10,8 +13,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.settings.viewer"
 }

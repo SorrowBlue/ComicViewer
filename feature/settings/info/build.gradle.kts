@@ -6,6 +6,10 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.settings.info"
+//        resourcePrefix("settings_info")
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -20,11 +24,6 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.settings.info"
-    resourcePrefix("settings_info")
 }
 
 val gitTagProvider: Provider<String> = providers.of(GitTagValueSource::class) {}

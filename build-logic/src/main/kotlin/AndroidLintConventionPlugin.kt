@@ -2,6 +2,8 @@ import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.DynamicFeatureExtension
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.api.dsl.Lint
+import com.android.build.api.dsl.androidLibrary
+import com.sorrowblue.comicviewer.hasPlugin
 import com.sorrowblue.comicviewer.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -9,6 +11,7 @@ import org.gradle.api.plugins.PluginManager
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.configure
 import org.gradle.plugin.use.PluginDependency
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 internal class AndroidLintConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -29,6 +32,13 @@ internal class AndroidLintConventionPlugin : Plugin<Project> {
                         lint { configure(target) }
                     }
 
+                pluginManager.hasPlugin(libs.plugins.android.kotlin.multiplatform.library) ->
+                    configure<KotlinMultiplatformExtension> {
+                        androidLibrary {
+                            lint.configure(target)
+                        }
+                    }
+
                 else -> {
                     pluginManager.apply("com.android.lint")
                     configure<Lint> {
@@ -38,10 +48,6 @@ internal class AndroidLintConventionPlugin : Plugin<Project> {
             }
         }
     }
-}
-
-internal fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Boolean {
-    return hasPlugin(provider.get().pluginId)
 }
 
 private fun Lint.configure(project: Project) {

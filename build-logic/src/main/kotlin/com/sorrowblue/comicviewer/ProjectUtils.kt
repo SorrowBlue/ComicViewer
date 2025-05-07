@@ -34,3 +34,7 @@ internal fun Project.composeCompiler(block: ComposeCompilerGradlePluginExtension
 internal fun DependencyHandlerScope.implementation(dependencyNotation: Any) {
     add("implementation", dependencyNotation)
 }
+
+internal fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Boolean {
+    return hasPlugin(provider.get().pluginId)
+}

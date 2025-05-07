@@ -3,6 +3,10 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.folder"
+//        resourcePrefix("folder")
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -16,9 +20,4 @@ compose {
     resources {
         publicResClass = true
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.folder"
-    resourcePrefix("folder")
 }

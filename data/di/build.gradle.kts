@@ -6,6 +6,9 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.data.di"
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -28,15 +31,10 @@ kotlin {
                 }
             }
         }
-
         desktopMain {
             dependencies {
                 implementation(projects.data.reader.document)
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.data.di"
 }

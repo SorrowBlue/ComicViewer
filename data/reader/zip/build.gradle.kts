@@ -4,6 +4,12 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.data.reader.zip"
+        packaging {
+            jniLibs.useLegacyPackaging = false
+        }
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -23,12 +29,5 @@ kotlin {
                 implementation(libs.sevenzipjbinding.allPlatforms)
             }
         }
-    }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.data.reader.zip"
-    packaging {
-        jniLibs.useLegacyPackaging = false
     }
 }

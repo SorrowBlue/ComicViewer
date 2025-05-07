@@ -1,5 +1,4 @@
 import io.gitlab.arturbosch.detekt.Detekt
-import org.gradle.kotlin.dsl.withType
 
 plugins {
     `kotlin-dsl`
@@ -24,6 +23,7 @@ tasks {
 
 dependencies {
     compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.android.kotlin.multiplatform.library)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.kotlin.compose.gradlePlugin)
     compileOnly(libs.kotlinx.kover.gradlePlugin)

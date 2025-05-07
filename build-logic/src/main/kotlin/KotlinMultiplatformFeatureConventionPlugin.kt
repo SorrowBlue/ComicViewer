@@ -1,9 +1,9 @@
 import com.sorrowblue.comicviewer.id
+import com.sorrowblue.comicviewer.kotlin
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.compose.ComposePlugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -17,7 +17,7 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                 id(libs.plugins.comicviewer.kotlinMultiplatform.compose)
                 id(libs.plugins.comicviewer.kotlinMultiplatform.koin)
             }
-            configure<KotlinMultiplatformExtension> {
+            kotlin<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
                     implementation(project(":framework:designsystem"))
                     implementation(project(":framework:ui"))

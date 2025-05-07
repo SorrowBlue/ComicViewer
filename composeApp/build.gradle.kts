@@ -77,7 +77,6 @@ android {
         versionCode = libs.versions.versionCode.get().toInt()
     }
     androidResources {
-        @Suppress("UnstableApiUsage")
         generateLocaleConfig = true
     }
 

@@ -3,6 +3,10 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.bookshelf.info"
+//        resourcePrefix("bookshelf_info")
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -19,9 +23,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.bookshelf.info"
-    resourcePrefix("bookshelf_info")
 }

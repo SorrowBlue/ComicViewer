@@ -1,19 +1,15 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.sorrowblue.comicviewer.ComicBuildType
-import com.sorrowblue.comicviewer.android
 import com.sorrowblue.comicviewer.configureAboutLibraries
 import com.sorrowblue.comicviewer.configureAndroid
-import com.sorrowblue.comicviewer.configureKotlin
 import com.sorrowblue.comicviewer.configureKotlinMultiplatform
 import com.sorrowblue.comicviewer.configureLicensee
 import com.sorrowblue.comicviewer.id
-import com.sorrowblue.comicviewer.kotlin
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.provideDelegate
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
 
@@ -28,20 +24,16 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
                 id(libs.plugins.licensee)
                 id(libs.plugins.aboutlibraries)
             }
-
-            configureKotlin<KotlinMultiplatformExtension>()
-            configureKotlinMultiplatform()
-            configureAndroid<ApplicationExtension>()
-            configureLicensee()
-            configureAboutLibraries()
-
-            kotlin<KotlinMultiplatformExtension> {
-                sourceSets.commonMain.dependencies {
-                    implementation(project(":framework:common"))
+            configureKotlinMultiplatform {
+                sourceSets {
+                    commonMain {
+                        dependencies {
+                            implementation(project(":framework:common"))
+                        }
+                    }
                 }
             }
-
-            android<ApplicationExtension> {
+            configureAndroid<ApplicationExtension> {
                 signingConfigs {
                     val androidSigningDebugStoreFile: String? by project
                     if (!androidSigningDebugStoreFile.isNullOrEmpty()) {
@@ -80,6 +72,8 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
                     }
                 }
             }
+            configureLicensee()
+            configureAboutLibraries()
         }
     }
 }

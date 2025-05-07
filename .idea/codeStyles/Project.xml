@@ -6,6 +6,7 @@
         <value>
           <package name="" withSubpackages="true" static="false" module="true" />
           <package name="" withSubpackages="true" static="false" />
+          <package name="" withSubpackages="true" static="false" />
           <package name="android" withSubpackages="true" static="true" />
           <package name="androidx" withSubpackages="true" static="true" />
           <package name="com" withSubpackages="true" static="true" />

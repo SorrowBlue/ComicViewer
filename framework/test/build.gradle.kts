@@ -3,15 +3,14 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.framework.test"
+    }
     sourceSets {
-        androidMain{
+        androidMain {
             dependencies {
                 implementation(libs.androidx.test.ext.junitKtx)
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.framework.test"
 }

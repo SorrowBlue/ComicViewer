@@ -109,10 +109,12 @@ sevenzipjbinding-allPlatforms = { group = "com.github.shayartzi.sevenzipjbinding
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version = "2.0.17-0" }
 soil-form = { group = "com.soil-kt.soil", name = "form", version = "1.0.0-alpha10" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version = "3.11.0" }
+android-kotlin-multiplatform-library = { group = "com.android.kotlin.multiplatform.library", name = "com.android.kotlin.multiplatform.library.gradle.plugin", version.ref = "android-gradle" }
 
 [plugins]
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
 androidApplication = { id = "com.android.application", version.ref = "android-gradle" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 androidDynamicFeature = { id = "com.android.dynamic-feature", version.ref = "android-gradle" }
 androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
 androidx-room = { id = "androidx.room", version.ref = "androidx-room" }

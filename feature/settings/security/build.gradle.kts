@@ -3,6 +3,10 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.settings.security"
+//        resourcePrefix("settings_security")
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -15,9 +19,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.settings.security"
-    resourcePrefix("settings_security")
 }

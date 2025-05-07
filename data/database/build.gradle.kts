@@ -4,38 +4,14 @@ plugins {
     alias(libs.plugins.androidx.room)
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.data.database"
-
-    sourceSets {
-        getByName("test") {
-            assets.srcDir(file("$projectDir/schemas"))
-        }
-    }
-
-    @Suppress("UnstableApiUsage")
-    testOptions {
-        managedDevices {
-            localDevices {
-                create("pixel9api35") {
-                    // Use device profiles you typically see in Android Studio.
-                    device = "Pixel 9"
-                    // Use only API levels 27 and higher.
-                    apiLevel = 35
-                    // To include Google services, use "google".
-                    systemImageSource = "aosp-atd"
-                }
-            }
-        }
-    }
-}
-
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.data.database"
+    }
     compilerOptions {
         freeCompilerArgs.add("-opt-in=com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue")
         freeCompilerArgs.add("-opt-in=androidx.paging.ExperimentalPagingApi")
     }
-
     sourceSets {
         commonMain {
             dependencies {
@@ -47,7 +23,6 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
             }
         }
-
         commonTest {
             dependencies {
                 implementation(projects.framework.test)
@@ -58,14 +33,15 @@ kotlin {
             }
         }
 
-        desktopMain{
+        desktopMain {
             dependencies {
                 implementation(libs.credential.secure.storage)
             }
         }
 
-        androidUnitTest{
+        val androidHostTest by getting {
             dependencies {
+                implementation(projects.framework.test)
                 implementation(libs.androidx.test.core.ktx)
                 implementation(libs.androidx.test.runner)
                 implementation(libs.androidx.test.rules)
@@ -73,8 +49,7 @@ kotlin {
                 implementation(libs.robolectric)
             }
         }
-
-        androidInstrumentedTest{
+        val androidDeviceTest by getting {
             dependencies {
                 implementation(libs.androidx.test.core.ktx)
                 implementation(libs.androidx.test.runner)
@@ -98,7 +73,7 @@ dependencies {
     add("kspDesktop", libs.androidx.room.compiler)
     add("kspDesktopTest", libs.androidx.room.compiler)
     add("kspAndroid", libs.androidx.room.compiler)
-    add("kspAndroidTest", libs.androidx.room.compiler)
+    add("kspAndroidHostTest", libs.androidx.room.compiler)
 }
 
 ksp {
@@ -107,4 +82,12 @@ ksp {
 
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+androidComponents {
+    onVariant { variant ->
+        variant.nestedComponents.forEach { nest ->
+            nest.sources.assets?.addStaticSourceDirectory("$projectDir/schemas")
+        }
+    }
 }
