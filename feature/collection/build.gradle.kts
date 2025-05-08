@@ -13,12 +13,6 @@ kotlin {
                 implementation(libs.soil.form)
             }
         }
-
-        androidMain {
-            dependencies {
-                implementation(libs.androidx.compose.animation.graphics)
-            }
-        }
     }
 }
 

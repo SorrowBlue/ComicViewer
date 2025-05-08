@@ -14,17 +14,17 @@ internal class AndroidLintConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             when {
-                pluginManager.hasPlugin(libs.plugins.androidApplication) ->
+                pluginManager.hasPlugin(libs.plugins.android.application) ->
                     configure<ApplicationExtension> {
                         lint { configure(target) }
                     }
 
-                pluginManager.hasPlugin(libs.plugins.androidLibrary) ->
+                pluginManager.hasPlugin(libs.plugins.android.library) ->
                     configure<LibraryExtension> {
                         lint { configure(target) }
                     }
 
-                pluginManager.hasPlugin(libs.plugins.androidDynamicFeature) ->
+                pluginManager.hasPlugin(libs.plugins.android.dynamicFeature) ->
                     configure<DynamicFeatureExtension> {
                         lint { configure(target) }
                     }
@@ -38,24 +38,29 @@ internal class AndroidLintConventionPlugin : Plugin<Project> {
             }
         }
     }
-}
 
-internal fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Boolean {
-    return hasPlugin(provider.get().pluginId)
-}
+    private fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Boolean {
+        return hasPlugin(provider.get().pluginId)
+    }
 
-private fun Lint.configure(project: Project) {
-    val isCI = System.getenv("CI").toBoolean()
-    checkAllWarnings = true
-    checkDependencies = true
-    disable += listOf("InvalidPackage", "NewerVersionAvailable", "GradleDependency", "AppLinksAutoVerify")
-    baseline = project.file("lint-baseline.xml")
-    htmlReport = !isCI
-    htmlOutput =
-        if (htmlReport) project.file("${project.rootDir}/build/reports/lint/lint-result.html") else null
-    sarifReport = isCI
-    sarifOutput =
-        if (sarifReport) project.file("${project.rootDir}/build/reports/lint/lint-result.sarif") else null
-    textReport = false
-    xmlReport = false
+    private fun Lint.configure(project: Project) {
+        val isCI = System.getenv("CI").toBoolean()
+        checkAllWarnings = true
+        checkDependencies = true
+        disable += listOf(
+            "InvalidPackage",
+            "NewerVersionAvailable",
+            "GradleDependency",
+            "AppLinksAutoVerify"
+        )
+        baseline = project.file("lint-baseline.xml")
+        htmlReport = !isCI
+        htmlOutput =
+            if (htmlReport) project.file("${project.rootDir}/build/reports/lint/lint-result.html") else null
+        sarifReport = isCI
+        sarifOutput =
+            if (sarifReport) project.file("${project.rootDir}/build/reports/lint/lint-result.sarif") else null
+        textReport = false
+        xmlReport = false
+    }
 }

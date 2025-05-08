@@ -58,15 +58,15 @@ kotlin {
             }
         }
 
-        desktopMain{
+        desktopMain {
             dependencies {
                 implementation(libs.credential.secure.storage)
             }
         }
 
-        androidUnitTest{
+        androidUnitTest {
             dependencies {
-                implementation(libs.androidx.test.core.ktx)
+                implementation(libs.androidx.test.coreKtx)
                 implementation(libs.androidx.test.runner)
                 implementation(libs.androidx.test.rules)
                 implementation(libs.androidx.test.ext.junitKtx)
@@ -74,9 +74,9 @@ kotlin {
             }
         }
 
-        androidInstrumentedTest{
+        androidInstrumentedTest {
             dependencies {
-                implementation(libs.androidx.test.core.ktx)
+                implementation(libs.androidx.test.coreKtx)
                 implementation(libs.androidx.test.runner)
                 implementation(libs.androidx.test.rules)
                 implementation(libs.androidx.test.ext.junitKtx)
@@ -89,16 +89,16 @@ kotlin {
 }
 
 dependencies {
-    add("kspIosX64", libs.androidx.room.compiler)
-    add("kspIosX64Test", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
-    add("kspIosArm64Test", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64Test", libs.androidx.room.compiler)
-    add("kspDesktop", libs.androidx.room.compiler)
-    add("kspDesktopTest", libs.androidx.room.compiler)
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspAndroidTest", libs.androidx.room.compiler)
+    kspAndroid(libs.androidx.room.compiler)
+    kspAndroidTest(libs.androidx.room.compiler)
+    kspDesktop(libs.androidx.room.compiler)
+    kspDesktopTest(libs.androidx.room.compiler)
+    kspIosArm64(libs.androidx.room.compiler)
+    kspIosArm64Test(libs.androidx.room.compiler)
+    kspIosSimulatorArm64(libs.androidx.room.compiler)
+    kspIosSimulatorArm64Test(libs.androidx.room.compiler)
+    kspIosX64(libs.androidx.room.compiler)
+    kspIosX64Test(libs.androidx.room.compiler)
 }
 
 ksp {
