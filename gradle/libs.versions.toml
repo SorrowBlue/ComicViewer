@@ -45,7 +45,7 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "androidx-room" }
-androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version = "2.5.0" }
+androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version = "2.5.1" }
 androidx-startup-runtime = { group = "androidx.startup", name = "startup-runtime", version = "1.2.0" }
 androidx-test-core-ktx = { group = "androidx.test", name = "core-ktx", version = "1.6.1" }
 androidx-test-ext-junitKtx = { group = "androidx.test.ext", name = "junit-ktx", version = "1.2.1" }
