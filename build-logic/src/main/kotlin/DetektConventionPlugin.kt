@@ -31,9 +31,7 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
             }
 
-            val reportMerge = rootProject.tasks.withType(ReportMergeTask::class) {
-                group = LifecycleBasePlugin.VERIFICATION_GROUP
-            }
+            val reportMerge = rootProject.tasks.withType(ReportMergeTask::class)
             tasks.withType<Detekt>().configureEach {
                 reports {
                     sarif.required.set(true)

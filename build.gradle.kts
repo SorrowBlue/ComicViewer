@@ -79,6 +79,7 @@ tasks.named(
 }
 
 tasks.register("reportMerge", io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
     output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
 }
 
