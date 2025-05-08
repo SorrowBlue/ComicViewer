@@ -85,7 +85,7 @@ internal class RegenerateThumbnailsWorker(
             RegenerateThumbnailsUseCase.Request(bookshelfInfo.bookshelf.id) { bookshelf, progress, max ->
                 setForeground(createForegroundInfo(bookshelf.displayName, progress, max))
             }
-        return regenerateThumbnailsUseCase(useCaseRequest).first().fold({
+        return regenerateThumbnailsUseCase(useCaseRequest).fold({
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
                     .setContentTitle("サムネイルのスキャンが完了しました")

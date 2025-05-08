@@ -10,8 +10,8 @@ import androidx.paging.PagingData
 import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase2
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase2
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequestResult
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.framework.common.AppCoroutineContext
@@ -35,8 +35,8 @@ internal actual fun rememberBookshelfInfoMainContentsState(
     viewModel: BookshelfInfoMainContentsViewModel,
 ): BookshelfInfoMainContentsState {
     val appCoroutineScope = koinInject<CoroutineScope>(TypeQualifier(AppCoroutineContext::class))
-    val scanBookshelfUseCase = koinInject<ScanBookshelfUseCase2>()
-    val regenerateThumbnailsUseCase = koinInject<RegenerateThumbnailsUseCase2>()
+    val scanBookshelfUseCase = koinInject<ScanBookshelfUseCase>()
+    val regenerateThumbnailsUseCase = koinInject<RegenerateThumbnailsUseCase>()
     val stateImpl = remember(bookshelfFolder, viewModel) {
         BookshelfInfoMainContentsStateImpl(
             bookshelfFolder = bookshelfFolder,
@@ -56,8 +56,8 @@ private class BookshelfInfoMainContentsStateImpl(
     private val snackbarHostState: SnackbarHostState,
     private val scope: CoroutineScope,
     private val appCoroutineScope: CoroutineScope,
-    private val scanBookshelfUseCase: ScanBookshelfUseCase2,
-    private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase2,
+    private val scanBookshelfUseCase: ScanBookshelfUseCase,
+    private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
     override val pagingDataFlow: Flow<PagingData<BookThumbnail>>,
 ) : BookshelfInfoMainContentsState {
 
@@ -102,7 +102,7 @@ private class BookshelfInfoMainContentsStateImpl(
         showSnackbar()
         appCoroutineScope.launch {
             scanBookshelfUseCase.invoke(
-                ScanBookshelfUseCase2.Request(bookshelfId = uiState.bookshelf.id) { bookshelf, file ->
+                ScanBookshelfUseCase.Request(bookshelfId = uiState.bookshelf.id) { bookshelf, file ->
                 }
             )
         }
@@ -113,7 +113,7 @@ private class BookshelfInfoMainContentsStateImpl(
         showSnackbar()
         appCoroutineScope.launch {
             regenerateThumbnailsUseCase.invoke(
-                RegenerateThumbnailsUseCase2.Request(bookshelfId = uiState.bookshelf.id) { bookshelf, progress, max ->
+                RegenerateThumbnailsUseCase.Request(bookshelfId = uiState.bookshelf.id) { bookshelf, progress, max ->
                 }
             )
         }

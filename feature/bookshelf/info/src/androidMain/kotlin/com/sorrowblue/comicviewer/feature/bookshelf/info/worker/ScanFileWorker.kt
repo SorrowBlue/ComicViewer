@@ -91,7 +91,7 @@ internal class ScanFileWorker(
                 )
                 setForeground(createForegroundInfo(bookshelf.displayName, file.path))
             }
-        return scanBookshelfUseCase(useCaseRequest).first().fold({
+        return scanBookshelfUseCase(useCaseRequest).fold({
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
                     .setContentTitle("本棚のスキャンが完了しました")
