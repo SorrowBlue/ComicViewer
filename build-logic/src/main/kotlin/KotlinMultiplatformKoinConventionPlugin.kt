@@ -13,7 +13,7 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             plugins {
-                id(libs.plugins.kotlinMultiplatform)
+                id(libs.plugins.kotlin.multiplatform)
                 id(libs.plugins.google.ksp)
             }
 

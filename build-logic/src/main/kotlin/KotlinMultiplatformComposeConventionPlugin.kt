@@ -16,7 +16,7 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             plugins {
-                id(libs.plugins.composeMultiplatform)
+                id(libs.plugins.compose)
                 id(libs.plugins.google.ksp)
                 id(libs.plugins.kotlin.compose)
                 id(libs.plugins.kotlin.serialization)

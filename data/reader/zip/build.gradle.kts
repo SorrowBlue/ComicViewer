@@ -14,7 +14,7 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.androidx.startup.runtime)
-                implementation(libs.com.sorrowblue.sevenzipjbinding)
+                implementation(libs.sevenzipjbinding.android)
             }
         }
         desktopMain {

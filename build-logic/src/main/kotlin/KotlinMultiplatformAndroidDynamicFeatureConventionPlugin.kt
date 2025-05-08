@@ -17,8 +17,8 @@ class KotlinMultiplatformAndroidDynamicFeatureConventionPlugin : Plugin<Project>
     override fun apply(target: Project) {
         with(target) {
             plugins {
-                id(libs.plugins.kotlinMultiplatform)
-                id(libs.plugins.androidDynamicFeature)
+                id(libs.plugins.kotlin.multiplatform)
+                id(libs.plugins.android.dynamicFeature)
                 id(libs.plugins.comicviewer.android.lint)
                 id(libs.plugins.comicviewer.detekt)
                 id(libs.plugins.comicviewer.dokka)

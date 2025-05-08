@@ -14,7 +14,7 @@ kotlin {
             dependencies {
                 implementation(projects.composeApp)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.artifex.mupdf.fitz)
+                implementation(libs.mupdf)
             }
         }
         desktopMain {

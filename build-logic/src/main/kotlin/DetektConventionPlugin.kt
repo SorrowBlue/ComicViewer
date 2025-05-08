@@ -9,6 +9,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.withType
+import org.gradle.language.base.plugins.LifecycleBasePlugin
 
 internal class DetektConventionPlugin : Plugin<Project> {
 
@@ -17,10 +18,10 @@ internal class DetektConventionPlugin : Plugin<Project> {
             plugins {
                 id(libs.plugins.detekt)
             }
-            val detektPlugins2 = configurations.getByName("detektPlugins")
+
             dependencies {
-                detektPlugins2(libs.nlopez.compose.rules.detekt)
-                detektPlugins2(libs.arturbosch.detektFormatting)
+                detektPlugins(libs.nlopez.compose.rules.detekt)
+                detektPlugins(libs.arturbosch.detektFormatting)
             }
 
             configure<DetektExtension> {
@@ -30,7 +31,9 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
             }
 
-            val reportMerge = rootProject.tasks.withType(ReportMergeTask::class)
+            val reportMerge = rootProject.tasks.withType(ReportMergeTask::class) {
+                group = LifecycleBasePlugin.VERIFICATION_GROUP
+            }
             tasks.withType<Detekt>().configureEach {
                 reports {
                     sarif.required.set(true)
@@ -48,34 +51,22 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 input.from(tasks.withType<Detekt>().map(Detekt::sarifReportFile))
             }
 
-            tasks.register("detektAndroidAll") {
-                group = "verification"
-                dependsOn(
-                    tasks.withType<Detekt>()
-                        .matching { detekt -> detekt.name.contains("(?i)^(?!.*metadata).*android.*$".toRegex()) }
-                )
-            }
-            tasks.register("detektDesktopAll") {
-                group = "verification"
-                dependsOn(
-                    tasks.withType<Detekt>()
-                        .matching { detekt -> detekt.name.contains("(?i)^(?!.*metadata).*desktop.*$".toRegex()) }
-                )
-            }
-            tasks.register("detektIosAll") {
-                group = "verification"
-                dependsOn(
-                    tasks.withType<Detekt>()
-                        .matching { detekt -> detekt.name.contains("(?i)^(?!.*metadata).*ios.*$".toRegex()) }
-                )
-            }
-            tasks.register("detektMetadataAll") {
-                group = "verification"
-                dependsOn(
-                    tasks.withType<Detekt>()
-                        .matching { detekt -> detekt.name.contains("(?i)^.*metadata.*$".toRegex()) }
-                )
+            mapOf(
+                "detektAndroidAll" to "(?i)^(?!.*metadata).*android.*$".toRegex(),
+                "detektDesktopAll" to "(?i)^(?!.*metadata).*desktop.*$".toRegex(),
+                "detektIosAll" to "(?i)^(?!.*metadata).*ios.*$".toRegex(),
+                "detektMetadataAll" to "(?i)^.*metadata.*$".toRegex()
+            ).forEach { (taskName, regex) ->
+                tasks.register(taskName) {
+                    group = LifecycleBasePlugin.VERIFICATION_GROUP
+                    dependsOn(
+                        tasks.withType<Detekt>()
+                            .matching { detekt -> detekt.name.contains(regex) }
+                    )
+                }
             }
         }
     }
+
+    private val Project.detektPlugins get() = configurations.getByName("detektPlugins")
 }

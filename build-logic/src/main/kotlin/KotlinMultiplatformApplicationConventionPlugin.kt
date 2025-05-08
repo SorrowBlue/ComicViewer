@@ -20,8 +20,8 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             plugins {
-                id(libs.plugins.kotlinMultiplatform)
-                id(libs.plugins.androidApplication)
+                id(libs.plugins.kotlin.multiplatform)
+                id(libs.plugins.android.application)
                 id(libs.plugins.comicviewer.android.lint)
                 id(libs.plugins.comicviewer.detekt)
                 id(libs.plugins.comicviewer.dokka)
