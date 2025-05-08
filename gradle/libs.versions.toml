@@ -5,11 +5,14 @@ androidx-activity = "1.10.1"
 androidx-appcompat = "1.7.0"
 androidx-biometric = "1.4.0-alpha03"
 androidx-browser = "1.8.0"
+androidx-compose-animation = "1.8.0"
+androidx-compose-ui = "1.8.0"
 androidx-core = "1.16.0"
 androidx-core-splashscreen = "1.0.1"
 androidx-datastore = "1.1.5"
 androidx-documentfile = "1.0.1"
 androidx-paging = "3.3.6"
+androidx-room = "2.7.1"
 androidx-sqlite = "2.5.0"
 androidx-startup = "1.2.0"
 androidx-test-core = "1.6.1"
@@ -17,10 +20,7 @@ androidx-test-ext-junit = "1.2.1"
 androidx-test-ext-truth = "1.6.0"
 androidx-test-rules = "1.6.1"
 androidx-test-runner = "1.6.2"
-androidx-room = "2.7.1"
 androidx-work = "2.10.1"
-androidx-compose-animation = "1.8.0"
-androidx-compose-ui = "1.8.0"
 autoservice = "1.2.0"
 buildkonfig = "0.17.1"
 cmpdestinations = "0.1.4"
@@ -53,14 +53,14 @@ multiplatform-navigationCompose = "2.9.0-beta01"
 mupdf = "1.25.6"
 pdfbox = "3.0.5"
 robolectric = "4.14.1"
+sevenzipjbinding = "16.02-2.01"
+sevenzipjbinding-android = "16.02-2.4"
 slf4j-android = "2.0.17-0"
 soil = "1.0.0-alpha10"
 squareup-okio = "3.11.0"
-sevenzipjbinding = "16.02-2.01"
-sevenzipjbinding-android = "16.02-2.4"
 targetSdk = "36"
-versionCode = "16"
 versionCatalogLinter = "1.0.5"
+versionCode = "16"
 versions = "0.52.0"
 
 [libraries]
@@ -91,7 +91,6 @@ androidx-test-ext-truth = { group = "androidx.test.ext", name = "truth", version
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test-rules" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "androidx-work" }
-mupdf = { group = "com.artifex.mupdf", name = "fitz", version.ref = "mupdf" }
 arturbosch-detektFormatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 autoservice-ksp = { group = "dev.zacsweers.autoservice", name = "auto-service-ksp", version.ref = "autoservice" }
 cmpdestinations = { group = "com.sorrowblue.cmpdestinations", name = "cmp-destinations-core", version.ref = "cmpdestinations" }
@@ -114,8 +113,8 @@ filekit-compose = { group = "io.github.vinceglb", name = "filekit-compose", vers
 google-android-play-feature-delivery-ktx = { group = "com.google.android.play", name = "feature-delivery-ktx", version.ref = "google-play-feature-delivery" }
 google-ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
 jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
-kmpfile-filekit = { module = "dev.zwander:kmpfile-filekit", version.ref = "kmpfile" }
-kmpfile-okio = { module = "dev.zwander:kmpfile-okio", version.ref = "kmpfile" }
+kmpfile-filekit = { group = "dev.zwander", name = "kmpfile-filekit", version.ref = "kmpfile" }
+kmpfile-okio = { group = "dev.zwander", name = "kmpfile-okio", version.ref = "kmpfile" }
 koin-androidxCompose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 koin-androidxStartup = { group = "io.insert-koin", name = "koin-androidx-startup", version.ref = "koin" }
 koin-androidxWorkmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin" }
@@ -138,6 +137,7 @@ kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 licensee-gradlePlugin = { group = "app.cash.licensee", name = "licensee-gradle-plugin", version.ref = "licensee" }
+mupdf = { group = "com.artifex.mupdf", name = "fitz", version.ref = "mupdf" }
 nlopez-compose-rules-detekt = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detekt-compose" }
 pdfbox = { group = "org.apache.pdfbox", name = "pdfbox", version.ref = "pdfbox" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
