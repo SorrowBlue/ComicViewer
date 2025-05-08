@@ -1,5 +1,5 @@
 [versions]
-aboutlibraries = "12.1.1"
+aboutlibraries = "12.1.2"
 android-gradle = "8.10.0"
 androidx-datastore = "1.1.5"
 androidx-paging = "3.3.6"
