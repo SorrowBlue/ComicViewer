@@ -14,4 +14,5 @@ internal class KoinModuleTest {
     }
 }
 
+@Suppress("KotlinNoActualForExpect")
 internal expect fun Module.verify()
