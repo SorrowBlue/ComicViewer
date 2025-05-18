@@ -6,7 +6,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.usecase.collection.DeleteCollectionUseCase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -32,7 +31,7 @@ private class DeleteCollectionScreenStateImpl(
 
     override fun delete(id: CollectionId, onComplete: () -> Unit) {
         scope.launch {
-            deleteCollectionUseCase(DeleteCollectionUseCase.Request(id)).first()
+            deleteCollectionUseCase(DeleteCollectionUseCase.Request(id))
             onComplete()
         }
     }

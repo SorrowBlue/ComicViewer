@@ -4,9 +4,9 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
+@Factory
 internal class AddReadLaterInteractor(
     private val localDataSource: ReadLaterFileLocalDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,

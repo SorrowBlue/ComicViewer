@@ -9,50 +9,43 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
-import com.sorrowblue.comicviewer.domain.usecase.GetLibraryInfoError
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
-import org.koin.core.annotation.Singleton
+import kotlinx.coroutines.flow.first
+import org.koin.core.annotation.Factory
 
-@Singleton
+@Factory
 internal class GetNextBookInteractor(
     private val datastoreDataSource: DatastoreDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
 ) : GetNextBookUseCase() {
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun run(request: Request): Flow<Resource<Book, GetLibraryInfoError>> {
-        return datastoreDataSource.folderDisplaySettings.flatMapLatest { settings ->
-            when (val location = request.location) {
-                is Location.Collection -> collection(
-                    request.isNext,
-                    location.collectionId,
-                    request.bookshelfId,
-                    request.path,
-                    settings.sortType
-                )
+    override suspend fun run(request: Request): Resource<Book, Error> {
+        val settings = datastoreDataSource.folderDisplaySettings.first()
+        return when (val location = request.location) {
+            is Location.Collection -> collection(
+                request.isNext,
+                location.collectionId,
+                request.bookshelfId,
+                request.path,
+                settings.sortType
+            )
 
-                Location.Folder -> folder(
-                    request.isNext,
-                    request.bookshelfId,
-                    request.path,
-                    settings.sortType
-                )
-            }
+            Location.Folder -> folder(
+                request.isNext,
+                request.bookshelfId,
+                request.path,
+                settings.sortType
+            )
         }
     }
 
-    private fun folder(
+    private suspend fun folder(
         isNext: Boolean,
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
-    ): Flow<Resource<Book, GetLibraryInfoError>> {
+    ): Resource<Book, Error> {
         return runCatching {
             if (isNext) {
                 fileLocalDataSource.nextFileModel(bookshelfId, path, sortType)
@@ -60,25 +53,25 @@ internal class GetNextBookInteractor(
                 fileLocalDataSource.prevFileModel(bookshelfId, path, sortType)
             }
         }.fold({ modelFlow ->
-            modelFlow.map {
+            modelFlow.first().let {
                 if (it is Book) {
                     Resource.Success(it)
                 } else {
-                    Resource.Error(GetLibraryInfoError.NOT_FOUND)
+                    Resource.Error(Error.NotFound)
                 }
             }
         }, {
-            flowOf(Resource.Error(GetLibraryInfoError.SYSTEM_ERROR))
+            Resource.Error(Error.System)
         })
     }
 
-    private fun collection(
+    private suspend fun collection(
         isNext: Boolean,
         collectionId: CollectionId,
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
-    ): Flow<Resource<Book, GetLibraryInfoError>> {
+    ): Resource<Book, Error> {
         return runCatching {
             if (isNext) {
                 collectionFileLocalDataSource.flowNextCollectionFile(
@@ -92,17 +85,17 @@ internal class GetNextBookInteractor(
                 )
             }
         }.fold({ modelFlow ->
-            modelFlow.map {
+            modelFlow.first().let {
                 if (it is Book) {
                     Resource.Success(it)
                 } else {
                     Resource.Error(
-                        GetLibraryInfoError.NOT_FOUND
+                        Error.NotFound
                     )
                 }
             }
         }, {
-            flowOf(Resource.Error(GetLibraryInfoError.SYSTEM_ERROR))
+            Resource.Error(Error.System)
         })
     }
 }

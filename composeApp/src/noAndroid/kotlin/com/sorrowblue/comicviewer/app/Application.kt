@@ -13,12 +13,18 @@ import org.koin.compose.module.rememberKoinModules
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.TypeQualifier
 import org.koin.core.scope.Scope
+import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.module
 
 @Composable
 fun Application(finishApp: () -> Unit) {
     @Suppress("OPT_IN_USAGE")
-    KoinMultiplatformApplication(config = setupDi()) {
+    KoinMultiplatformApplication(
+        config = KoinConfiguration {
+            koinConfiguration().appDeclaration.invoke(this)
+            modules(allModules())
+        }
+    ) {
         val coroutineScope = rememberCoroutineScope()
         @Suppress("OPT_IN_USAGE")
         rememberKoinModules {

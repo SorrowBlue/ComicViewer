@@ -13,11 +13,17 @@ import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
 import com.sorrowblue.comicviewer.feature.search.Search
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphNavigator
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraph
+import org.koin.core.annotation.Factory
 import com.sorrowblue.comicviewer.feature.book.Book as BookRoute
 
+internal interface ComicViewerAppNavigatorImpl {
+    fun onRestoreComplete()
+}
+
+@Factory
 internal class ComicViewerAppNavigator(
-    private val onRestoreComplete: () -> Unit,
     private val navController: NavController,
+    private val appNavigator: ComicViewerAppNavigatorImpl,
 ) : BookshelfNavGraphNavigator,
     ReadLaterNavGraphNavigator,
     CollectionNavGraphNavigator,
@@ -45,7 +51,7 @@ internal class ComicViewerAppNavigator(
     }
 
     override fun onRestoreComplete() {
-        this.onRestoreComplete.invoke()
+        appNavigator.onRestoreComplete()
     }
 
     override fun onSearchClick(bookshelfId: BookshelfId, path: String) {

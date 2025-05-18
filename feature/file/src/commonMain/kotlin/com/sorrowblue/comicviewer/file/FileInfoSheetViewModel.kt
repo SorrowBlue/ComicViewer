@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingFolderBookThumbnailsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.PagingFolderBookThumbnailsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase

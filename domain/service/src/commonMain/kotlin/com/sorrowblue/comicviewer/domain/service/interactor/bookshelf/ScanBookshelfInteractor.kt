@@ -21,7 +21,6 @@ internal class ScanBookshelfInteractor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : ScanBookshelfUseCase() {
 
-
     override suspend fun run(request: Request): Resource<List<File>, Error> {
         val bookshelf = bookshelfLocalDataSource.flow(request.bookshelfId).first()
         if (bookshelf != null) {

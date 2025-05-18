@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.history.navigation
 
-import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.history.ClearAllHistory
 import com.sorrowblue.comicviewer.feature.history.History
@@ -11,14 +10,16 @@ import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Singleton
 
 @Serializable
-@NavGraph(startDestination = History::class, transitions = HistoryNavGraphTransitions::class)
-data object HistoryNavGraph {
-
-    @DestinationInGraph<History>
-    @DestinationInGraph<HistoryFolder>
-    @DestinationInGraph<ClearAllHistory>
-    object Include
-}
+@NavGraph(
+    startDestination = History::class,
+    transitions = HistoryNavGraphTransitions::class,
+    destinations = [
+        History::class,
+        HistoryFolder::class,
+        ClearAllHistory::class,
+    ]
+)
+data object HistoryNavGraph
 
 @Singleton
 internal class HistoryNavGraphTabDisplayRoute : TabDisplayRoute {

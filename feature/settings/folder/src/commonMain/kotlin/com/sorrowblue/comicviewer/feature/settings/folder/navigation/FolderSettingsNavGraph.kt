@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.folder.navigation
 
 import androidx.navigation.NavController
-import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
@@ -19,17 +18,18 @@ import org.koin.core.annotation.Scoped
 import com.sorrowblue.comicviewer.feature.settings.folder.ImageFormatSettings as ImageFormatRoute
 
 @Serializable
-@NavGraph(startDestination = FolderSettings::class)
-data object FolderSettingsNavGraph {
-
-    @DestinationInGraph<FolderSettings>
-    @DestinationInGraph<SortTypeSettings>
-    @DestinationInGraph<FolderThumbnailOrderSettings>
-    @DestinationInGraph<ImageFilterQualitySettings>
-    @DestinationInGraph<ImageFormatRoute>
-    @DestinationInGraph<ImageScaleSettings>
-    object Include
-}
+@NavGraph(
+    startDestination = FolderSettings::class,
+    destinations = [
+        FolderSettings::class,
+        SortTypeSettings::class,
+        FolderThumbnailOrderSettings::class,
+        ImageFilterQualitySettings::class,
+        ImageFormatRoute::class,
+        ImageScaleSettings::class,
+    ]
+)
+data object FolderSettingsNavGraph
 
 @Scope(SettingsScope::class)
 @Scoped(binds = [FolderSettingsScreenNavigator::class])

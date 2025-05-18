@@ -6,6 +6,7 @@ import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.ThumbnailDataSource
+import com.sorrowblue.comicviewer.domain.service.limitedCoroutineScope
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.awaitAll
@@ -14,7 +15,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Qualifier
-import org.koin.core.annotation.Singleton
 
 @Factory
 internal class RegenerateThumbnailsInteractor(

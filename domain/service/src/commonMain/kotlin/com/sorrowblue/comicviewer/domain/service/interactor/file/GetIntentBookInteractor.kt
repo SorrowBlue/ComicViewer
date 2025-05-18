@@ -8,9 +8,9 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import logcat.logcat
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
+@Factory
 internal class GetIntentBookInteractor(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : GetIntentBookUseCase() {

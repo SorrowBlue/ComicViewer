@@ -18,7 +18,6 @@ import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -101,7 +100,7 @@ private class BasicCollectionAddScreenStateImpl(
                             route.path
                         )
                     )
-                ).first()
+                )
             } else {
                 addCollectionFileUseCase(
                     AddCollectionFileUseCase.Request(
@@ -111,7 +110,7 @@ private class BasicCollectionAddScreenStateImpl(
                             route.path
                         )
                     )
-                ).first()
+                )
             }
         }
     }

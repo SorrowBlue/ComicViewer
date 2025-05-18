@@ -1,6 +1,41 @@
 package com.sorrowblue.comicviewer.feature.book.receive
 
-/*
+import android.content.Context
+import android.graphics.Bitmap
+import android.widget.Toast
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
+import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
+import com.sorrowblue.comicviewer.feature.book.section.BookPage
+import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
+import com.sorrowblue.comicviewer.feature.book.section.PageItem
+import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
+import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.SystemUiController
+import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
+import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import logcat.logcat
+import org.koin.android.annotation.KoinViewModel
+import org.koin.compose.viewmodel.koinViewModel
+
 internal interface ReceiveBookScreenState : SaveableScreenState {
 
     val uiState: BookScreenUiState
@@ -10,7 +45,7 @@ internal interface ReceiveBookScreenState : SaveableScreenState {
 
     fun toggleTooltip()
     fun onPageChange(page: Int)
-    fun onPageLoaded(split: UnratedPage, bitmap: Bitmap)
+    fun onPageLoaded(split: UnratedPage, bitmap: coil3.Bitmap)
 }
 
 @KoinViewModel
@@ -19,6 +54,7 @@ internal class ReceiveBookViewModel(val getIntentBookUseCase: GetIntentBookUseCa
 
 @Composable
 internal fun rememberReceiveBookScreenState(
+    uri: String?,
     context: Context = LocalContext.current,
     scope: CoroutineScope = rememberCoroutineScope(),
     currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() },
@@ -28,6 +64,7 @@ internal fun rememberReceiveBookScreenState(
 ): ReceiveBookScreenState {
     return rememberSaveableScreenState {
         ReceiveBookScreenStateImpl(
+            uri = uri,
             context = context,
             scope = scope,
             pagerState = pagerState,
@@ -40,6 +77,7 @@ internal fun rememberReceiveBookScreenState(
 }
 
 private class ReceiveBookScreenStateImpl(
+    uri: String?,
     context: Context,
     private val scope: CoroutineScope,
     override val pagerState: PagerState,
@@ -49,20 +87,18 @@ private class ReceiveBookScreenStateImpl(
     private val getIntentBookUseCase: GetIntentBookUseCase,
 ) : ReceiveBookScreenState {
     init {
-        val activity = context as Activity
-        val data = activity.intent.data
-        if (data == null) {
+        if (uri == null) {
             Toast.makeText(context, "ファイルを開けませんでした", Toast.LENGTH_SHORT).show()
         } else {
             scope.launch {
-                getIntentBookUseCase(GetIntentBookUseCase.Request(data.toString())).collect { resource ->
+                getIntentBookUseCase(GetIntentBookUseCase.Request(uri)).collect { resource ->
                     when (resource) {
                         is Resource.Error -> Unit
                         is Resource.Success -> {
                             logcat { "book=${resource.data}" }
                             uiState = BookScreenUiState.Loaded(
                                 resource.data,
-                                FavoriteId(),
+                                CollectionId(),
                                 BookSheetUiState(resource.data)
                             )
                             currentList.clear()
@@ -98,18 +134,33 @@ private class ReceiveBookScreenStateImpl(
         }
     }
 
-    override fun onPageLoaded(split: UnratedPage, bitmap: Bitmap) {
-        when (split) {
-            is BookPage.Spread.Unrated -> {
-                onPageLoaded2(split, bitmap)
-            }
+    val mutex = Mutex()
+    override fun onPageLoaded(unratedPage: UnratedPage, bitmap: Bitmap) {
+        scope.launch {
+            mutex.withLock {
+                when (unratedPage) {
+                    is BookPage.Spread.Unrated -> {
+                        onSpreadPageLoad(unratedPage, bitmap)
+                    }
 
-            is BookPage.Split.Unrated -> {
+                    is BookPage.Split.Unrated -> onSplitPageLoad(unratedPage, bitmap)
+                }
             }
         }
     }
 
-    private fun onPageLoaded2(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
+    private fun onSplitPageLoad(split: BookPage.Split.Unrated, bitmap: Bitmap) {
+        val index = currentList.indexOf(split)
+        if (0 < index) {
+            if (bitmap.width < bitmap.height) {
+                currentList[index] = BookPage.Split.Single(split.index)
+            } else {
+                currentList[index] = BookPage.Split.Right(split.index)
+                currentList.add(index + 1, BookPage.Split.Left(split.index))
+            }
+        }
+    }
+    private fun onSpreadPageLoad(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(spread)
         if (bitmap.width < bitmap.height) {
             currentList[index] = BookPage.Spread.Single(spread.index)
@@ -159,4 +210,3 @@ private class ReceiveBookScreenStateImpl(
         currentList.addAll(newList)
     }
 }
-*/

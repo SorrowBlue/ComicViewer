@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.usecase.collection.FlowCollectionUseCase
+import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.RemoveCollectionFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.UpdateCollectionUseCase
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
@@ -20,7 +20,6 @@ import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
@@ -46,7 +45,7 @@ internal interface BasicCollectionEditScreenState : SaveableScreenState {
 internal fun rememberBasicCollectionEditScreenState(
     route: BasicCollectionEdit,
     scope: CoroutineScope = rememberCoroutineScope(),
-    flowCollectionUseCase: FlowCollectionUseCase = koinInject(),
+    getCollectionUseCase: GetCollectionUseCase = koinInject(),
     updateCollectionUseCase: UpdateCollectionUseCase = koinInject(),
     removeCollectionFileUseCase: RemoveCollectionFileUseCase = koinInject(),
     viewModel: BasicCollectionEditViewModel = koinViewModel { parametersOf(route) },
@@ -55,7 +54,7 @@ internal fun rememberBasicCollectionEditScreenState(
         savedStateHandle = it,
         scope = scope,
         route = route,
-        flowCollectionUseCase = flowCollectionUseCase,
+        getCollectionUseCase = getCollectionUseCase,
         updateCollectionUseCase = updateCollectionUseCase,
         removeCollectionFileUseCase = removeCollectionFileUseCase,
         pagingDataFlow = viewModel.pagingDataFlow
@@ -69,7 +68,7 @@ private class BasicCollectionEditScreenStateImpl(
     override val pagingDataFlow: Flow<PagingData<File>>,
     private val scope: CoroutineScope,
     private val route: BasicCollectionEdit,
-    private val flowCollectionUseCase: FlowCollectionUseCase,
+    private val getCollectionUseCase: GetCollectionUseCase,
     private val updateCollectionUseCase: UpdateCollectionUseCase,
     private val removeCollectionFileUseCase: RemoveCollectionFileUseCase,
 ) : BasicCollectionEditScreenState {
@@ -83,7 +82,7 @@ private class BasicCollectionEditScreenStateImpl(
 
     init {
         scope.launch {
-            flowCollectionUseCase(FlowCollectionUseCase.Request(route.id))
+            getCollectionUseCase(GetCollectionUseCase.Request(route.id))
                 .mapNotNull { it.dataOrNull() as? BasicCollection }
                 .first().let {
                     uiState = uiState.copy(formData = uiState.formData.copy(name = it.name))
@@ -101,17 +100,16 @@ private class BasicCollectionEditScreenStateImpl(
                         file.path
                     )
                 )
-            ).first()
+            )
         }
     }
 
     override suspend fun onSubmit(formData: BasicCollectionEditorFormData) {
         scope.launch {
-            val collection = flowCollectionUseCase(FlowCollectionUseCase.Request(route.id))
+            val collection = getCollectionUseCase(GetCollectionUseCase.Request(route.id))
                 .mapNotNull { it.dataOrNull() as? BasicCollection }
                 .first()
             updateCollectionUseCase(UpdateCollectionUseCase.Request(collection.copy(name = formData.name)))
-                .collect()
             events.tryEmit(BasicCollectionEditScreenStateEvent.EditComplete)
         }
     }

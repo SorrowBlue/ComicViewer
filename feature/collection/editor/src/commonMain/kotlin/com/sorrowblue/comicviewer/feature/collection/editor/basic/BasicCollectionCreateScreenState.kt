@@ -17,7 +17,6 @@ import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create_add
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import org.jetbrains.compose.resources.getString
 import org.koin.compose.koinInject
 
@@ -61,7 +60,7 @@ private class BasicCollectionCreateScreenStateImpl(
 
     override suspend fun onSubmit(formData: BasicCollectionEditorFormData) {
         delay(300)
-        createCollectionUseCase(CreateCollectionUseCase.Request(BasicCollection(formData.name))).first()
+        createCollectionUseCase(CreateCollectionUseCase.Request(BasicCollection(formData.name)))
             .fold(
                 onSuccess = { collection ->
                     if (route.bookshelfId != BookshelfId() && route.path.isNotEmpty()) {
@@ -92,19 +91,18 @@ private class BasicCollectionCreateScreenStateImpl(
     ) {
         addCollectionFileUseCase(
             AddCollectionFileUseCase.Request(CollectionFile(collection.id, bookshelfId, path))
-        ).first()
-            .fold(
-                onSuccess = {
-                    event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
-                    notificationManager.toast(
-                        getString(
-                            Res.string.collection_editor_msg_success_create_add,
-                            collection.name
-                        ),
-                        NotificationManager.LENGTH_SHORT
-                    )
-                },
-                onError = {}
-            )
+        ).fold(
+            onSuccess = {
+                event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
+                notificationManager.toast(
+                    getString(
+                        Res.string.collection_editor_msg_success_create_add,
+                        collection.name
+                    ),
+                    NotificationManager.LENGTH_SHORT
+                )
+            },
+            onError = {}
+        )
     }
 }

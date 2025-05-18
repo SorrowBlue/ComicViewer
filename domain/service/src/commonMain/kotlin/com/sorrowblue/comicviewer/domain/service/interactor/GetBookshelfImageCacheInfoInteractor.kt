@@ -12,9 +12,9 @@ import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
+@Factory
 internal class GetBookshelfImageCacheInfoInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val imageCacheDataSource: ImageCacheDataSource,

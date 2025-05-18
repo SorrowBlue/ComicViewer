@@ -1,16 +1,16 @@
 package com.sorrowblue.comicviewer.domain.usecase.file
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 import kotlinx.datetime.Clock
 
 abstract class UpdateLastReadPageUseCase :
-    UseCase<UpdateLastReadPageUseCase.Request, Unit, Unit>() {
+    OneShotUseCase<UpdateLastReadPageUseCase.Request, Unit, Unit>() {
 
     class Request(
         val bookshelfId: BookshelfId,
         val path: String,
         val lastReadPage: Int,
         val timestamp: Long = Clock.System.now().toEpochMilliseconds(),
-    ) : UseCase.Request
+    ) : OneShotUseCase.Request
 }

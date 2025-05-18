@@ -59,15 +59,20 @@ internal fun BookBottomBar(
         CompositionLocalProvider(
             LocalLayoutDirection.provides(LayoutDirection.Rtl)
         ) {
-            Slider(
-                value = remember(currentPage, pageRange) {
-                    currentPage.coerceIn(pageRange.start.toInt(), pageRange.endInclusive.toInt())
-                        .toFloat()
-                },
-                onValueChange = { onPageChange(it.toInt()) },
-                valueRange = pageRange,
-                steps = max((pageRange.endInclusive.toInt() / 2) - 2, 0)
-            )
+            if (0 < pageRange.endInclusive.toInt()) {
+                Slider(
+                    value = remember(currentPage, pageRange) {
+                        currentPage.coerceIn(
+                            pageRange.start.toInt(),
+                            pageRange.endInclusive.toInt()
+                        )
+                            .toFloat()
+                    },
+                    onValueChange = { onPageChange(it.toInt()) },
+                    valueRange = pageRange,
+                    steps = max((pageRange.endInclusive.toInt() / 2) - 2, 0)
+                )
+            }
         }
         Text(
             text = when {

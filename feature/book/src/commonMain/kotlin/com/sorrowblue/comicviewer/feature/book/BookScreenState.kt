@@ -23,14 +23,11 @@ import com.sorrowblue.comicviewer.feature.book.section.NextPage
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-import com.sorrowblue.comicviewer.feature.book.section.height2
-import com.sorrowblue.comicviewer.feature.book.section.width2
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -105,7 +102,7 @@ private class BookScreenStateImpl(
                     GetNextBookUseCase.Location.Collection(uiState.collectionId),
                     isNext
                 )
-            ).first().dataOrNull()?.let {
+            ).dataOrNull()?.let {
                 nextBookList.add(NextBook.Collection(it))
             }
         }
@@ -116,7 +113,7 @@ private class BookScreenStateImpl(
                 GetNextBookUseCase.Location.Folder,
                 isNext
             )
-        ).first().dataOrNull()?.let {
+        ).dataOrNull()?.let {
             nextBookList.add(NextBook.Folder(it))
         }
         return NextPage(isNext, nextBookList)
@@ -178,7 +175,9 @@ private class BookScreenStateImpl(
             uiState.book.path,
             pagerState.currentPage - 1
         )
-        updateLastReadPageUseCase(request).launchIn(scope)
+        scope.launch {
+            updateLastReadPageUseCase(request)
+        }
     }
 
     override fun toggleTooltip() {
@@ -196,7 +195,9 @@ private class BookScreenStateImpl(
             uiState.book.path,
             pagerState.currentPage - 1
         )
-        updateLastReadPageUseCase(request).launchIn(scope)
+        scope.launch {
+            updateLastReadPageUseCase(request)
+        }
     }
 
     override fun onPageChange(page: Int) {
@@ -222,7 +223,7 @@ private class BookScreenStateImpl(
     private fun onSplitPageLoad(split: BookPage.Split.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(split)
         if (0 < index) {
-            if (bitmap.width2 < bitmap.height2) {
+            if (bitmap.width < bitmap.height) {
                 currentList[index] = BookPage.Split.Single(split.index)
             } else {
                 currentList[index] = BookPage.Split.Right(split.index)
@@ -233,7 +234,7 @@ private class BookScreenStateImpl(
 
     private fun onSpreadPageLoad(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(spread)
-        if (bitmap.width2 < bitmap.height2) {
+        if (bitmap.width < bitmap.height) {
             currentList[index] = BookPage.Spread.Single(spread.index)
         } else {
             // 横

@@ -18,9 +18,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import logcat.asLog
 import logcat.logcat
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
+@Factory
 internal class GetBookInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,

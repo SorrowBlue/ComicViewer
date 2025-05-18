@@ -126,6 +126,7 @@ internal class RemoteDataSourceImpl(
     }
 
     override suspend fun fileReader(book: Book): FileReader {
+        logcat { "fileReader(book: $book)" }
         return withContext(dispatcher) {
             kotlin.runCatching {
                 when (book) {

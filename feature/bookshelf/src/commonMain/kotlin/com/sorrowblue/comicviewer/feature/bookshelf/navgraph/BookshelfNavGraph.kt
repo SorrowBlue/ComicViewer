@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.navgraph
 
-import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
-import com.sorrowblue.cmpdestinations.annotation.NestedNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditNavGraph
@@ -14,16 +12,18 @@ import kotlinx.serialization.Serializable
 import org.koin.core.annotation.Singleton
 
 @Serializable
-@NavGraph(startDestination = Bookshelf::class, transitions = BookshelfNavGraphTransitions::class)
-data object BookshelfNavGraph {
-
-    @DestinationInGraph<Bookshelf>
-    @DestinationInGraph<BookshelfDelete>
-    @DestinationInGraph<BookshelfFolder>
-    @DestinationInGraph<BookshelfSelection>
-    @NestedNavGraph<BookshelfEditNavGraph>
-    object Include
-}
+@NavGraph(
+    startDestination = Bookshelf::class,
+    transitions = BookshelfNavGraphTransitions::class,
+    destinations = [
+        Bookshelf::class,
+        BookshelfDelete::class,
+        BookshelfFolder::class,
+        BookshelfSelection::class,
+    ],
+    nestedGraphs = [BookshelfEditNavGraph::class]
+)
+data object BookshelfNavGraph
 
 @Singleton
 internal class BookshelfNavGraphTabDisplayRoute : TabDisplayRoute {

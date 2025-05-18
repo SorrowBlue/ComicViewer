@@ -13,14 +13,13 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseCase
-import com.sorrowblue.comicviewer.domain.usecase.collection.FlowCollectionUseCase
+import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.UpdateCollectionUseCase
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionEditorFormData
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_all_bookshelf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
@@ -34,14 +33,14 @@ internal fun rememberSmartCollectionEditScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     flowBookshelfListUseCase: FlowBookshelfListUseCase = koinInject(),
     updateCollectionUseCase: UpdateCollectionUseCase = koinInject(),
-    flowCollectionUseCase: FlowCollectionUseCase = koinInject(),
+    getCollectionUseCase: GetCollectionUseCase = koinInject(),
 ): SmartCollectionEditorScreenState {
     return SmartCollectionEditScreenImpl(
         route = route,
         scope = scope,
         flowBookshelfListUseCase = flowBookshelfListUseCase,
         updateCollectionUseCase = updateCollectionUseCase,
-        flowCollectionUseCase = flowCollectionUseCase
+        getCollectionUseCase = getCollectionUseCase
     )
 }
 
@@ -49,7 +48,7 @@ private class SmartCollectionEditScreenImpl(
     route: SmartCollectionEdit,
     scope: CoroutineScope,
     flowBookshelfListUseCase: FlowBookshelfListUseCase,
-    flowCollectionUseCase: FlowCollectionUseCase,
+    getCollectionUseCase: GetCollectionUseCase,
     private val updateCollectionUseCase: UpdateCollectionUseCase,
 ) : SmartCollectionEditorScreenState {
 
@@ -58,7 +57,7 @@ private class SmartCollectionEditScreenImpl(
     override var uiState by mutableStateOf(SmartCollectionEditorScreenUiState())
 
     init {
-        flowCollectionUseCase(FlowCollectionUseCase.Request(route.collectionId))
+        getCollectionUseCase(GetCollectionUseCase.Request(route.collectionId))
             .mapNotNull { it.dataOrNull() as? SmartCollection }
             .onEach {
                 uiState = uiState.copy(
@@ -89,7 +88,7 @@ private class SmartCollectionEditScreenImpl(
                     formData.searchCondition
                 )
             )
-        ).collect()
+        )
         event.emit(SmartCollectionEditorScreenStateEvent.Complete)
     }
 

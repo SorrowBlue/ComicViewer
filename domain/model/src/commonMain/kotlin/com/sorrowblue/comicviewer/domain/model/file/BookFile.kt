@@ -18,5 +18,5 @@ data class BookFile(
     override val sortIndex: Int = -1,
 ) : Book {
 
-    val extension get() = path.extension
+    val extension get() = name.extension
 }
