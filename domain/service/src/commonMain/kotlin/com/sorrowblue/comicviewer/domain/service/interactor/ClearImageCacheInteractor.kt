@@ -4,9 +4,9 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.usecase.ClearImageCacheUseCase
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
+@Factory
 internal class ClearImageCacheInteractor(
     private val imageCacheDataSource: ImageCacheDataSource,
     private val localDataSource: FileLocalDataSource,

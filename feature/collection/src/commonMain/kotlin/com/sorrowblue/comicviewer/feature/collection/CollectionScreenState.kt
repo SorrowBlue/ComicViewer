@@ -19,7 +19,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.usecase.collection.DeleteCollectionUseCase
-import com.sorrowblue.comicviewer.domain.usecase.collection.FlowCollectionUseCase
+import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarAction
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionContentsAction
@@ -68,14 +68,14 @@ internal fun rememberCollectionScreenState(
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    flowCollectionUseCase: FlowCollectionUseCase = koinInject(),
+    getCollectionUseCase: GetCollectionUseCase = koinInject(),
     displaySettingsUseCase: ManageFolderDisplaySettingsUseCase = koinInject(),
     deleteCollectionUseCase: DeleteCollectionUseCase = koinInject(),
     viewModel: CollectionViewModel = koinViewModel { parametersOf(route) },
 ): CollectionScreenState {
     return remember {
         CollectionScreenStateImpl(
-            flowCollectionUseCase = flowCollectionUseCase,
+            getCollectionUseCase = getCollectionUseCase,
             navigator = navigator,
             pagingDataFlow = viewModel.pagingDataFlow,
             lazyGridState = lazyGridState,
@@ -89,7 +89,7 @@ internal fun rememberCollectionScreenState(
 }
 
 private class CollectionScreenStateImpl(
-    flowCollectionUseCase: FlowCollectionUseCase,
+    getCollectionUseCase: GetCollectionUseCase,
     override val navigator: ThreePaneScaffoldNavigator<File.Key>,
     override val pagingDataFlow: Flow<PagingData<File>>,
     override val lazyGridState: LazyGridState,
@@ -106,7 +106,7 @@ private class CollectionScreenStateImpl(
     lateinit var collection: CollectionModel
 
     init {
-        flowCollectionUseCase(FlowCollectionUseCase.Request(route.id)).mapNotNull { it.dataOrNull() }
+        getCollectionUseCase(GetCollectionUseCase.Request(route.id)).mapNotNull { it.dataOrNull() }
             .onEach {
                 collection = it
                 uiState = uiState.copy(appBarUiState = uiState.appBarUiState.copy(title = it.name))
@@ -181,7 +181,9 @@ private class CollectionScreenStateImpl(
     }
 
     private fun delete() {
-        deleteCollectionUseCase(DeleteCollectionUseCase.Request(route.id)).launchIn(scope)
-        events.tryEmit(CollectionScreenEvent.Back)
+        scope.launch {
+            deleteCollectionUseCase(DeleteCollectionUseCase.Request(route.id))
+            events.emit(CollectionScreenEvent.Back)
+        }
     }
 }

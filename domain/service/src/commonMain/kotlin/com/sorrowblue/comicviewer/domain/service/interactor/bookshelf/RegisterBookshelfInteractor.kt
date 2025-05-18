@@ -13,9 +13,9 @@ import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import logcat.asLog
 import logcat.logcat
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
+@Factory
 internal class RegisterBookshelfInteractor(
     private val fileLocalDataSource: FileLocalDataSource,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,7 +23,7 @@ import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySet
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCache
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsNavGraph
-import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNavGraphImpl
+import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNavGraph
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettings
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettings
@@ -82,7 +81,12 @@ internal fun SettingsScreen(
         navigator = state.navigator,
         onBackClick = screenNavigator::navigateUp,
         onSettingsClick = { state.onSettingsClick(it, screenNavigator::onStartTutorialClick) },
-        onSettingsLongClick = { state.onSettingsLongClick(it, screenNavigator::onStartTutorialClick) },
+        onSettingsLongClick = {
+            state.onSettingsLongClick(
+                it,
+                screenNavigator::onStartTutorialClick
+            )
+        },
     ) {
         val coroutineScope = rememberCoroutineScope()
         rememberKoinModules {
@@ -94,13 +98,12 @@ internal fun SettingsScreen(
                 )
             )
         }
-        val navGraph = remember { SettingsDetailNavGraphImpl() }
         KoinScope<SettingsScope>(SettingsScope::class.simpleName.orEmpty()) {
             NavGraphNavHost(
                 navController = state.navController,
-                navGraph = navGraph,
+                graphNavigation = SettingsDetailNavGraph,
                 startDestination = state.navigator.currentDestination?.contentKey?.route
-                    ?: navGraph.startDestination,
+                    ?: SettingsDetailNavGraph.startDestination,
             )
         }
     }

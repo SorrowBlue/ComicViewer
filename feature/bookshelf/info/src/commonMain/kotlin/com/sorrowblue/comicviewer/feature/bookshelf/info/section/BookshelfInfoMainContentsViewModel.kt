@@ -7,7 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingBookshelfBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import kotlinx.coroutines.flow.Flow
 import org.koin.android.annotation.KoinViewModel
 

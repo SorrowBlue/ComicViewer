@@ -7,9 +7,9 @@ import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
+@Factory
 internal class GetFileAttributeInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,

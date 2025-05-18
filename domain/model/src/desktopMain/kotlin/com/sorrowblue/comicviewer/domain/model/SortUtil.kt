@@ -9,7 +9,6 @@ import java.text.Collator
 import java.text.RuleBasedCollator
 import java.util.Locale
 
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual object SortUtil {
 
     private val collator: Collator

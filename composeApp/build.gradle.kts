@@ -51,6 +51,15 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
         }
 
+
+        commonTest {
+            dependencies {
+                implementation(projects.framework.test)
+                implementation(libs.kotlin.test)
+                implementation(libs.koin.test)
+            }
+        }
+
         androidMain.dependencies {
             implementation(projects.framework.notification)
 
@@ -65,6 +74,20 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+        }
+
+        androidUnitTest {
+            dependencies {
+                implementation(libs.compose.multiplatform.material3.adaptiveNavigation)
+                implementation(projects.data.storage.client)
+            }
+        }
+
+        desktopTest {
+            dependencies {
+                implementation(libs.compose.multiplatform.material3.adaptiveNavigation)
+                implementation(projects.data.storage.client)
+            }
         }
     }
 }

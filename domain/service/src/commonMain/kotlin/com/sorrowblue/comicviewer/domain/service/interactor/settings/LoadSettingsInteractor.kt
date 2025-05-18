@@ -4,9 +4,9 @@ import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import kotlinx.coroutines.flow.Flow
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
+@Factory
 internal class LoadSettingsInteractor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : LoadSettingsUseCase {

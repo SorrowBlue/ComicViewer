@@ -6,7 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.usecase.paging.PagingQueryFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.PagingQueryFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam

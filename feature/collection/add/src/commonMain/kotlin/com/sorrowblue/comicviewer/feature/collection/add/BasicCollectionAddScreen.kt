@@ -58,10 +58,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Serializable
-internal data class BasicCollectionAdd(
-    val bookshelfId: BookshelfId,
-    val path: String,
-)
+internal data class BasicCollectionAdd(val bookshelfId: BookshelfId, val path: String)
 
 interface BasicCollectionAddNavigator {
     fun onCollectionCreateClick(bookshelfId: BookshelfId, path: String)

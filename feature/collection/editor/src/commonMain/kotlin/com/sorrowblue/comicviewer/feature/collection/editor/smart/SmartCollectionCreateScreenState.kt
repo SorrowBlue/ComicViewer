@@ -18,7 +18,6 @@ import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.compose.koinInject
@@ -74,7 +73,7 @@ private class SmartCollectionCreateScreenStateImpl(
                     formData.searchCondition
                 )
             )
-        ).first()
+        )
         event.emit(SmartCollectionEditorScreenStateEvent.Complete)
     }
 }

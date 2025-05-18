@@ -13,7 +13,7 @@ internal class MainApplication : SplitCompatApplication(), KoinStartup {
 
     override fun onKoinStartup() = KoinConfiguration {
         androidContext(this@MainApplication)
-        setupDi().appDeclaration.invoke(this)
+        koinConfiguration().appDeclaration.invoke(this)
     }
 
     override fun onCreate() {

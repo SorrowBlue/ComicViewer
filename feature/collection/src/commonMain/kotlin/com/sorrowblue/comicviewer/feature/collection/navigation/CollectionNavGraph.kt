@@ -1,8 +1,6 @@
 package com.sorrowblue.comicviewer.feature.collection.navigation
 
-import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
-import com.sorrowblue.cmpdestinations.annotation.NestedNavGraph
 import com.sorrowblue.comicviewer.feature.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.CollectionFolder
 import com.sorrowblue.comicviewer.feature.collection.add.navigation.BasicCollectionAddNavGraph
@@ -16,18 +14,20 @@ import org.koin.core.annotation.Singleton
 
 @NavGraph(
     startDestination = CollectionList::class,
-    transitions = CollectionNavGraphTransitions::class
+    transitions = CollectionNavGraphTransitions::class,
+    destinations = [
+        Collection::class,
+        CollectionList::class,
+        CollectionFolder::class,
+        DeleteCollection::class,
+    ],
+    nestedGraphs = [
+        BasicCollectionAddNavGraph::class,
+        CollectionEditorNavGraph::class,
+    ],
 )
 @Serializable
-data object CollectionNavGraph {
-    @DestinationInGraph<CollectionList>
-    @DestinationInGraph<Collection>
-    @DestinationInGraph<CollectionFolder>
-    @DestinationInGraph<DeleteCollection>
-    @NestedNavGraph<BasicCollectionAddNavGraph>
-    @NestedNavGraph<CollectionEditorNavGraph>
-    object Include
-}
+data object CollectionNavGraph
 
 @Singleton
 internal class CollectionNavGraphTabDisplayRoute : TabDisplayRoute {

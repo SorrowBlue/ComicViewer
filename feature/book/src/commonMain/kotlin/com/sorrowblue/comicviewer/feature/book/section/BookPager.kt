@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
@@ -36,6 +35,8 @@ import coil3.request.ImageRequest
 import coil3.toBitmap
 import com.sorrowblue.comicviewer.domain.model.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.feature.book.asImageBitmap
+import com.sorrowblue.comicviewer.feature.book.createSplitBitmap
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import comicviewer.feature.book.generated.resources.Res
@@ -276,9 +277,3 @@ object SpreadSplitTransformation {
         }
     }
 }
-
-internal expect fun Bitmap.createSplitBitmap(isLeft: Boolean): Bitmap
-
-internal expect fun Bitmap.asImageBitmap(): ImageBitmap
-internal expect val Bitmap.width2: Int
-internal expect val Bitmap.height2: Int

@@ -15,9 +15,9 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.runBlocking
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
+@Factory
 internal class PagingCollectionFileInteractor(
     private val dataSource: CollectionLocalDataSource,
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,

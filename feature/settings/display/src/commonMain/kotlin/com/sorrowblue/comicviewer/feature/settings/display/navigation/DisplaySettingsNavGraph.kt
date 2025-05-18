@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.display.navigation
 
 import androidx.navigation.NavController
-import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsScope
@@ -13,13 +12,11 @@ import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
 @Serializable
-@NavGraph(startDestination = DisplaySettings::class)
-data object DisplaySettingsNavGraph {
-
-    @DestinationInGraph<DisplaySettings>
-    @DestinationInGraph<DisplaySettingsDarkMode>
-    object Include
-}
+@NavGraph(
+    startDestination = DisplaySettings::class,
+    destinations = [DisplaySettings::class, DisplaySettingsDarkMode::class]
+)
+data object DisplaySettingsNavGraph
 
 @Scope(SettingsScope::class)
 @Scoped

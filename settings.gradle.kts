@@ -32,7 +32,6 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
-        mavenLocal()
         maven {
             url = uri("https://maven.ghostscript.com/")
             content {
@@ -44,6 +43,14 @@ dependencyResolutionManagement {
             url = uri("https://gitlab.com/api/v4/projects/59936705/packages/maven")
             content {
                 includeModule("com.github.shayartzi.sevenzipjbinding", "sevenzipjbinding-all-platforms")
+            }
+        }
+
+        maven {
+            name = "Central Portal Snapshots"
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+            content {
+                includeGroup("com.sorrowblue.cmpdestinations")
             }
         }
     }

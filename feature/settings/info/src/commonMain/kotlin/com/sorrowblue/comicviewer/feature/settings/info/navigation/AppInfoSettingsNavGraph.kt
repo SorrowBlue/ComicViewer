@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.info.navigation
 
 import androidx.navigation.NavController
-import com.sorrowblue.cmpdestinations.annotation.DestinationInGraph
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsScope
@@ -15,14 +14,10 @@ import org.koin.core.annotation.Scoped
 @Serializable
 @NavGraph(
     startDestination = AppInfoSettings::class,
-    transitions = AppInfoSettingsGraphTransitions::class
+    transitions = AppInfoSettingsGraphTransitions::class,
+    destinations = [AppInfoSettings::class, License::class],
 )
-data object AppInfoSettingsNavGraph {
-
-    @DestinationInGraph<AppInfoSettings>
-    @DestinationInGraph<License>
-    object Include
-}
+data object AppInfoSettingsNavGraph
 
 @Scope(SettingsScope::class)
 @Scoped
