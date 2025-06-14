@@ -246,6 +246,7 @@ internal suspend fun FileDao.bookshelfIdCacheKey(
 ): List<BookshelfIdCacheKey> {
     val bindArgs = mutableListOf<Any>()
     val selectionStr = buildList {
+        add("cache_key != ''")
         if (bookshelfId != null) {
             add("bookshelf_id = :bookshelfId")
             bindArgs += bookshelfId.value
