@@ -3,12 +3,9 @@ package com.sorrowblue.comicviewer.feature.history
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -20,8 +17,9 @@ import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import kotlinx.serialization.Serializable
@@ -50,7 +48,7 @@ internal fun HistoryScreen(
     val lazyGridState = rememberLazyGridState()
     HistoryScreen(
         lazyPagingItems = lazyPagingItems,
-        navigator = state.navigator,
+        scaffoldState = state.scaffoldState,
         onHistoryTopAppBarAction = state::onHistoryTopAppBarAction,
         onFileInfoSheetAction = state::onFileInfoSheetAction,
         onHistoryContentsAction = state::onHistoryContentsAction,
@@ -77,21 +75,17 @@ internal fun HistoryScreen(
 @Composable
 internal fun HistoryScreen(
     lazyPagingItems: LazyPagingItems<Book>,
-    navigator: ThreePaneScaffoldNavigator<File.Key>,
+    scaffoldState: NavigationSuiteScaffold2State<File.Key>,
     onHistoryTopAppBarAction: (HistoryTopAppBarAction) -> Unit,
     onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onHistoryContentsAction: (HistoryContentsAction) -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    CanonicalScaffold(
-        navigator = navigator,
+    scaffoldState.appBarState.scrollBehavior = scrollBehavior
+    scaffoldState.CanonicalScaffoldLayout(
         topBar = {
-            HistoryTopAppBar(
-                onAction = onHistoryTopAppBarAction,
-                scrollBehavior = scrollBehavior,
-                scrollableState = lazyGridState
-            )
+            HistoryTopAppBar(onAction = onHistoryTopAppBarAction)
         },
         extraPane = { contentKey ->
             FileInfoSheet(
@@ -100,7 +94,6 @@ internal fun HistoryScreen(
                 isOpenFolderEnabled = true
             )
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         FavoriteContents(
             lazyGridState = lazyGridState,

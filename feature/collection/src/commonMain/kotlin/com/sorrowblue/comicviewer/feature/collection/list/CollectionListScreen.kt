@@ -1,46 +1,44 @@
 package com.sorrowblue.comicviewer.feature.collection.list
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.paging.PagingData
 import com.sorrowblue.cmpdestinations.annotation.Destination
+import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionListAppBar
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionListContents
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionListContentsAction
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
+import com.sorrowblue.comicviewer.framework.ui.LocalAppState
+import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.PrimaryActionContentMode
+import com.sorrowblue.comicviewer.framework.ui.canonical.PrimaryActionButtonMenu
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
+import com.sorrowblue.comicviewer.framework.ui.rememberAppState
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_label_collection
-import comicviewer.feature.collection.generated.resources.collection_label_create
 import comicviewer.feature.collection.generated.resources.collection_label_smart_collection
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Serializable
@@ -60,6 +58,7 @@ internal interface CollectionListScreenNavigator {
 internal fun CollectionListScreen(navigator: CollectionListScreenNavigator = koinInject()) {
     val state = rememberCollectionListScreenState()
     CollectionListScreen(
+        scaffoldState = state.scaffoldState,
         lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
         lazyListState = state.lazyListState,
         onContentsAction = {
@@ -78,8 +77,10 @@ internal fun CollectionListScreen(navigator: CollectionListScreenNavigator = koi
     )
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun CollectionListScreen(
+internal fun CollectionListScreen(
+    scaffoldState: NavigationSuiteScaffold2State<Unit>,
     lazyPagingItems: LazyPagingItems<Collection>,
     lazyListState: LazyListState,
     onContentsAction: (CollectionListContentsAction) -> Unit,
@@ -88,81 +89,51 @@ private fun CollectionListScreen(
     onCreateSmartCollectionClick: () -> Unit,
 ) {
     val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    Scaffold(
+    scaffoldState.appBarState.scrollBehavior = appBarScrollBehavior
+    scaffoldState.CanonicalScaffoldLayout(
         topBar = {
             CollectionListAppBar(
                 onSettingsClick = onSettingsClick,
-                scrollBehavior = appBarScrollBehavior,
-                scrollableState = lazyListState
             )
         },
-        floatingActionButton = {
-            Column(horizontalAlignment = Alignment.End) {
-                var show by remember { mutableStateOf(false) }
-                val containerColor by animateColorAsState(
-                    if (show) ComicTheme.colorScheme.secondaryContainer else FloatingActionButtonDefaults.containerColor
-                )
-                AnimatedVisibility(show) {
-                    Column(horizontalAlignment = Alignment.End) {
-                        ExtendedFloatingActionButton(
-                            onClick = {
-                                show = !show
-                                onCreateBasicCollectionClick()
-                            },
-                            text = {
-                                Text(stringResource(Res.string.collection_label_collection))
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = ComicIcons.Favorite,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                        Spacer(Modifier.size(ComicTheme.dimension.padding))
-                        ExtendedFloatingActionButton(
-                            onClick = {
-                                show = !show
-                                onCreateSmartCollectionClick()
-                            },
-                            text = {
-                                Text(stringResource(Res.string.collection_label_smart_collection))
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = ComicIcons.CollectionsBookmark,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                        Spacer(Modifier.size(ComicTheme.dimension.padding))
-                    }
-                }
-                ExtendedFloatingActionButton(
-                    expanded = !show,
-                    text = { Text(stringResource(Res.string.collection_label_create)) },
-                    icon = {
-                        val rotate by animateFloatAsState(if (show) 225f else 0f)
-                        Icon(
-                            imageVector = ComicIcons.Add,
-                            contentDescription = null,
-                            modifier = Modifier.rotate(rotate)
-                        )
+        primaryActionContent = {
+            PrimaryActionButtonMenu {
+                FloatingActionButtonMenuItem(
+                    onClick = {
+                        onCreateBasicCollectionClick()
+                    }, text = {
+                        Text(stringResource(Res.string.collection_label_collection))
                     },
-                    containerColor = containerColor,
-                    onClick = { show = !show }
+                    icon = {
+                        Icon(
+                            imageVector = ComicIcons.Favorite,
+                            contentDescription = null
+                        )
+                    }
+                )
+                FloatingActionButtonMenuItem(
+                    onClick = {
+                        onCreateSmartCollectionClick()
+                    },
+                    text = {
+                        Text(stringResource(Res.string.collection_label_smart_collection))
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = ComicIcons.CollectionsBookmark,
+                            contentDescription = null
+                        )
+                    }
                 )
             }
         },
-        contentWindowInsets = WindowInsets.safeDrawing,
-        containerColor = LocalContainerColor.current,
-        modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection)
-    ) { innerPadding ->
+        primaryActionContentMode = PrimaryActionContentMode.NavigationBarOnly
+    ) { contentPadding ->
         CollectionListContents(
             lazyPagingItems = lazyPagingItems,
             onAction = onContentsAction,
             lazyListState = lazyListState,
-            contentPadding = innerPadding,
+            contentPadding = contentPadding,
         )
     }
 }

@@ -1,13 +1,16 @@
 package com.sorrowblue.comicviewer.feature.collection.section
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
@@ -17,10 +20,9 @@ import com.sorrowblue.comicviewer.feature.collection.component.CollectionListCar
 import com.sorrowblue.comicviewer.feature.collection.component.CollectionListItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
-import com.sorrowblue.comicviewer.framework.ui.layout.ResponsiveLazyColumn
-import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.itemKey
@@ -52,9 +54,13 @@ internal fun CollectionListContents(
         )
     } else {
         val isCompact = isCompactWindowClass()
-        ResponsiveLazyColumn(
+        LazyColumn(
             state = lazyListState,
-            contentPadding = contentPadding + PaddingValues(bottom = 88.dp),
+            contentPadding = contentPadding,
+            verticalArrangement = Arrangement.spacedBy(
+                if (isCompact) 0.dp else ComicTheme.dimension.padding,
+                Alignment.Top
+            ),
             modifier = modifier
         ) {
             items(

@@ -123,7 +123,6 @@ private fun BookshelfColumnItem(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BookshelfRowItem(
     bookshelfFolder: BookshelfFolder,
@@ -131,7 +130,7 @@ private fun BookshelfRowItem(
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = CardDefaults.cardColors()
+    val colors = CardDefaults.cardColors(containerColor = ComicTheme.colorScheme.surfaceContainerHighest)
     Card(onClick = onClick, colors = colors, modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             FileThumbnailAsyncImage(

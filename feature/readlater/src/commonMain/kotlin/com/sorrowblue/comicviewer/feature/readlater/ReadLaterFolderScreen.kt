@@ -25,7 +25,7 @@ internal interface ReadLaterFolderScreenNavigator : FolderScreenNavigator
 @Composable
 internal fun ReadLaterFolderScreen(
     route: ReadLaterFolder,
-    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
+    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortTypeSelect>,
     navigator: ReadLaterFolderScreenNavigator = koinInject(),
 ) {
     FolderScreen(

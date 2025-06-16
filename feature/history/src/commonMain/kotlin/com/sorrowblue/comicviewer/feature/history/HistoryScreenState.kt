@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.feature.history
 
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.SavedStateHandle
@@ -15,8 +15,9 @@ import com.sorrowblue.comicviewer.feature.history.section.HistoryContentsAction
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -39,16 +40,17 @@ internal interface HistoryScreenState :
     SaveableScreenState {
     val pagingDataFlow: Flow<PagingData<Book>>
     val events: EventFlow<HistoryScreenEvent>
-    val navigator: ThreePaneScaffoldNavigator<File.Key>
+    val scaffoldState: NavigationSuiteScaffold2State<File.Key>
     fun onHistoryTopAppBarAction(action: HistoryTopAppBarAction)
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onHistoryContentsAction(action: HistoryContentsAction)
     fun onNavResult(result: NavResult<Boolean>)
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun rememberHistoryScreenState(
-    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
+    scaffoldState: NavigationSuiteScaffold2State<File.Key> = rememberCanonicalScaffoldLayoutState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: HistoryViewModel = koinViewModel(),
     clearAllHistoryUseCase: ClearAllHistoryUseCase = koinInject(),
@@ -57,7 +59,7 @@ internal fun rememberHistoryScreenState(
         HistoryScreenStateImpl(
             pagingDataFlow = viewModel.pagingDataFlow,
             savedStateHandle = it,
-            navigator = navigator,
+            scaffoldState = scaffoldState,
             scope = scope,
             clearAllHistoryUseCase = clearAllHistoryUseCase
         )
@@ -68,7 +70,7 @@ private class HistoryScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
     private val scope: CoroutineScope,
     override val pagingDataFlow: Flow<PagingData<Book>>,
-    override val navigator: ThreePaneScaffoldNavigator<File.Key>,
+    override val scaffoldState: NavigationSuiteScaffold2State<File.Key>,
     private val clearAllHistoryUseCase: ClearAllHistoryUseCase,
 ) : HistoryScreenState {
 
@@ -95,8 +97,8 @@ private class HistoryScreenStateImpl(
 
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
-            FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
-            is FileInfoSheetNavigator.Collection -> navigator.currentDestination?.contentKey?.let {
+            FileInfoSheetNavigator.Back -> scope.launch { scaffoldState.navigator.navigateBack() }
+            is FileInfoSheetNavigator.Collection -> scaffoldState.navigator.currentDestination?.contentKey?.let {
                 events.tryEmit(HistoryScreenEvent.Collection(it.bookshelfId, it.path))
             }
 
@@ -117,7 +119,7 @@ private class HistoryScreenStateImpl(
 
     private fun navigateToFileInfo(file: File) {
         scope.launch {
-            navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file.key())
+            scaffoldState.navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file.key())
         }
     }
 

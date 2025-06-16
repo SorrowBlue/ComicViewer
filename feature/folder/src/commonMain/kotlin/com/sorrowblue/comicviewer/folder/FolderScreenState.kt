@@ -2,16 +2,14 @@ package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,6 +22,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderScopeOnly
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
@@ -31,16 +30,21 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
+import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import logcat.asLog
 import logcat.logcat
@@ -53,7 +57,7 @@ internal sealed interface FolderScreenEvent {
 
     data class Search(val bookshelfId: BookshelfId, val path: String) : FolderScreenEvent
 
-    data class Sort(val sortType: SortType) : FolderScreenEvent
+    data class Sort(val sortType: SortType, val folderScopeOnly: Boolean) : FolderScreenEvent
 
     data object Back : FolderScreenEvent
     data object Settings : FolderScreenEvent
@@ -63,15 +67,14 @@ internal sealed interface FolderScreenEvent {
 @Stable
 internal interface FolderScreenState {
 
-    val navigator: ThreePaneScaffoldNavigator<File.Key>
+    val state: NavigationSuiteScaffold2State<File.Key>
     val events: EventFlow<FolderScreenEvent>
-    val snackbarHostState: SnackbarHostState
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
     val pullRefreshState: PullToRefreshState
     fun onNavClick()
-    fun onNavResult(navResult: NavResult<SortType>)
+    fun onNavResult(navResult: NavResult<SortTypeSelect>)
     fun onFolderTopAppBarAction(action: FolderTopAppBarAction)
 
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
@@ -79,12 +82,12 @@ internal interface FolderScreenState {
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun rememberFolderScreenState(
     args: Folder,
-    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
+    state: NavigationSuiteScaffold2State<File.Key> = rememberCanonicalScaffoldLayoutState<File.Key>(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: FolderViewModel = koinViewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
@@ -99,9 +102,8 @@ internal fun rememberFolderScreenState(
             restore = {
                 FolderScreenStateImpl(
                     lazyPagingItems = lazyPagingItems,
-                    navigator = navigator,
+                    state = state,
                     lazyGridState = lazyGridState,
-                    snackbarHostState = snackbarHostState,
                     pullRefreshState = pullRefreshState,
                     scope = scope,
                     args = args,
@@ -115,9 +117,8 @@ internal fun rememberFolderScreenState(
     ) {
         FolderScreenStateImpl(
             lazyPagingItems = lazyPagingItems,
-            navigator = navigator,
+            state = state,
             lazyGridState = lazyGridState,
-            snackbarHostState = snackbarHostState,
             pullRefreshState = pullRefreshState,
             scope = scope,
             args = args,
@@ -129,9 +130,8 @@ internal fun rememberFolderScreenState(
 
 private class FolderScreenStateImpl(
     override val lazyPagingItems: LazyPagingItems<File>,
-    override val navigator: ThreePaneScaffoldNavigator<File.Key>,
+    override val state: NavigationSuiteScaffold2State<File.Key>,
     override val lazyGridState: LazyGridState,
-    override val snackbarHostState: SnackbarHostState,
     override val pullRefreshState: PullToRefreshState,
     private val scope: CoroutineScope,
     private val args: Folder,
@@ -143,14 +143,24 @@ private class FolderScreenStateImpl(
 
     override val events = EventFlow<FolderScreenEvent>()
 
-    override var uiState by mutableStateOf(FolderScreenUiState(bookshelfId = args.bookshelfId))
+    override var uiState by mutableStateOf(FolderScreenUiState())
         private set
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val folderScopeOnly = folderDisplaySettingsUseCase.settings.mapLatest { settings ->
+        settings.folderScopeOnlyList.any { it.bookshelfId == args.bookshelfId && it.path == args.path }
+    }.stateIn(scope, SharingStarted.Eagerly, false)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val sortType = folderDisplaySettingsUseCase.settings.mapLatest { settings ->
+        settings.folderScopeOnlyList.find { it.bookshelfId == args.bookshelfId && it.path == args.path }?.sortType
+            ?: settings.sortType
+    }.stateIn(scope, SharingStarted.Eagerly, SortType.Name(true))
 
     init {
         uiState = uiState.copy(emphasisPath = args.restorePath.orEmpty())
         folderDisplaySettingsUseCase.settings.distinctUntilChanged().onEach {
             uiState = uiState.copy(
-                sortType = it.sortType,
                 folderAppBarUiState = uiState.folderAppBarUiState.copy(
                     fileListDisplay = it.fileListDisplay,
                     gridColumnSize = it.gridColumnSize,
@@ -181,8 +191,8 @@ private class FolderScreenStateImpl(
 
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
-            FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
-            is FileInfoSheetNavigator.Collection -> navigator.currentDestination!!.contentKey!!.let {
+            FileInfoSheetNavigator.Back -> scope.launch { state.navigator.navigateBack() }
+            is FileInfoSheetNavigator.Collection -> state.navigator.currentDestination!!.contentKey!!.let {
                 events.tryEmit(FolderScreenEvent.Collection(it.bookshelfId, it.path))
             }
 
@@ -194,7 +204,7 @@ private class FolderScreenStateImpl(
         when (action) {
             is FolderContentsAction.File -> events.tryEmit(FolderScreenEvent.File(action.file))
             is FolderContentsAction.FileInfo -> scope.launch {
-                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file.key())
+                state.navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file.key())
             }
 
             FolderContentsAction.Refresh -> refreshItems()
@@ -240,7 +250,9 @@ private class FolderScreenStateImpl(
                 events.tryEmit(FolderScreenEvent.Search(args.bookshelfId, args.path))
 
             FolderTopAppBarAction.Settings -> events.tryEmit(FolderScreenEvent.Settings)
-            FolderTopAppBarAction.Sort -> events.tryEmit(FolderScreenEvent.Sort(uiState.sortType))
+
+            FolderTopAppBarAction.Sort ->
+                events.tryEmit(FolderScreenEvent.Sort(sortType.value, folderScopeOnly.value))
         }
     }
 
@@ -266,28 +278,70 @@ private class FolderScreenStateImpl(
             ((lazyPagingItems.loadState.refresh as LoadState.Error).error as? PagingException)?.let {
                 scope.launch {
                     when (it) {
-                        is PagingException.InvalidAuth -> snackbarHostState.showSnackbar("認証エラー")
+                        is PagingException.InvalidAuth -> state.snackbarHostState.showSnackbar("認証エラー")
 
-                        is PagingException.InvalidServer -> snackbarHostState.showSnackbar("サーバーエラー")
+                        is PagingException.InvalidServer -> state.snackbarHostState.showSnackbar("サーバーエラー")
 
-                        is PagingException.NoNetwork -> snackbarHostState.showSnackbar("ネットワークエラー")
+                        is PagingException.NoNetwork -> state.snackbarHostState.showSnackbar("ネットワークエラー")
 
-                        is PagingException.NotFound -> snackbarHostState.showSnackbar("見つかりませんでした")
+                        is PagingException.NotFound -> state.snackbarHostState.showSnackbar("見つかりませんでした")
                     }
                 }
             }
         }
     }
 
-    override fun onNavResult(navResult: NavResult<SortType>) {
+    override fun onNavResult(navResult: NavResult<SortTypeSelect>) {
         when (navResult) {
             NavResult.Canceled -> Unit
             is NavResult.Value -> {
                 scope.launch {
-                    folderDisplaySettingsUseCase.edit {
-                        it.copy(sortType = navResult.value)
+                    var refresh = false
+                    folderDisplaySettingsUseCase.edit { settings ->
+                        val beforeFolderScopeOnly =
+                            settings.folderScopeOnlyList.find { it.bookshelfId == args.bookshelfId && it.path == args.path }
+                        when {
+                            navResult.value.folderScopeOnly -> {
+                                if (beforeFolderScopeOnly == null) {
+                                    refresh = true
+                                    settings.copy(
+                                        folderScopeOnlyList = settings.folderScopeOnlyList + FolderScopeOnly(
+                                            args.bookshelfId,
+                                            args.path,
+                                            navResult.value.sortType
+                                        )
+                                    )
+                                } else if (beforeFolderScopeOnly.sortType != navResult.value.sortType) {
+                                    refresh = true
+                                    val new = FolderScopeOnly(
+                                        args.bookshelfId,
+                                        args.path,
+                                        navResult.value.sortType
+                                    )
+                                    settings.copy(folderScopeOnlyList = settings.folderScopeOnlyList - beforeFolderScopeOnly + new)
+                                } else {
+                                    settings
+                                }
+                            }
+
+                            !navResult.value.folderScopeOnly && beforeFolderScopeOnly != null -> {
+                                refresh = true
+                                settings.copy(folderScopeOnlyList = settings.folderScopeOnlyList - beforeFolderScopeOnly)
+                            }
+
+                            settings.sortType != navResult.value.sortType -> {
+                                refresh = true
+                                settings.copy(sortType = navResult.value.sortType)
+                            }
+
+                            else -> {
+                                settings
+                            }
+                        }
                     }
-                    refreshItems()
+                    if (refresh) {
+                        refreshItems()
+                    }
                 }
             }
         }

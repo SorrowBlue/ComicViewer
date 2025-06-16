@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.framework.ui.adaptive.navigation
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +38,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.layout.WindowInsets
 
 object ExtraPaneScaffoldDefaults {
@@ -59,15 +59,13 @@ fun ExtraPaneScaffold(
         mutableStateOf(scaffoldDirective.maxHorizontalPartitions == 1)
     }
     val scrollBehavior = if (singlePane) TopAppBarDefaults.pinnedScrollBehavior() else null
+    val containerColor by animateColorAsState(if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainerHigh)
     Scaffold(
-        containerColor = if (singlePane) LocalContainerColor.current else ComicTheme.colorScheme.surfaceContainer,
         topBar = {
             Column {
                 TopAppBar(
                     title = title,
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainer
-                    ),
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = containerColor),
                     actions = {
                         IconButton(onClick = onCloseClick) {
                             Icon(ComicIcons.Close, null)
@@ -76,7 +74,7 @@ fun ExtraPaneScaffold(
                     windowInsets = if (singlePane) {
                         WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
                     } else {
-                        WindowInsets(0)
+                        WindowInsets()
                     },
                     scrollBehavior = scrollBehavior
                 )
@@ -88,6 +86,7 @@ fun ExtraPaneScaffold(
             }
         },
         contentWindowInsets = WindowInsets.safeDrawing,
+        containerColor = containerColor,
         modifier = if (scrollBehavior != null) {
             modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         } else {

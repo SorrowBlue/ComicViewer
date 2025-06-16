@@ -39,8 +39,8 @@ interface FolderScreenNavigator {
      */
     fun onCollectionAddClick(bookshelfId: BookshelfId, path: String)
 
-    fun onSortClick(sortType: SortType) {
-        navController.navigate(SortTypeSelect(sortType))
+    fun onSortClick(sortType: SortType, folderScopeOnly: Boolean) {
+        navController.navigate(SortTypeSelect(sortType, folderScopeOnly))
     }
 
     fun onRestoreComplete() {

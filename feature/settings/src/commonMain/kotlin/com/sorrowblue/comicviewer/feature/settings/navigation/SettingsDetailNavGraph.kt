@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.feature.settings.navigation
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.navigation.NavController
 import androidx.navigation.NavType
+import com.sorrowblue.cmpdestinations.Destination
 import com.sorrowblue.cmpdestinations.GraphNavigation
-import com.sorrowblue.cmpdestinations.ScreenDestination
 import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.settings.InAppLanguagePicker
@@ -42,7 +42,7 @@ import org.koin.core.annotation.Scoped
     ]
 )
 expect object SettingsDetailNavGraph : GraphNavigation {
-    override val destinations: Array<ScreenDestination>
+    override val destinations: Array<Destination>
     override val nestedGraphs: Array<GraphNavigation>
     override val route: KClass<*>
     override val startDestination: KClass<*>

@@ -1,12 +1,15 @@
 package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -14,6 +17,10 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.sorrowblue.cmpdestinations.DestinationStyle
@@ -31,29 +38,43 @@ import comicviewer.feature.folder.generated.resources.folder_sorttype_label_size
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_size_desc
 import comicviewer.feature.folder.generated.resources.folder_sorttype_title_sort_by
 import kotlinx.serialization.Serializable
+import logcat.logcat
 import org.jetbrains.compose.resources.stringResource
 
 @Serializable
-data class SortTypeSelect(val sortType: SortType)
+data class SortTypeSelect(val sortType: SortType, val folderScopeOnly: Boolean = false)
 
 @Destination<SortTypeSelect>(style = DestinationStyle.Dialog::class)
 @Composable
 internal fun SortTypeSelectScreen(
     route: SortTypeSelect,
-    resultNavigator: NavResultSender<SortType>,
+    resultNavigator: NavResultSender<SortTypeSelect>,
 ) {
+    var currentFolderScopeOnly by remember(route.folderScopeOnly) { mutableStateOf(route.folderScopeOnly) }
+    logcat("SortTypeSelectScreen") { "currentFolderScopeOnly: $currentFolderScopeOnly" }
     SortTypeSelectScreen(
         currentSortType = route.sortType,
-        onDismissRequest = resultNavigator::navigateBack,
-        onClick = resultNavigator::navigateBack
+        folderScopeOnly = currentFolderScopeOnly,
+        onFolderScopeOnlyClick = { currentFolderScopeOnly = !currentFolderScopeOnly },
+        onDismissRequest = {
+            resultNavigator.navigateBack(
+                SortTypeSelect(
+                    route.sortType,
+                    currentFolderScopeOnly
+                )
+            )
+        },
+        onClick = { resultNavigator.navigateBack(SortTypeSelect(it, currentFolderScopeOnly)) }
     )
 }
 
 @Composable
 private fun SortTypeSelectScreen(
     currentSortType: SortType,
+    folderScopeOnly: Boolean,
     onDismissRequest: () -> Unit,
     onClick: (SortType) -> Unit,
+    onFolderScopeOnlyClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ModalBottomSheet(
@@ -70,6 +91,25 @@ private fun SortTypeSelectScreen(
         )
         HorizontalDivider()
         LazyColumn {
+            item {
+                Column {
+                    ListItem(
+                        headlineContent = {
+                            Text(text = "このフォルダにだけ適用")
+                        },
+                        leadingContent = {
+                            Checkbox(
+                                checked = folderScopeOnly,
+                                onCheckedChange = { onFolderScopeOnlyClick() },
+                                modifier = Modifier.focusable(false)
+                            )
+                        },
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        modifier = Modifier.clickable { onFolderScopeOnlyClick() }
+                    )
+                    HorizontalDivider()
+                }
+            }
             items(SortType.entries) { item ->
                 ListItem(
                     headlineContent = {

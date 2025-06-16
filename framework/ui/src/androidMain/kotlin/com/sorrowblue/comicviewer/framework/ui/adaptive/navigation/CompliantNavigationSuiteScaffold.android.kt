@@ -55,7 +55,7 @@ private fun CompliantNavigationSuiteScaffoldPreview(
     }
 }
 
-private class PreviewConfigProvider : PreviewParameterProvider<PreviewConfig> {
+class PreviewConfigProvider : PreviewParameterProvider<PreviewConfig> {
     override val values
         get() = sequenceOf(
             PreviewConfig(isInvertedOrientation = false, cutout = true, systemBar = true),

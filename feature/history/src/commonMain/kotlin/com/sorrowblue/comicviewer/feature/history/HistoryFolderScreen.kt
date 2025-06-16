@@ -23,7 +23,7 @@ internal data class HistoryFolder(
 @Composable
 internal fun HistoryFolderScreen(
     route: HistoryFolder,
-    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
+    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortTypeSelect>,
     navigator: FolderScreenNavigator = koinInject(),
 ) {
     FolderScreen(

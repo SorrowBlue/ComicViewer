@@ -23,8 +23,10 @@ import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
+import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
@@ -55,7 +57,7 @@ internal fun ReadLaterScreen(
     val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     ReadLaterScreen(
         lazyPagingItems = lazyPagingItems,
-        navigator = state.navigator,
+        scaffoldState = state.scaffoldState,
         lazyGridState = state.lazyGridState,
         onTopAppBarAction = state::onTopAppBarAction,
         onFileInfoSheetAction = state::onFileInfoSheetAction,
@@ -79,20 +81,18 @@ internal fun ReadLaterScreen(
 @Composable
 private fun ReadLaterScreen(
     lazyPagingItems: LazyPagingItems<File>,
-    navigator: ThreePaneScaffoldNavigator<File.Key>,
+    scaffoldState: NavigationSuiteScaffold2State<File.Key>,
     lazyGridState: LazyGridState,
     onTopAppBarAction: (ReadLaterTopAppBarAction) -> Unit,
     onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onContentsAction: (ReadLaterContentsAction) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    CanonicalScaffold(
-        navigator = navigator,
+    scaffoldState.appBarState.scrollBehavior = scrollBehavior
+    scaffoldState.CanonicalScaffoldLayout(
         topBar = {
             ReadLaterTopAppBar(
                 onAction = onTopAppBarAction,
-                scrollBehavior = scrollBehavior,
-                scrollableState = lazyGridState
             )
         },
         extraPane = { contentKey ->
@@ -101,8 +101,7 @@ private fun ReadLaterScreen(
                 onAction = onFileInfoSheetAction,
                 isOpenFolderEnabled = true
             )
-        },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        }
     ) { contentPadding ->
         ReadLaterContents(
             lazyPagingItems = lazyPagingItems,

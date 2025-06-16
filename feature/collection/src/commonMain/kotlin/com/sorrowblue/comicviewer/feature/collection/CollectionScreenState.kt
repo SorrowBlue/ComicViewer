@@ -2,9 +2,8 @@ package com.sorrowblue.comicviewer.feature.collection
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +24,8 @@ import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarAct
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionContentsAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
+import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
@@ -49,25 +49,24 @@ internal sealed interface CollectionScreenEvent {
 }
 
 internal interface CollectionScreenState {
-    val navigator: ThreePaneScaffoldNavigator<File.Key>
+    val scaffoldState: NavigationSuiteScaffold2State<File.Key>
     val uiState: SmartCollectionScreenUiState
     val events: EventFlow<CollectionScreenEvent>
     val pagingDataFlow: Flow<PagingData<File>>
     val lazyGridState: LazyGridState
-    val snackbarHostState: SnackbarHostState
     fun onNavClick()
     fun onAppBarAction(action: CollectionAppBarAction)
     fun onSheetAction(action: FileInfoSheetNavigator)
     fun onContentsAction(action: CollectionContentsAction)
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun rememberCollectionScreenState(
     route: Collection,
-    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
+    scaffoldState: NavigationSuiteScaffold2State<File.Key> = rememberCanonicalScaffoldLayoutState(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     getCollectionUseCase: GetCollectionUseCase = koinInject(),
     displaySettingsUseCase: ManageFolderDisplaySettingsUseCase = koinInject(),
     deleteCollectionUseCase: DeleteCollectionUseCase = koinInject(),
@@ -76,10 +75,9 @@ internal fun rememberCollectionScreenState(
     return remember {
         CollectionScreenStateImpl(
             getCollectionUseCase = getCollectionUseCase,
-            navigator = navigator,
+            scaffoldState = scaffoldState,
             pagingDataFlow = viewModel.pagingDataFlow,
             lazyGridState = lazyGridState,
-            snackbarHostState = snackbarHostState,
             route = route,
             scope = scope,
             displaySettingsUseCase = displaySettingsUseCase,
@@ -90,10 +88,9 @@ internal fun rememberCollectionScreenState(
 
 private class CollectionScreenStateImpl(
     getCollectionUseCase: GetCollectionUseCase,
-    override val navigator: ThreePaneScaffoldNavigator<File.Key>,
+    override val scaffoldState: NavigationSuiteScaffold2State<File.Key>,
     override val pagingDataFlow: Flow<PagingData<File>>,
     override val lazyGridState: LazyGridState,
-    override val snackbarHostState: SnackbarHostState,
     private val route: Collection,
     private val scope: CoroutineScope,
     private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
@@ -153,8 +150,8 @@ private class CollectionScreenStateImpl(
 
     override fun onSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
-            FileInfoSheetNavigator.Back -> scope.launch { navigator.navigateBack() }
-            is FileInfoSheetNavigator.Collection -> navigator.currentDestination?.contentKey?.let {
+            FileInfoSheetNavigator.Back -> scope.launch { scaffoldState.navigator.navigateBack() }
+            is FileInfoSheetNavigator.Collection -> scaffoldState.navigator.currentDestination?.contentKey?.let {
                 events.tryEmit(CollectionScreenEvent.CollectionAddClick(it.bookshelfId, it.path))
             }
 
@@ -169,7 +166,10 @@ private class CollectionScreenStateImpl(
                 events.tryEmit(CollectionScreenEvent.FileClick(action.file))
 
             is CollectionContentsAction.FileInfo -> scope.launch {
-                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file.key())
+                scaffoldState.navigator.navigateTo(
+                    SupportingPaneScaffoldRole.Extra,
+                    action.file.key()
+                )
             }
         }
     }

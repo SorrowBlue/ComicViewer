@@ -28,16 +28,6 @@ private fun PreviewBookshelfScreen(
     PreviewCompliantNavigation {
         val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
         val lazyGridState = rememberLazyGridState()
-        BookshelfScreen(
-            navigator = rememberSupportingPaneScaffoldNavigator<BookshelfId>(),
-            lazyPagingItems = lazyPagingItems,
-            snackbarHostState = remember { SnackbarHostState() },
-            onFabClick = {},
-            onSettingsClick = {},
-            onBookshelfClick = { _, _ -> },
-            onBookshelfInfoClick = {},
-            lazyGridState = lazyGridState
-        ) { _ -> }
     }
 }
 
