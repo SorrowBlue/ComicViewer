@@ -6,6 +6,7 @@ import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.exclude
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.provideDelegate
 import org.jetbrains.compose.ComposePlugin
@@ -27,7 +28,13 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
                     implementation(compose.components.resources)
                     implementation(compose.components.uiToolingPreview)
-
+                    implementation(compose.material3AdaptiveNavigationSuite)
+                    implementation(libs.compose.multiplatform.material3.adaptiveLayout.get().run { "$group:$name:$version" }) {
+                        exclude(group = "org.jetbrains.androidx.window")
+                    }
+                    implementation(libs.compose.multiplatform.material3.adaptiveNavigation.get().run { "$group:$name:$version" }) {
+                        exclude(group = "org.jetbrains.androidx.window")
+                    }
                     // Navigation
                     implementation(libs.cmpdestinations)
                     implementation(libs.compose.multiplatform.lifecycleCompose)

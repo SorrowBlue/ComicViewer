@@ -2,8 +2,8 @@ package com.sorrowblue.comicviewer.feature.readlater
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -14,7 +14,8 @@ import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteAllReadLaterUse
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
+import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -37,22 +38,25 @@ internal interface ReadLaterScreenState {
     val pagingDataFlow: Flow<PagingData<File>>
     val lazyGridState: LazyGridState
     val events: EventFlow<ReadLaterScreenEvent>
-    val navigator: ThreePaneScaffoldNavigator<File.Key>
+
+    val scaffoldState: NavigationSuiteScaffold2State<File.Key>
+
     fun onNavClick()
     fun onTopAppBarAction(action: ReadLaterTopAppBarAction)
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onContentsAction(action: ReadLaterContentsAction)
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun rememberReadLaterScreenState(
-    navigator: ThreePaneScaffoldNavigator<File.Key> = rememberCanonicalScaffoldNavigator(),
+    scaffoldState: NavigationSuiteScaffold2State<File.Key> = rememberCanonicalScaffoldLayoutState(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: ReadLaterViewModel = koinViewModel(),
 ): ReadLaterScreenState = remember {
     ReadLaterScreenStateImpl(
-        navigator = navigator,
+        scaffoldState = scaffoldState,
         lazyGridState = lazyGridState,
         scope = scope,
         viewModel = viewModel,
@@ -62,7 +66,7 @@ internal fun rememberReadLaterScreenState(
 
 private class ReadLaterScreenStateImpl(
     viewModel: ReadLaterViewModel,
-    override val navigator: ThreePaneScaffoldNavigator<File.Key>,
+    override val scaffoldState: NavigationSuiteScaffold2State<File.Key>,
     override val lazyGridState: LazyGridState,
     private val scope: CoroutineScope,
     private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
@@ -84,10 +88,10 @@ private class ReadLaterScreenStateImpl(
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
             FileInfoSheetNavigator.Back -> scope.launch {
-                navigator.navigateBack()
+                scaffoldState.navigator.navigateBack()
             }
 
-            is FileInfoSheetNavigator.Collection -> navigator.currentDestination?.contentKey?.let {
+            is FileInfoSheetNavigator.Collection -> scaffoldState.navigator.currentDestination?.contentKey?.let {
                 events.tryEmit(ReadLaterScreenEvent.Collection(it.bookshelfId, it.path))
             }
 
@@ -101,7 +105,10 @@ private class ReadLaterScreenStateImpl(
         when (action) {
             is ReadLaterContentsAction.File -> events.tryEmit(ReadLaterScreenEvent.File(action.file))
             is ReadLaterContentsAction.FileInfo -> scope.launch {
-                navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file.key())
+                scaffoldState.navigator.navigateTo(
+                    SupportingPaneScaffoldRole.Extra,
+                    action.file.key()
+                )
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.AppBarRowScope2
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -51,6 +52,18 @@ fun OverflowMenuScope.SettingsOverflowMenuItem(
         icon = ComicIcons.Settings,
         onClick = onClick,
         modifier = modifier,
+    )
+}
+
+fun AppBarRowScope2.settingsItem(
+    onClick: () -> Unit,
+) {
+    clickableItem(
+        label = { Text(stringResource(Res.string.label_settings)) },
+        icon = {
+            Icon(ComicIcons.Settings, null)
+        },
+        onClick = onClick,
     )
 }
 

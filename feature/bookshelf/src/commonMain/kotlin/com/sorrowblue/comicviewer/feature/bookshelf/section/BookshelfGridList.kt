@@ -33,6 +33,7 @@ internal fun BookshelfGridList(
             union contentPadding.asWindowInsets().only(WindowInsetsSides.Top)
     ) {
         LazyPagingColumn(
+            autoPadding = false,
             contentPadding = contentPadding,
             lazyPagingItems = lazyPagingItems,
             state = lazyGridState,

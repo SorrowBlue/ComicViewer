@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.framework.ui.animation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -20,6 +19,7 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
 import com.sorrowblue.comicviewer.framework.designsystem.theme.MotionTokens
 
 fun materialContainerTransformIn(): EnterTransition {
@@ -32,16 +32,10 @@ fun materialContainerTransformOut(): ExitTransition {
 
 fun materialFadeThroughIn(): EnterTransition {
     return fadeIn(
-        animationSpec = tween(
-            durationMillis = MotionTokens.DurationLong1,
-            easing = MotionTokens.EasingEmphasizedInterpolator,
-        ),
-        initialAlpha = 0.35f,
+        animationSpec = ExpressiveMotion.Spatial.slow(),
+        initialAlpha = 0.0f,
     ) + scaleIn(
-        animationSpec = tween(
-            durationMillis = MotionTokens.DurationLong1,
-            easing = MotionTokens.EasingEmphasizedInterpolator,
-        ),
+        animationSpec = ExpressiveMotion.Spatial.slow(),
         initialScale = 0.92f,
         transformOrigin = TransformOrigin.Center,
     )
@@ -49,17 +43,11 @@ fun materialFadeThroughIn(): EnterTransition {
 
 fun materialFadeThroughOut(): ExitTransition {
     return fadeOut(
-        animationSpec = tween(
-            durationMillis = MotionTokens.DurationLong1,
-            easing = MotionTokens.EasingEmphasizedInterpolator,
-        ),
-        targetAlpha = 0.35f,
+        animationSpec = ExpressiveMotion.Spatial.slow(),
+        targetAlpha = 0.0f,
     ) + scaleOut(
-        animationSpec = tween(
-            durationMillis = MotionTokens.DurationLong1,
-            easing = MotionTokens.EasingEmphasizedInterpolator,
-        ),
-        targetScale = 0.92f,
+        animationSpec = ExpressiveMotion.Spatial.slow(),
+        targetScale = 0.0f,
         transformOrigin = TransformOrigin.Center,
     )
 }
@@ -69,8 +57,8 @@ fun materialSharedAxisXIn(
     slideDistance: Int,
 ): EnterTransition = slideInHorizontally(
     animationSpec = tween(
-        durationMillis = 300,
-        easing = FastOutSlowInEasing,
+        durationMillis = 400,
+        easing = MotionTokens.EasingEmphasizedDecelerate,
     ),
     initialOffsetX = {
         if (forward) slideDistance else -slideDistance
@@ -88,8 +76,8 @@ fun materialSharedAxisXOut(
     slideDistance: Int,
 ): ExitTransition = slideOutHorizontally(
     animationSpec = tween(
-        durationMillis = 300,
-        easing = FastOutSlowInEasing,
+        durationMillis = 200,
+        easing = MotionTokens.EasingEmphasizedAccelerate,
     ),
     targetOffsetX = {
         if (forward) -slideDistance else slideDistance
@@ -107,8 +95,8 @@ fun materialSharedAxisYIn(
     slideDistance: Int,
 ): EnterTransition = slideInVertically(
     animationSpec = tween(
-        durationMillis = 300,
-        easing = FastOutSlowInEasing,
+        durationMillis = 400,
+        easing = MotionTokens.EasingEmphasizedDecelerate,
     ),
     initialOffsetY = {
         if (slideUp) slideDistance else -slideDistance
@@ -126,8 +114,8 @@ fun materialSharedAxisYOut(
     slideDistance: Int,
 ): ExitTransition = slideOutVertically(
     animationSpec = tween(
-        durationMillis = 300,
-        easing = FastOutSlowInEasing,
+        durationMillis = 200,
+        easing = MotionTokens.EasingEmphasizedAccelerate,
     ),
     targetOffsetY = {
         if (slideDown) slideDistance else -slideDistance

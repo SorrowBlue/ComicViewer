@@ -38,7 +38,8 @@ internal class PagingFileInteractor(
                                 "",
                                 SearchCondition.Range.InFolder(file.path),
                                 SearchCondition.Period.None,
-                                settings.sortType,
+                                settings.folderScopeOnlyList.find { it.path == file.path && it.bookshelfId == file.bookshelfId }?.sortType
+                                    ?: settings.sortType,
                                 settings.showHiddenFiles,
                             )
                         }

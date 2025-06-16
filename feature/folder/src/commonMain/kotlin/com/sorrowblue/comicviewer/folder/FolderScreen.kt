@@ -15,10 +15,9 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -45,9 +43,12 @@ import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
@@ -75,10 +76,8 @@ interface Folder {
 }
 
 internal data class FolderScreenUiState(
-    val bookshelfId: BookshelfId = BookshelfId(),
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
     val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
-    val sortType: SortType = FolderDisplaySettingsDefaults.sortType,
     val emphasisPath: String = "",
 )
 
@@ -86,19 +85,18 @@ internal data class FolderScreenUiState(
 fun FolderScreen(
     route: Folder,
     navigator: FolderScreenNavigator,
-    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
+    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortTypeSelect>,
 ) {
     val state = rememberFolderScreenState(args = route)
     FolderScreen(
         uiState = state.uiState,
-        navigator = state.navigator,
+        scaffoldState = state.state,
         lazyPagingItems = state.lazyPagingItems,
         onFolderTopAppBarAction = state::onFolderTopAppBarAction,
         onFileInfoSheetAction = state::onFileInfoSheetAction,
         onFolderContentsAction = state::onFolderContentsAction,
         lazyGridState = state.lazyGridState,
         pullRefreshState = state.pullRefreshState,
-        snackbarHostState = state.snackbarHostState,
     )
 
     val currentNavigator by rememberUpdatedState(navigator)
@@ -112,7 +110,7 @@ fun FolderScreen(
             FolderScreenEvent.Restore -> currentNavigator.onRestoreComplete()
             is FolderScreenEvent.Search -> currentNavigator.onSearchClick(it.bookshelfId, it.path)
             FolderScreenEvent.Settings -> currentNavigator.onSettingsClick()
-            is FolderScreenEvent.Sort -> currentNavigator.onSortClick(it.sortType)
+            is FolderScreenEvent.Sort -> currentNavigator.onSortClick(it.sortType, it.folderScopeOnly)
         }
     }
 
@@ -127,7 +125,7 @@ fun FolderScreen(
 
 @Composable
 internal fun FolderScreen(
-    navigator: ThreePaneScaffoldNavigator<File.Key>,
+    scaffoldState: NavigationSuiteScaffold2State<File.Key>,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onFolderTopAppBarAction: (FolderTopAppBarAction) -> Unit,
@@ -135,17 +133,14 @@ internal fun FolderScreen(
     onFolderContentsAction: (FolderContentsAction) -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    CanonicalScaffold(
-        navigator = navigator,
+    scaffoldState.appBarState.scrollBehavior = scrollBehavior
+    scaffoldState.CanonicalScaffoldLayout(
         topBar = {
             FolderAppBar(
                 uiState = uiState.folderAppBarUiState,
                 onAction = onFolderTopAppBarAction,
-                scrollableState = lazyGridState,
-                scrollBehavior = scrollBehavior,
             )
         },
         extraPane = { contentKey ->
@@ -153,10 +148,22 @@ internal fun FolderScreen(
                 fileKey = contentKey,
                 onAction = onFileInfoSheetAction,
             )
-        },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        }
     ) { contentPadding ->
+        val pad = contentPadding.plus(
+            PaddingValues(
+                start = if (scaffoldState.navigationSuiteType.isNavigationRail && scaffoldState.suiteScaffoldState.targetValue == NavigationSuiteScaffoldValue.Visible) {
+                    0.dp
+                } else {
+                    ComicTheme.dimension.margin
+                },
+                end = if (scaffoldState.navigator.scaffoldDirective.maxHorizontalPartitions == 1 || scaffoldState.navigator.scaffoldValue.tertiary != PaneAdaptedValue.Expanded) {
+                    ComicTheme.dimension.margin
+                } else {
+                    0.dp
+                }
+            )
+        )
         FolderContents(
             title = uiState.folderAppBarUiState.title,
             fileLazyVerticalGridUiState = uiState.fileLazyVerticalGridUiState,
@@ -164,7 +171,7 @@ internal fun FolderScreen(
             lazyGridState = lazyGridState,
             pullRefreshState = pullRefreshState,
             onAction = onFolderContentsAction,
-            contentPadding = contentPadding,
+            contentPadding = pad,
             emphasisPath = uiState.emphasisPath
         )
     }

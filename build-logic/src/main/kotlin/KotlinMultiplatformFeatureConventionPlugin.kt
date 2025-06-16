@@ -4,6 +4,7 @@ import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.exclude
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.compose.ComposePlugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -26,8 +27,12 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                     // Material3
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
                     implementation(compose.material3)
-                    implementation(libs.compose.multiplatform.material3.adaptiveLayout)
-                    implementation(libs.compose.multiplatform.material3.adaptiveNavigation)
+                    implementation(libs.compose.multiplatform.material3.adaptiveLayout.get().run { "$group:$name:$version" }) {
+                        exclude(group = "org.jetbrains.androidx.window")
+                    }
+                    implementation(libs.compose.multiplatform.material3.adaptiveNavigation.get().run { "$group:$name:$version" }) {
+                        exclude(group = "org.jetbrains.androidx.window")
+                    }
                     // Image
                     implementation(libs.coil3.compose)
                     // Paging

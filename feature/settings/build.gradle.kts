@@ -14,7 +14,9 @@ kotlin {
                 implementation(projects.feature.settings.viewer)
                 implementation(projects.feature.authentication)
                 implementation(projects.feature.tutorial)
-                implementation(compose.material3AdaptiveNavigationSuite)
+                implementation(compose.material3AdaptiveNavigationSuite) {
+                    exclude(group = "org.jetbrains.androidx.window")
+                }
                 implementation(libs.compose.multiplatform.coreUri)
             }
         }

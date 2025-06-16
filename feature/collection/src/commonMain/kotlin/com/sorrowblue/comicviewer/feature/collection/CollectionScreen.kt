@@ -1,15 +1,10 @@
 package com.sorrowblue.comicviewer.feature.collection
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
@@ -22,8 +17,9 @@ import com.sorrowblue.comicviewer.feature.collection.section.CollectionContentsA
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
+import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
@@ -51,11 +47,10 @@ internal fun CollectionScreen(
 ) {
     val state = rememberCollectionScreenState(route)
     CollectionScreen(
-        navigator = state.navigator,
+        scaffoldState = state.scaffoldState,
         lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
         uiState = state.uiState,
         lazyGridState = state.lazyGridState,
-        snackbarHostState = state.snackbarHostState,
         onAppBarAction = state::onAppBarAction,
         onSheetAction = state::onSheetAction,
         onContentsAction = state::onContentsAction,
@@ -85,23 +80,21 @@ internal data class SmartCollectionScreenUiState(
 
 @Composable
 internal fun CollectionScreen(
-    navigator: ThreePaneScaffoldNavigator<File.Key>,
+    scaffoldState: NavigationSuiteScaffold2State<File.Key>,
     lazyPagingItems: LazyPagingItems<File>,
     uiState: SmartCollectionScreenUiState,
     lazyGridState: LazyGridState,
-    snackbarHostState: SnackbarHostState,
     onAppBarAction: (CollectionAppBarAction) -> Unit,
     onSheetAction: (FileInfoSheetNavigator) -> Unit,
     onContentsAction: (CollectionContentsAction) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    CanonicalScaffold(
+    scaffoldState.appBarState.scrollBehavior = scrollBehavior
+    scaffoldState.CanonicalScaffoldLayout(
         topBar = {
             CollectionAppBar(
                 uiState = uiState.appBarUiState,
                 onAction = onAppBarAction,
-                scrollBehavior = scrollBehavior,
-                scrollableState = lazyGridState
             )
         },
         extraPane = { contentKey ->
@@ -111,9 +104,6 @@ internal fun CollectionScreen(
                 isOpenFolderEnabled = true
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        navigator = navigator,
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         CollectionContents(
             fileLazyVerticalGridUiState = uiState.fileLazyVerticalGridUiState,

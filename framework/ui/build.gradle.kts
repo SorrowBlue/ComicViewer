@@ -13,9 +13,15 @@ kotlin {
 
                 // Material3
                 implementation(compose.material3)
-                implementation(compose.material3AdaptiveNavigationSuite)
-                implementation(libs.compose.multiplatform.material3.adaptiveLayout)
-                implementation(libs.compose.multiplatform.material3.adaptiveNavigation)
+                implementation(compose.material3AdaptiveNavigationSuite) {
+                    exclude(group = "org.jetbrains.androidx.window")
+                }
+                implementation(libs.compose.multiplatform.material3.adaptiveLayout.get().run { "$group:$name:$version" }) {
+                        exclude(group = "org.jetbrains.androidx.window")
+                }
+                implementation(libs.compose.multiplatform.material3.adaptiveNavigation.get().run { "$group:$name:$version" }) {
+                    exclude(group = "org.jetbrains.androidx.window")
+                }
                 // Navigation + Serialization
                 implementation(libs.kotlinx.serialization.cbor)
                 // Image

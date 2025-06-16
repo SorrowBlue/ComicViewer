@@ -25,7 +25,7 @@ internal interface BookshelfFolderScreenNavigator : FolderScreenNavigator
 @Composable
 internal fun BookshelfFolderScreen(
     route: BookshelfFolder,
-    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
+    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortTypeSelect>,
     navigator: BookshelfFolderScreenNavigator = koinInject(),
 ) {
     FolderScreen(

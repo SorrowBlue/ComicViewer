@@ -20,14 +20,14 @@ private fun FolderScreenPreview() {
     }
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {
-        FolderScreen(
-            navigator = rememberCanonicalScaffoldNavigator(),
-            uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
-            lazyPagingItems = lazyPagingItems,
-            onFileInfoSheetAction = {},
-            onFolderTopAppBarAction = {},
-            onFolderContentsAction = {},
-        )
+//        FolderScreen(
+//            navigator = rememberCanonicalScaffoldNavigator(),
+//            uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
+//            lazyPagingItems = lazyPagingItems,
+//            onFileInfoSheetAction = {},
+//            onFolderTopAppBarAction = {},
+//            onFolderContentsAction = {},
+//        )
     }
 }
 
@@ -37,13 +37,13 @@ private fun FolderScreenEmptyPreview() {
     val pagingDataFlow = PagingData.flowEmptyData<File>()
     val lazyPagingItems = pagingDataFlow.collectAsLazyPagingItems()
     PreviewTheme {
-        FolderScreen(
-            navigator = rememberCanonicalScaffoldNavigator(),
-            uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
-            lazyPagingItems = lazyPagingItems,
-            onFileInfoSheetAction = {},
-            onFolderTopAppBarAction = {},
-            onFolderContentsAction = {},
-        )
+//        FolderScreen(
+//            navigator = rememberCanonicalScaffoldNavigator(),
+//            uiState = FolderScreenUiState(folderAppBarUiState = FolderAppBarUiState("Preview title")),
+//            lazyPagingItems = lazyPagingItems,
+//            onFileInfoSheetAction = {},
+//            onFolderTopAppBarAction = {},
+//            onFolderContentsAction = {},
+//        )
     }
 }

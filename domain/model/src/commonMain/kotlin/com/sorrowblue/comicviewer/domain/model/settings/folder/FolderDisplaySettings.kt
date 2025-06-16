@@ -1,6 +1,14 @@
 package com.sorrowblue.comicviewer.domain.model.settings.folder
 
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlinx.serialization.Serializable
+
+@Serializable
+data class FolderScopeOnly(
+    val bookshelfId: BookshelfId,
+    val path: String,
+    val sortType: SortType,
+)
 
 /**
  * フォルダ表示設定
@@ -16,6 +24,7 @@ data class FolderDisplaySettings(
     val fileListDisplay: FileListDisplay = FolderDisplaySettingsDefaults.fileListDisplay,
     val gridColumnSize: GridColumnSize = FolderDisplaySettingsDefaults.gridColumnSize,
     val sortType: SortType = FolderDisplaySettingsDefaults.sortType,
+    val folderScopeOnlyList: List<FolderScopeOnly> = emptyList(),
     val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.isDisplayHiddenFile,
     val showFilesExtension: Boolean = FolderDisplaySettingsDefaults.isDisplayFileExtension,
     val showThumbnails: Boolean = FolderDisplaySettingsDefaults.isDisplayThumbnail,

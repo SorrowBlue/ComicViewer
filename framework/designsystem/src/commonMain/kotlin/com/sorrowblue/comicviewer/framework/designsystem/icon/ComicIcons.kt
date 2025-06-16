@@ -7,6 +7,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowRight
 import androidx.compose.material.icons.automirrored.rounded.InsertDriveFile
 import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
 import androidx.compose.material.icons.automirrored.rounded.Logout
+import androidx.compose.material.icons.automirrored.rounded.MenuOpen
 import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.automirrored.rounded.ViewList
 import androidx.compose.material.icons.automirrored.rounded.VolumeUp
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.rounded.Dns
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.FolderOff
 import androidx.compose.material.icons.rounded.FolderOpen
@@ -41,12 +43,14 @@ import androidx.compose.material.icons.rounded.InstallMobile
 import androidx.compose.material.icons.rounded.Key
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material.icons.rounded.RocketLaunch
 import androidx.compose.material.icons.rounded.Save
+import androidx.compose.material.icons.rounded.ScreenRotationAlt
 import androidx.compose.material.icons.rounded.SdStorage
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
@@ -59,6 +63,7 @@ import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.WatchLater
 
 object ComicIcons {
+    val ScreenRotationAlt = Icons.Rounded.ScreenRotationAlt
     val AccountCircle = Icons.Rounded.AccountCircle
     val Visibility = Icons.Rounded.Visibility
     val VisibilityOff = Icons.Rounded.VisibilityOff
@@ -67,6 +72,7 @@ object ComicIcons {
     val LibraryBooks = Icons.AutoMirrored.Rounded.LibraryBooks
     val WatchLater = Icons.Rounded.WatchLater
     val Favorite = Icons.Rounded.Favorite
+    val FavoriteBorder = Icons.Rounded.FavoriteBorder
     val RocketLaunch = Icons.Rounded.RocketLaunch
     val History = Icons.Rounded.History
     val ErrorOutline = Icons.Rounded.ErrorOutline
@@ -115,4 +121,6 @@ object ComicIcons {
     val Storage = Icons.Rounded.Storage
     val Notifications = Icons.Rounded.Notifications
     val CollectionsBookmark = Icons.Rounded.CollectionsBookmark
+    val Menu = Icons.Rounded.Menu
+    val MenuOpen = Icons.AutoMirrored.Rounded.MenuOpen
 }

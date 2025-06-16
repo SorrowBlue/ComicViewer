@@ -25,7 +25,7 @@ internal interface CollectionFolderScreenNavigator : FolderScreenNavigator
 @Composable
 internal fun CollectionFolderScreen(
     route: CollectionFolder,
-    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortType>,
+    sortTypeResultReceiver: NavResultReceiver<SortTypeSelect, SortTypeSelect>,
     navigator: CollectionFolderScreenNavigator = koinInject(),
 ) {
     FolderScreen(
