@@ -53,7 +53,6 @@ dependencyResolutionManagement {
                 includeGroup("com.sorrowblue.cmpdestinations")
             }
         }
-        mavenLocal()
     }
 }
 
