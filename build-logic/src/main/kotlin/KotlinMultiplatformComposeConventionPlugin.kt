@@ -40,6 +40,7 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
                         exclude(group = "org.jetbrains.androidx.window")
                     }
+                    implementation("androidx.window:window-core:1.4.0")
                     // Navigation
                     implementation(libs.cmpdestinations)
                     implementation(libs.compose.multiplatform.lifecycleCompose)
