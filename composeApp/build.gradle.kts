@@ -46,10 +46,10 @@ kotlin {
             implementation(compose.material3AdaptiveNavigationSuite) {
                 exclude(group = "org.jetbrains.androidx.window")
             }
-            implementation(libs.compose.multiplatform.material3.adaptive.get().run { "$group:$name:$version" }) {
+            implementation(libs.compose.multiplatform.material3.adaptive) {
                 exclude(group = "org.jetbrains.androidx.window")
             }
-            implementation(libs.compose.multiplatform.material3.adaptiveNavigation.get().run { "$group:$name:$version" }) {
+            implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
                 exclude(group = "org.jetbrains.androidx.window")
             }
             // Di
@@ -85,7 +85,7 @@ kotlin {
 
         androidUnitTest {
             dependencies {
-                implementation(libs.compose.multiplatform.material3.adaptiveNavigation.get().run { "$group:$name:$version" }) {
+                implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
                     exclude(group = "org.jetbrains.androidx.window")
                 }
                 implementation(projects.data.storage.client)
@@ -94,7 +94,7 @@ kotlin {
 
         desktopTest {
             dependencies {
-                implementation(libs.compose.multiplatform.material3.adaptiveNavigation.get().run { "$group:$name:$version" }) {
+                implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
                     exclude(group = "org.jetbrains.androidx.window")
                 }
                 implementation(projects.data.storage.client)
