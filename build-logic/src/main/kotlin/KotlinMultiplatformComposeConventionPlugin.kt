@@ -29,6 +29,9 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     implementation(compose.components.resources)
                     implementation(compose.components.uiToolingPreview)
                     implementation(compose.material3AdaptiveNavigationSuite)
+                    implementation(libs.compose.multiplatform.material3.adaptive) {
+                        exclude(group = "org.jetbrains.androidx.window")
+                    }
                     implementation(libs.compose.multiplatform.material3.adaptiveLayout) {
                         exclude(group = "org.jetbrains.androidx.window")
                     }
@@ -44,6 +47,10 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
 
                 sourceSets.androidMain.dependencies {
                     implementation(libs.androidx.compose.ui.toolingPreview)
+                }
+
+                sourceSets.desktopMain.dependencies {
+                    implementation("androidx.window:window-core-jvm:1.4.0")
                 }
 
                 compilerOptions {

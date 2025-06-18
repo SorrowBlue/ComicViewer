@@ -76,7 +76,7 @@ fun ExtraPaneScaffold(
                     windowInsets = if (singlePane) {
                         WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
                     } else {
-                        WindowInsets()
+                        WindowInsets(0)
                     },
                     scrollBehavior = scrollBehavior
                 )
