@@ -43,15 +43,6 @@ kotlin {
 
             // Material3
             implementation(compose.material3)
-            implementation(compose.material3AdaptiveNavigationSuite) {
-                exclude(group = "org.jetbrains.androidx.window")
-            }
-            implementation(libs.compose.multiplatform.material3.adaptive) {
-                exclude(group = "org.jetbrains.androidx.window")
-            }
-            implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
-                exclude(group = "org.jetbrains.androidx.window")
-            }
             // Di
             implementation(libs.koin.composeViewModel)
 
@@ -97,6 +88,7 @@ kotlin {
                 implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
                     exclude(group = "org.jetbrains.androidx.window")
                 }
+                implementation("androidx.window:window-core-jvm:1.4.0")
                 implementation(projects.data.storage.client)
             }
         }

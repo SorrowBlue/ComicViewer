@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
@@ -141,15 +141,17 @@ fun rememberLazyPagingColumnType(
         mutableStateOf(
             when (fileListDisplay) {
                 FileListDisplay.List -> if (scaffoldDirective.maxHorizontalPartitions == 1) LazyPagingColumnType.List else LazyPagingColumnType.ListMedium
-                FileListDisplay.Grid -> when (windowSizeClass.windowWidthSizeClass) {
-                    WindowWidthSizeClass.EXPANDED -> when (gridColumnSize) {
+                FileListDisplay.Grid -> when {
+                    windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) -> when (gridColumnSize) {
                         GridColumnSize.Medium -> 160
                         GridColumnSize.Large -> 200
                     }
-                    WindowWidthSizeClass.MEDIUM -> when (gridColumnSize) {
+
+                    windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> when (gridColumnSize) {
                         GridColumnSize.Medium -> 160
                         GridColumnSize.Large -> 200
                     }
+
                     else -> when (gridColumnSize) {
                         GridColumnSize.Medium -> 120
                         GridColumnSize.Large -> 180

@@ -9,9 +9,6 @@ kotlin {
             dependencies {
                 implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
-                implementation(libs.compose.multiplatform.material3.adaptive) {
-                    exclude(group = "org.jetbrains.androidx.window")
-                }
             }
         }
         androidMain {
