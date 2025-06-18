@@ -29,10 +29,10 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     implementation(compose.components.resources)
                     implementation(compose.components.uiToolingPreview)
                     implementation(compose.material3AdaptiveNavigationSuite)
-                    implementation(libs.compose.multiplatform.material3.adaptiveLayout.get().run { "$group:$name:$version" }) {
+                    implementation(libs.compose.multiplatform.material3.adaptiveLayout) {
                         exclude(group = "org.jetbrains.androidx.window")
                     }
-                    implementation(libs.compose.multiplatform.material3.adaptiveNavigation.get().run { "$group:$name:$version" }) {
+                    implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
                         exclude(group = "org.jetbrains.androidx.window")
                     }
                     // Navigation

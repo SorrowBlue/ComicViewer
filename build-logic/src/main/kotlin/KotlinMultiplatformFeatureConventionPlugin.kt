@@ -27,10 +27,10 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                     // Material3
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
                     implementation(compose.material3)
-                    implementation(libs.compose.multiplatform.material3.adaptiveLayout.get().run { "$group:$name:$version" }) {
+                    implementation(libs.compose.multiplatform.material3.adaptiveLayout) {
                         exclude(group = "org.jetbrains.androidx.window")
                     }
-                    implementation(libs.compose.multiplatform.material3.adaptiveNavigation.get().run { "$group:$name:$version" }) {
+                    implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
                         exclude(group = "org.jetbrains.androidx.window")
                     }
                     // Image
