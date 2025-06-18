@@ -318,7 +318,9 @@ private class FolderScreenStateImpl(
                                         args.path,
                                         navResult.value.sortType
                                     )
-                                    settings.copy(folderScopeOnlyList = settings.folderScopeOnlyList - beforeFolderScopeOnly + new)
+                                    settings.copy(
+                                        folderScopeOnlyList = settings.folderScopeOnlyList - beforeFolderScopeOnly + new
+                                    )
                                 } else {
                                     settings
                                 }
@@ -326,7 +328,9 @@ private class FolderScreenStateImpl(
 
                             !navResult.value.folderScopeOnly && beforeFolderScopeOnly != null -> {
                                 refresh = true
-                                settings.copy(folderScopeOnlyList = settings.folderScopeOnlyList - beforeFolderScopeOnly)
+                                settings.copy(
+                                    folderScopeOnlyList = settings.folderScopeOnlyList - beforeFolderScopeOnly
+                                )
                             }
 
                             settings.sortType != navResult.value.sortType -> {

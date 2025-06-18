@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.framework.ui.layout
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationVector4D
 import androidx.compose.animation.core.TwoWayConverter
-import androidx.compose.animation.core.animateIntOffsetAsState
 import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.PaddingValues

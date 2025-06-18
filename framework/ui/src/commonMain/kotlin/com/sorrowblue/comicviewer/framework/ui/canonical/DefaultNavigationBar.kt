@@ -40,20 +40,18 @@ val NavigationSuiteScaffold2State<*>.DefaultNavigationBar: @Composable (Boolean,
         }
     }
 
-private val NavigationBarTransitionEnter = slideInVertically(
+internal val NavigationBarTransitionEnter = slideInVertically(
     animationSpec = ExpressiveMotion.Spatial.default(),
     initialOffsetY = { it }
 )
 
-private val NavigationBarTransitionExit = slideOutVertically(
+internal val NavigationBarTransitionExit = slideOutVertically(
     animationSpec = ExpressiveMotion.Spatial.default(),
     targetOffsetY = { it }
 )
 
-private val NavigationBarTransition: AnimatedContentTransitionScope<*>.() -> ContentTransform = {
+internal val NavigationBarTransition: AnimatedContentTransitionScope<*>.() -> ContentTransform = {
     NavigationBarTransitionEnter togetherWith NavigationBarTransitionExit
 }
 
-private data object NavigationBarSharedElementKey
-
-
+internal data object NavigationBarSharedElementKey

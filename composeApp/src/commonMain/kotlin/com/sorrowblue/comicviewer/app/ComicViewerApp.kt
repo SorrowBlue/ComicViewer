@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.rememberSlideDistance
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
-import com.sorrowblue.comicviewer.framework.ui.rememberAppState
 import org.koin.compose.module.rememberKoinModules
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.dsl.module

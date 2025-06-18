@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.app.navigation
 import androidx.navigation.NavType
 import com.sorrowblue.cmpdestinations.Destination
 import com.sorrowblue.cmpdestinations.GraphNavigation
-import com.sorrowblue.cmpdestinations.ScreenDestination
 import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraph

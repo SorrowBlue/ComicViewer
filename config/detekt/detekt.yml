@@ -75,6 +75,7 @@ Compose:
       - 'LocalAppLocaleIso'
       - 'LocalAppLocaleIsoInternal'
       - 'LocalDefaultLanguage'
+      - 'LocalAppState'
     # You can optionally define a list of CompositionLocals that are allowed here
     # allowedCompositionLocals: LocalSomething,LocalSomethingElse
   ContentEmitterReturningValues:

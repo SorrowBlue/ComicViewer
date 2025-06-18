@@ -7,21 +7,14 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.WideNavigationRailDefaults
 import androidx.compose.material3.WideNavigationRailState
-import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
@@ -34,25 +27,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigableExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.canonical.AnimatedNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.canonical.AppBarState
 import com.sorrowblue.comicviewer.framework.ui.canonical.DefaultAppBarScope
-import com.sorrowblue.comicviewer.framework.ui.canonical.DefaultNavigationBar
-import com.sorrowblue.comicviewer.framework.ui.canonical.DefaultNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonState
 import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationSuiteScope
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberAppBarState
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
-import com.sorrowblue.comicviewer.framework.ui.layout.union
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -129,60 +117,6 @@ class NavigationSuiteScaffold2StateImpl<T : Any>(
     override val snackbarHostState: SnackbarHostState get() = appState.snackbarHostState
 }
 
-@Composable
-fun <T : Any> NavigationSuiteScaffold2State<T>.ExtraScaffold(
-    topBar: () -> Unit,
-    content: (T) -> Unit,
-) {
-    val destination = navigator.currentDestination
-    if (destination?.pane == SupportingPaneScaffoldRole.Extra && destination.contentKey != null) {
-        val isExtraPaneShown =
-            2 <= navigator.scaffoldDirective.maxHorizontalPartitions && navigator.scaffoldValue.tertiary == PaneAdaptedValue.Expanded
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text("Extra Pane")
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {}
-                        ) {
-                            Icon(ComicIcons.Close, null)
-                        }
-                    },
-                    colors =
-                        if (isExtraPaneShown) TopAppBarDefaults.topAppBarColors(containerColor = ComicTheme.colorScheme.surfaceContainerHigh)
-                        else
-                            TopAppBarDefaults.topAppBarColors()
-                )
-            },
-            contentWindowInsets = if (isExtraPaneShown) WindowInsets() else WindowInsets.safeDrawing,
-            containerColor = if (isExtraPaneShown) ComicTheme.colorScheme.surfaceContainerHigh else ComicTheme.colorScheme.surface,
-            modifier =
-                if (isExtraPaneShown) {
-                    Modifier.windowInsetsPadding(
-                        WindowInsets.safeDrawing.union(
-                            with(
-                                ComicTheme.dimension
-                            ) {
-                                PaddingValues(
-                                    top = margin,
-                                    end = margin,
-                                    bottom = margin
-                                )
-                            }.asWindowInsets()
-                        )
-                    ).clip(ComicTheme.shapes.large)
-                } else {
-                    Modifier
-                }
-        ) {
-            content(destination.contentKey!!)
-        }
-    }
-}
-
 enum class PrimaryActionContentMode {
     Auto,
     NavigationBarOnly,
@@ -208,26 +142,25 @@ fun <T : Any> NavigationSuiteScaffold2State<T>.CanonicalScaffoldLayout(
     extraPane: @Composable (T) -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val containerColor by animateColorAsState(if (navigationSuiteType.isNavigationRail) ComicTheme.colorScheme.surfaceContainer else ComicTheme.colorScheme.surface)
+    val containerColor by animateColorAsState(
+        if (navigationSuiteType.isNavigationRail) ComicTheme.colorScheme.surfaceContainer else ComicTheme.colorScheme.surface
+    )
     NavigableExtraPaneScaffold(
         navigator = navigator,
-        modifier = Modifier.background(containerColor),
+        modifier = modifier.background(containerColor),
         extraPane = {
             val destination = navigator.currentDestination
             if (destination?.pane == SupportingPaneScaffoldRole.Extra && destination.contentKey != null) {
                 extraPane(destination.contentKey!!)
             }
-        }
+        },
     ) {
         Surface(color = containerColor) {
             AnimatedNavigationSuiteScaffold(
-                modifier = modifier,
                 state = this,
                 navigationRailState = navigationRailState,
                 layoutType = navigationSuiteType,
                 navigationSuiteItems = navigationSuiteItems,
-                navigationRail = DefaultNavigationRail,
-                navigationBar = DefaultNavigationBar,
                 primaryActionContent = { primaryActionContent() },
                 primaryActionContentMode = primaryActionContentMode,
                 colors = NavigationSuiteDefaults.colors(

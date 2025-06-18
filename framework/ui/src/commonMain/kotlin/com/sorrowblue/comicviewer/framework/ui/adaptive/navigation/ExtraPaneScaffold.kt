@@ -59,7 +59,9 @@ fun ExtraPaneScaffold(
         mutableStateOf(scaffoldDirective.maxHorizontalPartitions == 1)
     }
     val scrollBehavior = if (singlePane) TopAppBarDefaults.pinnedScrollBehavior() else null
-    val containerColor by animateColorAsState(if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainerHigh)
+    val containerColor by animateColorAsState(
+        if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainerHigh
+    )
     Scaffold(
         topBar = {
             Column {

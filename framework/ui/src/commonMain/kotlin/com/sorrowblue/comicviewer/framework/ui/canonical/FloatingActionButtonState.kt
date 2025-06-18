@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
 
 enum class FloatingActionButtonValue {
     Visible,
-    Hidden
+    Hidden,
 }
 
 val FloatingActionButtonValue.isVisible
@@ -41,7 +41,7 @@ interface FloatingActionButtonState {
 fun rememberFloatingActionButtonState(
     initialValue: FloatingActionButtonValue = FloatingActionButtonValue.Visible,
 ): FloatingActionButtonState {
-    return rememberSaveable(saver = FloatingActionButtonStateImpl.Saver()) {
+    return rememberSaveable(saver = FloatingActionButtonStateImpl.saver()) {
         FloatingActionButtonStateImpl(initialValue = initialValue)
     }
 }
@@ -96,8 +96,8 @@ private class FloatingActionButtonStateImpl(var initialValue: FloatingActionButt
         private const val Hidden = 0f
         private const val Visible = 1f
 
-        /** The default [Saver] implementation for [NavigationSuiteScaffoldState]. */
-        fun Saver() =
+        /** The default [saver] implementation for [NavigationSuiteScaffoldState]. */
+        fun saver() =
             Saver<FloatingActionButtonState, FloatingActionButtonValue>(
                 save = { it.targetValue },
                 restore = { FloatingActionButtonStateImpl(it) }

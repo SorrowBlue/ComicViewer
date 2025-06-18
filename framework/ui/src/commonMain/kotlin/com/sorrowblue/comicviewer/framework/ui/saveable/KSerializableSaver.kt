@@ -23,7 +23,6 @@ fun <T : Any> rememberListSaveable(
     vararg inputs: Any?,
     save: (T) -> List<Any?>,
     restore: T.(List<Any?>) -> Unit,
-    key: String? = null,
     init: () -> T,
 ): T {
     return rememberSaveable(
@@ -41,7 +40,6 @@ fun <T : Any> rememberListSaveable(
             },
             restore = { init().apply { restore(it.toList()) } }
         ),
-        key = key,
         init = init
     )
 }

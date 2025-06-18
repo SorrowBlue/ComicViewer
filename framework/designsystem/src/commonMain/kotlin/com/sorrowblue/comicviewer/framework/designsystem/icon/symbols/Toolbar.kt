@@ -17,8 +17,10 @@ val ComicIcons.Toolbar: ImageVector
             return _toolbar!!
         }
         _toolbar = Builder(
-            name = "Toolbar", defaultWidth = 24.0.dp, defaultHeight =
-                24.0.dp, viewportWidth = 960.0f, viewportHeight = 960.0f
+            name = "Toolbar", defaultWidth = 24.0.dp,
+            defaultHeight =
+            24.0.dp,
+            viewportWidth = 960.0f, viewportHeight = 960.0f
         ).apply {
             path(
                 fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,

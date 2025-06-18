@@ -74,7 +74,6 @@ internal fun rememberComicViewerAppState(
     mainViewModel: MainViewModel = koinViewModel(),
     navController: NavHostController = rememberNavController(),
 ): ComicViewerAppState {
-
     val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
         currentWindowAdaptiveInfo()
     )
@@ -111,7 +110,8 @@ sealed class NavItemImpl(
     override val icon: ImageVector,
 ) : NavItem {
     data object Bookshelf : NavItemImpl(
-        BookshelfNavGraph, ComicIcons.Book
+        BookshelfNavGraph,
+        ComicIcons.Book
     ) {
         override val title: String
             @Composable

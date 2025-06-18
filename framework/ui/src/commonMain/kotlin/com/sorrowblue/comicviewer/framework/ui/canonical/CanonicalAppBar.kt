@@ -26,7 +26,9 @@ fun NavigationSuiteScaffold2State<*>.CanonicalAppBar(
     actions: @Composable RowScope.() -> Unit = {},
     titleHorizontalAlignment: Alignment.Horizontal = Alignment.Start,
 ) {
-    val containerColor by animateColorAsState(if (navigationSuiteType.isNavigationRail) ComicTheme.colorScheme.surfaceContainer else ComicTheme.colorScheme.surface)
+    val containerColor by animateColorAsState(
+        if (navigationSuiteType.isNavigationRail) ComicTheme.colorScheme.surfaceContainer else ComicTheme.colorScheme.surface
+    )
     TopAppBar(
         title = title,
         subtitle = subtitle,

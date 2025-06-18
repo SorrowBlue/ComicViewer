@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.framework.ui.canonical
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +12,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -57,21 +61,22 @@ import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
 import com.sorrowblue.comicviewer.framework.ui.PrimaryActionContentMode
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun AnimatedNavigationSuiteScaffold(
+fun NavigationSuiteScaffold2State<*>.AnimatedNavigationSuiteScaffold(
     state: NavigationSuiteScaffold2State<*>,
     layoutType: NavigationSuiteType,
     navigationRailState: WideNavigationRailState,
     navigationSuiteItems: NavigationSuiteScope.() -> Unit,
-    navigationRail: @Composable (Boolean, @Composable () -> Unit) -> Unit,
-    navigationBar: @Composable (Boolean, @Composable () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
     primaryActionContent: @Composable () -> Unit = {},
-    primaryActionContentMode: PrimaryActionContentMode,
+    primaryActionContentMode: PrimaryActionContentMode = PrimaryActionContentMode.Auto,
     colors: NavigationSuiteColors = NavigationSuiteDefaults.colors(),
     content: @Composable (PaddingValues) -> Unit,
 ) {
+    val currentPrimaryActionContent = remember {
+        movableContentOf(primaryActionContent)
+    }
     val scope = rememberCoroutineScope()
     val suiteItemProvider by rememberStateOfItems(navigationSuiteItems)
     val movableContent = remember(navigationSuiteItems) {
@@ -112,74 +117,107 @@ fun AnimatedNavigationSuiteScaffold(
         }
     }
     Scaffold(
+//        modifier = modifier,
         containerColor = LocalContainerColor.current,
         bottomBar = {
-            val navigationBarContent = movableContentOf {
-                // TODO(ShortNavigationBar has an animation bug in SharedElementTransition)
-                NavigationBar(
-                    containerColor = colors.shortNavigationBarContainerColor,
-                    contentColor = colors.shortNavigationBarContentColor,
-                    content = movableNavigationBarContent
-                )
+            AnimatedContent(
+                targetState = layoutType.isNavigationBar && state.suiteScaffoldState.targetValue == NavigationSuiteScaffoldValue.Visible,
+                transitionSpec = NavigationBarTransition,
+                modifier = Modifier
+                    .animateEnterExit(
+                        enter = NavigationBarTransitionEnter,
+                        exit = NavigationBarTransitionExit
+                    )
+                    .sharedElement(
+                        animatedVisibilityScope = this,
+                        sharedContentState = rememberSharedContentState(
+                            NavigationBarSharedElementKey
+                        )
+                    )
+            ) {
+                if (it) {
+                    // TODO(ShortNavigationBar has an animation bug in SharedElementTransition)
+                    NavigationBar(
+                        containerColor = colors.shortNavigationBarContainerColor,
+                        contentColor = colors.shortNavigationBarContentColor
+                    ) {
+                        movableNavigationBarContent()
+                    }
+                } else {
+                    Spacer(Modifier.fillMaxWidth())
+                }
             }
-            navigationBar(
-                layoutType.isNavigationBar && state.suiteScaffoldState.targetValue == NavigationSuiteScaffoldValue.Visible,
-                navigationBarContent
-            )
         },
         contentWindowInsets = WindowInsets.safeDrawing,
         floatingActionButton = {
             if (primaryActionContentMode == PrimaryActionContentMode.Auto && layoutType.isNavigationBar || primaryActionContentMode == PrimaryActionContentMode.NavigationBarOnly) {
-                primaryActionContent()
+                currentPrimaryActionContent()
             }
         },
-        modifier = modifier
     ) { contentPadding ->
         Row {
-            val navigationRailContent = movableContentOf {
-                WideNavigationRail(
-                    header = {
-                        Column {
-                            IconButton(
-                                onClick = {
-                                    scope.launch {
-                                        state.navigationRailState.toggle()
+            AnimatedContent(
+                targetState = layoutType.isNavigationRail && state.suiteScaffoldState.targetValue == NavigationSuiteScaffoldValue.Visible,
+                transitionSpec = NavigationRailTransition,
+                modifier = Modifier
+                    .animateEnterExit(
+                        enter = NavigationRailTransitionEnter,
+                        exit = NavigationRailTransitionExit
+                    )
+                    .sharedElement(
+                        animatedVisibilityScope = this@AnimatedNavigationSuiteScaffold,
+                        sharedContentState = rememberSharedContentState(
+                            NavigationRailSharedElementKey
+                        )
+                    ),
+            ) {
+                if (it) {
+                    WideNavigationRail(
+                        header = {
+                            Column {
+                                IconButton(
+                                    onClick = {
+                                        scope.launch {
+                                            state.navigationRailState.toggle()
+                                        }
+                                    },
+                                    modifier = Modifier.padding(start = 24.dp)
+                                ) {
+                                    if (state.navigationRailState.targetValue == WideNavigationRailValue.Expanded) {
+                                        Icon(ComicIcons.MenuOpen, null)
+                                    } else {
+                                        Icon(ComicIcons.Menu, null)
                                     }
-                                },
-                                modifier = Modifier.padding(start = 24.dp)
-                            ) {
-                                if (state.navigationRailState.targetValue == WideNavigationRailValue.Expanded) {
-                                    Icon(ComicIcons.MenuOpen, null)
-                                } else {
-                                    Icon(ComicIcons.Menu, null)
+                                }
+                                if (primaryActionContentMode == PrimaryActionContentMode.Auto) {
+                                    Spacer(Modifier.size(ComicTheme.dimension.padding))
+                                    currentPrimaryActionContent()
                                 }
                             }
-                            if (primaryActionContentMode == PrimaryActionContentMode.Auto) {
-                                Spacer(Modifier.size(ComicTheme.dimension.padding))
-                                primaryActionContent()
-                            }
-                        }
-                    },
-                    state = state.navigationRailState,
-                    colors = colors.wideNavigationRailColors,
-                    content = movableContent
-                )
+                        },
+                        state = state.navigationRailState,
+                        colors = colors.wideNavigationRailColors
+                    ) {
+                        movableContent()
+                    }
+                } else {
+                    Spacer(Modifier.fillMaxHeight())
+                }
             }
-            navigationRail(
-                layoutType.isNavigationRail && state.suiteScaffoldState.targetValue == NavigationSuiteScaffoldValue.Visible,
-                navigationRailContent
-            )
             Box(
-                modifier = if (layoutType.isNavigationRail && state.suiteScaffoldState.targetValue == NavigationSuiteScaffoldValue.Visible) Modifier.consumeWindowInsets(
-                    WindowInsets.safeDrawing.only(WindowInsetsSides.Start)
-                ) else Modifier.zIndex(2f)
+                modifier = if (layoutType.isNavigationRail && state.suiteScaffoldState.targetValue == NavigationSuiteScaffoldValue.Visible) {
+                    Modifier.consumeWindowInsets(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Start)
+                    )
+                } else {
+                    Modifier.zIndex(2f)
+                }
             ) {
                 content(contentPadding)
             }
         }
     }
 }
-
 
 private interface NavigationSuiteItemProvider {
     val itemsCount: Int
@@ -265,10 +303,11 @@ private fun NavigationItemIcon(
     icon: @Composable () -> Unit,
     badge: (@Composable () -> Unit)? = null,
 ) {
+    val currentIcon = remember(icon) { movableContentOf(icon) }
     if (badge != null) {
-        BadgedBox(badge = { badge.invoke() }) { icon() }
+        BadgedBox(badge = { badge.invoke() }) { currentIcon() }
     } else {
-        icon()
+        currentIcon()
     }
 }
 
@@ -281,11 +320,11 @@ private fun NavigationSuiteItem(
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
     label: @Composable (() -> Unit)?,
-    modifier: Modifier,
     enabled: Boolean,
     badge: @Composable (() -> Unit)?,
     navigationItemColors: NavigationItemColors?,
     interactionSource: MutableInteractionSource?,
+    modifier: Modifier = Modifier,
 ) {
     when (navigationSuiteType) {
         NavigationSuiteType.ShortNavigationBarCompact,
@@ -337,10 +376,10 @@ private fun RowScope.NavigationSuiteItem(
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
     label: @Composable (() -> Unit)?,
-    modifier: Modifier,
     enabled: Boolean,
     badge: @Composable (() -> Unit)?,
     interactionSource: MutableInteractionSource?,
+    modifier: Modifier = Modifier,
 ) {
     when (navigationSuiteType) {
         NavigationSuiteType.ShortNavigationBarCompact,

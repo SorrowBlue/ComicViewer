@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.framework.designsystem.theme
 
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.PathEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.Path
 
 object MotionTokens {
@@ -30,12 +29,6 @@ object MotionTokens {
      */
     val EasingEmphaizedDecelerateInterpolator = CubicBezierEasing(0.05f, 0.7f, 0.1f, 1.0f)
 
-    fun <T> EnterScreen() = tween<T>(
-        400,
-        0,
-        EasingEmphaizedDecelerateInterpolator
-    )
-
     /**
      * 画面から完全に終了する
      *
@@ -43,12 +36,6 @@ object MotionTokens {
      * 最高速度で終了することで、終了したコンポーネントを回復できないという印象を与えます。
      */
     val EasingEmphasizedAccelerateInterpolator = CubicBezierEasing(0.3f, 0f, 0.8f, 0.15f)
-
-    fun <T> ExitScreenPermanently() = tween<T>(
-        200,
-        0,
-        EasingEmphasizedAccelerateInterpolator
-    )
 
     /**
      * 一時的に画面を終了する
@@ -62,12 +49,6 @@ object MotionTokens {
             cubicTo(0.05f, 0f, 0.133333f, 0.06f, 0.166666f, 0.4f)
             cubicTo(0.208333f, 0.82f, 0.25f, 1f, 1f, 1f)
         }
-    )
-
-    fun <T> ExitScreenTemporarily() = tween<T>(
-        200,
-        0,
-        EasingEmphasizedInterpolator
     )
 
     val EasingEmphasized = CubicBezierEasing(0.2f, 0.0f, 0.0f, 1.0f)

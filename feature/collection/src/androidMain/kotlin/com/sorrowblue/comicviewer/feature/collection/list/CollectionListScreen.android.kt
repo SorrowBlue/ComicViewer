@@ -34,7 +34,7 @@ private fun CollectionListScreenPreview(
     PreviewTheme {
         SharedTransitionLayout {
             CompositionLocalProvider(LocalAppState provides rememberAppState(sharedTransitionScope = this)) {
-                AnimatedContent(true) { it ->
+                AnimatedContent(true) {
                     if (it) {
                         val lazyPagingItems = config.collectAsLazyPagingItems()
                         val scaffoldState =
@@ -52,12 +52,11 @@ private fun CollectionListScreenPreview(
                     }
                 }
             }
-
         }
     }
 }
 
- class CollectionListScreenPreviewParameterProvider :
+private class CollectionListScreenPreviewParameterProvider :
     PreviewParameterProvider<Flow<PagingData<Collection>>> {
     override val values
         get() = sequenceOf(
