@@ -5,6 +5,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.ArrowRight
 import androidx.compose.material.icons.automirrored.rounded.InsertDriveFile
+import androidx.compose.material.icons.automirrored.rounded.LastPage
 import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
 import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.automirrored.rounded.MenuOpen
@@ -31,6 +32,7 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.FirstPage
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.FolderOff
 import androidx.compose.material.icons.rounded.FolderOpen
@@ -123,4 +125,6 @@ object ComicIcons {
     val CollectionsBookmark = Icons.Rounded.CollectionsBookmark
     val Menu = Icons.Rounded.Menu
     val MenuOpen = Icons.AutoMirrored.Rounded.MenuOpen
+    val FirstPage = Icons.Rounded.FirstPage
+    val LastPage = Icons.AutoMirrored.Rounded.LastPage
 }

@@ -22,12 +22,13 @@ import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun NavigationSuiteScaffold2State<*>.DefaultAppBarScope(
-    content: @Composable () -> Unit
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
 ) {
     AnimatedContent(
         appBarState.targetValue.isVisible,
         transitionSpec = AppBarTransition,
-        modifier = Modifier
+        modifier = modifier
             .animateEnterExit(
                 enter = AppBarTransitionEnter,
                 exit = AppBarTransitionExit

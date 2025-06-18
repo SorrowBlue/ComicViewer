@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -27,7 +25,6 @@ import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems

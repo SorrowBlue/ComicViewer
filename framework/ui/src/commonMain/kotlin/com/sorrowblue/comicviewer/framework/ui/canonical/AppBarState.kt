@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
 
 enum class AppBarValue {
     Visible,
-    Hidden
+    Hidden,
 }
 
 val AppBarValue.isVisible
@@ -44,7 +44,7 @@ interface AppBarState {
 fun rememberAppBarState(
     initialValue: AppBarValue = AppBarValue.Visible,
 ): AppBarState {
-    return rememberSaveable(saver = AppBarStateImpl.Saver()) {
+    return rememberSaveable(saver = AppBarStateImpl.saver()) {
         AppBarStateImpl(initialValue = initialValue)
     }
 }
@@ -100,8 +100,8 @@ private class AppBarStateImpl(var initialValue: AppBarValue) : AppBarState {
         private const val Hidden = 0f
         private const val Visible = 1f
 
-        /** The default [Saver] implementation for [NavigationSuiteScaffoldState]. */
-        fun Saver() =
+        /** The default [saver] implementation for [NavigationSuiteScaffoldState]. */
+        fun saver() =
             Saver<AppBarState, AppBarValue>(
                 save = { it.targetValue },
                 restore = { AppBarStateImpl(it) }

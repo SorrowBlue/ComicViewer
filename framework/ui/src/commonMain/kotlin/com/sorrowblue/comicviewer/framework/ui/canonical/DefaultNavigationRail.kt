@@ -40,18 +40,18 @@ val NavigationSuiteScaffold2State<*>.DefaultNavigationRail: @Composable (Boolean
         }
     }
 
-private val NavigationRailTransitionEnter = slideInHorizontally(
+internal val NavigationRailTransitionEnter = slideInHorizontally(
     animationSpec = ExpressiveMotion.Spatial.default(),
     initialOffsetX = { -it }
 )
 
-private val NavigationRailTransitionExit = slideOutHorizontally(
+internal val NavigationRailTransitionExit = slideOutHorizontally(
     animationSpec = ExpressiveMotion.Spatial.default(),
     targetOffsetX = { -it }
 )
 
-private val NavigationRailTransition: AnimatedContentTransitionScope<*>.() -> ContentTransform = {
+internal val NavigationRailTransition: AnimatedContentTransitionScope<*>.() -> ContentTransform = {
     NavigationRailTransitionEnter togetherWith NavigationRailTransitionExit
 }
 
-private data object NavigationRailSharedElementKey
+internal data object NavigationRailSharedElementKey

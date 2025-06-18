@@ -26,7 +26,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 
@@ -69,9 +69,7 @@ fun NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo2(
 ): NavigationState = with(adaptiveInfo) {
     if (windowPosture.isTabletop) {
         NavigationState.NavigationBar(defaultVisible)
-    } else if (
-        windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.Companion.COMPACT
-    ) {
+    } else if (windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)) {
         NavigationState.NavigationRail(defaultVisible)
     } else {
         NavigationState.NavigationBar(defaultVisible)

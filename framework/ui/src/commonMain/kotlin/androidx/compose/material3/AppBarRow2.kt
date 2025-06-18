@@ -52,25 +52,25 @@ fun AppBarRow2(
 
     Layout(
         contents =
-            listOf(
-                { scope.items.fastForEach { it.AppbarContent() } },
-                {
-                    Box {
-                        overflowIndicator(menuState)
-                        DropdownMenu(
-                            expanded = menuState.isExpanded,
-                            onDismissRequest = { menuState.dismiss() }
-                        ) {
-                            scope.items
-                                .subList(
-                                    overflowState.visibleItemCount,
-                                    overflowState.totalItemCount
-                                )
-                                .fastForEach { item -> item.MenuContent(menuState) }
-                        }
+        listOf(
+            { scope.items.fastForEach { it.AppbarContent() } },
+            {
+                Box {
+                    overflowIndicator(menuState)
+                    DropdownMenu(
+                        expanded = menuState.isExpanded,
+                        onDismissRequest = { menuState.dismiss() }
+                    ) {
+                        scope.items
+                            .subList(
+                                overflowState.visibleItemCount,
+                                overflowState.totalItemCount
+                            )
+                            .fastForEach { item -> item.MenuContent(menuState) }
                     }
                 }
-            ),
+            }
+        ),
         modifier = modifier,
         measurePolicy = measurePolicy,
     )
@@ -385,6 +385,7 @@ internal class OverflowMeasurePolicy2(
         val contentPlaceables = mutableListOf<Placeable>()
 
         // Measure content until it doesn't fit
+        @Suppress("LoopWithTooManyJumpStatements")
         for (i in contentMeasurables.indices) {
             val placeable = contentMeasurables[i].measure(looseConstraints)
             val isLastContent = i == contentMeasurables.lastIndex

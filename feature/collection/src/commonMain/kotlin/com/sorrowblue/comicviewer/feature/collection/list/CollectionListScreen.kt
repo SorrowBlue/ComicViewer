@@ -1,20 +1,13 @@
 package com.sorrowblue.comicviewer.feature.collection.list
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.paging.PagingData
 import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionListAppBar
@@ -22,23 +15,16 @@ import com.sorrowblue.comicviewer.feature.collection.section.CollectionListConte
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionListContentsAction
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
-import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
 import com.sorrowblue.comicviewer.framework.ui.PrimaryActionContentMode
 import com.sorrowblue.comicviewer.framework.ui.canonical.PrimaryActionButtonMenu
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
-import com.sorrowblue.comicviewer.framework.ui.rememberAppState
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_label_collection
 import comicviewer.feature.collection.generated.resources.collection_label_smart_collection
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Serializable
@@ -101,7 +87,8 @@ internal fun CollectionListScreen(
                 FloatingActionButtonMenuItem(
                     onClick = {
                         onCreateBasicCollectionClick()
-                    }, text = {
+                    },
+                    text = {
                         Text(stringResource(Res.string.collection_label_collection))
                     },
                     icon = {

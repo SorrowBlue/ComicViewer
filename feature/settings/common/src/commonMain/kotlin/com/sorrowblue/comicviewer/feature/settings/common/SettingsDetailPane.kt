@@ -24,7 +24,7 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
 interface SettingsDetailNavigator {
@@ -44,7 +44,7 @@ fun SettingsDetailPane(
     actions: @Composable (RowScope.() -> Unit) = {},
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
     scrollBehavior: TopAppBarScrollBehavior =
-        if (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT) {
+        if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)) {
             TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
         } else {
             TopAppBarDefaults.pinnedScrollBehavior()
@@ -54,7 +54,10 @@ fun SettingsDetailPane(
 ) {
     Scaffold(
         topBar = {
-            if (windowAdaptiveInfo.windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT) {
+            if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(
+                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
+                )
+            ) {
                 LargeTopAppBar(
                     title = title,
                     actions = actions,

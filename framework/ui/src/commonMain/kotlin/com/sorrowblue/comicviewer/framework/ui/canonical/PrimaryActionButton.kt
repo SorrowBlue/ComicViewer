@@ -40,6 +40,7 @@ fun NavigationSuiteScaffold2State<*>.PrimaryActionButton(
     onClick: () -> Unit,
     text: @Composable () -> Unit,
     icon: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     visible: Boolean = true,
 ) {
     if (navigationSuiteType.isNavigationRail) {
@@ -49,7 +50,7 @@ fun NavigationSuiteScaffold2State<*>.PrimaryActionButton(
             text = text,
             icon = icon,
             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-            modifier = Modifier.padding(start = 20.dp)
+            modifier = modifier.padding(start = 20.dp)
                 .animateFloatingActionButton(
                     visible = floatingActionButtonState.targetValue.isVisible,
                     alignment = Alignment.Center
@@ -66,7 +67,7 @@ fun NavigationSuiteScaffold2State<*>.PrimaryActionButton(
     } else {
         MediumFloatingActionButton(
             onClick = onClick,
-            modifier = Modifier
+            modifier = modifier
                 .animateFloatingActionButton(
                     visible = visible && floatingActionButtonState.targetValue.isVisible,
                     alignment = Alignment.BottomEnd
@@ -88,6 +89,7 @@ fun NavigationSuiteScaffold2State<*>.PrimaryActionButton(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun NavigationSuiteScaffold2State<*>.PrimaryActionButtonMenu(
+    modifier: Modifier = Modifier,
     visible: Boolean = true,
     content: @Composable FloatingActionButtonMenuScope.() -> Unit,
 ) {
@@ -97,23 +99,23 @@ fun NavigationSuiteScaffold2State<*>.PrimaryActionButtonMenu(
         button = {
             ToggleFloatingActionButton(
                 modifier =
-                    Modifier.semantics {
-                        traversalIndex = -1f
-                        stateDescription = if (fabMenuExpanded) "Expanded" else "Collapsed"
-                        contentDescription = "Toggle menu"
-                    }
-                        .animateFloatingActionButton(
-                            visible = visible && floatingActionButtonState.targetValue.isVisible || fabMenuExpanded,
-                            alignment = Alignment.BottomEnd
-                        )
-                        .animateEnterExit(
-                            enter = FloatingActionButtonTransitionEnter,
-                            exit = FloatingActionButtonTransitionExit
-                        )
-                        .sharedElement(
-                            sharedContentState = rememberSharedContentState("fab"),
-                            animatedVisibilityScope = this
-                        ),
+                Modifier.semantics {
+                    traversalIndex = -1f
+                    stateDescription = if (fabMenuExpanded) "Expanded" else "Collapsed"
+                    contentDescription = "Toggle menu"
+                }
+                    .animateFloatingActionButton(
+                        visible = visible && floatingActionButtonState.targetValue.isVisible || fabMenuExpanded,
+                        alignment = Alignment.BottomEnd
+                    )
+                    .animateEnterExit(
+                        enter = FloatingActionButtonTransitionEnter,
+                        exit = FloatingActionButtonTransitionExit
+                    )
+                    .sharedElement(
+                        sharedContentState = rememberSharedContentState("fab"),
+                        animatedVisibilityScope = this
+                    ),
                 checked = fabMenuExpanded,
                 onCheckedChange = { fabMenuExpanded = !fabMenuExpanded }
             ) {
@@ -129,7 +131,8 @@ fun NavigationSuiteScaffold2State<*>.PrimaryActionButtonMenu(
                 )
             }
         },
-        content = content
+        content = content,
+        modifier = modifier
     )
 }
 

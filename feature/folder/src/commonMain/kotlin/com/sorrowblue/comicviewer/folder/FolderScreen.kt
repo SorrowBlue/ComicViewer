@@ -32,8 +32,6 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
-import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid

@@ -69,8 +69,7 @@ private class AppStateImpl(
 ) : AppState,
     SharedTransitionScope by sharedTransitionScope {
 
-    override fun onNavItemClick(navItem: NavItem) {
-    }
+    override fun onNavItemClick(navItem: NavItem) = Unit
 
     override val navItems = mutableStateListOf<NavItem>(
         object : NavItem {
@@ -78,21 +77,18 @@ private class AppStateImpl(
                 @Composable
                 get() = stringResource(Res.string.label_settings)
             override val icon = ComicIcons.Settings
-
         },
         object : NavItem {
             override val title
                 @Composable
                 get() = stringResource(Res.string.label_settings)
             override val icon = ComicIcons.Settings
-
         },
         object : NavItem {
             override val title
                 @Composable
                 get() = stringResource(Res.string.label_settings)
             override val icon = ComicIcons.Settings
-
         },
         object : NavItem {
             override val title

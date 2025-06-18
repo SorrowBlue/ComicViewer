@@ -16,9 +16,13 @@ fun AppBarRowScope2.fileListDisplayItem(fileListDisplay: FileListDisplay, onClic
         autoDismiss = false,
         label = {
             Text(
-                if (fileListDisplay == FileListDisplay.Grid) stringResource(Res.string.file_list_label_switch_list_view) else stringResource(
-                    Res.string.file_list_label_switch_grid_view
-                )
+                if (fileListDisplay == FileListDisplay.Grid) {
+                    stringResource(Res.string.file_list_label_switch_list_view)
+                } else {
+                    stringResource(
+                        Res.string.file_list_label_switch_grid_view
+                    )
+                }
             )
         },
         icon = {
