@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -69,14 +68,6 @@ fun ListFile(
                             .clip(CardDefaults.shape)
                             .background(ComicTheme.colorScheme.imageBackground(ListItemDefaults.containerColor))
                     )
-                    if (isError && file is Folder) {
-                        Icon(
-                            imageVector = ComicIcons.Folder,
-                            contentDescription = null,
-                            modifier = Modifier.align(Alignment.BottomEnd)
-                                .padding(end = 4.dp, bottom = 4.dp)
-                        )
-                    }
                 }
             } else {
                 Box(

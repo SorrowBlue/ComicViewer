@@ -1,16 +1,12 @@
 package com.sorrowblue.comicviewer.folder
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
@@ -26,7 +22,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.cmpdestinations.result.NavResultReceiver
@@ -49,13 +44,12 @@ import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
+import com.sorrowblue.comicviewer.framework.ui.layout.union
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.VerticalScrollbar
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.rememberScrollbarAdapter
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.scrollbarStyle
+import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
 import comicviewer.feature.folder.generated.resources.Res
 import comicviewer.feature.folder.generated.resources.folder_text_nothing_in_folder
 import org.jetbrains.compose.resources.stringResource
@@ -88,7 +82,7 @@ fun FolderScreen(
     val state = rememberFolderScreenState(args = route)
     FolderScreen(
         uiState = state.uiState,
-        scaffoldState = state.state,
+        scaffoldState = state.scaffoldState,
         lazyPagingItems = state.lazyPagingItems,
         onFolderTopAppBarAction = state::onFolderTopAppBarAction,
         onFileInfoSheetAction = state::onFileInfoSheetAction,
@@ -108,7 +102,10 @@ fun FolderScreen(
             FolderScreenEvent.Restore -> currentNavigator.onRestoreComplete()
             is FolderScreenEvent.Search -> currentNavigator.onSearchClick(it.bookshelfId, it.path)
             FolderScreenEvent.Settings -> currentNavigator.onSettingsClick()
-            is FolderScreenEvent.Sort -> currentNavigator.onSortClick(it.sortType, it.folderScopeOnly)
+            is FolderScreenEvent.Sort -> currentNavigator.onSortClick(
+                it.sortType,
+                it.folderScopeOnly
+            )
         }
     }
 
@@ -216,10 +213,13 @@ private fun FolderContents(
                 text = stringResource(Res.string.folder_text_nothing_in_folder, title)
             )
         } else {
-            Box {
+            ScrollbarBox(
+                state = lazyGridState,
+                scrollbarWindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
+                    union contentPadding.asWindowInsets().only(WindowInsetsSides.Vertical)
+            ) {
                 FileLazyVerticalGrid(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     uiState = fileLazyVerticalGridUiState,
                     lazyPagingItems = lazyPagingItems,
                     contentPadding = contentPadding,
@@ -228,24 +228,7 @@ private fun FolderContents(
                     state = lazyGridState,
                     emphasisPath = emphasisPath
                 )
-                VerticalScrollbar(
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                        .fillMaxHeight()
-                        .padding(
-                            contentPadding
-                                .asWindowInsets()
-                                .only(WindowInsetsSides.Top)
-                                .union(
-                                    WindowInsets.safeDrawing.only(
-                                        WindowInsetsSides.Vertical + WindowInsetsSides.End
-                                    )
-                                ).asPaddingValues().plus(PaddingValues(end = 4.dp))
-                        ),
-                    style = scrollbarStyle(),
-                    adapter = rememberScrollbarAdapter(lazyGridState)
-                )
             }
-//            }
         }
     }
 }

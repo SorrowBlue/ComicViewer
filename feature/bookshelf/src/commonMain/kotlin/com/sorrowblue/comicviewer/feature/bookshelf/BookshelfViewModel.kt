@@ -8,6 +8,7 @@ import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.PagingBookshelfFolderUseCase
 import kotlinx.coroutines.flow.Flow
+import logcat.logcat
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -18,4 +19,9 @@ internal class BookshelfViewModel(
     val pagingDataFlow: Flow<PagingData<BookshelfFolder>> =
         pagingBookshelfFolderUseCase(PagingBookshelfFolderUseCase.Request(PagingConfig(20)))
             .cachedIn(viewModelScope)
+
+    override fun onCleared() {
+        super.onCleared()
+        logcat { "onCleared" }
+    }
 }

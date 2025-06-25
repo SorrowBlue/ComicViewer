@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -23,7 +22,7 @@ import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutSt
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @PreviewMultiScreen
 @Composable
 private fun CollectionListScreenPreview(

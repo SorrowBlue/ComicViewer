@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
@@ -61,7 +60,7 @@ import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
 import com.sorrowblue.comicviewer.framework.ui.PrimaryActionContentMode
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun NavigationSuiteScaffold2State<*>.AnimatedNavigationSuiteScaffold(
     state: NavigationSuiteScaffold2State<*>,
@@ -103,7 +102,7 @@ fun NavigationSuiteScaffold2State<*>.AnimatedNavigationSuiteScaffold(
         movableContentWithReceiverOf<RowScope> {
             suiteItemProvider.itemList.forEach {
                 NavigationSuiteItem(
-                    navigationSuiteType = layoutType,
+                    navigationSuiteType = NavigationSuiteType.ShortNavigationBarCompact,
                     modifier = it.modifier,
                     selected = it.selected,
                     onClick = it.onClick,
@@ -117,7 +116,7 @@ fun NavigationSuiteScaffold2State<*>.AnimatedNavigationSuiteScaffold(
         }
     }
     Scaffold(
-//        modifier = modifier,
+        modifier = modifier,
         containerColor = LocalContainerColor.current,
         bottomBar = {
             AnimatedContent(
@@ -311,7 +310,6 @@ private fun NavigationItemIcon(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun NavigationSuiteItem(
     navigationSuiteType: NavigationSuiteType,

@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.window.Notification
 import androidx.compose.ui.window.Tray
@@ -35,5 +36,9 @@ fun main() = application {
     ) {
         window.minimumSize = Dimension(400, 600)
         Application(finishApp = ::exitApplication)
+
+        LaunchedEffect(Unit) {
+            System.loadLibrary("javaviewerlib64")
+        }
     }
 }

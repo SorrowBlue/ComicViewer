@@ -35,7 +35,6 @@ import com.sorrowblue.comicviewer.framework.ui.canonical.PrimaryActionButton
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_btn_add
@@ -80,8 +79,6 @@ internal fun BookshelfScreen(
             notificationNavResultReceiver = notificationNavResultReceiver,
         )
     }
-
-    NavTabHandler(onClick = state::onNavClick)
 }
 
 @Composable

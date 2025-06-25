@@ -30,7 +30,7 @@ internal fun BookshelfGridList(
     ScrollbarBox(
         state = lazyGridState,
         scrollbarWindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
-            union contentPadding.asWindowInsets().only(WindowInsetsSides.Top)
+            union contentPadding.asWindowInsets().only(WindowInsetsSides.Vertical)
     ) {
         LazyPagingColumn(
             autoPadding = false,
