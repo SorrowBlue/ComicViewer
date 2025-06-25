@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.history
 
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,7 +46,6 @@ internal interface HistoryScreenState :
     fun onNavResult(result: NavResult<Boolean>)
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun rememberHistoryScreenState(
     scaffoldState: NavigationSuiteScaffold2State<File.Key> = rememberCanonicalScaffoldLayoutState(),

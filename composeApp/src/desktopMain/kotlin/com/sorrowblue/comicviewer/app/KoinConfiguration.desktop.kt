@@ -12,6 +12,7 @@ import org.koin.ksp.generated.module
 
 internal actual fun koinConfiguration() = KoinConfiguration {
     logger(JvmLogger)
+    modules(allModules())
 }
 
 internal actual fun allModules() =

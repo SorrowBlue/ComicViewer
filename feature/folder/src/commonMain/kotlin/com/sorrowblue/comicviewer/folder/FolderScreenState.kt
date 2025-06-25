@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -48,7 +47,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import logcat.asLog
 import logcat.logcat
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 
 internal sealed interface FolderScreenEvent {
     data class Collection(val bookshelfId: BookshelfId, val path: String) : FolderScreenEvent
@@ -67,13 +66,13 @@ internal sealed interface FolderScreenEvent {
 @Stable
 internal interface FolderScreenState {
 
-    val state: NavigationSuiteScaffold2State<File.Key>
+    val scaffoldState: NavigationSuiteScaffold2State<File.Key>
     val events: EventFlow<FolderScreenEvent>
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
     val pullRefreshState: PullToRefreshState
-    fun onNavClick()
+    fun onReSelected()
     fun onNavResult(navResult: NavResult<SortTypeSelect>)
     fun onFolderTopAppBarAction(action: FolderTopAppBarAction)
 
@@ -82,19 +81,18 @@ internal interface FolderScreenState {
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun rememberFolderScreenState(
     args: Folder,
-    state: NavigationSuiteScaffold2State<File.Key> = rememberCanonicalScaffoldLayoutState<File.Key>(),
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
-    viewModel: FolderViewModel = koinViewModel(),
+    viewModel: FolderViewModel = FolderViewModel.koinViewModel(args.bookshelfId, args.path),
+    getFileUseCase: GetFileUseCase = koinInject(),
+    displaySettingsUseCase: ManageFolderDisplaySettingsUseCase = koinInject(),
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ): FolderScreenState {
-    val lazyPagingItems =
-        viewModel.pagingDataFlow(args.bookshelfId, args.path).collectAsLazyPagingItems()
-    return rememberSaveable(
+    val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+    val state = rememberSaveable(
         saver = Saver(
             save = {
                 it.isRestored
@@ -102,13 +100,12 @@ internal fun rememberFolderScreenState(
             restore = {
                 FolderScreenStateImpl(
                     lazyPagingItems = lazyPagingItems,
-                    state = state,
                     lazyGridState = lazyGridState,
                     pullRefreshState = pullRefreshState,
                     scope = scope,
                     args = args,
-                    folderDisplaySettingsUseCase = viewModel.displaySettingsUseCase,
-                    getFileUseCase = viewModel.getFileUseCase
+                    folderDisplaySettingsUseCase = displaySettingsUseCase,
+                    getFileUseCase = getFileUseCase
                 ).apply {
                     isRestored = it
                 }
@@ -117,20 +114,22 @@ internal fun rememberFolderScreenState(
     ) {
         FolderScreenStateImpl(
             lazyPagingItems = lazyPagingItems,
-            state = state,
             lazyGridState = lazyGridState,
             pullRefreshState = pullRefreshState,
             scope = scope,
             args = args,
-            folderDisplaySettingsUseCase = viewModel.displaySettingsUseCase,
-            getFileUseCase = viewModel.getFileUseCase
+            folderDisplaySettingsUseCase = displaySettingsUseCase,
+            getFileUseCase = getFileUseCase
         )
     }
+    state.scaffoldState = rememberCanonicalScaffoldLayoutState<File.Key>(
+        onReSelect = state::onReSelected
+    )
+    return state
 }
 
 private class FolderScreenStateImpl(
     override val lazyPagingItems: LazyPagingItems<File>,
-    override val state: NavigationSuiteScaffold2State<File.Key>,
     override val lazyGridState: LazyGridState,
     override val pullRefreshState: PullToRefreshState,
     private val scope: CoroutineScope,
@@ -138,6 +137,8 @@ private class FolderScreenStateImpl(
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     getFileUseCase: GetFileUseCase,
 ) : FolderScreenState {
+
+    override lateinit var scaffoldState: NavigationSuiteScaffold2State<File.Key>
 
     var isRestored by mutableStateOf(false)
 
@@ -191,8 +192,8 @@ private class FolderScreenStateImpl(
 
     override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
         when (action) {
-            FileInfoSheetNavigator.Back -> scope.launch { state.navigator.navigateBack() }
-            is FileInfoSheetNavigator.Collection -> state.navigator.currentDestination!!.contentKey!!.let {
+            FileInfoSheetNavigator.Back -> scope.launch { scaffoldState.navigator.navigateBack() }
+            is FileInfoSheetNavigator.Collection -> scaffoldState.navigator.currentDestination!!.contentKey!!.let {
                 events.tryEmit(FolderScreenEvent.Collection(it.bookshelfId, it.path))
             }
 
@@ -204,7 +205,10 @@ private class FolderScreenStateImpl(
         when (action) {
             is FolderContentsAction.File -> events.tryEmit(FolderScreenEvent.File(action.file))
             is FolderContentsAction.FileInfo -> scope.launch {
-                state.navigator.navigateTo(SupportingPaneScaffoldRole.Extra, action.file.key())
+                scaffoldState.navigator.navigateTo(
+                    SupportingPaneScaffoldRole.Extra,
+                    action.file.key()
+                )
             }
 
             FolderContentsAction.Refresh -> refreshItems()
@@ -278,13 +282,21 @@ private class FolderScreenStateImpl(
             ((lazyPagingItems.loadState.refresh as LoadState.Error).error as? PagingException)?.let {
                 scope.launch {
                     when (it) {
-                        is PagingException.InvalidAuth -> state.snackbarHostState.showSnackbar("認証エラー")
+                        is PagingException.InvalidAuth -> scaffoldState.snackbarHostState.showSnackbar(
+                            "認証エラー"
+                        )
 
-                        is PagingException.InvalidServer -> state.snackbarHostState.showSnackbar("サーバーエラー")
+                        is PagingException.InvalidServer -> scaffoldState.snackbarHostState.showSnackbar(
+                            "サーバーエラー"
+                        )
 
-                        is PagingException.NoNetwork -> state.snackbarHostState.showSnackbar("ネットワークエラー")
+                        is PagingException.NoNetwork -> scaffoldState.snackbarHostState.showSnackbar(
+                            "ネットワークエラー"
+                        )
 
-                        is PagingException.NotFound -> state.snackbarHostState.showSnackbar("見つかりませんでした")
+                        is PagingException.NotFound -> scaffoldState.snackbarHostState.showSnackbar(
+                            "見つかりませんでした"
+                        )
                     }
                 }
             }
@@ -351,10 +363,10 @@ private class FolderScreenStateImpl(
         }
     }
 
-    override fun onNavClick() {
+    override fun onReSelected() {
         if (lazyGridState.canScrollBackward) {
             scope.launch {
-                lazyGridState.scrollToItem(0)
+                lazyGridState.animateScrollToItem(0)
             }
         }
     }

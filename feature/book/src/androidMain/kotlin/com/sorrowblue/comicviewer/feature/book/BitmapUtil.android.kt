@@ -20,8 +20,8 @@ internal actual fun Bitmap.asImageBitmap(): ImageBitmap {
     return asImageBitmap()
 }
 
-internal actual val Bitmap.width: Int
+internal actual val Bitmap.imageWidth: Int
     get() = width
 
-internal actual val Bitmap.height: Int
+internal actual val Bitmap.imageHeight: Int
     get() = height

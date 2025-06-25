@@ -7,7 +7,6 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -23,6 +22,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.material3.rememberWideNavigationRailState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigableExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanonicalScaffoldNavigator
 import com.sorrowblue.comicviewer.framework.ui.canonical.AnimatedNavigationSuiteScaffold
@@ -45,7 +46,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 interface NavigationSuiteScaffold2State<T : Any> : AnimatedVisibilityScope, SharedTransitionScope {
     val suiteScaffoldState: NavigationSuiteScaffoldState
     val navigationRailState: WideNavigationRailState
@@ -61,7 +62,6 @@ interface NavigationSuiteScaffold2State<T : Any> : AnimatedVisibilityScope, Shar
     val snackbarHostState: SnackbarHostState
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldLayoutState(
     navigator: ThreePaneScaffoldNavigator<T> = rememberCanonicalScaffoldNavigator(),
@@ -72,6 +72,7 @@ inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldLayoutState(
     floatingActionButtonState: FloatingActionButtonState = rememberFloatingActionButtonState(),
     appState: AppState = LocalAppState.current,
     scope: CoroutineScope = rememberCoroutineScope(),
+    noinline onReSelect: () -> Unit = {},
 ): NavigationSuiteScaffold2State<T> {
     return remember {
         NavigationSuiteScaffold2StateImpl(
@@ -82,12 +83,13 @@ inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldLayoutState(
             floatingActionButtonState = floatingActionButtonState,
             navigator = navigator,
             appState = appState,
-            scope = scope
+            scope = scope,
+            onReSelected = onReSelect,
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 class NavigationSuiteScaffold2StateImpl<T : Any>(
     animatedVisibilityScope: AnimatedVisibilityScope,
     override val suiteScaffoldState: NavigationSuiteScaffoldState,
@@ -97,6 +99,7 @@ class NavigationSuiteScaffold2StateImpl<T : Any>(
     override val navigator: ThreePaneScaffoldNavigator<T>,
     private val appState: AppState,
     private val scope: CoroutineScope,
+    private val onReSelected: () -> Unit,
 ) : NavigationSuiteScaffold2State<T>,
     AnimatedVisibilityScope by animatedVisibilityScope,
     SharedTransitionScope by appState.sharedTransitionScope {
@@ -110,6 +113,9 @@ class NavigationSuiteScaffold2StateImpl<T : Any>(
     override val navItems: List<NavItem> get() = appState.navItems
     override val currentNavItem: NavItem? get() = appState.currentNavItem
     override fun onNavItemClick(navItem: NavItem) {
+        if (navItem == currentNavItem) {
+            onReSelected()
+        }
         appState.onNavItemClick(navItem)
     }
 
@@ -122,7 +128,6 @@ enum class PrimaryActionContentMode {
     NavigationBarOnly,
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun <T : Any> NavigationSuiteScaffold2State<T>.CanonicalScaffoldLayout(
     modifier: Modifier = Modifier,
@@ -181,7 +186,11 @@ fun <T : Any> NavigationSuiteScaffold2State<T>.CanonicalScaffoldLayout(
                     modifier = appBarState.scrollBehavior?.nestedScrollConnection?.let(Modifier::nestedScroll)
                         ?: Modifier
                 ) { contentPadding ->
-                    content(contentPadding)
+                    CompositionLocalProvider(
+                        LocalContainerColor provides ComicTheme.colorScheme.surface
+                    ) {
+                        content(contentPadding)
+                    }
                 }
             }
         }

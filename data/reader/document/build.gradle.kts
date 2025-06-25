@@ -21,6 +21,9 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.pdfbox)
+                implementation(fileTree("libs") {
+                    include("*.jar")
+                })
             }
         }
     }
@@ -30,6 +33,10 @@ android {
     namespace = "com.sorrowblue.comicviewer.data.reader.document"
     packaging {
         jniLibs.useLegacyPackaging = false
+    }
+
+    buildFeatures {
+        aidl = true
     }
 }
 

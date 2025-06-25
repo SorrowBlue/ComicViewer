@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.feature.collection
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -60,7 +59,6 @@ internal interface CollectionScreenState {
     fun onContentsAction(action: CollectionContentsAction)
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun rememberCollectionScreenState(
     route: Collection,

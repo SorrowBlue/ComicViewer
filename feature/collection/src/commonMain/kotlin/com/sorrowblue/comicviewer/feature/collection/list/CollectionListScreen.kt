@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.collection.list
 
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -63,7 +62,6 @@ internal fun CollectionListScreen(navigator: CollectionListScreenNavigator = koi
     )
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun CollectionListScreen(
     scaffoldState: NavigationSuiteScaffold2State<Unit>,

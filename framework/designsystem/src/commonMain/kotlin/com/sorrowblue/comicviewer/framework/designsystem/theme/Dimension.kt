@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Stable
-class Dimension(
+data class Dimension(
     val margin: Dp,
     val spacer: Dp,
     val targetSpacing: Dp = 8.dp,

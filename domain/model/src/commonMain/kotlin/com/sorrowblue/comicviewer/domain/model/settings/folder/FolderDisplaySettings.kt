@@ -35,7 +35,13 @@ data class FolderDisplaySettings(
     val imageScale: ImageScale = FolderDisplaySettingsDefaults.imageScale,
     val imageFilterQuality: ImageFilterQuality = FolderDisplaySettingsDefaults.imageFilterQuality,
     val folderThumbnailOrder: FolderThumbnailOrder = FolderDisplaySettingsDefaults.folderThumbnailOrder,
-)
+) {
+
+    fun currentSortType(bookshelfId: BookshelfId, path: String): SortType {
+        return folderScopeOnlyList.find { it.bookshelfId == bookshelfId && it.path == path }?.sortType
+            ?: sortType
+    }
+}
 
 object FolderDisplaySettingsDefaults {
 

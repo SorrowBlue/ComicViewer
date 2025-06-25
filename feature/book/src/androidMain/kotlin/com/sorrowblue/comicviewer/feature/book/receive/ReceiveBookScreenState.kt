@@ -45,7 +45,7 @@ internal interface ReceiveBookScreenState : SaveableScreenState {
 
     fun toggleTooltip()
     fun onPageChange(page: Int)
-    fun onPageLoaded(split: UnratedPage, bitmap: coil3.Bitmap)
+    fun onPageLoaded(unratedPage: UnratedPage, bitmap: coil3.Bitmap)
 }
 
 @KoinViewModel

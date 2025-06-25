@@ -33,7 +33,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_desc_open_file_info
 import org.jetbrains.compose.resources.stringResource
@@ -71,7 +70,6 @@ fun GridFile(
                         .fillMaxWidth()
                         .aspectRatio(1f)
                         .clip(CardDefaults.shape)
-                        .background(ComicTheme.colorScheme.imageBackground(colors.containerColor))
                 )
             } else {
                 GridFileIcon(file = file)

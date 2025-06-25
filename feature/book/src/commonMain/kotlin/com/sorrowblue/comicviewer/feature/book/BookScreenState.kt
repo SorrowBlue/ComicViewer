@@ -223,7 +223,7 @@ private class BookScreenStateImpl(
     private fun onSplitPageLoad(split: BookPage.Split.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(split)
         if (0 < index) {
-            if (bitmap.width < bitmap.height) {
+            if (bitmap.imageWidth < bitmap.imageHeight) {
                 currentList[index] = BookPage.Split.Single(split.index)
             } else {
                 currentList[index] = BookPage.Split.Right(split.index)
@@ -234,7 +234,7 @@ private class BookScreenStateImpl(
 
     private fun onSpreadPageLoad(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(spread)
-        if (bitmap.width < bitmap.height) {
+        if (bitmap.imageWidth < bitmap.imageHeight) {
             currentList[index] = BookPage.Spread.Single(spread.index)
         } else {
             // 横

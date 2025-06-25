@@ -77,7 +77,7 @@ internal fun rememberComicViewerAppState(
     val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
         currentWindowAdaptiveInfo()
     )
-    return rememberListSaveable(
+    val comicViewerAppState = rememberListSaveable(
         save = { listOf(it.isNavigationRestored) },
         restore = { isNavigationRestored = it[0] as Boolean }
     ) {
@@ -97,6 +97,8 @@ internal fun rememberComicViewerAppState(
             navController = navController,
         )
     }
+    comicViewerAppState.navigationSuiteType = navigationSuiteType
+    return comicViewerAppState
 }
 
 internal interface ComicViewerAppState : AppState {

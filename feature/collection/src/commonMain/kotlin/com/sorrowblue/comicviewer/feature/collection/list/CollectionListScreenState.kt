@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.feature.collection.list
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -23,7 +22,6 @@ internal interface CollectionListScreenState {
     fun onNavClick()
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun rememberCollectionListScreenState(
     scaffoldState: NavigationSuiteScaffold2State<Unit> = rememberCanonicalScaffoldLayoutState(),
