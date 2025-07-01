@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.graphics.Bitmap
 import android.os.IBinder
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.DocumentFileReader
@@ -16,7 +15,6 @@ import com.sorrowblue.comicviewer.pdf.aidl.ISeekableInputStream
 import java.io.OutputStream
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -52,7 +50,7 @@ internal class PdfDocumentFileReader(
     private val mutex = Mutex()
     private var pdfService: IRemotePdfService? = null
     private var reader: com.sorrowblue.comicviewer.pdf.aidl.FileReader? = null
-    private val job = CoroutineScope(Dispatchers.IO)
+    private val job = CoroutineScope(dispatcher)
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             pdfService = IRemotePdfService.Stub.asInterface(service)
@@ -81,7 +79,6 @@ internal class PdfDocumentFileReader(
             context.bindService(this, connection, Context.BIND_AUTO_CREATE)
         }
     }
-
 
     override suspend fun pageCount(): Int {
         return mutex.withLock { withContext(dispatcher) { reader!!.pageCount() } }
