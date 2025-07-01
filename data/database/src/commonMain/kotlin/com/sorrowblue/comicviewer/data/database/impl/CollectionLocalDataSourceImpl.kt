@@ -27,7 +27,7 @@ import org.koin.core.annotation.Singleton
 @Singleton
 internal class CollectionLocalDataSourceImpl(
     private val dao: CollectionDao,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    @param:IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : CollectionLocalDataSource {
 
     override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<Collection>> {

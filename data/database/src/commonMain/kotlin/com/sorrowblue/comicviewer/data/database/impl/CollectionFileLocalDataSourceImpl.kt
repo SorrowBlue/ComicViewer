@@ -32,7 +32,7 @@ internal class CollectionFileLocalDataSourceImpl(
     private val dao: CollectionDao,
     private val collectionFileDao: CollectionFileDao,
     private val fileDao: FileDao,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    @param:IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : CollectionFileLocalDataSource {
 
     override fun pagingDataFlow(
