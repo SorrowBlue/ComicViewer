@@ -33,12 +33,6 @@ dependencyResolutionManagement {
         }
         mavenCentral()
         maven {
-            url = uri("https://maven.ghostscript.com/")
-            content {
-                includeModule("com.artifex.mupdf", "fitz")
-            }
-        }
-        maven {
             name = "gitlab-maven"
             url = uri("https://gitlab.com/api/v4/projects/59936705/packages/maven")
             content {

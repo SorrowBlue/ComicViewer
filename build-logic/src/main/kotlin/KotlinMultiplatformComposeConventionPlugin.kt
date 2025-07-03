@@ -53,7 +53,7 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                 }
 
                 sourceSets.desktopMain.dependencies {
-                    implementation("androidx.window:window-core-jvm:1.4.0")
+                    implementation(libs.androidx.windowCoreJvm)
                 }
 
                 compilerOptions {

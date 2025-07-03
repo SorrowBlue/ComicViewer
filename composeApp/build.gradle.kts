@@ -88,7 +88,7 @@ kotlin {
                 implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
                     exclude(group = "org.jetbrains.androidx.window")
                 }
-                implementation("androidx.window:window-core-jvm:1.4.0")
+                implementation(libs.androidx.windowCoreJvm)
                 implementation(projects.data.storage.client)
             }
         }
@@ -135,8 +135,6 @@ android {
             signingConfig = signingConfigs.findByName(name)
         }
     }
-
-    dynamicFeatures += setOf(projects.data.reader.document.path)
 
     buildFeatures.buildConfig = true
 

@@ -13,8 +13,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import logcat.LogPriority
-import logcat.logcat
 import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import okio.BufferedSink
@@ -52,9 +50,7 @@ internal actual class ZipFileReader(
 
     actual override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         mutex.withLock {
-            logcat(LogPriority.DEBUG) { "copyTo(pageIndex: $pageIndex) path = ${entries[pageIndex].path}" }
             entries[pageIndex].extractSlow2 {
-                logcat(LogPriority.DEBUG) { "  extractSlow2 ${entries[pageIndex].path}" }
                 bufferedSink.write(it)
                 it.size
             }

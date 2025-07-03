@@ -1,26 +1,16 @@
 package com.sorrowblue.comicviewer.data.reader.document
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import logcat.logcat
+import com.sorrowblue.comicviewer.pdf.aidl.ISeekableInputStream
 
 internal class SeekableInputStreamImpl(private val seekableInputStream: SeekableInputStream) :
-    com.artifex.mupdf.fitz.SeekableInputStream {
+    ISeekableInputStream.Stub() {
 
-    override fun seek(offset: Long, whence: Int): Long {
-        return seekableInputStream.seek(offset, whence).also {
-            logcat { "seek($offset, $whence) = $it" }
-        }
-    }
+    override fun read(buf: ByteArray) = seekableInputStream.read(buf)
 
-    override fun position(): Long {
-        return seekableInputStream.position().also {
-            logcat { "position() = $it" }
-        }
-    }
+    override fun seek(offset: Long, whence: Int) = seekableInputStream.seek(offset, whence)
 
-    override fun read(buf: ByteArray): Int {
-        return seekableInputStream.read(buf).also {
-            logcat { "read($buf) = $it" }
-        }
-    }
+    override fun position() = seekableInputStream.position()
+
+    override fun close() = seekableInputStream.close()
 }
