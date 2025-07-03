@@ -9,7 +9,7 @@ internal interface SmartCollectionEditorScreenState {
 
     val event: EventFlow<SmartCollectionEditorScreenStateEvent>
 
-    suspend fun onSubmit(formData: SmartCollectionEditorFormData)
+    fun onSubmit(formData: SmartCollectionEditorFormData)
 }
 
 internal sealed interface SmartCollectionEditorScreenStateEvent {

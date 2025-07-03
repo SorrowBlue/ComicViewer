@@ -1,10 +1,12 @@
 package com.sorrowblue.comicviewer.domain.model.collection
 
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+@OptIn(ExperimentalTime::class)
 data class BasicCollection(
     override val id: CollectionId,
     override val name: String,

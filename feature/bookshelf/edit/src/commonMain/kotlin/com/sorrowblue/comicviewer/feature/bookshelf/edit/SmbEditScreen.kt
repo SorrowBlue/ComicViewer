@@ -28,18 +28,15 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.AuthField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DisplayNameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DomainField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.HostField
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PasswordFieldView
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PasswordField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameFieldView
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.EditScreen
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.EditorDialog
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
-import soil.form.FormPolicy
-import soil.form.compose.Controller
-import soil.form.compose.Form
-import soil.form.compose.rememberSubmissionRuleAutoControl
+import soil.form.compose.rememberForm
 
 internal data class SmbEditScreenUiState(
     val form: SmbEditScreenForm,
@@ -52,117 +49,108 @@ internal fun SmbEditScreen(
     uiState: SmbEditScreenUiState,
     snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
-    onSubmit: suspend (SmbEditScreenForm) -> Unit,
+    onSubmit: (SmbEditScreenForm) -> Unit,
     scrollState: ScrollState = rememberScrollState(),
 ) {
-    Form(
-        onSubmit = onSubmit,
+    val form = rememberForm(
         initialValue = uiState.form,
-        saver = kSerializableSaver<SmbEditScreenForm>(),
-        policy = FormPolicy.Default
-    ) {
-        Controller(rememberSubmissionRuleAutoControl()) { submission ->
-            val content = remember {
-                movableContentWithReceiverOf<ColumnScope> {
-                    val dimension = ComicTheme.dimension
-                    DisplayNameField(
-                        enabled = !submission.isSubmitting,
+        onSubmit = onSubmit,
+        saver = kSerializableSaver<SmbEditScreenForm>()
+    )
+
+    val content = remember {
+        movableContentWithReceiverOf<ColumnScope> {
+            val dimension = ComicTheme.dimension
+            DisplayNameField(
+                form = form,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = dimension.targetSpacing)
+                    .semantics { contentDataType = ContentDataType.None }
+            )
+            HostField(
+                form = form,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = dimension.targetSpacing)
+                    .semantics { contentDataType = ContentDataType.None }
+            )
+            PortField(
+                form = form,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = dimension.targetSpacing)
+                    .semantics { contentDataType = ContentDataType.None }
+            )
+            PathField(
+                form = form,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = dimension.targetSpacing)
+                    .semantics { contentDataType = ContentDataType.None }
+            )
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = dimension.targetSpacing * 2)
+                    .semantics { contentDataType = ContentDataType.None }
+            )
+            AuthField(
+                form = form,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = dimension.targetSpacing)
+                    .semantics { contentDataType = ContentDataType.None }
+            )
+            AnimatedVisibility(
+                visible = form.value.auth == Auth.UserPass,
+                enter = fadeIn() + expandIn(initialSize = { IntSize(it.width, 0) }),
+                exit = shrinkOut(targetSize = { IntSize(it.width, 0) }) + fadeOut(),
+            ) {
+                Column {
+                    DomainField(
+                        form = form,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
                             .semantics { contentDataType = ContentDataType.None }
                     )
-                    HostField(
-                        enabled = !submission.isSubmitting,
+
+                    UsernameField(
+                        form = form,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
-                            .semantics { contentDataType = ContentDataType.None }
+                            .semantics { contentType = ContentType.Username }
                     )
 
-                    PortField(
-                        enabled = !submission.isSubmitting,
+                    PasswordField(
+                        form = form,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
-                            .semantics { contentDataType = ContentDataType.None }
+                            .semantics { contentType = ContentType.Password }
                     )
-
-                    PathField(
-                        auth = formState.value.auth,
-                        enabled = !submission.isSubmitting,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = dimension.targetSpacing)
-                            .semantics { contentDataType = ContentDataType.None }
-                    )
-
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = dimension.targetSpacing * 2)
-                            .semantics { contentDataType = ContentDataType.None }
-                    )
-
-                    AuthField(
-                        enabled = !submission.isSubmitting,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = dimension.targetSpacing)
-                            .semantics { contentDataType = ContentDataType.None }
-                    )
-
-                    AnimatedVisibility(
-                        visible = formState.value.auth == Auth.UserPass,
-                        enter = fadeIn() + expandIn(initialSize = { IntSize(it.width, 0) }),
-                        exit = shrinkOut(targetSize = { IntSize(it.width, 0) }) + fadeOut(),
-                    ) {
-                        Column {
-                            DomainField(
-                                enabled = !submission.isSubmitting,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = dimension.targetSpacing)
-                                    .semantics { contentDataType = ContentDataType.None }
-                            )
-
-                            UsernameFieldView(
-                                enabled = !submission.isSubmitting,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = dimension.targetSpacing)
-                                    .semantics { contentType = ContentType.Username }
-                            )
-
-                            PasswordFieldView(
-                                enabled = !submission.isSubmitting,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = dimension.targetSpacing)
-                                    .semantics { contentType = ContentType.Password }
-                            )
-                        }
-                    }
                 }
             }
-            if (isDialog) {
-                EditorDialog(
-                    uiState = uiState,
-                    onDismissRequest = onBackClick,
-                    submission = submission,
-                    scrollState = scrollState,
-                    content = content
-                )
-            } else {
-                EditScreen(
-                    uiState = uiState,
-                    onBackClick = onBackClick,
-                    submission = submission,
-                    scrollState = scrollState,
-                    snackbarHostState = snackbarHostState,
-                    content = content
-                )
-            }
         }
+    }
+    if (isDialog) {
+        EditorDialog(
+            form = form,
+            uiState = uiState,
+            onDismissRequest = onBackClick,
+            scrollState = scrollState,
+            content = content
+        )
+    } else {
+        EditScreen(
+            form = form,
+            uiState = uiState,
+            onBackClick = onBackClick,
+            scrollState = scrollState,
+            snackbarHostState = snackbarHostState,
+            content = content
+        )
     }
 }

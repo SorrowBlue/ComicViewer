@@ -12,37 +12,36 @@ import com.sorrowblue.comicviewer.framework.ui.material3.SwitchWithText
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_show_hidden_files
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.rememberField
 
 @Composable
-internal fun FormScope<SmartCollectionEditorFormData>.ShowHiddenFilesField(
+internal fun ShowHiddenFilesField(
+    form: Form<SmartCollectionEditorFormData>,
     modifier: Modifier = Modifier,
-    control: FieldControl<Boolean> = rememberShowHiddenFilesControl(),
+    field: FormField<Boolean> = form.rememberShowHiddenFilesField(),
 ) {
-    Controller(control) { field ->
-        SwitchWithText(
-            text = { Text(text = field.name) },
-            checked = field.value,
-            onCheckedChange = field.onChange,
-            thumbContent = {
-                Icon(
-                    imageVector = ComicIcons.Check,
-                    contentDescription = null,
-                    modifier = Modifier.size(SwitchDefaults.IconSize)
-                )
-            },
-            modifier = modifier
-        )
-    }
+    SwitchWithText(
+        text = { Text(text = field.name) },
+        checked = field.value,
+        onCheckedChange = field::onValueChange,
+        thumbContent = {
+            Icon(
+                imageVector = ComicIcons.Check,
+                contentDescription = null,
+                modifier = Modifier.size(SwitchDefaults.IconSize)
+            )
+        },
+        modifier = modifier
+    )
 }
 
 @Composable
-private fun FormScope<SmartCollectionEditorFormData>.rememberShowHiddenFilesControl(): FieldControl<Boolean> {
-    return rememberFieldControl(
+private fun Form<SmartCollectionEditorFormData>.rememberShowHiddenFilesField(): FormField<Boolean> {
+    return rememberField(
         name = stringResource(Res.string.collection_editor_label_show_hidden_files),
-        select = { searchCondition.showHidden },
-        update = { copy(searchCondition = searchCondition.copy(showHidden = it)) }
+        selector = { it.searchCondition.showHidden },
+        updater = { copy(searchCondition = searchCondition.copy(showHidden = it)) }
     )
 }

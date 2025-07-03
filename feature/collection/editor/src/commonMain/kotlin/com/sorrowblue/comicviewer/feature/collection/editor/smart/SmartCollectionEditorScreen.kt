@@ -41,7 +41,7 @@ private fun SmartCollectionEditorScreen(
     uiState: SmartCollectionEditorScreenUiState,
     title: @Composable () -> Unit,
     onCancel: () -> Unit,
-    onSubmit: suspend (SmartCollectionEditorFormData) -> Unit,
+    onSubmit: (SmartCollectionEditorFormData) -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onCancel,

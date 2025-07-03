@@ -13,46 +13,48 @@ import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_hint_username
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb_input_error_username
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
-import soil.form.compose.rememberFieldRuleControl
+import soil.form.FieldValidator
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.hasError
+import soil.form.compose.rememberField
+import soil.form.compose.watch
 import soil.form.rule.notBlank
 
 @Composable
-internal fun FormScope<SmbEditScreenForm>.UsernameFieldView(
-    enabled: Boolean,
+internal fun UsernameField(
+    form: Form<SmbEditScreenForm>,
     modifier: Modifier = Modifier,
-    control: FieldControl<String> = rememberUsernameFieldControl(),
+    field: FormField<String> = form.rememberUsernameField(),
 ) {
-    Controller(control) { field ->
-        OutlinedTextField(
-            value = field.value,
-            onValueChange = field.onChange,
-            label = { Text(text = field.name) },
-            isError = field.hasError,
-            enabled = enabled && field.isEnabled,
-            supportingText = field.errorContent { Text(text = it.first()) },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            singleLine = true,
-            modifier = modifier
-                .testTag("Username")
-        )
-    }
+    OutlinedTextField(
+        value = field.value,
+        onValueChange = field::onValueChange,
+        label = { Text(text = field.name) },
+        isError = field.hasError,
+        enabled = field.isEnabled,
+        supportingText = field.supportingText(),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Next
+        ),
+        singleLine = true,
+        modifier = modifier
+            .testTag("Username")
+    )
 }
 
 @Composable
-private fun FormScope<SmbEditScreenForm>.rememberUsernameFieldControl(): FieldControl<String> {
+private fun Form<SmbEditScreenForm>.rememberUsernameField(): FormField<String> {
     val notBlankMessage = stringResource(Res.string.bookshelf_edit_smb_input_error_username)
-    return rememberFieldRuleControl(
+    return rememberField(
         name = stringResource(Res.string.bookshelf_edit_hint_username),
-        select = { username },
-        update = { copy(username = it) },
-        dependsOn = setOf(AuthField)
-    ) {
-        notBlank { notBlankMessage }
-    }
+        selector = { it.username },
+        updater = { copy(username = it) },
+        dependsOn = setOf(AuthField),
+        validator = FieldValidator {
+            notBlank { notBlankMessage }
+        },
+        enabled = watch { !value.isRunning }
+    )
 }

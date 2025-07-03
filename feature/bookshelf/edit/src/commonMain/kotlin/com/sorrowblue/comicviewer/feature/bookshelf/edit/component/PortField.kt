@@ -13,50 +13,49 @@ import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb_input_error_port
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb_input_label_port
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
-import soil.form.compose.rememberFieldRuleControl
-import soil.form.rule.IntRuleBuilder
-import soil.form.rule.IntRuleTester
+import soil.form.FieldValidator
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.hasError
+import soil.form.compose.rememberField
+import soil.form.compose.watch
+import soil.form.rule.maximum
+import soil.form.rule.minimum
 
 @Composable
-internal fun FormScope<SmbEditScreenForm>.PortField(
-    enabled: Boolean,
+internal fun PortField(
+    form: Form<SmbEditScreenForm>,
     modifier: Modifier = Modifier,
-    control: FieldControl<Int> = rememberPortFieldControl(),
+    field: FormField<Int> = form.rememberPortField(),
 ) {
-    Controller(control) { field ->
-        OutlinedTextField(
-            value = if (field.value < 0) "" else field.value.toString(),
-            onValueChange = { field.onChange.invoke(it.toIntOrNull() ?: -1) },
-            label = { Text(text = field.name) },
-            isError = field.hasError,
-            enabled = enabled && field.isEnabled,
-            supportingText = field.errorContent { Text(text = it.first()) },
-            keyboardOptions = KeyboardOptions(
-                showKeyboardOnFocus = false,
-                keyboardType = KeyboardType.NumberPassword,
-                imeAction = ImeAction.Next
-            ),
-            singleLine = true,
-            modifier = modifier.testTag("Port"),
-        )
-    }
+    OutlinedTextField(
+        value = if (field.value < 0) "" else field.value.toString(),
+        onValueChange = { field.onValueChange(it.toIntOrNull() ?: -1) },
+        label = { Text(text = field.name) },
+        isError = field.hasError,
+        enabled = field.isEnabled,
+        supportingText = field.supportingText(),
+        keyboardOptions = KeyboardOptions(
+            showKeyboardOnFocus = false,
+            keyboardType = KeyboardType.NumberPassword,
+            imeAction = ImeAction.Next
+        ),
+        singleLine = true,
+        modifier = modifier.testTag("Port"),
+    )
 }
 
 @Composable
-private fun FormScope<SmbEditScreenForm>.rememberPortFieldControl(): FieldControl<Int> {
+private fun Form<SmbEditScreenForm>.rememberPortField(): FormField<Int> {
     val rangeErrorMessage = stringResource(Res.string.bookshelf_edit_smb_input_error_port)
-    return rememberFieldRuleControl(
+    return rememberField(
         name = stringResource(Res.string.bookshelf_edit_smb_input_label_port),
-        select = { port },
-        update = { copy(port = it) }
-    ) {
-        range(0..65535) { rangeErrorMessage }
-    }
-}
-
-private fun IntRuleBuilder.range(range: IntRange, message: () -> String) {
-    extend(IntRuleTester({ this in range }, message))
+        selector = { it.port },
+        updater = { this.copy(port = it) },
+        validator = FieldValidator {
+            minimum(0) { rangeErrorMessage }
+            maximum(65535) { rangeErrorMessage }
+        },
+        enabled = watch { !value.isRunning }
+    )
 }

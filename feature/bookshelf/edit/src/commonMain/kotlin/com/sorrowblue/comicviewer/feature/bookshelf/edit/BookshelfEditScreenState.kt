@@ -38,7 +38,7 @@ internal interface BookshelfEditScreenState {
     val uiState: BookshelfEditScreenUiState
     val snackbarHostState: SnackbarHostState
     val events: EventFlow<BookshelfEditScreenEvent>
-    suspend fun onSubmit(form: BookshelfEditForm)
+    fun onSubmit(form: BookshelfEditForm)
 }
 
 @Composable
@@ -146,9 +146,15 @@ private class BookshelfEditScreenStateImpl(
         }
     }
 
-    override suspend fun onSubmit(form: BookshelfEditForm) {
+    override fun onSubmit(form: BookshelfEditForm) {
         logcat { "onSubmit(form: $form)" }
-        delay(300)
+        uiState = when (val currentUiState = uiState) {
+            is BookshelfEditScreenUiState.Loading -> currentUiState
+            is InternalStorageEditScreenUiState ->
+                currentUiState.copy(form = currentUiState.form.copy(isRunning = true))
+
+            is SmbEditScreenUiState -> currentUiState.copy(form = currentUiState.form.copy(isRunning = true))
+        }
         val bookshelf: Bookshelf
         val path: String
         when (form) {
@@ -158,12 +164,12 @@ private class BookshelfEditScreenStateImpl(
                         editMode.bookshelfId,
                         form.displayName
                     )
-                    path = form.path!!.toString()
+                    path = form.path!!
                 }
 
                 is BookshelfEditMode.Register -> {
                     bookshelf = InternalStorage(form.displayName)
-                    path = form.path!!.toString()
+                    path = form.path!!
                 }
             }
 
@@ -201,30 +207,33 @@ private class BookshelfEditScreenStateImpl(
                 }
             }
         }
-        registerBookshelfUseCase(RegisterBookshelfUseCase.Request(bookshelf, path)).fold(
-            onSuccess = {
-                events.tryEmit(BookshelfEditScreenEvent.Complete)
-            },
-            onError = {
-                scope.launch {
-                    when (it) {
-                        RegisterBookshelfUseCase.Error.Auth ->
-                            snackbarHostState.showSnackbar(getString(Res.string.bookshelf_edit_error_bad_auth))
+        scope.launch {
+            delay(300)
+            registerBookshelfUseCase(RegisterBookshelfUseCase.Request(bookshelf, path)).fold(
+                onSuccess = {
+                    events.tryEmit(BookshelfEditScreenEvent.Complete)
+                },
+                onError = {
+                    scope.launch {
+                        when (it) {
+                            RegisterBookshelfUseCase.Error.Auth ->
+                                snackbarHostState.showSnackbar(getString(Res.string.bookshelf_edit_error_bad_auth))
 
-                        RegisterBookshelfUseCase.Error.Host ->
-                            snackbarHostState.showSnackbar(getString(Res.string.bookshelf_edit_error_bad_host))
+                            RegisterBookshelfUseCase.Error.Host ->
+                                snackbarHostState.showSnackbar(getString(Res.string.bookshelf_edit_error_bad_host))
 
-                        RegisterBookshelfUseCase.Error.Network ->
-                            snackbarHostState.showSnackbar(getString(Res.string.bookshelf_edit_error_bad_network))
+                            RegisterBookshelfUseCase.Error.Network ->
+                                snackbarHostState.showSnackbar(getString(Res.string.bookshelf_edit_error_bad_network))
 
-                        RegisterBookshelfUseCase.Error.Path ->
-                            snackbarHostState.showSnackbar(getString(Res.string.bookshelf_edit_error_bad_path))
+                            RegisterBookshelfUseCase.Error.Path ->
+                                snackbarHostState.showSnackbar(getString(Res.string.bookshelf_edit_error_bad_path))
 
-                        RegisterBookshelfUseCase.Error.System ->
-                            snackbarHostState.showSnackbar("?????????????")
+                            RegisterBookshelfUseCase.Error.System ->
+                                snackbarHostState.showSnackbar("?????????????")
+                        }
                     }
                 }
-            }
-        )
+            )
+        }
     }
 }

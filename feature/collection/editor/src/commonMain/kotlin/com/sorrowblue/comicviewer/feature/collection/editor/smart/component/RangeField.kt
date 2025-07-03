@@ -12,16 +12,18 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_range_sub_folder
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.rememberField
 
 @Composable
-internal fun FormScope<SmartCollectionEditorFormData>.RangeField(
+internal fun RangeField(
+    form: Form<SmartCollectionEditorFormData>,
     modifier: Modifier = Modifier,
-    control: FieldControl<SearchCondition.Range> = rememberRangeControl(),
+    field: FormField<SearchCondition.Range> = form.rememberRangeField(),
 ) {
     DropdownMenuField(
-        control = control,
+        field = field,
         value = { stringResource(displayText) },
         menus = remember { SearchCondition.Range.entries },
         modifier = modifier
@@ -29,11 +31,11 @@ internal fun FormScope<SmartCollectionEditorFormData>.RangeField(
 }
 
 @Composable
-private fun FormScope<SmartCollectionEditorFormData>.rememberRangeControl(): FieldControl<SearchCondition.Range> {
-    return rememberFieldControl(
+private fun Form<SmartCollectionEditorFormData>.rememberRangeField(): FormField<SearchCondition.Range> {
+    return rememberField(
         name = stringResource(Res.string.collection_editor_label_range),
-        select = { searchCondition.range },
-        update = { copy(searchCondition = searchCondition.copy(range = it)) },
+        selector = { it.searchCondition.range },
+        updater = { copy(searchCondition = searchCondition.copy(range = it)) },
     )
 }
 

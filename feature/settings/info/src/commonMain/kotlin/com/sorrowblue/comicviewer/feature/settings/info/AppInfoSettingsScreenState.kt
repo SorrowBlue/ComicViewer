@@ -7,7 +7,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
-import kotlinx.datetime.Instant
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -33,6 +34,7 @@ private class AppInfoSettingsScreenStateImpl(
     private val urlHandler: UriHandler,
 ) : AppInfoSettingsScreenState {
 
+    @OptIn(ExperimentalTime::class)
     override var uiState: SettingsAppInfoScreenUiState by mutableStateOf(
         SettingsAppInfoScreenUiState(
             versionName = BuildKonfig.VERSION_NAME,

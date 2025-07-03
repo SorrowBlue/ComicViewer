@@ -14,47 +14,47 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb_input_prefix_path
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb_input_suffix_path
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.hasError
+import soil.form.compose.rememberField
+import soil.form.compose.watch
 
 @Composable
-internal fun FormScope<SmbEditScreenForm>.PathField(
-    auth: SmbEditScreenForm.Auth,
-    enabled: Boolean,
+internal fun PathField(
+    form: Form<SmbEditScreenForm>,
     modifier: Modifier = Modifier,
-    control: FieldControl<String> = rememberPathFieldControl(),
+    field: FormField<String> = form.rememberPathField(),
 ) {
-    Controller(control) { field ->
-        OutlinedTextField(
-            value = field.value,
-            onValueChange = field.onChange,
-            modifier = modifier.testTag("Path"),
-            label = { Text(text = field.name) },
-            isError = field.hasError,
-            prefix = { Text(text = stringResource(Res.string.bookshelf_edit_smb_input_prefix_path)) },
-            suffix = { Text(text = stringResource(Res.string.bookshelf_edit_smb_input_suffix_path)) },
-            enabled = enabled && field.isEnabled,
-            supportingText = field.errorContent { Text(text = it.first()) },
-            keyboardOptions = KeyboardOptions(
-                showKeyboardOnFocus = false,
-                keyboardType = KeyboardType.Uri,
-                imeAction = if (auth == SmbEditScreenForm.Auth.Guest) {
-                    ImeAction.Done
-                } else {
-                    ImeAction.Next
-                }
-            ),
-            singleLine = true,
-        )
-    }
+    OutlinedTextField(
+        value = field.value,
+        onValueChange = field::onValueChange,
+        label = { Text(text = field.name) },
+        isError = field.hasError,
+        prefix = { Text(text = stringResource(Res.string.bookshelf_edit_smb_input_prefix_path)) },
+        suffix = { Text(text = stringResource(Res.string.bookshelf_edit_smb_input_suffix_path)) },
+        enabled = field.isEnabled,
+        supportingText = field.supportingText(),
+        keyboardOptions = KeyboardOptions(
+            showKeyboardOnFocus = false,
+            keyboardType = KeyboardType.Uri,
+            imeAction = if (form.value.auth == SmbEditScreenForm.Auth.Guest) {
+                ImeAction.Done
+            } else {
+                ImeAction.Next
+            }
+        ),
+        singleLine = true,
+        modifier = modifier.testTag("Path"),
+    )
 }
 
 @Composable
-private fun FormScope<SmbEditScreenForm>.rememberPathFieldControl(): FieldControl<String> {
-    return rememberFieldControl(
+private fun Form<SmbEditScreenForm>.rememberPathField(): FormField<String> {
+    return rememberField(
         name = stringResource(Res.string.bookshelf_edit_smb_input_label_path),
-        select = { path },
-        update = { copy(path = it) }
+        selector = { it.path },
+        updater = { copy(path = it) },
+        enabled = watch { !value.isRunning }
     )
 }

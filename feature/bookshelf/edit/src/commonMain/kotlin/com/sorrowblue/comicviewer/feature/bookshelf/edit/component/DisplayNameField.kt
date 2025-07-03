@@ -13,57 +13,47 @@ import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_display_name
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_display_name
 import org.jetbrains.compose.resources.stringResource
-import soil.form.Field
-import soil.form.FieldErrors
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
-import soil.form.compose.rememberFieldRuleControl
+import soil.form.FieldValidator
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.hasError
+import soil.form.compose.rememberField
+import soil.form.compose.watch
 import soil.form.rule.notBlank
 
 @Composable
-internal fun <T : BookshelfEditForm> FormScope<T>.DisplayNameField(
-    enabled: Boolean,
+internal fun <T : BookshelfEditForm> DisplayNameField(
+    form: Form<T>,
     modifier: Modifier = Modifier,
-    control: FieldControl<String> = rememberDisplayNameFieldControl(),
+    field: FormField<String> = form.rememberDisplayNameField(),
 ) {
-    Controller(control) { field ->
-        OutlinedTextField(
-            value = field.value,
-            onValueChange = field.onChange,
-            modifier = modifier.testTag("DisplayName"),
-            label = { Text(text = field.name) },
-            isError = field.hasError,
-            enabled = enabled && field.isEnabled,
-            supportingText = field.errorContent { Text(text = it.first()) },
-            keyboardOptions = KeyboardOptions(
-                showKeyboardOnFocus = false,
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            singleLine = true,
-        )
-    }
+    OutlinedTextField(
+        value = field.value,
+        onValueChange = field::onValueChange,
+        label = { Text(text = field.name) },
+        isError = field.hasError,
+        enabled = field.isEnabled,
+        supportingText = field.supportingText(),
+        keyboardOptions = KeyboardOptions(
+            showKeyboardOnFocus = false,
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Next
+        ),
+        singleLine = true,
+        modifier = modifier.testTag("DisplayName"),
+    )
 }
 
 @Composable
-private fun <T : BookshelfEditForm> FormScope<T>.rememberDisplayNameFieldControl(): FieldControl<String> {
+private fun <T : BookshelfEditForm> Form<T>.rememberDisplayNameField(): FormField<String> {
     val notBlankMessage = stringResource(Res.string.bookshelf_edit_error_display_name)
-    return rememberFieldRuleControl(
+    return rememberField(
         name = stringResource(Res.string.bookshelf_edit_label_display_name),
-        select = { displayName },
-        update = { this.update(displayName = it) },
-    ) {
-        notBlank { notBlankMessage }
-    }
-}
-
-internal fun <V> Field<V>.errorContent(content: @Composable (FieldErrors) -> Unit): @Composable (() -> Unit)? {
-    return if (hasError) {
-        {
-            content(errors)
-        }
-    } else {
-        null
-    }
+        selector = { it.displayName },
+        updater = { this.update(displayName = it) },
+        validator = FieldValidator {
+            notBlank { notBlankMessage }
+        },
+        enabled = watch { !value.isRunning }
+    )
 }

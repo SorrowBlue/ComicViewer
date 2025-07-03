@@ -37,7 +37,7 @@ internal interface BasicCollectionEditScreenState : SaveableScreenState {
     val events: EventFlow<BasicCollectionEditScreenStateEvent>
     val pagingDataFlow: Flow<PagingData<File>>
 
-    suspend fun onSubmit(formData: BasicCollectionEditorFormData)
+    fun onSubmit(formData: BasicCollectionEditorFormData)
     fun onDeleteClick(file: File)
 }
 
@@ -104,7 +104,7 @@ private class BasicCollectionEditScreenStateImpl(
         }
     }
 
-    override suspend fun onSubmit(formData: BasicCollectionEditorFormData) {
+    override fun onSubmit(formData: BasicCollectionEditorFormData) {
         scope.launch {
             val collection = getCollectionUseCase(GetCollectionUseCase.Request(route.id))
                 .mapNotNull { it.dataOrNull() as? BasicCollection }

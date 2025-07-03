@@ -10,17 +10,19 @@ import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_all_bookshelf
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_bookshelf
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.rememberField
 
 @Composable
-internal fun FormScope<SmartCollectionEditorFormData>.BookshelfField(
+internal fun BookshelfField(
+    form: Form<SmartCollectionEditorFormData>,
     bookshelfList: List<Bookshelf>,
     modifier: Modifier = Modifier,
-    control: FieldControl<BookshelfId?> = rememberBookshelfFieldControl(),
+    field: FormField<BookshelfId?> = form.rememberBookshelfFieldControl(),
 ) {
     DropdownMenuField(
-        control = control,
+        field = field,
         value = {
             bookshelfList.firstOrNull { it.id == this }?.displayName
                 ?: stringResource(Res.string.collection_editor_label_all_bookshelf)
@@ -31,10 +33,10 @@ internal fun FormScope<SmartCollectionEditorFormData>.BookshelfField(
 }
 
 @Composable
-private fun FormScope<SmartCollectionEditorFormData>.rememberBookshelfFieldControl(): FieldControl<BookshelfId?> {
-    return rememberFieldControl(
+private fun Form<SmartCollectionEditorFormData>.rememberBookshelfFieldControl(): FormField<BookshelfId?> {
+    return rememberField(
         name = stringResource(Res.string.collection_editor_label_bookshelf),
-        select = { bookshelfId },
-        update = { copy(bookshelfId = it) },
+        selector = { it.bookshelfId },
+        updater = { copy(bookshelfId = it) },
     )
 }

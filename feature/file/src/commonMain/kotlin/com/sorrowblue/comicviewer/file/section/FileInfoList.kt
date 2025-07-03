@@ -20,8 +20,9 @@ import comicviewer.feature.file.generated.resources.file_label_modified_date
 import comicviewer.feature.file.generated.resources.file_text_page_count
 import kotlin.math.pow
 import kotlin.math.roundToInt
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -109,6 +110,7 @@ private fun Float.format(decimalPlaces: Int = 2): String {
     return ((this * multiplier).roundToInt() / multiplier).toString()
 }
 
+@OptIn(ExperimentalTime::class)
 val Long.asDateTime: String
     get() = Instant.fromEpochMilliseconds(this)
         .toLocalDateTime(TimeZone.currentSystemDefault())

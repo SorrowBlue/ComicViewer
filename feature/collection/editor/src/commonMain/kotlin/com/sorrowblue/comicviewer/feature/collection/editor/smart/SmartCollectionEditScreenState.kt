@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.koin.compose.koinInject
 
@@ -46,9 +47,9 @@ internal fun rememberSmartCollectionEditScreenState(
 
 private class SmartCollectionEditScreenImpl(
     route: SmartCollectionEdit,
-    scope: CoroutineScope,
     flowBookshelfListUseCase: FlowBookshelfListUseCase,
     getCollectionUseCase: GetCollectionUseCase,
+    private val scope: CoroutineScope,
     private val updateCollectionUseCase: UpdateCollectionUseCase,
 ) : SmartCollectionEditorScreenState {
 
@@ -79,17 +80,19 @@ private class SmartCollectionEditScreenImpl(
             }.launchIn(scope)
     }
 
-    override suspend fun onSubmit(formData: SmartCollectionEditorFormData) {
-        updateCollectionUseCase(
-            UpdateCollectionUseCase.Request(
-                SmartCollection(
-                    formData.name,
-                    formData.bookshelfId,
-                    formData.searchCondition
+    override fun onSubmit(formData: SmartCollectionEditorFormData) {
+        scope.launch {
+            updateCollectionUseCase(
+                UpdateCollectionUseCase.Request(
+                    SmartCollection(
+                        formData.name,
+                        formData.bookshelfId,
+                        formData.searchCondition
+                    )
                 )
             )
-        )
-        event.emit(SmartCollectionEditorScreenStateEvent.Complete)
+            event.emit(SmartCollectionEditorScreenStateEvent.Complete)
+        }
     }
 
     private suspend fun allBookshelf(): Bookshelf {

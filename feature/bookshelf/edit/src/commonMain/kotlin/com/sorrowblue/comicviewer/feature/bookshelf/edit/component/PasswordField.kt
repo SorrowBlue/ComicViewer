@@ -22,65 +22,67 @@ import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_hint_password
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb_input_error_password
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
-import soil.form.compose.rememberFieldRuleControl
+import soil.form.FieldValidator
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.hasError
+import soil.form.compose.rememberField
+import soil.form.compose.watch
 import soil.form.rule.notBlank
 
 @Composable
-internal fun FormScope<SmbEditScreenForm>.PasswordFieldView(
-    enabled: Boolean,
+internal fun PasswordField(
+    form: Form<SmbEditScreenForm>,
     modifier: Modifier = Modifier,
-    control: FieldControl<String> = rememberPasswordFieldControl(),
+    field: FormField<String> = form.rememberPasswordField(),
 ) {
-    Controller(control) { field ->
-        var showPassword by remember { mutableStateOf(value = false) }
-        OutlinedTextField(
-            value = field.value,
-            onValueChange = field.onChange,
-            label = { Text(text = field.name) },
-            isError = field.hasError,
-            enabled = enabled && field.isEnabled,
-            supportingText = field.errorContent { Text(text = it.first()) },
-            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                if (showPassword) {
-                    IconButton(onClick = { showPassword = false }) {
-                        Icon(
-                            imageVector = ComicIcons.Visibility,
-                            contentDescription = "hide_password"
-                        )
-                    }
-                } else {
-                    IconButton(onClick = { showPassword = true }) {
-                        Icon(
-                            imageVector = ComicIcons.VisibilityOff,
-                            contentDescription = "hide_password"
-                        )
-                    }
+    var showPassword by remember { mutableStateOf(value = false) }
+    OutlinedTextField(
+        value = field.value,
+        onValueChange = field::onValueChange,
+        label = { Text(text = field.name) },
+        isError = field.hasError,
+        enabled = field.isEnabled,
+        supportingText = field.supportingText(),
+        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            if (showPassword) {
+                IconButton(onClick = { showPassword = false }) {
+                    Icon(
+                        imageVector = ComicIcons.Visibility,
+                        contentDescription = "hide_password"
+                    )
                 }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            ),
-            singleLine = true,
-            modifier = modifier
-                .testTag("Password")
-        )
-    }
+            } else {
+                IconButton(onClick = { showPassword = true }) {
+                    Icon(
+                        imageVector = ComicIcons.VisibilityOff,
+                        contentDescription = "hide_password"
+                    )
+                }
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done
+        ),
+        singleLine = true,
+        modifier = modifier
+            .testTag("Password")
+    )
 }
 
 @Composable
-private fun FormScope<SmbEditScreenForm>.rememberPasswordFieldControl(): FieldControl<String> {
+private fun Form<SmbEditScreenForm>.rememberPasswordField(): FormField<String> {
     val notBlankMessage = stringResource(Res.string.bookshelf_edit_smb_input_error_password)
-    return rememberFieldRuleControl(
+    return rememberField(
         name = stringResource(Res.string.bookshelf_edit_hint_password),
-        select = { password },
-        update = { copy(password = it) },
-        dependsOn = setOf(AuthField)
-    ) {
-        notBlank { notBlankMessage }
-    }
+        selector = { it.password },
+        updater = { copy(password = it) },
+        dependsOn = setOf(AuthField),
+        validator = FieldValidator {
+            notBlank { notBlankMessage }
+        },
+        enabled = watch { !value.isRunning }
+    )
 }
